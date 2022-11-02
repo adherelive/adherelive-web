@@ -9,7 +9,7 @@ import ServiceOffering from "../../services/serviceOffering/serviceOffering.serv
 import DoctorService from "../../services/doctor/doctor.service";
 import PatientService from "../../services/patients/patients.service";
 import PatientWrapper from "../../ApiWrapper/web/patient";
-
+import { USER_CATEGORY } from "../../../constant";
 const Log = new Logger("WEB > CONTROLLER > Service Offering");
 
 class ServiceSubscriptionTxController extends Controller {
@@ -27,11 +27,11 @@ class ServiceSubscriptionTxController extends Controller {
       provider_id = null;
     let data = null;
     let { status } = req.query;
-    if (req.userDetails.userRoleData.basic_info.linked_with === "doctor") {
+    if (category === USER_CATEGORY.DOCTOR) {
       doctor_id = req.userDetails.userCategoryData.basic_info.id;
       data = {
         doctor_id,
-        provider_type: req.userDetails.userRoleData.basic_info.linked_with,
+        provider_type: USER_CATEGORY.DOCTOR,
       };
     }
 
