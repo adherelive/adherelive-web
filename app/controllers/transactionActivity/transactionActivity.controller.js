@@ -59,7 +59,7 @@ class ServiceSubscriptionTxController extends Controller {
       let users = await PatientService.getPatientById({
         id: txActivities[i].patient_id,
       });
-      const patientData = await PatientWrapper(patient);
+      const patientData = await PatientWrapper(users);
       console.log({
         myuserdetails: users.user.getBasicInfo,
         patoemtdo: txActivities[i].patient_id,
