@@ -35,6 +35,8 @@ class ServiceUserMappingController extends Controller {
       doctor_id = req.userDetails.userCategoryData.basic_info.id;
     }
 
+    console.log({ doctor_id, provider_type });
+
     try {
       let date = new Date();
       let next_recharge_date = new Date();
@@ -74,6 +76,7 @@ class ServiceUserMappingController extends Controller {
         due_date: new Date(),
         // subscription_plan_id: userServicesSubscription.id
       };
+      console.log({ txDetails });
       let txres = await TxService.addServiceSubscriptionTx(txDetails);
       return raiseSuccess(
         res,
