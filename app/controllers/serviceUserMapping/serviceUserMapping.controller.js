@@ -33,6 +33,7 @@ class ServiceUserMappingController extends Controller {
     if (req.userDetails.userRoleData.basic_info.linked_with === "provider") {
       provider_id = req.userDetails.userRoleData.basic_info.linked_id;
       doctor_id = req.userDetails.userCategoryData.basic_info.id;
+      provider_type = req.userDetails.userRoleData.basic_info.linked_with;
     }
 
     console.log({ doctor_id, provider_type, category });
