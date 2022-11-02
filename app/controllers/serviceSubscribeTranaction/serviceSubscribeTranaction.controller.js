@@ -102,6 +102,13 @@ class ServiceSubscriptionTxController extends Controller {
         provider_type: req.userDetails.userRoleData.basic_info.linked_with,
       };
     }
+    if (category === "provider") {
+      provider_id = req.userDetails.userRoleData.basic_info.linked_id;
+      data = {
+        provider_id,
+        provider_type: req.userDetails.userRoleData.basic_info.linked_with,
+      };
+    }
     console.log("=================================");
     console.log({ data });
     console.log("=================================");
