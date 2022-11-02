@@ -102,6 +102,9 @@ class ServiceSubscriptionTxController extends Controller {
         provider_type: req.userDetails.userRoleData.basic_info.linked_with,
       };
     }
+    console.log("=================================");
+    console.log({ data });
+    console.log("=================================");
 
     // const serviceSubscribeTx = new ServiceSubscribeTx();
     let tranactions = await ServiceSubscribeTx.getAllServiceSubscriptionTx(
