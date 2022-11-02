@@ -12,7 +12,6 @@ router.post("/activity", Authenticate, serviceSubscribeTx.createActivity);
 router.get(
   "/",
   Authenticate,
-  isDoctor,
   serviceSubscribeTx.getServiceSubscriptionTxForUser
 );
 router.put("/:id", Authenticate, serviceSubscribeTx.updateTx);
