@@ -35,7 +35,7 @@ class ServiceUserMappingController extends Controller {
       doctor_id = req.userDetails.userCategoryData.basic_info.id;
     }
 
-    console.log({ doctor_id, provider_type });
+    console.log({ doctor_id, provider_type, category });
 
     try {
       let date = new Date();
