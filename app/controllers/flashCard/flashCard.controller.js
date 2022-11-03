@@ -46,6 +46,8 @@ class FlashCardController extends Controller {
     try {
       let data = { ...req.body, doctor_id, provider_type, provider_id };
       Log.debug("flash card controller data", data);
+      console.log({ requestBody: req.body });
+
       const flashCardService = new FlashCardService();
       let flashCard = await flashCardService.addFlashCard(data);
       let { tx_activity_id, activity_status, is_published } = data;
@@ -57,7 +59,7 @@ class FlashCardController extends Controller {
       }
 
       let txActivity = new TxActivity();
-      txActivity.updateTxActivities({ activity_status }, tx_activity_id);
+      await txActivity.updateTxActivities({ activity_status }, tx_activity_id);
 
       // need to add records.
       let reportBody = {
@@ -68,9 +70,15 @@ class FlashCardController extends Controller {
         patient_id: data.patient_id,
         flas_card_id: flashCard.id,
       };
+      console.log({ reportBody });
 
       if (req.body.data.flashCardData.length > 0) {
-        await createReport(req.body.data.flashCardData, "myfashcord.pdf");
+        try {
+          await createReport(req.body.data.flashCardData, "myfashcord.pdf");
+        } catch (ex) {
+          console.log(ex);
+          console.log("error in create report function");
+        }
         let file = fs.readFileSync("myfashcord.pdf");
         const { originalname } = file || {};
         console.log({ file });
@@ -81,25 +89,30 @@ class FlashCardController extends Controller {
             id: data.patient_id,
           });
         } catch (ex) {
+          console.log("error in linue number 91");
           fileUrl = "https://www.africau.edu/images/default/sample.pdf";
         }
-
-        const reportService = new ReportService();
-        const addReport = await reportService.addReport(reportBody);
-        const report = await ReportWrapper({ data: addReport });
-        console.log(report.getId());
-        console.log({
-          name: "myfashcord.pdf",
-          document: fileUrl,
-          parent_type: DOCUMENT_PARENT_TYPE.REPORT,
-          parent_id: report.getId(),
-        });
-        await uploadDocumentService.addDocument({
-          name: "myfashcord.pdf",
-          document: fileUrl,
-          parent_type: DOCUMENT_PARENT_TYPE.REPORT,
-          parent_id: report.getId(),
-        });
+        try {
+          const reportService = new ReportService();
+          const addReport = await reportService.addReport(reportBody);
+          const report = await ReportWrapper({ data: addReport });
+          console.log(report.getId());
+          console.log({
+            name: "myfashcord.pdf",
+            document: fileUrl,
+            parent_type: DOCUMENT_PARENT_TYPE.REPORT,
+            parent_id: report.getId(),
+          });
+          await uploadDocumentService.addDocument({
+            name: "myfashcord.pdf",
+            document: fileUrl,
+            parent_type: DOCUMENT_PARENT_TYPE.REPORT,
+            parent_id: report.getId(),
+          });
+        } catch (ex) {
+          console.log("error in report service");
+          console.log(ex);
+        }
       }
 
       return raiseSuccess(
