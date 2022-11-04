@@ -4051,14 +4051,33 @@ class DoctorController extends Controller {
   getAppointmentForDoctors = async (req, res) => {
     const { raiseSuccess, raiseServerError, raiseClientError } = this;
     try {
-      const {
-        userDetails: { userId } = {},
+      let {
+        userDetails: {
+          userId,
+          userData: { category } = {},
+          userCategoryId,
+        } = {},
         query: {
           type = APPOINTMENT_QUERY_TYPE.DAY,
           value = null,
           provider_id = 0,
         } = {},
       } = req;
+      let data = {};
+
+      let doctor_id = null;
+      let provider_type = null;
+
+      if (category === USER_CATEGORY.DOCTOR) {
+        doctor_id = req.userDetails.userCategoryData.basic_info.id;
+        provider_type = USER_CATEGORY.DOCTOR;
+      }
+
+      if (req.userDetails.userRoleData.basic_info.linked_with === "provider") {
+        provider_id = req.userDetails.userRoleData.basic_info.linked_id;
+        doctor_id = req.userDetails.userCategoryData.basic_info.id;
+        provider_type = req.userDetails.userRoleData.basic_info.linked_with;
+      }
 
       const validDate = moment(value).isValid();
       if (!validDate) {
@@ -4069,15 +4088,6 @@ class DoctorController extends Controller {
           "Please enter the correct date value"
         );
       }
-      const doctorData = await doctorService.getDoctorByData({
-        user_id: userId,
-      });
-
-      const doctorWrap = await DoctorWrapper(doctorData);
-      // const provider = await ProviderWrapper(providerData);
-      // const providerId = provider.getProviderId();
-
-      const doctorId = doctorWrap.getDoctorId();
 
       let userApiDetails = {};
       let doctorApiDetails = {};
@@ -4086,87 +4096,61 @@ class DoctorController extends Controller {
       let dateWiseAppointmentDetails = {};
 
       let patientIds = [];
-      let doctorIds = [];
 
-      const UserRoles = await UserRoleService.getAllByData({
-        linked_id: doctorId,
-        linked_with: USER_CATEGORY.DOCTOR,
-      });
+      let appointmentList = [];
 
-      if (UserRoles && UserRoles.length) {
-        for (let i = 0; i < UserRoles.length; i++) {
-          const UserRole = UserRoles[i];
-          const userRoleWrapper = await UserRoleWrapper(UserRole);
-          const DoctorUserId = await userRoleWrapper.getUserId();
-          const doctor = await doctorService.getDoctorByData({
-            user_id: DoctorUserId,
-          });
-          if (doctor) {
-            const doctorWrapper = await DoctorWrapper(doctor);
-            const doctorId = await doctorWrapper.getDoctorId();
-            doctorIds.push(doctorId);
-          }
-        }
+      switch (type) {
+        case APPOINTMENT_QUERY_TYPE.DAY:
+          appointmentList = await appointmentService.getDayAppointmentForDoctor(
+            doctor_id,
+            provider_id,
+            value
+          );
+          break;
+        case APPOINTMENT_QUERY_TYPE.MONTH:
+          appointmentList =
+            await appointmentService.getMonthAppointmentForDoctor(
+              doctor_id,
+              provider_id,
+              value
+            );
+          break;
+        default:
+          return raiseClientError(
+            res,
+            422,
+            {},
+            "Please check selected value for getting upcoming schedules"
+          );
       }
 
-      for (const doctorId of doctorIds) {
-        let appointmentList = [];
+      if (appointmentList && appointmentList.length) {
+        for (const appointment of appointmentList) {
+          const appointmentData = await AppointmentWrapper(appointment);
+          const { participant_one_id, participant_two_id } =
+            appointmentData.getParticipants();
 
-        switch (type) {
-          case APPOINTMENT_QUERY_TYPE.DAY:
-            appointmentList =
-              await appointmentService.getDayAppointmentForDoctor(
-                doctorId,
-                5,
-                value
-              );
-            break;
-          case APPOINTMENT_QUERY_TYPE.MONTH:
-            appointmentList =
-              await appointmentService.getMonthAppointmentForDoctor(
-                doctorId,
-                5,
-                value
-              );
-            break;
-          default:
-            return raiseClientError(
-              res,
-              422,
-              {},
-              "Please check selected value for getting upcoming schedules"
-            );
-        }
+          const {
+            [appointmentData.getFormattedStartDate()]: dateAppointments = null,
+          } = dateWiseAppointmentDetails;
 
-        if (appointmentList && appointmentList.length) {
-          for (const appointment of appointmentList) {
-            const appointmentData = await AppointmentWrapper(appointment);
-            const { participant_one_id, participant_two_id } =
-              appointmentData.getParticipants();
+          if (dateAppointments) {
+            dateWiseAppointmentDetails[
+              appointmentData.getFormattedStartDate()
+            ].push(appointmentData.getAppointmentId());
+          } else {
+            dateWiseAppointmentDetails[
+              appointmentData.getFormattedStartDate()
+            ] = [appointmentData.getAppointmentId()];
+          }
 
-            const {
-              [appointmentData.getFormattedStartDate()]:
-                dateAppointments = null,
-            } = dateWiseAppointmentDetails;
+          appointmentApiDetails[appointmentData.getAppointmentId()] =
+            await appointmentData.getBasicInfo();
 
-            if (dateAppointments) {
-              dateWiseAppointmentDetails[
-                appointmentData.getFormattedStartDate()
-              ].push(appointmentData.getAppointmentId());
-            } else {
-              dateWiseAppointmentDetails[
-                appointmentData.getFormattedStartDate()
-              ] = [appointmentData.getAppointmentId()];
-            }
-
-            appointmentApiDetails[appointmentData.getAppointmentId()] =
-              await appointmentData.getBasicInfo();
-
-            if (participant_one_id !== doctorId) {
-              patientIds.push(participant_one_id);
-            } else {
-              patientIds.push(participant_two_id);
-            }
+          if (participant_one_id !== doctor_id) {
+            patientIds.push(participant_one_id);
+          } else {
+            patientIds.push(participant_two_id);
           }
         }
       }
