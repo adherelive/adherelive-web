@@ -3,10 +3,20 @@ import { isDoctor as isMDoctor } from "../m-api/middlewares/doctor";
 
 export const isDoctor = (req, res, next) => {
   try {
+    console.log("In Common MiddleWare dr -1");
     isWebDoctor(req, res, next);
+    console.log("In Common MiddleWare dr -2");
     next();
   } catch (ex) {
-    isMDoctor(req, res, next);
-    next();
+    console.log("In Common MiddleWare dr -3");
+    try {
+      console.log("In Common MiddleWare dr -4");
+      isMDoctor(req, res, next);
+      console.log("In Common MiddleWare dr -5");
+      next();
+    } catch (ex) {
+      console.log("In Common MiddleWare dr -6");
+      return raiseServerError(res);
+    }
   }
 };
