@@ -3,9 +3,12 @@ import ServiceOffering from "../../../app/controllers/serviceOffering/serviceOff
 import isAllowed from "../../middlewares/permissions";
 import PERMISSIONS from "../../../config/permissions";
 
-import Authenticate from "../middleware/auth";
+// import Authenticate from "../middleware/auth";
 
-import { isDoctor } from "../middleware/doctor";
+// import { isDoctor } from "../middleware/doctor";
+
+import Authenticate from "../../commonmiddlewares/auth";
+import { isDoctor } from "../../commonmiddlewares/doctor";
 
 const router = express.Router();
 

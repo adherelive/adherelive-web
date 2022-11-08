@@ -4063,7 +4063,6 @@ class DoctorController extends Controller {
           provider_id = 0,
         } = {},
       } = req;
-      let data = {};
 
       let doctor_id = null;
       let provider_type = null;
