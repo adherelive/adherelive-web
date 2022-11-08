@@ -6,7 +6,6 @@ export default async (req, res, next) => {
     console.log("In Common MiddleWare auth -1");
     await WebAuthenticate(req, res, next);
     console.log("In Common MiddleWare auth -2");
-    next();
   } catch (err) {
     console.log("In Common MiddleWare auth -6");
     try {
