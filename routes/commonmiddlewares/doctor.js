@@ -3,6 +3,9 @@ import { isDoctor as isMDoctor } from "../m-api/middlewares/doctor";
 
 export const isDoctor = (req, res, next) => {
   let { m } = req.query;
+  console.log("=======================");
+  console.log({ m });
+  console.log("=======================");
   try {
     if (m) isMDoctor(req, res, next);
     else isWebDoctor(req, res, next);
