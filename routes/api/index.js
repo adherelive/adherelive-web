@@ -70,13 +70,26 @@ router.use(async function (req, res, next) {
       userRoleData;
     const { cookies = {} } = req;
     console.log("api-index-2" + getTime());
-    if (cookies.accessToken) {
-      accessToken = cookies.accessToken;
-    }
-    console.log("api-index-3" + getTime());
-    const { accesstoken: aT = "" } = req.headers || {};
-    if (aT) {
-      accessToken = aT;
+    // if (cookies.accessToken) {
+    //   accessToken = cookies.accessToken;
+    // }
+    // console.log("api-index-3" + getTime());
+    // const { accesstoken: aT = "" } = req.headers || {};
+    // if (aT) {
+    //   accessToken = aT;
+    // }
+
+    if (m) {
+      const { authorization = "" } = req.headers || {};
+      const bearer = authorization.split(" ");
+      if (bearer.length === 2) {
+        accessToken = bearer[1];
+      }
+    } else {
+      const { cookies = {} } = req;
+      if (cookies.accessToken) {
+        accessToken = cookies.accessToken;
+      }
     }
 
     const secret = process.config.TOKEN_SECRET_KEY;
