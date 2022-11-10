@@ -1,7 +1,9 @@
 import express from "express";
 import ServiceSubscriptionUserMapping from "../../../app/controllers/serviceSubscriptionUserMapping/serviceSubscriptionUserMapping.controller";
-import Authenticate from "../middleware/auth";
-import { isDoctor } from "../middleware/doctor";
+// import Authenticate from "../middleware/auth";
+// import { isDoctor } from "../middleware/doctor";
+import Authenticate from "../../commonmiddlewares/auth";
+import { isDoctor } from "../../commonmiddlewares/doctor";
 
 const router = express.Router();
 
