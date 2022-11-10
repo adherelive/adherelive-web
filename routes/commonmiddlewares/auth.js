@@ -8,7 +8,7 @@ export default async (req, res, next) => {
   console.log("in auth middleware");
   console.log("=======================");
   try {
-    if (m) MobileAuthenticate(req, res, next);
+    if (m) WebAuthenticate(req, res, next);
     else WebAuthenticate(req, res, next);
   } catch (ex) {
     return raiseServerError(res);
