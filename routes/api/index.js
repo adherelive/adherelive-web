@@ -78,7 +78,7 @@ router.use(async function (req, res, next) {
     // if (aT) {
     //   accessToken = aT;
     // }
-
+    let { m } = req.query;
     if (m) {
       const { authorization = "" } = req.headers || {};
       const bearer = authorization.split(" ");
