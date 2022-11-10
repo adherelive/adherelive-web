@@ -5,6 +5,7 @@ export const isDoctor = (req, res, next) => {
   let { m } = req.query;
   console.log("=======================");
   console.log({ m });
+  console.log("in doctor middle ware.");
   console.log("=======================");
   try {
     if (m) isMDoctor(req, res, next);

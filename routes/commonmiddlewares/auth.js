@@ -5,6 +5,7 @@ export default async (req, res, next) => {
   let { m } = req.query;
   console.log("=======================");
   console.log({ m });
+  console.log("in auth middleware");
   console.log("=======================");
   try {
     if (m) MobileAuthenticate(req, res, next);
