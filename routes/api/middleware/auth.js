@@ -29,10 +29,13 @@ export default async (req, res, next) => {
     }
     console.log("auth-middle-ware - 3");
     if (accessToken) {
+      // const secret = process.config.TOKEN_SECRET_KEY;
+      // const decodedAccessToken = await jwt.verify(accessToken, secret);
+      // const { userId = "", accessToken: access_token = "" } =
+      //   decodedAccessToken || {};
       const secret = process.config.TOKEN_SECRET_KEY;
       const decodedAccessToken = await jwt.verify(accessToken, secret);
-      const { userId = "", accessToken: access_token = "" } =
-        decodedAccessToken || {};
+      const access_token = decodedAccessToken.accessToken;
       console.log("auth-middle-ware - 4");
     } else {
       const response = new Response(false, 401);
