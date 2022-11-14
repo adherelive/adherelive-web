@@ -206,11 +206,11 @@ class ServiceSubscriptionUserMappingController extends Controller {
       console.log({ doctors, doctor_id_for_sub });
       console.log("===================================");
       console.log(userServicesSubscription);
-      if (doctor_id_for_sub && !doctors[doctor_id_for_sub]) {
+      if (doctor_id_for_sub && !doctors[doctor_id_for_sub])
         doctors[doctor_id_for_sub] = await doctorService.getDoctorByDoctorId(
           doctor_id_for_sub
         );
-      }
+
       userServicesSubscription["doctor_id"];
 
       let subId =
@@ -254,6 +254,12 @@ class ServiceSubscriptionUserMappingController extends Controller {
       let serviceData = userServices[userService];
       const serviceOffering = new ServiceOffering();
       let servicedata = { id: serviceData.service_plan_id };
+      let doctor_id_for_sub = servicedata.doctor_id;
+      if (doctor_id_for_sub && !doctors[doctor_id_for_sub])
+        doctors[doctor_id_for_sub] = await doctorService.getDoctorByDoctorId(
+          doctor_id_for_sub
+        );
+
       let services = await serviceOffering.getServiceOfferingByData(
         servicedata
       );

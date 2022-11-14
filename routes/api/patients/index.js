@@ -1,6 +1,7 @@
 import express from "express";
 import Authenticated from "../middleware/auth";
 import PatientController from "../../../app/controllers/patients/patients.controller";
+import ServiceSubscriptionUserMapping from "../../../app/controllers/serviceSubscriptionUserMapping/serviceSubscriptionUserMapping.controller";
 import multer from "multer";
 import { getTime } from "../../../app/helper/timer";
 
@@ -110,6 +111,12 @@ router.get(
   "/generate_prescription/:care_plan_id",
   Authenticated,
   PatientController.generatePrescription
+);
+
+router.get(
+  "/servicesubplan/:patient_id",
+  Authenticated,
+  ServiceSubscriptionUserMapping.getServiceSubscriptionUserMappingAndServiceUserByPatientId
 );
 
 module.exports = router;
