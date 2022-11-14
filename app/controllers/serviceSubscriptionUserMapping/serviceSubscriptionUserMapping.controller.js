@@ -199,12 +199,15 @@ class ServiceSubscriptionUserMappingController extends Controller {
     console.log("userServicesSubscriptions", userServicesSubscriptions);
     let doctors = {};
     for (let userServicesSubscription in userServicesSubscriptions) {
-      let doctor_id_for_sub = userServicesSubscription["doctor_id"];
+      let doctor_id_for_sub = [userServicesSubscriptions][
+        userServicesSubscription
+      ]["doctor_id"];
       console.log("===================================");
+      console.log({ userServicesSubscription });
       console.log({ doctors, doctor_id_for_sub });
       console.log("===================================");
       console.log(userServicesSubscription);
-      if (!doctors[doctor_id_for_sub]) {
+      if (doctor_id_for_sub && !doctors[doctor_id_for_sub]) {
         doctors[doctor_id_for_sub] = await doctorService.getDoctorByDoctorId(
           doctor_id_for_sub
         );
