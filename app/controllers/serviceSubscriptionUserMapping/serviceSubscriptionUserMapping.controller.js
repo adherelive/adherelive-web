@@ -7,6 +7,7 @@ import ServiceSubscriptionService from "../../services/serviceSubscription/servi
 import ServiceSubscriptionMapping from "../../services/serviceSubscriptionMapping/serviceSubscritpionMapping.service";
 import ServiceOffering from "../../services/serviceOffering/serviceOffering.service";
 import TxService from "../../services/serviceSubscribeTranaction/serviceSubscribeTranaction";
+import doctorService from "../../services/doctor/doctor.service";
 import { USER_CATEGORY, USER_STATUS } from "../../../constant";
 
 const Log = new Logger("WEB > CONTROLLER > Service Offering");
@@ -196,7 +197,20 @@ class ServiceSubscriptionUserMappingController extends Controller {
     let response = {};
 
     console.log("userServicesSubscriptions", userServicesSubscriptions);
+    let doctors = {};
     for (let userServicesSubscription in userServicesSubscriptions) {
+      let doctor_id_for_sub = userServicesSubscription["doctor_id"];
+      console.log("===================================");
+      console.log({ doctors, doctor_id_for_sub });
+      console.log("===================================");
+      console.log(userServicesSubscription);
+      if (!doctors[doctor_id_for_sub]) {
+        doctors[doctor_id_for_sub] = await doctorService.getDoctorByDoctorId(
+          doctor_id_for_sub
+        );
+      }
+      userServicesSubscription["doctor_id"];
+
       let subId =
         userServicesSubscriptions[userServicesSubscription][
           "service_subscription_plan_id"
@@ -250,6 +264,7 @@ class ServiceSubscriptionUserMappingController extends Controller {
       res,
       200,
       {
+        doctors,
         services: { ...servicesResponse },
         subscription: { ...servicesSubResponse },
       },
