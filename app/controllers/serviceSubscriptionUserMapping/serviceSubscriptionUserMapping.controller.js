@@ -199,9 +199,8 @@ class ServiceSubscriptionUserMappingController extends Controller {
     console.log("userServicesSubscriptions", userServicesSubscriptions);
     let doctors = {};
     for (let userServicesSubscription in userServicesSubscriptions) {
-      let doctor_id_for_sub = [userServicesSubscriptions][
-        userServicesSubscription
-      ]["doctor_id"];
+      let doctor_id_for_sub =
+        userServicesSubscriptions[userServicesSubscription]["doctor_id"];
       console.log("===================================");
       console.log({ userServicesSubscription });
       console.log({ doctors, doctor_id_for_sub });
