@@ -190,6 +190,7 @@ class ServiceSubscriptionUserMappingController extends Controller {
     let data = { patient_id };
     const serviceSubscriptionUserMappingService =
       new ServiceSubscriptionUserMappingService();
+    console.log({ data });
     let userServicesSubscriptions =
       await serviceSubscriptionUserMappingService.getAllServiceSubscriptionUserMappingByData(
         data
@@ -210,8 +211,6 @@ class ServiceSubscriptionUserMappingController extends Controller {
         doctors[doctor_id_for_sub] = await doctorService.getDoctorByDoctorId(
           doctor_id_for_sub
         );
-
-      userServicesSubscription["doctor_id"];
 
       let subId =
         userServicesSubscriptions[userServicesSubscription][
@@ -250,11 +249,15 @@ class ServiceSubscriptionUserMappingController extends Controller {
     console.log("userServices", userServices);
 
     let serviceDatas = [];
+
     for (let userService in userServices) {
       let serviceData = userServices[userService];
+      console.log(serviceData);
+
       const serviceOffering = new ServiceOffering();
       let servicedata = { id: serviceData.service_plan_id };
-      let doctor_id_for_sub = servicedata.doctor_id;
+      let doctor_id_for_sub = userServices[userService]["doctor_id"];
+      console.log({ doctor_id_for_sub });
       if (doctor_id_for_sub && !doctors[doctor_id_for_sub])
         doctors[doctor_id_for_sub] = await doctorService.getDoctorByDoctorId(
           doctor_id_for_sub
