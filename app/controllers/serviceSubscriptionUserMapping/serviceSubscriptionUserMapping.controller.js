@@ -419,6 +419,9 @@ class ServiceSubscriptionUserMappingController extends Controller {
       let { provider_id, patient_id, provider_type, doctor_id } = req.query;
       // assuming that i am getting patientId,doctor_id, provider_type, provider_id
 
+      patient_id = parseInt(patient_id);
+      doctor_id = parseInt(doctor_id);
+
       console.log(
         "getServiceSubscriptionUserMappingAndServiceUserByPatientIdAndDoctorId called"
       );
@@ -440,12 +443,18 @@ class ServiceSubscriptionUserMappingController extends Controller {
       let data = {};
 
       if (USER_CATEGORY.PROVIDER === provider_type)
-        data = { patient_id, provider_id, provider_type, doctor_id };
+        data = {
+          patient_id,
+          provider_id: parseInt(provider_id),
+          provider_type,
+          doctor_id,
+        };
       if (USER_CATEGORY.DOCTOR === provider_type)
         data = { patient_id, provider_type, doctor_id };
 
+      console.log("===================");
       console.log({ data });
-
+      console.log("===================");
       const serviceSubscriptionUserMappingService =
         new ServiceSubscriptionUserMappingService();
       console.log({ data });
