@@ -258,11 +258,19 @@ class ServiceSubscriptionController extends Controller {
     let data = null;
     let { provider_id, provider_type, doctor_id } = req.query;
 
-    data = {
-      doctor_id,
-      provider_type,
-      provider_id,
-    };
+    if (USER_CATEGORY.PROVIDER === provider_type) {
+      data = {
+        doctor_id: parseInt(doctor_id),
+        provider_type,
+        provider_id: parseInt(provider_id),
+      };
+    }
+    if (USER_CATEGORY.DOCTOR === provider_type) {
+      data = {
+        doctor_id: parseInt(doctor_id),
+        provider_type,
+      };
+    }
     try {
       const serviceSubscriptionService = new ServiceSubscriptionService();
       let serviceSubscriptions =
