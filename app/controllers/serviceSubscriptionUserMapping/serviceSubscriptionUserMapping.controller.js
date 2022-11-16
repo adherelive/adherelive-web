@@ -468,37 +468,6 @@ class ServiceSubscriptionUserMappingController extends Controller {
       let doctors = {};
       let doctorsInproviders = {};
       for (let userServicesSubscription in userServicesSubscriptions) {
-        let doctor_id_for_sub =
-          userServicesSubscriptions[userServicesSubscription]["doctor_id"];
-        let doctory_provider_type =
-          userServicesSubscriptions[userServicesSubscription]["provider_type"];
-        console.log("===================================");
-        console.log({ userServicesSubscription });
-        console.log({ doctors, doctor_id_for_sub });
-        console.log("===================================");
-        console.log(userServicesSubscription);
-        if (doctor_id_for_sub && !doctors[doctor_id_for_sub]) {
-          doctors[doctor_id_for_sub] = await doctorService.getDoctorByDoctorId(
-            doctor_id_for_sub
-          );
-        }
-
-        if (
-          doctory_provider_type === USER_CATEGORY.PROVIDER &&
-          doctor_id_for_sub &&
-          !doctorsInproviders[doctor_id_for_sub]
-        ) {
-          doctorsInproviders[doctor_id_for_sub] =
-            await doctorService.getDoctorByDoctorId(doctor_id_for_sub);
-          doctorsInproviders[doctor_id_for_sub][
-            userServicesSubscriptions[userServicesSubscription]["provider_id"]
-          ] = await providerService.getProviderByData({
-            id: userServicesSubscriptions[userServicesSubscription][
-              "provider_id"
-            ],
-          });
-        }
-
         let subId =
           userServicesSubscriptions[userServicesSubscription][
             "service_subscription_plan_id"
@@ -541,31 +510,10 @@ class ServiceSubscriptionUserMappingController extends Controller {
 
       for (let userService in userServices) {
         let serviceData = userServices[userService];
-        console.log(serviceData);
-
         const serviceOffering = new ServiceOffering();
         let servicedata = { id: serviceData.service_plan_id };
         let doctor_id_for_sub = userServices[userService]["doctor_id"];
-        let doctory_provider_type = userServices[userService]["provider_type"];
         console.log({ doctor_id_for_sub });
-        if (doctor_id_for_sub && !doctors[doctor_id_for_sub])
-          doctors[doctor_id_for_sub] = await doctorService.getDoctorByDoctorId(
-            doctor_id_for_sub
-          );
-
-        if (
-          doctory_provider_type === USER_CATEGORY.PROVIDER &&
-          doctor_id_for_sub &&
-          !doctorsInproviders[doctor_id_for_sub]
-        ) {
-          doctorsInproviders[doctor_id_for_sub] =
-            await doctorService.getDoctorByDoctorId(doctor_id_for_sub);
-          doctorsInproviders[doctor_id_for_sub][
-            userServices[userService]["provider_id"]
-          ] = await providerService.getProviderByData({
-            id: userServices[userService]["provider_id"],
-          });
-        }
 
         let services = await serviceOffering.getServiceOfferingByData(
           servicedata
@@ -579,8 +527,6 @@ class ServiceSubscriptionUserMappingController extends Controller {
         res,
         200,
         {
-          doctors,
-          doctorsInproviders,
           services: { ...servicesResponse },
           subscription: { ...servicesSubResponse },
         },
