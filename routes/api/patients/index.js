@@ -119,4 +119,10 @@ router.get(
   ServiceSubscriptionUserMapping.getServiceSubscriptionUserMappingAndServiceUserByPatientId
 );
 
+router.get(
+  "/servicesubplan/doctor/:patient_id",
+  Authenticated,
+  ServiceSubscriptionUserMapping.getServiceSubscriptionDoctorByPatientId
+);
+
 module.exports = router;

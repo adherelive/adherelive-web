@@ -320,6 +320,100 @@ class ServiceSubscriptionUserMappingController extends Controller {
     );
   };
 
+  getServiceSubscriptionDoctorByPatientId = async (req, res) => {
+    let { params: { patient_id } = {}, body } = req;
+
+    const { raiseSuccess, raiseClientError, raiseServerError } = this;
+    try {
+      if (!patient_id)
+        return raiseClientError(
+          res,
+          422,
+          {},
+          "Please select correct ServiceOffer to update"
+        );
+    } catch (error) {
+      Log.debug("updateService 500 error", error);
+      return raiseServerError(res);
+    }
+
+    let data = { patient_id };
+    const serviceSubscriptionUserMappingService =
+      new ServiceSubscriptionUserMappingService();
+
+    let userServicesSubscriptions =
+      await serviceSubscriptionUserMappingService.getAllServiceSubscriptionUserMappingByData(
+        data
+      );
+
+    console.log("userServicesSubscriptions", userServicesSubscriptions);
+    let doctors = {};
+    let doctorsInproviders = {};
+    for (let userServicesSubscription in userServicesSubscriptions) {
+      let doctor_id_for_sub =
+        userServicesSubscriptions[userServicesSubscription]["doctor_id"];
+      let doctory_provider_type =
+        userServicesSubscriptions[userServicesSubscription]["provider_type"];
+      if (doctor_id_for_sub && !doctors[doctor_id_for_sub]) {
+        doctors[doctor_id_for_sub] = await doctorService.getDoctorByDoctorId(
+          doctor_id_for_sub
+        );
+      }
+
+      if (
+        doctory_provider_type === USER_CATEGORY.PROVIDER &&
+        doctor_id_for_sub &&
+        !doctorsInproviders[doctor_id_for_sub]
+      ) {
+        doctorsInproviders[doctor_id_for_sub] =
+          await doctorService.getDoctorByDoctorId(doctor_id_for_sub);
+        doctorsInproviders[doctor_id_for_sub][
+          userServicesSubscriptions[userServicesSubscription]["provider_id"]
+        ] = await providerService.getProviderByData({
+          id: userServicesSubscriptions[userServicesSubscription][
+            "provider_id"
+          ],
+        });
+      }
+    }
+    const serviceuserMappingServices = new ServiceUserMappingService();
+    let userServices =
+      await serviceuserMappingServices.getAllServiceUserMappingByData(data);
+
+    for (let userService in userServices) {
+      let doctor_id_for_sub = userServices[userService]["doctor_id"];
+      let doctory_provider_type = userServices[userService]["provider_type"];
+
+      if (doctor_id_for_sub && !doctors[doctor_id_for_sub])
+        doctors[doctor_id_for_sub] = await doctorService.getDoctorByDoctorId(
+          doctor_id_for_sub
+        );
+
+      if (
+        doctory_provider_type === USER_CATEGORY.PROVIDER &&
+        doctor_id_for_sub &&
+        !doctorsInproviders[doctor_id_for_sub]
+      ) {
+        doctorsInproviders[doctor_id_for_sub] =
+          await doctorService.getDoctorByDoctorId(doctor_id_for_sub);
+        doctorsInproviders[doctor_id_for_sub][
+          userServices[userService]["provider_id"]
+        ] = await providerService.getProviderByData({
+          id: userServices[userService]["provider_id"],
+        });
+      }
+    }
+    return raiseSuccess(
+      res,
+      200,
+      {
+        doctors,
+        doctorsInproviders,
+      },
+      "success"
+    );
+  };
+
   updateServiceSubscriptionUserMapping = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
