@@ -32,6 +32,12 @@ router.get(
 );
 
 router.get(
+  "/doctor",
+  Authenticate,
+  ServiceSubscriptionController.getServiceSubscriptionForPatient
+);
+
+router.get(
   "/:id",
   Authenticate,
   isDoctor,

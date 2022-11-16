@@ -43,6 +43,12 @@ router.get(
 );
 
 router.get(
+  "/doctor",
+  Authenticate,
+  ServiceOffering.getServiceOfferingForPatient
+);
+
+router.get(
   "/:id",
   Authenticate,
   isDoctor,

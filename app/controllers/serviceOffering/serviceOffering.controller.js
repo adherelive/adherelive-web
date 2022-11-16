@@ -219,7 +219,7 @@ class ReportController extends Controller {
         "Service updated successfully"
       );
     } catch (ex) {
-      Log.debug("getServiceByData 500 error", error);
+      Log.debug("getServiceByData 500 error", ex);
       return raiseServerError(res);
     }
   };
@@ -300,6 +300,29 @@ class ReportController extends Controller {
       data
     );
     return raiseSuccess(res, 200, { ...services }, "Success");
+  };
+
+  /////////////////////////////////////////////////////////
+  getServiceOfferingForPatient = async (req, res) => {
+    const { raiseSuccess, raiseClientError, raiseServerError } = this;
+    let data = null;
+    let { provider_id, provider_type, doctor_id } = req.query;
+
+    data = {
+      doctor_id,
+      provider_type,
+      provider_id,
+    };
+    const serviceOfferingService = new ServiceOfferingService();
+    try {
+      const services = await serviceOfferingService.getAllServiceOfferingByData(
+        data
+      );
+      return raiseSuccess(res, 200, { ...services }, "Success");
+    } catch (ex) {
+      Log.debug("getServiceByData 500 error", ex);
+      return raiseServerError(res);
+    }
   };
 }
 

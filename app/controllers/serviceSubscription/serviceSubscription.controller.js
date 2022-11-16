@@ -253,6 +253,48 @@ class ServiceSubscriptionController extends Controller {
     }
   };
 
+  getServiceSubscriptionForPatient = async (req, res) => {
+    const { raiseSuccess, raiseClientError, raiseServerError } = this;
+    let data = null;
+    let { provider_id, provider_type, doctor_id } = req.query;
+
+    data = {
+      doctor_id,
+      provider_type,
+      provider_id,
+    };
+    try {
+      const serviceSubscriptionService = new ServiceSubscriptionService();
+      let serviceSubscriptions =
+        await serviceSubscriptionService.getAllServiceSubscriptionByData(data);
+
+      let serviceSubscriptionsData = [];
+      for (let serviceSubscription in serviceSubscriptions) {
+        let serviceSubData = serviceSubscriptions[serviceSubscription];
+        const serviceSubscriptionMapping = new ServiceSubscriptionMapping();
+        let servicedata = { subscription_plan_id: serviceSubData.id };
+        let services =
+          await serviceSubscriptionMapping.getAllServiceSubscriptionMappingByData(
+            servicedata
+          );
+        serviceSubData.services = services;
+        serviceSubscriptionsData.push(serviceSubData);
+      }
+
+      return raiseSuccess(
+        res,
+        200,
+        {
+          ...serviceSubscriptionsData,
+        },
+        "Service updated successfully"
+      );
+    } catch (ex) {
+      Log.debug("getServiceByData 500 error", ex);
+      return raiseServerError(res);
+    }
+  };
+
   getServiceOfferingForUser = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     const {
