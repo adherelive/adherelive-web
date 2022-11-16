@@ -312,6 +312,7 @@ class ServiceSubscriptionUserMappingController extends Controller {
       200,
       {
         doctors,
+        doctorsInproviders,
         services: { ...servicesResponse },
         subscription: { ...servicesSubResponse },
       },
