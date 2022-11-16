@@ -57,6 +57,12 @@ router.get(
   PatientController.searchPatientForDoctor
 );
 
+router.get(
+  "/servicesubplan",
+  Authenticated,
+  ServiceSubscriptionUserMapping.getServiceSubscriptionUserMappingAndServiceUserByPatientIdAndDoctorId
+);
+
 router.get("/:patient_id", Authenticated, PatientController.getPatientById);
 
 router.get(
@@ -111,12 +117,6 @@ router.get(
   "/generate_prescription/:care_plan_id",
   Authenticated,
   PatientController.generatePrescription
-);
-
-router.get(
-  "/servicesubplan",
-  Authenticated,
-  ServiceSubscriptionUserMapping.getServiceSubscriptionUserMappingAndServiceUserByPatientIdAndDoctorId
 );
 
 router.get(
