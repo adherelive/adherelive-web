@@ -419,6 +419,10 @@ class ServiceSubscriptionUserMappingController extends Controller {
       let { provider_id, patient_id, provider_type, doctor_id } = req.query;
       // assuming that i am getting patientId,doctor_id, provider_type, provider_id
 
+      console.log(
+        "getServiceSubscriptionUserMappingAndServiceUserByPatientIdAndDoctorId called"
+      );
+      console.log({ provider_id, patient_id, provider_type, doctor_id });
       const { raiseSuccess, raiseClientError, raiseServerError } = this;
       try {
         if (!patient_id)
@@ -439,6 +443,8 @@ class ServiceSubscriptionUserMappingController extends Controller {
         data = { patient_id, provider_id, provider_type, doctor_id };
       if (USER_CATEGORY.DOCTOR === provider_type)
         data = { patient_id, provider_type, doctor_id };
+
+      console.log({ data });
 
       const serviceSubscriptionUserMappingService =
         new ServiceSubscriptionUserMappingService();
