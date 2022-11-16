@@ -114,6 +114,12 @@ router.get(
 );
 
 router.get(
+  "/servicesubplan",
+  Authenticated,
+  ServiceSubscriptionUserMapping.getServiceSubscriptionUserMappingAndServiceUserByPatientIdAndDoctorId
+);
+
+router.get(
   "/servicesubplan/:patient_id",
   Authenticated,
   ServiceSubscriptionUserMapping.getServiceSubscriptionUserMappingAndServiceUserByPatientId
