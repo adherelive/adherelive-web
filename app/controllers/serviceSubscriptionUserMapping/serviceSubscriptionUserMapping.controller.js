@@ -381,7 +381,7 @@ class ServiceSubscriptionUserMappingController extends Controller {
           id: provider_id,
         });
         let providerDetails = await ProviderWrapper(provider);
-        doctorDetails["provider"] = { ...providerDetails };
+        // doctorDetails["provider"] = { ...providerDetails };
         doctorsInproviders[doctor_id_for_sub] = {
           ...doctorDetails,
           ...providerDetails,
