@@ -329,12 +329,16 @@ class ReportController extends Controller {
       const services = await serviceOfferingService.getAllServiceOfferingByData(
         data
       );
+      let mainServiceData = {};
+      for (let service in services) {
+        mainServiceData[services[service][id]] = services[service];
+      }
 
       const serviceSubscriptionService = new ServiceSubscriptionService();
       let serviceSubscriptions =
         await serviceSubscriptionService.getAllServiceSubscriptionByData(data);
 
-      let serviceSubscriptionsData = [];
+      let serviceSubscriptionsData = {};
       for (let serviceSubscription in serviceSubscriptions) {
         let serviceSubData = serviceSubscriptions[serviceSubscription];
         const serviceSubscriptionMapping = new ServiceSubscriptionMapping();
@@ -344,12 +348,15 @@ class ReportController extends Controller {
             servicedata
           );
         serviceSubData.services = services;
-        serviceSubscriptionsData.push(serviceSubData);
+        serviceSubscriptionsData[serviceSubData.id] = serviceSubData;
       }
       return raiseSuccess(
         res,
         200,
-        { services, subscriptions: serviceSubscriptionsData },
+        {
+          services: mainServiceData,
+          subscriptions: serviceSubscriptionsData,
+        },
         "Success"
       );
     } catch (ex) {
