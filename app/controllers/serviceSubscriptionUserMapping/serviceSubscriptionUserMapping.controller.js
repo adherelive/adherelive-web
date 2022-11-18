@@ -370,20 +370,19 @@ class ServiceSubscriptionUserMappingController extends Controller {
         doctor_id_for_sub &&
         !doctorsInproviders[doctor_id_for_sub]
       ) {
-        doctorsInproviders[doctor_id_for_sub] =
-          await doctorService.getDoctorByDoctorId(doctor_id_for_sub);
-        doctorsInproviders[doctor_id_for_sub]["providerDetails"] = {};
-        console.log("=============-=-=-=-=-=-=-=-=-=-=-=-=-");
-        let providerDetails = await providerService.getProviderByData({
-          id: userServicesSubscriptions[userServicesSubscription][
-            "provider_id"
-          ],
+        console.log("doctor is in provider.");
+        let provider_id =
+          userServicesSubscriptions[userServicesSubscription]["provider_id"];
+
+        let doctorDetails = await doctorService.getDoctorByDoctorId(
+          doctor_id_for_sub
+        );
+        let provider = await providerService.getProviderByData({
+          id: provider_id,
         });
-        doctorsInproviders[doctor_id_for_sub]["providerDetails"][
-          userServicesSubscriptions[userServicesSubscription]["provider_id"]
-        ] = await ProviderWrapper(providerDetails);
-        console.log({ providerDetails });
-        console.log("=============-=-=-=-=-=-=-=-=-=-=-=-=-");
+        let providerDetails = await ProviderWrapper(provider);
+        doctorDetails["provider"] = { ...providerDetails };
+        doctorsInproviders[doctor_id_for_sub] = doctorDetails;
       }
     }
     const serviceuserMappingServices = new ServiceUserMappingService();
