@@ -371,13 +371,18 @@ class ServiceSubscriptionUserMappingController extends Controller {
       ) {
         doctorsInproviders[doctor_id_for_sub] =
           await doctorService.getDoctorByDoctorId(doctor_id_for_sub);
-        doctorsInproviders[doctor_id_for_sub]["providerDetails"][
-          userServicesSubscriptions[userServicesSubscription]["provider_id"]
-        ] = await providerService.getProviderByData({
+        doctorsInproviders[doctor_id_for_sub]["providerDetails"] = {};
+        console.log("=============-=-=-=-=-=-=-=-=-=-=-=-=-");
+        let providerDetails = await providerService.getProviderByData({
           id: userServicesSubscriptions[userServicesSubscription][
             "provider_id"
           ],
         });
+        doctorsInproviders[doctor_id_for_sub]["providerDetails"][
+          userServicesSubscriptions[userServicesSubscription]["provider_id"]
+        ] = providerDetails;
+        console.log({ providerDetails });
+        console.log("=============-=-=-=-=-=-=-=-=-=-=-=-=-");
       }
     }
     const serviceuserMappingServices = new ServiceUserMappingService();
@@ -404,11 +409,16 @@ class ServiceSubscriptionUserMappingController extends Controller {
       ) {
         doctorsInproviders[doctor_id_for_sub] =
           await doctorService.getDoctorByDoctorId(doctor_id_for_sub);
-        doctorsInproviders[doctor_id_for_sub][
-          userServices[userService]["provider_id"]
-        ] = await providerService.getProviderByData({
+        let providerDetails = await await providerService.getProviderByData({
           id: userServices[userService]["provider_id"],
         });
+        doctorsInproviders[doctor_id_for_sub][
+          userServices[userService]["provider_id"]
+        ] = providerDetails;
+
+        console.log("121231231231231231231231");
+        console.log({ providerDetails });
+        console.log("121231231231231231231231");
       }
     }
     return raiseSuccess(
