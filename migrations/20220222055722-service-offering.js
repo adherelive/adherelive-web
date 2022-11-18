@@ -7,7 +7,7 @@ module.exports = {
     return Promise.all([
       queryInterface.addColumn(TABLE_NAME, "payment_link", {
         type: Sequelize.STRING(1000),
-        allowNull: false,
+        allowNull: true,
       }),
       // queryInterface.changeColumn(TABLE_NAME, "type",{
       //   type: Sequelize.ENUM,
