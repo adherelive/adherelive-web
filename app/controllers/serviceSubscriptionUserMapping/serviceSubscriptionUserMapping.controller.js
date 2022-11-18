@@ -465,8 +465,7 @@ class ServiceSubscriptionUserMappingController extends Controller {
       let response = {};
 
       console.log("userServicesSubscriptions", userServicesSubscriptions);
-      let doctors = {};
-      let doctorsInproviders = {};
+
       for (let userServicesSubscription in userServicesSubscriptions) {
         let subId =
           userServicesSubscriptions[userServicesSubscription][
