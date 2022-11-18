@@ -40,10 +40,10 @@ export const db = (database) => {
         type: DataTypes.STRING(1000),
         allowNull: false,
       },
-      payment_link: {
-        type: DataTypes.STRING(1000),
-        allowNull: false,
-      },
+      // payment_link: {
+      //   type: DataTypes.STRING(1000),
+      //   allowNull: false,
+      // },
       service_charge: {
         type: DataTypes.INTEGER,
         allowNull: false,
@@ -67,7 +67,7 @@ export const db = (database) => {
             provider_type: this.provider_type,
             subscription_charge: this.subscription_charge,
             currency: this.currency,
-            payment_link: this.payment_link,
+            // payment_link: this.payment_link,
           };
         },
       },
