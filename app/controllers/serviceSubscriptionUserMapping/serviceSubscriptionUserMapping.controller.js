@@ -383,8 +383,8 @@ class ServiceSubscriptionUserMappingController extends Controller {
         let providerDetails = await ProviderWrapper(provider);
         // doctorDetails["provider"] = { ...providerDetails };
         doctorsInproviders[doctor_id_for_sub] = {
-          ...doctorDetails,
-          ...providerDetails,
+          doctorDetails,
+          providerDetails,
         };
       }
     }
@@ -392,38 +392,38 @@ class ServiceSubscriptionUserMappingController extends Controller {
     let userServices =
       await serviceuserMappingServices.getAllServiceUserMappingByData(data);
 
-    for (let userService in userServices) {
-      let doctor_id_for_sub = userServices[userService]["doctor_id"];
-      let doctory_provider_type = userServices[userService]["provider_type"];
+    // for (let userService in userServices) {
+    //   let doctor_id_for_sub = userServices[userService]["doctor_id"];
+    //   let doctory_provider_type = userServices[userService]["provider_type"];
 
-      if (
-        doctory_provider_type === USER_CATEGORY.DOCTOR &&
-        doctor_id_for_sub &&
-        !doctors[doctor_id_for_sub]
-      )
-        doctors[doctor_id_for_sub] = await doctorService.getDoctorByDoctorId(
-          doctor_id_for_sub
-        );
+    //   if (
+    //     doctory_provider_type === USER_CATEGORY.DOCTOR &&
+    //     doctor_id_for_sub &&
+    //     !doctors[doctor_id_for_sub]
+    //   )
+    //     doctors[doctor_id_for_sub] = await doctorService.getDoctorByDoctorId(
+    //       doctor_id_for_sub
+    //     );
 
-      if (
-        doctory_provider_type === USER_CATEGORY.PROVIDER &&
-        doctor_id_for_sub &&
-        !doctorsInproviders[doctor_id_for_sub]
-      ) {
-        doctorsInproviders[doctor_id_for_sub] =
-          await doctorService.getDoctorByDoctorId(doctor_id_for_sub);
-        let providerDetails = await await providerService.getProviderByData({
-          id: userServices[userService]["provider_id"],
-        });
-        doctorsInproviders[doctor_id_for_sub][
-          userServices[userService]["provider_id"]
-        ] = await ProviderWrapper(providerDetails);
+    //   if (
+    //     doctory_provider_type === USER_CATEGORY.PROVIDER &&
+    //     doctor_id_for_sub &&
+    //     !doctorsInproviders[doctor_id_for_sub]
+    //   ) {
+    //     doctorsInproviders[doctor_id_for_sub] =
+    //       await doctorService.getDoctorByDoctorId(doctor_id_for_sub);
+    //     let providerDetails = await await providerService.getProviderByData({
+    //       id: userServices[userService]["provider_id"],
+    //     });
+    //     doctorsInproviders[doctor_id_for_sub][
+    //       userServices[userService]["provider_id"]
+    //     ] = await ProviderWrapper(providerDetails);
 
-        console.log("121231231231231231231231");
-        console.log({ providerDetails });
-        console.log("121231231231231231231231");
-      }
-    }
+    //     console.log("121231231231231231231231");
+    //     console.log({ providerDetails });
+    //     console.log("121231231231231231231231");
+    //   }
+    // }
     return raiseSuccess(
       res,
       200,
