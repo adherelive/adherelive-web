@@ -1,6 +1,7 @@
 import Controller from "../index";
 import Logger from "../../../libs/log";
 // services
+import ServiceSubscriptionService from "../../services/serviceSubscription/serviceSubscription.service";
 import ServiceOfferingService from "../../services/serviceOffering/serviceOffering.service";
 import { USER_CATEGORY } from "../../../constant";
 
@@ -327,7 +328,29 @@ class ReportController extends Controller {
       const services = await serviceOfferingService.getAllServiceOfferingByData(
         data
       );
-      return raiseSuccess(res, 200, { ...services }, "Success");
+
+      const serviceSubscriptionService = new ServiceSubscriptionService();
+      let serviceSubscriptions =
+        await serviceSubscriptionService.getAllServiceSubscriptionByData(data);
+
+      let serviceSubscriptionsData = [];
+      for (let serviceSubscription in serviceSubscriptions) {
+        let serviceSubData = serviceSubscriptions[serviceSubscription];
+        const serviceSubscriptionMapping = new ServiceSubscriptionMapping();
+        let servicedata = { subscription_plan_id: serviceSubData.id };
+        let services =
+          await serviceSubscriptionMapping.getAllServiceSubscriptionMappingByData(
+            servicedata
+          );
+        serviceSubData.services = services;
+        serviceSubscriptionsData.push(serviceSubData);
+      }
+      return raiseSuccess(
+        res,
+        200,
+        { ...services, ...serviceSubscriptionsData },
+        "Success"
+      );
     } catch (ex) {
       Log.debug("getServiceByData 500 error", ex);
       return raiseServerError(res);
