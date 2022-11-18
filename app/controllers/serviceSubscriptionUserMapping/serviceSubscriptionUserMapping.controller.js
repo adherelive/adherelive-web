@@ -384,7 +384,7 @@ class ServiceSubscriptionUserMappingController extends Controller {
         // doctorDetails["provider"] = { ...providerDetails };
         let providerBasicInfo = providerDetails.getBasicInfo();
         doctorsInproviders[doctor_id_for_sub] = {
-          doctorDetails,
+          ...doctorDetails,
           providerDetails: providerBasicInfo,
         };
 
