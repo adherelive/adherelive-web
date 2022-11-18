@@ -380,7 +380,7 @@ class ServiceSubscriptionUserMappingController extends Controller {
         });
         doctorsInproviders[doctor_id_for_sub]["providerDetails"][
           userServicesSubscriptions[userServicesSubscription]["provider_id"]
-        ] = providerDetails;
+        ] = await ProviderWrapper(providerDetails);
         console.log({ providerDetails });
         console.log("=============-=-=-=-=-=-=-=-=-=-=-=-=-");
       }
@@ -414,7 +414,7 @@ class ServiceSubscriptionUserMappingController extends Controller {
         });
         doctorsInproviders[doctor_id_for_sub][
           userServices[userService]["provider_id"]
-        ] = providerDetails;
+        ] = await ProviderWrapper(providerDetails);
 
         console.log("121231231231231231231231");
         console.log({ providerDetails });
