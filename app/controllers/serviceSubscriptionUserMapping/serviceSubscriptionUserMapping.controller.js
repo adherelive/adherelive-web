@@ -420,7 +420,7 @@ class ServiceSubscriptionUserMappingController extends Controller {
         let providerDetails = await providerService.getProviderByData({
           id: provider_id,
         });
-        providerDetails = await ProviderWrapper(provider);
+        providerDetails = await ProviderWrapper(providerDetails);
         let providerBasicInfo = providerDetails.getBasicInfo().basic_info;
         doctorsInproviders[doctor_id_for_sub] = {
           ...doctorDetails,
