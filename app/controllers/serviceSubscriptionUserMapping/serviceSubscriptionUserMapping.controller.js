@@ -413,8 +413,7 @@ class ServiceSubscriptionUserMappingController extends Controller {
         doctor_id_for_sub &&
         !doctorsInproviders[doctor_id_for_sub]
       ) {
-        let provider_id =
-          userServicesSubscriptions[userServicesSubscription]["provider_id"];
+        let provider_id = userServices[userService]["provider_id"];
 
         doctorsInproviders[doctor_id_for_sub] =
           await doctorService.getDoctorByDoctorId(doctor_id_for_sub);
