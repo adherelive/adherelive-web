@@ -349,7 +349,7 @@ class ReportController extends Controller {
       return raiseSuccess(
         res,
         200,
-        { ...services, ...serviceSubscriptionsData },
+        { services, subscriptions: serviceSubscriptionsData },
         "Success"
       );
     } catch (ex) {
