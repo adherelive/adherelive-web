@@ -26,6 +26,7 @@ class ReportController extends Controller {
           service_charge,
           currency,
           is_active,
+          payment_link,
         },
         // userDetails: { userData: { category }, userCategoryId } = {},
       } = req;
@@ -80,6 +81,7 @@ class ReportController extends Controller {
         description,
         service_charge,
         currency,
+        payment_link,
       } = await serviceOfferingService.addServiceOffering({
         provider_type,
         provider_id,
@@ -89,6 +91,7 @@ class ReportController extends Controller {
         service_charge,
         currency,
         is_active,
+        payment_link,
       }));
 
       let service = {
@@ -101,6 +104,7 @@ class ReportController extends Controller {
         service_charge,
         currency,
         doctor_id,
+        payment_link,
       };
 
       return raiseSuccess(
