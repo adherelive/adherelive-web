@@ -32,6 +32,10 @@ export const db = (database) => {
         type: DataTypes.STRING(1000),
         allowNull: false,
       },
+      payment_link: {
+        type: DataTypes.STRING(1000),
+        allowNull: false,
+      },
       notes: {
         type: DataTypes.STRING(1000),
         allowNull: false,
@@ -68,6 +72,7 @@ export const db = (database) => {
             service_charge_per_month: this.service_charge_per_month,
             currency: this.currency,
             isActiveForDoctor: this.isActiveForDoctor,
+            payment_link: this.payment_link,
           };
         },
       },
