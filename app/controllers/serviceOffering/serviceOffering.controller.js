@@ -331,7 +331,9 @@ class ReportController extends Controller {
       );
       let mainServiceData = {};
       for (let service in services) {
-        mainServiceData[services[service]][id] = services[service];
+        let serviceData = services[service];
+        console.log(serviceData);
+        mainServiceData[serviceData.id] = serviceData;
       }
 
       const serviceSubscriptionService = new ServiceSubscriptionService();
