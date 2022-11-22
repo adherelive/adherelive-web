@@ -698,8 +698,8 @@ class CarePlanController extends Controller {
       let carePlanApiData = {};
 
       for (let careplan in carePlans) {
-        let carePlanDeatils = carePlans[careplan].get("id");
-        const carePlanApiWrapper = await CarePlanWrapper(carePlanDeatils);
+        // let carePlanDeatils = carePlans[careplan].get("id");
+        const carePlanApiWrapper = await CarePlanWrapper(carePlans[careplan]);
         carePlanApiData[carePlanApiWrapper.getCarePlanId()] = {
           ...carePlanApiWrapper.getBasicInfo(),
         };
