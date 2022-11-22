@@ -535,6 +535,11 @@ class CarePlanController extends Controller {
           category === USER_CATEGORY.HSP) && { user_role_id: userRoleId }),
       });
 
+      console.log({ carePlan });
+
+      if (carePlan == null)
+        return this.raiseServerError(res, 500, "No Care Plan Found");
+
       let cPdetails = carePlan.get("details") ? carePlan.get("details") : {};
 
       let { shown = false } = cPdetails;
