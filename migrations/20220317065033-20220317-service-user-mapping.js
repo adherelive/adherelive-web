@@ -59,6 +59,10 @@ module.exports = {
         type: Sequelize.ENUM,
         values: [USER_STATUS.ACTIVE, USER_STATUS.INACTIVE],
       },
+      // is_patient_activated: {
+      //   type: Sequelize.ENUM,
+      //   values: [USER_STATUS.ACTIVE, USER_STATUS.INACTIVE],
+      // },
       notes: {
         type: Sequelize.STRING(1000),
       },

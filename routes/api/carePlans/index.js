@@ -30,6 +30,12 @@ router.post(
 
 // GAURAV NEW CHANGES
 router.get(
+  "/patient-care-plan-name",
+  Authenticated,
+  CarePlanController.getPatientCarePlanOnly
+);
+
+router.get(
   "/:carePlanId",
   Authenticated,
   // Authorize(USER_CATEGORY.DOCTOR),
@@ -39,6 +45,7 @@ router.get(
 );
 
 // router.get('/patient-care-plan-details/:patientId',
+
 router.get(
   "/patient-care-plan-details/:patientId",
   Authenticated,

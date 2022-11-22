@@ -91,6 +91,11 @@ export const db = (database) => {
         type: DataTypes.ENUM,
         values: [USER_STATUS.ACTIVE, USER_STATUS.INACTIVE],
       },
+      // when patient click on paynow button.
+      // is_patient_activated: {
+      //   type: DataTypes.ENUM,
+      //   values: [USER_STATUS.ACTIVE, USER_STATUS.INACTIVE],
+      // },
     },
     {
       underscored: true,

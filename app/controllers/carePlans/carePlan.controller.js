@@ -9,6 +9,7 @@ import carePlanAppointmentService from "../../services/carePlanAppointment/careP
 import templateMedicationService from "../../services/templateMedication/templateMedication.service";
 import templateAppointmentService from "../../services/templateAppointment/templateAppointment.service";
 import medicineService from "../../services/medicine/medicine.service";
+import userRoleService from "../../services/userRoles/userRoles.service";
 import carePlanSecondaryDoctorMappingService from "../../services/careplanSecondaryDoctorMappings/careplanSecondaryDoctorMappings.service";
 import twilioService from "../../services/twilio/twilio.service";
 
@@ -663,6 +664,50 @@ class CarePlanController extends Controller {
           carePlanMedications,
           carePlanAppointments,
           carePlanTemplateId,
+        },
+        "patient care plan details fetched successfully"
+      );
+    } catch (error) {
+      return this.raiseServerError(res, 500, error);
+    }
+  };
+
+  getPatientCarePlanOnly = async (req, res) => {
+    const { patient_id, doctor_user_id, provider_id, provider_type } =
+      req.query;
+    try {
+      const userRoles = await userRoleService.getAllByData({
+        linked_id: provider_id,
+        linked_with: provider_type,
+        user_identity: doctor_user_id,
+      });
+      let user_role_id = "";
+      //---------------------------
+      for (let i = 0; i < userRoles.length; i++) {
+        const userRole = userRoles[i];
+        const userRoleWrapper = await UserRoleWrapper(userRole);
+        user_role_id = userRoleWrapper.getId();
+      }
+      //---------------------------
+      let carePlans = await carePlanService.getCarePlanByData({
+        patient_id,
+        user_role_id,
+      });
+
+      let carePlanApiData = {};
+
+      for (let careplan in carePlans) {
+        let carePlanDeatils = carePlans[careplan].get("id");
+        const carePlanApiWrapper = await CarePlanWrapper(carePlanDeatils);
+        carePlanApiData[carePlanApiWrapper.getCarePlanId()] = {
+          ...carePlanApiWrapper.getBasicInfo(),
+        };
+      }
+      return this.raiseSuccess(
+        res,
+        200,
+        {
+          care_plans: { ...carePlanApiData },
         },
         "patient care plan details fetched successfully"
       );

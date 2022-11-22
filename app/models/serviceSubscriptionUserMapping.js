@@ -88,6 +88,10 @@ export const db = (database) => {
         type: DataTypes.ENUM,
         values: [USER_STATUS.ACTIVE, USER_STATUS.INACTIVE],
       },
+      // is_patient_activated: {
+      //   type: DataTypes.ENUM,
+      //   values: [USER_STATUS.ACTIVE, USER_STATUS.INACTIVE],
+      // },
     },
     {
       underscored: true,
