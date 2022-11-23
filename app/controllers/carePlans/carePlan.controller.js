@@ -536,7 +536,13 @@ class CarePlanController extends Controller {
         ...((category === USER_CATEGORY.DOCTOR ||
           category === USER_CATEGORY.HSP) && { user_role_id: userRoleId }),
       });
-
+      console.log({
+        patient_id,
+        ...((category === USER_CATEGORY.DOCTOR ||
+          category === USER_CATEGORY.HSP) && {
+          user_role_id: userRoleId,
+        }),
+      });
       console.log({ carePlan });
 
       if (carePlan == null)
