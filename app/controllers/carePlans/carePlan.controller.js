@@ -11,7 +11,7 @@ import templateAppointmentService from "../../services/templateAppointment/templ
 import medicineService from "../../services/medicine/medicine.service";
 import userRoleService from "../../services/userRoles/userRoles.service";
 import carePlanSecondaryDoctorMappingService from "../../services/careplanSecondaryDoctorMappings/careplanSecondaryDoctorMappings.service";
-import twilioService from "../../services/twilio/twilio.service";
+// import twilioService from "../../services/twilio/twilio.service";
 
 import {
   getCarePlanAppointmentIds,
@@ -33,7 +33,7 @@ import AppointmentWrapper from "../../ApiWrapper/web/appointments";
 import carePlanTemplateService from "../../services/carePlanTemplate/carePlanTemplate.service";
 import CarePlanTemplateWrapper from "../../ApiWrapper/web/carePlanTemplate";
 import Logger from "../../../libs/log";
-import ScheduleEventService from "../../services/scheduleEvents/scheduleEvent.service";
+// import ScheduleEventService from "../../services/scheduleEvents/scheduleEvent.service";
 import moment from "moment";
 import queueService from "../../services/awsQueue/queue.service";
 
@@ -41,7 +41,7 @@ import * as carePlanHelper from "./carePlanHelper";
 import MedicationWrapper from "../../ApiWrapper/web/medicationReminder";
 
 import PERMISSIONS from "../../../config/permissions";
-import { ConfigurationServicePlaceholders } from "aws-sdk/lib/config_service_placeholders";
+// import { ConfigurationServicePlaceholders } from "aws-sdk/lib/config_service_placeholders";
 
 const Log = new Logger("WEB > CAREPLAN > CONTROLLER");
 
