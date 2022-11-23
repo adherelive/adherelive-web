@@ -540,7 +540,8 @@ class CarePlanController extends Controller {
       console.log({ carePlan });
 
       if (carePlan == null)
-        return this.raiseServerError(res, 500, "No Care Plan Found");
+        return this.raiseServerError(res, 500, {}, "No Care Plan Found");
+      // return this.raiseServerError(res, 500, "No Care Plan Found");
 
       let cPdetails = carePlan.get("details") ? carePlan.get("details") : {};
 
