@@ -41,6 +41,7 @@ import * as carePlanHelper from "./carePlanHelper";
 import MedicationWrapper from "../../ApiWrapper/web/medicationReminder";
 
 import PERMISSIONS from "../../../config/permissions";
+import { ConfigurationServicePlaceholders } from "aws-sdk/lib/config_service_placeholders";
 
 const Log = new Logger("WEB > CAREPLAN > CONTROLLER");
 
@@ -683,7 +684,9 @@ class CarePlanController extends Controller {
       req.query;
 
     let data = {};
+
     if (USER_CATEGORY.PROVIDER === provider_type) {
+      console.log("in provider");
       data = {
         user_identity: parseInt(doctor_user_id),
         linked_with: provider_type,
@@ -691,11 +694,15 @@ class CarePlanController extends Controller {
       };
     }
     if (USER_CATEGORY.DOCTOR === provider_type) {
+      console.log("in doctor");
       data = {
         user_identity: parseInt(doctor_user_id),
         linked_with: provider_type,
       };
     }
+    console.log("=====================");
+    console.log({ data });
+    console.log("=====================");
 
     try {
       const userRoles = await userRoleService.getAllByData(data);
@@ -708,6 +715,11 @@ class CarePlanController extends Controller {
       }
       //---------------------------
       let carePlans = await carePlanService.getCarePlanByData({
+        patient_id,
+        user_role_id,
+      });
+
+      console.log({
         patient_id,
         user_role_id,
       });
