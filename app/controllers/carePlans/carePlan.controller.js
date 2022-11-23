@@ -681,12 +681,24 @@ class CarePlanController extends Controller {
   getPatientCarePlanOnly = async (req, res) => {
     const { patient_id, doctor_user_id, provider_id, provider_type } =
       req.query;
-    try {
-      const userRoles = await userRoleService.getAllByData({
-        linked_id: provider_id,
+
+    let data = {};
+    if (USER_CATEGORY.PROVIDER === provider_type) {
+      data = {
+        user_identity: parseInt(doctor_user_id),
         linked_with: provider_type,
-        user_identity: doctor_user_id,
-      });
+        linked_id: parseInt(provider_id),
+      };
+    }
+    if (USER_CATEGORY.DOCTOR === provider_type) {
+      data = {
+        user_identity: parseInt(doctor_user_id),
+        linked_with: provider_type,
+      };
+    }
+
+    try {
+      const userRoles = await userRoleService.getAllByData(data);
       let user_role_id = "";
       //---------------------------
       for (let i = 0; i < userRoles.length; i++) {
