@@ -83,6 +83,19 @@ class CarePlanService {
     }
   };
 
+  getOnlyCarePlanByData = async (data) => {
+    try {
+      const { user_role_id = null, ...rest } = data || {};
+
+      const carePlan = await Database.getModel(TABLE_NAME).findAll({
+        where: data,
+      });
+      return carePlan;
+    } catch (error) {
+      throw error;
+    }
+  };
+
   getCarePlanById = async (id) => {
     try {
       const carePlan = await Database.getModel(TABLE_NAME).findOne({

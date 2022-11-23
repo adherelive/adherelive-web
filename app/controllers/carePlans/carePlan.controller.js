@@ -714,7 +714,7 @@ class CarePlanController extends Controller {
         user_role_id = userRoleWrapper.getId();
       }
       //---------------------------
-      let carePlans = await carePlanService.getCarePlanByData({
+      let carePlans = await carePlanService.getOnlyCarePlanByData({
         patient_id,
         user_role_id,
       });
