@@ -518,6 +518,7 @@ class CarePlanController extends Controller {
   };
 
   getPatientCarePlanDetails = async (req, res) => {
+    console.log("getPatientCarePlanDetails called.");
     const { patientId: patient_id = 1 } = req.params;
     try {
       const { userDetails, body, file, permissions = [] } = req;
