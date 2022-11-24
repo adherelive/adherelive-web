@@ -203,10 +203,11 @@ class FlashCardController extends Controller {
         let tranaction_activities = await txActivity.getAllTxActivitiesByData({
           id: tx_activity_id,
         });
+        console.log("==========================================");
         console.log({ tranaction_activities });
 
         let { service_sub_tx_id } = tranaction_activities[0];
-
+        console.log("==========================================");
         console.log({ service_sub_tx_id });
 
         if (service_sub_tx_id) {
@@ -214,15 +215,20 @@ class FlashCardController extends Controller {
             await serviceSubscriptionTx.getAllServiceSubscriptionTx({
               id: service_sub_tx_id,
             });
+          console.log("==========================================");
           console.log({ userservicesmapping });
           if (userservicesmapping && userservicesmapping.length > 0) {
             const serviceUserMappingService = new ServiceUserMappingService();
             let serviceUserMappingId = userservicesmapping[0].id;
-            let serviceSubecription =
+            console.log("==========================================");
+            console.log({ serviceUserMappingId });
+            let serviceUserMapping =
               await serviceUserMappingService.updateServiceUserMapping(
                 { patient_status: activity_status },
                 serviceUserMappingId
               );
+            console.log("===============================");
+            console.log({ serviceUserMapping });
           }
         }
       }
