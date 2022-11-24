@@ -168,6 +168,12 @@ class ServiceSubscriptionTxController extends Controller {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       const { id, service_subscription_id, service_plan_id } = req.body;
+      // id is tx id that we will get from service_subscription_tranactions table.
+
+      // we can get the service_user_mapping tx.
+
+      // we can get the service_sub_user_mapping tx.
+
       let tranactions = await ServiceSubscribeTx.getAllServiceSubscriptionTx({
         id: id,
       });

@@ -110,6 +110,13 @@ export const USER_STATUS = {
   INACTIVE: "inactive",
 };
 
+export const PATIENT_STATUS = {
+  ACTIVE: "active",
+  INACTIVE: "inactive",
+  COMPLETED: "completed",
+  INPROGRESS: "inprogress",
+};
+
 export const BILLING_FREQUENCY = {
   MONTHLY: "monthly",
   ONCES: "onces",

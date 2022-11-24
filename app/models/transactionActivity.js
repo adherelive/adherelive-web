@@ -14,6 +14,7 @@ import { TABLE_NAME as serviceOffering } from "./serviceOffering";
 import { TABLE_NAME as serviceSubscription } from "./serviceSubecriptions";
 import { TABLE_NAME as providersTableName } from "./providers";
 import { TABLE_NAME as appointmentTableName } from "./appointments";
+import { TABLE_NAME as serviceSubTxTableName } from "./serviceSubscribeTranaction";
 
 export const TABLE_NAME = "tranaction_activities";
 
@@ -58,6 +59,15 @@ export const db = (database) => {
         references: {
           model: {
             tableName: providersTableName,
+          },
+          key: "id",
+        },
+      },
+      service_sub_tx_id: {
+        type: DataTypes.INTEGER,
+        references: {
+          model: {
+            tableName: serviceSubTxTableName,
           },
           key: "id",
         },
@@ -153,6 +163,7 @@ export const db = (database) => {
             is_next_tx_create: this.is_next_tx_create,
             appointment_id: this.appointment_id,
             appointment_time: this.appointment_time,
+            service_sub_tx_id: this.service_sub_tx_id,
           };
         },
       },
@@ -165,6 +176,15 @@ export const associate = (database) => {
     foreignKey: "patient_id",
     targetKey: "id",
   });
+  // service_sub_tx_id
+
+  database.models[TABLE_NAME].belongsTo(
+    database.models[serviceSubTxTableName],
+    {
+      foreignKey: "service_sub_tx_id",
+      targetKey: "id",
+    }
+  );
 
   database.models[TABLE_NAME].belongsTo(database.models[doctorsTableName], {
     foreignKey: "doctor_id",
