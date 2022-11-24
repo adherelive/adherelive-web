@@ -5,7 +5,9 @@ const { createReport } = require("./genrateTable");
 import FlashCardService from "../../services/flashCard/flashCard.service";
 import ReportService from "../../services/reports/report.service";
 import TxActivity from "../../services/transactionActivity/transactionActivity.service";
+import serviceSubscriptionTx from "../../services/serviceSubscribeTranaction/serviceSubscribeTranaction";
 import { getFilePath } from "../../helper/filePath";
+import ServiceUserMappingService from "../../services/serviceUserMapping/serviceUserMapping.service";
 import { DOCUMENT_PARENT_TYPE } from "../../../constant";
 import uploadDocumentService from "../../services/uploadDocuments/uploadDocuments.service";
 import * as ReportHelper from "../reports/reportHelper"; // wrappers
@@ -192,8 +194,38 @@ class FlashCardController extends Controller {
       } else {
         activity_status = "inprogress";
       }
+
       let txActivity = new TxActivity();
-      txActivity.updateTxActivities({ activity_status }, tx_activity_id);
+      await txActivity.updateTxActivities({ activity_status }, tx_activity_id);
+
+      if (activity_status === "completed" || activity_status === "inprogress") {
+        // get tx from activity tx table
+        let tranaction_activities = await txActivity.getAllTxActivitiesByData({
+          id: tx_activity_id,
+        });
+        console.log({ tranaction_activities });
+
+        let { service_sub_tx_id } = tranaction_activities[0];
+
+        console.log({ service_sub_tx_id });
+
+        if (service_sub_tx_id) {
+          let userservicesmapping =
+            await serviceSubscriptionTx.getAllServiceSubscriptionTx({
+              id: service_sub_tx_id,
+            });
+          console.log({ userservicesmapping });
+          if (userservicesmapping && userservicesmapping.length > 0) {
+            const serviceUserMappingService = new ServiceUserMappingService();
+            let serviceUserMappingId = userservicesmapping[0].id;
+            let serviceSubecription =
+              await serviceUserMappingService.updateServiceUserMapping(
+                { patient_status: activity_status },
+                serviceUserMappingId
+              );
+          }
+        }
+      }
 
       return raiseSuccess(
         res,
