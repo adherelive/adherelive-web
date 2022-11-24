@@ -7,6 +7,7 @@ import { TABLE_NAME as providersTableName } from "../app/models/providers";
 import {
   DB_TABLES,
   USER_CATEGORY,
+  PATIENT_STATUS,
   USER_STATUS,
   CURRENCY,
   BILLING_CYCLE,
@@ -83,7 +84,12 @@ module.exports = {
       },
       patient_status: {
         type: Sequelize.ENUM,
-        values: [USER_STATUS.ACTIVE, USER_STATUS.INACTIVE],
+        values: [
+          PATIENT_STATUS.ACTIVE,
+          PATIENT_STATUS.INACTIVE,
+          PATIENT_STATUS.COMPLETED,
+          PATIENT_STATUS.INPROGRESS,
+        ],
       },
       // is_patient_activated: {
       //   type: Sequelize.ENUM,

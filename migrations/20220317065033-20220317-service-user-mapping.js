@@ -5,7 +5,7 @@ import { TABLE_NAME as serviceOfferingTableName } from "../app/models/serviceOff
 import { TABLE_NAME as patientsTableName } from "../app/models/patients";
 import { TABLE_NAME as doctorsTableName } from "../app/models/doctors";
 import { TABLE_NAME as providersTableName } from "../app/models/providers";
-import { USER_CATEGORY, USER_STATUS } from "../constant";
+import { USER_CATEGORY, USER_STATUS, PATIENT_STATUS } from "../constant";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -57,8 +57,14 @@ module.exports = {
       },
       patient_status: {
         type: Sequelize.ENUM,
-        values: [USER_STATUS.ACTIVE, USER_STATUS.INACTIVE],
+        values: [
+          PATIENT_STATUS.ACTIVE,
+          PATIENT_STATUS.INACTIVE,
+          PATIENT_STATUS.COMPLETED,
+          PATIENT_STATUS.INPROGRESS,
+        ],
       },
+
       // is_patient_activated: {
       //   type: Sequelize.ENUM,
       //   values: [USER_STATUS.ACTIVE, USER_STATUS.INACTIVE],
