@@ -219,6 +219,7 @@ class ServiceSubscriptionTxController extends Controller {
           service_offering_id: service_plan_id,
           doctor_id,
           provider_id,
+          service_sub_tx_id: id,
           provider_type,
           patient_id,
           status: "pending",
