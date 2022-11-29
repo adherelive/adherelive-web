@@ -520,7 +520,7 @@ class CarePlanController extends Controller {
   getPatientCarePlanPrimaryAndSecDetails = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
-      const { id: patient_id = 1 } = req.params;
+      const { patient_id: patient_id = 1 } = req.params;
       console.log("getPatientCarePlanPrimaryAndSecDetails called");
       const {
         userDetails: {
