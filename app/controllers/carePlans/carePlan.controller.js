@@ -533,8 +533,8 @@ class CarePlanController extends Controller {
 
       let carePlan = await carePlanService.getOnlyCarePlanByData({
         patient_id,
-        // ...((category === USER_CATEGORY.DOCTOR ||
-        //   category === USER_CATEGORY.HSP) && { user_role_id: userRoleId }),
+        ...((category === USER_CATEGORY.DOCTOR ||
+          category === USER_CATEGORY.HSP) && { user_role_id: userRoleId }),
       });
       console.log({
         patient_id,
