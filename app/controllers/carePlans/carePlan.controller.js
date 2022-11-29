@@ -521,7 +521,7 @@ class CarePlanController extends Controller {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       const { id: patient_id = 1 } = req.params;
-      Logger.info(`params: patient_id = ${patient_id}`);
+
       const {
         userDetails: {
           userRoleId = null,
@@ -579,7 +579,6 @@ class CarePlanController extends Controller {
         "Patient care plan details fetched successfully"
       );
     } catch (error) {
-      // Logger.debug("get careplan 500 error ---> ", error);
       console.log(error);
       return raiseServerError(res);
     }
