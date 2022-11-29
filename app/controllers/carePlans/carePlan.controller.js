@@ -544,19 +544,20 @@ class CarePlanController extends Controller {
         (await carePlanService.getOnlyCarePlanByData({
           patient_id,
         })) || [];
+      console.log({ carePlans });
 
-      let care_planss = null;
       let carePlansResponse = [];
+      console.log({ carePlanLength: carePlans.length });
       if (carePlans.length > 0) {
-        const { care_plans, care_plan_ids, current_careplan_id } =
-          await carePlanHelper.getCareplanDataWithImp({
-            carePlans,
-            userCategory: category,
-            doctorId: userCategoryId,
-            userRoleId,
-          });
-        care_planss = care_plans;
-
+        const { care_plans } = await carePlanHelper.getCareplanDataWithImp({
+          carePlans,
+          userCategory: category,
+          doctorId: userCategoryId,
+          userRoleId,
+        });
+        console.log("========1=1=1=1=1=1=1==1=1=========");
+        console.log({ care_plans });
+        console.log("========1=1=1=1=1=1=1==1=1=========");
         Object.keys(care_plans).forEach((id) => {
           let careplan = care_plans[id];
           if (
