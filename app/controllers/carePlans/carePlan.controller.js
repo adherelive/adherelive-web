@@ -541,7 +541,7 @@ class CarePlanController extends Controller {
       }
 
       const carePlans =
-        (await carePlanService.getMultipleCarePlanByData({
+        (await carePlanService.getOnlyCarePlanByData({
           patient_id,
         })) || [];
 
