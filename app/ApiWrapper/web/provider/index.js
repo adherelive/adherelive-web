@@ -92,7 +92,8 @@ class ProviderWrapper extends BaseProvider {
   getReferenceInfo = async () => {
     try {
       const { _data, getBasicInfo, getProviderId } = this;
-      if (!_data) return;
+      //if cooment tha
+      // if (!_data) return;
       const { user } = _data;
 
       const userData = await UserWrapper(user.get());
