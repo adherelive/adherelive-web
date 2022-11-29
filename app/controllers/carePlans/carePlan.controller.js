@@ -561,7 +561,16 @@ class CarePlanController extends Controller {
         console.log("========1=1=1=1=1=1=1==1=1=========");
 
         Object.keys(care_plans).forEach((id) => {
+          console.log("-11--1-11--1-1-1-1-1-1-111-111-111-11");
+          console.log(care_plans[id]);
+          console.log("-11--1-11--1-1-1-1-1-1-111-111-111-11");
           let careplan = care_plans[id];
+          console.log("=2-2-2-2-2-2-2-2--2-2-2-2-2-2-");
+          console.log(careplan["basic_info"]["patient_id"]);
+          console.log(careplan["basic_info"]["user_role_id"]);
+          console.log(careplan["secondary_doctor_user_role_ids"]);
+          console.log({ patient_id, userRoleId });
+          console.log("=2-2-2-2-2-2-2-2--2-2-2-2-2-2-");
           if (
             (careplan["basic_info"]["patient_id"] == patient_id &&
               careplan["basic_info"]["user_role_id"] == userRoleId) ||
