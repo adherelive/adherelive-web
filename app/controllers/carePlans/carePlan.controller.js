@@ -546,6 +546,7 @@ class CarePlanController extends Controller {
         })) || [];
 
       let care_planss = null;
+      let carePlansResponse = [];
       if (carePlans.length > 0) {
         const { care_plans, care_plan_ids, current_careplan_id } =
           await carePlanHelper.getCareplanDataWithImp({
@@ -555,8 +556,6 @@ class CarePlanController extends Controller {
             userRoleId,
           });
         care_planss = care_plans;
-
-        let carePlansResponse = [];
 
         Object.keys(care_plans).forEach((id) => {
           let careplan = care_plans[id];
