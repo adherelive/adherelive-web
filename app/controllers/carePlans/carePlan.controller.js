@@ -517,6 +517,74 @@ class CarePlanController extends Controller {
     }
   };
 
+  getPatientCarePlanPrimaryAndSecDetails = async (req, res) => {
+    const { raiseSuccess, raiseClientError, raiseServerError } = this;
+    try {
+      const { id: patient_id = 1 } = req.params;
+      Logger.info(`params: patient_id = ${patient_id}`);
+      const {
+        userDetails: {
+          userRoleId = null,
+          userId,
+          userCategoryId,
+          userData: { category } = {},
+        } = {},
+      } = req;
+      console.log({ userId, userRoleId, userCategoryId, patient_id });
+      if (!patient_id) {
+        return raiseClientError(
+          res,
+          422,
+          {},
+          "Please select correct patient to continue"
+        );
+      }
+
+      const carePlans =
+        (await carePlanService.getMultipleCarePlanByData({
+          patient_id,
+        })) || [];
+
+      let care_planss = null;
+      if (carePlans.length > 0) {
+        const { care_plans, care_plan_ids, current_careplan_id } =
+          await carePlanHelper.getCareplanDataWithImp({
+            carePlans,
+            userCategory: category,
+            doctorId: userCategoryId,
+            userRoleId,
+          });
+        care_planss = care_plans;
+
+        let carePlansResponse = [];
+
+        Object.keys(care_plans).forEach((id) => {
+          let careplan = care_plans[id];
+          if (
+            (careplan["basic_info"]["patient_id"] == patient_id &&
+              careplan["basic_info"]["user_role_id"] == userRoleId) ||
+            (careplan["basic_info"]["patient_id"] == patient_id &&
+              careplan["secondary_doctor_user_role_ids"].includes(userRoleId))
+          ) {
+            carePlansResponse.push(careplan);
+          }
+        });
+      }
+      return raiseSuccess(
+        res,
+        200,
+        {
+          care_plans: carePlansResponse,
+        },
+        "Patient care plan details fetched successfully"
+      );
+    } catch (error) {
+      // Logger.debug("get careplan 500 error ---> ", error);
+      console.log(error);
+      return raiseServerError(res);
+    }
+  };
+
   getPatientCarePlanDetails = async (req, res) => {
     console.log("getPatientCarePlanDetails called.");
     const { patientId: patient_id = 1 } = req.params;
@@ -531,10 +599,10 @@ class CarePlanController extends Controller {
 
       let show = false;
 
-      let carePlan = await carePlanService.getMultipleCarePlanByData({
+      let carePlan = await carePlanService.getSingleCarePlanByData({
         patient_id,
-        ...((category === USER_CATEGORY.DOCTOR ||
-          category === USER_CATEGORY.HSP) && { user_role_id: userRoleId }),
+        // ...((category === USER_CATEGORY.DOCTOR ||
+        //   category === USER_CATEGORY.HSP) && { user_role_id: userRoleId }),
       });
       console.log({
         patient_id,

@@ -40,6 +40,11 @@ router.get(
   Authenticated,
   CarePlanController.getPatientCarePlanDetails
 );
+router.get(
+  "/patient-care-plan-details-sec/:patientId",
+  Authenticated,
+  CarePlanController.getPatientCarePlanPrimaryAndSecDetails
+);
 
 router.get(
   "/:carePlanId",
