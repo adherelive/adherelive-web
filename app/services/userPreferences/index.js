@@ -10,7 +10,10 @@ export default class UserPreference {
   getUserId = () => this._data.get("user_id");
 
   getAllDetails = () => {
-    return this._data.get("details") || {};
+    if (this._data) {
+      return this._data.get("details");
+    }
+    return {};
   };
 
   getChartDetails = () => {
