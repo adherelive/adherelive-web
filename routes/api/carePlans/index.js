@@ -41,7 +41,7 @@ router.get(
   CarePlanController.getPatientCarePlanDetails
 );
 router.get(
-  "/patient-care-plan-details-sec/:patientId",
+  "/patient-care-plan-details-sec/:patient_id",
   Authenticated,
   CarePlanController.getPatientCarePlanPrimaryAndSecDetails
 );
