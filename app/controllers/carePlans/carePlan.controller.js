@@ -521,7 +521,7 @@ class CarePlanController extends Controller {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       const { id: patient_id = 1 } = req.params;
-
+      console.log("getPatientCarePlanPrimaryAndSecDetails called");
       const {
         userDetails: {
           userRoleId = null,
@@ -540,6 +540,7 @@ class CarePlanController extends Controller {
         );
       }
 
+      console.log({ patient_id });
       const carePlans =
         (await carePlanService.getOnlyCarePlanByData({
           patient_id,
@@ -558,6 +559,7 @@ class CarePlanController extends Controller {
         console.log("========1=1=1=1=1=1=1==1=1=========");
         console.log({ care_plans });
         console.log("========1=1=1=1=1=1=1==1=1=========");
+
         Object.keys(care_plans).forEach((id) => {
           let careplan = care_plans[id];
           if (
