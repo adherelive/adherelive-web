@@ -578,7 +578,7 @@ class CarePlanController extends Controller {
             careplan["basic_info"]["patient_id"] == patient_id &&
             careplan["basic_info"]["user_role_id"] == userRoleId
           ) {
-            console.log("conditioin one pass");
+            console.log("conditioin one pass", careplan["basic_info"]["id"]);
             carePlansResponse.push(careplan);
           }
 
@@ -598,7 +598,7 @@ class CarePlanController extends Controller {
             careplan["basic_info"]["patient_id"] == patient_id &&
             existingMapping != null
           ) {
-            console.log("conditioin two pass");
+            console.log("conditioin two pass", careplan["basic_info"]["id"]);
             carePlansResponse.push(careplan);
           }
         });
