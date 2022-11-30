@@ -564,43 +564,26 @@ class CarePlanController extends Controller {
           console.log("-11--1-11--1-1-1-1-1-1-111-111-111-11");
           console.log(care_plans[id]);
           let careplan = care_plans[id];
-
-          // (careplan["basic_info"]["patient_id"] == patient_id &&
-          // careplan["secondary_doctor_user_role_ids"].includes(userRoleId))
-          console.log("=2-2-2-2-2-2-2-2--2-2-2-2-2-2-");
-
-          console.log(careplan["basic_info"]["patient_id"]);
-          console.log(careplan["basic_info"]["user_role_id"]);
-          console.log(careplan["secondary_doctor_user_role_ids"]);
-          console.log({ patient_id, userRoleId });
-          console.log("=2-2-2-2-2-2-2-2--2-2-2-2-2-2-");
-          if (
-            careplan["basic_info"]["patient_id"] == patient_id &&
-            careplan["basic_info"]["user_role_id"] == userRoleId
-          ) {
-            console.log("conditioin one pass", careplan["basic_info"]["id"]);
-            carePlansResponse.push(careplan);
-          }
-
           let dataToAdd = {
             care_plan_id: careplan["basic_info"]["id"],
             secondary_doctor_role_id: userRoleId,
           };
-
-          console.log("-11--1-11--1-1-1-1-1-1-111-111-111-11");
           let existingMapping =
             (await carePlanSecondaryDoctorMappingService.getByData(
               dataToAdd
             )) || null;
-
-          console.log({ existingMapping });
           if (
-            careplan["basic_info"]["patient_id"] == patient_id &&
-            existingMapping != null
+            (careplan["basic_info"]["patient_id"] == patient_id &&
+              careplan["basic_info"]["user_role_id"] == userRoleId) ||
+            (careplan["basic_info"]["patient_id"] == patient_id &&
+              existingMapping != null)
           ) {
-            console.log("conditioin two pass", careplan["basic_info"]["id"]);
+            console.log("conditioin one pass", careplan["basic_info"]["id"]);
+
             carePlansResponse.push(careplan);
           }
+
+          console.log({ existingMapping });
         });
       }
       return raiseSuccess(
