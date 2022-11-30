@@ -560,7 +560,8 @@ class CarePlanController extends Controller {
         console.log({ care_plans });
         console.log("========1=1=1=1=1=1=1==1=1=========");
 
-        Object.keys(care_plans).forEach(async (id) => {
+        // Object.keys(care_plans).forEach(async (id) => {
+        for (let id in care_plans) {
           console.log("-11--1-11--1-1-1-1-1-1-111-111-111-11");
           console.log(care_plans[id]);
           let careplan = care_plans[id];
@@ -584,7 +585,7 @@ class CarePlanController extends Controller {
           }
 
           console.log({ existingMapping });
-        });
+        }
       }
       return raiseSuccess(
         res,
