@@ -560,11 +560,23 @@ class CarePlanController extends Controller {
         console.log({ care_plans });
         console.log("========1=1=1=1=1=1=1==1=1=========");
 
-        Object.keys(care_plans).forEach((id) => {
+        Object.keys(care_plans).forEach(async (id) => {
           console.log("-11--1-11--1-1-1-1-1-1-111-111-111-11");
           console.log(care_plans[id]);
-          console.log("-11--1-11--1-1-1-1-1-1-111-111-111-11");
           let careplan = care_plans[id];
+          let dataToAdd = {
+            care_plan_id: careplan["basic_info"]["id"],
+            secondary_doctor_role_id: userRoleId,
+          };
+
+          console.log("-11--1-11--1-1-1-1-1-1-111-111-111-11");
+          let existingMapping =
+            (await carePlanSecondaryDoctorMappingService.getByData(
+              dataToAdd
+            )) || null;
+
+          // (careplan["basic_info"]["patient_id"] == patient_id &&
+          // careplan["secondary_doctor_user_role_ids"].includes(userRoleId))
           console.log("=2-2-2-2-2-2-2-2--2-2-2-2-2-2-");
           console.log(careplan["basic_info"]["patient_id"]);
           console.log(careplan["basic_info"]["user_role_id"]);
@@ -572,10 +584,15 @@ class CarePlanController extends Controller {
           console.log({ patient_id, userRoleId });
           console.log("=2-2-2-2-2-2-2-2--2-2-2-2-2-2-");
           if (
-            (careplan["basic_info"]["patient_id"] == patient_id &&
-              careplan["basic_info"]["user_role_id"] == userRoleId) ||
-            (careplan["basic_info"]["patient_id"] == patient_id &&
-              careplan["secondary_doctor_user_role_ids"].includes(userRoleId))
+            careplan["basic_info"]["patient_id"] == patient_id &&
+            careplan["basic_info"]["user_role_id"] == userRoleId
+          ) {
+            carePlansResponse.push(careplan);
+          }
+          console.log({ existingMapping });
+          if (
+            careplan["basic_info"]["patient_id"] == patient_id &&
+            existingMapping
           ) {
             carePlansResponse.push(careplan);
           }
