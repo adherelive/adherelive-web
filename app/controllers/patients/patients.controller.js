@@ -11,6 +11,7 @@ import carePlanService from "../../services/carePlan/carePlan.service";
 // import templateMedicationService from "../../services/templateMedication/templateMedication.service";
 // import templateAppointmentService from "../../services/templateAppointment/templateAppointment.service";
 import medicineService from "../../services/medicine/medicine.service";
+import getAge from "../../helper/getAge";
 import SymptomService from "../../services/symptom/symptom.service";
 import VitalService from "../../services/vitals/vital.service";
 import appointmentService from "../../services/appointment/appointment.service";
