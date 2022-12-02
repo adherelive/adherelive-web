@@ -2631,10 +2631,14 @@ class PatientController extends Controller {
 
       const { first_name, middle_name, last_name } = getSeparateName(name);
 
+      console.log({ length: userExists.length });
+
       if (userExists.length > 0) {
         userData = await UserWrapper(userExists[0].get());
-
         const { patient_id } = await userData.getReferenceInfo();
+        console.log({ userData });
+        console.log("========================");
+        console.log({ patient_id });
         patientData = await PatientWrapper(null, patient_id);
 
         const previousDetails = patientData.getDetails();
@@ -2680,7 +2684,7 @@ class PatientController extends Controller {
         }
 
         let newUserId = userData.getId();
-
+        console.log({ newUserId });
         // const uid = uuidv4();
         const birth_date = moment(date_of_birth);
         const age = getAge(date_of_birth);
@@ -2700,13 +2704,18 @@ class PatientController extends Controller {
           weight,
           address,
         });
-
+        console.log("=========================");
+        console.log({ patient });
+        console.log("=========================");
         const uid = patient_uid
           ? patient_uid
           : getReferenceId(patient.get("id"));
 
         await patientService.update({ uid }, patient.get("id"));
         patientData = await PatientWrapper(null, patient.get("id"));
+        console.log("======2=2=2=2=2==2=2=2=2=2=");
+        console.log({ patientData });
+        console.log("======2=2=2=2=2==2=2=2=2=2=");
       }
 
       const patient_id = patientData.getPatientId();
