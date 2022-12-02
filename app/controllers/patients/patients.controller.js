@@ -75,7 +75,11 @@ import {
   DIAGNOSIS_TYPE,
   S3_DOWNLOAD_FOLDER_PROVIDER,
   CONSULTATION,
+  EVENT_TYPE,
+  ONBOARDING_STATUS,
+  SIGN_IN_CATEGORY,
 } from "../../../constant";
+
 import { getSeparateName, getRoomId } from "../../helper/common";
 import generateOTP from "../../helper/generateOtp";
 import { EVENTS, Proxy_Sdk } from "../../proxySdk";
