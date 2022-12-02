@@ -9,6 +9,8 @@ var storage = multer.memoryStorage();
 var upload = multer({ dest: "../app/public/", storage: storage });
 
 const router = express.Router();
+// Create Patients from HIS.
+router.post("/", PatientController.createPatient);
 
 router.post(
   "/patients",

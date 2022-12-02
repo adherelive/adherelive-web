@@ -2582,6 +2582,170 @@ class PatientController extends Controller {
       return raiseServerError(res);
     }
   };
+
+  createPatient = async (req, res) => {
+    try {
+      const {
+        mobile_number = "",
+        name = "",
+        patient_uid = "",
+        gender = "",
+        date_of_birth = "",
+        prefix = "",
+        comorbidities = "",
+        allergies = "",
+        clinical_notes = "",
+        height = "",
+        weight = "",
+        symptoms = "",
+        address = "",
+      } = req.body;
+
+      const userExists =
+        (await userService.getPatientByMobile(mobile_number)) || [];
+
+      // TODO: add check his value.
+
+      let userData = null;
+      let patientData = null;
+      let patientOtherDetails = {};
+      let carePlanOtherDetails = {};
+
+      if (comorbidities) {
+        patientOtherDetails["comorbidities"] = comorbidities;
+      }
+      if (allergies) {
+        patientOtherDetails["allergies"] = allergies;
+      }
+      if (clinical_notes) {
+        carePlanOtherDetails["clinical_notes"] = clinical_notes;
+      }
+      if (symptoms) {
+        carePlanOtherDetails["symptoms"] = symptoms;
+      }
+
+      const { first_name, middle_name, last_name } = getSeparateName(name);
+
+      if (userExists.length > 0) {
+        userData = await UserWrapper(userExists[0].get());
+
+        const { patient_id } = await userData.getReferenceInfo();
+        patientData = await PatientWrapper(null, patient_id);
+
+        const previousDetails = patientData.getDetails();
+        const updateResponse = await patientService.update(
+          {
+            height,
+            weight,
+            address,
+            first_name,
+            middle_name,
+            last_name,
+            gender,
+            dob: date_of_birth,
+            age: getAge(moment(date_of_birth)),
+            details: { ...previousDetails, ...patientOtherDetails },
+          },
+          patient_id
+        );
+
+        patientData = await PatientWrapper(null, patient_id);
+      } else {
+        const password = process.config.DEFAULT_PASSWORD;
+        const salt = await bcrypt.genSalt(Number(process.config.saltRounds));
+        const hash = await bcrypt.hash(password, salt);
+        let user = await userService.addUser({
+          prefix,
+          mobile_number,
+          password: hash,
+          sign_in_type: SIGN_IN_CATEGORY.BASIC,
+          category: USER_CATEGORY.PATIENT,
+          onboarded: false,
+          onboarding_status: ONBOARDING_STATUS.PATIENT.PROFILE_REGISTERED,
+          verified: true,
+          activated_on: moment().format(),
+        });
+        userData = await UserWrapper(user.get());
+
+        if (clinical_notes) {
+          carePlanOtherDetails["clinical_notes"] = clinical_notes;
+        }
+        if (symptoms) {
+          carePlanOtherDetails["symptoms"] = symptoms;
+        }
+
+        let newUserId = userData.getId();
+
+        // const uid = uuidv4();
+        const birth_date = moment(date_of_birth);
+        const age = getAge(date_of_birth);
+        const patient = await patientService.addPatient({
+          first_name,
+          gender,
+          middle_name,
+          last_name,
+          user_id: newUserId,
+          birth_date,
+          age,
+          dob: date_of_birth,
+          details: {
+            ...patientOtherDetails,
+          },
+          height,
+          weight,
+          address,
+        });
+
+        const uid = patient_uid
+          ? patient_uid
+          : getReferenceId(patient.get("id"));
+
+        await patientService.update({ uid }, patient.get("id"));
+        patientData = await PatientWrapper(null, patient.get("id"));
+      }
+
+      const patient_id = patientData.getPatientId();
+
+      // const { user_role_id: patientRoleId } = await patientData.getAllInfo();
+
+      const emailPayload = {
+        title: "Mobile Patient Verification mail",
+        toAddress: process.config.app.developer_email,
+        templateName: EMAIL_TEMPLATE_NAME.INVITATION,
+        templateData: {
+          title: "Patient",
+          link: universalLink,
+          inviteCard: "",
+          mainBodyText: "We are happy to welcome you onboard.",
+          subBodyText: "Please verify your account",
+          buttonText: "Verify",
+          host: process.config.WEB_URL,
+          contactTo: "customersupport@adhere.live",
+        },
+      };
+      Proxy_Sdk.execute(EVENTS.SEND_EMAIL, emailPayload);
+
+      return this.raiseSuccess(
+        res,
+        200,
+        {
+          patient_ids: [patient_id],
+          users: {
+            [userData.getId()]: userData.getBasicInfo(),
+          },
+          patients: {
+            [patientData.getPatientId()]: {
+              ...(await patientData.getAllInfo()),
+            },
+          },
+        },
+        "Patient added successfully"
+      );
+    } catch (error) {
+      Logger.debug("ADD DOCTOR PATIENT 500 ERROR", error);
+      return this.raiseServerError(res);
+    }
+  };
 }
 
 export default new PatientController();
