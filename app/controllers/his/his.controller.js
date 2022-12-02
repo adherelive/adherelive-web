@@ -14,39 +14,29 @@ class UserController extends Controller {
 
   signIn = async (req, res) => {
     try {
-      const { email, password } = req.body;
-      const user = await userService.getUserByEmail({
-        email,
+      const expiresIn = "60s"; // expires in 30 day
+      const secret = process.config.TOKEN_SECRET_KEY;
+      const accessToken = await jwt.sign(
+        {
+          providerId: 2,
+        },
+        secret,
+        {
+          expiresIn,
+        }
+      );
+
+      res.cookie("accessToken", accessToken, {
+        expires: new Date(Date.now() + 1 * 86400000),
+        httpOnly: true,
       });
 
-      if (doLogin) {
-        const expiresIn = "60s"; // expires in 30 day
-
-        const secret = process.config.TOKEN_SECRET_KEY;
-        const accessToken = await jwt.sign(
-          {
-            providerId: 2,
-          },
-          secret,
-          {
-            expiresIn,
-          }
-        );
-
-        res.cookie("accessToken", accessToken, {
-          expires: new Date(Date.now() + 1 * 86400000),
-          httpOnly: true,
-        });
-
-        return this.raiseSuccess(
-          res,
-          200,
-          {},
-          "Initial data retrieved successfully"
-        );
-      } else {
-        return this.raiseClientError(res, 401, {}, "Invalid Credentials");
-      }
+      return this.raiseSuccess(
+        res,
+        200,
+        {},
+        "Initial data retrieved successfully"
+      );
     } catch (error) {
       Logger.debug("signIn 500 error ----> ", error);
 
