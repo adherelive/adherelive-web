@@ -86,6 +86,7 @@ import { getFilePath } from "../../helper/filePath";
 import { checkAndCreateDirectory } from "../../helper/common";
 import PERMISSIONS from "../../../config/permissions";
 // helpers
+import bcrypt from "bcrypt";
 import * as carePlanHelper from "../carePlans/carePlanHelper";
 import { getDoctorCurrentTime } from "../../helper/getUserTime";
 
