@@ -2606,8 +2606,24 @@ class PatientController extends Controller {
         address = "",
       } = req.body;
 
+      if (
+        patient_uid === null ||
+        patient_uid === "" ||
+        patient_uid === undefined
+      ) {
+        return raiseServerError(
+          res,
+          500,
+          {},
+          "please provide patient_ui as HIS Id."
+        );
+      }
+
       const userExists =
         (await userService.getPatientByMobile(mobile_number)) || [];
+
+      const patientExistByHisId =
+        (await patientService.getPatientByData({ uid: patient_uid })) || [];
 
       // TODO: add check his value.
 
@@ -2633,7 +2649,7 @@ class PatientController extends Controller {
 
       console.log({ length: userExists.length });
 
-      if (userExists.length > 0) {
+      if (userExists.length > 0 || patientExistByHisId.length > 0) {
         userData = await UserWrapper(userExists[0].get());
         const { patient_id } = await userData.getReferenceInfo();
         console.log({ userData });
@@ -2707,9 +2723,7 @@ class PatientController extends Controller {
         console.log("=========================");
         console.log({ patient });
         console.log("=========================");
-        const uid = patient_uid
-          ? patient_uid
-          : getReferenceId(patient.get("id"));
+        const uid = patient_uid;
 
         await patientService.update({ uid }, patient.get("id"));
         patientData = await PatientWrapper(null, patient.get("id"));
@@ -2719,25 +2733,6 @@ class PatientController extends Controller {
       }
 
       const patient_id = patientData.getPatientId();
-
-      // const { user_role_id: patientRoleId } = await patientData.getAllInfo();
-
-      // const emailPayload = {
-      //   title: "Mobile Patient Verification mail",
-      //   toAddress: process.config.app.developer_email,
-      //   templateName: EMAIL_TEMPLATE_NAME.INVITATION,
-      //   templateData: {
-      //     title: "Patient",
-      //     link: "universalLink",
-      //     inviteCard: "",
-      //     mainBodyText: "We are happy to welcome you onboard.",
-      //     subBodyText: "Please verify your account",
-      //     buttonText: "Verify",
-      //     host: process.config.WEB_URL,
-      //     contactTo: "customersupport@adhere.live",
-      //   },
-      // };
-      // Proxy_Sdk.execute(EVENTS.SEND_EMAIL, emailPayload);
 
       return this.raiseSuccess(
         res,
@@ -2756,7 +2751,7 @@ class PatientController extends Controller {
         "Patient added successfully"
       );
     } catch (error) {
-      Logger.debug("ADD DOCTOR PATIENT 500 ERROR", error);
+      Logger.debug("ADD PATIENT 500 ERROR", error);
       return this.raiseServerError(res);
     }
   };
