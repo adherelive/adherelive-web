@@ -2649,12 +2649,22 @@ class PatientController extends Controller {
 
       console.log({ length: userExists.length });
 
-      if (userExists.length > 0 || patientExistByHisId.length > 0) {
+      if (userExists.length > 0) {
         userData = await UserWrapper(userExists[0].get());
+      }
+
+      if (patientExistByHisId.length > 0) {
+        let patientdetails = patientExistByHisId[0].get();
+        let { user_id } = patientdetails;
+
+        console.log({ patientdetails });
+        console.log({ user_id });
+
+        userData = await UserWrapper(null, user_id);
+      }
+
+      if (userExists.length > 0 || patientExistByHisId.length > 0) {
         const { patient_id } = await userData.getReferenceInfo();
-        console.log({ userData });
-        console.log("========================");
-        console.log({ patient_id });
         patientData = await PatientWrapper(null, patient_id);
 
         const previousDetails = patientData.getDetails();
