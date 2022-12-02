@@ -2722,22 +2722,22 @@ class PatientController extends Controller {
 
       // const { user_role_id: patientRoleId } = await patientData.getAllInfo();
 
-      const emailPayload = {
-        title: "Mobile Patient Verification mail",
-        toAddress: process.config.app.developer_email,
-        templateName: EMAIL_TEMPLATE_NAME.INVITATION,
-        templateData: {
-          title: "Patient",
-          link: universalLink,
-          inviteCard: "",
-          mainBodyText: "We are happy to welcome you onboard.",
-          subBodyText: "Please verify your account",
-          buttonText: "Verify",
-          host: process.config.WEB_URL,
-          contactTo: "customersupport@adhere.live",
-        },
-      };
-      Proxy_Sdk.execute(EVENTS.SEND_EMAIL, emailPayload);
+      // const emailPayload = {
+      //   title: "Mobile Patient Verification mail",
+      //   toAddress: process.config.app.developer_email,
+      //   templateName: EMAIL_TEMPLATE_NAME.INVITATION,
+      //   templateData: {
+      //     title: "Patient",
+      //     link: "universalLink",
+      //     inviteCard: "",
+      //     mainBodyText: "We are happy to welcome you onboard.",
+      //     subBodyText: "Please verify your account",
+      //     buttonText: "Verify",
+      //     host: process.config.WEB_URL,
+      //     contactTo: "customersupport@adhere.live",
+      //   },
+      // };
+      // Proxy_Sdk.execute(EVENTS.SEND_EMAIL, emailPayload);
 
       return this.raiseSuccess(
         res,
