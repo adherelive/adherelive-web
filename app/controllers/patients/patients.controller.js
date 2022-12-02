@@ -2584,6 +2584,7 @@ class PatientController extends Controller {
   };
 
   createPatient = async (req, res) => {
+    console.log("create Patient Called.");
     try {
       const {
         mobile_number = "",
