@@ -14,6 +14,7 @@ import Logger from "../../libs/log";
 const Log = new Logger("API > INDEX");
 
 import userRouter from "./user";
+import hisRouter from "./his";
 import appointmentRouter from "./appointments";
 import eventRouter from "./events";
 import twilioRouter from "./twilio";
@@ -169,6 +170,7 @@ router.use(async function (req, res, next) {
 });
 
 router.use("/auth", userRouter);
+router.use("/auth-his", hisRouter);
 router.use("/appointments", appointmentRouter);
 router.use("/medications", medicationRouter);
 router.use("/events", eventRouter);
