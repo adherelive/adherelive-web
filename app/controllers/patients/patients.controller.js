@@ -74,8 +74,6 @@ import {
   PRESCRIPTION_PDF_FOLDER,
   DIAGNOSIS_TYPE,
   S3_DOWNLOAD_FOLDER_PROVIDER,
-  CONSULTATION,
-  EVENT_TYPE,
   ONBOARDING_STATUS,
   SIGN_IN_CATEGORY,
 } from "../../../constant";
@@ -88,7 +86,7 @@ import generatePDF from "../../helper/generateCarePlanPdf";
 import { downloadFileFromS3 } from "../user/userHelper";
 import { getFilePath } from "../../helper/filePath";
 import { checkAndCreateDirectory } from "../../helper/common";
-import PERMISSIONS from "../../../config/permissions";
+
 // helpers
 import bcrypt from "bcrypt";
 import * as carePlanHelper from "../carePlans/carePlanHelper";
