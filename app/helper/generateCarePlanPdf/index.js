@@ -1477,7 +1477,7 @@ function printCarePlanData({
               width: dosageXStart - medicineXStart,
             }
           )
-          .text(`${medicineData.toLowerCase()}`, medicineXStart, doc.y, {
+          .text(`${medicineData}`, medicineXStart, doc.y, {
             width: dosageXStart - medicineXStart,
             // strike:true
           })
