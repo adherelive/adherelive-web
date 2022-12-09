@@ -1469,10 +1469,15 @@ function printCarePlanData({
           // .text(`${organizer.name}`, drXStart, medicationYLevel, {
           //   width: medicineXStart - drXStart,
           // })
-          .text(`${medicineData}`, medicineXStart, medicationYLevel, {
-            width: dosageXStart - medicineXStart,
-          })
-          .text(`${genericName}`, medicineXStart, doc.y, {
+          .text(
+            `${genericName.toUpperCase()}`,
+            medicineXStart,
+            medicationYLevel,
+            {
+              width: dosageXStart - medicineXStart,
+            }
+          )
+          .text(`${medicineData.toLowerCase()}`, medicineXStart, doc.y, {
             width: dosageXStart - medicineXStart,
             // strike:true
           })

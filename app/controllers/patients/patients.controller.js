@@ -75,6 +75,8 @@ import {
   DIAGNOSIS_TYPE,
   S3_DOWNLOAD_FOLDER_PROVIDER,
   CONSULTATION,
+  ONBOARDING_STATUS,
+  SIGN_IN_CATEGORY,
 } from "../../../constant";
 import { getSeparateName, getRoomId } from "../../helper/common";
 import generateOTP from "../../helper/generateOtp";
@@ -88,7 +90,10 @@ import PERMISSIONS from "../../../config/permissions";
 // helpers
 import * as carePlanHelper from "../carePlans/carePlanHelper";
 import { getDoctorCurrentTime } from "../../helper/getUserTime";
-
+import templateAppointmentService from "../../services/templateAppointment/templateAppointment.service";
+import getAge from "../../helper/getAge";
+// helpers
+import bcrypt from "bcrypt";
 const path = require("path");
 
 const Logger = new Log("WEB > PATIENTS > CONTROLLER");
@@ -2580,6 +2585,172 @@ class PatientController extends Controller {
     } catch (error) {
       Logger.debug("getPatientReports 500 error", error);
       return raiseServerError(res);
+    }
+  };
+  createPatient = async (req, res) => {
+    console.log("create Patient Called.");
+    try {
+      const {
+        mobile_number = "",
+        name = "",
+        patient_uid = "",
+        gender = "",
+        date_of_birth = "",
+        prefix = "",
+        comorbidities = "",
+        allergies = "",
+        clinical_notes = "",
+        height = "",
+        weight = "",
+        symptoms = "",
+        address = "",
+      } = req.body;
+
+      if (
+        patient_uid === null ||
+        patient_uid === "" ||
+        patient_uid === undefined
+      ) {
+        return raiseServerError(
+          res,
+          500,
+          {},
+          "please provide patient_ui as HIS Id."
+        );
+      }
+
+      const userExists =
+        (await userService.getPatientByMobile(mobile_number)) || [];
+
+      const patientExistByHisId =
+        (await patientService.getPatientByData({ uid: patient_uid })) || [];
+
+      // TODO: add check his value.
+
+      let userData = null;
+      let patientData = null;
+      let patientOtherDetails = {};
+      let carePlanOtherDetails = {};
+
+      if (comorbidities) {
+        patientOtherDetails["comorbidities"] = comorbidities;
+      }
+      if (allergies) {
+        patientOtherDetails["allergies"] = allergies;
+      }
+      if (clinical_notes) {
+        carePlanOtherDetails["clinical_notes"] = clinical_notes;
+      }
+      if (symptoms) {
+        carePlanOtherDetails["symptoms"] = symptoms;
+      }
+
+      const { first_name, middle_name, last_name } = getSeparateName(name);
+
+      if (userExists.length > 0) {
+        userData = await UserWrapper(userExists[0].get());
+      }
+
+      if (patientExistByHisId.length > 0) {
+        let patientdetails = patientExistByHisId[0].get();
+        let { user_id } = patientdetails;
+        userData = await UserWrapper(null, user_id);
+      }
+
+      if (userExists.length > 0 || patientExistByHisId.length > 0) {
+        const { patient_id } = await userData.getReferenceInfo();
+        patientData = await PatientWrapper(null, patient_id);
+
+        const previousDetails = patientData.getDetails();
+        const updateResponse = await patientService.update(
+          {
+            height,
+            weight,
+            address,
+            first_name,
+            middle_name,
+            last_name,
+            gender,
+            dob: date_of_birth,
+            age: getAge(moment(date_of_birth)),
+            details: { ...previousDetails, ...patientOtherDetails },
+          },
+          patient_id
+        );
+
+        patientData = await PatientWrapper(null, patient_id);
+      } else {
+        const password = process.config.DEFAULT_PASSWORD;
+        const salt = await bcrypt.genSalt(Number(process.config.saltRounds));
+        const hash = await bcrypt.hash(password, salt);
+        let user = await userService.addUser({
+          prefix,
+          mobile_number,
+          password: hash,
+          sign_in_type: SIGN_IN_CATEGORY.BASIC,
+          category: USER_CATEGORY.PATIENT,
+          onboarded: false,
+          onboarding_status: ONBOARDING_STATUS.PATIENT.PROFILE_REGISTERED,
+          verified: true,
+          activated_on: moment().format(),
+        });
+        userData = await UserWrapper(user.get());
+
+        if (clinical_notes) {
+          carePlanOtherDetails["clinical_notes"] = clinical_notes;
+        }
+        if (symptoms) {
+          carePlanOtherDetails["symptoms"] = symptoms;
+        }
+
+        let newUserId = userData.getId();
+        console.log({ newUserId });
+        // const uid = uuidv4();
+        const birth_date = moment(date_of_birth);
+        const age = getAge(date_of_birth);
+        const patient = await patientService.addPatient({
+          first_name,
+          gender,
+          middle_name,
+          last_name,
+          user_id: newUserId,
+          birth_date,
+          age,
+          dob: date_of_birth,
+          details: {
+            ...patientOtherDetails,
+          },
+          height,
+          weight,
+          address,
+        });
+        const uid = patient_uid;
+
+        await patientService.update({ uid }, patient.get("id"));
+        patientData = await PatientWrapper(null, patient.get("id"));
+      }
+
+      const patient_id = patientData.getPatientId();
+
+      return this.raiseSuccess(
+        res,
+        200,
+        {
+          patient_ids: [patient_id],
+          users: {
+            [userData.getId()]: userData.getBasicInfo(),
+          },
+          patients: {
+            [patientData.getPatientId()]: {
+              ...(await patientData.getAllInfo()),
+            },
+          },
+        },
+        "Patient added successfully"
+      );
+    } catch (error) {
+      Logger.debug("ADD PATIENT 500 ERROR", error);
+      return this.raiseServerError(res);
     }
   };
 }

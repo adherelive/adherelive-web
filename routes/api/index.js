@@ -36,6 +36,7 @@ import notificationRouter from "./notification";
 import symptomRouter from "./symptoms";
 import vitalRouter from "./vitals";
 import accountsRouter from "./accounts";
+import hisRouter from "./his";
 import providersRouter from "./providers";
 import featuresRouter from "./features";
 import reportRouter from "./reports";
@@ -148,6 +149,7 @@ router.use(async function (req, res, next) {
 });
 
 router.use("/auth", userRouter);
+router.use("/auth-his", hisRouter);
 router.use("/appointments", appointmentRouter);
 router.use("/medications", medicationRouter);
 router.use("/events", eventRouter);
@@ -187,4 +189,5 @@ router.use("/portions", portionRouter);
 router.use("/exercises", exerciseRouter);
 router.use("/workout", workoutRouter);
 router.use("/cdss", CdssRouter);
+
 module.exports = router;
