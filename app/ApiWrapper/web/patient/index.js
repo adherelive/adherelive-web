@@ -73,7 +73,11 @@ class PatientWrapper extends BasePatient {
     const data = { patient_id: getPatientId() };
     let carePlan = await carePlanService.getSingleCarePlanByData(data, order);
 
-    const carePlanId = carePlan.get("id") || null;
+    let carePlanId = "";
+    let response = {};
+    if (carePlan) {
+      carePlanId = carePlan.get("id") || null;
+    }
 
     const { user_id = null } = _data || {};
     let user_role_id = null;
@@ -83,11 +87,16 @@ class PatientWrapper extends BasePatient {
       user_role_id = userRoleData.getId();
     }
 
-    return {
-      ...getBasicInfo(),
-      care_plan_id: carePlanId,
-      user_role_id,
-    };
+    if (carePlanId) {
+      response = { ...getBasicInfo(), care_plan_id: carePlanId, user_role_id };
+    } else {
+      response = {
+        ...getBasicInfo(),
+
+        user_role_id,
+      };
+    }
+    return response;
   };
 
   getReferenceInfo = async () => {
