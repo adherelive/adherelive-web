@@ -115,3 +115,25 @@ If you're running the project first time. Run the following command
 3. `docker-compose run node npm run build`
 4. `docker-compose run node npm run migrate`
 5. `docker-compose run node npm run seed`
+
+# prescription changes - helper/genpdf/index.js->413
+
+```
+ .add(330, "minutes")
+```
+
+app/ApiWrapper/mobile/medicine/index.js and webwrapper also.
+
+```js
+ id,
+name,
+treatment_id,
+severity_id,
+condition_id,
+user_id,
+details = {},
+createdAt = null, (in get basic info.)
+
+```
+
+in feature details table add new json data `app/services/featureDetails/appontmentdetails.json`
