@@ -8,8 +8,15 @@ class MobileMedicineWrapper extends BaseMedicine {
 
   getBasicInfo = () => {
     const { _data } = this;
-    const { id, name, type, description, creator_id, public_medicine } =
-      _data || {};
+    const {
+      id,
+      name,
+      type,
+      description,
+      creator_id,
+      details,
+      public_medicine,
+    } = _data || {};
     return {
       basic_info: {
         id,
@@ -18,6 +25,7 @@ class MobileMedicineWrapper extends BaseMedicine {
         description,
         creator_id,
         public_medicine,
+        details,
       },
     };
   };
