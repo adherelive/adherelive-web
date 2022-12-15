@@ -465,7 +465,7 @@ class CarePlanController extends Controller {
         (await initialCarePlanData.getCarePlanDetails()) || {};
       const { basic_info: prevCareplanBasicInfo } =
         initialCarePlanData.getBasicInfo() || {};
-
+      console.log({ clinical_notes });
       const carePlanUpdateData = {
         ...prevCareplanBasicInfo,
         details: {
