@@ -410,7 +410,9 @@ function printDiet(
         ? timings[time]
         : PATIENT_MEAL_TIMINGS[time];
       const { text: timeText = "", time: timeVal = "" } = timeObj || {};
-      const formattedTime = moment(timeVal).format("hh:mm A");
+      const formattedTime = moment(timeVal)
+        .add(330, "minutes")
+        .format("hh:mm A");
       doc
         .fillColor("#212b36")
         .font(MEDIUM_FONT)
