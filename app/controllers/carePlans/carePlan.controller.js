@@ -441,12 +441,14 @@ class CarePlanController extends Controller {
         carePlanTemplate = await CarePlanTemplateWrapper(
           createCarePlanTemplate
         );
-
+        let { details: careplannewdetails } =
+          carePlanTemplate.getCarePlanTemplateId();
+        careplannewdetails["clinical_notes"] = clinical_notes;
         await carePlanService.updateCarePlan(
           {
             care_plan_template_id: {
               ...carePlanTemplate.getCarePlanTemplateId(),
-              clinical_notes: clinical_notes ? clinical_notes : "",
+              details: careplannewdetails,
             },
           },
           care_plan_id
