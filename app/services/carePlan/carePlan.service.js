@@ -226,6 +226,7 @@ class CarePlanService {
   };
 
   updateCarePlan = async (data, id) => {
+    console.log("update care plan called", { data, id });
     const transaction = await Database.initTransaction();
     try {
       const carePlan = await Database.getModel(TABLE_NAME).update(data, {

@@ -423,6 +423,7 @@ class CarePlanController extends Controller {
       let carePlanTemplate = null;
 
       if (createTemplate) {
+        console.log("createTemplace called", { createTemplate });
         const createCarePlanTemplate = await carePlanTemplateService.create({
           name: newTemplateName,
           treatment_id,
@@ -444,6 +445,8 @@ class CarePlanController extends Controller {
         let { details: careplannewdetails } =
           carePlanTemplate.getCarePlanTemplateId();
         careplannewdetails["clinical_notes"] = clinical_notes;
+
+        console.log({ testdata: carePlanTemplate.getCarePlanTemplateId() });
         await carePlanService.updateCarePlan(
           {
             care_plan_template_id: {
