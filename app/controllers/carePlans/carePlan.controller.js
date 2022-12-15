@@ -428,7 +428,6 @@ class CarePlanController extends Controller {
           treatment_id,
           severity_id: severity_id ? severity_id : null,
           condition_id: condition_id ? condition_id : null,
-          clinical_notes: clinical_notes ? clinical_notes : "",
           user_id: userId,
           template_appointments: [...appointmentsArr],
           ...(permissions.includes(PERMISSIONS.MEDICATIONS.ADD) && {
@@ -444,7 +443,12 @@ class CarePlanController extends Controller {
         );
 
         await carePlanService.updateCarePlan(
-          { care_plan_template_id: carePlanTemplate.getCarePlanTemplateId() },
+          {
+            care_plan_template_id: {
+              ...carePlanTemplate.getCarePlanTemplateId(),
+              clinical_notes: clinical_notes ? clinical_notes : "",
+            },
+          },
           care_plan_id
         );
 
