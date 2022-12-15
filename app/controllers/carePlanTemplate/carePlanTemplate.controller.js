@@ -64,6 +64,7 @@ class CarePlanTemplateController extends Controller {
         workoutData = [],
         name,
         is_public_in_provider,
+        clinical_notes,
       } = body || {};
 
       Log.info(`name : ${name}`);
@@ -86,6 +87,7 @@ class CarePlanTemplateController extends Controller {
             ...(permissions.includes(PERMISSIONS.MEDICATIONS.TEMPLATE) && {
               template_medications: medicationsData,
             }),
+            details: { clinical_notes },
             template_vitals: vitalsData,
             template_diets: dietData,
             template_workouts: workoutData,
