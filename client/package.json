@@ -83,7 +83,7 @@
     "redux-thunk": "^2.4.1",
     "reselect": "^4.1.6",
     "showdown": "^2.1.0",
-    "twilio-chat": "^5.0.2",
+    "twilio-chat": "^6.0.0",
     "twilio-video": "2.17.1",
     "web-vitals": "^2.1.4"
   },
