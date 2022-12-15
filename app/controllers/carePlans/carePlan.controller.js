@@ -474,6 +474,8 @@ class CarePlanController extends Controller {
         },
       };
 
+      console.log({ carePlanUpdateData });
+
       const updatedCareplanId = await carePlanService.updateCarePlan(
         carePlanUpdateData,
         care_plan_id
