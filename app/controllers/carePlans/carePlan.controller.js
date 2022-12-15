@@ -470,7 +470,7 @@ class CarePlanController extends Controller {
         ...prevCareplanBasicInfo,
         details: {
           ...previousCareplanDetails,
-          clinical_notes,
+          clinical_notes: "this by gaurav",
         },
       };
 
