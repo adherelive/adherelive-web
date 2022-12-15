@@ -64,6 +64,7 @@ class CarePlanController extends Controller {
         severity_id,
         name: newTemplateName,
         createTemplate = false,
+        clinical_notes,
       } = req.body;
 
       const { userDetails, permissions = [] } = req;
@@ -427,6 +428,7 @@ class CarePlanController extends Controller {
           treatment_id,
           severity_id: severity_id ? severity_id : null,
           condition_id: condition_id ? condition_id : null,
+          clinical_notes: clinical_notes ? clinical_notes : "",
           user_id: userId,
           template_appointments: [...appointmentsArr],
           ...(permissions.includes(PERMISSIONS.MEDICATIONS.ADD) && {
