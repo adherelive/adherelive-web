@@ -489,7 +489,7 @@ class CarePlanController extends Controller {
         ...prevCareplanBasicInfo,
         details: {
           ...previousCareplanDetails,
-          clinical_notes: "this by gaurav",
+          clinical_notes,
         },
       };
       console.log(35);
