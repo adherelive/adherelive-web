@@ -51,6 +51,7 @@ class CarePlanController extends Controller {
   }
 
   createFromTemplate = async (req, res) => {
+    console.log("===============CreateFromTemplate================");
     try {
       const { carePlanId: care_plan_id } = req.params;
       const {
@@ -74,7 +75,7 @@ class CarePlanController extends Controller {
         userData: { category } = {},
         userCategoryData,
       } = userDetails || {};
-
+      console.log(1);
       if (!care_plan_id) {
         return raiseClientError(
           res,
@@ -91,7 +92,7 @@ class CarePlanController extends Controller {
           name: newTemplateName,
           user_id: userId,
         });
-
+      console.log(2);
       if (templateNameCheck) {
         return this.raiseClientError(
           res,
@@ -114,9 +115,10 @@ class CarePlanController extends Controller {
 
       let appointmentApiDetails = {};
       let appointment_ids = [];
-
+      console.log(3);
       // appointments ---------------------------------
       if (appointmentsData.length > 0) {
+        console.log(4);
         for (let i = 0; i < appointmentsData.length; i++) {
           const {
             schedule_data: {
@@ -143,12 +145,13 @@ class CarePlanController extends Controller {
 
           let userCategoryId = null;
           let participantTwoId = null;
-
+          console.log(5);
           switch (category) {
             case USER_CATEGORY.DOCTOR:
               const doctor = await doctorService.getDoctorByData({
                 user_id: userId,
               });
+              console.log(6);
               const doctorData = await DoctorWrapper(doctor);
               userCategoryId = doctorData.getDoctorId();
               participantTwoId = doctorData.getUserId();
@@ -157,6 +160,7 @@ class CarePlanController extends Controller {
               const hspDoctor = await doctorService.getDoctorByData({
                 user_id: userId,
               });
+              console.log(7);
               const hspDoctorData = await DoctorWrapper(hspDoctor);
               userCategoryId = hspDoctorData.getDoctorId();
               participantTwoId = hspDoctorData.getUserId();
@@ -188,20 +192,21 @@ class CarePlanController extends Controller {
               critical,
             },
           };
-
+          console.log(8);
           const baseAppointment = await appointmentService.addAppointment(
             appointment_data
           );
-
+          console.log(9);
           const newAppointment =
             await carePlanAppointmentService.addCarePlanAppointment({
               care_plan_id,
               appointment_id: baseAppointment.get("id"),
             });
-
+          console.log(10);
           const appointmentData = await AppointmentWrapper(baseAppointment);
           appointmentApiDetails[appointmentData.getAppointmentId()] =
             appointmentData.getBasicInfo();
+          console.log(11);
           appointment_ids.push(appointmentData.getAppointmentId());
 
           appointmentsArr.push({
@@ -218,7 +223,7 @@ class CarePlanController extends Controller {
               appointment_type: type,
             },
           });
-
+          console.log(12);
           eventScheduleData.push({
             type: EVENT_TYPE.APPOINTMENT_TIME_ASSIGNMENT,
             event_id: appointmentData.getAppointmentId(),
@@ -228,14 +233,17 @@ class CarePlanController extends Controller {
           });
         }
       }
-
+      console.log(13);
       const carePlanStartTime = new moment.utc();
       const carePlanEndTime = new moment.utc(carePlanStartTime).add(2, "hours");
+      console.log(14);
       const patient = await PatientWrapper(null, patient_id);
       const { user_role_id: patientRoleId } = await patient.getAllInfo();
 
       let carePlanScheduleData = {};
+      console.log(15);
       if (permissions.includes(PERMISSIONS.MEDICATIONS.ADD)) {
+        console.log(16);
         carePlanScheduleData = {
           type: EVENT_TYPE.CARE_PLAN_ACTIVATION,
           event_id: care_plan_id,
@@ -261,12 +269,13 @@ class CarePlanController extends Controller {
       let medicationApiDetails = {};
       let medicineApiDetails = {};
       let medication_ids = [];
-
+      console.log(17);
       // medications ---------------------------------
       if (
         permissions.includes(PERMISSIONS.MEDICATIONS.ADD) &&
         medicationsData.length > 0
       ) {
+        console.log(18);
         for (const medication of medicationsData) {
           const {
             schedule_data: {
@@ -314,28 +323,28 @@ class CarePlanController extends Controller {
               critical,
             },
           };
-
+          console.log(19);
           const mReminderDetails = await medicationReminderService.addMReminder(
             dataToSave
           );
-
+          console.log(20);
           const medicationWrapper = await MedicationWrapper(mReminderDetails);
 
           const data_to_create = {
             care_plan_id,
             medication_id: medicationWrapper.getMReminderId(),
           };
-
+          console.log(21);
           let newMedication =
             await carePlanMedicationService.addCarePlanMedication(
               data_to_create
             );
-
+          console.log(22);
           const { medications, medicines } =
             await medicationWrapper.getReferenceInfo();
           medicationApiDetails = { ...medicationApiDetails, ...medications };
           medicineApiDetails = { ...medicineApiDetails, ...medicines };
-
+          console.log(23);
           medication_ids.push(medicationWrapper.getMReminderId());
 
           medicationsArr.push({
@@ -356,6 +365,7 @@ class CarePlanController extends Controller {
                 : EVENT_LONG_TERM_VALUE,
             },
           });
+          console.log(24);
         }
       }
 
@@ -363,6 +373,7 @@ class CarePlanController extends Controller {
       //   ...carePlanScheduleData,
       //   medication_ids
       // });
+      console.log(25);
 
       carePlanScheduleData = {
         ...(permissions.includes(PERMISSIONS.MEDICATIONS.ADD) && {
@@ -370,7 +381,7 @@ class CarePlanController extends Controller {
           medication_ids,
         }),
       };
-
+      console.log(26);
       // vitals ----------------------------------------
       const {
         vitals,
@@ -385,6 +396,7 @@ class CarePlanController extends Controller {
         patientId: carePlanData.getPatientId(),
       });
 
+      console.log(27);
       // diets ----------------------------------------
       const {
         diets,
@@ -402,6 +414,8 @@ class CarePlanController extends Controller {
         patientId: carePlanData.getPatientId(),
       });
 
+      console.log(28);
+
       // workouts ----------------------------------------
       const {
         workouts,
@@ -418,11 +432,13 @@ class CarePlanController extends Controller {
         authUser: { category, userId, userCategoryData, userRoleId },
         patientId: carePlanData.getPatientId(),
       });
+      console.log(29);
 
       // careplan template -------------------------------
       let carePlanTemplate = null;
 
       if (createTemplate) {
+        console.log(30);
         const createCarePlanTemplate = await carePlanTemplateService.create({
           name: newTemplateName,
           treatment_id,
@@ -437,11 +453,13 @@ class CarePlanController extends Controller {
           template_diets: [...carePlanTemplateDiets],
           template_workouts: [...carePlanTemplateWorkouts],
         });
+        console.log(31);
 
         carePlanTemplate = await CarePlanTemplateWrapper(
           createCarePlanTemplate
         );
 
+        console.log(32);
         await carePlanService.updateCarePlan(
           { care_plan_template_id: carePlanTemplate.getCarePlanTemplateId() },
           care_plan_id
@@ -459,12 +477,13 @@ class CarePlanController extends Controller {
         carePlanScheduleData,
       ]);
       // update care plan clinical notes.
-
+      console.log(33);
       const initialCarePlanData = await CarePlanWrapper(null, care_plan_id);
       const previousCareplanDetails =
         (await initialCarePlanData.getCarePlanDetails()) || {};
       const { basic_info: prevCareplanBasicInfo } =
         initialCarePlanData.getBasicInfo() || {};
+      console.log(34);
       console.log({ clinical_notes });
       const carePlanUpdateData = {
         ...prevCareplanBasicInfo,
@@ -473,6 +492,7 @@ class CarePlanController extends Controller {
           clinical_notes: "this by gaurav",
         },
       };
+      console.log(35);
 
       console.log({ carePlanUpdateData });
 
@@ -480,7 +500,7 @@ class CarePlanController extends Controller {
         carePlanUpdateData,
         care_plan_id
       );
-
+      console.log(36);
       return this.raiseSuccess(
         res,
         200,
