@@ -481,6 +481,8 @@ class CarePlanController extends Controller {
       const initialCarePlanData = await CarePlanWrapper(null, care_plan_id);
       const previousCareplanDetails =
         (await initialCarePlanData.getCarePlanDetails()) || {};
+      const { clinical_notes: previousClinicalNotes } = previousCareplanDetails;
+      const new_clinical_notes = `${previousClinicalNotes} follow up advise ${clinical_notes}`;
       const { basic_info: prevCareplanBasicInfo } =
         initialCarePlanData.getBasicInfo() || {};
       console.log(34);
@@ -489,7 +491,7 @@ class CarePlanController extends Controller {
         ...prevCareplanBasicInfo,
         details: {
           ...previousCareplanDetails,
-          clinical_notes,
+          clinical_notes: new_clinical_notes,
         },
       };
       console.log(35);

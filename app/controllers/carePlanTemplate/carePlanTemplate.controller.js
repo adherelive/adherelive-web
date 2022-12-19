@@ -842,12 +842,15 @@ class CarePlanTemplateController extends Controller {
           isDuplicate = true;
         }
       }
-
+      let { clinical_notes } = req.body;
+      let { details } = existingTemplate;
+      let newdetails = { ...details, clinical_notes };
       if (!isDuplicate) {
         const updateTemplate =
           (await carePlanTemplateService.update(
             {
               name,
+              details: newdetails,
             },
             careplanTemplateId
           )) || null;
