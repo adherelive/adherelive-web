@@ -482,7 +482,15 @@ class CarePlanController extends Controller {
       const previousCareplanDetails =
         (await initialCarePlanData.getCarePlanDetails()) || {};
       const { clinical_notes: previousClinicalNotes } = previousCareplanDetails;
-      const new_clinical_notes = `${previousClinicalNotes} follow up advise ${clinical_notes}`;
+      let new_clinical_notes = "";
+      if (
+        previousClinicalNotes !== undefined &&
+        clinical_notes !== "" &&
+        clinical_notes !== null &&
+        clinical_notes !== undefined
+      )
+        new_clinical_notes = `${previousClinicalNotes} follow up advise ${clinical_notes}`;
+      else new_clinical_notes = clinical_notes;
       const { basic_info: prevCareplanBasicInfo } =
         initialCarePlanData.getBasicInfo() || {};
       console.log(34);
