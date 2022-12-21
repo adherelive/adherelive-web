@@ -503,6 +503,7 @@ class CarePlanController extends Controller {
         ...prevCareplanBasicInfo,
         details: {
           ...previousCareplanDetails,
+          clinical_notes,
           follow_up_advise: new_follow_up_advise,
         },
       };
