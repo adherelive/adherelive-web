@@ -1595,6 +1595,12 @@ function printCarePlanData({
         doc
           .font(REGULAR_FONT)
           .text(follow_up_advise[itr], DOC_MARGIN, doc.y + 5);
+        if (doc.y > PAGE_END_LIMIT) {
+          if (pageCount === 1) {
+            addPageFooter(doc, providerPrescriptionDetails);
+          }
+          addPageAndNumber(doc);
+        }
       }
 
       if (doc.y > PAGE_END_LIMIT) {
