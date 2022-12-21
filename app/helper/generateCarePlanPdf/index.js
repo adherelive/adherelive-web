@@ -1551,12 +1551,12 @@ function printCarePlanData({
       medicationYLevel = generalExaminationEndLevel + NORMAL_FONT_SIZE + 12;
     }
 
-    let docYLevel = medicationYLevel;
+    let docYLevel = medicationYLevel + 10;
 
     doc
       .font(BOLD_FONT)
       .fontSize(NORMAL_FONT_SIZE)
-      .text("Suggested Investigation :", DOC_MARGIN, docYLevel + 10);
+      .text("Suggested Investigation :", DOC_MARGIN, docYLevel);
 
     for (let index = 0; index < suggestedInvestigations.length; index++) {
       const { type, type_description, radiology_type, start_date, organizer } =
@@ -1593,16 +1593,15 @@ function printCarePlanData({
     doc
       .font(BOLD_FONT)
       .fontSize(NORMAL_FONT_SIZE)
-      .text("FollowUp Advise :", DOC_MARGIN, medicationYLevel + 10);
+      .text("FollowUp Advise :", DOC_MARGIN, docYLevel + 10);
 
-    for (let itr = 0; itr < follow_up_advise.length; itr++) {
-      doc.font(REGULAR_FONT).text(follow_up_advise[itr], DOC_MARGIN, doc.y + 5);
-      if (doc.y > PAGE_END_LIMIT) {
-        if (pageCount === 1) {
-          addPageFooter(doc, providerPrescriptionDetails);
-        }
-        addPageAndNumber(doc);
+    doc.font(REGULAR_FONT).text(follow_up_advise, DOC_MARGIN, doc.y + 5);
+
+    if (doc.y > PAGE_END_LIMIT) {
+      if (pageCount === 1) {
+        addPageFooter(doc, providerPrescriptionDetails);
       }
+      addPageAndNumber(doc);
     }
 
     const suggestedInvestigationXLevelEnd = doc.x;
