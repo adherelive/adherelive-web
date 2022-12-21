@@ -497,7 +497,10 @@ class CarePlanController extends Controller {
       ) {
         new_follow_up_advise = previousFollowUpAdvise;
         new_follow_up_advise.push(follow_up_advise);
-      } else if (previousFollowUpAdvise === undefined) {
+      } else if (
+        previousFollowUpAdvise === undefined &&
+        follow_up_advise !== null
+      ) {
         new_follow_up_advise.push(follow_up_advise);
       } else {
         new_follow_up_advise = previousFollowUpAdvise;
