@@ -3378,6 +3378,7 @@ class DoctorController extends Controller {
         comorbidities = "",
         allergies = "",
         clinical_notes = "",
+        follow_up_advise,
         diagnosis_type = "1",
         diagnosis_description = "",
         treatment_id,
@@ -3452,6 +3453,7 @@ class DoctorController extends Controller {
         details: {
           ...previousCareplanDetails,
           clinical_notes,
+          follow_up_advise,
           treatment_id,
           severity_id,
           condition_id,

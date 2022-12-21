@@ -137,3 +137,14 @@ createdAt = null, (in get basic info.)
 ```
 
 in feature details table add new json data `app/services/featureDetails/appontmentdetails.json`
+
+#
+
+in gen prescription -> added followup and change gen and cons test.
+
+# updated at in careplantemplate wrapper
+
+# clinical notes and flollowup changes
+
+careplan-template
+careplan update and create api.
