@@ -66,6 +66,7 @@ class CarePlanController extends Controller {
         name: newTemplateName,
         createTemplate = false,
         clinical_notes,
+        follow_up_advise,
       } = req.body;
 
       const { userDetails, permissions = [] } = req;
@@ -481,25 +482,28 @@ class CarePlanController extends Controller {
       const initialCarePlanData = await CarePlanWrapper(null, care_plan_id);
       const previousCareplanDetails =
         (await initialCarePlanData.getCarePlanDetails()) || {};
-      const { clinical_notes: previousClinicalNotes } = previousCareplanDetails;
-      let new_clinical_notes = "";
+      //================================
+      const { follow_up_advise: previousFollowUpAdvise } =
+        previousCareplanDetails;
+
+      let new_follow_up_advise = [];
       if (
-        previousClinicalNotes !== undefined &&
-        clinical_notes !== "" &&
-        clinical_notes !== null &&
-        clinical_notes !== undefined
-      )
-        new_clinical_notes = `${previousClinicalNotes} follow up advise ${clinical_notes}`;
-      else new_clinical_notes = clinical_notes;
+        previousFollowUpAdvise !== undefined &&
+        follow_up_advise !== "" &&
+        follow_up_advise !== null &&
+        follow_up_advise !== undefined
+      ) {
+        new_follow_up_advise = previousFollowUpAdvise;
+        new_follow_up_advise.push(follow_up_advise);
+      } else new_follow_up_advise.push(follow_up_advise);
       const { basic_info: prevCareplanBasicInfo } =
         initialCarePlanData.getBasicInfo() || {};
-      console.log(34);
-      console.log({ clinical_notes });
+
       const carePlanUpdateData = {
         ...prevCareplanBasicInfo,
         details: {
           ...previousCareplanDetails,
-          clinical_notes: new_clinical_notes,
+          follow_up_advise: new_follow_up_advise,
         },
       };
       console.log(35);
