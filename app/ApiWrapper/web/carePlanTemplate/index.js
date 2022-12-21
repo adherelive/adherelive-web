@@ -29,6 +29,7 @@ class CarePlanTemplateWrapper extends BaseCarePlanTemplate {
       user_id,
       details = {},
       createdAt = null,
+      updated_at = null,
     } = _data || {};
 
     return {
