@@ -1588,12 +1588,11 @@ function printCarePlanData({
         addPageAndNumber(doc);
       }
     }
-    // Gaurav New Changes
-    medicationYLevel = generalExaminationEndLevel + NORMAL_FONT_SIZE + 12;
+
     doc
       .font(BOLD_FONT)
       .fontSize(NORMAL_FONT_SIZE)
-      .text("FollowUp Advise :", DOC_MARGIN, docYLevel + 10);
+      .text("FollowUp Advise :", DOC_MARGIN, doc.y + 10);
 
     doc.font(REGULAR_FONT).text(follow_up_advise, DOC_MARGIN, doc.y + 5);
 
