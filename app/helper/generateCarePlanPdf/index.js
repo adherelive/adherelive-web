@@ -1551,12 +1551,7 @@ function printCarePlanData({
       medicationYLevel = generalExaminationEndLevel + NORMAL_FONT_SIZE + 12;
     }
 
-    let docYLevel =
-      // workoutBlockLevelEnd
-      // ? workoutBlockLevelEnd
-      // : dietBlockLevelEnd ? dietBlockLevelEnd
-      // :
-      medicationYLevel;
+    let docYLevel = medicationYLevel;
 
     doc
       .font(BOLD_FONT)
@@ -1594,10 +1589,11 @@ function printCarePlanData({
       }
     }
     // Gaurav New Changes
+    medicationYLevel = generalExaminationEndLevel + NORMAL_FONT_SIZE + 12;
     doc
       .font(BOLD_FONT)
       .fontSize(NORMAL_FONT_SIZE)
-      .text("FollowUp Advise :", DOC_MARGIN, docYLevel + 10);
+      .text("FollowUp Advise :", DOC_MARGIN, medicationYLevel + 10);
 
     for (let itr = 0; itr < follow_up_advise.length; itr++) {
       doc.font(REGULAR_FONT).text(follow_up_advise[itr], DOC_MARGIN, doc.y + 5);
