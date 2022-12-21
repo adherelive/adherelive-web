@@ -1309,9 +1309,14 @@ function printCarePlanData({
     doc
       .font(BOLD_FONT)
       .fontSize(NORMAL_FONT_SIZE)
-      .text("General Examination: ", DOC_MARGIN, chiefComplaintsEndLevel, {
-        continued: true,
-      })
+      .text(
+        "General | systemic  Examination ",
+        DOC_MARGIN,
+        chiefComplaintsEndLevel,
+        {
+          continued: true,
+        }
+      )
       .font(REGULAR_FONT)
       .text(`${clinicalNotes}`, doc.x + 10, chiefComplaintsEndLevel);
 
@@ -1626,7 +1631,7 @@ function printConsultationAppointment({
     doc
       .font(BOLD_FONT)
       .fontSize(NORMAL_FONT_SIZE)
-      .text("Consultation:", DOC_MARGIN, docYLevel + 10);
+      .text("Next Consultation:", DOC_MARGIN, docYLevel + 10);
 
     for (let index = 0; index < suggestedInvestigations.length; index++) {
       const { type, type_description, radiology_type, start_date, organizer } =
