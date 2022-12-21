@@ -1476,6 +1476,8 @@ class PatientController extends Controller {
       }
       const carePlan = await carePlanService.getCarePlanById(care_plan_id);
       const carePlanData = await CarePlanWrapper(carePlan);
+      const { clinical_notes, follow_up_advise } =
+        (await initialCarePlanData.getCarePlanDetails()) || {};
       const curr_patient_id = carePlanData.getPatientId();
       const doctorUserRoleId = carePlanData.getUserRoleId();
       const userRoles = await userRolesService.getSingleUserRoleByData({
@@ -1945,6 +1947,8 @@ class PatientController extends Controller {
         //   medicines,
         // }),
         medications,
+        clinical_notes,
+        follow_up_advise,
         medicines,
         care_plans: {
           [carePlanData.getCarePlanId()]: {
