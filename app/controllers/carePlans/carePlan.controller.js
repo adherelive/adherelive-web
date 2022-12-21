@@ -489,6 +489,7 @@ class CarePlanController extends Controller {
       let new_follow_up_advise = [];
       console.log({ previousFollowUpAdvise, follow_up_advise });
       if (
+        previousFollowUpAdvise !== undefined &&
         previousFollowUpAdvise.length > 0 &&
         follow_up_advise !== "" &&
         follow_up_advise !== null &&
