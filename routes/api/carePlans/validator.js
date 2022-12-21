@@ -8,6 +8,7 @@ const templateCreateCarePlanForm = Joi.object().keys({
   dietData: Joi.array(),
   workoutData: Joi.array(),
   clinical_notes: Joi.string().allow(null, ""),
+  follow_up_advise: Joi.array().allow(null, [], ""),
   treatment_id: Joi.number()
     .required()
     .label("Incorrect Treatment value selected"),
