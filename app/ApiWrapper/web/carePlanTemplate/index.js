@@ -44,6 +44,7 @@ class CarePlanTemplateWrapper extends BaseCarePlanTemplate {
       },
       details,
       created_at: createdAt,
+      updated_at: updatedAt,
     };
   };
 
