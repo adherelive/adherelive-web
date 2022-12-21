@@ -1585,24 +1585,22 @@ function printCarePlanData({
             doc.y + 5
           );
       }
-      // Gaurav New Changes
-      doc
-        .font(BOLD_FONT)
-        .fontSize(NORMAL_FONT_SIZE)
-        .text("FollowUp Advise :", DOC_MARGIN, docYLevel + 10);
 
-      for (let itr = 0; itr < follow_up_advise.length; itr++) {
-        doc
-          .font(REGULAR_FONT)
-          .text(follow_up_advise[itr], DOC_MARGIN, doc.y + 5);
-        if (doc.y > PAGE_END_LIMIT) {
-          if (pageCount === 1) {
-            addPageFooter(doc, providerPrescriptionDetails);
-          }
-          addPageAndNumber(doc);
+      if (doc.y > PAGE_END_LIMIT) {
+        if (pageCount === 1) {
+          addPageFooter(doc, providerPrescriptionDetails);
         }
+        addPageAndNumber(doc);
       }
+    }
+    // Gaurav New Changes
+    doc
+      .font(BOLD_FONT)
+      .fontSize(NORMAL_FONT_SIZE)
+      .text("FollowUp Advise :", DOC_MARGIN, docYLevel + 10);
 
+    for (let itr = 0; itr < follow_up_advise.length; itr++) {
+      doc.font(REGULAR_FONT).text(follow_up_advise[itr], DOC_MARGIN, doc.y + 5);
       if (doc.y > PAGE_END_LIMIT) {
         if (pageCount === 1) {
           addPageFooter(doc, providerPrescriptionDetails);
