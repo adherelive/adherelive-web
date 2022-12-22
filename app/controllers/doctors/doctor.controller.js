@@ -4208,6 +4208,53 @@ class DoctorController extends Controller {
   //     return raiseServerError(res);
   //   }
   // };
+
+  medicineModificationDocs = async (req, res) => {
+    const { raiseServerError, raiseSuccess, raiseClientError } = this;
+    try {
+      const {
+        userDetails: { userId, userData: { category = null } = {} } = {},
+        body: { doctor_id = null } = {},
+      } = req;
+      const file = req.file;
+
+      let doctorUserId = userId;
+      if (doctor_id) {
+        if (category !== USER_CATEGORY.PROVIDER) {
+          return raiseClientError(res, 401, {}, "UNAUTHORIZED");
+        }
+
+        const doctorData = await DoctorWrapper(null, doctor_id);
+        doctorUserId = doctorData.getUserId();
+      }
+
+      const { mimetype } = file || {};
+      const fileType = mimetype.split("/");
+      Logger.debug("mimetype ------> ", mimetype);
+      if (!ALLOWED_DOC_TYPE_DOCTORS.includes(fileType[1])) {
+        return this.raiseClientError(
+          res,
+          422,
+          {},
+          "Only images and pdf documents are allowed"
+        );
+      }
+
+      // read the file and convert it in the json and update the value accordingly.
+
+      return raiseSuccess(
+        res,
+        200,
+        {
+          files: file,
+          // qualification_id
+        },
+        "Doctor qualification document uploaded successfully"
+      );
+    } catch (error) {
+      return raiseServerError(res);
+    }
+  };
 }
 
 export default new DoctorController();

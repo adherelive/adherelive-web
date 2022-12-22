@@ -50,6 +50,7 @@ const addPatientForm = Joi.object().keys({
   comorbidities: Joi.string().trim().optional().allow(""),
   allergies: Joi.string().trim().optional().allow(""),
   clinical_notes: Joi.string().trim().optional().allow(""),
+  follow_up_advise: Joi.string().trim().optional().allow(""),
   diagnosis_type: Joi.number().required(),
   diagnosis_description: Joi.string().trim().max(500).required(),
   treatment_id: Joi.number()

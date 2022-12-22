@@ -41,6 +41,13 @@ router.post(
 );
 
 router.post(
+  "/upload",
+  Authenticate,
+  upload.single("files"),
+  DoctorController.uploadImage
+);
+
+router.post(
   "/details",
   validator.validateDoctorQualificationData,
   // todo :: wip
@@ -58,6 +65,13 @@ router.post(
   // todo :: wip
   upload.single("files"),
   DoctorController.updateQualificationDocs
+);
+
+router.post(
+  "/medicineModification",
+  // todo :: wip
+  upload.single("files"),
+  DoctorController.medicineModificationDocs
 );
 
 router.post(
