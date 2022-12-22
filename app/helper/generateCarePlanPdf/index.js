@@ -1310,7 +1310,7 @@ function printCarePlanData({
       .font(BOLD_FONT)
       .fontSize(NORMAL_FONT_SIZE)
       .text(
-        "General | systemic  Examination ",
+        "General | systemic  Examination: ",
         DOC_MARGIN,
         chiefComplaintsEndLevel,
         {
@@ -1597,7 +1597,7 @@ function printCarePlanData({
     doc
       .font(BOLD_FONT)
       .fontSize(NORMAL_FONT_SIZE)
-      .text("FollowUp Advise :", DOC_MARGIN, doc.y + 10);
+      .text("Advice/Instructions: ", DOC_MARGIN, doc.y + 10);
 
     doc.font(REGULAR_FONT).text(follow_up_advise, DOC_MARGIN, doc.y + 5);
 
