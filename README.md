@@ -148,3 +148,5 @@ in gen prescription -> added followup and change gen and cons test.
 
 careplan-template
 careplan update and create api.
+update bar code.
+and add followup advise in update patient careplan's validator

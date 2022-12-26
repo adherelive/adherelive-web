@@ -4230,6 +4230,7 @@ class DoctorController extends Controller {
 
       const { mimetype } = file || {};
       const fileType = mimetype.split("/");
+      console.log(file);
       Logger.debug("mimetype ------> ", mimetype);
       if (!ALLOWED_DOC_TYPE_DOCTORS.includes(fileType[1])) {
         return this.raiseClientError(
