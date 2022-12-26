@@ -4246,6 +4246,8 @@ class DoctorController extends Controller {
         );
       }
 
+      // let files = await uploadImageS3(doctorUserId, file);
+
       // read the file and convert it in the json and update the value accordingly.
 
       return raiseSuccess(

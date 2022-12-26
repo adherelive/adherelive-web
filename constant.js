@@ -715,7 +715,14 @@ export const BLANK_STATE = "";
 
 export const PASSWORD_LENGTH = 8;
 
-export const ALLOWED_DOC_TYPE_DOCTORS = ["jpeg", "svg", "png", "pdf", "xlsx"];
+export const ALLOWED_DOC_TYPE_DOCTORS = [
+  "jpeg",
+  "svg",
+  "png",
+  "pdf",
+  "application",
+  "xlsx",
+];
 
 const TABLET = "1";
 const SYRUP = "2";
