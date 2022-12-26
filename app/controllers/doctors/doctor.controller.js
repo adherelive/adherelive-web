@@ -4210,16 +4210,19 @@ class DoctorController extends Controller {
   // };
 
   medicineModificationDocs = async (req, res) => {
+    console.log("medicineModificationDocs-Called-1");
     const { raiseServerError, raiseSuccess, raiseClientError } = this;
     try {
+      console.log("medicineModificationDocs-Called-2");
       const {
         userDetails: { userId, userData: { category = null } = {} } = {},
         body: { doctor_id = null } = {},
       } = req;
       const file = req.file;
-
+      console.log("medicineModificationDocs-Called-3");
       let doctorUserId = userId;
       if (doctor_id) {
+        console.log("medicineModificationDocs-Called-4");
         if (category !== USER_CATEGORY.PROVIDER) {
           return raiseClientError(res, 401, {}, "UNAUTHORIZED");
         }
@@ -4227,7 +4230,7 @@ class DoctorController extends Controller {
         const doctorData = await DoctorWrapper(null, doctor_id);
         doctorUserId = doctorData.getUserId();
       }
-
+      console.log("medicineModificationDocs-Called-5");
       const { mimetype } = file || {};
       const fileType = mimetype.split("/");
       console.log(file);
