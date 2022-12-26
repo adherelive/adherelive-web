@@ -4256,6 +4256,7 @@ class DoctorController extends Controller {
         "Doctor qualification document uploaded successfully"
       );
     } catch (error) {
+      console.log(error);
       return raiseServerError(res);
     }
   };
