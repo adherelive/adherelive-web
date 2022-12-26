@@ -721,7 +721,7 @@ export const ALLOWED_DOC_TYPE_DOCTORS = [
   "png",
   "pdf",
   "application",
-  "xlsx",
+  "vnd.openxmlformats-officedocument.spreadsheetml.sheet",
 ];
 
 const TABLET = "1";
