@@ -4219,6 +4219,7 @@ class DoctorController extends Controller {
         body: { doctor_id = null } = {},
       } = req;
       const file = req.file;
+      console.log({ file });
       console.log("medicineModificationDocs-Called-3");
       let doctorUserId = userId;
       if (doctor_id) {
