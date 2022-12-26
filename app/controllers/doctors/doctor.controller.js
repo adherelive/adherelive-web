@@ -4249,6 +4249,9 @@ class DoctorController extends Controller {
       fs.writeFile("file.xlsx", file.buffer, function (err, result) {
         if (err) console.log("error", err);
       });
+
+      //TODO: read the data file file.xlsx
+
       // let files = await uploadImageS3(doctorUserId, file);
 
       // read the file and convert it in the json and update the value accordingly.

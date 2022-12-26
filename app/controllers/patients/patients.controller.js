@@ -1248,6 +1248,7 @@ class PatientController extends Controller {
     try {
       const {
         clinical_notes = "",
+        follow_up_advise = "",
         diagnosis_type = "1",
         diagnosis_description = "",
         treatment_id,
@@ -1269,16 +1270,19 @@ class PatientController extends Controller {
       if (clinical_notes) {
         carePlanOtherDetails["clinical_notes"] = clinical_notes;
       }
+      if (follow_up_advise) {
+        carePlanOtherDetails["follow_up_advise"] = follow_up_advise;
+      }
       if (symptoms) {
         carePlanOtherDetails["symptoms"] = symptoms;
       }
 
-      if (clinical_notes) {
-        carePlanOtherDetails["clinical_notes"] = clinical_notes;
-      }
-      if (symptoms) {
-        carePlanOtherDetails["symptoms"] = symptoms;
-      }
+      // if (clinical_notes) {
+      //   carePlanOtherDetails["clinical_notes"] = clinical_notes;
+      // }
+      // if (symptoms) {
+      //   carePlanOtherDetails["symptoms"] = symptoms;
+      // }
 
       patientData = await PatientWrapper(null, patient_id);
 

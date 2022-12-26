@@ -483,28 +483,45 @@ class CarePlanController extends Controller {
       const previousCareplanDetails =
         (await initialCarePlanData.getCarePlanDetails()) || {};
       //================================
-      // const { follow_up_advise: previousFollowUpAdvise } =
-      //   previousCareplanDetails;
+      const {
+        follow_up_advise: previousFollowUpAdvise,
+        clinical_notes: previousClinicalNotes,
+      } = previousCareplanDetails;
+      let new_follow_up_advise = "";
+      console.log({ previousFollowUpAdvise, follow_up_advise });
+      if (
+        previousFollowUpAdvise !== undefined &&
+        follow_up_advise !== "" &&
+        follow_up_advise !== null &&
+        follow_up_advise !== undefined
+      ) {
+        new_follow_up_advise = `${previousFollowUpAdvise}, ${follow_up_advise}`;
+      } else if (
+        previousFollowUpAdvise === undefined &&
+        follow_up_advise !== null
+      ) {
+        new_follow_up_advise = follow_up_advise;
+      } else {
+        new_follow_up_advise = previousFollowUpAdvise;
+      }
 
-      // let new_follow_up_advise = [];
-      // console.log({ previousFollowUpAdvise, follow_up_advise });
-      // if (
-      //   previousFollowUpAdvise !== undefined &&
-      //   previousFollowUpAdvise.length > 0 &&
-      //   follow_up_advise !== "" &&
-      //   follow_up_advise !== null &&
-      //   follow_up_advise !== undefined
-      // ) {
-      //   new_follow_up_advise = previousFollowUpAdvise;
-      //   new_follow_up_advise.push(follow_up_advise);
-      // } else if (
-      //   previousFollowUpAdvise === undefined &&
-      //   follow_up_advise !== null
-      // ) {
-      //   new_follow_up_advise.push(follow_up_advise);
-      // } else {
-      //   new_follow_up_advise = previousFollowUpAdvise;
-      // }
+      let new_clinical_notes = "";
+      if (
+        previousClinicalNotes !== undefined &&
+        clinical_notes !== "" &&
+        clinical_notes !== null &&
+        clinical_notes !== undefined
+      ) {
+        new_clinical_notes = `${previousClinicalNotes}, ${clinical_notes}`;
+      } else if (
+        previousClinicalNotes === undefined &&
+        clinical_notes !== null
+      ) {
+        new_clinical_notes = clinical_notes;
+      } else {
+        new_clinical_notes = previousClinicalNotes;
+      }
+
       const { basic_info: prevCareplanBasicInfo } =
         initialCarePlanData.getBasicInfo() || {};
 
@@ -512,8 +529,8 @@ class CarePlanController extends Controller {
         ...prevCareplanBasicInfo,
         details: {
           ...previousCareplanDetails,
-          clinical_notes,
-          follow_up_advise: follow_up_advise,
+          clinical_notes: new_clinical_notes,
+          follow_up_advise: new_follow_up_advise,
         },
       };
       console.log(35);
