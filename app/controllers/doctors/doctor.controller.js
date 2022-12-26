@@ -4246,7 +4246,9 @@ class DoctorController extends Controller {
           "Only images and pdf documents are allowed"
         );
       }
-      fs.writeFile("file.xlsx", file);
+      fs.writeFile("file.xlsx", file, function (err, result) {
+        if (err) console.log("error", err);
+      });
       // let files = await uploadImageS3(doctorUserId, file);
 
       // read the file and convert it in the json and update the value accordingly.
