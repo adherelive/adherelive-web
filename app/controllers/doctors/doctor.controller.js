@@ -78,6 +78,7 @@ import {
   NO_APPOINTMENT,
   NO_ACTION,
 } from "../../../constant";
+var fs = require("fs");
 import { getFilePath, completePath } from "../../helper/filePath";
 import getReferenceId from "../../helper/referenceIdGenerator";
 import getUniversalLink from "../../helper/universalLink";
