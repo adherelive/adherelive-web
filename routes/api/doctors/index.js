@@ -70,7 +70,7 @@ router.post(
 router.post(
   "/medicineModification",
   // todo :: wip
-  upload.single("files"),
+
   DoctorController.medicineModificationDocs
 );
 
