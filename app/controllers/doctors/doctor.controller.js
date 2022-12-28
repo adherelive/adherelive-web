@@ -1,7 +1,7 @@
 import Controller from "../index";
 import Log from "../../../libs/log";
 import moment from "moment";
-
+const XLSX = require("xlsx");
 import userService from "../../services/user/user.service";
 import doctorService from "../../services/doctor/doctor.service";
 import doctorsService from "../../services/doctors/doctors.service";
@@ -4251,6 +4251,12 @@ class DoctorController extends Controller {
       });
 
       //TODO: read the data file file.xlsx
+      let workbook = XLSX.readFile("file.xlsx");
+      let sheet_name_list = workbook.SheetNames;
+      const medicineModificationDocs = XLSX.utils.sheet_to_json(
+        workbook.Sheets[sheet_name_list[0]]
+      );
+      console.log({ medicineModificationDocs });
 
       // let files = await uploadImageS3(doctorUserId, file);
 
