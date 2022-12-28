@@ -4265,6 +4265,9 @@ class DoctorController extends Controller {
           let { id: medicinId } = medicin;
           let oldData = await medicineService.getMedicineById(medicinId);
           let data = { ...oldData, ...medicin };
+          let { details } = data;
+          details = JSON.parse(details);
+          data = { ...data, details };
           try {
             let medicaineUpdate = await medicineService.updateMedicine(
               data,
