@@ -4248,6 +4248,7 @@ class DoctorController extends Controller {
         );
       }
 
+      let baseId = 22016;
       fs.writeFile("file.xlsx", file.buffer, async function (err, result) {
         if (err) console.log("error", err);
 
@@ -4267,7 +4268,7 @@ class DoctorController extends Controller {
           try {
             let medicaineUpdate = await medicineService.updateMedicine(
               data,
-              medicinId
+              baseId + i
             );
             success.push(medicinId);
           } catch (ex) {
