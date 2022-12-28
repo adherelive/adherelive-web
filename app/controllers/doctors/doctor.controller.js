@@ -4248,7 +4248,7 @@ class DoctorController extends Controller {
         );
       }
 
-      let baseId = 22016;
+      // let baseId = 22016;
       fs.writeFile("file.xlsx", file.buffer, async function (err, result) {
         if (err) console.log("error", err);
 
@@ -4263,7 +4263,7 @@ class DoctorController extends Controller {
         for (let i in medicineModificationDocs) {
           let medicin = medicineModificationDocs[i];
           let { id: medicinId } = medicin;
-          medicinId = baseId;
+          // medicinId = baseId;
           let oldData = await medicineService.getMedicineById(medicinId);
           oldData = oldData.dataValues || {};
           let data = { ...oldData, ...medicin };
