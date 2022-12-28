@@ -4268,10 +4268,12 @@ class DoctorController extends Controller {
           let { details } = data;
           details = JSON.parse(details);
           data = { ...data, details };
+          medicinId = baseId + i;
+          console.log({ medicinId, baseId, i });
           try {
             let medicaineUpdate = await medicineService.updateMedicine(
               data,
-              baseId + i
+              medicinId
             );
             success.push(medicinId);
           } catch (ex) {
