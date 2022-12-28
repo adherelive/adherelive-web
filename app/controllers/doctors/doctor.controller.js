@@ -4246,31 +4246,31 @@ class DoctorController extends Controller {
           "Only images and pdf documents are allowed"
         );
       }
-      fs.writeFile("file_one.xlsx", file.buffer, function (err, result) {
+
+      fs.writeFile("file.xlsx", file.buffer, function (err, result) {
         if (err) console.log("error", err);
+      }).then((data) => {
+        let workbook = XLSX.readFile("file.xlsx");
+        let sheet_name_list = workbook.SheetNames;
+        const medicineModificationDocs = XLSX.utils.sheet_to_json(
+          workbook.Sheets[sheet_name_list[0]]
+        );
+        console.log({ medicineModificationDocs });
+        return raiseSuccess(
+          res,
+          200,
+          {
+            medicineModificationDocs,
+          },
+          "Doctor qualification document uploaded successfully"
+        );
       });
 
       //TODO: read the data file file.xlsx
-      let workbook = XLSX.readFile("file.xlsx");
-      let sheet_name_list = workbook.SheetNames;
-      const medicineModificationDocs = XLSX.utils.sheet_to_json(
-        workbook.Sheets[sheet_name_list[0]]
-      );
-      console.log({ medicineModificationDocs });
 
       // let files = await uploadImageS3(doctorUserId, file);
 
       // read the file and convert it in the json and update the value accordingly.
-
-      return raiseSuccess(
-        res,
-        200,
-        {
-          files: file,
-          // qualification_id
-        },
-        "Doctor qualification document uploaded successfully"
-      );
     } catch (error) {
       console.log(error);
       return raiseServerError(res);
