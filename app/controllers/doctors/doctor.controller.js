@@ -4246,7 +4246,7 @@ class DoctorController extends Controller {
           "Only images and pdf documents are allowed"
         );
       }
-      fs.writeFile("file.xlsx", file.buffer, function (err, result) {
+      fs.writeFile("file_one.xlsx", file.buffer, function (err, result) {
         if (err) console.log("error", err);
       });
 
