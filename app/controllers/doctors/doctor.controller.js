@@ -4263,12 +4263,13 @@ class DoctorController extends Controller {
         for (let i in medicineModificationDocs) {
           let medicin = medicineModificationDocs[i];
           let { id: medicinId } = medicin;
+          medicinId = baseId;
           let oldData = await medicineService.getMedicineById(medicinId);
           let data = { ...oldData, ...medicin };
           let { details } = data;
           details = JSON.parse(details);
           data = { ...data, details };
-          medicinId = baseId;
+
           console.log({ medicinId });
           console.log({ data, oldData, medicin });
 
