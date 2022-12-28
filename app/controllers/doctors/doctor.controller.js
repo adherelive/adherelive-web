@@ -4249,7 +4249,7 @@ class DoctorController extends Controller {
 
       fs.writeFile("file.xlsx", file.buffer, function (err, result) {
         if (err) console.log("error", err);
-      }).then((data) => {
+
         let workbook = XLSX.readFile("file.xlsx");
         let sheet_name_list = workbook.SheetNames;
         const medicineModificationDocs = XLSX.utils.sheet_to_json(
