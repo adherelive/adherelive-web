@@ -9,6 +9,7 @@ import patientsService from "../../services/patients/patients.service";
 import treatmentService from "../../services/treatment/treatment.service";
 import specialityService from "../../services/speciality/speciality.service";
 import patientService from "../../../app/services/patients/patients.service";
+import medicineService from "../../services/medicine/medicine.service";
 import UserRoleService from "../../services/userRoles/userRoles.service";
 import qualificationService from "../../services/doctorQualifications/doctorQualification.service";
 import clinicService from "../../services/doctorClinics/doctorClinics.service";
@@ -4247,7 +4248,7 @@ class DoctorController extends Controller {
         );
       }
 
-      fs.writeFile("file.xlsx", file.buffer, function (err, result) {
+      fs.writeFile("file.xlsx", file.buffer, async function (err, result) {
         if (err) console.log("error", err);
 
         let workbook = XLSX.readFile("file.xlsx");
@@ -4256,13 +4257,31 @@ class DoctorController extends Controller {
           workbook.Sheets[sheet_name_list[0]]
         );
         console.log({ medicineModificationDocs });
+        let error = [];
+        let success = [];
+        for (let i in medicineModificationDocs) {
+          let medicin = medicineModificationDocs[i];
+          let { id: medicinId } = medicin;
+          let oldData = await medicineService.getMedicineById(medicinId);
+          let data = { ...oldData, ...medicin };
+          try {
+            let medicaineUpdate = await medicineService.updateMedicine(
+              data,
+              medicinId
+            );
+            success.push(medicinId);
+          } catch (ex) {
+            error.push(medicinId);
+          }
+        }
         return raiseSuccess(
           res,
           200,
           {
-            medicineModificationDocs,
+            error,
+            success,
           },
-          "Doctor qualification document uploaded successfully"
+          ""
         );
       });
 
