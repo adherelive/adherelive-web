@@ -4270,7 +4270,7 @@ class DoctorController extends Controller {
           data = { ...data, details };
           medicinId = baseId;
           console.log({ medicinId });
-          console.log(data);
+          console.log({ data });
           try {
             let medicaineUpdate = await medicineService.updateMedicine(
               data,
