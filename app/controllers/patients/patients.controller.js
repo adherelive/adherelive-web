@@ -11,6 +11,7 @@ import carePlanService from "../../services/carePlan/carePlan.service";
 // import templateMedicationService from "../../services/templateMedication/templateMedication.service";
 // import templateAppointmentService from "../../services/templateAppointment/templateAppointment.service";
 import medicineService from "../../services/medicine/medicine.service";
+import getAge from "../../helper/getAge";
 import SymptomService from "../../services/symptom/symptom.service";
 import VitalService from "../../services/vitals/vital.service";
 import appointmentService from "../../services/appointment/appointment.service";
@@ -74,10 +75,10 @@ import {
   PRESCRIPTION_PDF_FOLDER,
   DIAGNOSIS_TYPE,
   S3_DOWNLOAD_FOLDER_PROVIDER,
-  CONSULTATION,
   ONBOARDING_STATUS,
   SIGN_IN_CATEGORY,
 } from "../../../constant";
+
 import { getSeparateName, getRoomId } from "../../helper/common";
 import generateOTP from "../../helper/generateOtp";
 import { EVENTS, Proxy_Sdk } from "../../proxySdk";
@@ -86,14 +87,12 @@ import generatePDF from "../../helper/generateCarePlanPdf";
 import { downloadFileFromS3 } from "../user/userHelper";
 import { getFilePath } from "../../helper/filePath";
 import { checkAndCreateDirectory } from "../../helper/common";
-import PERMISSIONS from "../../../config/permissions";
-// helpers
-import * as carePlanHelper from "../carePlans/carePlanHelper";
-import { getDoctorCurrentTime } from "../../helper/getUserTime";
-import templateAppointmentService from "../../services/templateAppointment/templateAppointment.service";
-import getAge from "../../helper/getAge";
+
 // helpers
 import bcrypt from "bcrypt";
+import * as carePlanHelper from "../carePlans/carePlanHelper";
+import { getDoctorCurrentTime } from "../../helper/getUserTime";
+
 const path = require("path");
 
 const Logger = new Log("WEB > PATIENTS > CONTROLLER");
@@ -1249,6 +1248,7 @@ class PatientController extends Controller {
     try {
       const {
         clinical_notes = "",
+        follow_up_advise = "",
         diagnosis_type = "1",
         diagnosis_description = "",
         treatment_id,
@@ -1270,16 +1270,19 @@ class PatientController extends Controller {
       if (clinical_notes) {
         carePlanOtherDetails["clinical_notes"] = clinical_notes;
       }
+      if (follow_up_advise) {
+        carePlanOtherDetails["follow_up_advise"] = follow_up_advise;
+      }
       if (symptoms) {
         carePlanOtherDetails["symptoms"] = symptoms;
       }
 
-      if (clinical_notes) {
-        carePlanOtherDetails["clinical_notes"] = clinical_notes;
-      }
-      if (symptoms) {
-        carePlanOtherDetails["symptoms"] = symptoms;
-      }
+      // if (clinical_notes) {
+      //   carePlanOtherDetails["clinical_notes"] = clinical_notes;
+      // }
+      // if (symptoms) {
+      //   carePlanOtherDetails["symptoms"] = symptoms;
+      // }
 
       patientData = await PatientWrapper(null, patient_id);
 
@@ -1477,6 +1480,8 @@ class PatientController extends Controller {
       }
       const carePlan = await carePlanService.getCarePlanById(care_plan_id);
       const carePlanData = await CarePlanWrapper(carePlan);
+      const { clinical_notes, follow_up_advise } =
+        (await carePlanData.getCarePlanDetails()) || {};
       const curr_patient_id = carePlanData.getPatientId();
       const doctorUserRoleId = carePlanData.getUserRoleId();
       const userRoles = await userRolesService.getSingleUserRoleByData({
@@ -1946,6 +1951,8 @@ class PatientController extends Controller {
         //   medicines,
         // }),
         medications,
+        clinical_notes,
+        follow_up_advise,
         medicines,
         care_plans: {
           [carePlanData.getCarePlanId()]: {
@@ -2587,6 +2594,7 @@ class PatientController extends Controller {
       return raiseServerError(res);
     }
   };
+
   createPatient = async (req, res) => {
     console.log("create Patient Called.");
     try {
