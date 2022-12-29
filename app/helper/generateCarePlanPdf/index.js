@@ -68,6 +68,8 @@ export default async (pdfData, signatureImage) => {
         workouts_formatted_data = {},
         workout_ids = [],
         timings = {},
+        clinical_notes = "",
+        follow_up_advise = [],
         providerPrescriptionDetails: pdfproviderPrescriptionDetails = "",
       } = pdfData;
       const doc = new PDFDocument({
@@ -140,6 +142,7 @@ export default async (pdfData, signatureImage) => {
         comorbidities,
         suggestedInvestigations,
         providerPrescriptionDetails,
+        follow_up_advise,
       });
 
       // generateHr(doc, doc.y + 17);
@@ -1222,6 +1225,7 @@ function printCarePlanData({
   comorbidities,
   suggestedInvestigations,
   providerPrescriptionDetails,
+  follow_up_advise,
 }) {
   try {
     const { diagnosis, condition, symptoms, clinicalNotes } =
@@ -1305,9 +1309,14 @@ function printCarePlanData({
     doc
       .font(BOLD_FONT)
       .fontSize(NORMAL_FONT_SIZE)
-      .text("General Examination: ", DOC_MARGIN, chiefComplaintsEndLevel, {
-        continued: true,
-      })
+      .text(
+        "General | Systemic  Examination: ",
+        DOC_MARGIN,
+        chiefComplaintsEndLevel,
+        {
+          continued: true,
+        }
+      )
       .font(REGULAR_FONT)
       .text(`${clinicalNotes}`, doc.x + 10, chiefComplaintsEndLevel);
 
@@ -1471,15 +1480,10 @@ function printCarePlanData({
           // .text(`${organizer.name}`, drXStart, medicationYLevel, {
           //   width: medicineXStart - drXStart,
           // })
-          .text(
-            `${genericName.toUpperCase()}`,
-            medicineXStart,
-            medicationYLevel,
-            {
-              width: dosageXStart - medicineXStart,
-            }
-          )
-          .text(`${medicineData}`, medicineXStart, doc.y, {
+          .text(`${medicineData}`, medicineXStart, medicationYLevel, {
+            width: dosageXStart - medicineXStart,
+          })
+          .text(`${genericName}`, medicineXStart, doc.y, {
             width: dosageXStart - medicineXStart,
             // strike:true
           })
@@ -1552,17 +1556,12 @@ function printCarePlanData({
       medicationYLevel = generalExaminationEndLevel + NORMAL_FONT_SIZE + 12;
     }
 
-    let docYLevel =
-      // workoutBlockLevelEnd
-      // ? workoutBlockLevelEnd
-      // : dietBlockLevelEnd ? dietBlockLevelEnd
-      // :
-      medicationYLevel;
+    let docYLevel = medicationYLevel + 10;
 
     doc
       .font(BOLD_FONT)
       .fontSize(NORMAL_FONT_SIZE)
-      .text("Suggested Investigation :", DOC_MARGIN, docYLevel + 10);
+      .text("Suggested Investigation :", DOC_MARGIN, docYLevel);
 
     for (let index = 0; index < suggestedInvestigations.length; index++) {
       const { type, type_description, radiology_type, start_date, organizer } =
@@ -1595,6 +1594,20 @@ function printCarePlanData({
       }
     }
 
+    doc
+      .font(BOLD_FONT)
+      .fontSize(NORMAL_FONT_SIZE)
+      .text("Advice/Instructions: ", DOC_MARGIN, doc.y + 10);
+
+    doc.font(REGULAR_FONT).text(follow_up_advise, DOC_MARGIN, doc.y + 5);
+
+    if (doc.y > PAGE_END_LIMIT) {
+      if (pageCount === 1) {
+        addPageFooter(doc, providerPrescriptionDetails);
+      }
+      addPageAndNumber(doc);
+    }
+
     const suggestedInvestigationXLevelEnd = doc.x;
     return suggestedInvestigationXLevelEnd;
   } catch (ex) {
@@ -1618,7 +1631,7 @@ function printConsultationAppointment({
     doc
       .font(BOLD_FONT)
       .fontSize(NORMAL_FONT_SIZE)
-      .text("Consultation:", DOC_MARGIN, docYLevel + 10);
+      .text("Next Consultation:", DOC_MARGIN, docYLevel + 10);
 
     for (let index = 0; index < suggestedInvestigations.length; index++) {
       const { type, type_description, radiology_type, start_date, organizer } =
