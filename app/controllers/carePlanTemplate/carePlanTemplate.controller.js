@@ -64,6 +64,8 @@ class CarePlanTemplateController extends Controller {
         workoutData = [],
         name,
         is_public_in_provider,
+        clinical_notes,
+        follow_up_advise,
       } = body || {};
 
       Log.info(`name : ${name}`);
@@ -86,6 +88,7 @@ class CarePlanTemplateController extends Controller {
             ...(permissions.includes(PERMISSIONS.MEDICATIONS.TEMPLATE) && {
               template_medications: medicationsData,
             }),
+            details: { clinical_notes, follow_up_advise },
             template_vitals: vitalsData,
             template_diets: dietData,
             template_workouts: workoutData,
@@ -840,12 +843,15 @@ class CarePlanTemplateController extends Controller {
           isDuplicate = true;
         }
       }
-
+      let { clinical_notes, follow_up_advise } = req.body;
+      let { details } = existingTemplate;
+      let newdetails = { ...details, clinical_notes, follow_up_advise };
       if (!isDuplicate) {
         const updateTemplate =
           (await carePlanTemplateService.update(
             {
               name,
+              details: newdetails,
             },
             careplanTemplateId
           )) || null;

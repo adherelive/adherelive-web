@@ -1,7 +1,7 @@
 import Controller from "../index";
 import Log from "../../../libs/log";
 import moment from "moment";
-
+const XLSX = require("xlsx");
 import userService from "../../services/user/user.service";
 import doctorService from "../../services/doctor/doctor.service";
 import doctorsService from "../../services/doctors/doctors.service";
@@ -9,6 +9,7 @@ import patientsService from "../../services/patients/patients.service";
 import treatmentService from "../../services/treatment/treatment.service";
 import specialityService from "../../services/speciality/speciality.service";
 import patientService from "../../../app/services/patients/patients.service";
+import medicineService from "../../services/medicine/medicine.service";
 import UserRoleService from "../../services/userRoles/userRoles.service";
 import qualificationService from "../../services/doctorQualifications/doctorQualification.service";
 import clinicService from "../../services/doctorClinics/doctorClinics.service";
@@ -78,6 +79,7 @@ import {
   NO_APPOINTMENT,
   NO_ACTION,
 } from "../../../constant";
+var fs = require("fs");
 import { getFilePath, completePath } from "../../helper/filePath";
 import getReferenceId from "../../helper/referenceIdGenerator";
 import getUniversalLink from "../../helper/universalLink";
@@ -3378,6 +3380,7 @@ class DoctorController extends Controller {
         comorbidities = "",
         allergies = "",
         clinical_notes = "",
+        follow_up_advise,
         diagnosis_type = "1",
         diagnosis_description = "",
         treatment_id,
@@ -3452,6 +3455,7 @@ class DoctorController extends Controller {
         details: {
           ...previousCareplanDetails,
           clinical_notes,
+          follow_up_advise,
           treatment_id,
           severity_id,
           condition_id,
@@ -4051,14 +4055,32 @@ class DoctorController extends Controller {
   getAppointmentForDoctors = async (req, res) => {
     const { raiseSuccess, raiseServerError, raiseClientError } = this;
     try {
-      const {
-        userDetails: { userId } = {},
+      let {
+        userDetails: {
+          userId,
+          userData: { category } = {},
+          userCategoryId,
+        } = {},
         query: {
           type = APPOINTMENT_QUERY_TYPE.DAY,
           value = null,
           provider_id = 0,
         } = {},
       } = req;
+
+      let doctor_id = null;
+      let provider_type = null;
+
+      if (category === USER_CATEGORY.DOCTOR) {
+        doctor_id = req.userDetails.userCategoryData.basic_info.id;
+        provider_type = USER_CATEGORY.DOCTOR;
+      }
+
+      if (req.userDetails.userRoleData.basic_info.linked_with === "provider") {
+        provider_id = req.userDetails.userRoleData.basic_info.linked_id;
+        doctor_id = req.userDetails.userCategoryData.basic_info.id;
+        provider_type = req.userDetails.userRoleData.basic_info.linked_with;
+      }
 
       const validDate = moment(value).isValid();
       if (!validDate) {
@@ -4069,15 +4091,6 @@ class DoctorController extends Controller {
           "Please enter the correct date value"
         );
       }
-      const doctorData = await doctorService.getDoctorByData({
-        user_id: userId,
-      });
-
-      const doctorWrap = await DoctorWrapper(doctorData);
-      // const provider = await ProviderWrapper(providerData);
-      // const providerId = provider.getProviderId();
-
-      const doctorId = doctorWrap.getDoctorId();
 
       let userApiDetails = {};
       let doctorApiDetails = {};
@@ -4086,96 +4099,61 @@ class DoctorController extends Controller {
       let dateWiseAppointmentDetails = {};
 
       let patientIds = [];
-      let doctorIds = [];
 
-      const UserRoles = await UserRoleService.getAllByData({
-        linked_id: doctorId,
-        linked_with: USER_CATEGORY.DOCTOR,
-      });
+      let appointmentList = [];
 
-      if (UserRoles && UserRoles.length) {
-        for (let i = 0; i < UserRoles.length; i++) {
-          const UserRole = UserRoles[i];
-          const userRoleWrapper = await UserRoleWrapper(UserRole);
-          const DoctorUserId = await userRoleWrapper.getUserId();
-          const doctor = await doctorService.getDoctorByData({
-            user_id: DoctorUserId,
-          });
-          if (doctor) {
-            const doctorWrapper = await DoctorWrapper(doctor);
-            const doctorId = await doctorWrapper.getDoctorId();
-            doctorIds.push(doctorId);
-          }
-        }
+      switch (type) {
+        case APPOINTMENT_QUERY_TYPE.DAY:
+          appointmentList = await appointmentService.getDayAppointmentForDoctor(
+            doctor_id,
+            provider_id,
+            value
+          );
+          break;
+        case APPOINTMENT_QUERY_TYPE.MONTH:
+          appointmentList =
+            await appointmentService.getMonthAppointmentForDoctor(
+              doctor_id,
+              provider_id,
+              value
+            );
+          break;
+        default:
+          return raiseClientError(
+            res,
+            422,
+            {},
+            "Please check selected value for getting upcoming schedules"
+          );
       }
 
-      for (const doctorId of doctorIds) {
-        let appointmentList = [];
+      if (appointmentList && appointmentList.length) {
+        for (const appointment of appointmentList) {
+          const appointmentData = await AppointmentWrapper(appointment);
+          const { participant_one_id, participant_two_id } =
+            appointmentData.getParticipants();
 
-        switch (type) {
-          case APPOINTMENT_QUERY_TYPE.DAY:
-            appointmentList =
-              await appointmentService.getDayAppointmentForDoctor(
-                doctorId,
-                5,
-                value
-              );
-            break;
-          case APPOINTMENT_QUERY_TYPE.MONTH:
-            appointmentList =
-              await appointmentService.getMonthAppointmentForDoctor(
-                doctorId,
-                5,
-                value
-              );
-            break;
-          default:
-            return raiseClientError(
-              res,
-              422,
-              {},
-              "Please check selected value for getting upcoming schedules"
-            );
-        }
+          const {
+            [appointmentData.getFormattedStartDate()]: dateAppointments = null,
+          } = dateWiseAppointmentDetails;
 
-        if (appointmentList && appointmentList.length) {
-          for (const appointment of appointmentList) {
-            const appointmentData = await AppointmentWrapper(appointment);
-            const { participant_one_id, participant_two_id } =
-              appointmentData.getParticipants();
+          if (dateAppointments) {
+            dateWiseAppointmentDetails[
+              appointmentData.getFormattedStartDate()
+            ].push(appointmentData.getAppointmentId());
+          } else {
+            dateWiseAppointmentDetails[
+              appointmentData.getFormattedStartDate()
+            ] = [appointmentData.getAppointmentId()];
+          }
 
-            const {
-              [appointmentData.getFormattedStartDate()]:
-                dateAppointments = null,
-            } = dateWiseAppointmentDetails;
+          appointmentApiDetails[appointmentData.getAppointmentId()] =
+            await appointmentData.getBasicInfo();
 
-            if (dateAppointments) {
-              dateWiseAppointmentDetails[
-                appointmentData.getFormattedStartDate()
-              ].push(appointmentData.getAppointmentId());
-            } else {
-              dateWiseAppointmentDetails[
-                appointmentData.getFormattedStartDate()
-              ] = [appointmentData.getAppointmentId()];
-            }
-            console.log(
-              "=============1 appointment getbasicinfo=============="
-            );
-            console.log(appointmentData.getBasicInfo());
-            console.log(
-              "=============2 appointment data details=============="
-            );
-            console.log(appointmentData);
-            console.log({ appointment });
-            console.log("=============final==============");
-            appointmentApiDetails[appointmentData.getAppointmentId()] =
-              await appointmentData.getBasicInfo();
-
-            if (participant_one_id !== doctorId) {
-              patientIds.push(participant_one_id);
-            } else {
-              patientIds.push(participant_two_id);
-            }
+          if (participant_one_id !== doctor_id) {
+            patientIds.push(participant_one_id);
+          } else {
+            patientIds.push(participant_two_id);
           }
         }
       }
@@ -4232,6 +4210,101 @@ class DoctorController extends Controller {
   //     return raiseServerError(res);
   //   }
   // };
+
+  medicineModificationDocs = async (req, res) => {
+    console.log("medicineModificationDocs-Called-1");
+    const { raiseServerError, raiseSuccess, raiseClientError } = this;
+    try {
+      console.log("medicineModificationDocs-Called-2");
+      const {
+        userDetails: { userId, userData: { category = null } = {} } = {},
+        body: { doctor_id = null } = {},
+      } = req;
+      const file = req.file;
+      console.log(req);
+      console.log({ file });
+      console.log("medicineModificationDocs-Called-3");
+      let doctorUserId = userId;
+      if (doctor_id) {
+        console.log("medicineModificationDocs-Called-4");
+        if (category !== USER_CATEGORY.PROVIDER) {
+          return raiseClientError(res, 401, {}, "UNAUTHORIZED");
+        }
+
+        const doctorData = await DoctorWrapper(null, doctor_id);
+        doctorUserId = doctorData.getUserId();
+      }
+      console.log("medicineModificationDocs-Called-5");
+      const { mimetype } = file || {};
+      const fileType = mimetype.split("/");
+      console.log(file);
+      Logger.debug("mimetype ------> ", mimetype);
+      if (!ALLOWED_DOC_TYPE_DOCTORS.includes(fileType[1])) {
+        return this.raiseClientError(
+          res,
+          422,
+          {},
+          "Only images and pdf documents are allowed"
+        );
+      }
+
+      // let baseId = 22016;
+      fs.writeFile("file.xlsx", file.buffer, async function (err, result) {
+        if (err) console.log("error", err);
+
+        let workbook = XLSX.readFile("file.xlsx");
+        let sheet_name_list = workbook.SheetNames;
+        const medicineModificationDocs = XLSX.utils.sheet_to_json(
+          workbook.Sheets[sheet_name_list[0]]
+        );
+        console.log({ medicineModificationDocs });
+        let error = [];
+        let success = [];
+        for (let i in medicineModificationDocs) {
+          let medicin = medicineModificationDocs[i];
+          let { id: medicinId } = medicin;
+          // medicinId = baseId;
+          let oldData = await medicineService.getMedicineById(medicinId);
+          oldData = oldData.dataValues || {};
+          let data = { ...oldData, ...medicin };
+          let { details } = data;
+          details = JSON.parse(details);
+          data = { ...data, details };
+
+          console.log({ medicinId });
+          console.log({ data, oldData, medicin });
+
+          try {
+            let medicaineUpdate = await medicineService.updateMedicine(
+              data,
+              medicinId
+            );
+            success.push(medicinId);
+          } catch (ex) {
+            error.push(medicinId);
+          }
+        }
+        return raiseSuccess(
+          res,
+          200,
+          {
+            error,
+            success,
+          },
+          ""
+        );
+      });
+
+      //TODO: read the data file file.xlsx
+
+      // let files = await uploadImageS3(doctorUserId, file);
+
+      // read the file and convert it in the json and update the value accordingly.
+    } catch (error) {
+      console.log(error);
+      return raiseServerError(res);
+    }
+  };
 }
 
 export default new DoctorController();

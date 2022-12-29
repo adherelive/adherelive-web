@@ -9,8 +9,9 @@ import carePlanAppointmentService from "../../services/carePlanAppointment/careP
 import templateMedicationService from "../../services/templateMedication/templateMedication.service";
 import templateAppointmentService from "../../services/templateAppointment/templateAppointment.service";
 import medicineService from "../../services/medicine/medicine.service";
+import userRoleService from "../../services/userRoles/userRoles.service";
 import carePlanSecondaryDoctorMappingService from "../../services/careplanSecondaryDoctorMappings/careplanSecondaryDoctorMappings.service";
-import twilioService from "../../services/twilio/twilio.service";
+// import twilioService from "../../services/twilio/twilio.service";
 
 import {
   getCarePlanAppointmentIds,
@@ -32,7 +33,7 @@ import AppointmentWrapper from "../../ApiWrapper/web/appointments";
 import carePlanTemplateService from "../../services/carePlanTemplate/carePlanTemplate.service";
 import CarePlanTemplateWrapper from "../../ApiWrapper/web/carePlanTemplate";
 import Logger from "../../../libs/log";
-import ScheduleEventService from "../../services/scheduleEvents/scheduleEvent.service";
+// import ScheduleEventService from "../../services/scheduleEvents/scheduleEvent.service";
 import moment from "moment";
 import queueService from "../../services/awsQueue/queue.service";
 
@@ -40,6 +41,7 @@ import * as carePlanHelper from "./carePlanHelper";
 import MedicationWrapper from "../../ApiWrapper/web/medicationReminder";
 
 import PERMISSIONS from "../../../config/permissions";
+// import { ConfigurationServicePlaceholders } from "aws-sdk/lib/config_service_placeholders";
 
 const Log = new Logger("WEB > CAREPLAN > CONTROLLER");
 
@@ -49,6 +51,7 @@ class CarePlanController extends Controller {
   }
 
   createFromTemplate = async (req, res) => {
+    console.log("===============CreateFromTemplate================");
     try {
       const { carePlanId: care_plan_id } = req.params;
       const {
@@ -62,6 +65,8 @@ class CarePlanController extends Controller {
         severity_id,
         name: newTemplateName,
         createTemplate = false,
+        clinical_notes,
+        follow_up_advise,
       } = req.body;
 
       const { userDetails, permissions = [] } = req;
@@ -71,7 +76,7 @@ class CarePlanController extends Controller {
         userData: { category } = {},
         userCategoryData,
       } = userDetails || {};
-
+      console.log(1);
       if (!care_plan_id) {
         return raiseClientError(
           res,
@@ -88,7 +93,7 @@ class CarePlanController extends Controller {
           name: newTemplateName,
           user_id: userId,
         });
-
+      console.log(2);
       if (templateNameCheck) {
         return this.raiseClientError(
           res,
@@ -111,9 +116,10 @@ class CarePlanController extends Controller {
 
       let appointmentApiDetails = {};
       let appointment_ids = [];
-
+      console.log(3);
       // appointments ---------------------------------
       if (appointmentsData.length > 0) {
+        console.log(4);
         for (let i = 0; i < appointmentsData.length; i++) {
           const {
             schedule_data: {
@@ -140,12 +146,13 @@ class CarePlanController extends Controller {
 
           let userCategoryId = null;
           let participantTwoId = null;
-
+          console.log(5);
           switch (category) {
             case USER_CATEGORY.DOCTOR:
               const doctor = await doctorService.getDoctorByData({
                 user_id: userId,
               });
+              console.log(6);
               const doctorData = await DoctorWrapper(doctor);
               userCategoryId = doctorData.getDoctorId();
               participantTwoId = doctorData.getUserId();
@@ -154,6 +161,7 @@ class CarePlanController extends Controller {
               const hspDoctor = await doctorService.getDoctorByData({
                 user_id: userId,
               });
+              console.log(7);
               const hspDoctorData = await DoctorWrapper(hspDoctor);
               userCategoryId = hspDoctorData.getDoctorId();
               participantTwoId = hspDoctorData.getUserId();
@@ -185,20 +193,21 @@ class CarePlanController extends Controller {
               critical,
             },
           };
-
+          console.log(8);
           const baseAppointment = await appointmentService.addAppointment(
             appointment_data
           );
-
+          console.log(9);
           const newAppointment =
             await carePlanAppointmentService.addCarePlanAppointment({
               care_plan_id,
               appointment_id: baseAppointment.get("id"),
             });
-
+          console.log(10);
           const appointmentData = await AppointmentWrapper(baseAppointment);
           appointmentApiDetails[appointmentData.getAppointmentId()] =
             appointmentData.getBasicInfo();
+          console.log(11);
           appointment_ids.push(appointmentData.getAppointmentId());
 
           appointmentsArr.push({
@@ -215,7 +224,7 @@ class CarePlanController extends Controller {
               appointment_type: type,
             },
           });
-
+          console.log(12);
           eventScheduleData.push({
             type: EVENT_TYPE.APPOINTMENT_TIME_ASSIGNMENT,
             event_id: appointmentData.getAppointmentId(),
@@ -225,14 +234,17 @@ class CarePlanController extends Controller {
           });
         }
       }
-
+      console.log(13);
       const carePlanStartTime = new moment.utc();
       const carePlanEndTime = new moment.utc(carePlanStartTime).add(2, "hours");
+      console.log(14);
       const patient = await PatientWrapper(null, patient_id);
       const { user_role_id: patientRoleId } = await patient.getAllInfo();
 
       let carePlanScheduleData = {};
+      console.log(15);
       if (permissions.includes(PERMISSIONS.MEDICATIONS.ADD)) {
+        console.log(16);
         carePlanScheduleData = {
           type: EVENT_TYPE.CARE_PLAN_ACTIVATION,
           event_id: care_plan_id,
@@ -258,12 +270,13 @@ class CarePlanController extends Controller {
       let medicationApiDetails = {};
       let medicineApiDetails = {};
       let medication_ids = [];
-
+      console.log(17);
       // medications ---------------------------------
       if (
         permissions.includes(PERMISSIONS.MEDICATIONS.ADD) &&
         medicationsData.length > 0
       ) {
+        console.log(18);
         for (const medication of medicationsData) {
           const {
             schedule_data: {
@@ -311,28 +324,28 @@ class CarePlanController extends Controller {
               critical,
             },
           };
-
+          console.log(19);
           const mReminderDetails = await medicationReminderService.addMReminder(
             dataToSave
           );
-
+          console.log(20);
           const medicationWrapper = await MedicationWrapper(mReminderDetails);
 
           const data_to_create = {
             care_plan_id,
             medication_id: medicationWrapper.getMReminderId(),
           };
-
+          console.log(21);
           let newMedication =
             await carePlanMedicationService.addCarePlanMedication(
               data_to_create
             );
-
+          console.log(22);
           const { medications, medicines } =
             await medicationWrapper.getReferenceInfo();
           medicationApiDetails = { ...medicationApiDetails, ...medications };
           medicineApiDetails = { ...medicineApiDetails, ...medicines };
-
+          console.log(23);
           medication_ids.push(medicationWrapper.getMReminderId());
 
           medicationsArr.push({
@@ -353,6 +366,7 @@ class CarePlanController extends Controller {
                 : EVENT_LONG_TERM_VALUE,
             },
           });
+          console.log(24);
         }
       }
 
@@ -360,6 +374,7 @@ class CarePlanController extends Controller {
       //   ...carePlanScheduleData,
       //   medication_ids
       // });
+      console.log(25);
 
       carePlanScheduleData = {
         ...(permissions.includes(PERMISSIONS.MEDICATIONS.ADD) && {
@@ -367,7 +382,7 @@ class CarePlanController extends Controller {
           medication_ids,
         }),
       };
-
+      console.log(26);
       // vitals ----------------------------------------
       const {
         vitals,
@@ -382,6 +397,7 @@ class CarePlanController extends Controller {
         patientId: carePlanData.getPatientId(),
       });
 
+      console.log(27);
       // diets ----------------------------------------
       const {
         diets,
@@ -399,6 +415,8 @@ class CarePlanController extends Controller {
         patientId: carePlanData.getPatientId(),
       });
 
+      console.log(28);
+
       // workouts ----------------------------------------
       const {
         workouts,
@@ -415,11 +433,13 @@ class CarePlanController extends Controller {
         authUser: { category, userId, userCategoryData, userRoleId },
         patientId: carePlanData.getPatientId(),
       });
+      console.log(29);
 
       // careplan template -------------------------------
       let carePlanTemplate = null;
 
       if (createTemplate) {
+        console.log(30);
         const createCarePlanTemplate = await carePlanTemplateService.create({
           name: newTemplateName,
           treatment_id,
@@ -434,11 +454,13 @@ class CarePlanController extends Controller {
           template_diets: [...carePlanTemplateDiets],
           template_workouts: [...carePlanTemplateWorkouts],
         });
+        console.log(31);
 
         carePlanTemplate = await CarePlanTemplateWrapper(
           createCarePlanTemplate
         );
 
+        console.log(32);
         await carePlanService.updateCarePlan(
           { care_plan_template_id: carePlanTemplate.getCarePlanTemplateId() },
           care_plan_id
@@ -455,7 +477,71 @@ class CarePlanController extends Controller {
         ...workoutEventData,
         carePlanScheduleData,
       ]);
+      // update care plan clinical notes.
+      console.log(33);
+      const initialCarePlanData = await CarePlanWrapper(null, care_plan_id);
+      const previousCareplanDetails =
+        (await initialCarePlanData.getCarePlanDetails()) || {};
+      //================================
+      const {
+        follow_up_advise: previousFollowUpAdvise,
+        clinical_notes: previousClinicalNotes,
+      } = previousCareplanDetails;
+      let new_follow_up_advise = "";
+      console.log({ previousFollowUpAdvise, follow_up_advise });
+      if (
+        previousFollowUpAdvise !== undefined &&
+        follow_up_advise !== "" &&
+        follow_up_advise !== null &&
+        follow_up_advise !== undefined
+      ) {
+        new_follow_up_advise = `${previousFollowUpAdvise}, ${follow_up_advise}`;
+      } else if (
+        previousFollowUpAdvise === undefined &&
+        follow_up_advise !== null
+      ) {
+        new_follow_up_advise = follow_up_advise;
+      } else {
+        new_follow_up_advise = previousFollowUpAdvise;
+      }
 
+      let new_clinical_notes = "";
+      if (
+        previousClinicalNotes !== undefined &&
+        clinical_notes !== "" &&
+        clinical_notes !== null &&
+        clinical_notes !== undefined
+      ) {
+        new_clinical_notes = `${previousClinicalNotes}, ${clinical_notes}`;
+      } else if (
+        previousClinicalNotes === undefined &&
+        clinical_notes !== null
+      ) {
+        new_clinical_notes = clinical_notes;
+      } else {
+        new_clinical_notes = previousClinicalNotes;
+      }
+
+      const { basic_info: prevCareplanBasicInfo } =
+        initialCarePlanData.getBasicInfo() || {};
+
+      const carePlanUpdateData = {
+        ...prevCareplanBasicInfo,
+        details: {
+          ...previousCareplanDetails,
+          clinical_notes: new_clinical_notes,
+          follow_up_advise: new_follow_up_advise,
+        },
+      };
+      console.log(35);
+
+      console.log({ carePlanUpdateData });
+
+      const updatedCareplanId = await carePlanService.updateCarePlan(
+        carePlanUpdateData,
+        care_plan_id
+      );
+      console.log(36);
       return this.raiseSuccess(
         res,
         200,
@@ -515,7 +601,92 @@ class CarePlanController extends Controller {
     }
   };
 
+  getPatientCarePlanPrimaryAndSecDetails = async (req, res) => {
+    const { raiseSuccess, raiseClientError, raiseServerError } = this;
+    try {
+      const { patient_id: patient_id = 1 } = req.params;
+      console.log("getPatientCarePlanPrimaryAndSecDetails called");
+      const {
+        userDetails: {
+          userRoleId = null,
+          userId,
+          userCategoryId,
+          userData: { category } = {},
+        } = {},
+      } = req;
+      console.log({ userId, userRoleId, userCategoryId, patient_id });
+      if (!patient_id) {
+        return raiseClientError(
+          res,
+          422,
+          {},
+          "Please select correct patient to continue"
+        );
+      }
+
+      console.log({ patient_id });
+      const carePlans =
+        (await carePlanService.getOnlyCarePlanByData({
+          patient_id,
+        })) || [];
+      console.log({ carePlans });
+
+      let carePlansResponse = [];
+      console.log({ carePlanLength: carePlans.length });
+      if (carePlans.length > 0) {
+        const { care_plans } = await carePlanHelper.getCareplanDataWithImp({
+          carePlans,
+          userCategory: category,
+          doctorId: userCategoryId,
+          userRoleId,
+        });
+        console.log("========1=1=1=1=1=1=1==1=1=========");
+        console.log({ care_plans });
+        console.log("========1=1=1=1=1=1=1==1=1=========");
+
+        // Object.keys(care_plans).forEach(async (id) => {
+        for (let id in care_plans) {
+          console.log("-11--1-11--1-1-1-1-1-1-111-111-111-11");
+          console.log(care_plans[id]);
+          let careplan = care_plans[id];
+          let dataToAdd = {
+            care_plan_id: careplan["basic_info"]["id"],
+            secondary_doctor_role_id: userRoleId,
+          };
+          let existingMapping =
+            (await carePlanSecondaryDoctorMappingService.getByData(
+              dataToAdd
+            )) || null;
+          if (
+            (careplan["basic_info"]["patient_id"] == patient_id &&
+              careplan["basic_info"]["user_role_id"] == userRoleId) ||
+            (careplan["basic_info"]["patient_id"] == patient_id &&
+              existingMapping != null)
+          ) {
+            console.log("conditioin one pass", careplan["basic_info"]["id"]);
+
+            carePlansResponse.push(careplan);
+          }
+
+          console.log({ existingMapping });
+        }
+      }
+      return raiseSuccess(
+        res,
+        200,
+        {
+          care_plans: carePlansResponse,
+        },
+        "Patient care plan details fetched successfully"
+      );
+    } catch (error) {
+      console.log(error);
+      return raiseServerError(res);
+    }
+  };
+
   getPatientCarePlanDetails = async (req, res) => {
+    console.log("getPatientCarePlanDetails called.");
     const { patientId: patient_id = 1 } = req.params;
     try {
       const { userDetails, body, file, permissions = [] } = req;
@@ -530,9 +701,21 @@ class CarePlanController extends Controller {
 
       let carePlan = await carePlanService.getSingleCarePlanByData({
         patient_id,
-        ...((category === USER_CATEGORY.DOCTOR ||
-          category === USER_CATEGORY.HSP) && { user_role_id: userRoleId }),
+        // ...((category === USER_CATEGORY.DOCTOR ||
+        //   category === USER_CATEGORY.HSP) && { user_role_id: userRoleId }),
       });
+      console.log({
+        patient_id,
+        ...((category === USER_CATEGORY.DOCTOR ||
+          category === USER_CATEGORY.HSP) && {
+          user_role_id: userRoleId,
+        }),
+      });
+      console.log({ carePlan });
+
+      if (carePlan == null)
+        return this.raiseServerError(res, 500, {}, "No Care Plan Found");
+      // return this.raiseServerError(res, 500, "No Care Plan Found");
 
       let cPdetails = carePlan.get("details") ? carePlan.get("details") : {};
 
@@ -667,6 +850,75 @@ class CarePlanController extends Controller {
         "patient care plan details fetched successfully"
       );
     } catch (error) {
+      console.log(error);
+      return this.raiseServerError(res, 500, error);
+    }
+  };
+
+  getPatientCarePlanOnly = async (req, res) => {
+    const { patient_id, doctor_user_id, provider_id, provider_type } =
+      req.query;
+
+    let data = {};
+
+    if (USER_CATEGORY.PROVIDER === provider_type) {
+      console.log("in provider");
+      data = {
+        user_identity: parseInt(doctor_user_id),
+        linked_with: provider_type,
+        linked_id: parseInt(provider_id),
+      };
+    }
+    if (USER_CATEGORY.DOCTOR === provider_type) {
+      console.log("in doctor");
+      data = {
+        user_identity: parseInt(doctor_user_id),
+        linked_with: provider_type,
+      };
+    }
+    console.log("=====================");
+    console.log({ data });
+    console.log("=====================");
+
+    try {
+      const userRoles = await userRoleService.getAllByData(data);
+      let user_role_id = "";
+      //---------------------------
+      for (let i = 0; i < userRoles.length; i++) {
+        const userRole = userRoles[i];
+        const userRoleWrapper = await UserRoleWrapper(userRole);
+        user_role_id = userRoleWrapper.getId();
+      }
+      //---------------------------
+      let carePlans = await carePlanService.getOnlyCarePlanByData({
+        patient_id,
+        user_role_id,
+      });
+
+      console.log({
+        patient_id,
+        user_role_id,
+      });
+
+      let carePlanApiData = {};
+
+      for (let careplan in carePlans) {
+        // let carePlanDeatils = carePlans[careplan].get("id");
+        const carePlanApiWrapper = await CarePlanWrapper(carePlans[careplan]);
+        carePlanApiData[carePlanApiWrapper.getCarePlanId()] = {
+          ...carePlanApiWrapper.getBasicInfo(),
+        };
+      }
+      return this.raiseSuccess(
+        res,
+        200,
+        {
+          care_plans: { ...carePlanApiData },
+        },
+        "patient care plan details fetched successfully"
+      );
+    } catch (error) {
+      console.log(error);
       return this.raiseServerError(res, 500, error);
     }
   };
