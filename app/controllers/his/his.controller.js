@@ -2,7 +2,7 @@
  * @author Gaurav Sharma
  * @email gaurav6421@gmail.com
  * @create date 2023-01-02 09:57:39
- * @modify date 2023-01-02 16:32:53
+ * @modify date 2023-01-02 16:58:58
  * @desc a controller for his.
  */
 
@@ -40,7 +40,7 @@ class HisController extends Controller {
       const salt = await bcrypt.genSalt(Number(process.config.saltRounds));
       const hash = await bcrypt.hash(password, salt);
       console.log({ hash, data: req.body });
-      his = await hisService.createHis({ ...data, his_password: hash });
+      let his = await hisService.createHis({ ...data, his_password: hash });
       return this.raiseSuccess(res, 200, { his }, "His added successfully");
     } catch (error) {
       Logger.debug("signIn 500 error ----> ", error);
