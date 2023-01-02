@@ -112,6 +112,7 @@ import * as WorkoutResponses from "../app/models/workoutResponses";
 import * as WorkoutExerciseGroupMapping from "../app/models/workoutExerciseGroupMapping";
 import * as WorkoutTemplates from "../app/models/workoutTemplate";
 import * as WorkoutTemplateExerciseMapping from "../app/models/workoutTemplateExerciseMapping";
+import * as His from "../app/models/his";
 
 // Models List...
 const models = [
@@ -222,6 +223,7 @@ const models = [
   WorkoutExerciseGroupMapping,
   WorkoutTemplates,
   WorkoutTemplateExerciseMapping,
+  His,
 ];
 
 class Database {
