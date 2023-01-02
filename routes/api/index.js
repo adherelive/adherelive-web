@@ -37,6 +37,7 @@ import symptomRouter from "./symptoms";
 import vitalRouter from "./vitals";
 import accountsRouter from "./accounts";
 import hisRouter from "./his";
+import hisOperationRouter from "./his/his-operation";
 import providersRouter from "./providers";
 import featuresRouter from "./features";
 import reportRouter from "./reports";
@@ -189,5 +190,6 @@ router.use("/portions", portionRouter);
 router.use("/exercises", exerciseRouter);
 router.use("/workout", workoutRouter);
 router.use("/cdss", CdssRouter);
+router.use("/his", hisOperationRouter);
 
 module.exports = router;
