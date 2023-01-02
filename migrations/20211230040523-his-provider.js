@@ -12,6 +12,7 @@ module.exports = {
       },
       his_username: {
         type: Sequelize.STRING,
+        unique: true,
         allowNull: false,
       },
       his_password: {
@@ -20,6 +21,7 @@ module.exports = {
       },
       his_client_id: {
         type: Sequelize.STRING,
+        unique: true,
         allowNull: false,
       },
       his_client_secret: {

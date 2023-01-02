@@ -2,7 +2,7 @@
  * @author Gaurav Sharma
  * @email gaurav6421@gmail.com
  * @create date 2023-01-02 10:23:31
- * @modify date 2023-01-02 17:56:32
+ * @modify date 2023-01-02 18:08:26
  * @desc services for his table.
  */
 import Database from "../../../libs/mysql";
@@ -13,16 +13,6 @@ const Logger = new Log("WEB > PATIENTS > CONTROLLER");
 
 class HisService {
   constructor() {}
-
-  createHisByData = async (data) => {
-    try {
-      const user = await Database.getModel(TABLE_NAME).findAll();
-      return user;
-    } catch (err) {
-      console.log(err);
-      throw err;
-    }
-  };
 
   createHis = async (data) => {
     const transaction = await Database.initTransaction();
@@ -82,6 +72,18 @@ class HisService {
       });
       return users;
     } catch (err) {
+      throw err;
+    }
+  };
+
+  getHisByData = async (data) => {
+    try {
+      const user = await Database.getModel(TABLE_NAME).findAll({
+        where: { id },
+      });
+      return user;
+    } catch (err) {
+      console.log(err);
       throw err;
     }
   };

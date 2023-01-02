@@ -13,7 +13,7 @@ export const db = (database) => {
       },
       his_username: {
         type: DataTypes.STRING(100),
-        // unique: true,
+        unique: true,
         allowNull: false,
         required: true,
       },
@@ -25,6 +25,7 @@ export const db = (database) => {
       his_client_id: {
         type: DataTypes.STRING,
         allowNull: false,
+        unique: true,
         required: true,
       },
       his_client_secret: {

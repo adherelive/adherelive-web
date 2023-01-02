@@ -2,7 +2,7 @@
  * @author Gaurav Sharma
  * @email gaurav6421@gmail.com
  * @create date 2023-01-02 09:57:39
- * @modify date 2023-01-02 17:55:35
+ * @modify date 2023-01-02 18:13:57
  * @desc a controller for his.
  */
 
@@ -117,11 +117,39 @@ class HisController extends Controller {
         expiresIn,
       });
 
-      return this.raiseSuccess(
+      // get hisby username
+      let hisData = hisService.getHisByData({ his_username });
+
+      if (!hisData.length > 0)
+        return this.raiseServerError(
+          res,
+          401,
+          {},
+          `Username or Password Incorrect.`
+        );
+
+      // check the username and password.
+
+      let { his_password: dbpass, his_username: dbusername } = hisData[0];
+
+      let passwordMatch = false;
+      if (user.get("password")) {
+        passwordMatch = await bcrypt.compare(his_password, dbpass);
+      }
+
+      if (passwordMatch)
+        return this.raiseSuccess(
+          res,
+          200,
+          { accessToken },
+          "Data retrieved successfully"
+        );
+
+      return this.raiseServerError(
         res,
-        200,
-        { accessToken },
-        "Initial data retrieved successfully"
+        401,
+        {},
+        `Username or Password Incorrect.`
       );
     } catch (error) {
       Logger.debug("signIn 500 error ----> ", error);
