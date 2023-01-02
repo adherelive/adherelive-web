@@ -2,7 +2,7 @@
  * @author Gaurav Sharma
  * @email gaurav6421@gmail.com
  * @create date 2023-01-02 09:57:39
- * @modify date 2023-01-02 18:36:58
+ * @modify date 2023-01-02 18:43:37
  * @desc a controller for his.
  */
 
@@ -120,8 +120,8 @@ class HisController extends Controller {
       console.log({ accessToken });
       // get hisby username
       let hisData = await hisService.getHisByData({ his_username });
-      console.log({ hisData });
-      if (!hisData.length > 0)
+      console.log({ value: hisData.dataValues });
+      if (!hisData.length.dataValues > 0)
         return this.raiseServerError(
           res,
           401,
@@ -134,10 +134,8 @@ class HisController extends Controller {
       let { his_password: dbpass, his_username: dbusername } = hisData[0];
       console.log({ dbusername, dbpass });
       let passwordMatch = false;
-      if (user.get("password")) {
-        passwordMatch = await bcrypt.compare(his_password, dbpass);
-        console.log({ passwordMatch });
-      }
+      passwordMatch = await bcrypt.compare(his_password, dbpass);
+      console.log({ passwordMatch });
 
       if (passwordMatch)
         return this.raiseSuccess(
