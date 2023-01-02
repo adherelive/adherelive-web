@@ -375,7 +375,7 @@ export const DB_TABLES = {
   PORTIONS: "portions",
   FOOD_GROUPS: "food_groups",
   DIET_FOOD_GROUP_MAPPINGS: "diet_food_group_mappings",
-  HIS_PROVIDER_TABLE: "his_provider_table",
+  HIS_PROVIDER_TABLE: "his_provider_tables",
 };
 
 export const ARTICLE_TYPE = {
