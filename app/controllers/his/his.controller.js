@@ -2,7 +2,7 @@
  * @author Gaurav Sharma
  * @email gaurav6421@gmail.com
  * @create date 2023-01-02 09:57:39
- * @modify date 2023-01-02 18:43:37
+ * @modify date 2023-01-02 18:46:47
  * @desc a controller for his.
  */
 
@@ -120,7 +120,7 @@ class HisController extends Controller {
       console.log({ accessToken });
       // get hisby username
       let hisData = await hisService.getHisByData({ his_username });
-      console.log({ value: hisData.dataValues });
+      console.log({ hisData, value: hisData.dataValues });
       if (!hisData.length.dataValues > 0)
         return this.raiseServerError(
           res,
