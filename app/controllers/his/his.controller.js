@@ -2,7 +2,7 @@
  * @author Gaurav Sharma
  * @email gaurav6421@gmail.com
  * @create date 2023-01-02 09:57:39
- * @modify date 2023-01-02 17:02:23
+ * @modify date 2023-01-02 17:19:40
  * @desc a controller for his.
  */
 
@@ -61,7 +61,8 @@ class HisController extends Controller {
   getHisById = async (req, res) => {
     try {
       const { params: { id } = {} } = req;
-      let his = await hisService.createHis(id);
+      console.log({ id });
+      let his = await hisService.getHisById(id);
       return this.raiseSuccess(res, 200, { his }, "Data Retrive successfully");
     } catch (error) {
       Logger.debug("signIn 500 error ----> ", error);
@@ -71,6 +72,7 @@ class HisController extends Controller {
 
   updateHis = async (req, res) => {
     const { params: { id } = {} } = req;
+    console.log({ id });
     const data = req.body;
     try {
       let his = await hisService.updateHis(data, id);
