@@ -5,7 +5,7 @@ import hisController from "../../../app/controllers/his/his.controller";
 router.post("/", hisController.createHis);
 router.get("/", hisController.listAllHis);
 router.get("/:id", hisController.getHisById);
-router.update("/:id", hisController.updateHis);
+router.put("/:id", hisController.updateHis);
 
 router.delete("/:id", hisController.deleteHis);
 
