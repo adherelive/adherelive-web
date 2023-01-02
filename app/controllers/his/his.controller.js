@@ -2,7 +2,7 @@
  * @author Gaurav Sharma
  * @email gaurav6421@gmail.com
  * @create date 2023-01-02 09:57:39
- * @modify date 2023-01-02 17:19:40
+ * @modify date 2023-01-02 17:27:07
  * @desc a controller for his.
  */
 
@@ -61,6 +61,7 @@ class HisController extends Controller {
   getHisById = async (req, res) => {
     try {
       const { params: { id } = {} } = req;
+      console.log("get hisbyid called");
       console.log({ id });
       let his = await hisService.getHisById(id);
       return this.raiseSuccess(res, 200, { his }, "Data Retrive successfully");
@@ -75,6 +76,18 @@ class HisController extends Controller {
     console.log({ id });
     const data = req.body;
     try {
+      if (
+        !(
+          data.his_password === "" ||
+          data.his_password === null ||
+          data.his_password === undefined
+        )
+      ) {
+        const password = process.config.DEFAULT_PASSWORD;
+        const salt = await bcrypt.genSalt(Number(process.config.saltRounds));
+        const hash = await bcrypt.hash(password, salt);
+        data = { ...data, his_password: hash };
+      }
       let his = await hisService.updateHis(data, id);
       return this.raiseSuccess(res, 200, { his }, "His added successfully");
     } catch (error) {
