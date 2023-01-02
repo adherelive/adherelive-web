@@ -2,7 +2,7 @@
  * @author Gaurav Sharma
  * @email gaurav6421@gmail.com
  * @create date 2023-01-02 09:57:39
- * @modify date 2023-01-02 19:12:20
+ * @modify date 2023-01-02 19:16:46
  * @desc a controller for his.
  */
 
@@ -112,28 +112,15 @@ class HisController extends Controller {
       const { his_username, his_password } = req.body;
       const expiresIn = "60d"; // expires in 30 day
       const secret = process.config.TOKEN_SECRET_KEY;
-      console.log(req.body);
+
       const accessToken = await jwt.sign({ providerId: 2 }, secret, {
         expiresIn,
       });
 
-      console.log({ accessToken });
       // get hisby username
       let hisData = await hisService.getHisByUsername(his_username);
-      let { his_password: testone, his_username: testtwo } = hisData;
-      console.log({ testone, testtwo });
-      console.log({ hisData, value: hisData.dataValues });
-      if (!hisData.length.dataValues > 0)
-        return this.raiseServerError(
-          res,
-          401,
-          {},
-          `Username or Password Incorrect.`
-        );
 
-      // check the username and password.
-
-      let { his_password: dbpass, his_username: dbusername } = hisData[0];
+      let { his_password: dbpass, his_username: dbusername } = hisData;
       console.log({ dbusername, dbpass });
       let passwordMatch = false;
       passwordMatch = await bcrypt.compare(his_password, dbpass);
