@@ -20,11 +20,11 @@ module.exports = {
       },
       his_client_id: {
         type: Sequelize.STRING,
-        allowNull: true,
+        allowNull: false,
       },
       his_client_secret: {
         type: Sequelize.STRING,
-        allowNull: true,
+        allowNull: false,
       },
       created_at: {
         allowNull: false,

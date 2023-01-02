@@ -14,24 +14,23 @@ export const db = (database) => {
       his_username: {
         type: DataTypes.STRING(100),
         // unique: true,
-        allowNull: true,
+        allowNull: false,
+        required: true,
       },
       his_password: {
         type: DataTypes.STRING(1000),
-        allow_null: true,
-        // unique: true,
-        set(val) {
-          this.setDataValue("email", val.toLowerCase());
-        },
+        allow_null: false,
+        required: true,
       },
       his_client_id: {
         type: DataTypes.STRING,
-        allowNull: true,
+        allowNull: false,
+        required: true,
       },
       his_client_secret: {
         type: DataTypes.STRING(1000),
         // unique: true,
-        allow_null: true,
+        allow_null: false,
         required: true,
       },
     },
