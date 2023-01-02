@@ -2,7 +2,7 @@
  * @author Gaurav Sharma
  * @email gaurav6421@gmail.com
  * @create date 2023-01-02 09:57:39
- * @modify date 2023-01-02 16:58:58
+ * @modify date 2023-01-02 17:02:23
  * @desc a controller for his.
  */
 
@@ -50,7 +50,7 @@ class HisController extends Controller {
 
   listAllHis = async (req, res) => {
     try {
-      his = await hisService.getAllHis();
+      let his = await hisService.getAllHis();
       return this.raiseSuccess(res, 200, { his }, "Data retrived successfully");
     } catch (error) {
       Logger.debug("signIn 500 error ----> ", error);
@@ -61,7 +61,7 @@ class HisController extends Controller {
   getHisById = async (req, res) => {
     try {
       const { params: { id } = {} } = req;
-      his = await hisService.createHis(id);
+      let his = await hisService.createHis(id);
       return this.raiseSuccess(res, 200, { his }, "Data Retrive successfully");
     } catch (error) {
       Logger.debug("signIn 500 error ----> ", error);
@@ -73,7 +73,7 @@ class HisController extends Controller {
     const { params: { id } = {} } = req;
     const data = req.body;
     try {
-      his = await hisService.updateHis(data, id);
+      let his = await hisService.updateHis(data, id);
       return this.raiseSuccess(res, 200, { his }, "His added successfully");
     } catch (error) {
       Logger.debug("signIn 500 error ----> ", error);
@@ -84,7 +84,7 @@ class HisController extends Controller {
   deleteHis = async (req, res) => {
     try {
       const { params: { id } = {} } = req;
-      his = await hisService.deleteHis(id);
+      let his = await hisService.deleteHis(id);
       return this.raiseSuccess(res, 200, { his }, "His Deleted successfully");
     } catch (error) {
       Logger.debug("signIn 500 error ----> ", error);
