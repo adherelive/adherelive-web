@@ -53,5 +53,5 @@ export const db = (database) => {
 };
 
 export const associate = (database) => {
-  database.models || {};
+  // database.models || {};
 };
