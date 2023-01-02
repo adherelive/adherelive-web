@@ -1,5 +1,6 @@
 "use strict";
 export const TABLE_NAME = "his_provider_table";
+import { DataTypes } from "sequelize";
 
 export const db = (database) => {
   database.define(
