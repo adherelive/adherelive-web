@@ -2,7 +2,7 @@
  * @author Gaurav Sharma
  * @email gaurav6421@gmail.com
  * @create date 2023-01-02 10:23:31
- * @modify date 2023-01-02 18:32:16
+ * @modify date 2023-01-02 18:57:26
  * @desc services for his table.
  */
 import Database from "../../../libs/mysql";
@@ -81,7 +81,7 @@ class HisService {
       const user = await Database.getModel(TABLE_NAME).findAll({
         where: { ...data },
       });
-      return user;
+      return { ...user };
     } catch (err) {
       console.log(err);
       throw err;
