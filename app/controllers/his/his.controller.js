@@ -2,7 +2,7 @@
  * @author Gaurav Sharma
  * @email gaurav6421@gmail.com
  * @create date 2023-01-02 09:57:39
- * @modify date 2023-01-02 14:11:44
+ * @modify date 2023-01-02 14:51:55
  * @desc a controller for his.
  */
 
@@ -42,6 +42,7 @@ class HisController extends Controller {
       his = await hisService.createHis({ ...data, his_password: hash });
       return this.raiseSuccess(res, 200, { his }, "His added successfully");
     } catch (error) {
+      Logger.debug("signIn 500 error ----> ", error);
       return this.raiseServerError(res);
     }
   };
@@ -51,6 +52,7 @@ class HisController extends Controller {
       his = await hisService.getAllHis();
       return this.raiseSuccess(res, 200, { his }, "Data retrived successfully");
     } catch (error) {
+      Logger.debug("signIn 500 error ----> ", error);
       return this.raiseServerError(res);
     }
   };
@@ -61,6 +63,7 @@ class HisController extends Controller {
       his = await hisService.createHis(id);
       return this.raiseSuccess(res, 200, { his }, "Data Retrive successfully");
     } catch (error) {
+      Logger.debug("signIn 500 error ----> ", error);
       return this.raiseServerError(res);
     }
   };
@@ -72,6 +75,7 @@ class HisController extends Controller {
       his = await hisService.updateHis(data, id);
       return this.raiseSuccess(res, 200, { his }, "His added successfully");
     } catch (error) {
+      Logger.debug("signIn 500 error ----> ", error);
       return this.raiseServerError(res);
     }
   };
@@ -82,6 +86,7 @@ class HisController extends Controller {
       his = await hisService.deleteHis(id);
       return this.raiseSuccess(res, 200, { his }, "His Deleted successfully");
     } catch (error) {
+      Logger.debug("signIn 500 error ----> ", error);
       return this.raiseServerError(res);
     }
   };
