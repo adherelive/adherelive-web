@@ -2,7 +2,7 @@
  * @author Gaurav Sharma
  * @email gaurav6421@gmail.com
  * @create date 2023-01-02 10:23:31
- * @modify date 2023-01-02 11:07:53
+ * @modify date 2023-01-02 17:56:32
  * @desc services for his table.
  */
 import Database from "../../../libs/mysql";
@@ -75,7 +75,7 @@ class HisService {
     }
   };
 
-  deleteHis = async ({ id }) => {
+  deleteHis = async (id) => {
     try {
       const users = await Database.getModel(TABLE_NAME).destroy({
         where: { id },

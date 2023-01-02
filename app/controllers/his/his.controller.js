@@ -2,7 +2,7 @@
  * @author Gaurav Sharma
  * @email gaurav6421@gmail.com
  * @create date 2023-01-02 09:57:39
- * @modify date 2023-01-02 17:27:07
+ * @modify date 2023-01-02 17:55:35
  * @desc a controller for his.
  */
 
@@ -74,7 +74,7 @@ class HisController extends Controller {
   updateHis = async (req, res) => {
     const { params: { id } = {} } = req;
     console.log({ id });
-    const data = req.body;
+    let data = req.body;
     try {
       if (
         !(
