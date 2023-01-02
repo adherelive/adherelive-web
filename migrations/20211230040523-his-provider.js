@@ -23,7 +23,7 @@ module.exports = {
         allowNull: true,
       },
       his_client_secret: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.STRING,
         allowNull: true,
       },
       created_at: {
