@@ -1,5 +1,6 @@
 "use strict";
 import { TABLE_NAME } from "../app/models/his";
+import { TABLE_NAME as providersTableName } from "../app/models/providers";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -27,6 +28,15 @@ module.exports = {
       his_client_secret: {
         type: Sequelize.STRING,
         allowNull: false,
+      },
+      provider_id: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: {
+            tableName: providersTableName,
+          },
+          key: "id",
+        },
       },
       created_at: {
         allowNull: false,

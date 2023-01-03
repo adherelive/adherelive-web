@@ -1,6 +1,7 @@
 "use strict";
 export const TABLE_NAME = "his_provider_tables";
 import { DataTypes } from "sequelize";
+import { TABLE_NAME as providersTableName } from "./providers";
 
 export const db = (database) => {
   database.define(
@@ -34,6 +35,15 @@ export const db = (database) => {
         allow_null: false,
         required: true,
       },
+      provider_id: {
+        type: DataTypes.INTEGER,
+        references: {
+          model: {
+            tableName: providersTableName,
+          },
+          key: "id",
+        },
+      },
     },
     {
       underscored: true,
@@ -42,6 +52,7 @@ export const db = (database) => {
         getBasicInfo() {
           return {
             his_id: this.id,
+            provider_id: this.provider_id,
             his_username: this.his_username,
             his_password: this.his_password,
             his_client_id: this.his_client_id,
