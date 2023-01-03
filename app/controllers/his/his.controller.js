@@ -2,7 +2,7 @@
  * @author Gaurav Sharma
  * @email gaurav6421@gmail.com
  * @create date 2023-01-02 09:57:39
- * @modify date 2023-01-02 19:16:46
+ * @modify date 2023-01-03 14:50:17
  * @desc a controller for his.
  */
 
@@ -36,7 +36,7 @@ class HisController extends Controller {
       );
     }
     try {
-      const password = process.config.DEFAULT_PASSWORD;
+      const password = data.his_password;
       const salt = await bcrypt.genSalt(Number(process.config.saltRounds));
       const hash = await bcrypt.hash(password, salt);
       console.log({ hash, data: req.body });
