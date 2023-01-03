@@ -3,6 +3,7 @@ import { DataTypes } from "sequelize";
 import { TABLE_NAME as UserCategoryPermissionTableName } from "./userCategoryPermissions";
 import { TABLE_NAME as providerTableName } from "./providers";
 import { USER_CATEGORY, SIGN_IN_CATEGORY } from "../../constant";
+import { TABLE_NAME as hisTableName } from "./providers";
 
 export const TABLE_NAME = "users";
 
@@ -93,6 +94,16 @@ export const db = (database) => {
       has_consent: {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
+      },
+      his_id: {
+        allow_null: true,
+        type: DataTypes.INTEGER,
+        references: {
+          model: {
+            tableName: hisTableName,
+          },
+          key: "id",
+        },
       },
       deleted_at: {
         type: DataTypes.DATE,
