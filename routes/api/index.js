@@ -68,7 +68,7 @@ router.use(async function (req, res, next) {
       accessToken = cookies.accessToken;
     }
     console.log("api-index-3" + getTime());
-    const { accesstoken: aT = "" } = req.headers || {};
+    const { authorization: aT = "" } = req.headers || {};
     if (aT) {
       accessToken = aT;
     }
