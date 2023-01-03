@@ -69,8 +69,9 @@ router.use(async function (req, res, next) {
     }
     console.log("api-index-3" + getTime());
     const { authorization: aT = "" } = req.headers || {};
-    if (aT) {
-      accessToken = aT;
+    const bearer = aT.split(" ");
+    if (bearer.length === 2) {
+      accessToken = bearer[1];
     }
 
     const secret = process.config.TOKEN_SECRET_KEY;
