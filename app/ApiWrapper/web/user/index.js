@@ -37,6 +37,7 @@ class UserWrapper extends BaseUser {
       prefix,
       deleted_at,
       has_consent,
+      his_id,
     } = _data || {};
     return {
       basic_info: {
@@ -53,6 +54,7 @@ class UserWrapper extends BaseUser {
       activated_on,
       deleted_at,
       has_consent,
+      his_id,
       // system_generated_password
     };
   };
