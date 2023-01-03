@@ -2,7 +2,7 @@
  * @author Gaurav Sharma
  * @email gaurav6421@gmail.com
  * @create date 2023-01-02 09:57:39
- * @modify date 2023-01-03 16:36:48
+ * @modify date 2023-01-03 17:04:18
  * @desc a controller for his.
  */
 
@@ -129,26 +129,30 @@ class HisController extends Controller {
       const expiresIn = "60d"; // expires in 30 day
       const secret = process.config.TOKEN_SECRET_KEY;
 
-      const accessToken = await jwt.sign({ providerId: 2 }, secret, {
-        expiresIn,
-      });
-
       // get hisby username
       let hisData = await hisService.getHisByUsername(his_username);
 
-      let { his_password: dbpass, his_username: dbusername } = hisData;
+      let {
+        his_password: dbpass,
+        his_username: dbusername,
+        id: his_id,
+      } = hisData;
       console.log({ dbusername, dbpass });
       let passwordMatch = false;
       passwordMatch = await bcrypt.compare(his_password, dbpass);
       console.log({ passwordMatch });
 
-      if (passwordMatch)
+      if (passwordMatch) {
+        const accessToken = await jwt.sign({ his_id }, secret, {
+          expiresIn,
+        });
         return this.raiseSuccess(
           res,
           200,
           { accessToken },
           "Data retrieved successfully"
         );
+      }
 
       return this.raiseServerError(
         res,
