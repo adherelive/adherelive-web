@@ -36,6 +36,7 @@ export const db = (database) => {
         required: true,
       },
       provider_id: {
+        allow_null: false,
         type: DataTypes.INTEGER,
         references: {
           model: {
