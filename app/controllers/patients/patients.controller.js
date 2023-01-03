@@ -2614,6 +2614,8 @@ class PatientController extends Controller {
         address = "",
       } = req.body;
 
+      let { his_id } = req;
+
       if (
         patient_uid === null ||
         patient_uid === "" ||
@@ -2691,7 +2693,7 @@ class PatientController extends Controller {
         const password = process.config.DEFAULT_PASSWORD;
         const salt = await bcrypt.genSalt(Number(process.config.saltRounds));
         const hash = await bcrypt.hash(password, salt);
-        let user = await userService.addUser({
+        let useradddata = (useradddata = {
           prefix,
           mobile_number,
           password: hash,
@@ -2702,6 +2704,10 @@ class PatientController extends Controller {
           verified: true,
           activated_on: moment().format(),
         });
+        if (!(his_id == "" || his_id == undefined || his_id == null))
+          useradddata = { ...useradddata, his_id };
+
+        let user = await userService.addUser(useradddata);
         userData = await UserWrapper(user.get());
 
         if (clinical_notes) {

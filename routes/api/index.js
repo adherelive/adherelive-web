@@ -81,6 +81,7 @@ router.use(async function (req, res, next) {
       const {
         userRoleId: decodedUserRoleId = null,
         userId: decodedUserTokenUserId = null,
+        his_id: his_id = null,
       } = decodedAccessToken || {};
       const userRoleDetails = await userRolesService.getSingleUserRoleByData({
         id: decodedUserRoleId,
@@ -92,9 +93,10 @@ router.use(async function (req, res, next) {
         userRoleId = parseInt(decodedUserRoleId);
         userRoleData = userRole.getBasicInfo();
       } else {
-        req.userDetails = {
-          exists: false,
-        };
+        (req.his_id = his_id),
+          (req.userDetails = {
+            exists: false,
+          });
         next();
         return;
       }
