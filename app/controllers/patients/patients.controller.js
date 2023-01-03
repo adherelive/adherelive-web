@@ -2616,6 +2616,10 @@ class PatientController extends Controller {
 
       let { his_id } = req;
 
+      console.log("===================");
+      console.log({ req, his_id });
+      console.log("===================");
+
       if (
         patient_uid === null ||
         patient_uid === "" ||
