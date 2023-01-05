@@ -2745,6 +2745,14 @@ class PatientController extends Controller {
         });
         const uid = patient_uid;
 
+        const patientWrapper = await PatientWrapper(patient);
+        const patientUserId = await patientWrapper.getUserId();
+        const userRole = await userRolesService.create({
+          user_identity: patientUserId,
+        });
+        const userRoleWrapper = await UserRoleWrapper(userRole);
+        const newUserRoleId = await userRoleWrapper.getId();
+
         await userPreferenceService.addUserPreference({
           user_id: newUserId,
           details: {
