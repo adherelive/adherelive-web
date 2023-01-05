@@ -20,6 +20,7 @@ import carePlanTemplateService from "../../services/carePlanTemplate/carePlanTem
 import otpVerificationService from "../../services/otpVerification/otpVerification.service";
 import ConsentService from "../../services/consents/consent.service";
 import ReportService from "../../services/reports/report.service";
+import UserRoleWrapper from "../../ApiWrapper/web/userRoles";
 import conditionService from "../../services/condition/condition.service";
 import qualificationService from "../../services/doctorQualifications/doctorQualification.service";
 import doctorRegistrationService from "../../services/doctorRegistration/doctorRegistration.service";
