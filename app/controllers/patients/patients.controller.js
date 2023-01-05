@@ -77,6 +77,7 @@ import {
   S3_DOWNLOAD_FOLDER_PROVIDER,
   ONBOARDING_STATUS,
   SIGN_IN_CATEGORY,
+  PATIENT_MEAL_TIMINGS,
 } from "../../../constant";
 
 import { getSeparateName, getRoomId } from "../../helper/common";
@@ -2744,6 +2745,13 @@ class PatientController extends Controller {
         });
         const uid = patient_uid;
 
+        await userPreferenceService.addUserPreference({
+          user_id: newUserId,
+          details: {
+            timings: PATIENT_MEAL_TIMINGS,
+          },
+          user_role_id: newUserRoleId,
+        });
         await patientService.update({ uid }, patient.get("id"));
         patientData = await PatientWrapper(null, patient.get("id"));
       }
