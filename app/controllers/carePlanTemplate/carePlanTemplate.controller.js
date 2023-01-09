@@ -849,7 +849,7 @@ class CarePlanTemplateController extends Controller {
       if (existingTemplate !== null) {
         ({ details } = existingTemplate);
       }
-      newdetails = { ...details, clinical_notes, follow_up_advise };
+      newDetails = { ...details, clinical_notes, follow_up_advise };
       if (!isDuplicate) {
         const updateTemplate =
           (await carePlanTemplateService.update(
