@@ -38,6 +38,7 @@ const VALUE_COLOR = "#7f8c8d";
 const BOLD_FONT = "fonts/PlusJakartaSans-Bold.ttf";
 const MEDIUM_FONT = "fonts/PlusJakartaSans-Medium.ttf";
 const REGULAR_FONT = "fonts/PlusJakartaSans-Regular.ttf";
+const HINDI_FONT = "fonts/TiroDevanagariHindi-Regular.ttf";
 
 const SOS_CASE = 0;
 
@@ -1317,7 +1318,7 @@ function printCarePlanData({
           continued: true,
         }
       )
-      .font(REGULAR_FONT)
+      .font(HINDI_FONT)
       .text(`${clinicalNotes}`, doc.x + 10, chiefComplaintsEndLevel);
 
     const generalExaminationEndLevel = doc.y + 20;
@@ -1599,7 +1600,7 @@ function printCarePlanData({
       .fontSize(NORMAL_FONT_SIZE)
       .text("Advice/Instructions: ", DOC_MARGIN, doc.y + 10);
 
-    doc.font(REGULAR_FONT).text(follow_up_advise, DOC_MARGIN, doc.y + 5);
+    doc.font(HINDI_FONT).text(follow_up_advise, DOC_MARGIN, doc.y + 5);
 
     if (doc.y > PAGE_END_LIMIT) {
       if (pageCount === 1) {
