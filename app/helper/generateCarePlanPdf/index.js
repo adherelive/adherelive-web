@@ -171,21 +171,21 @@ export default async (pdfData, signatureImage) => {
 
       //  SUGGESTED INVESTIGATION AND NEXT CONSULATION ADDED BY US
 
-      let appointmentLevelEnd = doc.y;
-      let appointmentStartLevel = doc.y;
+      // let appointmentLevelEnd = doc.y;
+      // let appointmentStartLevel = doc.y;
 
-      if (Object.keys(suggestedInvestigations).length) {
-        if (Object.keys(suggestedInvestigations).length) {
-          addPageAndNumber(doc);
-          appointmentStartLevel = DOC_MARGIN;
-        }
+      // if (Object.keys(suggestedInvestigations).length) {
+      //   if (Object.keys(suggestedInvestigations).length) {
+      //     addPageAndNumber(doc);
+      //     appointmentStartLevel = DOC_MARGIN;
+      //   }
 
-        appointmentLevelEnd = printSuggestedInvestigation(
-          doc,
-          appointmentStartLevel,
-          suggestedInvestigations
-        );
-      }
+      //   appointmentLevelEnd = printSuggestedInvestigation(
+      //     doc,
+      //     appointmentStartLevel,
+      //     suggestedInvestigations
+      //   );
+      // }
 
       // let nextConsulationLevelEnd = doc.y;
       // let nextConsultationStartLevel = doc.y;
@@ -1010,7 +1010,7 @@ function printSuggestedInvestigation(
     let today = new moment();
     let start = moment(start_date);
     if (start.isSameOrAfter(today)) {
-      let basicDetailsYLevel = singleWorkoutDetailYLevel + 40,
+      let basicDetailsYLevel = singleWorkoutDetailYLevel + 20,
         formattedStartDate = "--",
         formattedEndDate = "--";
 
@@ -1070,9 +1070,9 @@ function printSuggestedInvestigation(
         );
     }
 
-    singleWorkoutDetailYLevel = doc.y;
+    // singleWorkoutDetailYLevel = doc.y;
 
-    generateHr(doc, singleWorkoutDetailYLevel + 10);
+    // generateHr(doc, singleWorkoutDetailYLevel + 10);
 
     singleWorkoutDetailYLevel = doc.y;
 
