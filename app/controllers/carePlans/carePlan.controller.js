@@ -179,14 +179,14 @@ class CarePlanController extends Controller {
             provider_name,
             organizer_type: category,
             organizer_id: userCategoryId,
-            description,
+
             start_date: date,
             end_date: date,
             start_time: start_time,
             end_time: end_time,
             details: {
               treatment_id,
-              reason,
+              reason, description,
               type,
               type_description,
               radiology_type,
@@ -305,11 +305,11 @@ class CarePlanController extends Controller {
             organizer_type: category,
             organizer_id: userId,
             medicine_id,
-            description,
+
             start_date,
             end_date,
             details: {
-              medicine_id,
+              medicine_id, description,
               medicine_type,
               start_time: start_time ? start_time : moment(),
               end_time: start_time ? start_time : moment(),
