@@ -1010,7 +1010,7 @@ function printSuggestedInvestigation(
     let today = new moment();
     let start = moment(start_date);
     if (start.isSameOrAfter(today)) {
-      let basicDetailsYLevel = singleWorkoutDetailYLevel + 20,
+      let basicDetailsYLevel = singleWorkoutDetailYLevel + 40,
         formattedStartDate = "--",
         formattedEndDate = "--";
 
