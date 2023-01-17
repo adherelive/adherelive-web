@@ -169,24 +169,13 @@ class VitalController extends Controller {
           userCategoryData = {},
         } = {},
         body,
-        body: { start_date, end_date, repeat_days, description, care_plan_id, vital_template_id, repeat_interval_id } = {},
+        body: { start_date, end_date } = {},
         params: { id } = {},
       } = req;
       const EventService = new eventService();
       const QueueService = new queueService();
 
       const doesVitalExists = await VitalService.getByData({ id });
-
-      let updateData = {
-        vital_template_id,
-        start_date,
-        end_date,
-        details: {
-          repeat_interval_id,
-          repeat_days,
-          description
-        },
-      }
 
       if (!doesVitalExists) {
         return raiseClientError(
@@ -198,7 +187,7 @@ class VitalController extends Controller {
       } else {
         const previousVital = await VitalWrapper({ data: doesVitalExists });
         const dataToUpdate = vitalHelper.getVitalUpdateData({
-          updateData,
+          ...body,
           previousVital,
         });
 

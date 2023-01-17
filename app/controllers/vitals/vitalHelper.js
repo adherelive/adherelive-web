@@ -31,14 +31,14 @@ export const getVitalUpdateData = ({
     dataToUpdate["details"] = repeat_days;
     dataToUpdate["details"] = {
       ...prevDetails,
-      repeat_days,
+      repeat_days, description
     };
     prevDetails = { ...prevDetails, repeat_days };
   }
 
-  if (!isEmpty(description)) {
-    dataToUpdate["description"] = description;
-  }
+  // if (!isEmpty(description)) {
+  //   dataToUpdate["description"] = description;
+  // }
 
   return dataToUpdate;
 };
