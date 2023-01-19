@@ -998,17 +998,17 @@ function printAppointment({
 
         if (APPOINTMENT_TYPE[type].title === "Consultation") continue;
 
-        let today = new moment();
-        let start = moment(start_date);
+        // let today = new moment();
+        // let start = moment(start_date);
 
-        if (start.isSameOrAfter(today)) {
+        // if (start.isSameOrAfter(today)) {
           // gaurav new changes - start
           doc
             .fillColor("#212b36")
             .fontSize(SHORT_FONT_SIZE)
             .font(MEDIUM_FONT)
             .text(
-              `${moment(start_date).format("DD/MM/YYYY")}`,
+              `Test Date`,
               dosageXStart,
               medicationYLevel
             )
@@ -1048,7 +1048,7 @@ function printAppointment({
             .text(`Note:-`, medicineXStart, doc.y, {
               width: dosageXStart - medicineXStart - 20,
             });
-        }
+        // }
 
         const medicationYLevelEnd = doc.y;
 
@@ -1931,13 +1931,13 @@ function printCarePlanData({
 
     doc.font(HINDI_FONT).text(follow_up_advise, DOC_MARGIN, doc.y + 5);
 
-    if (Object.keys(suggestedInvestigations).length) {
-      const consultationLevelEnd = printConsultation({
-        doc,
-        providerPrescriptionDetails,
-        suggestedInvestigations,
-      });
-    }
+    // if (Object.keys(suggestedInvestigations).length) {
+    //   const consultationLevelEnd = printConsultation({
+    //     doc,
+    //     providerPrescriptionDetails,
+    //     suggestedInvestigations,
+    //   });
+    // }
 
     if (doc.y > PAGE_END_LIMIT) {
       if (pageCount === 1) {
