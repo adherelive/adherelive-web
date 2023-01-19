@@ -169,42 +169,6 @@ export default async (pdfData, signatureImage) => {
         suggestedInvestigations
       );
 
-      //  SUGGESTED INVESTIGATION AND NEXT CONSULATION ADDED BY US
-
-      // let appointmentLevelEnd = doc.y;
-      // let appointmentStartLevel = doc.y;
-
-      // if (Object.keys(suggestedInvestigations).length) {
-      //   if (Object.keys(suggestedInvestigations).length) {
-      //     addPageAndNumber(doc);
-      //     appointmentStartLevel = DOC_MARGIN;
-      //   }
-
-      //   appointmentLevelEnd = printSuggestedInvestigation(
-      //     doc,
-      //     appointmentStartLevel,
-      //     suggestedInvestigations
-      //   );
-      // }
-
-      // let nextConsulationLevelEnd = doc.y;
-      // let nextConsultationStartLevel = doc.y;
-
-      // if (Object.keys(suggestedInvestigations).length) {
-      //   if (Object.keys(suggestedInvestigations).length) {
-      //     addPageAndNumber(doc);
-      //     nextConsultationStartLevel = DOC_MARGIN;
-      //   }
-
-      //   appointmentLevelEnd = printNextConsulation(
-      //     doc,
-      //     nextConsultationStartLevel,
-      //     suggestedInvestigations
-      //   );
-      // }
-
-      //  SUGGESTED INVESTIGATION CONSULTATION ENDED
-
       if (pageCount === 1) {
         addPageFooter(doc, providerPrescriptionDetails);
       }
@@ -938,304 +902,6 @@ function printWorkout(
   return doc.y + 20;
 }
 
-function printSuggestedInvestigation(
-  doc,
-  dietYLevel,
-  // repetitions,
-  suggestedInvestigations
-  // workouts_formatted_data,
-  // workout_ids
-) {
-  const serialNoXStart = DOC_MARGIN;
-  // AKSHAY NEW CODE IMPLEMENTATIONS START
-  // const drNameWorkoutXStart = DOC_MARGIN + 50;
-  // AKSHAY NEW CODE IMPLEMENTATIONS END
-  const workoutNameXStart = DOC_MARGIN + 40;
-  const workoutTimeXStart = DOC_MARGIN + 160;
-  const workoutDetailsDataXStart = DOC_MARGIN + 260;
-  const startDateXStart = DOC_MARGIN + 430;
-  const endDateXStart = DOC_MARGIN + 560;
-
-  doc
-    .font(BOLD_FONT)
-    .fontSize(BOLD_FONT_SIZE)
-    .text("Suggested Investigation :", DOC_MARGIN, dietYLevel);
-
-  const workoutsHeaderEnds = doc.y;
-
-  doc
-    .fillColor("#4a90e2")
-    .fontSize(NORMAL_FONT_SIZE)
-    .font(BOLD_FONT)
-    .text("S.No.", serialNoXStart, workoutsHeaderEnds + 20)
-    // AKSHAY NEW CODE IMPLEMENTATIONS START
-    // .font(BOLD_FONT)
-    // .text("Provider Name", drNameWorkoutXStart, workoutsHeaderEnds + 20)
-    // AKSHAY NEW CODE IMPLEMENTATIONS END
-    .font(BOLD_FONT)
-    .text("Name", workoutNameXStart, workoutsHeaderEnds + 20)
-    .font(BOLD_FONT)
-    .text("Dr Name", workoutTimeXStart, workoutsHeaderEnds + 20)
-    .font(BOLD_FONT)
-    .text("Details", workoutDetailsDataXStart, workoutsHeaderEnds + 20)
-    .font(BOLD_FONT)
-    .text("Date", startDateXStart, workoutsHeaderEnds + 20)
-    .font(BOLD_FONT);
-  // .text("End Date",endDateXStart, workoutsHeaderEnds + 20)
-
-  let workoutCount = 1;
-  let singleWorkoutDetailYLevel = doc.y;
-
-  for (let each in suggestedInvestigations) {
-    if (doc.y + 3 * SHORT_FONT_SIZE > PAGE_END_LIMIT) {
-      addPageAndNumber(doc);
-      singleWorkoutDetailYLevel = DOC_MARGIN;
-    }
-
-    const { type, type_description, radiology_type, start_date, organizer } =
-      suggestedInvestigations[each] || {};
-
-    // let basicDetailsYLevel = singleWorkoutDetailYLevel + 20,
-    //   formattedStartDate = "--",
-    //   formattedEndDate = "--";
-
-    // if (start_date) {
-    //   formattedStartDate = moment(start_date);
-    // }
-
-    // GAURAV NEW CHNAGES
-    if (APPOINTMENT_TYPE[type].title === "Consultation") continue;
-    // IF STARTDATE LESSTHAN TODAY THEN WE WILL NOT PRINT THIS
-    // let today = moment().add(25, "days");
-    let today = new moment();
-    let start = moment(start_date);
-    if (start.isSameOrAfter(today)) {
-      let basicDetailsYLevel = singleWorkoutDetailYLevel + 20,
-        formattedStartDate = "--",
-        formattedEndDate = "--";
-
-      if (start_date) {
-        formattedStartDate = moment(start_date);
-      }
-
-      doc
-        .fillColor("#212b36")
-        .fontSize(SHORT_FONT_SIZE)
-        .font(MEDIUM_FONT)
-        .text(`${workoutCount}.`, serialNoXStart, basicDetailsYLevel)
-        // AKSHAY NEW CODE IMPLEMENTATIONS START
-        // .text(`Dr akshay`, drNameWorkoutXStart, basicDetailsYLevel, {
-        //   width: workoutNameXStart - drNameWorkoutXStart,
-        // })
-        // AKSHAY NEW CODE IMPLEMENTATIONS END
-        .text(
-          `${type_description}${radiology_type ? `-${radiology_type}` : ""}`,
-          workoutNameXStart,
-          basicDetailsYLevel,
-          {
-            width: workoutTimeXStart - workoutNameXStart,
-          }
-        )
-        .text(`${organizer.name}`, workoutTimeXStart, basicDetailsYLevel, {
-          width: workoutDetailsDataXStart - workoutTimeXStart,
-        })
-        .text(`29/12/23`, startDateXStart, basicDetailsYLevel, {
-          width: endDateXStart - startDateXStart,
-        });
-      // .text(`${formattedEndDate}`, endDateXStart, basicDetailsYLevel)
-
-      singleWorkoutDetailYLevel = doc.y;
-
-      doc
-        .font(BOLD_FONT)
-        .text(
-          `Notes${" "}${"-"}`,
-          workoutDetailsDataXStart,
-          // singleWorkoutDetailYLevel + 10,
-          basicDetailsYLevel,
-          {
-            width: startDateXStart - workoutDetailsDataXStart,
-            continued: true,
-          }
-        )
-        .font(MEDIUM_FONT)
-        .text(
-          `notes added by dr`,
-          workoutDetailsDataXStart + 10,
-          // singleWorkoutDetailYLevel + 10,
-          basicDetailsYLevel,
-          {
-            width: startDateXStart - workoutDetailsDataXStart,
-          }
-        );
-    }
-
-    // singleWorkoutDetailYLevel = doc.y;
-
-    // generateHr(doc, singleWorkoutDetailYLevel + 10);
-
-    singleWorkoutDetailYLevel = doc.y;
-
-    workoutCount++;
-
-    if (doc.y + 3 * SHORT_FONT_SIZE > PAGE_END_LIMIT) {
-      addPageAndNumber(doc);
-      singleWorkoutDetailYLevel = DOC_MARGIN;
-    }
-  }
-
-  return doc.y + 20;
-}
-
-function printNextConsulation(
-  doc,
-  dietYLevel,
-  // repetitions,
-  suggestedInvestigations
-  // workouts_formatted_data,
-  // workout_ids
-) {
-  const serialNoXStart = DOC_MARGIN;
-  // AKSHAY NEW CODE IMPLEMENTATIONS START
-  // const drNameWorkoutXStart = DOC_MARGIN + 50;
-  // AKSHAY NEW CODE IMPLEMENTATIONS END
-  const workoutNameXStart = DOC_MARGIN + 40;
-  const workoutTimeXStart = DOC_MARGIN + 160;
-  const workoutDetailsDataXStart = DOC_MARGIN + 260;
-  const startDateXStart = DOC_MARGIN + 430;
-  const endDateXStart = DOC_MARGIN + 560;
-
-  doc
-    .font(BOLD_FONT)
-    .fontSize(BOLD_FONT_SIZE)
-    .text("Next Consultation: :", DOC_MARGIN, dietYLevel);
-
-  const workoutsHeaderEnds = doc.y;
-
-  doc
-    .fillColor("#4a90e2")
-    .fontSize(NORMAL_FONT_SIZE)
-    .font(BOLD_FONT)
-    .text("S.No.", serialNoXStart, workoutsHeaderEnds + 20)
-    // AKSHAY NEW CODE IMPLEMENTATIONS START
-    // .font(BOLD_FONT)
-    // .text("Provider Name", drNameWorkoutXStart, workoutsHeaderEnds + 20)
-    // AKSHAY NEW CODE IMPLEMENTATIONS END
-    .font(BOLD_FONT)
-    .text("Name", workoutNameXStart, workoutsHeaderEnds + 20)
-    .font(BOLD_FONT)
-    .text("Dr Name", workoutTimeXStart, workoutsHeaderEnds + 20)
-    .font(BOLD_FONT)
-    .text("Details", workoutDetailsDataXStart, workoutsHeaderEnds + 20)
-    .font(BOLD_FONT)
-    .text("Date", startDateXStart, workoutsHeaderEnds + 20)
-    .font(BOLD_FONT);
-  // .text("End Date",endDateXStart, workoutsHeaderEnds + 20)
-
-  let workoutCount = 1;
-  let singleWorkoutDetailYLevel = doc.y;
-
-  for (let each in suggestedInvestigations) {
-    if (doc.y + 3 * SHORT_FONT_SIZE > PAGE_END_LIMIT) {
-      addPageAndNumber(doc);
-      singleWorkoutDetailYLevel = DOC_MARGIN;
-    }
-
-    const { type, type_description, radiology_type, start_date, organizer } =
-      suggestedInvestigations[each] || {};
-
-    // let basicDetailsYLevel = singleWorkoutDetailYLevel + 20,
-    //   formattedStartDate = "--",
-    //   formattedEndDate = "--";
-
-    // if (start_date) {
-    //   formattedStartDate = moment(start_date);
-    // }
-
-    // GAURAV NEW CHNAGES
-    if (APPOINTMENT_TYPE[type].title === "Consultation") continue;
-    // IF STARTDATE LESSTHAN TODAY THEN WE WILL NOT PRINT THIS
-    // let today = moment().add(25, "days");
-    let today = new moment();
-    let start = moment(start_date);
-    if (start.isSameOrAfter(today)) {
-      let basicDetailsYLevel = singleWorkoutDetailYLevel + 20,
-        formattedStartDate = "--",
-        formattedEndDate = "--";
-
-      if (start_date) {
-        formattedStartDate = moment(start_date);
-      }
-
-      doc
-        .fillColor("#212b36")
-        .fontSize(SHORT_FONT_SIZE)
-        .font(MEDIUM_FONT)
-        .text(`${workoutCount}.`, serialNoXStart, basicDetailsYLevel)
-        // AKSHAY NEW CODE IMPLEMENTATIONS START
-        // .text(`Dr akshay`, drNameWorkoutXStart, basicDetailsYLevel, {
-        //   width: workoutNameXStart - drNameWorkoutXStart,
-        // })
-        // AKSHAY NEW CODE IMPLEMENTATIONS END
-        .text(
-          `${type_description}${radiology_type ? `-${radiology_type}` : ""}`,
-          workoutNameXStart,
-          basicDetailsYLevel,
-          {
-            width: workoutTimeXStart - workoutNameXStart,
-          }
-        )
-        .text(`${organizer.name}`, workoutTimeXStart, basicDetailsYLevel, {
-          width: workoutDetailsDataXStart - workoutTimeXStart,
-        })
-        .text(`29/12/23`, startDateXStart, basicDetailsYLevel, {
-          width: endDateXStart - startDateXStart,
-        });
-      // .text(`${formattedEndDate}`, endDateXStart, basicDetailsYLevel)
-
-      singleWorkoutDetailYLevel = doc.y;
-
-      doc
-        .font(BOLD_FONT)
-        .text(
-          `Notes${" "}${"-"}`,
-          workoutDetailsDataXStart,
-          // singleWorkoutDetailYLevel + 10,
-          basicDetailsYLevel,
-          {
-            width: startDateXStart - workoutDetailsDataXStart,
-            continued: true,
-          }
-        )
-        .font(MEDIUM_FONT)
-        .text(
-          `notes added by dr`,
-          workoutDetailsDataXStart + 10,
-          // singleWorkoutDetailYLevel + 10,
-          basicDetailsYLevel,
-          {
-            width: startDateXStart - workoutDetailsDataXStart,
-          }
-        );
-    }
-
-    singleWorkoutDetailYLevel = doc.y;
-
-    generateHr(doc, singleWorkoutDetailYLevel + 10);
-
-    singleWorkoutDetailYLevel = doc.y;
-
-    workoutCount++;
-
-    if (doc.y + 3 * SHORT_FONT_SIZE > PAGE_END_LIMIT) {
-      addPageAndNumber(doc);
-      singleWorkoutDetailYLevel = DOC_MARGIN;
-    }
-  }
-
-  return doc.y + 20;
-}
-
 function printDoctorBlockData(
   doc,
   doctors,
@@ -1918,7 +1584,7 @@ function printCarePlanData({
       });
     }
 
-    // New Code - 19-01-2023 - end
+      // New Code - 19-01-2023 - end
     // doc
     //   .font(BOLD_FONT)
     //   .fontSize(NORMAL_FONT_SIZE)
@@ -1988,7 +1654,7 @@ function printAppointment({
     let medicationYLevel = doc.y;
 
     // MEDICATIONS
-    // addPageFooter(doc, providerPrescriptionDetails);
+    addPageFooter(doc, providerPrescriptionDetails);
 
     if (suggestedInvestigations.length > 0) {
       doc
@@ -2140,7 +1806,7 @@ function printConsultation({
     let medicationYLevel = doc.y;
 
     // MEDICATIONS
-    // addPageFooter(doc, providerPrescriptionDetails);
+    addPageFooter(doc, providerPrescriptionDetails);
 
     if (suggestedInvestigations.length > 0) {
       doc
@@ -2420,7 +2086,7 @@ function printFooter(
     if (pageCount === 1) {
       addPageFooter(doc, providerPrescriptionDetails);
     }
-    // addPageAndNumber(doc);
+    addPageAndNumber(doc);
     // medicationYLevel = DOC_MARGIN;
   }
 
@@ -2452,7 +2118,7 @@ function printFooter(
     if (pageCount === 1) {
       addPageFooter(doc, providerPrescriptionDetails);
     }
-    // addPageAndNumber(doc);
+    addPageAndNumber(doc);
   }
 
   try {
@@ -2468,7 +2134,7 @@ function printFooter(
     if (pageCount === 1) {
       addPageFooter(doc);
     }
-    // addPageAndNumber(doc);
+    addPageAndNumber(doc);
   }
 
   doc
