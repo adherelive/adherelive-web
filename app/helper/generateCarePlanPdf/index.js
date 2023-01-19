@@ -1988,7 +1988,7 @@ function printAppointment({
     let medicationYLevel = doc.y;
 
     // MEDICATIONS
-    addPageFooter(doc, providerPrescriptionDetails);
+    // addPageFooter(doc, providerPrescriptionDetails);
 
     if (suggestedInvestigations.length > 0) {
       doc
@@ -2140,7 +2140,7 @@ function printConsultation({
     let medicationYLevel = doc.y;
 
     // MEDICATIONS
-    addPageFooter(doc, providerPrescriptionDetails);
+    // addPageFooter(doc, providerPrescriptionDetails);
 
     if (suggestedInvestigations.length > 0) {
       doc
