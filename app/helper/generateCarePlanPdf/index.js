@@ -2420,7 +2420,7 @@ function printFooter(
     if (pageCount === 1) {
       addPageFooter(doc, providerPrescriptionDetails);
     }
-    addPageAndNumber(doc);
+    // addPageAndNumber(doc);
     // medicationYLevel = DOC_MARGIN;
   }
 
@@ -2452,7 +2452,7 @@ function printFooter(
     if (pageCount === 1) {
       addPageFooter(doc, providerPrescriptionDetails);
     }
-    addPageAndNumber(doc);
+    // addPageAndNumber(doc);
   }
 
   try {
@@ -2468,7 +2468,7 @@ function printFooter(
     if (pageCount === 1) {
       addPageFooter(doc);
     }
-    addPageAndNumber(doc);
+    // addPageAndNumber(doc);
   }
 
   doc
