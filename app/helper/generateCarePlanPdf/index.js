@@ -930,10 +930,10 @@ function printAppointment({
 }) {
   try {
     let labFindingsEndLevel = doc.y;
-    if (suggestedInvestigations.length > 0) {
-      addPageAndNumber(doc);
-      labFindingsEndLevel = DOC_MARGIN;
-    }
+    // if (suggestedInvestigations.length > 0) {
+    //   addPageAndNumber(doc);
+    //   labFindingsEndLevel = DOC_MARGIN;
+    // }
 
 
     let medicationYLevel = doc.y;
