@@ -1067,9 +1067,9 @@ function printAppointment({
       }
     }
 
-    if (!medicationsList.length > 0) {
-      medicationYLevel = generalExaminationEndLevel + NORMAL_FONT_SIZE + 12;
-    }
+    // if (!medicationsList.length > 0) {
+    //   medicationYLevel = generalExaminationEndLevel + NORMAL_FONT_SIZE + 12;
+    // }
   } catch (ex) {
     console.log(ex);
   }
@@ -1214,9 +1214,9 @@ function printConsultation({
       }
     }
 
-    if (!medicationsList.length > 0) {
-      medicationYLevel = generalExaminationEndLevel + NORMAL_FONT_SIZE + 12;
-    }
+    // if (!medicationsList.length > 0) {
+    //   medicationYLevel = generalExaminationEndLevel + NORMAL_FONT_SIZE + 12;
+    // }
   } catch (ex) {
     console.log(ex);
   }
