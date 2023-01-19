@@ -939,7 +939,7 @@ function printAppointment({
       doc
         .font(BOLD_FONT)
         .fontSize(BOLD_FONT_SIZE)
-        .text("Suggested Investigations", DOC_MARGIN, docYLevel + 15);
+        .text("Suggested Investigations", DOC_MARGIN, labFindingsEndLevel + 15);
 
       const rXLabelEndLevelY = doc.y;
 
