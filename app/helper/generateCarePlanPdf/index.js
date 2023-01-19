@@ -929,7 +929,13 @@ function printAppointment({
   docYLevel,
 }) {
   try {
-    const labFindingsEndLevel = doc.y;
+    let labFindingsEndLevel = doc.y;
+    if (suggestedInvestigations.length > 0) {
+      addPageAndNumber(doc);
+      labFindingsEndLevel = DOC_MARGIN;
+    }
+
+
     let medicationYLevel = doc.y;
 
     // MEDICATIONS
@@ -1160,7 +1166,7 @@ function printConsultation({
             .fontSize(SHORT_FONT_SIZE)
             .font(MEDIUM_FONT)
             .text(
-              `testdateone`,
+              `test date`,
               dosageXStart,
               medicationYLevel
             )
