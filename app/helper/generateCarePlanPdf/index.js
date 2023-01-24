@@ -1092,6 +1092,20 @@ function printConsultation({
     // MEDICATIONS
     // addPageFooter(doc, providerPrescriptionDetails);
 
+
+    if (suggestedInvestigations.length > 0) {
+      addPageAndNumber(doc);
+      labFindingsEndLevel = DOC_MARGIN;
+    }
+
+
+
+    // MEDICATIONS
+    addPageFooter(doc, providerPrescriptionDetails);
+
+
+
+
     if (suggestedInvestigations.length > 0) {
       doc
         .font(BOLD_FONT)
