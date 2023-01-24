@@ -1101,7 +1101,7 @@ function printConsultation({
 
 
     // MEDICATIONS
-    addPageFooter(doc, providerPrescriptionDetails);
+    // addPageFooter(doc, providerPrescriptionDetails);
 
 
 
