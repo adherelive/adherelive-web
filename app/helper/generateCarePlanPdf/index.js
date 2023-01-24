@@ -1093,10 +1093,10 @@ function printConsultation({
     // addPageFooter(doc, providerPrescriptionDetails);
 
 
-    if (suggestedInvestigations.length > 0) {
-      addPageAndNumber(doc);
-      labFindingsEndLevel = DOC_MARGIN;
-    }
+    // if (suggestedInvestigations.length > 0) {
+    //   addPageAndNumber(doc);
+    //   labFindingsEndLevel = DOC_MARGIN;
+    // }
 
 
 
