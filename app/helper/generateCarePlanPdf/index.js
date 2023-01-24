@@ -1094,7 +1094,7 @@ function printConsultation({
 
 
     if (suggestedInvestigations.length > 0) {
-      addPageAndNumber(doc);
+      // addPageAndNumber(doc);
       labFindingsEndLevel = DOC_MARGIN;
     }
 
