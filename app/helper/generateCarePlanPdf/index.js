@@ -931,11 +931,9 @@ function printAppointment({
   try {
     let labFindingsEndLevel = doc.y;
     if (suggestedInvestigations.length > 0) {
-      if (docYLevel > PAGE_END_LIMIT) addPageAndNumber(doc);
+      addPageAndNumber(doc);
       labFindingsEndLevel = DOC_MARGIN;
     }
-
-
 
     let medicationYLevel = doc.y;
 
@@ -1092,7 +1090,7 @@ function printConsultation({
     let medicationYLevel = doc.y;
 
     // MEDICATIONS
-    addPageFooter(doc, providerPrescriptionDetails);
+    // addPageFooter(doc, providerPrescriptionDetails);
 
     if (suggestedInvestigations.length > 0) {
       doc
@@ -1930,6 +1928,15 @@ function printCarePlanData({
         docYLevel,
       });
     }
+
+    // if (Object.keys(suggestedInvestigations).length) {
+    //   const consultationLevelEnd = printConsultation({
+    //     doc,
+    //     providerPrescriptionDetails,
+    //     suggestedInvestigations,
+    //   });
+    // }
+
 
     doc
       .font(BOLD_FONT)
