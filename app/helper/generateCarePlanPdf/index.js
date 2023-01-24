@@ -931,9 +931,10 @@ function printAppointment({
   try {
     let labFindingsEndLevel = doc.y;
     if (suggestedInvestigations.length > 0) {
-      addPageAndNumber(doc);
+      if (docYLevel > PAGE_END_LIMIT) addPageAndNumber(doc);
       labFindingsEndLevel = DOC_MARGIN;
     }
+
 
 
     let medicationYLevel = doc.y;
