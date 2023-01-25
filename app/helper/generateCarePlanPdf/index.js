@@ -1009,7 +1009,7 @@ function printAppointment({
         // let today = new moment();
         // let start = moment(start_date);
 
-        let start = `${moment(new Date(start_date)).format("DD MM YY")}`;
+        let start = `${moment(new Date(start_date))}`;
         // if (start.isSameOrAfter(today)) {
           // gaurav new changes - start
           doc
