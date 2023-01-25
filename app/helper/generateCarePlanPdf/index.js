@@ -1009,6 +1009,7 @@ function printAppointment({
         // let today = new moment();
         // let start = moment(start_date);
 
+        let start = `${moment(new Date(start_date)).format("DD MM YY")}`;
         // if (start.isSameOrAfter(today)) {
           // gaurav new changes - start
           doc
@@ -1016,7 +1017,7 @@ function printAppointment({
             .fontSize(SHORT_FONT_SIZE)
             .font(MEDIUM_FONT)
             .text(
-              `${start_date}`,
+              `${start}`,
               dosageXStart,
               medicationYLevel
             )
