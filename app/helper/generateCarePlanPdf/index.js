@@ -2433,7 +2433,7 @@ function formatMedicationsData(medications, medicines) {
       strength = "",
       unit = "",
       quantity = null,
-      detailDescription = ""
+      description: detailDescription = ""
     } = mainDetails || {};
 
     const {
