@@ -2433,6 +2433,7 @@ function formatMedicationsData(medications, medicines) {
       strength = "",
       unit = "",
       quantity = null,
+      detailDescription = ""
     } = mainDetails || {};
 
     const {
@@ -2464,7 +2465,7 @@ function formatMedicationsData(medications, medicines) {
     const unitToShow = text ? text : unit;
 
     medicationDataObj = {
-      description,
+      description: description || detailDescription,
       medicineName: name ? name.toUpperCase() : name,
       genericName: generic_name,
       medicineType: medicine_type,
