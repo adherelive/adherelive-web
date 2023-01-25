@@ -991,7 +991,9 @@ function printAppointment({
           start_date,
           organizer,
         } = suggestedInvestigations[each] || {};
-
+        console.log("=================================")
+        console.log(suggestedInvestigations[each])
+        console.log("=================================")
         // gaurav new changes - start
         if (doc.y + 3 * SHORT_FONT_SIZE > PAGE_END_LIMIT) {
           if (pageCount === 1) {
@@ -1013,7 +1015,7 @@ function printAppointment({
             .fontSize(SHORT_FONT_SIZE)
             .font(MEDIUM_FONT)
             .text(
-              `Test Date`,
+              `${start_date}`,
               dosageXStart,
               medicationYLevel
             )
@@ -1943,13 +1945,13 @@ function printCarePlanData({
       });
     }
 
-    // if (Object.keys(suggestedInvestigations).length) {
-    //   const consultationLevelEnd = printConsultation({
-    //     doc,
-    //     providerPrescriptionDetails,
-    //     suggestedInvestigations,
-    //   });
-    // }
+    if (Object.keys(suggestedInvestigations).length) {
+      const consultationLevelEnd = printConsultation({
+        doc,
+        providerPrescriptionDetails,
+        suggestedInvestigations,
+      });
+    }
 
 
     doc
