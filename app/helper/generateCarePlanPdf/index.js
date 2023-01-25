@@ -990,6 +990,7 @@ function printAppointment({
           radiology_type,
           start_date,
           organizer,
+          description
         } = suggestedInvestigations[each] || {};
         console.log("=================================")
         console.log(suggestedInvestigations[each])
@@ -1052,7 +1053,7 @@ function printAppointment({
                 width: dosageXStart - medicineXStart,
               }
             )
-            .text(`Note:-`, medicineXStart, doc.y, {
+            .text(`Note:-${description}`, medicineXStart, doc.y, {
               width: dosageXStart - medicineXStart - 20,
             });
         // }

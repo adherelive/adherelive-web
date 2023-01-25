@@ -1572,10 +1572,10 @@ class PatientController extends Controller {
           const { type } = appointmentWrapper.getDetails() || {};
 
           // if (type !== CONSULTATION) {
-          const { type_description = "", radiology_type = "" } =
+          const { type_description = "", radiology_type = "", description = "" } =
             appointmentWrapper.getDetails() || {};
           suggestedInvestigations.push({
-            type,
+            type, description,
             type_description,
             radiology_type,
             start_date: startDate,
