@@ -1099,10 +1099,6 @@ function printConsultation({
 
     let medicationYLevel = doc.y;
 
-
-
-
-
     if (suggestedInvestigations.length > 0) {
       doc
         .font(BOLD_FONT)
@@ -1168,6 +1164,8 @@ function printConsultation({
 
         // let today = new moment();
         // let start = moment(start_date);
+
+        let start = `${moment(new Date(start_date)).format('ll')}`;
 
         // if (start.isSameOrAfter(today)) {
           // gaurav new changes - start
