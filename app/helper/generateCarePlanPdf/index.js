@@ -1010,7 +1010,7 @@ function printAppointment({
         // let today = new moment();
         // let start = moment(start_date);
 
-        let start = `${moment(new Date(start_date)).format("DD/MM/YYYY")}`;
+        let start = `${moment(new Date(start_date)).format("ll")}`;
         // if (start.isSameOrAfter(today)) {
           // gaurav new changes - start
           doc
@@ -1030,7 +1030,7 @@ function printAppointment({
           doc
             .fillColor("#212b36")
             .fontSize(SHORT_FONT_SIZE)
-            .font(MEDIUM_FONT)
+            .font(HINDI_FONT)
             .text(`${srNumber}.`, serialNoXStart, medicationYLevel)
             // gaurav new changes - end
 
@@ -1148,7 +1148,7 @@ function printConsultation({
           type_description,
           radiology_type,
           start_date,
-          organizer,
+          organizer, description
         } = suggestedInvestigations[each] || {};
 
         // gaurav new changes - start
@@ -1174,11 +1174,11 @@ function printConsultation({
             .fontSize(SHORT_FONT_SIZE)
             .font(MEDIUM_FONT)
             .text(
-              `test date`,
+              `${start}`,
               dosageXStart,
               medicationYLevel
             )
-            .text(`Self`, quantityXStart, medicationYLevel)
+            .text(`${organizer.name}`, quantityXStart, medicationYLevel)
             .text(`Test purpose`, frequencyXStart, medicationYLevel, {
               width: timingFrequencyXStart - frequencyXStart - 25,
             });
@@ -1186,7 +1186,7 @@ function printConsultation({
           doc
             .fillColor("#212b36")
             .fontSize(SHORT_FONT_SIZE)
-            .font(MEDIUM_FONT)
+            .font(HINDI_FONT)
             .text(`${srNumber}.`, serialNoXStart, medicationYLevel)
             // gaurav new changes - end
 
