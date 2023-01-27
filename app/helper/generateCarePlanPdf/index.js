@@ -1111,7 +1111,7 @@ function printConsultation({
 
 
 
-    if (suggestedInvestigations.length > 0) {
+    if (true) {
       doc
         .font(BOLD_FONT)
         .fontSize(BOLD_FONT_SIZE)
