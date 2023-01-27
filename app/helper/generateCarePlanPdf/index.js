@@ -170,14 +170,14 @@ export default async (pdfData, signatureImage) => {
       );
 
       //  SUGGESTED INVESTIGATION AND NEXT CONSULATION ADDED BY US
-
-      // if (Object.keys(suggestedInvestigations).length) {
-      //   const appointmentLevelEnd = printAppointment({
-      //     doc,
-      //     providerPrescriptionDetails,
-      //     suggestedInvestigations,
-      //   });
-      // }
+      // test start - 27-01-23
+      if (Object.keys(suggestedInvestigations).length) {
+        const appointmentLevelEnd = printAppointment({
+          doc,
+          providerPrescriptionDetails,
+          suggestedInvestigations,
+        });
+      }
 
       if (Object.keys(suggestedInvestigations).length) {
         const consultationLevelEnd = printConsultation({
@@ -187,6 +187,7 @@ export default async (pdfData, signatureImage) => {
         });
       }
 
+      // test start - 27-01-23
       //  SUGGESTED INVESTIGATION CONSULTATION ENDED
 
       if (pageCount === 1) {
