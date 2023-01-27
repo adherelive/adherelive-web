@@ -1091,7 +1091,7 @@ function printConsultation({
   suggestedInvestigations,
 }) {
   try {
-    const labFindingsEndLevel = doc.y;
+    let labFindingsEndLevel = doc.y;
     let medicationYLevel = doc.y;
 
     // MEDICATIONS
