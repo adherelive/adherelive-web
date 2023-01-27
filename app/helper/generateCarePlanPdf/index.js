@@ -171,21 +171,21 @@ export default async (pdfData, signatureImage) => {
 
       //  SUGGESTED INVESTIGATION AND NEXT CONSULATION ADDED BY US
       // test start - 27-01-23
-      if (Object.keys(suggestedInvestigations).length) {
-        const appointmentLevelEnd = printAppointment({
-          doc,
-          providerPrescriptionDetails,
-          suggestedInvestigations,
-        });
-      }
+      // if (Object.keys(suggestedInvestigations).length) {
+      //   const appointmentLevelEnd = printAppointment({
+      //     doc,
+      //     providerPrescriptionDetails,
+      //     suggestedInvestigations,
+      //   });
+      // }
 
-      if (Object.keys(suggestedInvestigations).length) {
-        const consultationLevelEnd = printConsultation({
-          doc,
-          providerPrescriptionDetails,
-          suggestedInvestigations,
-        });
-      }
+      // if (Object.keys(suggestedInvestigations).length) {
+      //   const consultationLevelEnd = printConsultation({
+      //     doc,
+      //     providerPrescriptionDetails,
+      //     suggestedInvestigations,
+      //   });
+      // }
 
       // test start - 27-01-23
       //  SUGGESTED INVESTIGATION CONSULTATION ENDED
