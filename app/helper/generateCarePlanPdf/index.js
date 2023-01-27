@@ -1957,13 +1957,13 @@ function printCarePlanData({
 
     doc.font(HINDI_FONT).text(follow_up_advise, DOC_MARGIN, doc.y + 5);
 
-    if (Object.keys(suggestedInvestigations).length) {
-      const consultationLevelEnd = printConsultation({
-        doc,
-        providerPrescriptionDetails,
-        suggestedInvestigations,
-      });
-    }
+    // if (Object.keys(suggestedInvestigations).length) {
+    //   const consultationLevelEnd = printConsultation({
+    //     doc,
+    //     providerPrescriptionDetails,
+    //     suggestedInvestigations,
+    //   });
+    // }
 
     if (doc.y > PAGE_END_LIMIT) {
       if (pageCount === 1) {
@@ -2150,11 +2150,11 @@ function printFooter(
 
   // ====================
   // 27-01-2023 - start
-  const consultationLevelEnd = printConsultation({
-    doc,
-    providerPrescriptionDetails,
-    suggestedInvestigations,
-  });
+  // const consultationLevelEnd = printConsultation({
+  //   doc,
+  //   providerPrescriptionDetails,
+  //   suggestedInvestigations,
+  // });
   // 27-01-2023 - end
 
   const signaturePictureHeight = 40;
