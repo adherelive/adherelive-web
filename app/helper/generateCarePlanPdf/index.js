@@ -1111,7 +1111,7 @@ function printConsultation({
 
 
 
-    if (true) {
+    if (suggestedInvestigations.length > 0) {
       doc
         .font(BOLD_FONT)
         .fontSize(BOLD_FONT_SIZE)
@@ -1938,8 +1938,11 @@ function printCarePlanData({
     //     addPageAndNumber(doc);
     //   }
     // }
+    console.log("\n\n\n\n\\n\n\n\n in printcareplan data")
+    console.log(Object.keys(suggestedInvestigations).length)
 
     if (Object.keys(suggestedInvestigations).length) {
+      console.log("\n\n\n\n\\n\n\n\nin the if looop appointment\n\n\n\n\\n\n\n\n")
       const appointmentLevelEnd = printAppointment({
         doc,
         providerPrescriptionDetails,
@@ -1947,8 +1950,8 @@ function printCarePlanData({
         docYLevel,
       });
     }
-
     if (Object.keys(suggestedInvestigations).length) {
+      console.log("\n\n\n\n\\n\n\n\nin the if looop printConsultation\n\n\n\n\\n\n\n\n")
       const consultationLevelEnd = printConsultation({
         doc,
         providerPrescriptionDetails,
