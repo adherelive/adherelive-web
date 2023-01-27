@@ -179,13 +179,13 @@ export default async (pdfData, signatureImage) => {
       //   });
       // }
 
-      // if (Object.keys(suggestedInvestigations).length) {
-      //   const consultationLevelEnd = printConsultation({
-      //     doc,
-      //     providerPrescriptionDetails,
-      //     suggestedInvestigations,
-      //   });
-      // }
+      if (Object.keys(suggestedInvestigations).length) {
+        const consultationLevelEnd = printConsultation({
+          doc,
+          providerPrescriptionDetails,
+          suggestedInvestigations,
+        });
+      }
 
       //  SUGGESTED INVESTIGATION CONSULTATION ENDED
 
