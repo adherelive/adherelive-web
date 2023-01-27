@@ -1092,21 +1092,13 @@ function printConsultation({
 }) {
   try {
     let labFindingsEndLevel = doc.y;
-    let medicationYLevel = doc.y;
-
-    // MEDICATIONS
-    // addPageFooter(doc, providerPrescriptionDetails);
-
-
     if (suggestedInvestigations.length > 0) {
-      // addPageAndNumber(doc);
+      addPageAndNumber(doc);
       labFindingsEndLevel = DOC_MARGIN;
     }
 
+    let medicationYLevel = doc.y;
 
-
-    // MEDICATIONS
-    // addPageFooter(doc, providerPrescriptionDetails);
 
 
 
