@@ -2149,11 +2149,20 @@ function printFooter(
 
   // AKSHAY NEW CODE IMPLEMENTATIONS
 
-  const consultationAppointment = printConsultationAppointment({
+  // const consultationAppointment = printConsultationAppointment({
+  //   doc,
+  //   suggestedInvestigations,
+  //   providerPrescriptionDetails,
+  // });
+
+  // ====================
+  // 27-01-2023 - start
+  const consultationLevelEnd = printConsultation({
     doc,
-    suggestedInvestigations,
     providerPrescriptionDetails,
+    suggestedInvestigations,
   });
+  // 27-01-2023 - end
 
   const signaturePictureHeight = 40;
 
