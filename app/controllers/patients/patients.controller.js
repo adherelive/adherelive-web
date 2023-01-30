@@ -1572,14 +1572,14 @@ class PatientController extends Controller {
           const { type } = appointmentWrapper.getDetails() || {};
 
           // if (type !== CONSULTATION) {
-          const { type_description = "", radiology_type = "", description = "" } =
+          const { type_description = "", radiology_type = "", description = "", reason = "" } =
             appointmentWrapper.getDetails() || {};
           suggestedInvestigations.push({
             type, description,
             type_description,
             radiology_type,
             start_date: startDate,
-            organizer,
+            organizer, reason
           });
           // }
         }
