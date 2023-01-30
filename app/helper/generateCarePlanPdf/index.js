@@ -531,7 +531,7 @@ function printDiet(
                   continued: true,
                 }
               )
-              .font(MEDIUM_FONT)
+            .font(HINDI_FONT)
               .text(
                 `${notes}`,
                 dietDetailsDataXStart,
@@ -580,7 +580,7 @@ function printDiet(
     singleDietDetailYLevel = doc.y;
 
     doc
-      .font(BOLD_FONT)
+      .font(HINDI_FONT)
       .text(
         `What Not to Do${" "}${"-"}`,
         dietDetailsTimeXStart,
@@ -590,7 +590,7 @@ function printDiet(
           continued: true,
         }
       )
-      .font(MEDIUM_FONT)
+      .font(HINDI_FONT)
       .text(
         `${not_to_do ? not_to_do : "--"}`,
         dietDetailsTimeXStart + 10,
@@ -1956,7 +1956,7 @@ function printCarePlanData({
       .fontSize(BOLD_FONT_SIZE)
       .text("Advice/Instructions: ", DOC_MARGIN, doc.y + 20);
 
-    doc.font(HINDI_FONT).text(follow_up_advise, DOC_MARGIN, doc.y + 5);
+    doc.font(HINDI_FONT).fontSize(NORMAL_FONT_SIZE).text(follow_up_advise, DOC_MARGIN, doc.y + 5);
 
     // if (Object.keys(suggestedInvestigations).length) {
     //   const consultationLevelEnd = printConsultation({
