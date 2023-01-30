@@ -1149,7 +1149,7 @@ function printConsultation({
           type_description,
           radiology_type,
           start_date,
-          organizer, description
+          organizer, description, reason
         } = suggestedInvestigations[each] || {};
 
         // gaurav new changes - start
@@ -1207,7 +1207,7 @@ function printConsultation({
             .text(`Prescribed by Dr.${organizer.name}`, medicineXStart, doc.y, {
               width: dosageXStart - medicineXStart,
             })
-            .text(`Note:-`, medicineXStart, doc.y, {
+            .text(`Note:-${description}`, medicineXStart, doc.y, {
               width: dosageXStart - medicineXStart - 20,
             });
         // }
