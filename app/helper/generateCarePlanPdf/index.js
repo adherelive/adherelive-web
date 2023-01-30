@@ -991,7 +991,7 @@ function printAppointment({
           radiology_type,
           start_date,
           organizer,
-          description
+          description, reason
         } = suggestedInvestigations[each] || {};
         console.log("=================================")
         console.log(suggestedInvestigations[each])
@@ -1024,7 +1024,7 @@ function printAppointment({
               medicationYLevel
             )
             .text(`${organizer.name}`, quantityXStart, medicationYLevel)
-            .text(`Test purpose`, frequencyXStart, medicationYLevel, {
+            .text(`${reason}`, frequencyXStart, medicationYLevel, {
               width: timingFrequencyXStart - frequencyXStart - 25,
             });
 
@@ -1180,7 +1180,7 @@ function printConsultation({
               medicationYLevel
             )
             .text(`${organizer.name}`, quantityXStart, medicationYLevel)
-            .text(`Test purpose`, frequencyXStart, medicationYLevel, {
+            .text(`${reason}`, frequencyXStart, medicationYLevel, {
               width: timingFrequencyXStart - frequencyXStart - 25,
             });
 
