@@ -440,7 +440,7 @@ function printDiet(
         .format("hh:mm A");
       doc
         .fillColor("#212b36")
-        .font(MEDIUM_FONT)
+        .font(HINDI_FONT)
         .text(
           `${timeText}${" "}(${formattedTime})${" "}`,
           dietDetailsTimeXStart,
@@ -506,7 +506,7 @@ function printDiet(
 
         doc
           .fillColor("#212b36")
-          .font(MEDIUM_FONT)
+          .font(HINDI_FONT)
           .text(
             `${singleData}`,
             dietDetailsDataXStart,
@@ -521,7 +521,7 @@ function printDiet(
         similar && notes && similar.length === 0 && notes.length
           ? doc
               .fillColor("#212b36")
-              .font(BOLD_FONT)
+            .font(HINDI_FONT)
               .text(
                 `Instructions:${" "}`,
                 dietDetailsDataXStart,
@@ -995,6 +995,7 @@ function printAppointment({
         } = suggestedInvestigations[each] || {};
         console.log("=================================")
         console.log(suggestedInvestigations[each])
+        console.log({ organizer })
         console.log("=================================")
         // gaurav new changes - start
         if (doc.y + 3 * SHORT_FONT_SIZE > PAGE_END_LIMIT) {
