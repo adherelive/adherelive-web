@@ -1011,7 +1011,7 @@ function printAppointment({
         // let today = new moment();
         // let start = moment(start_date);
 
-        let start = `${moment(new Date(start_date)).format("ll")}`;
+        let start = `${moment(new Date(start_date)).format("DD MMM 'YY")}`;
         // if (start.isSameOrAfter(today)) {
           // gaurav new changes - start
           doc
@@ -1166,7 +1166,7 @@ function printConsultation({
         // let today = new moment();
         // let start = moment(start_date);
 
-        let start = `${moment(new Date(start_date)).format('ll')}`;
+        let start = `${moment(new Date(start_date)).format("DD MMM 'YY")}`;
 
         // if (start.isSameOrAfter(today)) {
           // gaurav new changes - start
@@ -1515,8 +1515,8 @@ function isMedicationsUpdatedInExistingMedicin(medications) {
         details: mobileDetails = null,
       },
     } = medications;
-    let updated_date = `${moment(new Date(updated_at)).format("DD MM YY")}`;
-    let created_date = `${moment(new Date(created_at)).format("DD MM YY")}`;
+    let updated_date = `${moment(new Date(updated_at)).format("DD MMM YY")}`;
+    let created_date = `${moment(new Date(created_at)).format("DD MMM YY")}`;
 
     if (created_date !== updated_date) {
       // all medicin written in same days an there is no update on medicins
@@ -2012,7 +2012,7 @@ function printConsultationAppointment({
           .text(
             `${type_description}${radiology_type ? `-${radiology_type}` : ""}(${
               APPOINTMENT_TYPE[type].title
-            }) on ${moment(start_date).format("DD/MM/YYYY")} by Dr. ${
+            }) on ${moment(start_date).format("DD MMM YY")} by Dr. ${
               organizer.name
             }`,
             DOC_MARGIN,
