@@ -817,7 +817,7 @@ function printWorkout(
                 continued: true,
               }
             )
-            .font(MEDIUM_FONT)
+          .font(HINDI_FONT)
             .text(
               `${notes}`,
               workoutDetailsDataXStart,
@@ -1953,7 +1953,7 @@ function printCarePlanData({
 
     doc
       .font(BOLD_FONT)
-      .fontSize(NORMAL_FONT_SIZE)
+      .fontSize(BOLD_FONT_SIZE)
       .text("Advice/Instructions: ", DOC_MARGIN, doc.y + 20);
 
     doc.font(HINDI_FONT).text(follow_up_advise, DOC_MARGIN, doc.y + 5);
