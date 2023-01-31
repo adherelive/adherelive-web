@@ -1014,6 +1014,8 @@ function printAppointment({
         let start = `${moment(new Date(start_date)).format("DD MMM 'YY")}`;
         // if (start.isSameOrAfter(today)) {
           // gaurav new changes - start
+        let organizer_name = ""
+        organizer_name = organizer.id == 4 ? "Subarthi Hospital" : `${organizer.name}`
           doc
             .fillColor("#212b36")
             .fontSize(SHORT_FONT_SIZE)
@@ -1023,7 +1025,7 @@ function printAppointment({
               dosageXStart,
               medicationYLevel
             )
-            .text(`${organizer.name}`, quantityXStart, medicationYLevel)
+            .text(`${organizer_name}`, quantityXStart, medicationYLevel)
             .text(`${reason}`, frequencyXStart, medicationYLevel, {
               width: timingFrequencyXStart - frequencyXStart - 25,
             });
@@ -1167,7 +1169,8 @@ function printConsultation({
         // let start = moment(start_date);
 
         let start = `${moment(new Date(start_date)).format("DD MMM 'YY")}`;
-
+        let organizer_name = ""
+        organizer_name = organizer.id == 4 ? "Subarthi Hospital" : `${organizer.name}`
         // if (start.isSameOrAfter(today)) {
           // gaurav new changes - start
           doc
@@ -1179,7 +1182,7 @@ function printConsultation({
               dosageXStart,
               medicationYLevel
             )
-            .text(`${organizer.name}`, quantityXStart, medicationYLevel)
+            .text(`${organizer_name}`, quantityXStart, medicationYLevel)
             .text(`${reason}`, frequencyXStart, medicationYLevel, {
               width: timingFrequencyXStart - frequencyXStart - 25,
             });
@@ -1941,6 +1944,13 @@ function printCarePlanData({
         docYLevel,
       });
     }
+    doc
+      .font(BOLD_FONT)
+      .fontSize(BOLD_FONT_SIZE)
+      .text("Advice/Instructions: ", DOC_MARGIN, doc.y + 20);
+
+    doc.font(HINDI_FONT).fontSize(NORMAL_FONT_SIZE).text(follow_up_advise, DOC_MARGIN, doc.y + 5);
+
     if (Object.keys(suggestedInvestigations).length) {
       console.log("\n\n\n\n\\n\n\n\nin the if looop printConsultation\n\n\n\n\\n\n\n\n")
       const consultationLevelEnd = printConsultation({
@@ -1949,15 +1959,6 @@ function printCarePlanData({
         suggestedInvestigations,
       });
     }
-
-
-    doc
-      .font(BOLD_FONT)
-      .fontSize(BOLD_FONT_SIZE)
-      .text("Advice/Instructions: ", DOC_MARGIN, doc.y + 20);
-
-    doc.font(HINDI_FONT).fontSize(NORMAL_FONT_SIZE).text(follow_up_advise, DOC_MARGIN, doc.y + 5);
-
     // if (Object.keys(suggestedInvestigations).length) {
     //   const consultationLevelEnd = printConsultation({
     //     doc,
