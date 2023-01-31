@@ -991,7 +991,7 @@ function printAppointment({
           radiology_type,
           start_date,
           organizer,
-          description, reason
+          description, reason, provider_id
         } = suggestedInvestigations[each] || {};
         console.log("=================================")
         console.log(suggestedInvestigations[each])
@@ -1015,7 +1015,7 @@ function printAppointment({
         // if (start.isSameOrAfter(today)) {
           // gaurav new changes - start
         let organizer_name = ""
-        organizer_name = organizer.id == 4 ? "Subarthi Hospital" : `${organizer.name}`
+        organizer_name = provider_id == 4 ? "Subarthi Hospital" : `${organizer.name}`
           doc
             .fillColor("#212b36")
             .fontSize(SHORT_FONT_SIZE)
@@ -1151,7 +1151,7 @@ function printConsultation({
           type_description,
           radiology_type,
           start_date,
-          organizer, description, reason
+          organizer, description, reason, provider_id
         } = suggestedInvestigations[each] || {};
 
         // gaurav new changes - start
@@ -1170,7 +1170,7 @@ function printConsultation({
 
         let start = `${moment(new Date(start_date)).format("DD MMM 'YY")}`;
         let organizer_name = ""
-        organizer_name = organizer.id == 4 ? "Subarthi Hospital" : `${organizer.name}`
+        organizer_name = provider_id == 4 ? "Subarthi Hospital" : `${organizer.name}`
         // if (start.isSameOrAfter(today)) {
           // gaurav new changes - start
           doc

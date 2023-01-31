@@ -1569,7 +1569,7 @@ class PatientController extends Controller {
             }
           }
 
-          const { type } = appointmentWrapper.getDetails() || {};
+          const { type, provider_id } = appointmentWrapper.getDetails() || {};
 
           // if (type !== CONSULTATION) {
           const { type_description = "", radiology_type = "", description = "", reason = "" } =
@@ -1577,7 +1577,7 @@ class PatientController extends Controller {
           suggestedInvestigations.push({
             type, description,
             type_description,
-            radiology_type,
+            radiology_type, provider_id,
             start_date: startDate,
             organizer, reason
           });
