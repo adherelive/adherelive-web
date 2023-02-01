@@ -954,7 +954,7 @@ function printAppointment({
       // const medicineXStart = DOC_MARGIN + 40;
       const medicineXStart = DOC_MARGIN + 40;
       const dosageXStart = DOC_MARGIN + 220;
-      const quantityXStart = DOC_MARGIN + 330;
+      const quantityXStart = DOC_MARGIN + 300;
       const frequencyXStart = DOC_MARGIN + 410;
       const timingFrequencyXStart = DOC_MARGIN + 410;
 
@@ -1812,7 +1812,7 @@ function printCarePlanData({
         doc
           .fillColor("#212b36")
           .fontSize(SHORT_FONT_SIZE)
-          .font(MEDIUM_FONT)
+          .font(HINDI_FONT)
           .text(`${srNumber}.`, serialNoXStart, medicationYLevel)
           // gaurav new changes - end
 
