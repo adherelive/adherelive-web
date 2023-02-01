@@ -1114,7 +1114,7 @@ function printConsultation({
       // const drXStart = DOC_MARGIN + 35;
       // const medicineXStart = DOC_MARGIN + 40;
       const medicineXStart = DOC_MARGIN + 40;
-      const dosageXStart = DOC_MARGIN + 220;
+      const dosageXStart = DOC_MARGIN + 210;
       const quantityXStart = DOC_MARGIN + 330;
       const frequencyXStart = DOC_MARGIN + 440;
       const timingFrequencyXStart = DOC_MARGIN + 410;
