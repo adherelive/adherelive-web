@@ -953,7 +953,7 @@ function printAppointment({
       // const drXStart = DOC_MARGIN + 35;
       // const medicineXStart = DOC_MARGIN + 40;
       const medicineXStart = DOC_MARGIN + 40;
-      const dosageXStart = DOC_MARGIN + 220;
+      const dosageXStart = DOC_MARGIN + 260;
       const quantityXStart = DOC_MARGIN + 300;
       const frequencyXStart = DOC_MARGIN + 410;
       const timingFrequencyXStart = DOC_MARGIN + 410;
@@ -968,7 +968,7 @@ function printAppointment({
         // .text("Provider Name", drXStart, rXLabelEndLevelY + 10)
         .text("Description", medicineXStart, rXLabelEndLevelY + 10)
         .text("Test Date", dosageXStart, rXLabelEndLevelY + 10)
-        .text("Provider", quantityXStart, rXLabelEndLevelY + 10)
+        // .text("Provider", quantityXStart, rXLabelEndLevelY + 10)
         .text("Purpose", frequencyXStart, rXLabelEndLevelY + 10);
       // .text("Time-Duration", timingFrequencyXStart, rXLabelEndLevelY + 10);
       //AKSHAY NEW CODE IMPLEMENTATIONS
@@ -1014,8 +1014,8 @@ function printAppointment({
         let start = `${moment(new Date(start_date)).format("DD MMM 'YY")}`;
         // if (start.isSameOrAfter(today)) {
           // gaurav new changes - start
-        let organizer_name = ""
-        organizer_name = provider_id == 4 ? "Subarthi Hospital" : `${organizer.name}`
+        // let organizer_name = ""
+        // organizer_name = provider_id == 4 ? "Subarthi Hospital" : `${organizer.name}`
           doc
             .fillColor("#212b36")
             .fontSize(SHORT_FONT_SIZE)
@@ -1025,7 +1025,7 @@ function printAppointment({
               dosageXStart,
               medicationYLevel
             )
-            .text(`${organizer_name}`, quantityXStart, medicationYLevel)
+            // .text(`${organizer_name}`, quantityXStart, medicationYLevel)
             .text(`${reason}`, frequencyXStart, medicationYLevel, {
               width: timingFrequencyXStart - frequencyXStart - 25,
             });
@@ -1114,7 +1114,7 @@ function printConsultation({
       // const drXStart = DOC_MARGIN + 35;
       // const medicineXStart = DOC_MARGIN + 40;
       const medicineXStart = DOC_MARGIN + 40;
-      const dosageXStart = DOC_MARGIN + 210;
+      const dosageXStart = DOC_MARGIN + 260;
       const quantityXStart = DOC_MARGIN + 330;
       const frequencyXStart = DOC_MARGIN + 440;
       const timingFrequencyXStart = DOC_MARGIN + 410;
@@ -1129,7 +1129,7 @@ function printConsultation({
         // .text("Provider Name", drXStart, rXLabelEndLevelY + 10)
         .text("Description", medicineXStart, rXLabelEndLevelY + 10)
         .text("Appointment date", dosageXStart, rXLabelEndLevelY + 10)
-        .text("Provider", quantityXStart, rXLabelEndLevelY + 10)
+        // .text("Provider", quantityXStart, rXLabelEndLevelY + 10)
         .text("Purpose", frequencyXStart, rXLabelEndLevelY + 10);
       // .text("Time-Duration", timingFrequencyXStart, rXLabelEndLevelY + 10);
       //AKSHAY NEW CODE IMPLEMENTATIONS
@@ -1169,8 +1169,8 @@ function printConsultation({
         // let start = moment(start_date);
 
         let start = `${moment(new Date(start_date)).format("DD MMM 'YY")}`;
-        let organizer_name = ""
-        organizer_name = provider_id == 4 ? "Subarthi Hospital" : `${organizer.name}`
+        // let organizer_name = ""
+        // organizer_name = provider_id == 4 ? "Subarthi Hospital" : `${organizer.name}`
         // if (start.isSameOrAfter(today)) {
           // gaurav new changes - start
           doc
@@ -1182,7 +1182,7 @@ function printConsultation({
               dosageXStart,
               medicationYLevel
             )
-            .text(`${organizer_name}`, quantityXStart, medicationYLevel)
+            // .text(`${organizer_name}`, quantityXStart, medicationYLevel)
             .text(`${reason}`, frequencyXStart, medicationYLevel, {
               width: timingFrequencyXStart - frequencyXStart - 25,
             });
