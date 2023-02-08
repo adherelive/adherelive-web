@@ -148,11 +148,7 @@ export default async (pdfData, signatureImage) => {
         portions,
         diets_formatted_data,
         timings,
-        diet_ids,
-        // workout details
-        repetitions,
-        workouts_formatted_data,
-        workout_ids
+        diet_ids
       });
 
       // generateHr(doc, doc.y + 17);
@@ -203,16 +199,16 @@ export default async (pdfData, signatureImage) => {
         addPageFooter(doc, providerPrescriptionDetails);
       }
 
-      // if (
-      //   Object.keys(diets_formatted_data).length ||
-      //   Object.keys(workouts_formatted_data).length
-      // ) {
-      //   addPageAndNumber(doc);
-      //   // doc
-      //   //   .font(BOLD_FONT)
-      //   //   .fontSize(BOLD_FONT_SIZE)
-      //   //   .text("ADVICE", DOC_MARGIN, DOC_MARGIN);
-      // }
+      if (
+        Object.keys(diets_formatted_data).length ||
+        Object.keys(workouts_formatted_data).length
+      ) {
+        addPageAndNumber(doc);
+        // doc
+        //   .font(BOLD_FONT)
+        //   .fontSize(BOLD_FONT_SIZE)
+        //   .text("ADVICE", DOC_MARGIN, DOC_MARGIN);
+      }
 
       // const dietStartLevel = doc.y + 10;
 
@@ -233,23 +229,23 @@ export default async (pdfData, signatureImage) => {
       // :
       // footerYLevelEnd + NORMAL_FONT_SIZE + 12 ;
 
-      // let workoutBlockLevelEnd = doc.y;
-      // let workoutStartLevel = doc.y;
+      let workoutBlockLevelEnd = doc.y;
+      let workoutStartLevel = doc.y;
 
-      // if (Object.keys(workouts_formatted_data).length) {
-      //   if (Object.keys(diets_formatted_data).length) {
-      //     addPageAndNumber(doc);
-      //     workoutStartLevel = DOC_MARGIN;
-      //   }
+      if (Object.keys(workouts_formatted_data).length) {
+        if (Object.keys(diets_formatted_data).length) {
+          addPageAndNumber(doc);
+          workoutStartLevel = DOC_MARGIN;
+        }
 
-      //   workoutBlockLevelEnd = printWorkout(
-      //     doc,
-      //     workoutStartLevel,
-      //     repetitions,
-      //     workouts_formatted_data,
-      //     workout_ids
-      //   );
-      // }
+        workoutBlockLevelEnd = printWorkout(
+          doc,
+          workoutStartLevel,
+          repetitions,
+          workouts_formatted_data,
+          workout_ids
+        );
+      }
 
       let singleDietDetailYLevel;
 
@@ -1579,11 +1575,7 @@ function printCarePlanData({
   portions,
   diets_formatted_data,
   timings,
-  diet_ids,
-  // workout details
-  repetitions,
-  workouts_formatted_data,
-  workout_ids
+  diet_ids
 }) {
   try {
     const { diagnosis, condition, symptoms, clinicalNotes } =
@@ -1979,11 +1971,9 @@ function printCarePlanData({
       });
     }
     // print dite func call here.
+
+
     const dietStartLevel = doc.y + 10;
-    doc
-      .font(BOLD_FONT)
-      .fontSize(BOLD_FONT_SIZE)
-      .text("ADVICE", DOC_MARGIN, DOC_MARGIN);
 
     const dietBlockLevelEnd = Object.keys(diets_formatted_data).length
       ? printDiet(
@@ -1995,26 +1985,6 @@ function printCarePlanData({
         diet_ids
       )
       : null;
-
-    let workoutBlockLevelEnd = doc.y;
-    let workoutStartLevel = doc.y;
-
-    if (Object.keys(workouts_formatted_data).length) {
-      // if (Object.keys(diets_formatted_data).length) {
-      // addPageAndNumber(doc);
-      workoutStartLevel = DOC_MARGIN;
-      // }
-
-      workoutBlockLevelEnd = printWorkout(
-        doc,
-        workoutStartLevel,
-        repetitions,
-        workouts_formatted_data,
-        workout_ids
-      );
-    }
-
-
     // if (Object.keys(suggestedInvestigations).length) {
     //   const consultationLevelEnd = printConsultation({
     //     doc,
