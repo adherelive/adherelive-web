@@ -198,7 +198,7 @@ export default async (pdfData, signatureImage) => {
         Object.keys(diets_formatted_data).length ||
         Object.keys(workouts_formatted_data).length
       ) {
-        addPageAndNumber(doc);
+        // addPageAndNumber(doc);
         doc
           .font(BOLD_FONT)
           .fontSize(BOLD_FONT_SIZE)
@@ -931,10 +931,10 @@ function printAppointment({
 }) {
   try {
     let labFindingsEndLevel = doc.y;
-    // if (suggestedInvestigations.length > 0) {
-    //   addPageAndNumber(doc);
-    //   labFindingsEndLevel = DOC_MARGIN;
-    // }
+    if (suggestedInvestigations.length > 0) {
+      addPageAndNumber(doc);
+      labFindingsEndLevel = DOC_MARGIN;
+    }
 
     let medicationYLevel = doc.y;
 
