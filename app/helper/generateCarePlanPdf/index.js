@@ -144,6 +144,11 @@ export default async (pdfData, signatureImage) => {
         suggestedInvestigations,
         providerPrescriptionDetails,
         follow_up_advise,
+        // testing only 
+        portions,
+        diets_formatted_data,
+        timings,
+        diet_ids
       });
 
       // generateHr(doc, doc.y + 17);
@@ -198,25 +203,25 @@ export default async (pdfData, signatureImage) => {
         Object.keys(diets_formatted_data).length ||
         Object.keys(workouts_formatted_data).length
       ) {
-        // addPageAndNumber(doc);
+        addPageAndNumber(doc);
         doc
           .font(BOLD_FONT)
           .fontSize(BOLD_FONT_SIZE)
           .text("ADVICE", DOC_MARGIN, DOC_MARGIN);
       }
 
-      const dietStartLevel = doc.y + 30;
+      // const dietStartLevel = doc.y + 10;
 
-      const dietBlockLevelEnd = Object.keys(diets_formatted_data).length
-        ? printDiet(
-            doc,
-            dietStartLevel,
-            portions,
-            diets_formatted_data,
-            timings,
-            diet_ids
-          )
-        : null;
+      // const dietBlockLevelEnd = Object.keys(diets_formatted_data).length
+      //   ? printDiet(
+      //       doc,
+      //       dietStartLevel,
+      //       portions,
+      //       diets_formatted_data,
+      //       timings,
+      //       diet_ids
+      //     )
+      //   : null;
 
       // const dietYLevel =
       // dietBlockLevelEnd
@@ -1566,6 +1571,11 @@ function printCarePlanData({
   suggestedInvestigations,
   providerPrescriptionDetails,
   follow_up_advise,
+  // trying the details.
+  portions,
+  diets_formatted_data,
+  timings,
+  diet_ids
 }) {
   try {
     const { diagnosis, condition, symptoms, clinicalNotes } =
@@ -1960,6 +1970,21 @@ function printCarePlanData({
         suggestedInvestigations,
       });
     }
+    // print dite func call here.
+
+
+    const dietStartLevel = doc.y + 10;
+
+    const dietBlockLevelEnd = Object.keys(diets_formatted_data).length
+      ? printDiet(
+        doc,
+        dietStartLevel,
+        portions,
+        diets_formatted_data,
+        timings,
+        diet_ids
+      )
+      : null;
     // if (Object.keys(suggestedInvestigations).length) {
     //   const consultationLevelEnd = printConsultation({
     //     doc,
