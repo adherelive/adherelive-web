@@ -198,14 +198,14 @@ export default async (pdfData, signatureImage) => {
         Object.keys(diets_formatted_data).length ||
         Object.keys(workouts_formatted_data).length
       ) {
-        // addPageAndNumber(doc);
+        addPageAndNumber(doc);
         doc
           .font(BOLD_FONT)
           .fontSize(BOLD_FONT_SIZE)
           .text("ADVICE", DOC_MARGIN, DOC_MARGIN);
       }
 
-      const dietStartLevel = doc.y + 10;
+      const dietStartLevel = doc.y + 60;
 
       const dietBlockLevelEnd = Object.keys(diets_formatted_data).length
         ? printDiet(
