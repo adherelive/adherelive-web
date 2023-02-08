@@ -203,7 +203,7 @@ export default async (pdfData, signatureImage) => {
         Object.keys(diets_formatted_data).length ||
         Object.keys(workouts_formatted_data).length
       ) {
-        addPageAndNumber(doc);
+        // addPageAndNumber(doc);
         // doc
         //   .font(BOLD_FONT)
         //   .fontSize(BOLD_FONT_SIZE)
@@ -1971,7 +1971,10 @@ function printCarePlanData({
       });
     }
     // print dite func call here.
-
+    doc
+      .font(BOLD_FONT)
+      .fontSize(BOLD_FONT_SIZE)
+      .text("ADVICE", DOC_MARGIN, doc.y + 20);
 
     const dietStartLevel = doc.y + 10;
 
