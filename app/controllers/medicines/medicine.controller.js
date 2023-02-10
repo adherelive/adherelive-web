@@ -75,7 +75,8 @@ class MedicineController extends Controller {
         userCategoryData: { basic_info: { id: categoryId = null } = {} } = {},
       } = userDetails || {};
 
-      const { name = "", type = "" } = body;
+      const { name = "", type = "", generic_name = "" } = body;
+
 
       const new_medicine_data = {
         name,
@@ -83,6 +84,7 @@ class MedicineController extends Controller {
         created_at: new Date(),
         type,
         public_medicine: false,
+        details: { generic_name },
       };
 
       const medicineDetails = await medicineService.add(new_medicine_data);
