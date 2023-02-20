@@ -14,6 +14,7 @@ import Logger from "../../libs/log";
 const Log = new Logger("API > INDEX");
 
 import userRouter from "./user";
+import hisRouter from "./his";
 import appointmentRouter from "./appointments";
 import eventRouter from "./events";
 import twilioRouter from "./twilio";
@@ -53,6 +54,14 @@ import portionRouter from "./portion";
 import exerciseRouter from "./exercises";
 import workoutRouter from "./workouts";
 import CdssRouter from "./cdss";
+import serviceOfferingRouter from "./serviceOffering";
+import serviceSubscriptionRouter from "./serviceSubscription";
+import serviceUserMappingRouter from "./serviceUserMapping";
+import serviceSubscriptionUserMapping from "./serviceSubscriptionUserMapping";
+import serviceSubscribeTxRouter from "./serviceSubscribeTranaction";
+import TxActivitiesRouter from "./transactionActivity";
+import FlashCardRouter from "./flashCard";
+import NotesRouter from "./notes";
 import { getTime } from "../../app/helper/timer";
 
 router.use(async function (req, res, next) {
@@ -64,14 +73,19 @@ router.use(async function (req, res, next) {
       userRoleData;
     const { cookies = {} } = req;
     console.log("api-index-2" + getTime());
-    if (cookies.accessToken) {
-      accessToken = cookies.accessToken;
-    }
-    console.log("api-index-3" + getTime());
-    const { authorization: aT = "" } = req.headers || {};
-    const bearer = aT.split(" ");
-    if (bearer.length === 2) {
-      accessToken = bearer[1];
+   
+    let { m } = req.query;
+    if (m) {
+      const { authorization = "" } = req.headers || {};
+      const bearer = authorization.split(" ");
+      if (bearer.length === 2) {
+        accessToken = bearer[1];
+      }
+    } else {
+      const { cookies = {} } = req;
+      if (cookies.accessToken) {
+        accessToken = cookies.accessToken;
+      }
     }
 
     const secret = process.config.TOKEN_SECRET_KEY;
@@ -192,6 +206,14 @@ router.use("/diet", dietRouter);
 router.use("/portions", portionRouter);
 router.use("/exercises", exerciseRouter);
 router.use("/workout", workoutRouter);
+router.use("/serviceoffering", serviceOfferingRouter);
+router.use("/servicesubscription", serviceSubscriptionRouter);
+router.use("/serviceusermapping", serviceUserMappingRouter);
+router.use("/servicesubscriptionusermapping", serviceSubscriptionUserMapping);
+router.use("/servicesubtx", serviceSubscribeTxRouter);
+router.use("/txactivities", TxActivitiesRouter);
+router.use("/flashcard", FlashCardRouter);
+router.use("/notes", NotesRouter);
 router.use("/cdss", CdssRouter);
 router.use("/his", hisOperationRouter);
 

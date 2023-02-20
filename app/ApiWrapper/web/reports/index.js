@@ -1,7 +1,7 @@
 import BaseReport from "../../../services/reports";
 import ReportService from "../../../services/reports/report.service";
 import uploadDocumentService from "../../../services/uploadDocuments/uploadDocuments.service";
-
+import FlashCardService from "../../../services/flashCard/flashCard.service";
 import DocumentWrapper from "../../web/uploadDocument";
 
 import Logger from "../../../../libs/log";
@@ -16,8 +16,15 @@ class ReportWrapper extends BaseReport {
 
   getBasicInfo = () => {
     const { _data } = this;
-    const { id, patient_id, uploader_id, uploader_type, name, test_date } =
-      _data || {};
+    const {
+      id,
+      patient_id,
+      uploader_id,
+      uploader_type,
+      name,
+      test_date,
+      flas_card_id,
+    } = _data || {};
 
     return {
       basic_info: {
@@ -26,6 +33,7 @@ class ReportWrapper extends BaseReport {
         name,
       },
       test_date,
+      flas_card_id,
       uploader: {
         id: uploader_id,
         category: uploader_type,
@@ -76,9 +84,18 @@ class ReportWrapper extends BaseReport {
           document.getBasicInfo();
       }
 
+      const ref = await getAllInfo();
+      if (ref["flas_card_id"]) {
+        const flasCardService = new FlashCardService();
+        const flascards = await flasCardService.getAllFlashCardByData({
+          id: ref["flas_card_id"],
+        });
+        ref["flashCard"] = flascards;
+      }
+
       return {
         reports: {
-          [getId()]: await getAllInfo(),
+          [getId()]: ref,
         },
         upload_documents: {
           ...uploadDocuments,

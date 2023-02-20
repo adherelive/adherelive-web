@@ -14,8 +14,8 @@ class MobileMedicineWrapper extends BaseMedicine {
       type,
       description,
       creator_id,
-      public_medicine,
       details,
+      public_medicine,
     } = _data || {};
     return {
       basic_info: {

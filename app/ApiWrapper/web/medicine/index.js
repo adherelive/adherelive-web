@@ -25,6 +25,7 @@ class MedicineWrapper extends BaseMedicine {
         details,
         description,
         creator_id,
+        details,
         public_medicine,
       },
     };

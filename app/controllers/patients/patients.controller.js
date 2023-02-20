@@ -2699,7 +2699,7 @@ class PatientController extends Controller {
         const password = process.config.DEFAULT_PASSWORD;
         const salt = await bcrypt.genSalt(Number(process.config.saltRounds));
         const hash = await bcrypt.hash(password, salt);
-        let useradddata = (useradddata = {
+        let useradddata = {
           prefix,
           mobile_number,
           password: hash,
@@ -2709,7 +2709,8 @@ class PatientController extends Controller {
           onboarding_status: ONBOARDING_STATUS.PATIENT.PROFILE_REGISTERED,
           verified: true,
           activated_on: moment().format(),
-        });
+        };
+       
         if (!(his_id == "" || his_id == undefined || his_id == null))
           useradddata = { ...useradddata, his_id };
 
@@ -2746,6 +2747,7 @@ class PatientController extends Controller {
         });
         const uid = patient_uid;
 
+<<<<<<< HEAD
         const patientWrapper = await PatientWrapper(patient);
         const patientUserId = await patientWrapper.getUserId();
         const userRole = await userRolesService.create({
@@ -2761,6 +2763,8 @@ class PatientController extends Controller {
           },
           user_role_id: newUserRoleId,
         });
+=======
+>>>>>>> origin/adhere-backend-new-feature
         await patientService.update({ uid }, patient.get("id"));
         patientData = await PatientWrapper(null, patient.get("id"));
       }

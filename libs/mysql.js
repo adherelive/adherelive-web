@@ -114,6 +114,16 @@ import * as WorkoutTemplates from "../app/models/workoutTemplate";
 import * as WorkoutTemplateExerciseMapping from "../app/models/workoutTemplateExerciseMapping";
 import * as His from "../app/models/his";
 
+import * as ServiceOffering from "../app/models/serviceOffering";
+import * as ServiceSubscription from "../app/models/serviceSubecriptions";
+import * as ServiceSubscriptionMapping from "../app/models/serviceSubscriptionMapping";
+import * as ServiceUserMapping from "../app/models/serviceUserMapping";
+import * as ServiceSubscriptionUserMapping from "../app/models/serviceSubscriptionUserMapping";
+import * as ServiceSubscibeTranaction from "../app/models/serviceSubscribeTranaction";
+import * as TransactionActivities from "../app/models/transactionActivity";
+import * as FlashCard from "../app/models/flashCard";
+import * as Notes from "../app/models/notes";
+
 // Models List...
 const models = [
   AccountDetails,
@@ -224,6 +234,15 @@ const models = [
   WorkoutTemplates,
   WorkoutTemplateExerciseMapping,
   His,
+  ServiceOffering,
+  ServiceSubscription,
+  ServiceSubscriptionMapping,
+  ServiceUserMapping,
+  ServiceSubscriptionUserMapping,
+  ServiceSubscibeTranaction,
+  TransactionActivities,
+  FlashCard,
+  Notes,
 ];
 
 class Database {
@@ -246,10 +265,10 @@ class Database {
             acquire: 100 * 1000,
             idle: 10000,
           },
-          // logging: false,
-          logging: function (str) {
-            Log.debug("query", str);
-          },
+          logging: false,
+          // logging: function (str) {
+          //   Log.debug("query", str);
+          // },
         }
       );
     }

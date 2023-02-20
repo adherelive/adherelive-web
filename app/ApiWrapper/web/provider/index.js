@@ -92,6 +92,7 @@ class ProviderWrapper extends BaseProvider {
   getReferenceInfo = async () => {
     try {
       const { _data, getBasicInfo, getProviderId } = this;
+      //if cooment tha
       // if (!_data) return;
       const { user } = _data;
 

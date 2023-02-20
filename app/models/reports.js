@@ -1,6 +1,7 @@
 "use strict";
 import { DataTypes } from "sequelize";
 import { TABLE_NAME as patientTableName } from "./patients";
+import { TABLE_NAME as flashCardTableName } from "./flashCard";
 import { USER_CATEGORY } from "../../constant";
 
 export const TABLE_NAME = "reports";
@@ -21,6 +22,16 @@ export const db = (database) => {
         references: {
           model: {
             tableName: patientTableName,
+          },
+          key: "id",
+        },
+      },
+      flas_card_id: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        references: {
+          model: {
+            tableName: flashCardTableName,
           },
           key: "id",
         },

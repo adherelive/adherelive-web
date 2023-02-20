@@ -143,6 +143,7 @@ class AppointmentService {
       const endOfDay = moment(date).endOf("day").toISOString();
       console.log(provider_id + "==========");
       console.log(provider_id);
+      console.log({ doctor_id, provider_id, date });
       console.log(provider_id + "==========");
       const appointments = await Database.getModel(TABLE_NAME).findAll({
         where: {

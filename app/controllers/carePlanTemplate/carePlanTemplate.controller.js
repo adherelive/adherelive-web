@@ -793,7 +793,7 @@ class CarePlanTemplateController extends Controller {
       return raiseServerError(res);
     }
   };
-
+  
   update = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
@@ -1027,6 +1027,8 @@ class CarePlanTemplateController extends Controller {
       return raiseServerError(res);
     }
   };
+
+
 
   delete = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;

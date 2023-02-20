@@ -77,12 +77,12 @@ class MedicineController extends Controller {
 
       const { name = "", type = "", generic_name = "" } = body;
 
-
       const new_medicine_data = {
         name,
         creator_id: categoryId,
         created_at: new Date(),
         type,
+        details: { generic_name },
         public_medicine: false,
         details: { generic_name },
       };

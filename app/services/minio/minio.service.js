@@ -108,6 +108,7 @@ class MinioService {
   }
 
   getSignedUrl = (path) => {
+    console.log({ path });
     return this.s3Client.getSignedUrl("getObject", {
       Bucket: this.bucket,
       Key: path.substring(1, path.length),

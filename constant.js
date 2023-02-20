@@ -105,6 +105,23 @@ export const USER_CATEGORY = {
   HSP: "hsp",
 };
 
+export const USER_STATUS = {
+  ACTIVE: "active",
+  INACTIVE: "inactive",
+};
+
+export const PATIENT_STATUS = {
+  ACTIVE: "active",
+  INACTIVE: "inactive",
+  COMPLETED: "completed",
+  INPROGRESS: "inprogress",
+};
+
+export const BILLING_FREQUENCY = {
+  MONTHLY: "monthly",
+  ONCES: "onces",
+};
+
 export const REQUEST_TYPE = {
   POST: "post",
   GET: "get",
@@ -376,6 +393,12 @@ export const DB_TABLES = {
   FOOD_GROUPS: "food_groups",
   DIET_FOOD_GROUP_MAPPINGS: "diet_food_group_mappings",
   HIS_PROVIDER_TABLE: "his_provider_tables",
+  SERVICE_OFFERING: "service_offerings",
+  SERVICE_SUBSCRIPTION: "service_subscriptions",
+  SERVICE_SUBSCRIPTION_MAPPING: "service_subscribe_plan_mappings",
+  SERVICE_USER_MAPPING: "service_user_mappings",
+  SERVICE_SUBSCRIPTION_USER_MAPPING: "service_subscription_user_mappings",
+  SERVICE_SUBSCRIPTION_TRANACTIONS: "service_subscription_tranactions",
 };
 
 export const ARTICLE_TYPE = {
@@ -693,7 +716,14 @@ export const BLANK_STATE = "";
 
 export const PASSWORD_LENGTH = 8;
 
-export const ALLOWED_DOC_TYPE_DOCTORS = ["jpeg", "svg", "png", "pdf"];
+export const ALLOWED_DOC_TYPE_DOCTORS = [
+  "jpeg",
+  "svg",
+  "png",
+  "pdf",
+  "application",
+  "vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+];
 
 const TABLET = "1";
 const SYRUP = "2";

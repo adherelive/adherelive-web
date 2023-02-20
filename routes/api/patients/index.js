@@ -1,6 +1,7 @@
 import express from "express";
 import Authenticated from "../middleware/auth";
 import PatientController from "../../../app/controllers/patients/patients.controller";
+import ServiceSubscriptionUserMapping from "../../../app/controllers/serviceSubscriptionUserMapping/serviceSubscriptionUserMapping.controller";
 import multer from "multer";
 import { getTime } from "../../../app/helper/timer";
 
@@ -60,6 +61,12 @@ router.get(
   PatientController.searchPatientForDoctor
 );
 
+router.get(
+  "/servicesubplan",
+  Authenticated,
+  ServiceSubscriptionUserMapping.getServiceSubscriptionUserMappingAndServiceUserByPatientIdAndDoctorId
+);
+
 router.get("/:patient_id", Authenticated, PatientController.getPatientById);
 
 router.get(
@@ -114,6 +121,18 @@ router.get(
   "/generate_prescription/:care_plan_id",
   Authenticated,
   PatientController.generatePrescription
+);
+
+router.get(
+  "/servicesubplan/:patient_id",
+  Authenticated,
+  ServiceSubscriptionUserMapping.getServiceSubscriptionUserMappingAndServiceUserByPatientId
+);
+
+router.get(
+  "/servicesubplan/doctor/:patient_id",
+  Authenticated,
+  ServiceSubscriptionUserMapping.getServiceSubscriptionDoctorByPatientId
 );
 
 module.exports = router;
