@@ -12,8 +12,10 @@ const router = express.Router();
 // Create Patients from HIS.
 router.post("/", Authenticated, PatientController.createPatient);
 
+// router.post("/his-patient", Authenticated, PatientController.hisCreatePatient);
+
 router.post(
-  "/patients",
+  "/create-patient",
   Authenticated,
   upload.single("files"),
   PatientController.updatePatient

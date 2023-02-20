@@ -84,6 +84,7 @@ class MedicineController extends Controller {
         type,
         details: { generic_name },
         public_medicine: false,
+        details: { generic_name },
       };
 
       const medicineDetails = await medicineService.add(new_medicine_data);

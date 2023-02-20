@@ -112,6 +112,7 @@ import * as WorkoutResponses from "../app/models/workoutResponses";
 import * as WorkoutExerciseGroupMapping from "../app/models/workoutExerciseGroupMapping";
 import * as WorkoutTemplates from "../app/models/workoutTemplate";
 import * as WorkoutTemplateExerciseMapping from "../app/models/workoutTemplateExerciseMapping";
+import * as His from "../app/models/his";
 
 import * as ServiceOffering from "../app/models/serviceOffering";
 import * as ServiceSubscription from "../app/models/serviceSubecriptions";
@@ -242,6 +243,7 @@ const models = [
   TransactionActivities,
   FlashCard,
   Notes,
+  His,
 ];
 
 class Database {

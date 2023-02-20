@@ -20,6 +20,7 @@ import carePlanTemplateService from "../../services/carePlanTemplate/carePlanTem
 import otpVerificationService from "../../services/otpVerification/otpVerification.service";
 import ConsentService from "../../services/consents/consent.service";
 import ReportService from "../../services/reports/report.service";
+import UserRoleWrapper from "../../ApiWrapper/web/userRoles";
 import conditionService from "../../services/condition/condition.service";
 import qualificationService from "../../services/doctorQualifications/doctorQualification.service";
 import doctorRegistrationService from "../../services/doctorRegistration/doctorRegistration.service";
@@ -77,6 +78,7 @@ import {
   S3_DOWNLOAD_FOLDER_PROVIDER,
   ONBOARDING_STATUS,
   SIGN_IN_CATEGORY,
+  PATIENT_MEAL_TIMINGS,
 } from "../../../constant";
 
 import { getSeparateName, getRoomId } from "../../helper/common";
@@ -1284,6 +1286,13 @@ class PatientController extends Controller {
       //   carePlanOtherDetails["symptoms"] = symptoms;
       // }
 
+      // if (clinical_notes) {
+      //   carePlanOtherDetails["clinical_notes"] = clinical_notes;
+      // }
+      // if (symptoms) {
+      //   carePlanOtherDetails["symptoms"] = symptoms;
+      // }
+
       patientData = await PatientWrapper(null, patient_id);
 
       const doctor = await doctorService.getDoctorByData({ user_id: userId });
@@ -1482,6 +1491,7 @@ class PatientController extends Controller {
       const carePlanData = await CarePlanWrapper(carePlan);
       const { clinical_notes, follow_up_advise } =
         (await carePlanData.getCarePlanDetails()) || {};
+
       const curr_patient_id = carePlanData.getPatientId();
       const doctorUserRoleId = carePlanData.getUserRoleId();
       const userRoles = await userRolesService.getSingleUserRoleByData({
@@ -1558,7 +1568,7 @@ class PatientController extends Controller {
 
           const startDate = appointmentWrapper.getStartTime();
           const startDateObj = moment(startDate);
-          const { organizer } = await appointmentWrapper.getBasicInfo();
+          const { organizer, provider_id } = await appointmentWrapper.getBasicInfo();
           const diff = startDateObj.diff(now);
 
           if (diff > 0) {
@@ -1570,14 +1580,14 @@ class PatientController extends Controller {
           const { type } = appointmentWrapper.getDetails() || {};
 
           // if (type !== CONSULTATION) {
-          const { type_description = "", radiology_type = "" } =
+          const { type_description = "", radiology_type = "", description = "", reason = "" } =
             appointmentWrapper.getDetails() || {};
           suggestedInvestigations.push({
-            type,
+            type, description,
             type_description,
-            radiology_type,
+            radiology_type, provider_id,
             start_date: startDate,
-            organizer,
+            organizer, reason
           });
           // }
         }
@@ -1951,6 +1961,8 @@ class PatientController extends Controller {
         //   medicines,
         // }),
         medications,
+        clinical_notes,
+        follow_up_advise,
         clinical_notes,
         follow_up_advise,
         medicines,
@@ -2614,6 +2626,12 @@ class PatientController extends Controller {
         address = "",
       } = req.body;
 
+      let { his_id } = req;
+
+      console.log("===================");
+      console.log({ req, his_id });
+      console.log("===================");
+
       if (
         patient_uid === null ||
         patient_uid === "" ||
@@ -2691,7 +2709,7 @@ class PatientController extends Controller {
         const password = process.config.DEFAULT_PASSWORD;
         const salt = await bcrypt.genSalt(Number(process.config.saltRounds));
         const hash = await bcrypt.hash(password, salt);
-        let user = await userService.addUser({
+        let useradddata = (useradddata = {
           prefix,
           mobile_number,
           password: hash,
@@ -2702,6 +2720,10 @@ class PatientController extends Controller {
           verified: true,
           activated_on: moment().format(),
         });
+        if (!(his_id == "" || his_id == undefined || his_id == null))
+          useradddata = { ...useradddata, his_id };
+
+        let user = await userService.addUser(useradddata);
         userData = await UserWrapper(user.get());
 
         if (clinical_notes) {
@@ -2734,6 +2756,21 @@ class PatientController extends Controller {
         });
         const uid = patient_uid;
 
+        const patientWrapper = await PatientWrapper(patient);
+        const patientUserId = await patientWrapper.getUserId();
+        const userRole = await userRolesService.create({
+          user_identity: patientUserId,
+        });
+        const userRoleWrapper = await UserRoleWrapper(userRole);
+        const newUserRoleId = await userRoleWrapper.getId();
+
+        await userPreferenceService.addUserPreference({
+          user_id: newUserId,
+          details: {
+            timings: PATIENT_MEAL_TIMINGS,
+          },
+          user_role_id: newUserRoleId,
+        });
         await patientService.update({ uid }, patient.get("id"));
         patientData = await PatientWrapper(null, patient.get("id"));
       }

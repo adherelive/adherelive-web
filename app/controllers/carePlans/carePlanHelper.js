@@ -349,10 +349,9 @@ export const createVitals = async ({
           vital_template_id,
           start_date,
           end_date,
-          description,
           details: {
             repeat_interval_id,
-            repeat_days,
+            repeat_days, description,
           },
           care_plan_id: carePlanId,
         });

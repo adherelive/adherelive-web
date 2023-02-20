@@ -398,6 +398,7 @@ export const DB_TABLES = {
   SERVICE_USER_MAPPING: "service_user_mappings",
   SERVICE_SUBSCRIPTION_USER_MAPPING: "service_subscription_user_mappings",
   SERVICE_SUBSCRIPTION_TRANACTIONS: "service_subscription_tranactions",
+  HIS_PROVIDER_TABLE: "his_provider_tables",
 };
 
 export const ARTICLE_TYPE = {

@@ -64,7 +64,8 @@ router.use(async (req, res, next) => {
 
     if (accessToken) {
       const decodedAccessToken = await jwt.verify(accessToken, secret);
-      const { userRoleId: decodedUserRoleId = null } = decodedAccessToken || {};
+      const { userRoleId: decodedUserRoleId = null, his_id: his_id = null } =
+        decodedAccessToken || {};
       const userRoleDetails = await userRolesService.getSingleUserRoleByData({
         id: decodedUserRoleId,
       });
@@ -74,9 +75,7 @@ router.use(async (req, res, next) => {
         userRoleId = parseInt(decodedUserRoleId);
         userRoleData = userRole.getBasicInfo();
       } else {
-        req.userDetails = {
-          exists: false,
-        };
+        req.userDetails = { exists: false, his_id };
         next();
         return;
       }

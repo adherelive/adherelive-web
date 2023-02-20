@@ -37,6 +37,8 @@ import notificationRouter from "./notification";
 import symptomRouter from "./symptoms";
 import vitalRouter from "./vitals";
 import accountsRouter from "./accounts";
+import hisRouter from "./his";
+import hisOperationRouter from "./his/his-operation";
 import providersRouter from "./providers";
 import featuresRouter from "./features";
 import reportRouter from "./reports";
@@ -101,6 +103,7 @@ router.use(async function (req, res, next) {
       const {
         userRoleId: decodedUserRoleId = null,
         userId: decodedUserTokenUserId = null,
+        his_id: his_id = null,
       } = decodedAccessToken || {};
       const userRoleDetails = await userRolesService.getSingleUserRoleByData({
         id: decodedUserRoleId,
@@ -112,9 +115,10 @@ router.use(async function (req, res, next) {
         userRoleId = parseInt(decodedUserRoleId);
         userRoleData = userRole.getBasicInfo();
       } else {
-        req.userDetails = {
-          exists: false,
-        };
+        (req.his_id = his_id),
+          (req.userDetails = {
+            exists: false,
+          });
         next();
         return;
       }
@@ -218,4 +222,6 @@ router.use("/txactivities", TxActivitiesRouter);
 router.use("/flashcard", FlashCardRouter);
 router.use("/notes", NotesRouter);
 router.use("/cdss", CdssRouter);
+router.use("/his", hisOperationRouter);
+
 module.exports = router;

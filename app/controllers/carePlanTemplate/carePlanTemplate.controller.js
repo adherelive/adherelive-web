@@ -844,8 +844,12 @@ class CarePlanTemplateController extends Controller {
         }
       }
       let { clinical_notes, follow_up_advise } = req.body;
-      let { details } = existingTemplate;
-      let newdetails = { ...details, clinical_notes, follow_up_advise };
+      let newDetails = {};
+      let details = {};
+      if (existingTemplate !== null) {
+        ({ details } = existingTemplate);
+      }
+      newDetails = { ...details, clinical_notes, follow_up_advise };
       if (!isDuplicate) {
         const updateTemplate =
           (await carePlanTemplateService.update(
