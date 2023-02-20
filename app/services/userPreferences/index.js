@@ -9,16 +9,12 @@ export default class UserPreference {
 
   getUserId = () => this._data.get("user_id");
 
-<<<<<<< HEAD
   getAllDetails = () => {
     if (this._data) {
       return this._data.get("details");
     }
     return {};
   };
-=======
-  getAllDetails = () => this._data.get("details");
->>>>>>> adhere-backend-new-dev-1
 
   getChartDetails = () => {
     const details = this._data.get("details");

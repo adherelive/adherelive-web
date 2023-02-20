@@ -14,7 +14,7 @@ import Logger from "../../libs/log";
 const Log = new Logger("API > INDEX");
 
 import userRouter from "./user";
-import hisRouter from "./his";
+
 import appointmentRouter from "./appointments";
 import eventRouter from "./events";
 import twilioRouter from "./twilio";
