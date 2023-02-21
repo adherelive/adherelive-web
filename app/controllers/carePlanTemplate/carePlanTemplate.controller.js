@@ -855,7 +855,7 @@ class CarePlanTemplateController extends Controller {
           (await carePlanTemplateService.update(
             {
               name,
-              details: newDetails,
+              details: newdetails,
             },
             careplanTemplateId
           )) || null;

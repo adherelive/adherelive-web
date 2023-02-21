@@ -293,12 +293,13 @@ class CarePlanController extends Controller {
               repeat_days = [],
               strength = "",
               start_time = "",
+              medicine_type = "",
               repeat_interval = "",
               medication_stage = "",
               critical = false,
             } = {},
             medicine_id = "",
-            medicine_type = "",
+
           } = medication;
 
           // add medication
