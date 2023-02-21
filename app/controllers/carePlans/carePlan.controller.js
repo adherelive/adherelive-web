@@ -278,6 +278,9 @@ class CarePlanController extends Controller {
       ) {
         console.log(18);
         for (const medication of medicationsData) {
+          console.log("====================================")
+          console.log({ medication })
+          console.log("====================================")
           const {
             schedule_data: {
               end_date = "",
@@ -295,7 +298,7 @@ class CarePlanController extends Controller {
               critical = false,
             } = {},
             medicine_id = "",
-            medicine_type = "1",
+            medicine_type = "",
           } = medication;
 
           // add medication
