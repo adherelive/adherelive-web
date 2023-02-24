@@ -269,6 +269,28 @@ class VitalController extends Controller {
     }
   };
 
+  delete = async (req, res) => {
+    const { raiseSuccess, raiseServerError } = this;
+    try {
+      const {
+        params: { id } = {},
+        userDetails: {
+          userId,
+          userRoleId,
+          userData: { category } = {},
+          userCategoryData: { basic_info: { full_name } = {} } = {},
+        } = {},
+      } = req;
+      const medicationDetails =
+        await medicationReminderService.deleteMedication(id);
+      await NotificationSdk.execute(medicationDetails);
+      return raiseSuccess(res, 200, {}, "medication deleted successfully");
+    } catch (error) {
+      Logger.debug("deleteMedication error", error);
+      return raiseServerError(res);
+    }
+  };
+
   getVitalFormDetails = async (req, res) => {
     const { raiseSuccess, raiseServerError } = this;
     try {

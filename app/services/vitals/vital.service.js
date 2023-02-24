@@ -34,6 +34,19 @@ class VitalService {
     }
   };
 
+  deleteMedication = async (id) => {
+    try {
+      const vitals = await Database.getModel(TABLE_NAME).destroy({
+        where: {
+          id,
+        },
+      });
+      return vitals;
+    } catch (err) {
+      throw err;
+    }
+  };
+
   getByData = async (data) => {
     try {
       const vitals = await Database.getModel(TABLE_NAME).findOne({

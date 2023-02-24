@@ -36,4 +36,6 @@ router.post(
   VitalController.updateVital
 );
 
+router.delete("/:id", Authenticate, VitalController.delete);
+
 export default router;
