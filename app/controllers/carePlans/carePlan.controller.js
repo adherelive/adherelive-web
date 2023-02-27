@@ -224,7 +224,6 @@ class CarePlanController extends Controller {
               appointment_type: type,
             },
           });
-          console.log(12);
           eventScheduleData.push({
             type: EVENT_TYPE.APPOINTMENT_TIME_ASSIGNMENT,
             event_id: appointmentData.getAppointmentId(),
@@ -234,10 +233,8 @@ class CarePlanController extends Controller {
           });
         }
       }
-      console.log(13);
       const carePlanStartTime = new moment.utc();
       const carePlanEndTime = new moment.utc(carePlanStartTime).add(2, "hours");
-      console.log(14);
       const patient = await PatientWrapper(null, patient_id);
       const { user_role_id: patientRoleId } = await patient.getAllInfo();
 

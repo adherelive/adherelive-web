@@ -77,7 +77,7 @@ class ReportWrapper extends BaseReport {
       }
 
       const ref = await getAllInfo();
-      let isAdd = true
+      let isAdd = false
       if (ref["flas_card_id"]) {
         const flasCardService = new FlashCardService();
         const flascards = await flasCardService.getAllFlashCardByData({
@@ -87,7 +87,7 @@ class ReportWrapper extends BaseReport {
         console.log({ flascards })
         console.log("=========================")
         if (flascards.length > 0) {
-          isAdd = false
+          isAdd = true
         } 
         ref["flashCard"] = flascards;
         ref["isAdd"] = isAdd
