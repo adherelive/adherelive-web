@@ -66,7 +66,7 @@ class ReportWrapper extends BaseReport {
       throw error;
     }
   };
-
+  // Web Report wrapper
   getReferenceInfo = async () => {
     const { getAllInfo, getId } = this;
     try {

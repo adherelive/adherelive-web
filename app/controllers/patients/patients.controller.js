@@ -1388,7 +1388,7 @@ class PatientController extends Controller {
       if (!patient_id) {
         return raiseClientError(res, 422, {}, "Please select correct patient");
       }
-
+      // web controller
       const reportService = new ReportService();
       const allReports =
         (await reportService.getAllReportByData({
