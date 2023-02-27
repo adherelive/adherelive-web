@@ -2471,7 +2471,7 @@ class MPatientController extends Controller {
       for (let index = 0; index < allReports.length; index++) {
         const report = await ReportWrapper({ data: allReports[index] });
         const { reports, upload_documents } = await report.getReferenceInfo();
-        reportIds.push(report.getId());
+        if (reports) reportIds.push(report.getId());
         reportData = { ...reportData, ...reports };
         documentData = { ...documentData, ...upload_documents };
 

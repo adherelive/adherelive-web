@@ -103,7 +103,6 @@ class MReminderWrapper extends BaseMedicationReminder {
   getAllInfoNew = async () => {
     const { getBasicInfo, getMReminderId } = this;
     const basicInfo = await getBasicInfo();
-    console.log("get all info - 8 ", getTime());
     return {
       medications: {
         [getMReminderId()]: {

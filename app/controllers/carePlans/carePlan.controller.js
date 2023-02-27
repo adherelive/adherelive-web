@@ -239,9 +239,7 @@ class CarePlanController extends Controller {
       const { user_role_id: patientRoleId } = await patient.getAllInfo();
 
       let carePlanScheduleData = {};
-      console.log(15);
       if (permissions.includes(PERMISSIONS.MEDICATIONS.ADD)) {
-        console.log(16);
         carePlanScheduleData = {
           type: EVENT_TYPE.CARE_PLAN_ACTIVATION,
           event_id: care_plan_id,
