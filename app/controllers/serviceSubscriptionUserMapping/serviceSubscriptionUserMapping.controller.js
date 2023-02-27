@@ -256,7 +256,8 @@ class ServiceSubscriptionUserMappingController extends Controller {
       // serviceSubecription.services = {...services};
 
       response[userServicesSubscriptions[userServicesSubscription]["id"]] = {
-        ...serviceSubecription[0],
+        ...userServicesSubscriptions[userServicesSubscription],
+        subscriptions: { ...serviceSubecription[0] },
         details: userServicesSubscriptions[userServicesSubscription],
         services: { ...services },
       };
