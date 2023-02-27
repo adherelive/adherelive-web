@@ -20,7 +20,6 @@ class CarePlanTemplateWrapper extends BaseCarePlanTemplate {
 
   getBasicInfo = () => {
     const { _data } = this;
-    console.log({ cateplantemplatedata: _data });
     const {
       id,
       name,

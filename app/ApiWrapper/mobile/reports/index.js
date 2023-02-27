@@ -77,16 +77,16 @@ class ReportWrapper extends BaseReport {
       }
 
       const ref = await getAllInfo();
-      console.log("===========getAllInfo========================")
-      console.log(ref)
       let isAdd = true
-      console.log("===================================")
       if (ref["flas_card_id"]) {
         const flasCardService = new FlashCardService();
         const flascards = await flasCardService.getAllFlashCardByData({
           id: ref["flas_card_id"], is_published: true
         });
-        if (!flascards) {
+        console.log("=========================")
+        console.log({ flascards })
+        console.log("=========================")
+        if (flascards.length > 0) {
           isAdd = false
         } 
         ref["flashCard"] = flascards;
