@@ -16,7 +16,7 @@ class ReportWrapper extends BaseReport {
 
   getBasicInfo = () => {
     const { _data } = this;
-    const { id, patient_id, uploader_id, uploader_type, name, test_date } =
+    const { id, patient_id, uploader_id, uploader_type, name, test_date, flas_card_id, } =
       _data || {};
 
     return {
@@ -25,7 +25,7 @@ class ReportWrapper extends BaseReport {
         patient_id,
         name,
       },
-      test_date,
+      test_date, flas_card_id,
       uploader: {
         id: uploader_id,
         category: uploader_type,
@@ -77,6 +77,9 @@ class ReportWrapper extends BaseReport {
       }
 
       const ref = await getAllInfo();
+      console.log("===========getAllInfo========================")
+      console.log(ref)
+      console.log("===================================")
       if (ref["flas_card_id"]) {
         const flasCardService = new FlashCardService();
         const flascards = await flasCardService.getAllFlashCardByData({
