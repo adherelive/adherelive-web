@@ -245,7 +245,7 @@ class ServiceSubscriptionTxController extends Controller {
       console.log("checking for occurance - end")
       let response = [];
       Object.keys(services).forEach((id) => {
-        console.log("in object keys ", { id, service: services[id], freq: services[id]["service_plan_id"]["service_frequency"] })
+        console.log("in object keys ", { id, service: services[id], freq: services[id]["service_frequency"] })
         for (let i = 0; i < services[id]["service_plan_id"]["service_frequency"]; i++) {
           console.log("loop running at", i)
           let activitieData = {
