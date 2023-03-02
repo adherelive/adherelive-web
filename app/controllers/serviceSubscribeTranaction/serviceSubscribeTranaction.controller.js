@@ -245,24 +245,25 @@ class ServiceSubscriptionTxController extends Controller {
       console.log("checking for occurance - end")
       let response = [];
       Object.keys(services).forEach((id) => {
-        let activitieData = {
-          service_offering_id: services[id]["service_plan_id"],
-          doctor_id,
-          provider_id,
-          provider_type,
-          patient_id,
-          status: "pending",
-          patient_status: "inactive",
-          amount,
-          billing_frequency: "onces",
-          due_date: moment(new Date(), "DD-MM-YYYY").add(30, "days"),
-          service_subscription_id: service_subscription_id,
-        };
-
-        console.log({ activitieData });
-        const txActivities = new TransactionActivite();
-        txActivities.addTransactionActivite(activitieData);
-        response.push(activitieData);
+        for (let i = 0; i < services[id]["service_plan_id"]["service_frequency"]; i++) {
+          let activitieData = {
+            service_offering_id: services[id]["service_plan_id"],
+            doctor_id,
+            provider_id,
+            provider_type,
+            patient_id,
+            status: "pending",
+            patient_status: "inactive",
+            amount,
+            billing_frequency: "onces",
+            due_date: moment(new Date(), "DD-MM-YYYY").add(30, "days"),
+            service_subscription_id: service_subscription_id,
+          };
+          console.log({ activitieData });
+          const txActivities = new TransactionActivite();
+          txActivities.addTransactionActivite(activitieData);
+          response.push(activitieData);
+        }
       });
       return raiseSuccess(res, 200, { response }, "Success");
     } catch (error) {
