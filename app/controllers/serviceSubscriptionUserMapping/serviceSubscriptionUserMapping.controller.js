@@ -575,6 +575,13 @@ class ServiceSubscriptionUserMappingController extends Controller {
       }
       const serviceSubscriptionUserMappingService =
         new ServiceSubscriptionUserMappingService();
+
+      if (body.durations) {
+        let expire_date = new Date();
+        expire_date.setMonth(expire_date.getMonth() + req.body.durations);
+        body = { ...body, expire_date }
+      }
+
       let userServicesSubscriptions =
         await serviceSubscriptionUserMappingService.updateServiceSubscriptionUserMapping(
           body,
