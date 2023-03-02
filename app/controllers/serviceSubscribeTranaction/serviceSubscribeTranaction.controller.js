@@ -240,6 +240,9 @@ class ServiceSubscriptionTxController extends Controller {
         await serviceSubscriptionMapping.getAllServiceSubscriptionMappingByData(
           servicedata
         );
+      console.log("checking for occurance - start")
+      console.log({ services })
+      console.log("checking for occurance - end")
       let response = [];
       Object.keys(services).forEach((id) => {
         let activitieData = {
