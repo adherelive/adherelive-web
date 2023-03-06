@@ -69,10 +69,33 @@ class FlashCardController extends Controller {
       console.log("==========================================");
       console.log({ tranaction_activities });
 
-      let { service_sub_tx_id } = tranaction_activities[0];
+      let { service_sub_tx_id, service_offering_id, service_subscription_id } = tranaction_activities[0];
       console.log("==========================================");
       console.log({ service_sub_tx_id });
       console.log("update flascard called. - 3");
+      // TODO: need to discuss with client bcz below step will slowdown application.
+
+      // service_offering_name
+
+      let flashCardName = ""
+      if (service_subscription_id) {
+        const serviceSubscriptionService = new ServiceSubscriptionService();
+        let serviceSubecription =
+          await serviceSubscriptionService.getServiceSubscriptionByData({ id: service_subscription_id });
+        console.log({ serviceSubecription })
+        flashCardName = serviceSubecription[0]["notes"]
+      } else {
+        const serviceOfferingService = new ServiceOfferingService();
+        const servicesDetails = await serviceOfferingService.getServiceOfferingByData(
+          { id: service_offering_id }
+        );
+        console.log({ servicesDetails })
+        flashCardName = servicesDetails[0]["service_offering_name"]
+      }
+
+      // /////////////////////////////////////////////
+
+
       if (service_sub_tx_id) {
         let userservicesmapping =
           await serviceSubscriptionTx.getAllServiceSubscriptionTx({
@@ -100,7 +123,7 @@ class FlashCardController extends Controller {
       let reportBody = {
         uploader_id: userCategoryId,
         uploader_type: category,
-        name: "flashcard record",
+        name: flashCardName,
         test_date: new Date(),
         patient_id: data.patient_id,
         flas_card_id: flashCard.id,
