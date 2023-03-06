@@ -35,8 +35,7 @@ class FlashCardController extends Controller {
       provider_type,
       provider_id = null;
     let data = null;
-
-    console.log(req.body)
+    console.log({ body: req.body })
     if (category === USER_CATEGORY.DOCTOR) {
       doctor_id = req.userDetails.userCategoryData.basic_info.id;
       provider_type = USER_CATEGORY.DOCTOR;
@@ -135,26 +134,24 @@ class FlashCardController extends Controller {
       console.log({ reportBody });
 
       if (req.body.data.flashCardData.length > 0) {
-        console.log("try one")
         try {
+          console.log("try 1")
           await createReport(req.body.data.flashCardData, "myfashcord.pdf");
         } catch (ex) {
           console.log(ex);
           console.log("error in create report function");
         }
-
+        let file = fs.readFileSync("myfashcord.pdf");
+        const { originalname } = file || {};
+        console.log({ file });
+        let fileUrl = "";
         try {
           console.log("try 2")
-          let file = fs.readFileSync("myfashcord.pdf");
-          const { originalname } = file || {};
-          console.log({ file });
-          let fileUrl = "";
           fileUrl = await ReportHelper.uploadToS3({
             filepath: "myfashcord.pdf",
             id: data.patient_id,
           });
         } catch (ex) {
-          console.log(ex)
           console.log("error in linue number 91");
           fileUrl = "https://www.africau.edu/images/default/sample.pdf";
         }
