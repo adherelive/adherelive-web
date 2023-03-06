@@ -86,14 +86,14 @@ class FlashCardController extends Controller {
         let serviceSubecription =
           await serviceSubscriptionService.getServiceSubscriptionByData({ id: service_subscription_id });
         console.log({ serviceSubecription })
-        flashCardName = serviceSubecription[0]["notes"]
+        flashCardName = serviceSubecription["notes"]
       } else {
         const serviceOfferingService = new ServiceOfferingService();
         const servicesDetails = await serviceOfferingService.getServiceOfferingByData(
           { id: service_offering_id }
         );
         console.log({ servicesDetails })
-        flashCardName = servicesDetails[0]["service_offering_name"]
+        flashCardName = servicesDetails["service_offering_name"]
       }
 
       // /////////////////////////////////////////////
