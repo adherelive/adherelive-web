@@ -52,7 +52,7 @@ class ServiceSubscriptionUserMappingController extends Controller {
         doctor_id,
         provider_type,
         patient_id: req.body.patient_id,
-        service_subscription_plan_id
+        service_subscription_plan_id: req.body.service_subscription_plan_id
       })
       console.log("=========attach Details ===================")
       console.log({ responseDb, lengtharray: responseDb.length })
@@ -78,11 +78,6 @@ class ServiceSubscriptionUserMappingController extends Controller {
 
         }
       }
-
-
-
-
-
 
       let date = new Date();
       let next_recharge_date = new Date();
