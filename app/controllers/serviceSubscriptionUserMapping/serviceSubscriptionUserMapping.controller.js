@@ -577,7 +577,7 @@ class ServiceSubscriptionUserMappingController extends Controller {
         new ServiceSubscriptionUserMappingService();
 
       if (body.durations) {
-        let expire_date = new Date();
+        let expire_date = new Date(req.body.start_date);
         expire_date.setMonth(expire_date.getMonth() + req.body.durations);
         body = { ...body, expire_date }
       }
