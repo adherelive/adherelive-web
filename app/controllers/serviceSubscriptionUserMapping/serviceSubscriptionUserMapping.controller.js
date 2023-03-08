@@ -44,6 +44,46 @@ class ServiceSubscriptionUserMappingController extends Controller {
 
     Log.debug("service user mapping controller - create - called");
     try {
+      const serviceSubscriptionUserMappingService =
+        new ServiceSubscriptionUserMappingService();
+      // check same subscription is attached to user or not...
+      let responseDb = serviceSubscriptionUserMappingService.getAllServiceSubscriptionUserMappingByData({
+        provider_id,
+        doctor_id,
+        provider_type,
+        patient_id: req.body.patient_id,
+        service_subscription_plan_id
+      })
+      console.log("=========attach Details ===================")
+      console.log({ responseDb, lengtharray: responseDb.length })
+      if (responseDb.length > 0) {
+        for (let userServicesSubscription in responseDb) {
+          // if subscription is attached then check is it expired or not
+          // if it is not expired then doctor can not attach the subscription to the user
+
+          let expire_date = new Date(responseDb[userServicesSubscription]["expire_date"])
+          let today_date = new Date();
+          console.log({ expire_date, today_date })
+          console.log("=========attach Details  End===================")
+          if (today_date < expire_date) {
+            console.log("in if condition")
+            // same subscription is already attached to user.
+            return raiseClientError(
+              res,
+              422,
+              {},
+              "Same Subscription is already attached to user."
+            );
+          }
+
+        }
+      }
+
+
+
+
+
+
       let date = new Date();
       let next_recharge_date = new Date();
       next_recharge_date.setMonth(next_recharge_date.getMonth() + 1);
@@ -65,8 +105,7 @@ class ServiceSubscriptionUserMappingController extends Controller {
         userServicesSubscription
       );
       console.log("userServicesSubscription", userServicesSubscription);
-      const serviceSubscriptionUserMappingService =
-        new ServiceSubscriptionUserMappingService();
+
       userServicesSubscription =
         await serviceSubscriptionUserMappingService.addServiceSubscriptionUserMapping(
           userServicesSubscription
