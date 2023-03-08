@@ -19,7 +19,7 @@ class ServiceSubscriptionUserMappingController extends Controller {
     super();
   }
   create = async (req, res) => {
-    const { raiseSuccess, raiseServerError } = this;
+    const { raiseSuccess, raiseClientError, raiseServerError } = this;
     Log.debug("service user mapping controller - create - called");
 
     const {
