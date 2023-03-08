@@ -47,7 +47,7 @@ class ServiceSubscriptionUserMappingController extends Controller {
       const serviceSubscriptionUserMappingService =
         new ServiceSubscriptionUserMappingService();
       // check same subscription is attached to user or not...
-      let responseDb = serviceSubscriptionUserMappingService.getAllServiceSubscriptionUserMappingByData({
+      let responseDb = await serviceSubscriptionUserMappingService.getAllServiceSubscriptionUserMappingByData({
         provider_id,
         doctor_id,
         provider_type,
