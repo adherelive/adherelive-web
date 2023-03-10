@@ -567,7 +567,7 @@ class UserController extends Controller {
 
   onAppStart = async (req, res) => {
     try {
-      console.log("1");
+
       if (req.userDetails.exists) {
         const {
           userId,
@@ -582,7 +582,7 @@ class UserController extends Controller {
         // Logger.debug("user data in request", userData);
 
         // const userDetails = user[0];
-        console.log("2");
+
         const authUserDetails = await UserWrapper(userData);
 
         let userCategoryData = {};
@@ -590,37 +590,37 @@ class UserController extends Controller {
         let userApiData = {};
         let userCaregoryApiData = {};
         let providerApiData = {};
-        console.log("3");
+
         let userCategoryApiWrapper = null;
         let userCategoryId = null;
         // let patientIds = [];
         let userIds = [userId];
         // let careplanData = [];
-        console.log("4");
+
         let treatmentIds = [];
         let doctorProviderId = null;
-        console.log("5");
+
         switch (category) {
           case USER_CATEGORY.PATIENT:
             userCategoryData = await patientService.getPatientByUserId(userId);
             break;
           case USER_CATEGORY.DOCTOR:
-            console.log("6");
+
             userCategoryData = await doctorService.getDoctorByUserId(userId);
-            console.log("7");
+
             if (userCategoryData) {
-              console.log("8");
+
               userCategoryApiWrapper = await DoctorWrapper(userCategoryData);
-              console.log("9");
+
               let watchlist_patient_ids = [];
-              console.log("10");
+
 
               // gaurav new changes
               // const watchlistRecords =
               //   await doctorPatientWatchlistService.getAllByData({
               //     user_role_id: userRoleId,
               //   });
-              //   console.log("11")
+
               // if (watchlistRecords && watchlistRecords.length) {
               //   for (let i = 0; i < watchlistRecords.length; i++) {
               //     const watchlistWrapper = await DoctorPatientWatchlistWrapper(
@@ -632,22 +632,22 @@ class UserController extends Controller {
               // }
 
               let allInfo = {};
-              console.log("11");
+
               allInfo = await userCategoryApiWrapper.getAllInfo();
               // gaurav new changes
               // delete allInfo.watchlist_patient_ids;
               // allInfo["watchlist_patient_ids"] = watchlist_patient_ids;
-              console.log("12");
+
               userCategoryId = userCategoryApiWrapper.getDoctorId();
               userCaregoryApiData[userCategoryApiWrapper.getDoctorId()] =
                 allInfo;
-              console.log("13");
+
               const record = await userRolesService.getSingleUserRoleByData({
                 id: userRoleId,
               });
 
               const { linked_with = "", linked_id = null } = record || {};
-              console.log("14");
+
               if (linked_with === USER_CATEGORY.PROVIDER) {
                 const providerId = linked_id;
                 doctorProviderId = providerId;
@@ -659,15 +659,15 @@ class UserController extends Controller {
                   await providerWrapper.getAllInfo();
               }
             }
-            console.log("15");
+
             break;
           case USER_CATEGORY.HSP:
-            console.log("16");
-            console.log("userid is ", userId);
+
+
             userCategoryData = await doctorService.getDoctorByUserId(userId);
-            console.log("16-1");
+
             if (userCategoryData) {
-              console.log("16-2");
+
               userCategoryApiWrapper = await DoctorWrapper(userCategoryData);
               // Gaurav new Changes
               // let watchlist_patient_ids = [];
@@ -686,9 +686,9 @@ class UserController extends Controller {
               // }
 
               let allInfo = {};
-              console.log("16-3");
+
               allInfo = await userCategoryApiWrapper.getAllInfoNew();
-              console.log("17");
+
               // Gaurav new Changes
               // delete allInfo.watchlist_patient_ids;
               // allInfo["watchlist_patient_ids"] = watchlist_patient_ids;
@@ -696,12 +696,12 @@ class UserController extends Controller {
               userCategoryId = userCategoryApiWrapper.getDoctorId();
               userCaregoryApiData[userCategoryApiWrapper.getDoctorId()] =
                 allInfo;
-              console.log("18");
+
               const record = await userRolesService.getSingleUserRoleByData({
                 id: userRoleId,
               });
               const { linked_with = "", linked_id = null } = record || {};
-              console.log("19");
+
               if (linked_with === USER_CATEGORY.PROVIDER) {
                 const providerId = linked_id;
                 doctorProviderId = providerId;
@@ -712,7 +712,7 @@ class UserController extends Controller {
                 providerApiData[providerId] =
                   await providerWrapper.getAllInfo();
               }
-              console.log("20");
+
             }
             break;
           case USER_CATEGORY.PROVIDER:
@@ -1242,7 +1242,6 @@ class UserController extends Controller {
       mobile_number = mobNo;
 
       let doctor = await doctorService.getDoctorByUserId(userId);
-      // console.log('GET PROFILE DATA USERRRRRRR',doctor.get('id'),doctor.getBasicInfo);
 
       if (doctor) {
         let docInfo = doctor.getBasicInfo;
