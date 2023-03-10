@@ -206,9 +206,7 @@ class CarePlanTemplateService {
   getAllTemplatesForDoctor = async (data) => {
     try {
       const { user_id, doctor_id, provider_id, keyword, ...rest } = data;
-      console.log("=1=1=1==1=1=1=1==1=1=1=1==1=1=1=1=1");
-      console.log({ user_id, doctor_id, provider_id, rest });
-      console.log("=1=1=1==1=1=1=1==1=1=1=1==1=1=1=1=1");
+
       const carePlanTemplate = await Database.getModel(TABLE_NAME).findAll({
         where: {
           [Op.or]: [
@@ -253,9 +251,6 @@ class CarePlanTemplateService {
   searchAllTemplatesForDoctor = async (data) => {
     try {
       const { user_id, doctor_id, provider_id, keyword, ...rest } = data;
-      console.log("=1=1=1==1=1=1=1==1=1=1=1==1=1=1=1=1");
-      console.log({ user_id, doctor_id, provider_id, rest });
-      console.log("=1=1=1==1=1=1=1==1=1=1=1==1=1=1=1=1");
       const carePlanTemplate = await Database.getModel(TABLE_NAME).findAll({
         where: {
           [Op.or]: [
