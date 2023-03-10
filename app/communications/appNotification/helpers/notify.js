@@ -40,15 +40,9 @@ class Notifier {
           : Object.assign({}, this.payload);
 
       let result = {};
-      // console.log("notification payload=>>>>>>>>>>>>>>>>>", data);
       const feed = this.client.feed("notification", data.object);
-      // console.log("Data....OBBBjeeeect: ", data.object);
-      // console.log("FFFFFEeeeeeedddddd: ", feed);
-
       const response = await feed.addActivity(data);
-
       console.log("response", response);
-
       return result;
     } catch (err) {
       console.log("Error", err);

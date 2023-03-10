@@ -49,8 +49,6 @@ class SendNotificationValidator {
   }
 
   async sendNotification(validData) {
-    console.log("validData===========>", this.actionType);
-
     return result;
   }
 
