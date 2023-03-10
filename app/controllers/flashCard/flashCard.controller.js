@@ -76,18 +76,13 @@ class FlashCardController extends Controller {
       console.log("==========================================");
       console.log({ service_sub_tx_id });
       console.log("update flascard called. - 3");
+
       // TODO: need to discuss with client bcz below step will slowdown application.
 
       // service_offering_name
-
       let flashCardName = ""
-      if (service_subscription_id) {
-        const serviceSubscriptionService = new ServiceSubscriptionService();
-        let serviceSubecription =
-          await serviceSubscriptionService.getServiceSubscriptionByData({ id: service_subscription_id });
-        console.log({ serviceSubecription })
-        flashCardName = serviceSubecription["notes"]
-      } else {
+
+      if (service_offering_id) {
         const serviceOfferingService = new ServiceOfferingService();
         const servicesDetails = await serviceOfferingService.getServiceOfferingByData(
           { id: service_offering_id }
@@ -96,9 +91,14 @@ class FlashCardController extends Controller {
         flashCardName = servicesDetails["service_offering_name"]
       }
 
-      // /////////////////////////////////////////////
-
-
+      if (service_subscription_id) {
+        const serviceSubscriptionService = new ServiceSubscriptionService();
+        let serviceSubecription =
+          await serviceSubscriptionService.getServiceSubscriptionByData({ id: service_subscription_id });
+        console.log({ serviceSubecription })
+        flashCardName = `${serviceSubecription["notes"]} - ${flashCardName}`
+      }
+      ////////////////////////////
       if (service_sub_tx_id) {
         let userservicesmapping =
           await serviceSubscriptionTx.getAllServiceSubscriptionTx({

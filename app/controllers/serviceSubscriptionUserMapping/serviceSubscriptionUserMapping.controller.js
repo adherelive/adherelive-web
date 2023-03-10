@@ -72,7 +72,7 @@ class ServiceSubscriptionUserMappingController extends Controller {
               res,
               422,
               {},
-              "Same Subscription is already attached to user."
+              "Same Subscription is already attached to patient."
             );
           }
 
