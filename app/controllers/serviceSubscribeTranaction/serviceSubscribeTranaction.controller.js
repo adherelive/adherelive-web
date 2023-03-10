@@ -239,9 +239,8 @@ class ServiceSubscriptionTxController extends Controller {
 
       let response = [];
       Object.keys(services).forEach((id) => {
-        console.log("in object keys ", { id, service: services[id], freq: services[id]["service_frequency"] })
+
         for (let i = 0; i < services[id]["service_frequency"]; i++) {
-          console.log("loop running at", i)
           let activitieData = {
             service_offering_id: services[id]["service_plan_id"],
             doctor_id,
@@ -255,7 +254,7 @@ class ServiceSubscriptionTxController extends Controller {
             due_date: moment(new Date(), "DD-MM-YYYY").add(30, "days"),
             service_subscription_id: service_subscription_id,
           };
-          console.log({ activitieData });
+
           const txActivities = new TransactionActivite();
           txActivities.addTransactionActivite(activitieData);
           response.push(activitieData);

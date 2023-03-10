@@ -44,13 +44,13 @@ class ServiceSubscriptionTxController extends Controller {
         provider_type: req.userDetails.userRoleData.basic_info.linked_with,
       };
     }
-    console.log({ testone: "testvalue" }, req.query);
+
     if (status) data["status"] = status;
 
     const txActivitiesService = new TxActivities();
-    console.log("testing data is", { data });
+
     let txActivities = await txActivitiesService.getAllTxActivitiesByData(data);
-    console.log(txActivities);
+
     let response = [];
     for (let i in txActivities) {
       txActivities[i].doctor = await DoctorService.getDoctorByDoctorId(
@@ -60,11 +60,7 @@ class ServiceSubscriptionTxController extends Controller {
         id: txActivities[i].patient_id,
       });
       const patientData = await PatientWrapper(users);
-      console.log({
-        myuserdetails: users.user.getBasicInfo,
-        patoemtdo: txActivities[i].patient_id,
-      });
-      console.log("users", users);
+
       txActivities[i].patient = patientData;
       let serviceSubscription = new ServiceSubscription();
 
@@ -87,7 +83,7 @@ class ServiceSubscriptionTxController extends Controller {
 
 
   getTxActivitiesbyPatient = async (req, res) => {
-    console.log("get task api called")
+
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     const {
       userDetails: { userId, userData: { category } = {}, userCategoryId } = {},
@@ -119,13 +115,13 @@ class ServiceSubscriptionTxController extends Controller {
       if (service_subscription_id) data = { ...data, service_subscription_id }
 
     }
-    console.log({ testone: "testvalue" }, req.query);
+
     if (status) data["status"] = status;
 
     const txActivitiesService = new TxActivities();
-    console.log("testing data is", { data });
+
     let txActivities = await txActivitiesService.getAllTxActivitiesByData(data);
-    console.log(txActivities);
+
     let response = [];
     for (let i in txActivities) {
       txActivities[i].doctor = await DoctorService.getDoctorByDoctorId(
@@ -135,11 +131,7 @@ class ServiceSubscriptionTxController extends Controller {
         id: txActivities[i].patient_id,
       });
       const patientData = await PatientWrapper(users);
-      console.log({
-        myuserdetails: users.user.getBasicInfo,
-        patoemtdo: txActivities[i].patient_id,
-      });
-      console.log("users", users);
+
       txActivities[i].patient = patientData;
       let serviceSubscription = new ServiceSubscription();
 

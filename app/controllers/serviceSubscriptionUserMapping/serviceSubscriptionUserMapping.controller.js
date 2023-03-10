@@ -54,8 +54,7 @@ class ServiceSubscriptionUserMappingController extends Controller {
         patient_id: req.body.patient_id,
         service_subscription_plan_id: req.body.service_subscription_plan_id
       })
-      console.log("=========attach Details ===================")
-      console.log({ responseDb, lengtharray: responseDb.length })
+
       if (responseDb.length > 0) {
         for (let userServicesSubscription in responseDb) {
           // if subscription is attached then check is it expired or not
@@ -63,10 +62,7 @@ class ServiceSubscriptionUserMappingController extends Controller {
 
           let expire_date = new Date(responseDb[userServicesSubscription]["expire_date"])
           let today_date = new Date();
-          console.log({ expire_date, today_date })
-          console.log("=========attach Details  End===================")
           if (today_date < expire_date) {
-            console.log("in if condition")
             // same subscription is already attached to user.
             return raiseClientError(
               res,
@@ -99,16 +95,14 @@ class ServiceSubscriptionUserMappingController extends Controller {
         "service user mapping controller - create - userServices",
         userServicesSubscription
       );
-      console.log("userServicesSubscription", userServicesSubscription);
+
 
       userServicesSubscription =
         await serviceSubscriptionUserMappingService.addServiceSubscriptionUserMapping(
           userServicesSubscription
         );
 
-      console.log("=1=1=1=1=1==1=1=1=1=1=1=1=1=1=1=1=1=1==1");
-      console.log(userServicesSubscription.id);
-      console.log("=1=1=1=1=1==1=1=1=1=1=1=1=1=1=1=1=1=1==1");
+
 
       // tx create
       const txDetails = {
@@ -122,11 +116,9 @@ class ServiceSubscriptionUserMappingController extends Controller {
         due_date: new Date(),
         // subscription_plan_id: userServicesSubscription.id
       };
-      console.log("====================================================");
-      console.log({ txDetails });
+
       let txres = await TxService.addServiceSubscriptionTx(txDetails);
-      console.log({ txres });
-      console.log("====================================================");
+
       return raiseSuccess(
         res,
         200,
@@ -160,7 +152,7 @@ class ServiceSubscriptionUserMappingController extends Controller {
         );
       let response = {};
       let serviceSubscriptionsData = [];
-      console.log("userServicesSubscriptions", userServicesSubscriptions);
+
       for (let userServicesSubscription in userServicesSubscriptions) {
         let subId =
           userServicesSubscriptions[userServicesSubscription][
@@ -172,11 +164,11 @@ class ServiceSubscriptionUserMappingController extends Controller {
         let serviceSubecription =
           await serviceSubscriptionService.getServiceSubscriptionByData(data);
 
-        console.log({ data, subId, serviceSubecription });
+
 
         const serviceSubscriptionMapping = new ServiceSubscriptionMapping();
         let servicedata = { subscription_plan_id: subId };
-        console.log(servicedata);
+
         let services =
           await serviceSubscriptionMapping.getAllServiceSubscriptionMappingByData(
             servicedata
@@ -186,9 +178,7 @@ class ServiceSubscriptionUserMappingController extends Controller {
         response[subId] = { ...serviceSubecription };
       }
 
-      console.log(response);
 
-      console.log("userServices", userServicesSubscriptions);
       return raiseSuccess(
         res,
         200,
@@ -226,14 +216,13 @@ class ServiceSubscriptionUserMappingController extends Controller {
     let data = { patient_id };
     const serviceSubscriptionUserMappingService =
       new ServiceSubscriptionUserMappingService();
-    console.log({ data });
+
     let userServicesSubscriptions =
       await serviceSubscriptionUserMappingService.getAllServiceSubscriptionUserMappingByData(
         data
       );
     let response = {};
 
-    console.log("userServicesSubscriptions", userServicesSubscriptions);
     let doctors = {};
     let doctorsInproviders = {};
     for (let userServicesSubscription in userServicesSubscriptions) {
@@ -241,11 +230,7 @@ class ServiceSubscriptionUserMappingController extends Controller {
         userServicesSubscriptions[userServicesSubscription]["doctor_id"];
       let doctory_provider_type =
         userServicesSubscriptions[userServicesSubscription]["provider_type"];
-      console.log("===================================");
-      console.log({ userServicesSubscription });
-      console.log({ doctors, doctor_id_for_sub });
-      console.log("===================================");
-      console.log(userServicesSubscription);
+
       if (doctor_id_for_sub && !doctors[doctor_id_for_sub]) {
         doctors[doctor_id_for_sub] = await doctorService.getDoctorByDoctorId(
           doctor_id_for_sub
@@ -274,7 +259,7 @@ class ServiceSubscriptionUserMappingController extends Controller {
         ];
 
       let data = { id: subId };
-      console.log("data", data);
+
       let serviceSubscriptionService = new ServiceSubscriptionService();
 
       let serviceSubecription =
@@ -297,25 +282,25 @@ class ServiceSubscriptionUserMappingController extends Controller {
       };
       // response.push({...serviceSubecription});
     }
-    console.log({ response });
+
     let servicesSubResponse = response;
     // ===============================================================================
     const serviceuserMappingServices = new ServiceUserMappingService();
     let userServices =
       await serviceuserMappingServices.getAllServiceUserMappingByData(data);
-    console.log("userServices", userServices);
+
 
     let serviceDatas = [];
 
     for (let userService in userServices) {
       let serviceData = userServices[userService];
-      console.log(serviceData);
+
 
       const serviceOffering = new ServiceOffering();
       let servicedata = { id: serviceData.service_plan_id };
       let doctor_id_for_sub = userServices[userService]["doctor_id"];
       let doctory_provider_type = userServices[userService]["provider_type"];
-      console.log({ doctor_id_for_sub });
+
       if (doctor_id_for_sub && !doctors[doctor_id_for_sub])
         doctors[doctor_id_for_sub] = await doctorService.getDoctorByDoctorId(
           doctor_id_for_sub
@@ -382,7 +367,7 @@ class ServiceSubscriptionUserMappingController extends Controller {
         data
       );
 
-    console.log("userServicesSubscriptions", userServicesSubscriptions);
+
     let doctors = {};
     let doctorsInproviders = {};
     for (let userServicesSubscription in userServicesSubscriptions) {
@@ -405,7 +390,7 @@ class ServiceSubscriptionUserMappingController extends Controller {
         doctor_id_for_sub &&
         !doctorsInproviders[doctor_id_for_sub]
       ) {
-        console.log("doctor is in provider.");
+
         let provider_id =
           userServicesSubscriptions[userServicesSubscription]["provider_id"];
 
@@ -423,7 +408,7 @@ class ServiceSubscriptionUserMappingController extends Controller {
           providerDetails: providerBasicInfo,
         };
 
-        console.log(doctorsInproviders[doctor_id_for_sub]);
+
       }
     }
     const serviceuserMappingServices = new ServiceUserMappingService();
@@ -483,10 +468,6 @@ class ServiceSubscriptionUserMappingController extends Controller {
       patient_id = parseInt(patient_id);
       doctor_id = parseInt(doctor_id);
 
-      console.log(
-        "getServiceSubscriptionUserMappingAndServiceUserByPatientIdAndDoctorId called"
-      );
-      console.log({ provider_id, patient_id, provider_type, doctor_id });
       const { raiseSuccess, raiseClientError, raiseServerError } = this;
       try {
         if (!patient_id)
@@ -513,19 +494,15 @@ class ServiceSubscriptionUserMappingController extends Controller {
       if (USER_CATEGORY.DOCTOR === provider_type)
         data = { patient_id, provider_type, doctor_id };
 
-      console.log("===================");
-      console.log({ data });
-      console.log("===================");
+
       const serviceSubscriptionUserMappingService =
         new ServiceSubscriptionUserMappingService();
-      console.log({ data });
       let userServicesSubscriptions =
         await serviceSubscriptionUserMappingService.getAllServiceSubscriptionUserMappingByData(
           data
         );
       let response = {};
 
-      console.log("userServicesSubscriptions", userServicesSubscriptions);
 
       for (let userServicesSubscription in userServicesSubscriptions) {
         let subId =
@@ -534,7 +511,7 @@ class ServiceSubscriptionUserMappingController extends Controller {
           ];
 
         let data = { id: subId };
-        console.log("data", data);
+
         let serviceSubscriptionService = new ServiceSubscriptionService();
 
         let serviceSubecription =
@@ -558,13 +535,13 @@ class ServiceSubscriptionUserMappingController extends Controller {
         };
         // response.push({...serviceSubecription});
       }
-      console.log({ response });
+
       let servicesSubResponse = response;
       // ===============================================================================
       const serviceuserMappingServices = new ServiceUserMappingService();
       let userServices =
         await serviceuserMappingServices.getAllServiceUserMappingByData(data);
-      console.log("userServices", userServices);
+
 
       let serviceDatas = [];
 
@@ -573,7 +550,7 @@ class ServiceSubscriptionUserMappingController extends Controller {
         const serviceOffering = new ServiceOffering();
         let servicedata = { id: serviceData.service_plan_id };
         let doctor_id_for_sub = userServices[userService]["doctor_id"];
-        console.log({ doctor_id_for_sub });
+
 
         let services = await serviceOffering.getServiceOfferingByData(
           servicedata
@@ -612,7 +589,7 @@ class ServiceSubscriptionUserMappingController extends Controller {
 
       if (body.durations) {
         let expire_date = new Date(req.body.startDate);
-        console.log({ expire_date })
+
         expire_date.setMonth(expire_date.getMonth() + req.body.durations);
         body = { ...body, expire_date }
       }
