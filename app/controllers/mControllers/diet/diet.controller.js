@@ -101,8 +101,6 @@ class DietController extends Controller {
 
       for (let eachTime in timeWise) {
         const { mappingIds = [] } = timeWise[eachTime] || {};
-        // console.log("864872342476823764826437",{mappingIds});
-
         for (let ele of mappingIds) {
           let primary = null,
             related_diet_food_group_mapping_ids = [];

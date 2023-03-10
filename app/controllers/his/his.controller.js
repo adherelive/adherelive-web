@@ -2,7 +2,7 @@
  * @author Gaurav Sharma
  * @email gaurav6421@gmail.com
  * @create date 2023-01-02 09:57:39
- * @modify date 2023-02-20 12:04:21
+ * @modify date 2023-03-10 16:15:39
  * @desc a controller for his.
  */
 
@@ -51,7 +51,6 @@ class HisController extends Controller {
         );
       }
 
-      console.log({ hash, data: req.body });
       let his = await hisService.createHis({
         ...data,
         his_password: hash,
@@ -77,8 +76,6 @@ class HisController extends Controller {
   getHisById = async (req, res) => {
     try {
       const { params: { id } = {} } = req;
-      console.log("get hisbyid called");
-      console.log({ id });
       let his = await hisService.getHisById(id);
       return this.raiseSuccess(res, 200, { his }, "Data Retrive successfully");
     } catch (error) {
@@ -89,7 +86,6 @@ class HisController extends Controller {
 
   updateHis = async (req, res) => {
     const { params: { id } = {} } = req;
-    console.log({ id });
     let data = req.body;
     try {
       if (
@@ -137,11 +133,8 @@ class HisController extends Controller {
         his_username: dbusername,
         id: his_id,
       } = hisData;
-      console.log({ dbusername, dbpass });
       let passwordMatch = false;
       passwordMatch = await bcrypt.compare(his_password, dbpass);
-      console.log({ passwordMatch });
-
       if (passwordMatch) {
         const accessToken = await jwt.sign({ his_id }, secret, {
           expiresIn,

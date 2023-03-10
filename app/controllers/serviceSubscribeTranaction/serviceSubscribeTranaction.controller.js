@@ -110,10 +110,7 @@ class ServiceSubscriptionTxController extends Controller {
         provider_type: req.userDetails.userRoleData.basic_info.linked_with,
       };
     }
-    console.log("=================================");
-    console.log({ data });
 
-    console.log("=================================");
 
     // const serviceSubscribeTx = new ServiceSubscribeTx();
     let tranactions = await ServiceSubscribeTx.getAllServiceSubscriptionTx(
@@ -183,7 +180,6 @@ class ServiceSubscriptionTxController extends Controller {
         id
       );
 
-      console.log(tranactions[0]);
       let {
         doctor_id,
         provider_id,
@@ -211,9 +207,9 @@ class ServiceSubscriptionTxController extends Controller {
         );
       }
 
-      console.log({ service_plan_id });
+
       if (service_plan_id) {
-        console.log("INIF");
+
         let response = [];
         let activitieData = {
           service_offering_id: service_plan_id,
@@ -240,9 +236,7 @@ class ServiceSubscriptionTxController extends Controller {
         await serviceSubscriptionMapping.getAllServiceSubscriptionMappingByData(
           servicedata
         );
-      console.log("checking for occurance - start")
-      console.log({ services })
-      console.log("checking for occurance - end")
+
       let response = [];
       Object.keys(services).forEach((id) => {
         console.log("in object keys ", { id, service: services[id], freq: services[id]["service_frequency"] })

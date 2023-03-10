@@ -30,7 +30,7 @@ class EventController extends Controller {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       Log.debug("req.params", req.params);
-      console.log("get All Events - 1 ", getTime());
+     
       const {
         params: { patient_id } = {},
         userDetails: {
@@ -40,24 +40,24 @@ class EventController extends Controller {
         } = {},
       } = req;
       const EventService = new eventService();
-      console.log("get All Events - 2 ", getTime());
+  
       let carePlan = null,
         vital_ids = [],
         appointment_ids = [],
         medication_ids = [],
         diet_ids = [],
         workout_ids = [];
-      console.log("get All Events - 3 ", getTime());
+  
       const carePlanData = await CarePlanService.getSingleCarePlanByData({
         patient_id,
         ...((category === USER_CATEGORY.DOCTOR ||
           category === USER_CATEGORY.HSP) && { user_role_id: userRoleId }),
       });
-      console.log("get All Events - 4 ", getTime());
+
       if (carePlanData) {
-        console.log("get All Events - 5 ", getTime());
+    
         carePlan = await CarePlanWrapper(carePlanData);
-        console.log("get All Events - 6 ", getTime());
+   
         const {
           vital_ids: cPvital_ids = [],
           appointment_ids: cPappointment_ids = [],
@@ -65,7 +65,7 @@ class EventController extends Controller {
           diet_ids: cPdiet_ids = [],
           workout_ids: cPworkout_ids = [],
         } = (await carePlan.getAllInfo()) || {};
-        console.log("get All Events - 7 ", getTime());
+     
         vital_ids = cPvital_ids;
         appointment_ids = cPappointment_ids;
         medication_ids = cPmedication_ids;
@@ -76,14 +76,14 @@ class EventController extends Controller {
       let symptomData = {};
       let documentData = {};
       const lastVisitData = [];
-      console.log("get All Events - 8 ", getTime());
+  
       const latestSymptom =
         (await SymptomService.getLastUpdatedData({
           patient_id,
         })) || [];
-      console.log("get All Events - 9 ", getTime());
+  
       if (latestSymptom.length > 0) {
-        console.log("get All Events - 10 ", getTime());
+    
         for (const symptoms of latestSymptom) {
           const symptom = await SymptomWrapper({ data: symptoms });
           const { symptoms: latestSymptom } = await symptom.getAllInfo();
@@ -91,18 +91,10 @@ class EventController extends Controller {
           const { upload_documents } = await symptom.getReferenceInfo();
           documentData = { ...documentData, ...upload_documents };
         }
-        console.log("get All Events - 11 ", getTime());
+     
       }
 
-      // TODO: need to rethink logic for latest events from last visit to include all types
-      console.log("get All Events - 12 ", getTime());
-      console.log({
-        vital_ids,
-        medication_ids,
-        diet_ids,
-        workout_ids,
-        appointment_ids,
-      });
+     
       const vitalEvents = await EventService.getLastVisitData({
         event_id: [
           ...vital_ids,
@@ -121,21 +113,21 @@ class EventController extends Controller {
         date: moment().subtract(7, "days").utc().toISOString(),
         sort: "DESC",
       });
-      console.log("get All Events - 13 ", getTime());
+
       // const appointmentEvents = await EventService.getLastVisitData({
       //   event_id: appointment_ids,
       //   event_type: EVENT_TYPE.APPOINTMENT,
       //   date: moment().subtract(7, "days").utc().toISOString(),
       //   sort: "DESC",
       // });
-      console.log("get All Events - 14 ", getTime());
+
       // const medicationEvents = await EventService.getLastVisitData({
       //   event_id: medication_ids,
       //   event_type: EVENT_TYPE.MEDICATION_REMINDER,
       //   date: moment().subtract(7, "days").utc().toISOString(),
       //   sort: "DESC",
       // });
-      console.log("get All Events - 15 ", getTime());
+    
 
       // const dietEvents = await EventService.getLastVisitData({
       //   event_id: diet_ids,
@@ -143,7 +135,7 @@ class EventController extends Controller {
       //   date: moment().subtract(7, "days").utc().toISOString(),
       //   sort: "DESC",
       // });
-      console.log("get All Events - 16 ", getTime());
+   
 
       // const workoutEvents = await EventService.getLastVisitData({
       //   event_id: workout_ids,
@@ -151,7 +143,7 @@ class EventController extends Controller {
       //   date: moment().subtract(7, "days").utc().toISOString(),
       //   sort: "DESC",
       // });
-      console.log("get All Events - 17 ", getTime());
+     
       let scheduleEvents = [
         ...vitalEvents,
         // ...appointmentEvents,
@@ -159,7 +151,7 @@ class EventController extends Controller {
         // ...dietEvents,
         // ...workoutEvents,
       ];
-      console.log("get All Events - 18 ", getTime());
+
       if (scheduleEvents.length > 0) {
         scheduleEvents.sort((activityA, activityB) => {
           const { updatedAt: a } = activityA || {};
@@ -170,14 +162,13 @@ class EventController extends Controller {
         });
 
         const allIds = [];
-        console.log("get All Events - 19 ", getTime());
+ 
         let scheduleEventData = {};
         // for (const scheduleEvent of scheduleEvents) {
         //   const event = await EventWrapper(scheduleEvent);
         //   scheduleEventData[event.getScheduleEventId()] = event.getAllInfo();
         //   allIds.push(event.getScheduleEventId());
         // }
-        console.log("get All Events - 20 ", getTime());
         for (const [key, event] of [
           ...latestSymptom,
           ...scheduleEvents,
@@ -195,12 +186,12 @@ class EventController extends Controller {
           const eventWrapper = await EventWrapper(event);
           scheduleEventData[eventWrapper.getScheduleEventId()] =
             eventWrapper.getAllInfo();
-          console.log("get All Events - 21 ", getTime());
+       
           if (key === 3) {
             break;
           }
         }
-        console.log("get All Events - 21 ", getTime());
+   
         lastVisitData.sort((activityA, activityB) => {
           const { updatedAt: a } = activityA || {};
           const { updatedAt: b } = activityB || {};
@@ -208,7 +199,7 @@ class EventController extends Controller {
           if (moment(a).isAfter(moment(b))) return -1;
           return 0;
         });
-        console.log("get All Events - 22 ", getTime());
+
         return raiseSuccess(
           res,
           200,
@@ -239,7 +230,7 @@ class EventController extends Controller {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       Log.debug("req.params", req.params);
-      console.log("get All Events - 1 ", getTime());
+     
       const {
         params: { patient_id } = {},
         userDetails: {
@@ -249,24 +240,24 @@ class EventController extends Controller {
         } = {},
       } = req;
       const EventService = new eventService();
-      console.log("get All Events - 2 ", getTime());
+     
       let carePlan = null,
         vital_ids = [],
         appointment_ids = [],
         medication_ids = [],
         diet_ids = [],
         workout_ids = [];
-      console.log("get All Events - 3 ", getTime());
+
       const carePlanData = await CarePlanService.getSingleCarePlanByData({
         patient_id,
         ...((category === USER_CATEGORY.DOCTOR ||
           category === USER_CATEGORY.HSP) && { user_role_id: userRoleId }),
       });
-      console.log("get All Events - 4 ", getTime());
+     
       if (carePlanData) {
-        console.log("get All Events - 5 ", getTime());
+   
         carePlan = await CarePlanWrapper(carePlanData);
-        console.log("get All Events - 6 ", getTime());
+ 
         const {
           vital_ids: cPvital_ids = [],
           appointment_ids: cPappointment_ids = [],
@@ -274,7 +265,7 @@ class EventController extends Controller {
           diet_ids: cPdiet_ids = [],
           workout_ids: cPworkout_ids = [],
         } = (await carePlan.getAllInfo()) || {};
-        console.log("get All Events - 7 ", getTime());
+    
         vital_ids = cPvital_ids;
         appointment_ids = cPappointment_ids;
         medication_ids = cPmedication_ids;
@@ -285,14 +276,14 @@ class EventController extends Controller {
       let symptomData = {};
       let documentData = {};
       const lastVisitData = [];
-      console.log("get All Events - 8 ", getTime());
+ 
       const latestSymptom =
         (await SymptomService.getLastUpdatedData({
           patient_id,
         })) || [];
-      console.log("get All Events - 9 ", getTime());
+    
       if (latestSymptom.length > 0) {
-        console.log("get All Events - 10 ", getTime());
+
         for (const symptoms of latestSymptom) {
           const symptom = await SymptomWrapper({ data: symptoms });
           const { symptoms: latestSymptom } = await symptom.getAllInfo();
@@ -300,47 +291,38 @@ class EventController extends Controller {
           const { upload_documents } = await symptom.getReferenceInfo();
           documentData = { ...documentData, ...upload_documents };
         }
-        console.log("get All Events - 11 ", getTime());
+      
       }
 
-      // TODO: need to rethink logic for latest events from last visit to include all types
-      console.log("get All Events - 12 ", getTime());
-      console.log({
-        vital_ids,
-        medication_ids,
-        diet_ids,
-        workout_ids,
-        appointment_ids,
-      });
+     
       const vitalEvents = await EventService.getLastVisitData({
         event_id: vital_ids,
         event_type: EVENT_TYPE.VITALS,
         date: moment().subtract(7, "days").utc().toISOString(),
         sort: "DESC",
       });
-      console.log("get All Events - 13 ", getTime());
+   
       const appointmentEvents = await EventService.getLastVisitData({
         event_id: appointment_ids,
         event_type: EVENT_TYPE.APPOINTMENT,
         date: moment().subtract(7, "days").utc().toISOString(),
         sort: "DESC",
       });
-      console.log("get All Events - 14 ", getTime());
+  
       const medicationEvents = await EventService.getLastVisitData({
         event_id: medication_ids,
         event_type: EVENT_TYPE.MEDICATION_REMINDER,
         date: moment().subtract(7, "days").utc().toISOString(),
         sort: "DESC",
       });
-      console.log("get All Events - 15 ", getTime());
-
+     
       const dietEvents = await EventService.getLastVisitData({
         event_id: diet_ids,
         event_type: EVENT_TYPE.DIET,
         date: moment().subtract(7, "days").utc().toISOString(),
         sort: "DESC",
       });
-      console.log("get All Events - 16 ", getTime());
+
 
       const workoutEvents = await EventService.getLastVisitData({
         event_id: workout_ids,
@@ -348,7 +330,7 @@ class EventController extends Controller {
         date: moment().subtract(7, "days").utc().toISOString(),
         sort: "DESC",
       });
-      console.log("get All Events - 17 ", getTime());
+
       let scheduleEvents = [
         ...vitalEvents,
         ...appointmentEvents,
@@ -356,7 +338,7 @@ class EventController extends Controller {
         ...dietEvents,
         ...workoutEvents,
       ];
-      console.log("get All Events - 18 ", getTime());
+     
       if (scheduleEvents.length > 0) {
         scheduleEvents.sort((activityA, activityB) => {
           const { updatedAt: a } = activityA || {};
@@ -367,14 +349,14 @@ class EventController extends Controller {
         });
 
         const allIds = [];
-        console.log("get All Events - 19 ", getTime());
+   
         let scheduleEventData = {};
         // for (const scheduleEvent of scheduleEvents) {
         //   const event = await EventWrapper(scheduleEvent);
         //   scheduleEventData[event.getScheduleEventId()] = event.getAllInfo();
         //   allIds.push(event.getScheduleEventId());
         // }
-        console.log("get All Events - 20 ", getTime());
+
         for (const [key, event] of [
           ...latestSymptom,
           ...scheduleEvents,
@@ -392,12 +374,12 @@ class EventController extends Controller {
           const eventWrapper = await EventWrapper(event);
           scheduleEventData[eventWrapper.getScheduleEventId()] =
             eventWrapper.getAllInfo();
-          console.log("get All Events - 21 ", getTime());
+        
           if (key === 3) {
             break;
           }
         }
-        console.log("get All Events - 21 ", getTime());
+   
         lastVisitData.sort((activityA, activityB) => {
           const { updatedAt: a } = activityA || {};
           const { updatedAt: b } = activityB || {};
@@ -405,7 +387,7 @@ class EventController extends Controller {
           if (moment(a).isAfter(moment(b))) return -1;
           return 0;
         });
-        console.log("get All Events - 22 ", getTime());
+     
         return raiseSuccess(
           res,
           200,

@@ -41,17 +41,6 @@ class ReportController extends Controller {
         permissions = [],
       } = req;
 
-      console.log("==============================");
-      console.log({ category });
-      console.log({ userData: req.userDetails.userData });
-      console.log({ userDetails: req.userDetails });
-      console.log({ userRoleData: req.userDetails.userRoleData.basic_info });
-      console.log({
-        userCategoryData: req.userDetails.userCategoryData.basic_info,
-      });
-      console.log("==============================");
-      console.log({ req });
-
       provider_type = req.userDetails.userRoleData.basic_info.linked_with;
       if (category === USER_CATEGORY.DOCTOR) {
         doctor_id = req.userDetails.userCategoryData.basic_info.id;
@@ -68,7 +57,7 @@ class ReportController extends Controller {
         doctor_id = req.body.doctor_id;
       }
 
-      console.log({ doctor_id, provider_id, provider_type });
+
 
       const serviceOfferingService = new ServiceOfferingService();
       ({
@@ -191,7 +180,7 @@ class ReportController extends Controller {
       const services = await serviceOfferingService.getServiceOfferingByData(
         data
       );
-      console.log("services", services);
+
       return raiseSuccess(
         res,
         200,
@@ -210,12 +199,12 @@ class ReportController extends Controller {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       const { query } = req;
-      console.log(query);
+
       const serviceOfferingService = new ServiceOfferingService();
       const services = await serviceOfferingService.getAllServiceOfferingByData(
         query
       );
-      console.log("services", services);
+
       return raiseSuccess(
         res,
         200,
@@ -336,7 +325,7 @@ class ReportController extends Controller {
       let mainServiceData = {};
       for (let service in services) {
         let serviceData = services[service];
-        console.log(serviceData);
+
         mainServiceData[serviceData.id] = serviceData;
       }
 
