@@ -150,3 +150,53 @@ careplan-template
 careplan update and create api.
 update bar code.
 and add followup advise in update patient careplan's validator
+
+
+
+
+
+## New Method To Deploy Backend & Frontend on Prod Server
+
+Build the image using below command
+
+```sh
+$ docker image build -t image_name:tag .
+```
+
+list the service using below command
+
+```sh
+$ docker service ls
+```
+
+
+update the image
+
+```sh
+docker image update --image=image_name:tag service_name
+```
+
+
+
+## New Method To Deploy Backend & Frontend on Dev Server
+
+## Backend
+
+Build the image using below commands
+
+```sh
+cd ~/akshay/adherelive-web/
+git pull
+docker image build -t adhere-backend-9 .
+cd ~/akshay/docker_env
+docker-compose up -d backend
+```
+
+## Frontend
+
+```sh
+$ cd /home/azureuser/akshay/adherelive-fe
+$ git pull
+$ docker image build -t adhere-frontend-11 .
+$ docker-compose  up -d frontend
+```
