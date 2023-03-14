@@ -56,7 +56,7 @@ class ServiceSubscriptionController extends Controller {
           ...serviceSubecription,
           ...data,
         });
-      console.log("services", serviceSubecription);
+
 
       return raiseSuccess(
         res,
@@ -147,12 +147,12 @@ class ServiceSubscriptionController extends Controller {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       const { query } = req;
-      console.log(query);
+
       const serviceSubscriptionService = new ServiceSubscriptionService();
       let serviceSubscriptions =
         await serviceSubscriptionService.getAllServiceSubscriptionByData(query);
 
-      console.log({ serviceSubscriptions });
+
       let serviceSubscriptionsData = [];
       for (let serviceSubscription in serviceSubscriptions) {
         let serviceSubData = serviceSubscriptions[serviceSubscription];
@@ -218,10 +218,7 @@ class ServiceSubscriptionController extends Controller {
     }
 
     try {
-      console.log("=========================");
-      console.log(data);
-      console.log("userDetails", req.userDetails);
-      console.log("=========================");
+
 
       const serviceSubscriptionService = new ServiceSubscriptionService();
       let serviceSubscriptions =

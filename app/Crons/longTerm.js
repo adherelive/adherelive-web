@@ -182,7 +182,7 @@ class LongTerm {
   createVitalEvents = async (vitalId) => {
     try {
       const eventService = new EventService();
-      console.log("1");
+
       const vital = await vitalService.getByData({
         id: vitalId,
       });
@@ -192,22 +192,17 @@ class LongTerm {
           event_id: vitalId,
           event_type: EVENT_TYPE.VITALS,
         })) || null;
-      console.log("2");
+
       const { details: { actor, participants = [] } = {} } =
         scheduleEvent || {};
-      console.log("3");
+
       const vitals = await VitalWrapper({ data: vital });
 
       // const {id: actorId, user_role_id} = actor || {};
       const { id: actorId } = actor || {};
 
       const { user_role_id } = actor || {};
-      console.log("==================================");
-      console.log("4");
-      console.log(actor);
-      console.log("user_role_id", user_role_id);
-      console.log(participants.length);
-      console.log("==================================");
+
       let patientUserRoleId = null;
       for (const participant of participants) {
         console.log("participant", participant);

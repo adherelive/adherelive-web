@@ -4212,21 +4212,17 @@ class DoctorController extends Controller {
   // };
 
   medicineModificationDocs = async (req, res) => {
-    console.log("medicineModificationDocs-Called-1");
+
     const { raiseServerError, raiseSuccess, raiseClientError } = this;
     try {
-      console.log("medicineModificationDocs-Called-2");
       const {
         userDetails: { userId, userData: { category = null } = {} } = {},
         body: { doctor_id = null } = {},
       } = req;
       const file = req.file;
-      console.log(req);
-      console.log({ file });
-      console.log("medicineModificationDocs-Called-3");
       let doctorUserId = userId;
       if (doctor_id) {
-        console.log("medicineModificationDocs-Called-4");
+
         if (category !== USER_CATEGORY.PROVIDER) {
           return raiseClientError(res, 401, {}, "UNAUTHORIZED");
         }
@@ -4234,10 +4230,10 @@ class DoctorController extends Controller {
         const doctorData = await DoctorWrapper(null, doctor_id);
         doctorUserId = doctorData.getUserId();
       }
-      console.log("medicineModificationDocs-Called-5");
+
       const { mimetype } = file || {};
       const fileType = mimetype.split("/");
-      console.log(file);
+
       Logger.debug("mimetype ------> ", mimetype);
       if (!ALLOWED_DOC_TYPE_DOCTORS.includes(fileType[1])) {
         return this.raiseClientError(
@@ -4257,7 +4253,7 @@ class DoctorController extends Controller {
         const medicineModificationDocs = XLSX.utils.sheet_to_json(
           workbook.Sheets[sheet_name_list[0]]
         );
-        console.log({ medicineModificationDocs });
+
         let error = [];
         let success = [];
         for (let i in medicineModificationDocs) {
@@ -4270,9 +4266,6 @@ class DoctorController extends Controller {
           let { details } = data;
           details = JSON.parse(details);
           data = { ...data, details };
-
-          console.log({ medicinId });
-          console.log({ data, oldData, medicin });
 
           try {
             let medicaineUpdate = await medicineService.updateMedicine(

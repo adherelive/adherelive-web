@@ -6,6 +6,7 @@ import { isDoctor } from "../middleware/doctor";
 const router = express.Router();
 // router.post("/", Authenticate, serviceSubscribeTx.create);
 router.get("/", Authenticate, isDoctor, transactionActivity.getTxActivities);
+router.get("/tasks", Authenticate, isDoctor, transactionActivity.getTxActivitiesbyPatient);
 router.put("/:id", Authenticate, transactionActivity.updateTxActivities);
 
 export default router;

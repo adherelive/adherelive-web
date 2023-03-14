@@ -6,12 +6,6 @@ const isBeforeOffset = (date) => {
   const hh = date.format("HH");
   const mm = date.format("mm");
   const offset = process.config.UTC_OFFSET_STR.split(":");
-  console.log(
-    "first: ",
-    (24 - hh) * 60 + mm,
-    "second: ",
-    offset[0] * 60 + offset[1]
-  );
   //return hh * 60 + mm <= offset[0] * 60 + offset[1];
   return Number((24 - hh) * 60 + mm) <= Number(offset[0] * 60 + offset[1]);
 };
@@ -63,7 +57,6 @@ const getEventListByWeekly = async ({
   repeatInterval,
   listOfDays,
 }) => {
-  console.log("start------------------------------------", eventStartTime);
   const eventGenartor = await nextEventTime(
     eventStartTime,
     eventEndTime,

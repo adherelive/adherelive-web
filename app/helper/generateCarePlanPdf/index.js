@@ -998,10 +998,6 @@ function printAppointment({
           organizer,
           description, reason, provider_id
         } = suggestedInvestigations[each] || {};
-        console.log("=================================")
-        console.log(suggestedInvestigations[each])
-        console.log({ organizer })
-        console.log("=================================")
         // gaurav new changes - start
         if (doc.y + 3 * SHORT_FONT_SIZE > PAGE_END_LIMIT) {
           if (pageCount === 1) {
@@ -1100,12 +1096,6 @@ function printConsultation({
 }) {
   try {
     let labFindingsEndLevel = doc.y;
-    // 08-02-2023
-    // if (suggestedInvestigations.length > 0) {
-    //   addPageAndNumber(doc);
-    //   labFindingsEndLevel = DOC_MARGIN;
-    // }
-
     let medicationYLevel = doc.y;
 
     if (suggestedInvestigations.length > 0) {

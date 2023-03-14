@@ -233,7 +233,6 @@ class PassedCron {
       const carePlanStartTime = new moment.utc();
       const carePlanEndTime = new moment.utc(carePlanStartTime).add(2, "hours");
 
-      // console.log("8712368126316283 ", {currentTime, eventStart: event.getStartTime(), num: moment(currentTime).diff(event.getStartTime(), "hours"), condition: moment(currentTime).diff(event.getStartTime(), "hours") >= process.config.app.careplan_activation_reschedule_hours, diff: process.config.app.careplan_activation_reschedule_hours});
       if (
         moment(currentTime).diff(event.getStartTime(), "hours") >=
         process.config.app.careplan_activation_reschedule_hours

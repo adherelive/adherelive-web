@@ -591,7 +591,7 @@ class CarePlanTemplateController extends Controller {
           template_medication_ids,
           template_vital_ids,
           template_diet_ids,
-          template_workout_ids,
+          template_workout_ids, details: care_plan_details
         } = care_plan_templates[template.getCarePlanTemplateId()] || {};
 
         // appointments
@@ -682,6 +682,7 @@ class CarePlanTemplateController extends Controller {
           severity_id,
           condition_id,
           user_id: userId,
+          details: care_plan_details,
           template_appointments: appointmentData,
           ...(permissions.includes(PERMISSIONS.MEDICATIONS.TEMPLATE) && {
             template_medications: medicationData,

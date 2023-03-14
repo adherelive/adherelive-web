@@ -36,7 +36,7 @@ class ServiceUserMappingController extends Controller {
       provider_type = req.userDetails.userRoleData.basic_info.linked_with;
     }
 
-    console.log({ doctor_id, provider_type, category });
+
 
     try {
       let date = new Date();
@@ -60,12 +60,12 @@ class ServiceUserMappingController extends Controller {
         "service user mapping controller - create - userServices",
         userServices
       );
-      console.log("userServices", userServices);
+
       const serviceUserMappingService = new ServiceUserMappingService();
       userServices = await serviceUserMappingService.addServiceUserMapping(
         userServices
       );
-      console.log("services", userServices);
+
       const txDetails = {
         doctor_id,
         provider_type,
@@ -77,7 +77,7 @@ class ServiceUserMappingController extends Controller {
         due_date: new Date(),
         // subscription_plan_id: userServicesSubscription.id
       };
-      console.log({ txDetails });
+
       let txres = await TxService.addServiceSubscriptionTx(txDetails);
       return raiseSuccess(
         res,
@@ -107,7 +107,7 @@ class ServiceUserMappingController extends Controller {
       const serviceuserMappingServices = new ServiceUserMappingService();
       let userServices =
         await serviceuserMappingServices.getAllServiceUserMappingByData(data);
-      console.log("userServices", userServices);
+
 
       let serviceDatas = [];
       for (let userService in userServices) {

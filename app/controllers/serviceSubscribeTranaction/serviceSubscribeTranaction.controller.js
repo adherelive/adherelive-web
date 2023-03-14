@@ -110,10 +110,7 @@ class ServiceSubscriptionTxController extends Controller {
         provider_type: req.userDetails.userRoleData.basic_info.linked_with,
       };
     }
-    console.log("=================================");
-    console.log({ data });
 
-    console.log("=================================");
 
     // const serviceSubscribeTx = new ServiceSubscribeTx();
     let tranactions = await ServiceSubscribeTx.getAllServiceSubscriptionTx(
@@ -183,7 +180,6 @@ class ServiceSubscriptionTxController extends Controller {
         id
       );
 
-      console.log(tranactions[0]);
       let {
         doctor_id,
         provider_id,
@@ -211,9 +207,9 @@ class ServiceSubscriptionTxController extends Controller {
         );
       }
 
-      console.log({ service_plan_id });
+
       if (service_plan_id) {
-        console.log("INIF");
+
         let response = [];
         let activitieData = {
           service_offering_id: service_plan_id,
@@ -240,26 +236,29 @@ class ServiceSubscriptionTxController extends Controller {
         await serviceSubscriptionMapping.getAllServiceSubscriptionMappingByData(
           servicedata
         );
+
       let response = [];
       Object.keys(services).forEach((id) => {
-        let activitieData = {
-          service_offering_id: services[id]["service_plan_id"],
-          doctor_id,
-          provider_id,
-          provider_type,
-          patient_id,
-          status: "pending",
-          patient_status: "inactive",
-          amount,
-          billing_frequency: "onces",
-          due_date: moment(new Date(), "DD-MM-YYYY").add(30, "days"),
-          service_subscription_id: service_subscription_id,
-        };
 
-        console.log({ activitieData });
-        const txActivities = new TransactionActivite();
-        txActivities.addTransactionActivite(activitieData);
-        response.push(activitieData);
+        for (let i = 0; i < services[id]["service_frequency"]; i++) {
+          let activitieData = {
+            service_offering_id: services[id]["service_plan_id"],
+            doctor_id,
+            provider_id,
+            provider_type,
+            patient_id,
+            status: "pending",
+            patient_status: "inactive",
+            amount,
+            billing_frequency: "onces",
+            due_date: moment(new Date(), "DD-MM-YYYY").add(30, "days"),
+            service_subscription_id: service_subscription_id,
+          };
+
+          const txActivities = new TransactionActivite();
+          txActivities.addTransactionActivite(activitieData);
+          response.push(activitieData);
+        }
       });
       return raiseSuccess(res, 200, { response }, "Success");
     } catch (error) {

@@ -40,12 +40,7 @@ class Scheduler {
   async updateScheduledJob({ id, status, previousStatus, previousStartTime }) {
     try {
       let scheduleEventData = await schedulerModule.find({ _id: id });
-      console.log(
-        "scheduleEventData==================>",
-        scheduleEventData,
-        previousStatus,
-        previousStartTime
-      );
+
       let eventStatus = scheduleEventData[0].status;
       let eventStartTime = scheduleEventData[0].startTime;
       if (

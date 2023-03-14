@@ -41,11 +41,7 @@ export const doctorQualificationData = async (userId) => {
     let qualification_details = [];
 
     let doctor = await doctorService.getDoctorByUserId(userId);
-    console.log(
-      "GET PROFILE DATA USERRRRRRR",
-      doctor.get("id"),
-      doctor.getBasicInfo
-    );
+
 
     if (doctor) {
       let docInfo = doctor.getBasicInfo;
@@ -68,7 +64,7 @@ export const doctorQualificationData = async (userId) => {
         await qualificationService.getQualificationsByDoctorId(docId);
 
       for (let qualification of docQualifications) {
-        console.log("QUALIFICATIONSSSSSSS=============>", qualification);
+
         let qualificationData = {};
         let qualificationId = qualification.get("id");
         qualificationData.degree = qualification.get("degree");
@@ -88,7 +84,7 @@ export const doctorQualificationData = async (userId) => {
         }
 
         qualificationData.photos = photos;
-        console.log("DOCUMENTSSSSSSS=============>", qualificationData);
+
         qualification_details.push(qualificationData);
       }
     }
@@ -300,7 +296,7 @@ export const downloadFileFromS3 = async (objectName, filePath) => {
       objectName,
       filePath
     );
-    console.log("Response got for the download is: ", response);
+
     return true;
   } catch (err) {
     console.log("Error got in downloading file from s3: ", err);

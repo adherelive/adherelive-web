@@ -2440,7 +2440,6 @@ class MPatientController extends Controller {
   };
 
   getPatientReports = async (req, res) => {
-    console.log("get patients report mobile called.")
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       const {
@@ -2458,9 +2457,6 @@ class MPatientController extends Controller {
         (await reportService.getAllReportByData({
           patient_id,
         })) || [];
-      console.log("===========================")
-      console.log({ allReports })
-      console.log("===========================")
       let reportData = {};
       let documentData = {};
 

@@ -438,8 +438,6 @@ class WorkoutController extends Controller {
       // get repetition ids
       const repetitionService = new RepetitionService();
 
-      // get exercise group ids
-      console.log("What is repetion Service? --->", repetitionService);
       const { count, rows: repetitions = [] } =
         (await repetitionService.findAndCountAll()) || {};
       if (count) {

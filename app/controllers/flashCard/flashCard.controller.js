@@ -12,6 +12,9 @@ import { DOCUMENT_PARENT_TYPE } from "../../../constant";
 import uploadDocumentService from "../../services/uploadDocuments/uploadDocuments.service";
 import * as ReportHelper from "../reports/reportHelper"; // wrappers
 import ReportWrapper from "../../ApiWrapper/web/reports";
+import ServiceSubscriptionService from "../../services/serviceSubscription/serviceSubscription.service";
+import ServiceOfferingService from "../../services/serviceOffering/serviceOffering.service";
+
 import { USER_CATEGORY } from "../../../constant";
 const fs = require("fs");
 const Log = new Logger("WEB > CONTROLLER > Service Offering");
@@ -48,7 +51,7 @@ class FlashCardController extends Controller {
     try {
       let data = { ...req.body, doctor_id, provider_type, provider_id };
       Log.debug("flash card controller data", data);
-      console.log({ requestBody: req.body });
+
 
       const flashCardService = new FlashCardService();
       let flashCard = await flashCardService.addFlashCard(data);
@@ -66,57 +69,62 @@ class FlashCardController extends Controller {
       let tranaction_activities = await txActivity.getAllTxActivitiesByData({
         id: tx_activity_id,
       });
-      console.log("==========================================");
-      console.log({ tranaction_activities });
+      let { service_sub_tx_id, service_offering_id, service_subscription_id } = tranaction_activities[0];
+      // TODO: need to discuss with client bcz below step will slowdown application.
 
-      let { service_sub_tx_id } = tranaction_activities[0];
-      console.log("==========================================");
-      console.log({ service_sub_tx_id });
-      console.log("update flascard called. - 3");
+      // service_offering_name
+      let flashCardName = ""
+
+      if (service_offering_id) {
+        const serviceOfferingService = new ServiceOfferingService();
+        const servicesDetails = await serviceOfferingService.getServiceOfferingByData(
+          { id: service_offering_id }
+        );
+        flashCardName = servicesDetails["service_offering_name"]
+      }
+
+      if (service_subscription_id) {
+        const serviceSubscriptionService = new ServiceSubscriptionService();
+        let serviceSubecription =
+          await serviceSubscriptionService.getServiceSubscriptionByData({ id: service_subscription_id });
+        flashCardName = `${serviceSubecription["notes"]} - ${flashCardName}`
+      }
+      ////////////////////////////
       if (service_sub_tx_id) {
         let userservicesmapping =
           await serviceSubscriptionTx.getAllServiceSubscriptionTx({
             id: service_sub_tx_id,
           });
-        console.log("==========================================");
-        console.log({ userservicesmapping });
+
         if (userservicesmapping && userservicesmapping.length > 0) {
-          console.log("update flascard called. - 4");
           const serviceUserMappingService = new ServiceUserMappingService();
           let serviceUserMappingId = userservicesmapping[0].id;
-          console.log("==========================================");
-          console.log({ serviceUserMappingId });
           let serviceUserMapping =
             await serviceUserMappingService.updateServiceUserMapping(
               { patient_status: activity_status },
               serviceUserMappingId
             );
-          console.log("===============================");
-          console.log({ serviceUserMapping });
-          console.log("update flascard called. - 5");
         }
       }
       // need to add records.
       let reportBody = {
         uploader_id: userCategoryId,
         uploader_type: category,
-        name: "flashcard record",
+        name: flashCardName,
         test_date: new Date(),
         patient_id: data.patient_id,
         flas_card_id: flashCard.id,
       };
-      console.log({ reportBody });
 
       if (req.body.data.flashCardData.length > 0) {
         try {
           await createReport(req.body.data.flashCardData, "myfashcord.pdf");
         } catch (ex) {
           console.log(ex);
-          console.log("error in create report function");
         }
         let file = fs.readFileSync("myfashcord.pdf");
         const { originalname } = file || {};
-        console.log({ file });
+
         let fileUrl = "";
         try {
           fileUrl = await ReportHelper.uploadToS3({
@@ -124,20 +132,13 @@ class FlashCardController extends Controller {
             id: data.patient_id,
           });
         } catch (ex) {
-          console.log("error in linue number 91");
           fileUrl = "https://www.africau.edu/images/default/sample.pdf";
         }
         try {
+
           const reportService = new ReportService();
           const addReport = await reportService.addReport(reportBody);
           const report = await ReportWrapper({ data: addReport });
-          console.log(report.getId());
-          console.log({
-            name: "myfashcord.pdf",
-            document: fileUrl,
-            parent_type: DOCUMENT_PARENT_TYPE.REPORT,
-            parent_id: report.getId(),
-          });
           await uploadDocumentService.addDocument({
             name: "myfashcord.pdf",
             document: fileUrl,
@@ -145,7 +146,7 @@ class FlashCardController extends Controller {
             parent_id: report.getId(),
           });
         } catch (ex) {
-          console.log("error in report service");
+
           console.log(ex);
         }
       }
@@ -219,7 +220,7 @@ class FlashCardController extends Controller {
           "Please select correct FlashCard to update"
         );
       }
-      console.log("update flascard called. - 1");
+
       const flashCardService = new FlashCardService();
       let flashCard = await flashCardService.updateFlashCardByData(body, id);
       let { tx_activity_id, activity_status, is_published } = body;
@@ -228,9 +229,6 @@ class FlashCardController extends Controller {
       } else {
         activity_status = "inprogress";
       }
-
-      console.log("update flascard called. - 2");
-      console.log({ activity_status });
       let txActivity = new TxActivity();
       await txActivity.updateTxActivities({ activity_status }, tx_activity_id);
       //
@@ -238,34 +236,26 @@ class FlashCardController extends Controller {
       let tranaction_activities = await txActivity.getAllTxActivitiesByData({
         id: tx_activity_id,
       });
-      console.log("==========================================");
-      console.log({ tranaction_activities });
 
       let { service_sub_tx_id } = tranaction_activities[0];
-      console.log("==========================================");
-      console.log({ service_sub_tx_id });
-      console.log("update flascard called. - 3");
       if (service_sub_tx_id) {
         let userservicesmapping =
           await serviceSubscriptionTx.getAllServiceSubscriptionTx({
             id: service_sub_tx_id,
           });
-        console.log("==========================================");
-        console.log({ userservicesmapping });
+
+
         if (userservicesmapping && userservicesmapping.length > 0) {
-          console.log("update flascard called. - 4");
+
           const serviceUserMappingService = new ServiceUserMappingService();
           let serviceUserMappingId = userservicesmapping[0].id;
-          console.log("==========================================");
-          console.log({ serviceUserMappingId });
+
           let serviceUserMapping =
             await serviceUserMappingService.updateServiceUserMapping(
               { patient_status: activity_status },
               serviceUserMappingId
             );
-          console.log("===============================");
-          console.log({ serviceUserMapping });
-          console.log("update flascard called. - 5");
+
         }
       }
 

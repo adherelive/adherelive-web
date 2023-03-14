@@ -322,7 +322,7 @@ class PatientController extends Controller {
         } = {},
       } = req;
 
-      console.log({ userId, userRoleId, userCategoryId, patient_id });
+
 
       // let newData = [];
       // if (req.userDetails.userCategoryData.care_plan_ids) {
@@ -388,7 +388,7 @@ class PatientController extends Controller {
           }
         });
       }
-      console.log({ latestCarePlanId });
+
       // get all careplan templates for user(doctor)
       const carePlanTemplates =
         (await carePlanTemplateService.getCarePlanTemplateData({
@@ -2027,8 +2027,6 @@ class PatientController extends Controller {
 
       let allPatientIds = [];
 
-      console.log(1);
-
       const {
         offset = 0,
         sort_name = null,
@@ -2044,7 +2042,7 @@ class PatientController extends Controller {
       const offsetLimit = parseInt(limit, 10) * parseInt(offset, 10);
       const endLimit = parseInt(limit, 10);
       const getWatchListPatients = parseInt(watchlist, 10) === 0 ? 0 : 1;
-      console.log(2);
+
       let patientsForDoctor = [];
 
       let rowData = [];
@@ -2061,7 +2059,7 @@ class PatientController extends Controller {
           secondary_doctor_role_id: userRoleId,
         },
       });
-      console.log(3);
+
 
       let careplanIdsAsSecondaryDoctor = [];
 
@@ -2072,25 +2070,20 @@ class PatientController extends Controller {
           careplanIdsAsSecondaryDoctor.push(id);
         }
       }
-      console.log(4);
+
       const secondary_careplan_ids = careplanIdsAsSecondaryDoctor.toString()
         ? careplanIdsAsSecondaryDoctor.toString()
         : null;
 
-      console.log(5);
       if (category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP) {
         let watchlistQuery = "";
         const doctor = await doctorService.getDoctorByData({
           user_id: userId,
         });
 
-        console.log(6);
-
         if (doctor && getWatchListPatients) {
           const doctorData = await DoctorWrapper(doctor);
-
           const doctorAllInfo = await doctorData.getAllInfo();
-          console.log(7);
           // let { watchlist_patient_ids = []} = doctorAllInfo || {};
           let watchlist_patient_ids = [];
           const watchlistRecords =
@@ -2098,12 +2091,11 @@ class PatientController extends Controller {
               user_role_id: userRoleId,
             });
 
-          console.log(8);
           // watchlisted patient ids
 
           if (watchlistRecords && watchlistRecords.length) {
             for (let i = 0; i < watchlistRecords.length; i++) {
-              console.log({ watchlistRecord: watchlistRecords.length });
+
               const watchlistWrapper = await DoctorPatientWatchlistWrapper(
                 watchlistRecords[i]
               );
@@ -2111,14 +2103,14 @@ class PatientController extends Controller {
               watchlist_patient_ids.push(patientId);
             }
           }
-          console.log(9);
+
           watchlist_patient_ids = watchlist_patient_ids.length
             ? watchlist_patient_ids
             : null; // if no patient id watchlisted , check patinetIds for (null) as watchlist_patient_ids=[]
           watchlistQuery = `AND (carePlan.user_role_id = ${userRoleId} OR carePlan.id in ( ${secondary_careplan_ids} ) ) AND carePlan.patient_id IN (${watchlist_patient_ids})`;
         }
 
-        console.log(10);
+
 
         // filter to get name sorted paginated data
         if (sort_name) {
@@ -2135,10 +2127,10 @@ class PatientController extends Controller {
               // watchlist: getWatchListPatients,
               secondary_careplan_ids,
             })) || [];
-          console.log(11);
+
         } else if (sort_createdAt) {
           // filter to get date sorted paginated data
-          console.log(12);
+
           const order = sort_createdAt === "0" ? "ASC" : "DESC";
           [count, patientsForDoctor] =
             (await carePlanService.getPaginatedPatients({
@@ -2150,24 +2142,24 @@ class PatientController extends Controller {
               watchlist: watchlistQuery,
               secondary_careplan_ids,
             })) || [];
-          console.log(13);
+
         } else if (filter_treatment) {
-          console.log(14);
+
           const allTreatments =
             (await treatmentService.searchByName(filter_treatment)) || [];
-          console.log(15);
+
           // get all treatment
           if (allTreatments.length > 0) {
-            console.log(16);
+
             for (let index = 0; index < allTreatments.length; index++) {
-              console.log({ treatmentlength: allTreatments.length });
+
               const treatment = await TreatmentWrapper(allTreatments[index]);
               treatments = {
                 ...treatments,
                 [treatment.getTreatmentId()]: treatment.getBasicInfo(),
               };
             }
-            console.log(17);
+
 
             const treatmentIds =
               allTreatments.map((treatment) => treatment.id) || [];
@@ -2183,13 +2175,13 @@ class PatientController extends Controller {
                 user_role_id: userRoleId,
                 secondary_careplan_ids,
               })) || [];
-            console.log(18);
+
           }
         } else if (filter_diagnosis) {
           // diagnosis filter
 
           let diagnosis_type = null;
-          console.log(19);
+
           if (DIAGNOSIS_TYPE.FINAL.text.includes(filter_diagnosis)) {
             diagnosis_type = DIAGNOSIS_TYPE.FINAL.id;
           } else if (DIAGNOSIS_TYPE.PROBABLE.text.includes(filter_diagnosis)) {
@@ -2210,12 +2202,12 @@ class PatientController extends Controller {
               watchlist: watchlistQuery,
               secondary_careplan_ids,
             })) || [];
-          console.log(20);
+
         }
         if (patientsForDoctor.length > 0) {
-          console.log(21);
+
           for (let index = 0; index < patientsForDoctor.length; index++) {
-            console.log({ doctroLength: patientsForDoctor.length });
+
             const {
               care_plan_id,
               care_plan_details,
@@ -2247,7 +2239,6 @@ class PatientController extends Controller {
               },
             });
           }
-          console.log(22);
         }
       }
       //count
@@ -2608,7 +2599,6 @@ class PatientController extends Controller {
   };
 
   createPatient = async (req, res) => {
-    console.log("create Patient Called.");
     try {
       const {
         mobile_number = "",
@@ -2628,9 +2618,7 @@ class PatientController extends Controller {
 
       let { his_id } = req;
 
-      console.log("===================");
-      console.log({ req, his_id });
-      console.log("===================");
+
 
       if (
         patient_uid === null ||
@@ -2734,7 +2722,6 @@ class PatientController extends Controller {
         }
 
         let newUserId = userData.getId();
-        console.log({ newUserId });
         // const uid = uuidv4();
         const birth_date = moment(date_of_birth);
         const age = getAge(date_of_birth);

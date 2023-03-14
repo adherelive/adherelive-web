@@ -44,13 +44,13 @@ class ServiceSubscriptionTxController extends Controller {
         provider_type: req.userDetails.userRoleData.basic_info.linked_with,
       };
     }
-    console.log({ testone: "testvalue" }, req.query);
+
     if (status) data["status"] = status;
 
     const txActivitiesService = new TxActivities();
-    console.log("testing data is", { data });
+
     let txActivities = await txActivitiesService.getAllTxActivitiesByData(data);
-    console.log(txActivities);
+
     let response = [];
     for (let i in txActivities) {
       txActivities[i].doctor = await DoctorService.getDoctorByDoctorId(
@@ -60,11 +60,7 @@ class ServiceSubscriptionTxController extends Controller {
         id: txActivities[i].patient_id,
       });
       const patientData = await PatientWrapper(users);
-      console.log({
-        myuserdetails: users.user.getBasicInfo,
-        patoemtdo: txActivities[i].patient_id,
-      });
-      console.log("users", users);
+
       txActivities[i].patient = patientData;
       let serviceSubscription = new ServiceSubscription();
 
@@ -83,6 +79,79 @@ class ServiceSubscriptionTxController extends Controller {
     }
     return raiseSuccess(res, 200, { ...txActivities }, "Success");
   };
+
+
+
+  getTxActivitiesbyPatient = async (req, res) => {
+
+    const { raiseSuccess, raiseClientError, raiseServerError } = this;
+    const {
+      userDetails: { userId, userData: { category } = {}, userCategoryId } = {},
+      permissions = [],
+    } = req;
+    let doctor_id,
+      provider_id = null;
+    let data = null;
+    let { status, patient_id, service_offering_id, service_subscription_id } = req.query;
+    if (category === USER_CATEGORY.DOCTOR) {
+      doctor_id = req.userDetails.userCategoryData.basic_info.id;
+      data = {
+        doctor_id,
+        provider_type: USER_CATEGORY.DOCTOR, patient_id
+      };
+      if (service_offering_id) data = { ...data, service_offering_id }
+      if (service_subscription_id) data = { ...data, service_subscription_id }
+    }
+
+    if (req.userDetails.userRoleData.basic_info.linked_with === "provider") {
+      provider_id = req.userDetails.userRoleData.basic_info.linked_id;
+      doctor_id = req.userDetails.userCategoryData.basic_info.id;
+      data = {
+        doctor_id, patient_id,
+        provider_id,
+        provider_type: req.userDetails.userRoleData.basic_info.linked_with,
+      };
+      if (service_offering_id) data = { ...data, service_offering_id }
+      if (service_subscription_id) data = { ...data, service_subscription_id }
+
+    }
+
+    if (status) data["status"] = status;
+
+    const txActivitiesService = new TxActivities();
+
+    let txActivities = await txActivitiesService.getAllTxActivitiesByData(data);
+
+    let response = [];
+    for (let i in txActivities) {
+      txActivities[i].doctor = await DoctorService.getDoctorByDoctorId(
+        txActivities[i].doctor_id
+      );
+      let users = await PatientService.getPatientById({
+        id: txActivities[i].patient_id,
+      });
+      const patientData = await PatientWrapper(users);
+
+      txActivities[i].patient = patientData;
+      let serviceSubscription = new ServiceSubscription();
+
+      let serviceSubscriptionDetails =
+        await serviceSubscription.getServiceSubscriptionByData({
+          id: txActivities[i].service_subscription_id,
+        });
+      txActivities[i]["serviceSubscriptionDetails"] =
+        serviceSubscriptionDetails;
+      let serviceOffering = new ServiceOffering();
+      let details = await serviceOffering.getServiceOfferingByData({
+        id: txActivities[i].service_offering_id,
+      });
+      txActivities[i]["details"] = details;
+      response.push(txActivities);
+    }
+    return raiseSuccess(res, 200, { ...txActivities }, "Success");
+  };
+
+
 
   updateTxActivities = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
