@@ -151,10 +151,6 @@ careplan update and create api.
 update bar code.
 and add followup advise in update patient careplan's validator
 
-
-
-
-
 ## New Method To Deploy Backend & Frontend on Prod Server
 
 Build the image using below command
@@ -169,14 +165,11 @@ list the service using below command
 $ docker service ls
 ```
 
-
 update the image
 
 ```sh
 docker image update --image=image_name:tag service_name
 ```
-
-
 
 ## New Method To Deploy Backend & Frontend on Dev Server
 
