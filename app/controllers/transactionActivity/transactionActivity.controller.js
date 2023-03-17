@@ -144,6 +144,7 @@ class ServiceSubscriptionTxController extends Controller {
       let serviceOffering = new ServiceOffering();
       let details = await serviceOffering.getServiceOfferingByData({
         id: txActivities[i].service_offering_id,
+        service_subscription_id: null
       });
       txActivities[i]["details"] = details;
       response.push(txActivities);
