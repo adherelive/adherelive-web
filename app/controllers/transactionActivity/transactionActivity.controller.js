@@ -99,7 +99,7 @@ class ServiceSubscriptionTxController extends Controller {
         doctor_id,
         provider_type: USER_CATEGORY.DOCTOR, patient_id
       };
-      if (service_offering_id) data = { ...data, service_offering_id }
+      if (service_offering_id) data = { ...data, service_offering_id, service_subscription_id: null }
       if (service_subscription_id) data = { ...data, service_subscription_id }
     }
 
@@ -111,8 +111,12 @@ class ServiceSubscriptionTxController extends Controller {
         provider_id,
         provider_type: req.userDetails.userRoleData.basic_info.linked_with,
       };
-      if (service_offering_id) data = { ...data, service_offering_id, service_subscription_id: null }
-      if (service_subscription_id) data = { ...data, service_subscription_id }
+      if (service_offering_id) {
+        data = { ...data, service_offering_id, service_subscription_id: null }
+      }
+      if (service_subscription_id) {
+        data = { ...data, service_subscription_id }
+      }
 
     }
 
@@ -163,7 +167,7 @@ class ServiceSubscriptionTxController extends Controller {
         // serviceSubscriptionDetails;
         let serviceOffering = new ServiceOffering();
         let details = await serviceOffering.getServiceOfferingByData({
-          id: txActivities[i].service_offering_id
+          id: txActivities[i].service_offering_id,
         });
         txActivities[i]["details"] = details;
         response.push(txActivities);
