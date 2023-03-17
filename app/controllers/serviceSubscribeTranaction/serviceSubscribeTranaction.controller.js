@@ -251,7 +251,7 @@ class ServiceSubscriptionTxController extends Controller {
             patient_status: "inactive",
             amount,
             billing_frequency: "onces",
-            due_date: moment(new Date(), "DD-MM-YYYY").add(30, "days"),
+            due_date: moment(new Date(), "DD-MM-YYYY").add(1, 'months'),
             service_subscription_id: service_subscription_id,
           };
 
