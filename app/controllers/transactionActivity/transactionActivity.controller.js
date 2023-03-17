@@ -111,7 +111,7 @@ class ServiceSubscriptionTxController extends Controller {
         provider_id,
         provider_type: req.userDetails.userRoleData.basic_info.linked_with,
       };
-      if (service_offering_id) data = { ...data, service_offering_id }
+      if (service_offering_id) data = { ...data, service_offering_id, service_subscription_id: null }
       if (service_subscription_id) data = { ...data, service_subscription_id }
 
     }
@@ -134,20 +134,36 @@ class ServiceSubscriptionTxController extends Controller {
 
       txActivities[i].patient = patientData;
       let serviceSubscription = new ServiceSubscription();
-
-      let serviceSubscriptionDetails =
-        await serviceSubscription.getServiceSubscriptionByData({
-          id: txActivities[i].service_subscription_id,
+      if (txActivities[i].service_subscription_id) {
+        let serviceSubscriptionDetails =
+          await serviceSubscription.getServiceSubscriptionByData({
+            id: txActivities[i].service_subscription_id,
+          });
+        txActivities[i]["serviceSubscriptionDetails"] =
+          serviceSubscriptionDetails;
+        let serviceOffering = new ServiceOffering();
+        let details = await serviceOffering.getServiceOfferingByData({
+          id: txActivities[i].service_offering_id
         });
-      txActivities[i]["serviceSubscriptionDetails"] =
-        serviceSubscriptionDetails;
-      let serviceOffering = new ServiceOffering();
-      let details = await serviceOffering.getServiceOfferingByData({
-        id: txActivities[i].service_offering_id,
-        service_subscription_id: null
-      });
-      txActivities[i]["details"] = details;
-      response.push(txActivities);
+        txActivities[i]["details"] = details;
+        response.push(txActivities);
+      }
+
+      if (txActivities[i].service_subscription_id == null) {
+        // let serviceSubscriptionDetails =
+        // await serviceSubscription.getServiceSubscriptionByData({
+        // id: txActivities[i].service_subscription_id,
+        // });
+        // txActivities[i]["serviceSubscriptionDetails"] =
+        // serviceSubscriptionDetails;
+        let serviceOffering = new ServiceOffering();
+        let details = await serviceOffering.getServiceOfferingByData({
+          id: txActivities[i].service_offering_id
+        });
+        txActivities[i]["details"] = details;
+        response.push(txActivities);
+      }
+
     }
     return raiseSuccess(res, 200, { ...txActivities }, "Success");
   };
