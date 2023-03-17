@@ -134,7 +134,12 @@ class ServiceSubscriptionTxController extends Controller {
 
       txActivities[i].patient = patientData;
       let serviceSubscription = new ServiceSubscription();
-      if (txActivities[i].service_subscription_id) {
+
+      console.log("=========================================")
+      console.log({ value: txActivities[i].service_subscription_id != null, mytestservice_subid: txActivities[i].service_subscription_id })
+      console.log("=========================================")
+
+      if (txActivities[i].service_subscription_id != null) {
         let serviceSubscriptionDetails =
           await serviceSubscription.getServiceSubscriptionByData({
             id: txActivities[i].service_subscription_id,
@@ -148,9 +153,7 @@ class ServiceSubscriptionTxController extends Controller {
         txActivities[i]["details"] = details;
         response.push(txActivities);
       }
-      console.log("=========================================")
-      console.log({ mytestservice_subid: txActivities[i].service_subscription_id })
-      console.log("=========================================")
+
       if (txActivities[i].service_subscription_id == null) {
         // let serviceSubscriptionDetails =
         // await serviceSubscription.getServiceSubscriptionByData({
