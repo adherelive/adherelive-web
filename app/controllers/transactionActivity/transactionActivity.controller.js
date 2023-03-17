@@ -148,7 +148,9 @@ class ServiceSubscriptionTxController extends Controller {
         txActivities[i]["details"] = details;
         response.push(txActivities);
       }
-
+      console.log("=========================================")
+      console.log({ mytestservice_subid: txActivities[i].service_subscription_id })
+      console.log("=========================================")
       if (txActivities[i].service_subscription_id == null) {
         // let serviceSubscriptionDetails =
         // await serviceSubscription.getServiceSubscriptionByData({
