@@ -34,7 +34,7 @@ class RenewTxActivity {
 
 
         console.log("================ txActivities ============ txActivities ================")
-        console.log({ newTx })
+        console.log({ newTxs })
         console.log("================ txActivities ============ txActivities ================")
     } catch (error) {
       Log.debug("RenewSubscription 500 error", error);
