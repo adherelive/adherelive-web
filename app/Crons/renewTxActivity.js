@@ -17,6 +17,7 @@ class RenewTxActivity {
                 $gt: moment().add(7, 'days').toDate()
             }
         }
+        console.log({data})
         let serviceSubscriptionUserMapping = new ServiceSubscriptionUserMapping()
         let newTxs = await serviceSubscriptionUserMapping.getAllServiceSubscriptionUserMappingByData(data)
 
