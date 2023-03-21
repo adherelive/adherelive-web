@@ -38,6 +38,7 @@ class RenewTxActivity {
                 });
                 const transaction = await Database.initTransaction();
                 try {
+                    console.log("updating tx table")
                     await Database.getModel(serviceSubscribeTranactionTable).update(
                         { is_next_tx_create: true },
                         {
@@ -48,12 +49,14 @@ class RenewTxActivity {
                         }
                     );
                     const txDetails = { ...all_details[0], due_date: new Date() };
+                    console.log("creating in  tx table")
                     await Database.getModel(
                         serviceSubscribeTranactionTable
                     ).create(txDetails, {
                         raw: true,
                         transaction,
                     });
+                    console.log("updating in  userservicesubmapping")
                     await Database.getModel(
                         serviceSubscriptionUserMappingTable
                     ).update({ next_recharge_date: newTxs[i]["next_recharge_date"] }, {
@@ -66,6 +69,7 @@ class RenewTxActivity {
                     });
                     await transaction.commit();
                 } catch (ex) {
+                    console.log(ex)
                     await transaction.rollback();
                 }
             }
