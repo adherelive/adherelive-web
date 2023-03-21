@@ -36,8 +36,8 @@ class RenewTxActivity {
                     subscription_user_plan_id: newTxs[i]["id"],
                     is_next_tx_create: false,
                 });
+                const transaction = await Database.initTransaction();
                 try {
-                    const transaction = await Database.initTransaction();
                     await Database.getModel(serviceSubscribeTranactionTable).update(
                         { is_next_tx_create: true },
                         {
