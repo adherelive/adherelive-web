@@ -17,6 +17,7 @@ import ApiRouter from "../routes/api";
 import mApiRouter from "../routes/m-api";
 import EventObserver from "../app/proxySdk/eventObserver";
 import Activity from "../app/activitySdk/activityObserver";
+import renewTxActivity from "../app/Crons/renewTxActivity";
 
 Database.init();
 require("../libs/mongo")();
@@ -35,10 +36,12 @@ const app = express();
 /****************************  CRONS  *********************************/
 
 // CRONS RUNNING EVERY 1 MINUTE
-const cron = schedule.scheduleJob("*/10 * * * *", async () => {
+const cron = schedule.scheduleJob("*/1 * * * *", async () => {
   await Prior.runObserver();
   await Passed.runObserver();
   await Start.runObserver();
+  await renewTxActivity.runObserver();
+
 });
 
 const perDayUtcRule = new schedule.RecurrenceRule();

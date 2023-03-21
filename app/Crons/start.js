@@ -34,7 +34,7 @@ class StartCron {
     );
     return scheduleEvents;
   };
-
+  // TODO: running cron job on event table that have more then 17gb data and its make application slow and also logs unreadble.
   runObserver = async () => {
     try {
       Log.info("running START cron");
