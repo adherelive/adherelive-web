@@ -29,8 +29,9 @@ class RenewTxActivity {
         console.log(newTxs[i]);
         console.log("====1=1=1=1=1=1=1==1=1=1=1=1=1=1=1=1");
         console.log("id is here", newTxs[i]["id"]);
-        let all_details = serviceSubscribeTx.getAllServiceSubscriptionTx({
+        let all_details = await serviceSubscribeTx.getAllServiceSubscriptionTx({
           subscription_user_plan_id: newTxs[i]["id"],
+          is_next_tx_create: false,
         });
         console.log(all_details);
         console.log("======================================");
