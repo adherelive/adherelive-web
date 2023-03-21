@@ -48,7 +48,9 @@ class RenewTxActivity {
                             transaction,
                         }
                     );
-                    const txDetails = { ...all_details[0], due_date: new Date() };
+                    let {id:myid, ...rest} = all_details[0];
+                    console.log({ ...rest, due_date: new Date() })
+                    const txDetails = { ...rest, due_date: new Date() };
                     console.log("creating in  tx table")
                     await Database.getModel(
                         serviceSubscribeTranactionTable
