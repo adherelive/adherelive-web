@@ -70,13 +70,19 @@ class RenewTxActivity {
             );
             console.log(
               "updating in  userservicesubmapping....",
-              newTxs[i]["next_recharge_date"]
+              newTxs[i]["next_recharge_date"],
+              {
+                next_rec_date: moment(newTxs[i]["next_recharge_date"]).add(
+                  1,
+                  "month"
+                ),
+              }
             );
             await Database.getModel(serviceSubscriptionUserMappingTable).update(
               {
                 next_recharge_date: moment(newTxs[i]["next_recharge_date"]).add(
                   1,
-                  "m"
+                  "month"
                 ),
               },
               {
