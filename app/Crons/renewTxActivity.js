@@ -36,49 +36,51 @@ class RenewTxActivity {
           subscription_user_plan_id: newTxs[i]["id"],
           is_next_tx_create: false,
         });
-        const transaction = await Database.initTransaction();
-        try {
-          console.log("updating tx table");
-          await Database.getModel(serviceSubscribeTranactionTable).update(
-            { is_next_tx_create: true },
-            {
-              where: { id: all_details[0]["id"] },
-              raw: true,
-              returning: true,
-              transaction,
-            }
-          );
-          let { id: myid, ...rest } = all_details[0];
-          console.log({ ...rest, due_date: new Date() });
-          const txDetails = {
-            ...rest,
-            due_date: new Date(),
-            patient_status: "inactive",
-          };
-          console.log("creating in  tx table");
-          await Database.getModel(serviceSubscribeTranactionTable).create(
-            txDetails,
-            {
-              raw: true,
-              transaction,
-            }
-          );
-          console.log("updating in  userservicesubmapping");
-          await Database.getModel(serviceSubscriptionUserMappingTable).update(
-            { next_recharge_date: newTxs[i]["next_recharge_date"] },
-            {
-              where: {
-                id: newTxs[i]["id"],
-              },
-              raw: true,
-              returning: true,
-              transaction,
-            }
-          );
-          await transaction.commit();
-        } catch (ex) {
-          console.log(ex);
-          await transaction.rollback();
+        if (all_details.length > 0) {
+          const transaction = await Database.initTransaction();
+          try {
+            console.log("updating tx table");
+            await Database.getModel(serviceSubscribeTranactionTable).update(
+              { is_next_tx_create: true },
+              {
+                where: { id: all_details[0]["id"] },
+                raw: true,
+                returning: true,
+                transaction,
+              }
+            );
+            let { id: myid, ...rest } = all_details[0];
+            console.log({ ...rest, due_date: new Date() });
+            const txDetails = {
+              ...rest,
+              due_date: new Date(),
+              patient_status: "inactive",
+            };
+            console.log("creating in  tx table");
+            await Database.getModel(serviceSubscribeTranactionTable).create(
+              txDetails,
+              {
+                raw: true,
+                transaction,
+              }
+            );
+            console.log("updating in  userservicesubmapping");
+            await Database.getModel(serviceSubscriptionUserMappingTable).update(
+              { next_recharge_date: newTxs[i]["next_recharge_date"] },
+              {
+                where: {
+                  id: newTxs[i]["id"],
+                },
+                raw: true,
+                returning: true,
+                transaction,
+              }
+            );
+            await transaction.commit();
+          } catch (ex) {
+            console.log(ex);
+            await transaction.rollback();
+          }
         }
       }
     } catch (error) {
