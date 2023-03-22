@@ -56,7 +56,7 @@ class RenewTxActivity {
             console.log({ ...rest, due_date: new Date() });
             const txDetails = {
               ...rest,
-              due_date: new Date(),
+              due_date: newTxs[i]["next_recharge_date"],
               patient_status: "inactive",
             };
             console.log("creating in  tx table new entry -> ", { txDetails });
@@ -73,7 +73,12 @@ class RenewTxActivity {
               newTxs[i]["next_recharge_date"]
             );
             await Database.getModel(serviceSubscriptionUserMappingTable).update(
-              { next_recharge_date: newTxs[i]["next_recharge_date"] },
+              {
+                next_recharge_date: moment(newTxs[i]["next_recharge_date"]).add(
+                  1,
+                  "m"
+                ),
+              },
               {
                 where: {
                   id: newTxs[i]["id"],
