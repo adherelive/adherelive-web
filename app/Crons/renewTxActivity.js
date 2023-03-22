@@ -36,6 +36,9 @@ class RenewTxActivity {
           subscription_user_plan_id: newTxs[i]["id"],
           is_next_tx_create: false,
         });
+
+        console.log({ all_details });
+
         if (all_details.length > 0) {
           const transaction = await Database.initTransaction();
           try {
@@ -56,7 +59,8 @@ class RenewTxActivity {
               due_date: new Date(),
               patient_status: "inactive",
             };
-            console.log("creating in  tx table");
+            console.log("creating in  tx table new entry -> ", { txDetails });
+
             await Database.getModel(serviceSubscribeTranactionTable).create(
               txDetails,
               {
@@ -64,7 +68,10 @@ class RenewTxActivity {
                 transaction,
               }
             );
-            console.log("updating in  userservicesubmapping");
+            console.log(
+              "updating in  userservicesubmapping....",
+              newTxs[i]["next_recharge_date"]
+            );
             await Database.getModel(serviceSubscriptionUserMappingTable).update(
               { next_recharge_date: newTxs[i]["next_recharge_date"] },
               {
