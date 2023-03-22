@@ -37,7 +37,7 @@ class RenewTxActivity {
           is_next_tx_create: false,
         });
 
-        console.log({ all_details });
+        console.log({ id: newTxs[i]["id"], all_details });
 
         if (all_details.length > 0) {
           const transaction = await Database.initTransaction();
