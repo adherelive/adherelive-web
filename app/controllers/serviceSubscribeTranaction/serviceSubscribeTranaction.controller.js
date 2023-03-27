@@ -111,7 +111,6 @@ class ServiceSubscriptionTxController extends Controller {
       };
     }
 
-
     // const serviceSubscribeTx = new ServiceSubscribeTx();
     let tranactions = await ServiceSubscribeTx.getAllServiceSubscriptionTx(
       data
@@ -176,7 +175,10 @@ class ServiceSubscriptionTxController extends Controller {
       });
 
       await ServiceSubscribeTx.updateServiceSubscriptionTx(
-        { patient_status: "active" },
+        {
+          patient_status: "active",
+          due_date: moment(new Date(), "DD-MM-YYYY"),
+        },
         id
       );
 
@@ -201,15 +203,32 @@ class ServiceSubscriptionTxController extends Controller {
       if (subscription_user_plan_id) {
         const serviceSubUserMapping =
           new ServiceSubscriptionUserMappingService();
+
+        let userServicesSubscriptions =
+          await serviceSubUserMapping.getAllServiceSubscriptionUserMappingByData(
+            { id: subscription_user_plan_id }
+          );
+
+        let { durations } = userServicesSubscriptions[0][""];
+
         serviceSubUserMapping.updateServiceSubscriptionUserMapping(
-          { patient_status: "active" },
+          {
+            patient_status: "active",
+            service_date: moment(new Date(), "DD-MM-YYYY"),
+            next_recharge_date: moment(new Date(), "DD-MM-YYYY").add(
+              1,
+              "months"
+            ),
+            expire_date: moment(new Date(), "DD-MM-YYYY").add(
+              durations,
+              "months"
+            ),
+          },
           subscription_user_plan_id
         );
       }
 
-
       if (service_plan_id) {
-
         let response = [];
         let activitieData = {
           service_offering_id: service_plan_id,
@@ -239,7 +258,6 @@ class ServiceSubscriptionTxController extends Controller {
 
       let response = [];
       Object.keys(services).forEach((id) => {
-
         for (let i = 0; i < services[id]["service_frequency"]; i++) {
           let activitieData = {
             service_offering_id: services[id]["service_plan_id"],
@@ -251,7 +269,7 @@ class ServiceSubscriptionTxController extends Controller {
             patient_status: "inactive",
             amount,
             billing_frequency: "onces",
-            due_date: moment(new Date(), "DD-MM-YYYY").add(1, 'months'),
+            due_date: moment(new Date(), "DD-MM-YYYY").add(1, "months"),
             service_subscription_id: service_subscription_id,
           };
 
