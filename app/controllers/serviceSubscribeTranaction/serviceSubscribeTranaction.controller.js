@@ -209,7 +209,7 @@ class ServiceSubscriptionTxController extends Controller {
             { id: subscription_user_plan_id }
           );
 
-        let { durations } = userServicesSubscriptions[0][""];
+        let { durations } = userServicesSubscriptions[0];
 
         serviceSubUserMapping.updateServiceSubscriptionUserMapping(
           {
