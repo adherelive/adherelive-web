@@ -23,10 +23,13 @@ class ServiceSubscriptionTxController extends Controller {
       userDetails: { userId, userData: { category } = {}, userCategoryId } = {},
       permissions = [],
     } = req;
+
+
     let doctor_id,
       provider_id = null;
     let data = null;
-    let { status } = req.query;
+    let { status, offset = 0, sort_duedate = null } = req.query;
+
     if (category === USER_CATEGORY.DOCTOR) {
       doctor_id = req.userDetails.userCategoryData.basic_info.id;
       data = {
@@ -49,7 +52,7 @@ class ServiceSubscriptionTxController extends Controller {
 
     const txActivitiesService = new TxActivities();
 
-    let txActivities = await txActivitiesService.getAllTxActivitiesByData(data);
+    let txActivities = await txActivitiesService.getAllTxActivitiesByData(data, sort_duedate);
 
     let response = [];
     for (let i in txActivities) {
