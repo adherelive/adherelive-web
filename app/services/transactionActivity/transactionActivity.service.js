@@ -22,13 +22,21 @@ export default class ServiceSubscriptionMapping {
     }
   };
 
-  getAllTxActivitiesByData = async (data) => {
-    try {
-      let mappingData = await Database.getModel(TABLE_NAME).findAll({
+  getAllTxActivitiesByData = async (data, sort_duedate = null) => {
+    let query_args = {
+      where: data,
+      raw: true,
+      // order: [["test_date", "DESC"]],
+    }
+    if (sort_duedate) {
+      query_args = {
         where: data,
         raw: true,
-        // order: [["test_date", "DESC"]],
-      });
+        order: [["due_date", sort_duedate.toUpperCase()]],
+      }
+    }
+    try {
+      let mappingData = await Database.getModel(TABLE_NAME).findAll(query_args);
 
       // for (let svc in mappingData) {
       //     let serviceOfferingService = new ServiceOfferingService();
