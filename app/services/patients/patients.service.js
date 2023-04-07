@@ -82,7 +82,7 @@ class PatientsService {
     try {
       const patient = await Database.getModel(TABLE_NAME).findAll({
         where: {
-          [Op.and]: [
+          [Op.or]: [
             {
               first_name: {
                 [Op.like]: `${keyword}%`,
