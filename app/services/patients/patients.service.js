@@ -82,12 +82,25 @@ class PatientsService {
     try {
       const patient = await Database.getModel(TABLE_NAME).findAll({
         where: {
-          [Op.or]: [
-            { first_name: `%${keyword}%` },
-            { middle_name: `%${keyword}%` },
-            { last_name: `%${keyword}%` },
+          [Op.and]: [
+            {
+              first_name: {
+                [Op.like]: `${value}%`,
+              },
+            },
+            {
+              middle_name: {
+                [Op.like]: `${value}%`,
+              },
+            },
+            {
+              last_name: {
+                [Op.like]: `${value}%`,
+              },
+            },
           ],
         },
+
         include: [Database.getModel(userTableName)],
       });
       return patient;
