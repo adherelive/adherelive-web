@@ -19,7 +19,7 @@ services:
     tty: true
     volumes:
       - ./:/usr/src/app
-      - ./.node_env_repo:/usr/src/app/.env_repo
+      - ./.node_env:/usr/src/app/.env
     links:
       - mysql
       - minio1
@@ -48,7 +48,7 @@ services:
       - "27017:27017"
     volumes:
       - adhere_mongo:/data/db
-    
+
   minio1:
     image: minio/minio
     volumes:

@@ -85,17 +85,17 @@ class PatientsService {
           [Op.or]: [
             {
               first_name: {
-                [Op.like]: `${keyword}%`,
+                [Op.like]: `%${keyword}%`,
               },
             },
             {
               middle_name: {
-                [Op.like]: `${keyword}%`,
+                [Op.like]: `%${keyword}%`,
               },
             },
             {
               last_name: {
-                [Op.like]: `${keyword}%`,
+                [Op.like]: `%${keyword}%`,
               },
             },
           ],

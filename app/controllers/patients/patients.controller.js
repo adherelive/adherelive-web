@@ -897,23 +897,21 @@ class PatientController extends Controller {
       if (category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP) {
         authDoctor = await doctorService.getDoctorByData({ user_id: userId });
       }
-      console.log(req.query);
-      console.log(value);
       const patients = await patientService.getPatientByName(value);
-      console.log({ patients });
-      return raiseSuccess(
-        res,
-        200,
-        { patients },
-        "Patients fetched successfully"
-      );
-      // else
-      //   return raiseSuccess(
-      //     res,
-      //     201,
-      //     {},
-      //     "No patient linked with the given name"
-      //   );
+      if (patients.length > 0)
+        return raiseSuccess(
+          res,
+          200,
+          { patients },
+          "Patients fetched successfully"
+        );
+      else
+        return raiseSuccess(
+          res,
+          201,
+          {},
+          "No patient linked with the given phone number"
+        );
     } catch (error) {
       Logger.debug("searchPatient 500 error", error);
       return raiseServerError(res);
