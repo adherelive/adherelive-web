@@ -19,7 +19,7 @@ services:
     tty: true
     volumes:
       - ./:/usr/src/app
-      - ./.node_env:/usr/src/app/.env
+      - ./.node_env_repo:/usr/src/app/.env_repo
     links:
       - mysql
       - minio1

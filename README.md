@@ -195,3 +195,66 @@ $ docker-compose  up -d frontend
 ```
 
 <!-- TODO: https://demo.adhere.live/api/servicesubtx/activity -->
+
+## Complete steps to build and deploy the PROD server code
+
+### Backend
+
+```shell
+$ cd ./adherelive-web
+
+$ vi Dockerfile
+FROM node:16.10.0
+RUN useradd -d /home/azureuser -m -s /bin/bash azureuser
+RUN mkdir -p /usr/src/app
+WORKDIR /usr/src/app
+COPY package.json /usr/src/app
+COPY package-lock.json /usr/src/app
+RUN npm install && npm cache clean --force --loglevel=error
+COPY .env_prod_new /usr/src/app/.env
+COPY . /usr/src/app
+EXPOSE 5000
+CMD ["npm", "start"]
+HEALTHCHECK NONE
+
+$ docker image build -t adherelive:portal-be .
+
+
+```
+
+### Frontend
+
+```shell
+$ cd ./adherelive-fe
+
+$ vi Dockerfile
+FROM node:16.10.0 as builder
+LABEL application="adhere-live-frontend"
+LABEL owner="Akshay Nagargoje"
+RUN mkdir /code
+WORKDIR /code
+COPY package*.json ./
+RUN npm install
+COPY . .
+RUN cp .env_prod .env
+RUN npm run build
+# stage 2
+FROM nginx
+EXPOSE 80
+COPY nginx/nginx.conf /etc/nginx/conf.d/default.conf
+COPY --from=builder /code/build/ /usr/share/nginx/html
+
+$ docker image build -t adherelive:portal-fe .
+```
+
+### Final steps to update the existing builds
+
+```shell
+$ docker service ls
+ID             NAME              MODE         REPLICAS   IMAGE                  PORTS
+y4568darcj1j   awesome_bose      replicated   1/1        adherelive:portal-fe   *:3000->80/tcp
+ogpoiobdkjto   blissful_edison   replicated   1/1        adherelive:portal      *:5000->5000/tcp
+
+$ docker service update --image=adherelive:portal-be blissful_edison
+$ docker service update --image=adherelive:portal-fe awesome_bose
+```

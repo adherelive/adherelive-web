@@ -23,25 +23,21 @@ services:
       $${!}; done;'
 
   node:
-    image: 'gagneet/adherelive:portal'
+    build: .
+    #image: gagneet/adherelive:portal
+    command: ["npm", "run", "start"]
     restart: always
-    command:
-      - npm
-      - run
-      - start
     ports:
-      - '5000:5000'
-      #- "3000:3000"
+      - "${WEB_SERVER_PORT}:5000"
+      - "${REACT_SERVER_PORT}:3000"
+    tty: true
+    volumes:
+      - ./:/usr/src/app
+      - ./.node_env_repo:/usr/src/app/.env_repo
     logging:
       options:
         max-size: 150m
         max-file: '3'
-    
-    #command: [ "npm", "run", "dev" ]
-    #tty: true
-    volumes:
-      #- ./:/usr/src/app
-      - './.node_env:/usr/src/app/.env'
     links:
       #- mysql
       - minio1

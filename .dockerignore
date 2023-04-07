@@ -8,10 +8,10 @@ dump
 emails
 !public/.gitkeep
 public
-.env
-.node_env
+.env_repo
+.node_env_repo
 docker-compose.yaml
 docker-compose.prod.yaml
-docker-compose-prod-ssl.yaml
+docker-compose.yaml
 output.log
 README.md
