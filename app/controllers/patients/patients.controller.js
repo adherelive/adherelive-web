@@ -322,8 +322,6 @@ class PatientController extends Controller {
         } = {},
       } = req;
 
-
-
       // let newData = [];
       // if (req.userDetails.userCategoryData.care_plan_ids) {
       //   newData = req.userDetails.userCategoryData.care_plan_ids[userRoleId];
@@ -881,6 +879,39 @@ class PatientController extends Controller {
           "No patient linked with the given phone number"
         );
       }
+    } catch (error) {
+      Logger.debug("searchPatient 500 error", error);
+      return raiseServerError(res);
+    }
+  };
+
+  searchPatientByName = async (req, res) => {
+    const { raiseSuccess, raiseServerError } = this;
+    try {
+      Logger.info(`searchPatient request query : ${req.query.value}`);
+      const { query: { value = "" } = {} } = req;
+      const {
+        userDetails: { userId, userRoleId, userData: { category } = {} } = {},
+      } = req;
+      let authDoctor = null;
+      if (category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP) {
+        authDoctor = await doctorService.getDoctorByData({ user_id: userId });
+      }
+      const patients = await patientService.getPatientByName(value);
+      if (patients.length > 0)
+        return raiseSuccess(
+          res,
+          200,
+          { patients },
+          "Patients fetched successfully"
+        );
+      else
+        return raiseSuccess(
+          res,
+          201,
+          {},
+          "No patient linked with the given phone number"
+        );
     } catch (error) {
       Logger.debug("searchPatient 500 error", error);
       return raiseServerError(res);
@@ -1568,7 +1599,8 @@ class PatientController extends Controller {
 
           const startDate = appointmentWrapper.getStartTime();
           const startDateObj = moment(startDate);
-          const { organizer, provider_id } = await appointmentWrapper.getBasicInfo();
+          const { organizer, provider_id } =
+            await appointmentWrapper.getBasicInfo();
           const diff = startDateObj.diff(now);
 
           if (diff > 0) {
@@ -1580,14 +1612,21 @@ class PatientController extends Controller {
           const { type } = appointmentWrapper.getDetails() || {};
 
           // if (type !== CONSULTATION) {
-          const { type_description = "", radiology_type = "", description = "", reason = "" } =
-            appointmentWrapper.getDetails() || {};
+          const {
+            type_description = "",
+            radiology_type = "",
+            description = "",
+            reason = "",
+          } = appointmentWrapper.getDetails() || {};
           suggestedInvestigations.push({
-            type, description,
+            type,
+            description,
             type_description,
-            radiology_type, provider_id,
+            radiology_type,
+            provider_id,
             start_date: startDate,
-            organizer, reason
+            organizer,
+            reason,
           });
           // }
         }
@@ -2060,7 +2099,6 @@ class PatientController extends Controller {
         },
       });
 
-
       let careplanIdsAsSecondaryDoctor = [];
 
       if (careplansCount) {
@@ -2095,7 +2133,6 @@ class PatientController extends Controller {
 
           if (watchlistRecords && watchlistRecords.length) {
             for (let i = 0; i < watchlistRecords.length; i++) {
-
               const watchlistWrapper = await DoctorPatientWatchlistWrapper(
                 watchlistRecords[i]
               );
@@ -2109,8 +2146,6 @@ class PatientController extends Controller {
             : null; // if no patient id watchlisted , check patinetIds for (null) as watchlist_patient_ids=[]
           watchlistQuery = `AND (carePlan.user_role_id = ${userRoleId} OR carePlan.id in ( ${secondary_careplan_ids} ) ) AND carePlan.patient_id IN (${watchlist_patient_ids})`;
         }
-
-
 
         // filter to get name sorted paginated data
         if (sort_name) {
@@ -2127,7 +2162,6 @@ class PatientController extends Controller {
               // watchlist: getWatchListPatients,
               secondary_careplan_ids,
             })) || [];
-
         } else if (sort_createdAt) {
           // filter to get date sorted paginated data
 
@@ -2142,24 +2176,19 @@ class PatientController extends Controller {
               watchlist: watchlistQuery,
               secondary_careplan_ids,
             })) || [];
-
         } else if (filter_treatment) {
-
           const allTreatments =
             (await treatmentService.searchByName(filter_treatment)) || [];
 
           // get all treatment
           if (allTreatments.length > 0) {
-
             for (let index = 0; index < allTreatments.length; index++) {
-
               const treatment = await TreatmentWrapper(allTreatments[index]);
               treatments = {
                 ...treatments,
                 [treatment.getTreatmentId()]: treatment.getBasicInfo(),
               };
             }
-
 
             const treatmentIds =
               allTreatments.map((treatment) => treatment.id) || [];
@@ -2175,7 +2204,6 @@ class PatientController extends Controller {
                 user_role_id: userRoleId,
                 secondary_careplan_ids,
               })) || [];
-
           }
         } else if (filter_diagnosis) {
           // diagnosis filter
@@ -2202,12 +2230,9 @@ class PatientController extends Controller {
               watchlist: watchlistQuery,
               secondary_careplan_ids,
             })) || [];
-
         }
         if (patientsForDoctor.length > 0) {
-
           for (let index = 0; index < patientsForDoctor.length; index++) {
-
             const {
               care_plan_id,
               care_plan_details,
@@ -2617,8 +2642,6 @@ class PatientController extends Controller {
       } = req.body;
 
       let { his_id } = req;
-
-
 
       if (
         patient_uid === null ||

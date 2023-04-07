@@ -78,6 +78,24 @@ class PatientsService {
     }
   };
 
+  getPatientByName = async (keyword) => {
+    try {
+      const patient = await Database.getModel(TABLE_NAME).findAll({
+        where: {
+          [Op.or]: [
+            { first_name: `%${keyword}%` },
+            { middle_name: `%${keyword}%` },
+            { last_name: `%${keyword}%` },
+          ],
+        },
+        include: [Database.getModel(userTableName)],
+      });
+      return patient;
+    } catch (error) {
+      throw error;
+    }
+  };
+
   getPatientById = async (data) => {
     try {
       const patient = await Database.getModel(TABLE_NAME).findOne({

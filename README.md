@@ -168,7 +168,7 @@ $ docker service ls
 update the image
 
 ```sh
-docker image update --image=image_name:tag service_name
+docker service update --image=image_name:tag service_name
 ```
 
 ## New Method To Deploy Backend & Frontend on Dev Server
@@ -193,3 +193,5 @@ $ git pull
 $ docker image build -t adhere-frontend-11 .
 $ docker-compose  up -d frontend
 ```
+
+<!-- TODO: https://demo.adhere.live/api/servicesubtx/activity -->

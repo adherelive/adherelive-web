@@ -41,6 +41,7 @@ router.post(
 
 router.get("/", Authenticated, PatientController.searchPatient);
 
+router.get("/namesearch", Authenticated, PatientController.searchPatientByName);
 router.get(
   "/pagination",
   (req, res, next) => {
