@@ -898,20 +898,20 @@ class PatientController extends Controller {
         authDoctor = await doctorService.getDoctorByData({ user_id: userId });
       }
       const patients = await patientService.getPatientByName(value);
-      if (patients.length > 0)
-        return raiseSuccess(
-          res,
-          200,
-          { patients },
-          "Patients fetched successfully"
-        );
-      else
-        return raiseSuccess(
-          res,
-          201,
-          {},
-          "No patient linked with the given phone number"
-        );
+      console.log({ patients });
+      return raiseSuccess(
+        res,
+        200,
+        { patients },
+        "Patients fetched successfully"
+      );
+      // else
+      //   return raiseSuccess(
+      //     res,
+      //     201,
+      //     {},
+      //     "No patient linked with the given name"
+      //   );
     } catch (error) {
       Logger.debug("searchPatient 500 error", error);
       return raiseServerError(res);
