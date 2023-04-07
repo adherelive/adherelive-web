@@ -258,3 +258,21 @@ ogpoiobdkjto   blissful_edison   replicated   1/1        adherelive:portal      
 $ docker service update --image=adherelive:portal-be blissful_edison
 $ docker service update --image=adherelive:portal-fe awesome_bose
 ```
+
+### Run Migrations, if required
+
+```shell
+$ docker ps
+CONTAINER ID   IMAGE                    COMMAND                  CREATED             STATUS             PORTS                                           NAMES
+13582d7d4daf   adherelive:portal        "docker-entrypoint.s…"   15 minutes ago      Up 15 minutes      5000/tcp                                        blissful_edison.1.7o9utloca9362t84ohvoccrzc
+85bbed7267ac   adherelive:portal-fe     "/docker-entrypoint.…"   About an hour ago   Up About an hour   80/tcp                                          awesome_bose.1.dhcmm7gghw1ft5rwqrhf4j3oa
+d7d0f37ac9ae   minio/minio              "/usr/bin/docker-ent…"   9 hours ago         Up 2 hours         0.0.0.0:9003->9000/tcp, :::9003->9000/tcp       adherelive-web_minio3_1
+ac666db74338   mongo:latest             "docker-entrypoint.s…"   9 hours ago         Up 3 hours         0.0.0.0:27017->27017/tcp, :::27017->27017/tcp   adherelive-web_mongo_1
+906e52a68536   minio/minio              "/usr/bin/docker-ent…"   9 hours ago         Up 2 hours         0.0.0.0:9002->9000/tcp, :::9002->9000/tcp       adherelive-web_minio2_1
+27f71e03d600   minio/minio              "/usr/bin/docker-ent…"   9 hours ago         Up 2 hours         0.0.0.0:9004->9000/tcp, :::9004->9000/tcp       adherelive-web_minio4_1
+23674bab2a97   minio/minio              "/usr/bin/docker-ent…"   9 hours ago         Up 2 hours         0.0.0.0:9001->9000/tcp, :::9001->9000/tcp       adherelive-web_minio1_1
+eaf587a93742   certbot/certbot:latest   "/bin/sh -c 'trap ex…"   7 months ago        Up 3 hours         80/tcp, 443/tcp                                 adhere_certbot_1
+
+$ docker exec -it 85bbed7267ac bash
+/# npm run migrate
+```
