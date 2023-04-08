@@ -15,6 +15,9 @@ import colors from "colors";
 
 const $ = plugins();
 
+var dartSass = require("gulp-sass");
+dartSass.compiler = require("sass");
+
 // Look for the --production flag
 const PRODUCTION = !!yargs.argv.production;
 const EMAIL = yargs.argv.to;
