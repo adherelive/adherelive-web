@@ -1,0 +1,17 @@
+node_modules
+client/node_modules
+client/build
+!client/.env
+dump
+.idea
+.git
+emails
+!public/.gitkeep
+public
+.env
+.node_env
+docker-compose.yaml
+docker-compose.prod.yaml
+docker-compose-prod-ssl.yaml
+output.log
+README.md

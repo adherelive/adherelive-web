@@ -1,0 +1,12 @@
+FROM node:16.10.0
+RUN useradd -d /home/azureuser -m -s /bin/bash azureuser
+RUN mkdir -p /usr/src/app
+WORKDIR /usr/src/app
+COPY package.json /usr/src/app
+COPY package-lock.json /usr/src/app
+RUN npm install && npm cache clean --force --loglevel=error
+COPY ./env-files/.node_env_demo /usr/src/app/.env
+COPY . /usr/src/app
+EXPOSE 5000
+CMD ["npm", "start"]
+HEALTHCHECK NONE
