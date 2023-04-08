@@ -1,48 +1,52 @@
 version: "3.0"
 
 services:
-  #nginx:
-    #build: ./nginx
-      #restart: unless-stopped
-    #ports:
-      #- "80:80"
-      #- "443:443"
-    #volumes:
-      #- ./nginx/ssl.conf:/etc/nginx/nginx.conf
-      #- ./nginx/certbot/conf:/etc/letsencrypt
-      #- ./nginx/certbot/www:/var/www/certbot
-    #links:
-      #- node
+  nginx:
+    build:
+      context: ./nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - "./nginx/ssl.conf:/etc/nginx/nginx.conf"
+      - "./nginx/certbot/conf:/etc/letsencrypt"
+      - "./nginx/certbot/www:/var/www/certbot"
+    links:
+      - node
   certbot:
-    image: 'certbot/certbot:latest'
+    image: "certbot/certbot:latest"
     restart: always
     volumes:
-      - './nginx/certbot/conf:/etc/letsencrypt'
-      - './nginx/certbot/www:/var/www/certbot'
+      - "./nginx/certbot/conf:/etc/letsencrypt"
+      - "./nginx/certbot/www:/var/www/certbot"
     entrypoint: >-
       /bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait
       $${!}; done;'
 
   node:
-    build: .
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile
     image: "gagneet/adherelive:portal"
+    env_file:
+      - ./env-files/.env_prod
     restart: always
     command:
       - npm
       - run
       - start
     ports:
-      - "5000:5000"
-      - "3000:3000"
+      - "${WEB_SERVER_PORT}:5000"
+      - "${REACT_SERVER_PORT}:3000"
     logging:
       options:
         max-size: 150m
         max-file: '3'
-    #command: [ "npm", "run", "dev" ]
     #tty: true
     volumes:
-      #- ./:/usr/src/app
-      - './.node_env:/usr/src/app/.env'
+      - "./:/usr/src/app"
+      - "./.node_env:/usr/src/app/.env"
     links:
       #- mysql
       - minio1
@@ -50,19 +54,19 @@ services:
       - minio3
       - minio4
 
-  mysql:
-    image: mysql:latest
-    ports:
-      - "3306:3306"
-    expose:
-      - 3306
-    volumes:
-      - mysql:/var/lib/mysql
-    environment:
-      - MYSQL_ROOT_PASSWORD=pass
-      - MYSQL_DATABASE=adhere
-      - MYSQL_USER=user
-      - MYSQL_PASSWORD=password
+  #mysql:
+    #image: mysql:latest
+    #ports:
+      #- "3306:3306"
+    #expose:
+      #- 3306
+    #volumes:
+      #- mysql:/var/lib/mysql
+    #environment:
+      #- MYSQL_ROOT_PASSWORD=adherelive
+      #- MYSQL_DATABASE=adhere
+      #- MYSQL_USER=adherelive
+      #- MYSQL_PASSWORD=eK7tz4s3CBkYPjUaSBAl
 
   mongo:
     image: mongo:latest
@@ -119,10 +123,10 @@ services:
 ## By default, this config uses default local driver,
 ## For custom volumes replace with volume driver configuration.
 volumes:
-  mysql:
-    driver: local
+  #mysql:
+    #driver: local
   adhere_storage_stack1: null
   adhere_storage_stack2: null
   adhere_storage_stack3: null
   adhere_storage_stack4: null
-  adhere_mongo:
+  adhere_mongo: null

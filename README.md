@@ -12,6 +12,16 @@ Web Portal for AdhereLive.
 
 ---
 
+### Pre-requisite steps for PROD
+
+Some files need to be copied to the root folder, if they do not exist:
+
+```shell
+$ cp ./env_files/.env_prod .env
+$ cp ./env_files/.node_env_prod .node_env
+$ cp ./docker/docker-compose.prod.yml docker-compose.yml
+```
+
 ### Steps to build for Production
 
 Note: Check the steps at the bottom for detailed PROD deploy
@@ -62,6 +72,16 @@ Now run these command in this particular order,
 
 ---
 
+### Pre-requisite steps for LOCAL
+
+Some files need to be copied to the root folder, if they do not exist:
+
+```shell
+$ cp ./env_files/.env_demo .env
+$ cp ./env_files/.node_env_demo .node_env
+$ cp ./docker/docker-compose.yml docker-compose.yml
+```
+
 ### Steps to build for Development
 
 1. Edit docker-compose.yml
@@ -81,6 +101,14 @@ Start off by running docker-compose.yml using the command.
 This will start building the docker image for the project. For a no cache build :-
 
 `docker-compose build --no-cache node`
+
+Use the image create to start the server
+
+```shell
+$ docker image ls
+$ docker tag <ID> gagneet/adherelive:portal
+$ docker push gagneet/adherelive:portal
+```
 
 ### 2. Run the image
 
@@ -185,6 +213,16 @@ $ docker-compose  up -d frontend
 <!-- TODO: https://demo.adhere.live/api/servicesubtx/activity -->
 
 ## Complete steps to build and deploy the PROD server code
+
+### Pre-requisite steps for PROD
+
+Some files need to be copied to the root folder, if they do not exist:
+
+```shell
+$ cp ./env_files/.env_prod .env
+$ cp ./env_files/.node_env_prod .node_env
+$ cp ./docker/docker-compose.prod.yml docker-compose.yml
+```
 
 ### Backend
 
