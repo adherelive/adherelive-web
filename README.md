@@ -274,9 +274,11 @@ Seeders are needed to be run for the data to be uploaded to the DB.
 `docker ps` will list all the running processes.
 Copy the container ID with the process marked "adhere_node".
 
-Now,
+Now
 
-1. `docker-compose exec node bash`
-2. `npm run seed`
+```shell
+$ docker-compose exec node bash
+/# npm run seed
+```
 
 ---
