@@ -1602,7 +1602,8 @@ class PatientController extends Controller {
 
           const startDate = appointmentWrapper.getStartTime();
           const startDateObj = moment(startDate);
-          const { organizer, provider_id } = await appointmentWrapper.getBasicInfo();
+          const { organizer, provider_id } =
+            await appointmentWrapper.getBasicInfo();
           const diff = startDateObj.diff(now);
 
           if (diff > 0) {
@@ -2002,8 +2003,6 @@ class PatientController extends Controller {
         //   medicines,
         // }),
         medications,
-        clinical_notes,
-        follow_up_advise,
         clinical_notes,
         follow_up_advise,
         medicines,
