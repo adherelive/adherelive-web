@@ -885,6 +885,8 @@ class PatientController extends Controller {
     }
   };
 
+  /* TODO: This function has been removed in the recent code for
+   * branch merge-2    
   searchPatientByName = async (req, res) => {
     const { raiseSuccess, raiseServerError } = this;
     try {
@@ -917,6 +919,7 @@ class PatientController extends Controller {
       return raiseServerError(res);
     }
   };
+  */
 
   searchPatientOld = async (req, res) => {
     const { raiseSuccess, raiseServerError } = this;
@@ -1599,8 +1602,7 @@ class PatientController extends Controller {
 
           const startDate = appointmentWrapper.getStartTime();
           const startDateObj = moment(startDate);
-          const { organizer, provider_id } =
-            await appointmentWrapper.getBasicInfo();
+          const { organizer, provider_id } = await appointmentWrapper.getBasicInfo();
           const diff = startDateObj.diff(now);
 
           if (diff > 0) {
