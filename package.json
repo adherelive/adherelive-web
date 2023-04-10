@@ -43,7 +43,8 @@
       "server/*",
       "routes/*",
       "helper/*",
-      "libs/*"
+      "libs/*",
+      "migrations/*"
     ],
     "delay": 2500
   },

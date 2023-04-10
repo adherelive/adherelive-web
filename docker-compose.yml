@@ -37,8 +37,8 @@ services:
       - run
       - start
     ports:
-      - "${WEB_SERVER_PORT}:5000"
-      - "${REACT_SERVER_PORT}:3000"
+      - ${WEB_SERVER_PORT}:5000
+      - ${REACT_SERVER_PORT}:3000
     logging:
       options:
         max-size: 150m
