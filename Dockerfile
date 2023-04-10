@@ -5,8 +5,8 @@ WORKDIR /usr/src/app
 COPY package.json /usr/src/app
 COPY package-lock.json /usr/src/app
 RUN npm install && npm cache clean --force --loglevel=error
-COPY ./env-files/.node_env_prod /usr/src/app/.env
-COPY . /usr/src/app
+COPY .node_env /usr/src/app/.env
+COPY docker /usr/src/app
 EXPOSE 5000
 CMD ["npm", "start"]
 HEALTHCHECK NONE
