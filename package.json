@@ -1,7 +1,7 @@
 {
   "name": "adherelive",
-  "version": "2.6.0",
-  "description": "All packages for the adherelive web application",
+  "version": "3.0.0",
+  "description": "All packages for the adhere.live web application",
   "main": "constant.js",
   "repository": {
     "type": "git",
@@ -26,14 +26,14 @@
     "build": "npm run build --prefix client",
     "client": "npm run start --prefix client",
     "server": "node --max-old-space-size=4096 --exec ./node_modules/.bin/babel-node ./server/bin/www",
-    "postinstall": "cd client && npm install",
+    "postinstall": "",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "migrate": "./node_modules/.bin/babel-node ./node_modules/.bin/sequelize db:migrate",
     "seed": "./node_modules/.bin/babel-node ./node_modules/.bin/sequelize db:seed:all",
     "seed:feature": "./node_modules/.bin/babel-node ./node_modules/.bin/sequelize db:seed:all --seeders-path ./app/seeders/production",
     "undoSeed": "./node_modules/.bin/babel-node ./node_modules/.bin/sequelize db:seed:undo:all",
-    "medicineDb": "./node_modules/.bin/babel-node scripts/testOne.js",
-    "degreeDb": "./node_modules/.bin/babel-node scripts/degreeDb",
+    "medicineDb": "./node_modules/.bin/babel-node ./scripts/testOne.js",
+    "degreeDb": "./node_modules/.bin/babel-node ./scripts/degreeDb",
     "rollback": "./node_modules/.bin/babel-node ./scripts/dropTables.js",
     "sqsCheck": "./node_modules/.bin/babel-node ./events/index.js"
   },

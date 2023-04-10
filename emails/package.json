@@ -1,8 +1,8 @@
 {
   "name": "foundation-emails-template",
-  "version": "1.0.0",
+  "version": "2.3.1",
   "description": "Basic template for a Foundation for Emails project.",
-  "repository": "zurb/foundation-emails-template",
+  "repository": "foundation/foundation-emails-template",
   "main": "gulpfile.babel.js",
   "scripts": {
     "start": "gulp",
@@ -13,7 +13,7 @@
     "mail": "gulp mail --production",
     "make": "bash ./build-ejs.sh"
   },
-  "author": "ZURB <foundation@zurb.com>",
+  "author": "Foundation <contact@get.foundation> (https://get.foundation)",
   "license": "MIT",
   "dependencies": {
     "foundation-emails": "^2.3.1"

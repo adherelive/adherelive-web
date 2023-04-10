@@ -1,4 +1,6 @@
-// FOR TEST...
+// FOR TEST
+// import database from "./libs/mysql";
+
 const Config = require("./config/config");
 Config();
 
@@ -17,6 +19,5 @@ const rollback = async () => {
 };
 
 rollback();
-// import database from "./libs/mysql";
-//
+
 // export default {};
