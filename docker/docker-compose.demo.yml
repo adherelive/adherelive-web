@@ -24,7 +24,7 @@ services:
   node:
     build:
       context: .
-      dockerfile: ./docker/DockerfileLocal
+      dockerfile: ./docker/DockerfileDemo
     image: gagneet/adherelive:portal_demo
     env_file:
       - ./env-files/.env_demo
