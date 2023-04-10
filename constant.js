@@ -1,3 +1,5 @@
+require("newrelic");
+
 export const ACTION_TYPE = {
   FOLLOWUP: "followup",
   MEDICATION: "medication",
