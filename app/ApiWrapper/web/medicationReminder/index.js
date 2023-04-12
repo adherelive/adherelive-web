@@ -25,6 +25,16 @@ class MReminderWrapper extends BaseMedicationReminder {
     return organizer;
   };
 
+  /* id,
+      participant_id,
+      organizer_type,
+      organizer_id,
+      description,
+      start_date,
+      end_date,
+      details,
+      rr_rule = "",*/
+
   getBasicInfo = async () => {
     const { _data } = this;
     const {

@@ -25,7 +25,7 @@ class MobileMReminderWrapper extends BaseMedicationReminder {
     return organizer;
   };
 
-  getBasicInfo = async () => {
+  getBasicInfo = async () => { 
     const { _data } = this;
 
     const {
@@ -38,6 +38,8 @@ class MobileMReminderWrapper extends BaseMedicationReminder {
       end_date,
       details,
       rr_rule = "",
+      updatedAt,
+      createdAt,
     } = _data || {};
     let organizerDetails = await this.getOrganizerDetailsFromId(
       organizer_id,
@@ -50,6 +52,9 @@ class MobileMReminderWrapper extends BaseMedicationReminder {
         description,
         start_date,
         end_date,
+        details,
+        updated_at: updatedAt,
+        created_at: createdAt,
       },
       organizer: {
         id: organizer_id,
