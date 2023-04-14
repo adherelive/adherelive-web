@@ -57,7 +57,6 @@ AWS_PLATFORM_ARN=
 AWS_TOPIC_ARN=
 AWS_PRESCRIPTION_BUCKET=
 
-
 # S3 Details
 #S3_HOST=https://portal.adhere.live
 S3_BUCKET_URL=
