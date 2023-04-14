@@ -123,8 +123,8 @@ services:
 ## By default, this config uses default local driver,
 ## For custom volumes replace with volume driver configuration.
 volumes:
-  mysql:
-    driver: local
+  #mysql:
+    #driver: local
   adhere_storage_stack1:
   adhere_storage_stack2:
   adhere_storage_stack3:

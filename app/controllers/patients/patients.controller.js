@@ -2005,8 +2005,6 @@ class PatientController extends Controller {
         medications,
         clinical_notes,
         follow_up_advise,
-        clinical_notes,
-        follow_up_advise,
         medicines,
         care_plans: {
           [carePlanData.getCarePlanId()]: {
