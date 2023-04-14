@@ -1,45 +1,72 @@
 version: "3.0"
 
 services:
-  #certbot:
-  #image: certbot/certbot:v0.36.0
-  #restart: unless-stopped
-  #volumes:
-  #- ./nginx/certbot/conf:/etc/letsencrypt
-  #- ./nginx/certbot/www:/var/www/certbot
-  #entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+  #nginx:
+    #build:
+      #context: ./nginx
+      #restart: unless-stopped
+    #ports:
+      #- "80:80"
+      #- "443:443"
+    #volumes:
+      #- "./nginx/ssl.conf:/etc/nginx/nginx.conf"
+      #- "./nginx/certbot/conf:/etc/letsencrypt"
+      #- "./nginx/certbot/www:/var/www/certbot"
+    #links:
+      #- node
+  certbot:
+    image: "certbot/certbot:latest"
+    restart: always
+    volumes:
+      - "./nginx/certbot/conf:/etc/letsencrypt"
+      - "./nginx/certbot/www:/var/www/certbot"
+    entrypoint: >-
+      /bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait
+      $${!}; done;'
 
   node:
-    build: .
+    build:
+      context: .
+      #dockerfile: ./docker/DockerfileProd
     #image: gagneet/adherelive:portal
-    command: ["npm", "run", "dev"]
+    #env_file:
+      #- ./env-files/.env_prod
+    restart: always
+    command:
+      - npm
+      - run
+      - start
     ports:
-      - "${WEB_SERVER_PORT}:5000"
-      - "${REACT_SERVER_PORT}:3000"
-    tty: true
+      - ${WEB_SERVER_PORT}:5000
+      - ${REACT_SERVER_PORT}:3000
+    logging:
+      options:
+        max-size: 150m
+        max-file: "3"
+    #tty: true
     volumes:
       - ./:/usr/src/app
       - ./.node_env:/usr/src/app/.env
     links:
-      - mysql
+      #- mysql
       - minio1
       - minio2
       - minio3
       - minio4
 
-  mysql:
-    image: mysql:latest
-    ports:
-      - "3306:3306"
-    expose:
-      - 3306
-    volumes:
-      - mysql:/var/lib/mysql
-    environment:
-      - MYSQL_ROOT_PASSWORD=pass
-      - MYSQL_DATABASE=adhere
-      - MYSQL_USER=user
-      - MYSQL_PASSWORD=password
+  #mysql:
+    #image: mysql:latest
+    #ports:
+      #- "3306:3306"
+    #expose:
+      #- 3306
+    #volumes:
+      #- mysql:/var/lib/mysql
+    #environment:
+      #- MYSQL_ROOT_PASSWORD=adherelive
+      #- MYSQL_DATABASE=adhere
+      #- MYSQL_USER=adherelive
+      #- MYSQL_PASSWORD=eK7tz4s3CBkYPjUaSBAl
 
   mongo:
     image: mongo:latest
@@ -48,7 +75,7 @@ services:
       - "27017:27017"
     volumes:
       - adhere_mongo:/data/db
-    
+
   minio1:
     image: minio/minio
     volumes:
