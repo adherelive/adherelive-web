@@ -25,7 +25,8 @@ class MReminderWrapper extends BaseMedicationReminder {
     return organizer;
   };
 
-  /* id,
+  /* TODO: Check why this is commented out
+      id,
       participant_id,
       organizer_type,
       organizer_id,
