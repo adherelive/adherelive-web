@@ -25,9 +25,9 @@ services:
       $${!}; done;'
 
   node:
-    build: .
-      #context: .
-      #dockerfile: ./docker/Dockerfile
+    build:
+      context: .
+      #dockerfile: ./docker/DockerfileProd
     #image: gagneet/adherelive:portal
     #env_file:
       #- ./env-files/.env_prod

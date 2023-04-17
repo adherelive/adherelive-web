@@ -25,7 +25,7 @@ class MobileMReminderWrapper extends BaseMedicationReminder {
     return organizer;
   };
 
-  getBasicInfo = async () => { 
+  getBasicInfo = async () => {
     const { _data } = this;
 
     const {

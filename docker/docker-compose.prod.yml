@@ -9,9 +9,9 @@ services:
       #- "80:80"
       #- "443:443"
     #volumes:
-      #- ./nginx/ssl.conf:/etc/nginx/nginx.conf
-      #- ./nginx/certbot/conf:/etc/letsencrypt
-      #- ./nginx/certbot/www:/var/www/certbot
+      #- "./nginx/ssl.conf:/etc/nginx/nginx.conf"
+      #- "./nginx/certbot/conf:/etc/letsencrypt"
+      #- "./nginx/certbot/www:/var/www/certbot"
     #links:
       #- node
   certbot:
@@ -25,10 +25,10 @@ services:
       $${!}; done;'
 
   node:
-    #build:
-      #context: .
-      #dockerfile: ./docker/Dockerfile
-    image: gagneet/adherelive:portal
+    build:
+      context: .
+      #dockerfile: ./docker/DockerfileProd
+    #image: gagneet/adherelive:portal
     #env_file:
       #- ./env-files/.env_prod
     restart: always
@@ -42,7 +42,7 @@ services:
     logging:
       options:
         max-size: 150m
-        max-file: '3'
+        max-file: "3"
     #tty: true
     volumes:
       - ./:/usr/src/app
