@@ -39,6 +39,7 @@ import queueService from "../../services/awsQueue/queue.service";
 
 import * as carePlanHelper from "./carePlanHelper";
 import MedicationWrapper from "../../ApiWrapper/web/medicationReminder";
+import MedicationJob from "../../JobSdk/Medications/observer";
 
 import PERMISSIONS from "../../../config/permissions";
 // import { ConfigurationServicePlaceholders } from "aws-sdk/lib/config_service_placeholders";
@@ -76,7 +77,7 @@ class CarePlanController extends Controller {
         userData: { category } = {},
         userCategoryData,
       } = userDetails || {};
-
+      let full_name = userCategoryData.basic_info.full_name;
       if (!care_plan_id) {
         return raiseClientError(
           res,
@@ -320,6 +321,8 @@ class CarePlanController extends Controller {
             dataToSave
           );
 
+
+
           const medicationWrapper = await MedicationWrapper(mReminderDetails);
 
           const data_to_create = {
@@ -331,6 +334,27 @@ class CarePlanController extends Controller {
             await carePlanMedicationService.addCarePlanMedication(
               data_to_create
             );
+          // testing gaurav
+          const eventScheduleDataNew = {
+            patient_id: patient_id,
+            type: EVENT_TYPE.MEDICATION_REMINDER,
+            event_id: medicationWrapper.getMReminderId(),
+            details: medicationWrapper.getDetails(),
+            status: EVENT_STATUS.SCHEDULED,
+            start_date,
+            end_date,
+            when_to_take,
+            participants: [userRoleId, patientRoleId],
+            actor: {
+              id: userId,
+              user_role_id: userRoleId,
+              details: { name: full_name, category },
+            },
+          };
+          const medicationJob = MedicationJob.execute(
+            EVENT_STATUS.SCHEDULED,
+            eventScheduleDataNew
+          );
 
           const { medications, medicines } =
             await medicationWrapper.getReferenceInfo();
