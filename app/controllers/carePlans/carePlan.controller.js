@@ -71,13 +71,16 @@ class CarePlanController extends Controller {
       } = req.body;
 
       const { userDetails, permissions = [] } = req;
+      
       const {
         userId,
         userRoleId,
         userData: { category } = {},
         userCategoryData,
       } = userDetails || {};
+      
       let full_name = userCategoryData.basic_info.full_name;
+      
       if (!care_plan_id) {
         return raiseClientError(
           res,
@@ -334,7 +337,8 @@ class CarePlanController extends Controller {
             await carePlanMedicationService.addCarePlanMedication(
               data_to_create
             );
-          // testing gaurav
+            
+          // TODO: testing gaurav
           const eventScheduleDataNew = {
             patient_id: patient_id,
             type: EVENT_TYPE.MEDICATION_REMINDER,

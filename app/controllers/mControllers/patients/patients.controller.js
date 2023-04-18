@@ -1951,7 +1951,7 @@ class MPatientController extends Controller {
                 [medicineWrapper.getMedicineId()]: medicineWrapper.getAllInfo(),
               },
             };
-          } 
+          }
           let newData = await medicationWrapper.getBasicInfo();
           medications = {
             ...medications,
@@ -1985,16 +1985,17 @@ class MPatientController extends Controller {
 
           const { type } = appointmentWrapper.getDetails() || {};
 
-          // if (type !== CONSULTATION) {
-            const { type_description = "", radiology_type = "" } =
-              appointmentWrapper.getDetails() || {};
-            suggestedInvestigations.push({
-              type,
-              type_description,
-              radiology_type,
-              start_date: startDate,
-              organizer,
-            });
+          // TODO: Removed the type != CONSULTATION
+          //if (type !== CONSULTATION) {
+          const { type_description = "", radiology_type = "" } =
+            appointmentWrapper.getDetails() || {};
+          suggestedInvestigations.push({
+            type,
+            type_description,
+            radiology_type,
+            start_date: startDate,
+            organizer,
+          });
           // }
         }
       }
@@ -2367,7 +2368,8 @@ class MPatientController extends Controller {
         users: { ...usersData },
         medications,
         medicines,
-        clinical_notes, follow_up_advise,
+        clinical_notes,
+        follow_up_advise,
         // ...(permissions.includes(PERMISSIONS.MEDICATIONS.ADD) && {
         //   medications,
         // }),

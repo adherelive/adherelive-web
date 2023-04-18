@@ -25,7 +25,8 @@ class MReminderWrapper extends BaseMedicationReminder {
     return organizer;
   };
 
-  /* id,
+  /* TODO: Check why this is commented out
+      id,
       participant_id,
       organizer_type,
       organizer_id,
@@ -33,7 +34,8 @@ class MReminderWrapper extends BaseMedicationReminder {
       start_date,
       end_date,
       details,
-      rr_rule = "",*/
+      rr_rule = "",
+  */
 
   getBasicInfo = async () => {
     const { _data } = this;
