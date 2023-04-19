@@ -1,7 +1,4 @@
 node_modules
-client/node_modules
-client/build
-!client/.env
 dump
 .idea
 .git
@@ -12,6 +9,6 @@ public
 .node_env
 docker-compose.yaml
 docker-compose.prod.yaml
-docker-compose-prod-ssl.yaml
+docker-compose.demo.yaml
 output.log
 README.md

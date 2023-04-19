@@ -9,9 +9,9 @@ services:
       #- "80:80"
       #- "443:443"
     #volumes:
-      #- "./nginx/ssl.conf:/etc/nginx/nginx.conf"
-      #- "./nginx/certbot/conf:/etc/letsencrypt"
-      #- "./nginx/certbot/www:/var/www/certbot"
+      #- ./nginx/ssl.conf:/etc/nginx/nginx.conf
+      #- ./nginx/certbot/conf:/etc/letsencrypt
+      #- ./nginx/certbot/www:/var/www/certbot
     #links:
       #- node
   certbot:
@@ -28,7 +28,7 @@ services:
     build:
       context: .
       #dockerfile: ./docker/DockerfileProd
-    #image: gagneet/adherelive:portal
+    #image: gagneet/adherelive:portal-be
     #env_file:
       #- ./env-files/.env_prod
     restart: always
@@ -42,7 +42,7 @@ services:
     logging:
       options:
         max-size: 150m
-        max-file: "3"
+        max-file: '3'
     #tty: true
     volumes:
       - ./:/usr/src/app
@@ -125,8 +125,8 @@ services:
 volumes:
   #mysql:
     #driver: local
-  adhere_storage_stack1:
-  adhere_storage_stack2:
-  adhere_storage_stack3:
-  adhere_storage_stack4:
+  adhere_storage_stack1: null
+  adhere_storage_stack2: null
+  adhere_storage_stack3: null
+  adhere_storage_stack4: null
   adhere_mongo:
