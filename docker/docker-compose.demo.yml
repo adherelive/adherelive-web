@@ -58,9 +58,9 @@ services:
     volumes:
       - mysql:/var/lib/mysql
     environment:
-      - MYSQL_ROOT_PASSWORD=adherelive
+      - MYSQL_ROOT_PASSWORD=pass
       - MYSQL_DATABASE=adhere
-      - MYSQL_USER=adherelive
+      - MYSQL_USER=user
       - MYSQL_PASSWORD=password
 
   mongo:
