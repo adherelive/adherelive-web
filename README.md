@@ -1,4 +1,4 @@
-# adherelive-web
+# adherelive-backend
 
 Web Portal backend code + API for AdhereLive.
 

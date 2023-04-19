@@ -27,8 +27,8 @@ services:
   node:
     build:
       context: .
-      #dockerfile: ./docker/Dockerfile
-    #image: gagneet/adherelive:portal
+      #dockerfile: ./docker/DockerfileProd
+    #image: gagneet/adherelive:portal-be
     #env_file:
       #- ./env-files/.env_prod
     restart: always
@@ -123,10 +123,10 @@ services:
 ## By default, this config uses default local driver,
 ## For custom volumes replace with volume driver configuration.
 volumes:
-  mysql:
-    driver: local
-  adhere_storage_stack1:
-  adhere_storage_stack2:
-  adhere_storage_stack3:
-  adhere_storage_stack4:
+  #mysql:
+    #driver: local
+  adhere_storage_stack1: null
+  adhere_storage_stack2: null
+  adhere_storage_stack3: null
+  adhere_storage_stack4: null
   adhere_mongo:

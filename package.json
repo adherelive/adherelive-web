@@ -1,7 +1,7 @@
 {
-  "name": "adherelive",
+  "name": "adherelive-be",
   "version": "3.0.0",
-  "description": "All packages for the adhere.live web application",
+  "description": "All packages for the adhere.live web backend application",
   "main": "constant.js",
   "repository": {
     "type": "git",
