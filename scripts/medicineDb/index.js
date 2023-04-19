@@ -8,7 +8,7 @@ Config();
 
 import medicineService from "../../app/services/medicine/medicine.service";
 
-console.log("process.config.db.name --> ", process.config.db.name);
+// console.log("process.config.db.name --> ", process.config.db.name);
 
 fs.readFile(
   path.join(__dirname, "Pillbox.csv"),

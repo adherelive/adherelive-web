@@ -15,7 +15,7 @@ variables:
   tag: '$(Build.BuildId)'
   dockerhubNS: 'gagneet'
   ImageNames: 'adherelive'
-  ImageTag: 'portal_demo'
+  ImageTag: 'portal-be-demo'
   azureSubscriptionEndpoint: 'adherelive-demo'
   azureSubscriptionId: 'AdhereLive'
   azureContainerRegistry: 'adherelivedemo.azurecr.io'
@@ -60,7 +60,7 @@ stages:
         environment:
           name: $(azureEnvironment)
           resourceType: VirtualMachine
-          tags: 'adherelive-ndemo'
+          tags: 'adherelive-be-demo'
         strategy:
           runOnce:
             deploy:

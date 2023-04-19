@@ -1,6 +1,6 @@
-# adherelive-web
+# adherelive-backend
 
-Web Portal for AdhereLive.
+Web Portal backend code + API for AdhereLive.
 
 - Currently, the Doctor and Admin login portal on the web application
   - [AdhereLive Portal](https://portal.adhere.live)
@@ -79,7 +79,7 @@ Some files need to be copied to the root folder, if they do not exist:
 ```shell
 $ cp ./env_files/.env_demo .env
 $ cp ./env_files/.node_env_demo .node_env
-$ cp ./docker/docker-compose.yml docker-compose.yml
+$ cp ./docker/docker-compose.demo.yml docker-compose.yml
 ```
 
 ### Steps to build for Development

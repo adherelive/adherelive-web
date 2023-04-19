@@ -272,6 +272,17 @@ class Database {
           // },
         }
       );
+      // TODO: Add a try-catch to check if the connection has been
+      //  established or not. We can get issues as the parameters used are
+      //  in the config - .node_env file.
+      // Database.connection
+      //   .authenticate()
+      //   .then(() => {
+      //     console.log('Connection has been established successfully.');
+      //   })
+      //   .catch((err) => {
+      //     console.log('Unable to connect to the database:', err);
+      //   });
     }
 
     return Database.connection;

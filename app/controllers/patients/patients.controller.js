@@ -885,6 +885,8 @@ class PatientController extends Controller {
     }
   };
 
+  /* TODO: This function has been removed in the recent code for
+   * branch merge-2    
   searchPatientByName = async (req, res) => {
     const { raiseSuccess, raiseServerError } = this;
     try {
@@ -917,6 +919,7 @@ class PatientController extends Controller {
       return raiseServerError(res);
     }
   };
+  */
 
   searchPatientOld = async (req, res) => {
     const { raiseSuccess, raiseServerError } = this;

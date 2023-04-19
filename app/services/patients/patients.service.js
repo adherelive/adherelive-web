@@ -78,6 +78,8 @@ class PatientsService {
     }
   };
 
+  /* TODO: Code has been removed in the recent merge-2 branch
+   * 
   getPatientByName = async (keyword) => {
     try {
       const patient = await Database.getModel(TABLE_NAME).findAll({
@@ -108,6 +110,7 @@ class PatientsService {
       throw error;
     }
   };
+  */
 
   getPatientById = async (data) => {
     try {
