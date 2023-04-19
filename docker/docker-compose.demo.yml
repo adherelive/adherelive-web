@@ -2,7 +2,8 @@ version: "3.0"
 
 services:
   #nginx:
-    #build: ./nginx
+    #build:
+      #context: ./nginx
       #restart: unless-stopped
     #ports:
       #- "80:80"
@@ -17,18 +18,18 @@ services:
     #image: "certbot/certbot:latest"
     #restart: unless-stopped
     #volumes:
-      #- ./nginx/certbot/conf:/etc/letsencrypt
-      #- ./nginx/certbot/www:/var/www/certbot
+      #- "./nginx/certbot/conf:/etc/letsencrypt"
+      #- "./nginx/certbot/www:/var/www/certbot"
     #entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
 
   node:
-    build: .
-      #context: .
+    build:
+      context: .
       #dockerfile: ./docker/DockerfileDemo
     #image: gagneet/adherelive:portal-be-demo
     #env_file:
       #- ./env-files/.env_demo
-    #restart: always
+    restart: always
     command: ["npm", "run", "dev"]
     ports:
       - "${WEB_SERVER_PORT}:5000"
