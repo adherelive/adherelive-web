@@ -32,7 +32,7 @@
     "seed": "./node_modules/.bin/babel-node ./node_modules/.bin/sequelize db:seed:all",
     "seed:feature": "./node_modules/.bin/babel-node ./node_modules/.bin/sequelize db:seed:all --seeders-path ./app/seeders/production",
     "undoSeed": "./node_modules/.bin/babel-node ./node_modules/.bin/sequelize db:seed:undo:all",
-    "medicineDb": "./node_modules/.bin/babel-node ./scripts/testOne.js",
+    "medicineDb": "./node_modules/.bin/babel-node ./scripts/use_pillbox.js",
     "degreeDb": "./node_modules/.bin/babel-node ./scripts/degreeDb",
     "rollback": "./node_modules/.bin/babel-node ./scripts/dropTables.js",
     "sqsCheck": "./node_modules/.bin/babel-node ./events/index.js"
