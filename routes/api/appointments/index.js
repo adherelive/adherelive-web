@@ -34,6 +34,8 @@ router.get(
   Appointment.getAllMissedAppointments
 );
 
+router.get("/date", Authenticate, Appointment.getDayAppointmentByDate);
+
 router.get("/:id", Authenticate, Appointment.getAppointmentForPatient);
 
 router.post(

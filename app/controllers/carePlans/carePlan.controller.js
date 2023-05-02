@@ -336,35 +336,6 @@ class CarePlanController extends Controller {
           let newMedication =
             await carePlanMedicationService.addCarePlanMedication(
               data_to_create
-<<<<<<< HEAD
-            );
-          // testing gaurav
-          // const eventScheduleDataNew = {
-          //   patient_id: patient_id,
-          //   type: EVENT_TYPE.MEDICATION_REMINDER,
-          //   event_id: medicationWrapper.getMReminderId(),
-          //   details: { ...medicationWrapper.getDetails(), when_to_take_abbr: '1', },
-          //   status: EVENT_STATUS.SCHEDULED,
-          //   start_date,
-          //   end_date,
-          //   when_to_take,
-          //   participants: [userRoleId, patientRoleId],
-          //   actor: {
-          //     id: userId,
-          //     user_role_id: userRoleId,
-          //     details: { name: full_name, category },
-          //   },
-          // };
-
-          // const medicationJob = MedicationJob.execute(
-          //   EVENT_STATUS.SCHEDULED,
-          //   eventScheduleDataNew
-          // );
-
-          // console.log("=======================================")
-          // console.log({ eventScheduleDataNew, medicationJob })
-          // console.log("=======================================")
-=======
           );
             
           // TODO: testing gaurav
@@ -388,7 +359,6 @@ class CarePlanController extends Controller {
             EVENT_STATUS.SCHEDULED,
             eventScheduleDataNew
           );
->>>>>>> ec8636ec0ac8fd41335eb8fc99df9243f372583e
 
           const { medications, medicines } =
             await medicationWrapper.getReferenceInfo();
