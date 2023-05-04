@@ -1974,7 +1974,7 @@ class MPatientController extends Controller {
 
           const startDate = appointmentWrapper.getStartTime();
           const startDateObj = moment(startDate);
-          const { organizer } = await appointmentWrapper.getBasicInfo();
+          const { organizer, provider_id } = await appointmentWrapper.getBasicInfo();
           const diff = startDateObj.diff(now);
 
           if (diff > 0) {
@@ -1987,7 +1987,8 @@ class MPatientController extends Controller {
 
           // TODO: Removed the type != CONSULTATION
           //if (type !== CONSULTATION) {
-          const { type_description = "", radiology_type = "" } =
+          const { type_description = "", radiology_type = "", description = "",
+            reason = "" } =
             appointmentWrapper.getDetails() || {};
           suggestedInvestigations.push({
             type,
@@ -1995,6 +1996,10 @@ class MPatientController extends Controller {
             radiology_type,
             start_date: startDate,
             organizer,
+
+            provider_id,
+            reason,
+            description,
           });
           // }
         }

@@ -63,6 +63,7 @@ module.exports = () => {
       password: process.env.DB_PASSWORD,
       dialect: process.env.DB_DIALECT,
     },
+    mongo: process.env.MONGO_DB_URI,
     getstream: {
       key: process.env.GETSTREAM_API_KEY,
       secretKey: process.env.GETSTREAM_API_SECRET,
