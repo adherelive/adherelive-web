@@ -336,7 +336,7 @@ class CarePlanController extends Controller {
           let newMedication =
             await carePlanMedicationService.addCarePlanMedication(
               data_to_create
-            );
+          );
             
           // TODO: testing gaurav
           const eventScheduleDataNew = {
