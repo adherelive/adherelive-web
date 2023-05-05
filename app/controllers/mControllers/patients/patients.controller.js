@@ -1996,7 +1996,6 @@ class MPatientController extends Controller {
             radiology_type,
             start_date: startDate,
             organizer,
-
             provider_id,
             reason,
             description,
