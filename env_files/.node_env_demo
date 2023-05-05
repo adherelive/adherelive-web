@@ -37,6 +37,9 @@ DB_USER=user
 DB_PASSWORD=password
 DB_DIALECT=mysql
 
+# MongoDB parameters
+MONGO_DB_URI="mongodb://mongo/adhere"
+
 SALT_ROUNDS=5
 
 DEFAULT_PASSWORD=Password@123
