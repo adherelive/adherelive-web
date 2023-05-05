@@ -1,6 +1,6 @@
 {
   "name": "adherelive-be",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "description": "All packages for the adhere.live web backend application",
   "main": "constant.js",
   "repository": {
@@ -43,7 +43,8 @@
       "server/*",
       "routes/*",
       "helper/*",
-      "libs/*"
+      "libs/*",
+      "migrations/*"
     ],
     "delay": 2500
   },
