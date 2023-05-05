@@ -1619,7 +1619,7 @@ class PatientController extends Controller {
             type_description = "",
             radiology_type = "",
             description = "",
-            reason = "",
+            reason = ""
           } = appointmentWrapper.getDetails() || {};
           suggestedInvestigations.push({
             type,
@@ -1629,7 +1629,7 @@ class PatientController extends Controller {
             provider_id,
             start_date: startDate,
             organizer,
-            reason,
+            reason
           });
           // }
         }
