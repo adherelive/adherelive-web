@@ -40,8 +40,6 @@ const cron = schedule.scheduleJob("*/1 * * * *", async () => {
   await Prior.runObserver();
   await Passed.runObserver();
   await Start.runObserver();
-  await renewTxActivity.runObserver();
-
 });
 
 const perDayUtcRule = new schedule.RecurrenceRule();
@@ -57,8 +55,10 @@ const removeDocumentPerDayCron = schedule.scheduleJob(
 
 // CRONS RUNNING EVERY 1 HOUR
 const perHourCron = schedule.scheduleJob("0 0 */1 * * *", async () => {
-  await LongTerm.observer();
+  // await LongTerm.observer();
   await activePatient.runObserver();
+  await renewTxActivity.runObserver();
+  await LongTerm.observer();
 });
 
 // CRONS RUNNING AT START OF EVERY MONTH

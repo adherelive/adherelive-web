@@ -1,6 +1,6 @@
-# adherelive-web
+# adherelive-backend
 
-Web Portal for AdhereLive.
+Web Portal backend code + API for AdhereLive.
 
 - Currently, the Doctor and Admin login portal on the web application
   - [AdhereLive Portal](https://portal.adhere.live)

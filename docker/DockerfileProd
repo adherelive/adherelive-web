@@ -1,5 +1,7 @@
 FROM node:14.15.0
 RUN useradd -d /home/azureuser -m -s /bin/bash azureuser
+LABEL application="adherelive-backend"
+LABEL owner="Gaurav Sharma"
 RUN mkdir -p /usr/src/app && mkdir -p /usr/src/app/public
 WORKDIR /usr/src/app
 COPY package.json /usr/src/app

@@ -646,6 +646,48 @@ class AppointmentController extends Controller {
     }
   };
 
+  getDayAppointmentByDate = async (req, res) => {
+    const { raiseSuccess, raiseServerError } = this;
+    try {
+      const { params: { id } = {}, userDetails: { userId } = {} } = req;
+      const { date } = req.query
+      const appointmentList = await appointmentService.getAppointmentsByDate(
+        date
+      );
+      let appointmentApiData = {};
+      let scheduleEventData = {};
+      let uploadDocumentData = {};
+      for (const appointment of appointmentList) {
+        const appointmentWrapper = await AppointmentWrapper(appointment);
+        const { appointments, schedule_events, upload_documents } =
+          await appointmentWrapper.getAllInfo();
+        appointmentApiData = { ...appointmentApiData, ...appointments };
+        scheduleEventData = { ...scheduleEventData, ...schedule_events };
+        uploadDocumentData = { ...uploadDocumentData, ...upload_documents };
+      }
+
+      return raiseSuccess(
+        res,
+        200,
+        {
+          appointments: {
+            ...appointmentApiData,
+          },
+          schedule_events: {
+            ...scheduleEventData,
+          },
+          upload_documents: {
+            ...uploadDocumentData,
+          },
+        },
+        `appointment data for patient: ${id} fetched successfully`
+      );
+    } catch (error) {
+      Logger.debug("getAppointmentForPatient 500 error", error);
+      return raiseServerError(res);
+    }
+  }
+
   getAppointmentForPatient = async (req, res) => {
     const { raiseSuccess, raiseServerError } = this;
     try {

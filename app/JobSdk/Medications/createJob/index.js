@@ -9,6 +9,7 @@ import { EVENT_TYPE, DEFAULT_PROVIDER } from "../../../../constant";
 
 class CreateJob extends MedicationJob {
   constructor(data) {
+    console.log("medication job called in create job")
     super(data);
   }
 

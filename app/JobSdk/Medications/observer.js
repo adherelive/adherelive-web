@@ -8,6 +8,7 @@ class MedicationObserver {
   constructor() {}
 
   execute = (typeStatus, eventDetails) => {
+    console.log("medication observer called", { typeStatus, eventDetails });
     switch (typeStatus) {
       case EVENT_STATUS.SCHEDULED:
         return new CreateJob(eventDetails);

@@ -78,7 +78,6 @@ class MReminderWrapper extends BaseMedicationReminder {
   };
 
   getAllInfo = async () => {
-
     const { getBasicInfo, getMReminderId } = this;
     const eventService = new EventService();
     const currentDate = moment().endOf("day").utc().toDate();
