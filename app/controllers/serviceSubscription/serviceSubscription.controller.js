@@ -322,9 +322,9 @@ class ServiceSubscriptionController extends Controller {
       provider_id = req.userDetails.userRoleData.basic_info.linked_id;
       doctor_id = req.userDetails.userCategoryData.basic_info.id;
       data = {
-        // doctor_id,
+        doctor_id,
         provider_id,
-        // provider_type: req.userDetails.userRoleData.basic_info.linked_with,
+        provider_type: req.userDetails.userRoleData.basic_info.linked_with,
       };
     }
 
