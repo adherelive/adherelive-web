@@ -277,7 +277,7 @@ function formatPatientData(patients, users) {
     const patientIds = Object.keys(patients);
 
     const patientId = patientIds[0];
-
+    console.log(JSON.stringify({ patients, users }))
     const {
         [patientId]: {
             basic_info: {
@@ -291,9 +291,10 @@ function formatPatientData(patients, users) {
                 weight = "",
                 user_id = null,
                 full_name = "",
-                uid = "",
+                uid = "", 
             } = {},
             details: { allergies = "", comorbidities = "" } = {},
+            created_at = ""
         } = {},
     } = patients;
 
@@ -316,7 +317,7 @@ function formatPatientData(patients, users) {
         comorbidities,
         mobile_number,
         prefix,
-        uid,
+        uid, created_at: `${moment(new Date(created_at)).format("DD MMM 'YY")}`
     };
 }
 
@@ -816,16 +817,19 @@ router.get(
                             currentDietDataForTime.push(currentfodmattedData);
 
                             dietFoodGroupsApidata[`${time}`] = [...currentDietDataForTime];
+                            dietFoodGroupsApidata["food_details_gaurav"] = food_item_details[dietFoodGroupsApidata["food_item_detail_id"]]
                         }
                     }
+                    let diet_food_groups = {
+                        ...dietFoodGroupsApidata,
+
+                    };
 
                     let this_dite_data = {
                         diets: {
                             ...dietBasicInfo,
                         },
-                        diet_food_groups: {
-                            ...dietFoodGroupsApidata,
-                        },
+                        diet_food_groups,
                         food_items,
                         food_item_details,
                     };
@@ -837,6 +841,11 @@ router.get(
                     dietIds.push(id);
                 }
             }
+
+
+            console.log("=========================")
+            console.log(JSON.stringify(dietList))
+            console.log("=========================")
 
             for (const id of workout_ids) {
                 const workout = await workoutService.findOne({ id });
