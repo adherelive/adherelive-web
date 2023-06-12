@@ -72,6 +72,7 @@ import { getFilePath } from "../../../app/helper/filePath";
 import { checkAndCreateDirectory } from "../../../app/helper/common";
 
 import { getDoctorCurrentTime } from "../../../app/helper/getUserTime";
+import diet from "../../../app/ApiWrapper/web/diet";
 
 const fs = require("fs");
 const path = require("path");
@@ -291,7 +292,7 @@ function formatPatientData(patients, users) {
                 weight = "",
                 user_id = null,
                 full_name = "",
-                uid = "", 
+                uid = "",
             } = {},
             details: { allergies = "", comorbidities = "" } = {},
             created_at = ""
@@ -698,10 +699,10 @@ router.get(
                     const dietData = await dietService.findOne({ id });
                     const dietWrapper = await DietWrapper({ data: dietData });
                     const expired_on = await dietWrapper.getExpiredOn();
-
                     if (expired_on) {
                         continue;
                     }
+                    dietList.push(dietWrapper)
 
                     const referenceInfo = await dietWrapper.getReferenceInfo();
 
@@ -817,7 +818,7 @@ router.get(
                             currentDietDataForTime.push(currentfodmattedData);
 
                             dietFoodGroupsApidata[`${time}`] = [...currentDietDataForTime];
-                            dietFoodGroupsApidata["food_details_gaurav"] = food_item_details[dietFoodGroupsApidata["food_item_detail_id"]]
+                            // dietFoodGroupsApidata["food_details_gaurav"] = food_item_details[dietFoodGroupsApidata["food_item_detail_id"]]
                         }
                     }
                     let diet_food_groups = {
@@ -835,9 +836,7 @@ router.get(
                     };
 
                     dietList.push(this_dite_data)
-
                     dietApiData[id] = this_dite_data;
-
                     dietIds.push(id);
                 }
             }
@@ -845,6 +844,7 @@ router.get(
 
             console.log("=========================")
             console.log(JSON.stringify(dietList))
+            console.log({ dietIds })
             console.log("=========================")
 
             for (const id of workout_ids) {
@@ -1126,7 +1126,74 @@ router.get(
             const medicationsList = formatMedicationsData(medications, medicines);
             console.log("================================")
             console.log(JSON.stringify(medicationsList));
+            console.log("diet real data start==============")
+            console.log({ data: JSON.stringify({ ...dietApiData }) })
+            console.log("diet real data end================")
             console.log("================================")
+            let diet_old_data = { ...dietApiData }
+            let diet_output = []
+
+            for (let i in dietIds) {
+                let food_group = []
+                let dietobj = {}
+                let formattedStartDate = ""
+                let formattedEndDate = ""
+                let diet_id = dietIds[i]
+                let start_date = diet_old_data[diet_id]["diets"][diet_id]["basic_info"]["start_date"]
+                let end_date = diet_old_data[diet_id]["diets"][diet_id]["basic_info"]["end_date"]
+                console.log("----------------get testing info-------------- start -------")
+                console.log(diet_old_data[diet_id]["diets"][diet_id]["basic_info"])
+                if (start_date) formattedStartDate = moment(start_date);
+
+                if (end_date) formattedEndDate = moment(end_date);
+
+                console.log("----------------get testing info-------------- end ---------")
+                let duration = null;
+                let durationText = "";
+                if (end_date) {
+                    duration = formattedEndDate.diff(formattedStartDate, "days");
+                    durationText = `${duration}${" "}days`;
+                    if (duration >= 7) {
+                        const weeks = Math.floor(duration / 7) || 0;
+                        const days = duration % 7 || 0;
+                        durationText = `${weeks > 0 ? `${weeks}${" "}${weeks > 1 ? "weeks" : "week"}${" "}` : ""
+                            }${days > 0 ? `${days}${" "}${days > 1 ? "days" : "day"}` : ""} `;
+                    }
+                }
+
+                dietobj.name = diet_old_data[dietIds[i]]["diets"][dietIds[i]]["basic_info"]["name"]
+                dietobj.total_calories = diet_old_data[dietIds[i]]["diets"][dietIds[i]]["basic_info"]["total_calories"]
+                dietobj.not_to_do = diet_old_data[dietIds[i]]["diets"][dietIds[i]]["details"]["not_to_do"]
+                dietobj.repeat_days = diet_old_data[dietIds[i]]["diets"][dietIds[i]]["details"]["repeat_days"]
+                dietobj.durationText = durationText
+                // for food groups
+
+                for (let key in diet_old_data[dietIds[i]]["diet_food_groups"]) {
+                    console.log({ key, old_time: diet_old_data[dietIds[i]]["diet_food_groups"] })
+                    let food_group_obj = {}
+                    food_group_obj.time = timings[key]
+                    food_group_obj.food_group_details_array = diet_old_data[dietIds[i]]["diet_food_groups"][key]
+                    for (let new_food_item in food_group_obj.food_group_details_array) {
+                        let details = { ...diet_old_data[dietIds[i]]["food_items"][diet_old_data[dietIds[i]]["diet_food_groups"][key][new_food_item]['food_item_detail_id']]["basic_info"], ...diet_old_data[dietIds[i]]["food_item_details"][diet_old_data[dietIds[i]]["diet_food_groups"][key][new_food_item]['food_item_detail_id']] }
+                        food_group_obj.food_group_details_array[new_food_item]['details'] = details
+                        food_group_obj.food_group_details_array[new_food_item]['portion'] = portionApiData[details["basic_info"]["portion_id"]]
+                        // diet_old_data[dietIds[i]]["diet_food_groups"][key][new_food_item]['details'] = diet_old_data[dietIds[i]]["diet_food_groups"][key][new_food_item]['food_item_detail_id']
+                    }
+                    food_group.push(food_group_obj)
+                }
+                dietobj.food_group = food_group
+                // dietobj.food_item = diet_old_data[dietIds[i]]["food_items"]["food_item_detail_id"]
+                diet_output.push(dietobj)
+            }
+
+            console.log("============my latest diet object start===============")
+            console.log({ diet_output })
+
+            console.log(JSON.stringify(diet_output))
+            console.log("============my latest diet object end===============")
+
+
+
             let { date: prescriptionDate } = getLatestUpdateDate(medications);
             prescriptionDate = prescriptionDate || carePlanCreatedDate;
             let pre_data = {
@@ -1152,9 +1219,14 @@ router.get(
                 registrations: registrationsData,
                 creationDate: moment(prescriptionDate).add(330, "minutes").format("Do MMMM YYYY, h:mm a"),
                 investigations, nextConsultation,
-                medicationsList
-            }
+                medicationsList,
+                diteFormattedData: { ...dietApiData }, dietIds, diet_output
 
+            }
+            console.log("diet real data start==============")
+            console.log({ data: JSON.stringify({ ...dietApiData }) })
+            console.log({ timings })
+            console.log("diet real data end================")
 
 
 
