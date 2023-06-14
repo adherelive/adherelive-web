@@ -150,7 +150,7 @@
       /* border-bottom: 1px solid black; */
       padding: 10px;
       display: flex;
-      align-items: center;
+      align-items: baseline;
       border-top: 1px solid black
     }
 
@@ -483,7 +483,7 @@
     </div>
     <div class="top_setion_wrapper_two">
       <h3>Symptoms :</h3>
-      <p>{{ symptoms_final_value }}</p>
+      <p style="width:250px">{{ symptoms_final_value }}</p>
     </div>
   </div>
 
@@ -658,7 +658,7 @@
             {{ medicineName }} {{ genericName }}
             <br /><span style="font-size: 8px">by Dr. {{ organizer.name }}</span>
             <br />
-          Note: - <span style="font-family: TiroDevanagariHindi-Regular;">{{ description }}</span>
+            Note: - <span style="font-family: TiroDevanagariHindi-Regular;">{{ description }}</span>
           </p>
         </td>
         <td>
@@ -884,46 +884,32 @@
     </h3>
   </div>
 
-  <div style="margin-top: 30px">
+  <!-- <div style="margin-top: 30px">
     <h3>Lifestyle Advice</h3>
-  </div>
+  </div> -->
 
   <!-- DIET SECTION  -->
 
 
 
 
-  <div class="diet_section_heading">
-
+  <!-- <div class="diet_section_heading">
     <h3>Diet :</h3>
-
   </div>
-
   <div class="diet_section_section">
-
     <div class="diet_section_section_one">
-
       <table class="diet_table" style="width: 100%; text-align: center">
-
         <tr>
-
           <th style="width: 6%">
             <h3>S. No</h3>
           </th>
-
           <th>
             <h3>Diet Name</h3>
           </th>
-
-          <th style="width: 30%">
-            <h3>Time</h3>
+          <th style="width: 40%">
+            <h3>Time and details</h3>
           </th>
-
           <th style="width: 30%">
-            <h3>Details</h3>
-          </th>
-
-          <th style="width: 20%">
             <h3>Duration</h3>
           </th>
         </tr>
@@ -936,20 +922,35 @@
             <p>{{ this.name }}</p>
           </td>
           <td style="text-align: left">
-            {{#each this.food_group}}<p>{{this.time.text}}</p>{{/each}}
-            <h5>Repeat Days - {{#each this.repeat_days }}<span>{{this}},</span>{{/each}}</h5>
-            <h5>What Not to Do - <span style="font-family: TiroDevanagariHindi-Regular">{{this.not_to_do}}</span></h5>
-            <h5>Total Calories - <span>{{ this.total_calories }}</span></h5>
-          </td>
-
-          <td style="text-align: left">
             {{#each this.food_group }}
-            {{#each this.food_group_details_array}}
-            <p>{{ this.details.name }}</p>
-            <p>Instructions: <span style="font-family: TiroDevanagariHindi-Regular">{{ this.notes }}</span></p>
-            <hr />
+            <div style="display: flex; justify-content: space-between;  margin-bottom: 30px;">
+              <div style="width:100px">
+                <p>{{this.time.text}}</p>
+              </div>
+              <div style="display: flex; flex-flow: column;">
+                {{#each this.food_group_details_array}}
+                <div style="width:120px">
+                  <p>{{ this.details.name }}</p>
+                  <p>
+                    Instructions:
+                    <span style="font-family: TiroDevanagariHindi-Regular">{{ this.notes }}</span>
+                  </p>
+                  </div>
+                  {{/each}}
+              </div>
+              </div>
             {{/each}}
-            {{/each}}
+            <div style="margin-top: 20px;">
+              <h5>
+                Repeat Days - {{#each this.repeat_days
+                }}<span>{{this}},</span>{{/each}}
+              </h5>
+              <h5>
+                What Not to Do -
+                <span style="font-family: TiroDevanagariHindi-Regular">{{this.not_to_do}}</span>
+              </h5>
+              <h5>Total Calories - <span>{{ this.total_calories }}</span></h5>
+            </div>
           </td>
           <td>
             <p>{{ this.durationText }}</p>
@@ -957,16 +958,14 @@
         </tr>
         {{/each }}
       </table>
-
     </div>
-
   </div>
+-->
 
 
 
 
-  <!-- WORKOUT SECTION  -->
-  <div class="workout_section_heading">
+  <!-- <div class="workout_section_heading">
     <h3>Workout :</h3>
   </div>
 
@@ -1015,7 +1014,8 @@
 
     </div>
 
-  </div>
+  </div> -->
+
 </body>
 
 </html>
