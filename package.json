@@ -119,6 +119,8 @@
     "nodemailer": "^6.4.10",
     "nodemailer-sendgrid-transport": "^0.2.0",
     "papaparse": "^5.2.0",
+    "handlebars": "^4.7.7",
+    "puppeteer": "^14.2.0",
     "pdfkit": "^0.13.0",
     "razorpay": "^2.0.6",
     "react-chartjs-2": "^2.9.0",
