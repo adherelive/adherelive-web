@@ -648,7 +648,7 @@
       {{#each medicationsList}}
       <tr>
         <td>
-          <p>{{ @index }}</p>
+          <p>{{print @index }}</p>
         </td>
         <td>
           <p>{{ medicineType }}</p>
@@ -749,7 +749,7 @@
         {{#each investigations}}
         <tr>
           <td>
-            <p>{{ @index }}</p>
+            <p>{{print @index }}</p>
           </td>
           <td style="text-align: left">
             <p>
@@ -809,7 +809,7 @@
         {{#each nextConsultation}}
         <tr>
           <td>
-            <p>{{ @index}}</p>
+            <p>{{print @index}}</p>
           </td>
           <td style="text-align: left">
             <p>
@@ -997,7 +997,8 @@
           </td>
           <td style="text-align: left">
             {{#each ex}}
-            <p>{{ ex_group.set }} set x {{ repetition_value }} {{ repetitions.type }} {{ exercises.basic_info.name }}</p>
+            <p>{{ ex_group.set }} set x {{ repetition_value }} {{ repetitions.type }} {{ exercises.basic_info.name }}
+            </p>
             {{/each}}
             <h5>Repeat Days - {{#each repeat_days}}<span>{{ this }}, </span>{{/each }}</h5>
             <h5>What Not to Do - <span>{{ not_to_do }}</span></h5>
