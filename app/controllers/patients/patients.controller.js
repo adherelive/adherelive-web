@@ -2042,7 +2042,9 @@ class PatientController extends Controller {
       };
 
       checkAndCreateDirectory(PRESCRIPTION_PDF_FOLDER);
-
+      console.log("\n\n\n\n\n\n\n\n\n\n\n================================")
+      console.log({ doctorSignImage })
+      console.log("================================\n\n\n\n\n\n\n\n\n\n\n")
       const pdfFileName = await generatePDF(dataForPdf, doctorSignImage);
 
       const pdfFile = `${pdfFileName}.pdf`;

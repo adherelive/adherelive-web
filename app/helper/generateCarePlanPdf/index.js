@@ -2186,7 +2186,9 @@ function printFooter(
     }
     addPageAndNumber(doc);
   }
-
+  console.log("\n\n\n\n\n\n\n\n\n\n\n================================")
+  console.log({ imageUrl })
+  console.log("================================\n\n\n\n\n\n\n\n\n\n\n")
   try {
     doc.image(`${imageUrl}`, 400, doc.y + 10, {
       width: 120,
