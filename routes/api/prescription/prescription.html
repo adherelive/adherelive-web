@@ -429,7 +429,7 @@
     </div>
     <div class="top_setion_wrapper_one">
       <h3>Patient Age/Gender :</h3>
-      <p>{{ patient_data.age }}</p>
+      <p>{{ patient_data.age }}/{{ patient_data.gender }}</p>
     </div>
 
     <div class="top_setion_wrapper_two">
@@ -442,7 +442,7 @@
     </div>
     <div class="top_setion_wrapper_two">
       <h3>Doctor Name:</h3>
-      <p>Dr. {{ doctorName }} (MD, MBBS M.S.) (ORTHOPAEDICS)</p>
+      <p>Dr. {{ doctorName }} {{ degree }}</p>
     </div>
     <div class="top_setion_wrapper_one">
       <h3>Patient Address:</h3>
@@ -516,7 +516,7 @@
                 <h3>Height</h3>
               </th>
               <td style="width: 50%; height: 30px">
-                <p>{{patient_data.height}}</p>
+                <p>{{patient_data.height}} cm</p>
               </td>
             </tr>
             <tr>
@@ -526,7 +526,7 @@
             </tr>
             <tr>
               <td style="width: 50%; height: 30px">
-                <p>{{patient_data.weight}}</p>
+                <p>{{patient_data.weight}} kg</p>
               </td>
             </tr>
             <tr>
@@ -648,7 +648,7 @@
       {{#each medicationsList}}
       <tr>
         <td>
-          <p>1</p>
+          <p>{{print @index }}</p>
         </td>
         <td>
           <p>{{ medicineType }}</p>
@@ -749,7 +749,7 @@
         {{#each investigations}}
         <tr>
           <td>
-            <p>1.</p>
+            <p>{{print @index }}</p>
           </td>
           <td style="text-align: left">
             <p>
@@ -809,7 +809,7 @@
         {{#each nextConsultation}}
         <tr>
           <td>
-            <p>1.</p>
+            <p>{{print @index}}</p>
           </td>
           <td style="text-align: left">
             <p>
@@ -884,16 +884,16 @@
     </h3>
   </div>
 
-  <!-- <div style="margin-top: 30px">
+  <div style="margin-top: 30px">
     <h3>Lifestyle Advice</h3>
-  </div> -->
+  </div>
 
   <!-- DIET SECTION  -->
 
 
 
 
-  <!-- <div class="diet_section_heading">
+  <div class="diet_section_heading">
     <h3>Diet :</h3>
   </div>
   <div class="diet_section_section">
@@ -916,7 +916,7 @@
         {{#each diet_output }}
         <tr>
           <td>
-            <p>1.</p>
+            <p>{{print @index}}</p>
           </td>
           <td style="text-align: left">
             <p>{{ this.name }}</p>
@@ -935,15 +935,14 @@
                     Instructions:
                     <span style="font-family: TiroDevanagariHindi-Regular">{{ this.notes }}</span>
                   </p>
-                  </div>
-                  {{/each}}
+                </div>
+                {{/each}}
               </div>
-              </div>
+            </div>
             {{/each}}
             <div style="margin-top: 20px;">
               <h5>
-                Repeat Days - {{#each this.repeat_days
-                }}<span>{{this}},</span>{{/each}}
+                Repeat Days - {{#each this.repeat_days}}<span>{{this}},</span>{{/each}}
               </h5>
               <h5>
                 What Not to Do -
@@ -960,12 +959,8 @@
       </table>
     </div>
   </div>
--->
 
-
-
-
-  <!-- <div class="workout_section_heading">
+  <div class="workout_section_heading">
     <h3>Workout :</h3>
   </div>
 
@@ -989,32 +984,36 @@
             <h3>Duration</h3>
           </th>
         </tr>
-
+        {{#each pre_workouts }}
         <tr>
           <td>
-            <p>1.</p>
+            <p>{{print @index }}</p>
           </td>
           <td style="text-align: left">
-            <p>test</p>
+            <p>{{ name }}</p>
           </td>
           <td>
-            <p>6 am</p>
+            <p>{{ formattedTime }}</p>
           </td>
           <td style="text-align: left">
-            <p>set x 1 repetitions Push Ups Long Term</p>
-            <h5>Repeat Days - <span> Sun</span></h5>
-            <h5>What Not to Do - --<span></span></h5>
-            <h5>Total Calories - <span>100 Cal</span></h5>
+            {{#each ex}}
+            <p>{{ ex_group.set }} set x {{ repetition_value }} {{ repetitions.type }} {{ exercises.basic_info.name }}
+            </p>
+            {{/each}}
+            <h5>Repeat Days - {{#each repeat_days}}<span>{{ this }}, </span>{{/each }}</h5>
+            <h5>What Not to Do - <span>{{ not_to_do }}</span></h5>
+            <h5>Total Calories - <span>{{ total_cal }} Cal</span></h5>
           </td>
           <td>
-            <p>Long Term</p>
+            <p>{{ durationText }}</p>
           </td>
         </tr>
+        {{/each }}
       </table>
 
     </div>
 
-  </div> -->
+  </div>
 
 </body>
 

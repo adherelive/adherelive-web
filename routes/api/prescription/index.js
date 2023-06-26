@@ -113,6 +113,9 @@ const getWhenToTakeText = (number) => {
 }
 
 async function html_to_pdf({ templateHtml, dataBinding, options }) {
+    handlebars.registerHelper('print', function (value) {
+        return ++value
+    });
     const template = handlebars.compile(templateHtml);
     const finalHtml = encodeURIComponent(template(dataBinding));
 
@@ -318,7 +321,7 @@ function formatPatientData(patients, users) {
         comorbidities,
         mobile_number,
         prefix,
-        uid, created_at: `${moment(new Date(created_at)).format("DD MMM 'YY")}`
+        uid, created_at: `${moment(new Date(created_at)).format("DD MMM 'YY, hh:mm A")}`
     };
 }
 
@@ -1194,7 +1197,67 @@ router.get(
 
 
 
+
             let { date: prescriptionDate } = getLatestUpdateDate(medications);
+
+            // workout logic here
+
+            let workoutdata = { ...workoutApiData };
+            let pre_workouts = []
+
+
+            for (let i in workoutIds) {
+
+                let { exercise_groups, exercise_details, exercises, repetitions } = workoutdata[workoutIds[i]]
+
+                let newworkout = {}
+                let workout = workoutdata[workoutIds[i]]["workouts"][workoutIds[i]]
+                let { basic_info: { name }, end_date, exercise_group_ids, start_date, time, details: { not_to_do, repeat_days } } = workout
+                let formattedStartDate = "--",
+                    formattedEndDate = "--";
+
+                let ex = [];
+                let total_cal = 0
+                for (let exgid in exercise_group_ids) {
+                    let ex_group = exercise_groups[exercise_group_ids[exgid]]
+                    let exdetails_id = ex_group["basic_info"]["exercise_detail_id"]
+                    let { exercise_id, repetition_id, repetition_value } = exercise_details[exdetails_id]['basic_info']
+                    total_cal += exercise_details[exdetails_id]["calorific_value"]
+                    ex.push({
+                        ex_group: ex_group,
+                        ex_details: exercise_details[exdetails_id],
+                        exercises: exercises[exercise_id],
+                        repetitions: repetitions[repetition_id],
+                        repetition_value
+                    })
+                }
+                if (start_date) formattedStartDate = moment(start_date);
+                if (end_date) formattedEndDate = moment(end_date);
+
+
+                const formattedTime = moment(time).tz("Asia/Kolkata").format("hh:mm A");
+
+                let duration = null;
+                let durationText = "";
+
+                if (end_date) {
+                    duration = formattedEndDate.diff(formattedStartDate, "days");
+                    durationText = `${duration}${" "}days`;
+                    if (duration >= 7) {
+                        const weeks = Math.floor(duration / 7) || 0;
+                        const days = duration % 7 || 0;
+                        durationText = `${weeks > 0 ? `${weeks}${" "}${weeks > 1 ? "weeks" : "week"}${" "}` : ""
+                            }${days > 0 ? `${days}${" "}${days > 1 ? "days" : "day"}` : ""} `;
+                    }
+                }
+                else {
+                    durationText = "Long Term"
+                }
+
+                pre_workouts.push({ ex, total_cal, durationText, duration, name, end_date, start_date, formattedTime, not_to_do, repeat_days })
+            }
+
+
             prescriptionDate = prescriptionDate || carePlanCreatedDate;
             let pre_data = {
                 doctor_id,
@@ -1220,8 +1283,10 @@ router.get(
                 creationDate: moment(prescriptionDate).add(330, "minutes").format("Do MMMM YYYY, h:mm a"),
                 investigations, nextConsultation,
                 medicationsList,
-                diteFormattedData: { ...dietApiData }, dietIds, diet_output
-
+                diteFormattedData: { ...dietApiData },
+                dietIds,
+                diet_output,
+                pre_workouts
             }
             console.log("diet real data start==============")
             console.log({ data: JSON.stringify({ ...dietApiData }) })
