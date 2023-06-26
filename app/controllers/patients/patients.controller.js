@@ -1884,11 +1884,13 @@ class PatientController extends Controller {
       checkAndCreateDirectory(S3_DOWNLOAD_FOLDER);
 
       const doctorSignImage = `${S3_DOWNLOAD_FOLDER}/${full_name}.jpeg`;
-
+      console.log("\n\n\n\n\n\n\n\n\n\n\n================================")
+      console.log({ doctorSignImage })
       const downloadImage = await downloadFileFromS3(
         getFilePath(signature_pic),
         doctorSignImage
       );
+      console.log("================================\n\n\n\n\n\n\n\n\n\n\n")
 
       const doctorQualifications =
         await qualificationService.getQualificationsByDoctorId(doctor_id);
