@@ -1070,6 +1070,7 @@ router.get(
                 providerLogo = "",
                 providerName = "",
                 providerAddress = "",
+
             } = formatDoctorsData(
                 doctors,
                 { ...usersData },
@@ -1257,7 +1258,6 @@ router.get(
                 pre_workouts.push({ ex, total_cal, durationText, duration, name, end_date, start_date, formattedTime, not_to_do, repeat_days })
             }
 
-
             prescriptionDate = prescriptionDate || carePlanCreatedDate;
             let pre_data = {
                 doctor_id,
@@ -1267,7 +1267,7 @@ router.get(
                 registrationNumber,
                 doctorEmail,
                 doctorMobileNumber,
-                doctorSignImage,
+                doctorSignImage: signature_pic,
                 prefix,
                 providerLogo,
                 providerName,
