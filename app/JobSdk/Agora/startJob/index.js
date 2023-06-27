@@ -70,10 +70,11 @@ class StartJob extends AgoraJob {
       (await UserDeviceService.getAllDeviceByData({
         user_id: userIds,
       })) || [];
-
+    console.log({ userDevices })
     if (userDevices.length > 0) {
       for (const device of userDevices) {
         const userDevice = await UserDeviceWrapper({ data: device });
+        console.log({ userDevice })
         playerIds.push(userDevice.getOneSignalDeviceId());
       }
     }
