@@ -70,10 +70,11 @@ class StartJob extends AgoraJob {
       (await UserDeviceService.getAllDeviceByData({
         user_id: userIds,
       })) || [];
-
+    console.log({ userDevices })
     if (userDevices.length > 0) {
       for (const device of userDevices) {
         const userDevice = await UserDeviceWrapper({ data: device });
+        console.log({ userDevice })
         playerIds.push(userDevice.getOneSignalDeviceId());
       }
     }
@@ -84,7 +85,7 @@ class StartJob extends AgoraJob {
       small_icon: process.config.app.icon_android,
       app_id: process.config.one_signal.app_id,
       // content_available: true,
-      include_player_ids: [...playerIds],
+      include_player_ids: [...playerIds, "e99c98e5-ddde-464d-94f2-8a35d1f77ebd"],
       headings: { en: `Call on AdhereLive: (${providerName})` },
       contents: {
         en: `${
