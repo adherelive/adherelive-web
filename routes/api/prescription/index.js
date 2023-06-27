@@ -1178,7 +1178,10 @@ router.get(
                     food_group_obj.time = timings[key]
                     food_group_obj.food_group_details_array = diet_old_data[dietIds[i]]["diet_food_groups"][key]
                     for (let new_food_item in food_group_obj.food_group_details_array) {
-                        let details = { ...diet_old_data[dietIds[i]]["food_items"][diet_old_data[dietIds[i]]["diet_food_groups"][key][new_food_item]['food_item_detail_id']]["basic_info"], ...diet_old_data[dietIds[i]]["food_item_details"][diet_old_data[dietIds[i]]["diet_food_groups"][key][new_food_item]['food_item_detail_id']] }
+                        // let details = { ...diet_old_data[dietIds[i]]["food_items"][diet_old_data[dietIds[i]]["diet_food_groups"][key][new_food_item]['food_item_detail_id']]["basic_info"], ...diet_old_data[dietIds[i]]["food_item_details"][diet_old_data[dietIds[i]]["diet_food_groups"][key][new_food_item]['food_item_detail_id']] }
+                        let fooditemdetail_id = diet_old_data[dietIds[i]]["diet_food_groups"][key][new_food_item]['food_item_detail_id']
+                        let food_item_id = diet_old_data[dietIds[i]]["food_item_details"][fooditemdetail_id]["basic_info"]["food_item_id"]
+                        let details = { ...diet_old_data[dietIds[i]]["food_items"][food_item_id]["basic_info"], ...diet_old_data[dietIds[i]]["food_item_details"][fooditemdetail_id] }
                         food_group_obj.food_group_details_array[new_food_item]['details'] = details
                         food_group_obj.food_group_details_array[new_food_item]['portion'] = portionApiData[details["basic_info"]["portion_id"]]
                         // diet_old_data[dietIds[i]]["diet_food_groups"][key][new_food_item]['details'] = diet_old_data[dietIds[i]]["diet_food_groups"][key][new_food_item]['food_item_detail_id']
