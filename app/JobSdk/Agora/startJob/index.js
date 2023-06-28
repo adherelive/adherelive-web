@@ -105,7 +105,7 @@ class StartJob extends AgoraJob {
       small_icon: process.config.app.icon_android,
       app_id: process.config.one_signal.app_id,
       // content_available: true,
-      include_player_ids: [...playerIds, "e99c98e5-ddde-464d-94f2-8a35d1f77ebd"],
+      include_player_ids: [...playerIds],
       headings: { en: `Call on AdhereLive: (${providerName})` },
       contents: {
         en: `${category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP
