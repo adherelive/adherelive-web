@@ -61,7 +61,7 @@ class StartJob extends AgoraJob {
       console.log({ id, user_role_id, linked_id, user_identity })
       if (id === user_role_id) {
         console.log("in if - 1 ")
-        userIds.push(user_identity)
+        // userIds.push(user_identity)
         if (linked_id) {
           providerId = linked_id;
           console.log("in if - 2 ")
