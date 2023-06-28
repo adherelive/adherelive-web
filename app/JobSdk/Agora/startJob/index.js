@@ -33,6 +33,11 @@ class StartJob extends AgoraJob {
     const participants = roomId.split(
       `-${process.config.twilio.CHANNEL_SERVER}-`
     );
+    console.log("12312313212312312312312312312312312312")
+    console.log(JSON.stringify(getAgoraData()))
+    console.log(participants)
+    console.log(roomId)
+
 
     const templateData = [];
     const playerIds = [];
@@ -56,9 +61,11 @@ class StartJob extends AgoraJob {
       console.log({ id, user_role_id, linked_id, user_identity })
       if (id === user_role_id) {
         console.log("in if - 1 ")
+        userIds.push(user_identity)
         if (linked_id) {
           providerId = linked_id;
           console.log("in if - 2 ")
+
         }
       } else {
         console.log("in else")
