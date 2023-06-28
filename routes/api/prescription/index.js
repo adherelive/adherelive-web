@@ -321,7 +321,7 @@ function formatPatientData(patients, users) {
         comorbidities,
         mobile_number,
         prefix,
-        uid, created_at: `${moment(new Date(created_at)).format("DD MMM 'YY, hh:mm A")}`
+        uid, created_at: `${moment(new Date(created_at)).tz("Asia/Kolkata").format("DD MMM 'YY, hh:mm A")}`
     };
 }
 
@@ -1083,6 +1083,8 @@ router.get(
             let patient_data = formatPatientData({
                 ...{ [patientData.getPatientId()]: patientData.getBasicInfo() },
             }, { ...usersData })
+
+
 
             const { diagnosis, condition, symptoms, clinicalNotes } = formatCarePlanData({
                 [carePlanData.getCarePlanId()]: {
