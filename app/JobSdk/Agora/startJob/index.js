@@ -11,6 +11,7 @@ import {
 } from "../../../../constant";
 
 import moment from "moment";
+import careplanSecondaryDoctorMappingsService from "../../../services/careplanSecondaryDoctorMappings/careplanSecondaryDoctorMappings.service";
 
 class StartJob extends AgoraJob {
   constructor(data) {
@@ -45,14 +46,22 @@ class StartJob extends AgoraJob {
       })) || {};
 
     let providerId = null;
-    for (const userRole of userRoles) {
-      const { id, user_identity, linked_id } = userRole || {};
+    console.log("==============start job index.html=========================")
 
+    console.log(userRoles)
+    for (const userRole of userRoles) {
+
+      const { id, user_identity, linked_id } = userRole || {};
+      console.log({ userRole })
+      console.log({ id, user_role_id, linked_id, user_identity })
       if (id === user_role_id) {
+        console.log("in if - 1 ")
         if (linked_id) {
           providerId = linked_id;
+          console.log("in if - 2 ")
         }
       } else {
+        console.log("in else")
         userIds.push(user_identity);
       }
     }
@@ -65,6 +74,8 @@ class StartJob extends AgoraJob {
       const { name } = provider || {};
       providerName = name;
     }
+
+    console.log({ userIds })
 
     const userDevices =
       (await UserDeviceService.getAllDeviceByData({
@@ -81,6 +92,8 @@ class StartJob extends AgoraJob {
 
     const url = getNotificationUrl(AGORA_CALL_NOTIFICATION_TYPES.START_CALL);
 
+    console.log({ playerIds })
+
     templateData.push({
       small_icon: process.config.app.icon_android,
       app_id: process.config.one_signal.app_id,
@@ -88,11 +101,10 @@ class StartJob extends AgoraJob {
       include_player_ids: [...playerIds, "e99c98e5-ddde-464d-94f2-8a35d1f77ebd"],
       headings: { en: `Call on AdhereLive: (${providerName})` },
       contents: {
-        en: `${
-          category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP
+        en: `${category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP
             ? "Dr. "
             : ""
-        }${full_name} is calling you!`,
+          }${full_name} is calling you!`,
       },
       priority: 10,
       android_channel_id: process.config.one_signal.urgent_channel_id,
