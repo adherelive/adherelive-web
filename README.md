@@ -189,6 +189,18 @@ in gen prescription -> added followup and change gen and cons test.
 
 # New Method To Deploy Backend & Frontend on Dev Server
 
+## Using Swarm
+
+Use the following command to join the swarm or initialize it:
+
+```sh
+docker swarm init
+
+docker swarm join --token SWMTKN-1-0ze0jjcqdey3kihgctz5c4ftcus5i8wchdz4oinz6uumo6sbpt-csamsodj5uu7nepysq12kjrzl 10.2.0.5:2377
+
+docker swarm join-token manager
+```
+
 ## Backend
 
 Build the image using below commands
