@@ -1,4 +1,5 @@
 FROM gauravsharma6421/ubuntulibs
+#FROM node:14.15.0 as builder
 RUN useradd -d /home/azureuser -m -s /bin/bash azureuser
 LABEL application="adherelive-backend"
 LABEL owner="Gaurav Sharma"
@@ -6,7 +7,7 @@ RUN mkdir -p /usr/src/app && mkdir -p /usr/src/app/public
 WORKDIR /usr/src/app
 COPY package.json /usr/src/app
 COPY package-lock.json /usr/src/app
-COPY env_files/.node_env_demo /usr/src/app/.env
+COPY .node_env /usr/src/app/.env
 RUN npm install && npm cache clean --force --loglevel=error
 COPY . /usr/src/app
 EXPOSE 5000
