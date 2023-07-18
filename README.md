@@ -255,9 +255,7 @@ EXPOSE 5000
 CMD ["npm", "start"]
 HEALTHCHECK NONE
 
-$ docker image build --no-cache -f ./docker/Dockerfile -t adherelive:portal-be .
-
-
+$ docker image build --no-cache -f Dockerfile -t adherelive:portal-be .
 ```
 
 ### Frontend
@@ -282,19 +280,27 @@ EXPOSE 80
 COPY nginx/nginx.conf /etc/nginx/conf.d/default.conf
 COPY --from=builder /code/build/ /usr/share/nginx/html
 
-$ docker image build -t adherelive:portal-fe .
+$ docker image build --no-cache -f Dockerfile -t adherelive:portal-fe .
 ```
 
 ### Final steps to update the existing builds
 
 ```shell
-$ docker service ls
-ID             NAME              MODE         REPLICAS   IMAGE                  PORTS
-y4568darcj1j   awesome_bose      replicated   1/1        adherelive:portal-fe   *:3000->80/tcp
-ogpoiobdkjto   blissful_edison   replicated   1/1        adherelive:portal      *:5000->5000/tcp
+#$ docker service ls
+#ID             NAME              MODE         REPLICAS   IMAGE                  PORTS
+#y4568darcj1j   awesome_bose      replicated   1/1        adherelive:portal-fe   *:3000->80/tcp
+#ogpoiobdkjto   blissful_edison   replicated   1/1        adherelive:portal      *:5000->5000/tcp
 
-$ docker service update --image=adherelive:portal-be blissful_edison
-$ docker service update --image=adherelive:portal-fe awesome_bose
+#$ docker service update --image=adherelive:portal-be blissful_edison
+#$ docker service update --image=adherelive:portal-fe awesome_bose
+
+adherelive@adherelive-nprod:~$ docker service ls
+ID             NAME                  MODE         REPLICAS   IMAGE                  PORTS
+sbomh2g1i0jy   intelligent_swirles   replicated   1/1        adherelive:portal-fe   *:3001->80/tcp
+8zsqeg7lpn4t   naughty_blackwell     replicated   1/1        adherelive:portal-be   *:5000->5000/tcp
+
+$ docker service update --image=adherelive:portal-be naughty_blackwell
+$ docker service update --image=adherelive:portal-fe intelligent_swirles
 ```
 
 ### Run Migrations, if required
@@ -312,7 +318,7 @@ ac666db74338   mongo:latest             "docker-entrypoint.s�"   9 hours ago  
 eaf587a93742   certbot/certbot:latest   "/bin/sh -c 'trap ex�"   7 months ago        Up 3 hours         80/tcp, 443/tcp                                 adhere_certbot_1
 
 $ docker exec -it 85bbed7267ac bash
-/# npm run migrate
+$ # npm run migrate
 ```
 
 ### Run Seeders, if required
