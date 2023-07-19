@@ -88,10 +88,15 @@ MINIO_BUCKET_NAME=adherelive-production
 
 # GetStream API Keys
 #APP_ID=adherelive-production
-GETSTREAM_API_KEY=uycevhsbaatd
-GETSTREAM_API_SECRET=b9fdmytwag4atcp6kjnk5zgepaq9fyneyvkwhhahsqduh9jp9g9jbcfj2v98bkwm
+; GETSTREAM_API_KEY=uycevhsbaatd
+; GETSTREAM_API_SECRET=b9fdmytwag4atcp6kjnk5zgepaq9fyneyvkwhhahsqduh9jp9g9jbcfj2v98bkwm
+; GETSTREAM_REGION=us-east
+; GETSTREAM_APP_ID=1144809
+
+GETSTREAM_API_KEY=kmvug7bs2v52
+GETSTREAM_API_SECRET=mqdvv7jv26sfxmt8wahqv7p9vx77p7r3u9au5qzv6v9f9utk67v4vzf4tbv35u49
 GETSTREAM_REGION=us-east
-GETSTREAM_APP_ID=1144809
+GETSTREAM_APP_ID=95904
 
 # OneSignal API Keys
 ONE_SIGNAL_APP_ID=78b416ba-40f8-41a7-904a-baf7c708573c
