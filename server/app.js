@@ -35,12 +35,18 @@ const app = express();
 
 /****************************  CRONS  *********************************/
 
-// CRONS RUNNING EVERY 1 MINUTE
-const cron = schedule.scheduleJob("*/1 * * * *", async () => {
-  await Prior.runObserver();
-  await Passed.runObserver();
-  await Start.runObserver();
-});
+// CRONS RUNNING EVERY 1 MINUTE as of now we have changed it to one hours. GauravSharma 
+// Reason: our prod server down 
+// const cron = schedule.scheduleJob("0 0 */1 * * *", async () => {
+//   await Prior.runObserver();
+//   await Passed.runObserver();
+//   await Start.runObserver();
+// });
+// const cron = schedule.scheduleJob("*/1 * * * *", async () => {
+//   await Prior.runObserver();
+//   await Passed.runObserver();
+//   await Start.runObserver();
+// });
 
 const perDayUtcRule = new schedule.RecurrenceRule();
 perDayUtcRule.hour = 0;
@@ -54,12 +60,12 @@ const removeDocumentPerDayCron = schedule.scheduleJob(
 );
 
 // CRONS RUNNING EVERY 1 HOUR
-const perHourCron = schedule.scheduleJob("0 0 */1 * * *", async () => {
-  // await LongTerm.observer();
-  await activePatient.runObserver();
-  await renewTxActivity.runObserver();
-  await LongTerm.observer();
-});
+// const perHourCron = schedule.scheduleJob("0 0 */1 * * *", async () => {
+//   // await LongTerm.observer();
+//   await activePatient.runObserver();
+//   await renewTxActivity.runObserver();
+//   await LongTerm.observer();
+// });
 
 // CRONS RUNNING AT START OF EVERY MONTH
 const rule = new schedule.RecurrenceRule();
@@ -67,9 +73,9 @@ rule.dayOfWeek = [new schedule.Range(0, 6)];
 rule.hour = 0;
 rule.minute = 0;
 
-const perDayCron = schedule.scheduleJob(rule, async () => {
-  await RenewSubscription.runObserver();
-});
+// const perDayCron = schedule.scheduleJob(rule, async () => {
+//   await RenewSubscription.runObserver();
+// });
 
 EventObserver.runObservers();
 Activity.runObservers();
