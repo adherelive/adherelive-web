@@ -261,9 +261,10 @@ class Database {
           port: process.config.db.port,
           dialect: process.config.db.dialect,
           pool: {
-            max: 100,
+            max: 50,
             min: 0,
-            acquire: 100 * 1000,
+            // acquire: 100 * 1000,
+            acquire: 120000,
             idle: 10000,
           },
           logging: false,
