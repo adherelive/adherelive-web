@@ -37,11 +37,11 @@ const app = express();
 
 // CRONS RUNNING EVERY 1 MINUTE as of now we have changed it to one hours. GauravSharma 
 // Reason: our prod server down 
-// const cron = schedule.scheduleJob("0 0 */1 * * *", async () => {
-//   await Prior.runObserver();
-//   await Passed.runObserver();
-//   await Start.runObserver();
-// });
+const cron = schedule.scheduleJob("0 0 */1 * * *", async () => {
+  await Prior.runObserver();
+  await Passed.runObserver();
+  await Start.runObserver();
+});
 // const cron = schedule.scheduleJob("*/1 * * * *", async () => {
 //   await Prior.runObserver();
 //   await Passed.runObserver();
@@ -60,12 +60,12 @@ const removeDocumentPerDayCron = schedule.scheduleJob(
 );
 
 // CRONS RUNNING EVERY 1 HOUR
-// const perHourCron = schedule.scheduleJob("0 0 */1 * * *", async () => {
-//   // await LongTerm.observer();
-//   await activePatient.runObserver();
-//   await renewTxActivity.runObserver();
-//   await LongTerm.observer();
-// });
+const perHourCron = schedule.scheduleJob("0 0 */2 * * *", async () => {
+  // await LongTerm.observer();
+  await activePatient.runObserver();
+  await renewTxActivity.runObserver();
+  await LongTerm.observer();
+});
 
 // CRONS RUNNING AT START OF EVERY MONTH
 const rule = new schedule.RecurrenceRule();
