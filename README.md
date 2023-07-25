@@ -201,7 +201,34 @@ https://www.digitalocean.com/community/tutorials/how-to-install-nginx-on-ubuntu-
 
 https://www.linode.com/docs/guides/how-to-install-and-use-nginx-on-ubuntu-20-04/
 
-Use the following to create a file - /etc/nginx/sites-enabled/portal.adhere.live
+Use this as the initial setup file for NGINX
+
+```json
+server {
+    if ($host = portal.adhere.live) {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
+
+        listen 80;
+        listen [::]:80;
+
+        server_name portal.adhere.live;
+    return 404; # managed by Certbot
+
+
+}
+
+```
+
+### Install LetsEncrypt certificate
+
+- nginx with LetsEncrypt and Certbot as a Docker container
+
+https://www.digitalocean.com/community/tutorials/how-to-secure-nginx-with-let-s-encrypt-on-ubuntu-20-04
+
+Use the following to update the file
+
+- /etc/nginx/sites-enabled/portal.adhere.live
 
 ```json lines
 server {
@@ -266,17 +293,11 @@ server {
 }
 ```
 
-### Install LetsEncrypt certificate
-
-- nginx with LetsEncrypt and Certbot as a Docker container
-
-https://www.digitalocean.com/community/tutorials/how-to-secure-nginx-with-let-s-encrypt-on-ubuntu-20-04
-
 ## Install Docker
 
 https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-on-ubuntu-20-04
 
-## Using Swarm
+### Using Swarm
 
 https://www.linuxtechi.com/how-to-deploy-docker-swarm-on-ubuntu/
 
@@ -340,7 +361,7 @@ WORKDIR /usr/src/app
 COPY package.json /usr/src/app/
 COPY package-lock.json /usr/src/app/
 RUN npm install && npm cache clean --force --loglevel=error
-COPY .env /usr/src/app/.env
+COPY .node_env /usr/src/app/.env
 COPY . /usr/src/app
 EXPOSE 5000
 CMD ["npm", "start"]
