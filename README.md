@@ -163,7 +163,7 @@ If you're running the project first time. Run the following command
 
 `app/ApiWrapper/mobile/medicine/index.js` and `webwrapper` also.
 
-```json
+```
 id,
 name,
 treatment_id,
@@ -203,7 +203,7 @@ https://www.linode.com/docs/guides/how-to-install-and-use-nginx-on-ubuntu-20-04/
 
 Use this as the initial setup file for NGINX
 
-```json
+```
 server {
     if ($host = portal.adhere.live) {
         return 301 https://$host$request_uri;
@@ -214,10 +214,7 @@ server {
 
         server_name portal.adhere.live;
     return 404; # managed by Certbot
-
-
 }
-
 ```
 
 ### Install LetsEncrypt certificate
@@ -230,7 +227,7 @@ Use the following to update the file
 
 - /etc/nginx/sites-enabled/portal.adhere.live
 
-```json lines
+```
 server {
         client_max_body_size 10M;
         server_name portal.adhere.live;
@@ -407,12 +404,12 @@ $ docker image build --no-cache -f Dockerfile -t adherelive:portal-fe .
 #$ docker service update --image=adherelive:portal-fe awesome_bose
 
 adherelive@adherelive-nprod:~$ docker service ls
-ID             NAME                  MODE         REPLICAS   IMAGE                  PORTS
-sbomh2g1i0jy   intelligent_swirles   replicated   1/1        adherelive:portal-fe   *:3001->80/tcp
-8zsqeg7lpn4t   naughty_blackwell     replicated   1/1        adherelive:portal-be   *:5000->5000/tcp
+ID             NAME            MODE         REPLICAS   IMAGE             PORTS
+2paz1v61fr3j   loving_yonath   replicated   1/1        adherelive-be:1   *:5000->5000/tcp
+kd6gf0vvaumz   stoic_lehmann   replicated   1/1        adherelive-fe:1   *:3000->80/tcp
 
-$ docker service update --image=adherelive:portal-be naughty_blackwell
-$ docker service update --image=adherelive:portal-fe intelligent_swirles
+$ docker service update --image=adherelive:portal-be loving_yonath
+$ docker service update --image=adherelive:portal-fe stoic_lehmann
 ```
 
 ### Run Migrations, if required
