@@ -1,5 +1,5 @@
-#FROM gauravsharma6421/ubuntulibs
-FROM node:16.10.0 as builder
+FROM gauravsharma6421/ubuntulibs
+#FROM node:16.10.0 as builder
 RUN useradd -d /home/azureuser -m -s /bin/bash azureuser
 LABEL application="adherelive-backend"
 LABEL owner="Gaurav Sharma"
