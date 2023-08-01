@@ -35,18 +35,14 @@ const app = express();
 
 /****************************  CRONS  *********************************/
 
-// CRONS RUNNING EVERY 1 MINUTE as of now we have changed it to one hours. GauravSharma 
-// Reason: our prod server down 
+// CRONS RUNNING EVERY 1 MINUTE as of now we have changed it to one hours. GauravSharma
+// Reason: our prod server down
+// const cron = schedule.scheduleJob("*/1 * * * *", async () => {
 const cron = schedule.scheduleJob("0 0 */1 * * *", async () => {
   await Prior.runObserver();
   await Passed.runObserver();
   await Start.runObserver();
 });
-// const cron = schedule.scheduleJob("*/1 * * * *", async () => {
-//   await Prior.runObserver();
-//   await Passed.runObserver();
-//   await Start.runObserver();
-// });
 
 const perDayUtcRule = new schedule.RecurrenceRule();
 perDayUtcRule.hour = 0;
@@ -60,6 +56,8 @@ const removeDocumentPerDayCron = schedule.scheduleJob(
 );
 
 // CRONS RUNNING EVERY 1 HOUR
+// Reason: our prod server down
+//const perHourCron = schedule.scheduleJob("0 0 */1 * * *", async () => {
 const perHourCron = schedule.scheduleJob("0 0 */2 * * *", async () => {
   // await LongTerm.observer();
   await activePatient.runObserver();
@@ -73,6 +71,7 @@ rule.dayOfWeek = [new schedule.Range(0, 6)];
 rule.hour = 0;
 rule.minute = 0;
 
+// Reason: our prod server down
 // const perDayCron = schedule.scheduleJob(rule, async () => {
 //   await RenewSubscription.runObserver();
 // });
