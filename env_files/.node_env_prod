@@ -38,7 +38,8 @@ DB_PASSWORD=eK7tz4s3CBkYPjUaSBAl
 DB_DIALECT=mysql
 
 # MongoDB parameters
-MONGO_DB_URI="mongodb+srv://adherelive:Q3xbZbp5f7O0AqR4@adherelive.aqaaqxe.mongodb.net/?retryWrites=true&w=majority"
+#MONGO_DB_URI="mongodb+srv://adherelive:Q3xbZbp5f7O0AqR4@adherelive.aqaaqxe.mongodb.net/?retryWrites=true&w=majority"
+MONGO_DB_URI="mongodb://10.2.0.5/adhere"
 
 SALT_ROUNDS=5
 
