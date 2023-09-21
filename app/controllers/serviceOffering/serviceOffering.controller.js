@@ -241,13 +241,13 @@ class ReportController extends Controller {
       };
     }
 
-    if (req.userDetails.userRoleData.basic_info.linked_with === "provider") {
+    if (req.userDetails.userRoleData.basic_info.linked_with === USER_CATEGORY.PROVIDER) {
       provider_id = req.userDetails.userRoleData.basic_info.linked_id;
       // doctor_id = req.userDetails.userCategoryData.basic_info.id;
       data = {
         doctor_id,
         provider_id,
-        provider_type: req.userDetails.userRoleData.basic_info.linked_with,
+        provider_type: USER_CATEGORY.PROVIDER,
       };
     }
     if (category === "provider" && doctor_id) {
@@ -255,7 +255,7 @@ class ReportController extends Controller {
       data = {
         doctor_id,
         provider_id,
-        provider_type: req.userDetails.userRoleData.basic_info.linked_with,
+        provider_type: USER_CATEGORY.PROVIDER,
       };
     }
 

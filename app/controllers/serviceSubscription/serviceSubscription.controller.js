@@ -204,7 +204,7 @@ class ServiceSubscriptionController extends Controller {
       data = {
         doctor_id,
         provider_id,
-        provider_type: req.userDetails.userRoleData.basic_info.linked_with,
+        provider_type: USER_CATEGORY.PROVIDER,
       };
     }
 
