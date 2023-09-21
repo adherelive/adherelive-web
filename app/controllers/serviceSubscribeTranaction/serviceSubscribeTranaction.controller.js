@@ -93,8 +93,8 @@ class ServiceSubscriptionTxController extends Controller {
         provider_type: USER_CATEGORY.DOCTOR,
       };
     }
-
-    if (req.userDetails.userRoleData.basic_info.linked_with === "provider") {
+// change constants.
+    if (req.userDetails.userRoleData.basic_info.linked_with === USER_CATEGORY.PROVIDER) {
       provider_id = req.userDetails.userRoleData.basic_info.linked_id;
       doctor_id = req.userDetails.userCategoryData.basic_info.id;
       data = {
@@ -103,11 +103,12 @@ class ServiceSubscriptionTxController extends Controller {
         provider_type: req.userDetails.userRoleData.basic_info.linked_with,
       };
     }
-    if (category === "provider") {
+    // change constant
+    if (category === USER_CATEGORY.PROVIDER) {
       provider_id = req.userDetails.userCategoryData.basic_info.id;
       data = {
         provider_id,
-        provider_type: req.userDetails.userRoleData.basic_info.linked_with,
+        provider_type: USER_CATEGORY.PROVIDER,
       };
     }
 

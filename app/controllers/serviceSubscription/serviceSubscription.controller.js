@@ -38,13 +38,14 @@ class ServiceSubscriptionController extends Controller {
         provider_type: req.userDetails.userRoleData.basic_info.linked_with,
       };
     }
+    // chanage provider type to provider
     if (category === "provider" && req.body.doctor_id) {
       provider_id = req.userDetails.userCategoryData.basic_info.id;
       doctor_id = req.body.doctor_id;
       data = {
         doctor_id,
         provider_id,
-        provider_type: req.userDetails.userRoleData.basic_info.linked_with,
+        provider_type: USER_CATEGORY.PROVIDER,
       };
     }
 
