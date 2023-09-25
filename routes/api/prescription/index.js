@@ -213,6 +213,10 @@ function formatDoctorsData(
     let mobileNumber = mobile_number;
     let prefixToShow = prefix;
 
+    console.log("========provider details start==================")
+    console.log(providers)
+    console.log("========provider details end====================")
+
     if (Object.keys(providers).length > 0) {
         const {
             basic_info: { user_id: providerUserId, name, address } = {},
@@ -1026,8 +1030,10 @@ router.get(
                         providerIcon
                     );
                 }
-
+                console.log("provide details start ====================1 ")
                 providerData = { ...providers[provider_id] };
+                console.log({providerData})
+                console.log("provide details end ====================1 ")
                 usersData = { ...usersData, ...users };
             }
 
@@ -1059,6 +1065,11 @@ router.get(
             console.log({})
             console.log("============================")
 
+            console.log("details before from a doctor start")
+            console.log({providerLogo})
+            console.log("details before from a doctor end")
+
+
             const {
                 name: doctorName = "",
                 city = "",
@@ -1079,6 +1090,10 @@ router.get(
                 providerData,
                 doctor_id
             );
+
+            console.log("details from a doctor start")
+            console.log({providerLogo})
+            console.log("details from a doctor end")
 
             let patient_data = formatPatientData({
                 ...{ [patientData.getPatientId()]: patientData.getBasicInfo() },
