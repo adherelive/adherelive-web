@@ -184,23 +184,24 @@ class DoctorWrapper extends BaseDoctor {
 
         watchlistPatientIds[userRoleId] = [...curreRoleIdPatientIds];
       }
+      // Start - 28 - Sept - 2023 comment
+      // const { rows: doctorCarePlans } =
+      //   (await carePlanService.findAndCountAll({
+      //     where: {
+      //       [Op.or]: [
+      //         { user_role_id: userRoleIds[index] },
+      //         { patient_id: patientIds },
+      //       ],
+      //     },
+      //     order: [["expired_on", "ASC"]],
+      //     attributes: ["id"],
+      //     userRoleId: userRoleIds[index],
+      //   })) || [];
 
-      const { rows: doctorCarePlans } =
-        (await carePlanService.findAndCountAll({
-          where: {
-            [Op.or]: [
-              { user_role_id: userRoleIds[index] },
-              { patient_id: patientIds },
-            ],
-          },
-          order: [["expired_on", "ASC"]],
-          attributes: ["id"],
-          userRoleId: userRoleIds[index],
-        })) || [];
-
-      carePlanIds[userRoleIds[index]] = [
-        ...new Set(doctorCarePlans.map((carePlan) => carePlan.id)),
-      ];
+      // carePlanIds[userRoleIds[index]] = [
+      //   ...new Set(doctorCarePlans.map((carePlan) => carePlan.id)),
+      // ];
+            // End - 28 - Sept - 2023 comment
     }
 
     // const carePlansDoctor =
