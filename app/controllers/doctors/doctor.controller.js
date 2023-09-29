@@ -904,8 +904,8 @@ class DoctorController extends Controller {
           doctorName.length === 3
             ? doctorName[2]
             : doctorName.length === 2
-            ? doctorName[1]
-            : "";
+              ? doctorName[1]
+              : "";
 
         doctor_data["first_name"] = first_name;
         doctor_data["middle_name"] = middle_name;
@@ -3995,7 +3995,7 @@ class DoctorController extends Controller {
             doctors = {
               ...doctors,
               [doctorWrapper.getDoctorId()]: {
-                ...(await doctorWrapper.getAllInfo()),
+                ...(await doctorWrapper.getAllInfoWithOutCarePlanDetails()),
               },
             };
 
@@ -4010,20 +4010,6 @@ class DoctorController extends Controller {
             };
           }
 
-          // rowData.push({
-          //   doctors:{
-          //     ...doctorWrapper.getBasicInfo()
-          //   },
-          //   users:{
-          //     ...userWrapper.getBasicInfo()
-          //   },
-          //   user_roles:{
-          //     ...userRoles
-          //   },
-          //   providers:{
-          //     ...providers
-          //   }
-          //  });
         }
 
         return raiseSuccess(
