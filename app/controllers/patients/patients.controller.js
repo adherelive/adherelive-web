@@ -307,6 +307,62 @@ class PatientController extends Controller {
     );
   };
 
+
+  // Care_plans seconday details iD start
+  getPatientCarePlanSecondaryDocDetails = async (req, res) => {
+    const { raiseSuccess, raiseClientError, raiseServerError } = this;
+    try {
+      const { id: patient_id = 1 } = req.params;
+
+      Logger.info(`params: patient_id = ${patient_id}`);
+      const {
+        userDetails: {
+          userRoleId = null,
+          userId,
+          userCategoryId,
+          userData: { category } = {},
+        } = {},
+      } = req;
+
+      if (!patient_id) {
+        return raiseClientError(
+          res,
+          422,
+          {},
+          "Please select correct patient to continue"
+        );
+      }
+
+      const carePlans = (await carePlanService.getMultipleCarePlanByData({ id })) || [];
+
+      if (carePlans.length > 0) {
+        const { care_plans, care_plan_ids } =
+          await carePlanHelper.getCareplanDataWithImp({
+            carePlans,
+            userCategory: category,
+            doctorId: userCategoryId,
+            userRoleId,
+          });
+      }
+
+      return raiseSuccess(
+        res,
+        200,
+        {
+          care_plans: care_plans,
+        },
+        "Patient care plan details fetched successfully"
+      );
+    } catch (error) {
+      // Logger.debug("get careplan 500 error ---> ", error);
+      console.log(error);
+      return raiseServerError(res);
+    }
+  };
+
+  // careplan secondary details id end
+
+
   getPatientCarePlanDetails = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
