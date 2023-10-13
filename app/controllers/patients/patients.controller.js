@@ -333,7 +333,7 @@ class PatientController extends Controller {
         );
       }
 
-      const carePlans = (await carePlanService.getMultipleCarePlanByData({ id })) || [];
+      const carePlans = (await carePlanService.getMultipleCarePlanByData({ patient_id })) || [];
 
       if (carePlans.length > 0) {
         const { care_plans, care_plan_ids } =
