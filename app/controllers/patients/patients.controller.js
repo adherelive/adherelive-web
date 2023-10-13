@@ -312,9 +312,9 @@ class PatientController extends Controller {
   getPatientCarePlanSecondaryDocDetails = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
-      const { id: patient_id = 1 } = req.params;
+      const { id } = req.params;
 
-      Logger.info(`params: patient_id = ${patient_id}`);
+      Logger.info(`params: patient_id = ${id}`);
       const {
         userDetails: {
           userRoleId = null,
@@ -324,26 +324,24 @@ class PatientController extends Controller {
         } = {},
       } = req;
 
-      if (!patient_id) {
+      if (!id) {
         return raiseClientError(
           res,
           422,
           {},
-          "Please select correct patient to continue"
+          "Please select correct careplan id to continue"
         );
       }
 
-      const carePlans = (await carePlanService.getMultipleCarePlanByData({ patient_id })) || [];
+      const carePlans = (await carePlanService.getMultipleCarePlanByData({ id })) || [];
 
-      if (carePlans.length > 0) {
-        const { care_plans, care_plan_ids } =
-          await carePlanHelper.getCareplanDataWithImp({
-            carePlans,
-            userCategory: category,
-            doctorId: userCategoryId,
-            userRoleId,
-          });
-      }
+      const { care_plans } =
+        await carePlanHelper.getCareplanDataWithDoctor({
+          carePlans,
+          userCategory: category,
+          doctorId: userCategoryId,
+          userRoleId,
+        });
 
       return raiseSuccess(
         res,

@@ -128,6 +128,21 @@ class CarePlanWrapper extends BaseCarePlan {
     };
   };
 
+  getAllSecDocs = async () => {
+    const { _data, getBasicInfo, getCarePlanId } = this;
+    const secondary_doctor_user_role_ids =
+      this.getCareplnSecondaryProfiles() || [];
+
+    let doctors = {}
+    for (let i in secondary_doctor_user_role_ids) {
+      doctors[secondary_doctor_user_role_ids[i]] = await DoctorService.getDoctorByUserId(secondary_doctor_user_role_ids[i])
+    }
+
+    return {
+      secondary_doctor_user_role_ids, doctors
+    };
+  };
+
   getReferenceInfoWithImp = async () => {
     const { _data, getCarePlanId, getAllInfo } = this;
     const secondary_doctor_user_role_ids =
@@ -135,6 +150,15 @@ class CarePlanWrapper extends BaseCarePlan {
     return {
       care_plans: {
         [getCarePlanId()]: await getAllInfo(),
+      },
+    };
+  };
+
+  getReferenceInfoWithSecDocDetails = async () => {
+    const { _data, getCarePlanId, getAllInfo, getAllSecDocs } = this;
+    return {
+      care_plans: {
+        [getCarePlanId()]: await getAllSecDocs(),
       },
     };
   };

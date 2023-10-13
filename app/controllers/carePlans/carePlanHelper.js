@@ -146,6 +146,31 @@ export const getCareplanDataWithImp = async ({
   }
 };
 
+export const getCareplanDataWithDoctor = async ({
+  carePlans = [],
+  userCategory,
+  doctorId,
+  userRoleId,
+}) => {
+  try {
+    let carePlanData = {};
+    for (let index = 0; index < carePlans.length; index++) {
+      const careplan = await CarePlanWrapper(carePlans[index]);
+      const { care_plans } = await careplan.getReferenceInfoWithSecDocDetails();
+      carePlanData = { ...carePlanData, ...care_plans };
+    }
+    return {
+      care_plans: {
+        ...carePlanData,
+      },
+    };
+  } catch (error) {
+    Log.debug("getCareplanData catch error", error);
+    return {};
+  }
+};
+
+
 export const getCareplanData = async ({
   carePlans = [],
   userCategory,
