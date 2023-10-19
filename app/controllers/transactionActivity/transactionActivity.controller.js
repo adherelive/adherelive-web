@@ -10,7 +10,7 @@ import DoctorService from "../../services/doctor/doctor.service";
 import PatientService from "../../services/patients/patients.service";
 import PatientWrapper from "../../ApiWrapper/web/patient";
 import { USER_CATEGORY } from "../../../constant";
-const ReassignAudit = require("../../models/mongoModel/reassignAudit");
+import ReassignAudit from "../../models/mongoModel/reassignAudit";
 const Log = new Logger("WEB > CONTROLLER > Service Offering");
 
 class ServiceSubscriptionTxController extends Controller {
