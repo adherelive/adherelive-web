@@ -2,7 +2,7 @@
  * @author Gaurav Sharma
  * @email gaurav6421@gmail.com
  * @create date 2021-04-16 09:30:27
- * @modify date 2023-10-19 11:36:10
+ * @modify date 2023-10-19 12:11:03
  * @desc topic model.
  */
 
@@ -16,6 +16,10 @@ const reassignAudit = mongoose.Schema(
         assignedTo: {
             type: String,
             required: true,
+        },
+        activity_id: {
+            type: String,
+            required: true
         },
         reason: {
             type: String,

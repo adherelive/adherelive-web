@@ -244,7 +244,7 @@ class ServiceSubscriptionTxController extends Controller {
       }
 
       // Audit Logic Here.
-      let reassignAudit = await ReassignAudit.save({ assignedBy, assignedTo, reason });
+      let reassignAudit = await ReassignAudit.save({ activity_id: id, assignedBy, assignedTo, reason });
 
       let txActivitie = await txActivities.updateTxActivities({ ...rest }, id);
       return raiseSuccess(
