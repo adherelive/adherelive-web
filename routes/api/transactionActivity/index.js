@@ -8,5 +8,6 @@ const router = express.Router();
 router.get("/", Authenticate, isDoctor, transactionActivity.getTxActivities);
 router.get("/tasks", Authenticate, isDoctor, transactionActivity.getTxActivitiesbyPatient);
 router.put("/:id", Authenticate, transactionActivity.updateTxActivities);
+router.put("/reassign/:id", Authenticate, transactionActivity.reassignTxActivities);
 
 export default router;

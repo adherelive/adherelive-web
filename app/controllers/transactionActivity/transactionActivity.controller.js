@@ -10,6 +10,7 @@ import DoctorService from "../../services/doctor/doctor.service";
 import PatientService from "../../services/patients/patients.service";
 import PatientWrapper from "../../ApiWrapper/web/patient";
 import { USER_CATEGORY } from "../../../constant";
+const ReassignAudit = require("../../models/mongoModel/reassignAudit");
 const Log = new Logger("WEB > CONTROLLER > Service Offering");
 
 class ServiceSubscriptionTxController extends Controller {
@@ -205,6 +206,53 @@ class ServiceSubscriptionTxController extends Controller {
         200,
         {
           ...txActivitie,
+        },
+        "Activity updated successfully"
+      );
+    } catch (error) {
+      Log.debug("updateService 500 error", error);
+      return raiseServerError(res);
+    }
+  };
+
+
+  reassignTxActivities = async (req, res) => {
+    const { raiseSuccess, raiseClientError, raiseServerError } = this;
+    try {
+      let { params: { id } = {}, body } = req;
+      Log.info(`Report : id = ${id}`);
+      if (!id) {
+        return raiseClientError(
+          res,
+          422,
+          {},
+          "Please select correct Id to update"
+        );
+      }
+      const serviceSubscriptionUserMappingService = new ServiceSubscriptionUserMappingService();
+      const txActivities = new TxActivities();
+
+      const { assignedBy, assignedTo, reason, ...rest } = body
+
+      if (!(assignedBy || assignedTo)) {
+        return raiseClientError(
+          res,
+          422,
+          {},
+          "Please select correct assignedBy and to assignedTo"
+        );
+      }
+
+      // Audit Logic Here.
+      let reassignAudit = await ReassignAudit.save({ assignedBy, assignedTo, reason });
+
+      let txActivitie = await txActivities.updateTxActivities({ ...rest }, id);
+      return raiseSuccess(
+        res,
+        200,
+        {
+          ...txActivitie,
+          reassignAudit
         },
         "Activity updated successfully"
       );
