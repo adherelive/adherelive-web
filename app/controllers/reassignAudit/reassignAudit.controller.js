@@ -19,9 +19,9 @@ class reassignAuditController extends Controller {
             let output = []
             for (let i in reassignAuditServiceData) {
                 let object = {}
-                object["reason"] = inreassignAuditServiceData[i]["reason"]
-                object["assignedByDoctor"] = await DoctorService.DoctorService(inreassignAuditServiceData[i]["assignedBy"]);
-                object["assignedToDoctor"] = await DoctorService.DoctorService(inreassignAuditServiceData[i]["assignedTo"]);
+                object["reason"] = reassignAuditServiceData[i]["reason"]
+                object["assignedByDoctor"] = await DoctorService.DoctorService(reassignAuditServiceData[i]["assignedBy"]);
+                object["assignedToDoctor"] = await DoctorService.DoctorService(reassignAuditServiceData[i]["assignedTo"]);
                 output.push(object)
             }
             return raiseSuccess(
