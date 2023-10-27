@@ -15,4 +15,4 @@ class reassignAuditService {
     };
 }
 
-export default new serviceSubscribeTx();
+export default new reassignAuditService();
