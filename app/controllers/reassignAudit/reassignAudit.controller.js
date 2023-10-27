@@ -2,7 +2,7 @@ import Controller from "../index";
 import Logger from "../../../libs/log";
 // services
 import reassignAuditService from "../../services/reassignAudit/reassignAudit.service";
-import ServiceSubscriptionMapping from "../../services/serviceSubscriptionMapping/serviceSubscritpionMapping.service";
+import DoctorService from "../../services/doctor/doctor.service"
 const Log = new Logger("WEB > CONTROLLER > Service Offering");
 import { USER_CATEGORY } from "../../../constant";
 class reassignAuditController extends Controller {
@@ -16,12 +16,19 @@ class reassignAuditController extends Controller {
             const { query: { activity_id } } = req;
             console.log({ activity_id })
             let reassignAuditServiceData = await reassignAuditService.getAuditByActivitiyData({ activity_id });
-            console.log({ reassignAuditServiceData })
+            let output = []
+            for (let i in reassignAuditServiceData) {
+                let object = {}
+                object["reason"] = inreassignAuditServiceData[i]["reason"]
+                object["assignedByDoctor"] = await DoctorService.DoctorService(inreassignAuditServiceData[i]["assignedBy"]);
+                object["assignedToDoctor"] = await DoctorService.DoctorService(inreassignAuditServiceData[i]["assignedTo"]);
+                output.push(object)
+            }
             return raiseSuccess(
                 res,
                 200,
                 {
-                    ...reassignAuditServiceData,
+                    ...object,
                 },
                 "Data Fetched Successfully"
             );
