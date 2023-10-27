@@ -28,7 +28,7 @@ class reassignAuditController extends Controller {
                 res,
                 200,
                 {
-                    ...object,
+                    ...output,
                 },
                 "Data Fetched Successfully"
             );
