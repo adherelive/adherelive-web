@@ -6,8 +6,8 @@ import { isDoctor } from "../../commonmiddlewares/doctor";
 
 router.get(
     "/",
-    // Authenticate,
-    // isDoctor,
+    Authenticate,
+    isDoctor,
     reassignAuditController.getAuditByActivityId
 );
 export default router;
