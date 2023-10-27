@@ -9,7 +9,7 @@ class reassignAuditService {
         console.log(data)
         try {
             let audites = await reassignAudit.find(data);
-            return res.status(200).send(audites);
+            return audites;
         } catch (ex) {
             console.log(ex);
         }
