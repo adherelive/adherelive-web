@@ -6,6 +6,7 @@ const Logger = new Log("WEB USER CONTROLLER");
 class reassignAuditService {
 
     getAuditByActivitiyData = async (data) => {
+        console.log(data)
         try {
             let audites = await reassignAudit.find(data);
             return res.status(200).send(audites);

@@ -14,7 +14,9 @@ class reassignAuditController extends Controller {
         const { raiseSuccess, raiseClientError, raiseServerError } = this;
         try {
             const { query: { activity_id } } = req;
+            console.log({ activity_id })
             let reassignAuditServiceData = await reassignAuditService.getAuditByActivitiyData({ activity_id });
+            console.log({ reassignAuditServiceData })
             return raiseSuccess(
                 res,
                 200,
