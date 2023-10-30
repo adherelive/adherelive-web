@@ -247,7 +247,7 @@ class ServiceSubscriptionTxController extends Controller {
       let reassignAudit = new ReassignAudit({ activity_id: id, assignedBy, assignedTo, reason })
       reassignAudit = reassignAudit.save()
 
-      let txActivitie = await txActivities.updateTxActivities({ ...rest }, id);
+      let txActivitie = await txActivities.updateTxActivities({ ...rest, is_reassigned: true }, id);
       return raiseSuccess(
         res,
         200,
