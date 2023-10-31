@@ -7,7 +7,7 @@ module.exports = {
   up: (queryInterface, Sequelize) => {
     return Promise.all([
       queryInterface.addColumn(TABLE_NAME, "is_reassigned", {
-        type: DataTypes.BOOLEAN,
+        type: Sequelize.BOOLEAN,
         defaultValue: false,
       }),
       queryInterface.addColumn(TABLE_NAME, "data", {
