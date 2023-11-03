@@ -160,7 +160,7 @@ export const getCareplanDataWithDoctor = async ({
       const { care_plans } = await careplan.getReferenceInfoWithSecDocDetails();
       carePlanData = { ...carePlanData, ...care_plans };
     }
-    let primary_doctor = await doctorService.getDoctorByDoctorId(doctorId)
+    let primary_doctor = await doctorService.getDoctorByUserId(doctorId)
     return {
       primary_doctor,
       care_plans: {
