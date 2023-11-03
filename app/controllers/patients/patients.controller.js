@@ -335,7 +335,7 @@ class PatientController extends Controller {
 
       const carePlans = (await carePlanService.getMultipleCarePlanByData({ id })) || [];
 
-      const { care_plans } =
+      const { care_plans, primary_doctor } =
         await carePlanHelper.getCareplanDataWithDoctor({
           carePlans,
           userCategory: category,
@@ -348,6 +348,7 @@ class PatientController extends Controller {
         200,
         {
           care_plans: care_plans,
+          primary_doctor
         },
         "Patient care plan details fetched successfully"
       );
