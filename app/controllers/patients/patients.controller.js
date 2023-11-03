@@ -348,7 +348,7 @@ class PatientController extends Controller {
         200,
         {
           care_plans: care_plans,
-          primary_doctor
+
         },
         "Patient care plan details fetched successfully"
       );

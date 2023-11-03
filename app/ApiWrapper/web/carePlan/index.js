@@ -139,11 +139,12 @@ class CarePlanWrapper extends BaseCarePlan {
       doctors[secondary_doctor_user_role_ids[i]] = await DoctorService.getDoctorByUserId(secondary_doctor_user_role_ids[i])
     }
 
-    primary_doctor_details = await DoctorService.getDoctorByUserId(primary_doctor)
+    let primary_doctor_details = await DoctorService.getDoctorByUserId(primary_doctor)
 
     return {
       primary_doctor_details,
-      secondary_doctor_user_role_ids, doctors
+      secondary_doctor_user_role_ids,
+      doctors
     };
   };
 
