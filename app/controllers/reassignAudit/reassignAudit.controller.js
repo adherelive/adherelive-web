@@ -19,6 +19,8 @@ class reassignAuditController extends Controller {
             let output = []
             for (let i in reassignAuditServiceData) {
                 let object = {}
+                object["createdAt"] = reassignAuditServiceData[i]["createdAt"]
+                object["updatedAt"] = reassignAuditServiceData[i]["updatedAt"]
                 object["reason"] = reassignAuditServiceData[i]["reason"]
                 object["assignedByDoctor"] = await DoctorService.getDoctorByDoctorId(reassignAuditServiceData[i]["assignedBy"]);
                 object["assignedToDoctor"] = await DoctorService.getDoctorByDoctorId(reassignAuditServiceData[i]["assignedTo"]);
