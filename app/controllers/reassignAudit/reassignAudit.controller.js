@@ -24,6 +24,8 @@ class reassignAuditController extends Controller {
                 object["reason"] = reassignAuditServiceData[i]["reason"]
                 object["assignedByDoctor"] = await DoctorService.getDoctorByDoctorId(reassignAuditServiceData[i]["assignedBy"]);
                 object["assignedToDoctor"] = await DoctorService.getDoctorByDoctorId(reassignAuditServiceData[i]["assignedTo"]);
+                console.log(reassignAuditServiceData[i]["createdAt"])
+                console.log(reassignAuditServiceData[i])
                 output.push(object)
             }
             return raiseSuccess(
