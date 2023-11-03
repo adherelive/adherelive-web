@@ -4,6 +4,7 @@ import appointmentService from "../../services/appointment/appointment.service";
 import medicationReminderService from "../../services/medicationReminder/mReminder.service";
 import carePlanMedicationService from "../../services/carePlanMedication/carePlanMedication.service";
 import carePlanAppointmentService from "../../services/carePlanAppointment/carePlanAppointment.service";
+import doctorService from "../../services/doctor/doctor.service"
 // import templateMedicationService from "../../services/templateMedication/templateMedication.service";
 // import templateAppointmentService from "../../services/templateAppointment/templateAppointment.service";
 // import medicineService from "../../services/medicine/medicine.service";
@@ -159,7 +160,9 @@ export const getCareplanDataWithDoctor = async ({
       const { care_plans } = await careplan.getReferenceInfoWithSecDocDetails();
       carePlanData = { ...carePlanData, ...care_plans };
     }
+    let primary_doctor = await doctorService.getDoctorByDoctorId(doctorId)
     return {
+      primary_doctor,
       care_plans: {
         ...carePlanData,
       },
