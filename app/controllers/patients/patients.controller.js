@@ -335,7 +335,7 @@ class PatientController extends Controller {
 
       const carePlans = (await carePlanService.getMultipleCarePlanByData({ id })) || [];
 
-      const { care_plans, primary_doctor } =
+      const { care_plans } =
         await carePlanHelper.getCareplanDataWithDoctor({
           carePlans,
           userCategory: category,
