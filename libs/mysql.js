@@ -314,6 +314,7 @@ class Database {
       Log.err(1000, "Db connect error is: ", err);
     }
   };
+  
 }
 
 export default Database;
