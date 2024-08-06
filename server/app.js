@@ -19,9 +19,6 @@ import EventObserver from "../app/proxySdk/eventObserver";
 import Activity from "../app/activitySdk/activityObserver";
 import renewTxActivity from "../app/Crons/renewTxActivity";
 
-
-
-
 Database.init();
 require("../libs/mongo")();
 const Events = import("../events")
@@ -33,7 +30,7 @@ const Events = import("../events")
 const cookieSession = require("cookie-session");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
-const connection = require('../libs/dbConnection');
+const connection = require("../libs/dbConnection");
 
 const app = express();
 
@@ -92,7 +89,7 @@ app.use(
 );
 app.use(cookieParser());
 app.use(cors());
-// ananjay add code 
+// ananjay add code
 // Add a check to handle cases where process.config.cookieKey might be undefined or not a valid JSON string
 // let cookieKeys = [];
 // if (process.config.cookieKey) {
@@ -104,19 +101,20 @@ app.use(cors());
 // } else {
 //   console.warn('process.config.cookieKey is undefined or null');
 // }
-// // 
+// //
 // app.use(
 //   cookieSession({
-//     maxAge: 30 * 24 * 60 * 60 * 1000, 
+//     maxAge: 30 * 24 * 60 * 60 * 1000,
 //     keys: cookieKeys,
 //   })
 // );
 
-// original code 
+// original code
 app.use(
   cookieSession({
     maxAge: 30 * 24 * 60 * 60 * 1000,
-    keys: JSON.parse(process.config.cookieKey),//problem occur in this showing undefined
+    keys: ["cookey938"],
+    // keys: JSON.parse(process.config.cookieKey),//problem occur in this showing undefined
   })
 );
 
