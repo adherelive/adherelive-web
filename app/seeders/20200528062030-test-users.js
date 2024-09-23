@@ -3,143 +3,93 @@
 import { TABLE_NAME } from "../models/users";
 import bcrypt from "bcrypt";
 
-let password = "";
+const generatePasswordHash = async (password) => {
+  return await bcrypt.hash(password, 5);
+};
+
+const usersData = [
+  {
+    user_name: "Sparsh Jaiswal",
+    email: "test-doctor@mail.com",
+    category: "doctor",
+    mobile_number: "8710087100",
+  },
+  {
+    user_name: "Gagneet Singh",
+    email: "gagneet.singh@gmail.com",
+    category: "patient",
+    mobile_number: "9810739699",
+  },
+  {
+    user_name: "Vivek Asthana",
+    email: "test-doctor2@mail.com",
+    category: "doctor",
+    mobile_number: "8710087102",
+  },
+  {
+    user_name: "Administrator User",
+    email: "admin@mail.com",
+    category: "admin",
+    mobile_number: "8710087101",
+  },
+  {
+    user_name: "Provider Hospital",
+    email: "test-provider@mail.com",
+    category: "provider",
+    mobile_number: "9876543215",
+  },
+  {
+    user_name: "Ankur Agrawal",
+    email: "test-patient2@mail.com",
+    category: "patient",
+    mobile_number: "9876543211",
+  },
+  {
+    user_name: "Sagar Agrawal",
+    email: "test-patient3@mail.com",
+    category: "patient",
+    mobile_number: "9876543212",
+  },
+  {
+    user_name: "Vasudevan Srinivasan",
+    email: "test-patient4@mail.com",
+    category: "patient",
+    mobile_number: "9876543213",
+  },
+  {
+    user_name: "Avneet Rooprai",
+    email: "test-patient5@mail.com",
+    category: "patient",
+    mobile_number: "9876543214",
+  },
+];
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    return queryInterface.bulkInsert(TABLE_NAME, [
-      {
-        user_name: "Sparsh Jaiswal",
-        email: "test-doctor@mail.com",
-        password: await bcrypt.hash("Password@123", 5),
+    const hashedUsersData = await Promise.all(
+      usersData.map(async (user) => ({
+        ...user,
+        password: await generatePasswordHash("Password@123"),
         sign_in_type: "basic",
-        category: "doctor",
         verified: 1,
         onboarded: 1,
-        onboarding_status: "CLINIC_registered",
-        mobile_number: "8710087100",
+        onboarding_status:
+          user.category === "doctor" ? "CLINIC_registered" : undefined,
         prefix: "91",
         activated_on: new Date(),
         created_at: new Date(),
         updated_at: new Date(),
-      },
-      {
-        user_name: "Gagneet Singh",
-        email: "gagneet.singh@gmail.com",
-        password: await bcrypt.hash("Password@123", 5),
-        sign_in_type: "basic",
-        category: "patient",
-        verified: 1,
-        onboarded: 1,
-        mobile_number: "9810739699",
-        prefix: "91",
-        activated_on: new Date(),
-        created_at: new Date(),
-        updated_at: new Date(),
-      },
-      {
-        user_name: "Vivek Asthana",
-        email: "test-doctor2@mail.com",
-        password: await bcrypt.hash("Password@123", 5),
-        sign_in_type: "basic",
-        category: "doctor",
-        verified: 1,
-        onboarded: 1,
-        onboarding_status: "CLINIC_registered",
-        mobile_number: "8710087102",
-        prefix: "91",
-        activated_on: new Date(),
-        created_at: new Date(),
-        updated_at: new Date(),
-      },
-      {
-        user_name: "Administrator User",
-        email: "admin@mail.com",
-        password: await bcrypt.hash("Password@123", 5),
-        sign_in_type: "basic",
-        category: "admin",
-        verified: 1,
-        onboarded: 1,
-        mobile_number: "8710087101",
-        prefix: "91",
-        activated_on: new Date(),
-        created_at: new Date(),
-        updated_at: new Date(),
-      },
-      {
-        user_name: "Provider Hospital",
-        email: "test-provider@mail.com",
-        password: await bcrypt.hash("Password@123", 5),
-        sign_in_type: "basic",
-        category: "provider",
-        verified: 1,
-        onboarded: 1,
-        mobile_number: "9876543215",
-        prefix: "91",
-        activated_on: new Date(),
-        created_at: new Date(),
-        updated_at: new Date(),
-      },
-      {
-        user_name: "Ankur Agrawal",
-        email: "test-patient2@mail.com",
-        password: await bcrypt.hash("Password@123", 5),
-        sign_in_type: "basic",
-        category: "patient",
-        verified: 1,
-        onboarded: 1,
-        mobile_number: "9876543211",
-        prefix: "91",
-        activated_on: new Date(),
-        created_at: new Date(),
-        updated_at: new Date(),
-      },
-      {
-        user_name: "Sagar Agrawal",
-        email: "test-patient3@mail.com",
-        password: await bcrypt.hash("Password@123", 5),
-        sign_in_type: "basic",
-        category: "patient",
-        verified: 1,
-        onboarded: 1,
-        mobile_number: "9876543212",
-        prefix: "91",
-        activated_on: new Date(),
-        created_at: new Date(),
-        updated_at: new Date(),
-      },
-      {
-        user_name: "Vasudevan Srinivasan",
-        email: "test-patient4@mail.com",
-        password: await bcrypt.hash("Password@123", 5),
-        sign_in_type: "basic",
-        category: "patient",
-        verified: 1,
-        onboarded: 1,
-        mobile_number: "9876543213",
-        prefix: "91",
-        activated_on: new Date(),
-        created_at: new Date(),
-        updated_at: new Date(),
-      },
-      {
-        user_name: "Avneet Rooprai",
-        email: "test-patient5@mail.com",
-        password: await bcrypt.hash("Password@123", 5),
-        sign_in_type: "basic",
-        category: "patient",
-        verified: 1,
-        onboarded: 1,
-        mobile_number: "9876543214",
-        prefix: "91",
-        activated_on: new Date(),
-        created_at: new Date(),
-        updated_at: new Date(),
-      },
-    ]);
+      }))
+    );
+
+    try {
+      return await queryInterface.bulkInsert(TABLE_NAME, hashedUsersData);
+    } catch (error) {
+      console.error("Error seeding users:", error);
+    }
   },
 
-  down: (queryInterface, Sequelize) => {
+  down: async (queryInterface, Sequelize) => {
     return queryInterface.bulkDelete(TABLE_NAME, null, {});
   },
 };

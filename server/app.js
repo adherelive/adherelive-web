@@ -113,8 +113,8 @@ app.use(cors());
 app.use(
   cookieSession({
     maxAge: 30 * 24 * 60 * 60 * 1000,
-    keys: ["cookey938"],
-    // keys: JSON.parse(process.config.cookieKey),//problem occur in this showing undefined
+    //keys: ["cookey938"],
+    keys: JSON.parse(process.config.cookieKey), //problem occur in this showing undefined
   })
 );
 
