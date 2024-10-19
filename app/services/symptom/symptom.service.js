@@ -8,15 +8,18 @@ import { TABLE_NAME as patientTableName } from "../../models/patients";
 import { TABLE_NAME as carePlanTableName } from "../../models/carePlan";
 
 class SymptomService {
+  // Create a new symptom record
   create = async (data) => {
     try {
       const symptom = await Database.getModel(TABLE_NAME).create(data);
-      return symptom;
+      return symptom; // Return the created symptom
     } catch (error) {
-      throw error;
+      console.error("Error creating symptom:", error); // Log the error for debugging
+      throw new Error("Unable to create symptom. Please try again later."); // Throw a user-friendly error
     }
   };
 
+  // Retrieve a symptom based on criteria
   getByData = async (data) => {
     try {
       const symptom = await Database.getModel(TABLE_NAME).findOne({
@@ -31,12 +34,16 @@ class SymptomService {
           },
         ],
       });
-      return symptom;
+      return symptom; // Return the found symptom
     } catch (error) {
-      throw error;
+      console.error("Error fetching symptom by data:", error); // Log the error
+      throw new Error(
+        "Unable to fetch symptom details. Please check your input."
+      ); // User-friendly error
     }
   };
 
+  // Count symptoms created in the last 7 days
   getCount = async (data) => {
     try {
       return await Database.getModel(TABLE_NAME).count({
@@ -51,13 +58,15 @@ class SymptomService {
         },
       });
     } catch (error) {
-      throw error;
+      console.error("Error counting symptoms:", error); // Log the error
+      throw new Error("Unable to count symptoms. Please try again later."); // User-friendly error
     }
   };
 
+  // Retrieve all symptoms based on criteria
   getAllByData = async (data) => {
     try {
-      const symptom = await Database.getModel(TABLE_NAME).findAll({
+      const symptoms = await Database.getModel(TABLE_NAME).findAll({
         where: data,
         include: [
           {
@@ -69,12 +78,16 @@ class SymptomService {
           },
         ],
       });
-      return symptom;
+      return symptoms; // Return the found symptoms
     } catch (error) {
-      throw error;
+      console.error("Error fetching all symptoms:", error); // Log the error
+      throw new Error(
+        "Unable to retrieve symptoms. Please check your criteria."
+      ); // User-friendly error
     }
   };
 
+  // Retrieve symptoms for a specific patient within a time range
   getFilteredData = async (data) => {
     try {
       const { patient_id, start_time, end_time } = data || {};
@@ -95,12 +108,14 @@ class SymptomService {
           },
         ],
       });
-      return symptom;
+      return symptom; // Return the found symptoms
     } catch (error) {
-      throw error;
+      console.error("Error fetching filtered symptoms:", error); // Log the error
+      throw new Error("Unable to filter symptoms. Please check your input."); // User-friendly error
     }
   };
 
+  // Retrieve the most recently updated symptom
   getLastUpdatedData = async (data) => {
     try {
       const symptom = await Database.getModel(TABLE_NAME).findAll({
@@ -117,9 +132,12 @@ class SymptomService {
           },
         ],
       });
-      return symptom;
+      return symptom; // Return the most recently updated symptom
     } catch (error) {
-      throw error;
+      console.error("Error fetching last updated symptom:", error); // Log the error
+      throw new Error(
+        "Unable to retrieve the last updated symptom. Please try again later."
+      ); // User-friendly error
     }
   };
 }
