@@ -450,8 +450,16 @@
         <p>{{ patient_data.address }}</p>
       </div>
       <div class="top_setion_wrapper_two"><!--Ananjay removed doctor email -->
-        <!-- <h3>Doctor Email :</h3>
-      <p>{{ doctorEmail }}</p> -->
+        <h3>Unit :</h3>
+      <p></p> 
+      </div>
+      <div class="top_setion_wrapper_one">
+        <h3>Sponsor:</h3>
+        <p></p>
+      </div>
+      <div class="top_setion_wrapper_two"><!--Ananjay removed doctor email -->
+        <h3>Visit-ID :</h3>
+      <p></p> 
       </div>
     </div>
 
@@ -669,7 +677,8 @@
           </td>
           <td style="text-align: left">
             <p>
-             <strong> {{ medicineName }}</strong> {{ genericName }} {{ strength }} <!--Ananjay added medicine strength and bold medicineName-->
+             <strong> {{ medicineName }}</strong> 
+             <br>{{ genericName }} {{ strength }} <!--Ananjay added medicine strength and bold medicineName-->
               <br /><span style="font-size: 8px"
                 >by Dr. {{ organizer.name }}</span
               >
@@ -933,13 +942,13 @@
       </h3>
     </div>
 
-    <div style="margin-top: 30px">
+    <!-- <div style="margin-top: 30px">
       <h3>Lifestyle Advice</h3>
-    </div>
+    </div> -->
 
     <!-- DIET SECTION  -->
 
-    <div class="diet_section_heading">
+    <!-- <div class="diet_section_heading">
       <h3>Diet :</h3>
     </div>
     <div class="diet_section_section">
@@ -1073,6 +1082,6 @@
           {{/each }}
         </table>
       </div>
-    </div>
+    </div> -->
   </body>
 </html>

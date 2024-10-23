@@ -99,7 +99,10 @@ MINIO_ENDPOINT=minio1
 MINIO_BUCKET_NAME=adherelive-production
 
 # GetStream Latest API Keys- mail 'info@adhere.live'
-
+GETSTREAM_API_KEY=kmvug7bs2v52
+GETSTREAM_API_SECRET=mqdvv7jv26sfxmt8wahqv7p9vx77p7r3u9au5qzv6v9f9utk67v4vzf4tbv35u49
+GETSTREAM_REGION=us-east
+GETSTREAM_APP_ID=95904
 
 # GetStream API Keys - 1
 #GETSTREAM_API_KEY=fjakqnrvnsq7
@@ -107,10 +110,7 @@ MINIO_BUCKET_NAME=adherelive-production
 #GETSTREAM_REGION=us-east
 #GETSTREAM_APP_ID=1143860
  # -2
-GETSTREAM_API_KEY=kmvug7bs2v52
-GETSTREAM_API_SECRET=mqdvv7jv26sfxmt8wahqv7p9vx77p7r3u9au5qzv6v9f9utk67v4vzf4tbv35u49
-GETSTREAM_REGION=us-east
-GETSTREAM_APP_ID=95904
+
 # Older GetStream Account IDs
 #GETSTREAM_API_KEY=ywtzg5hdvp7t
 #GETSTREAM_API_SECRET=zbrxan8wdzg3phz6qffj8jnx4jraxvxu7zc3zzkqqvzaumb6mwjqfxh6jf7fc42w
