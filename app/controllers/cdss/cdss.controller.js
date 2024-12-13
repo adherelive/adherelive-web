@@ -1,25 +1,29 @@
 import Log from "../../../libs/log";
+import Controller from "../index";
+import mongoose from "mongoose";
 // import fs from "fs";
 const Response = require("../helper/responseFormat");
-import Controller from "../index";
-const Cdss = require("../../models/mongoModel/cdss");
 
-const Logger = new Log("WEB USER CONTROLLER");
+const cdss = require("../../models/mongoModel/cdss");
+
+const Logger = new Log("Web CDSS user controller");
+
+mongoose.set("strictQuery", true); // Add this line to handle the deprecation warning
 
 class CdssController extends Controller {
   constructor() {
     super();
   }
 
-  addDyanosis = async (req, res) => {
+  addDiagnosis = async (req, res) => {
     let data = req.body;
 
     if (!data.dia) {
-      return res.status(201).send({ error: "Please add Dia in Body" });
+      return res.status(201).send({ error: "Please add Diagnosis in Body" });
     }
 
-    // check if it is alread exist or not.
-    let dbcdss = await Cdss.find(data);
+    // check if it is already exist or not.
+    let dbcdss = await cdss.find(data);
     if (!dbcdss)
       return res.status(400).send({ error: true, message: "Already Added" });
 
@@ -32,19 +36,19 @@ class CdssController extends Controller {
       for (let i in data.dia) {
         let newDia = data.dia[i];
         let newData = { ...data, dia: newDia };
-        let cdss = new Cdss(newData);
+        let cdss = new cdss(newData);
         cdss = await cdss.save();
         cdssResponse.push(cdss);
       }
     } else {
-      let cdss = new Cdss(data);
+      let cdss = new cdss(data);
       cdss = await cdss.save();
       cdssResponse.push(cdss);
     }
     return res.status(201).send(cdssResponse);
   };
 
-  getDyanosis = async (req, res) => {
+  getDiagnosis = async (req, res) => {
     let data = req.body;
 
     if (!(data.length > 0)) {
@@ -57,7 +61,7 @@ class CdssController extends Controller {
       searchObject.push(symp);
     }
 
-    let cdss = await Cdss.find({
+    let cdss = await cdss.find({
       $or: searchObject,
     });
 
@@ -73,14 +77,14 @@ class CdssController extends Controller {
     return res.status(200).send([...keysSorted]);
   };
 
-  listDyanosis = async (req, res) => {
+  listDiagnosis = async (req, res) => {
     let keyword = "";
     if (req.query.dia) keyword = req.query.dia;
     try {
       let data = {
         $or: [{ dia: { $regex: keyword, $options: "i" } }],
       };
-      let cdss = await Cdss.find(data);
+      let cdss = await cdss.find(data);
       let filterDia = [];
       for (let i in cdss) {
         filterDia.push(cdss[i].dia);

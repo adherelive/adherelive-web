@@ -766,7 +766,6 @@ export const categories = {
   ],
 };
 
-
 export const CATEGORY_ONE = {
   index: "1",
   name: "",

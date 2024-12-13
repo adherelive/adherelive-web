@@ -45,25 +45,26 @@ import ProviderWrapper from "../../../app/ApiWrapper/web/provider";
 import PortionWrapper from "../../../app/ApiWrapper/web/portions";
 import WorkoutWrapper from "../../../app/ApiWrapper/web/workouts";
 import UserPreferenceWrapper from "../../../app/ApiWrapper/web/userPreference";
-import * as DietHelper from "../../../app/controllers/diet/dietHelper"
+import * as DietHelper from "../../../app/controllers/diet/dietHelper";
 import moment from "moment";
 
 import {
-    BODY_VIEW,
-    CONSENT_TYPE,
-    EMAIL_TEMPLATE_NAME,
-    USER_CATEGORY,
-    S3_DOWNLOAD_FOLDER,
-    PRESCRIPTION_PDF_FOLDER,
-    DIAGNOSIS_TYPE,
-    S3_DOWNLOAD_FOLDER_PROVIDER,
-    ONBOARDING_STATUS,
-    SIGN_IN_CATEGORY, DOSE_UNIT,
-    PATIENT_MEAL_TIMINGS,
-    APPOINTMENT_TYPE,
-    MEDICATION_TIMING,
-    WHEN_TO_TAKE_ABBREVATIONS,
-    categories,
+  BODY_VIEW,
+  CONSENT_TYPE,
+  EMAIL_TEMPLATE_NAME,
+  USER_CATEGORY,
+  S3_DOWNLOAD_FOLDER,
+  PRESCRIPTION_PDF_FOLDER,
+  DIAGNOSIS_TYPE,
+  S3_DOWNLOAD_FOLDER_PROVIDER,
+  ONBOARDING_STATUS,
+  SIGN_IN_CATEGORY,
+  DOSE_UNIT,
+  PATIENT_MEAL_TIMINGS,
+  APPOINTMENT_TYPE,
+  MEDICATION_TIMING,
+  WHEN_TO_TAKE_ABBREVATIONS,
+  categories,
 } from "../../../constant";
 
 import { downloadFileFromS3 } from "../../../app/controllers/user/userHelper";

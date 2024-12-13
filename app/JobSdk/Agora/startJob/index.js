@@ -33,11 +33,10 @@ class StartJob extends AgoraJob {
     const participants = roomId.split(
       `-${process.config.twilio.CHANNEL_SERVER}-`
     );
-    console.log("12312313212312312312312312312312312312")
-    console.log(JSON.stringify(getAgoraData()))
-    console.log(participants)
-    console.log(roomId)
-
+    console.log("12312313212312312312312312312312312312");
+    console.log(JSON.stringify(getAgoraData()));
+    console.log(participants);
+    console.log(roomId);
 
     const templateData = [];
     const playerIds = [];
@@ -51,24 +50,22 @@ class StartJob extends AgoraJob {
       })) || {};
 
     let providerId = null;
-    console.log("==============start job index.html=========================")
+    console.log("==============start job index.html=========================");
 
-    console.log(userRoles)
+    console.log(userRoles);
     for (const userRole of userRoles) {
-
       const { id, user_identity, linked_id } = userRole || {};
-      console.log({ userRole })
-      console.log({ id, user_role_id, linked_id, user_identity })
+      console.log({ userRole });
+      console.log({ id, user_role_id, linked_id, user_identity });
       if (id === user_role_id) {
-        console.log("in if - 1 ")
+        console.log("in if - 1 ");
         // userIds.push(user_identity)
         if (linked_id) {
           providerId = linked_id;
-          console.log("in if - 2 ")
-
+          console.log("in if - 2 ");
         }
       } else {
-        console.log("in else")
+        console.log("in else");
         userIds.push(user_identity);
       }
     }
@@ -82,24 +79,24 @@ class StartJob extends AgoraJob {
       providerName = name;
     }
 
-    console.log({ userIds })
+    console.log({ userIds });
 
     const userDevices =
       (await UserDeviceService.getAllDeviceByData({
         user_id: userIds,
       })) || [];
-    console.log({ userDevices })
+    console.log({ userDevices });
     if (userDevices.length > 0) {
       for (const device of userDevices) {
         const userDevice = await UserDeviceWrapper({ data: device });
-        console.log({ userDevice })
+        console.log({ userDevice });
         playerIds.push(userDevice.getOneSignalDeviceId());
       }
     }
 
     const url = getNotificationUrl(AGORA_CALL_NOTIFICATION_TYPES.START_CALL);
 
-    console.log({ playerIds })
+    console.log({ playerIds });
 
     templateData.push({
       small_icon: process.config.app.icon_android,
@@ -108,10 +105,11 @@ class StartJob extends AgoraJob {
       include_player_ids: [...playerIds],
       headings: { en: `Call on AdhereLive: (${providerName})` },
       contents: {
-        en: `${category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP
+        en: `${
+          category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP
             ? "Dr. "
             : ""
-          }${full_name} is calling you!`,
+        }${full_name} is calling you!`,
       },
       priority: 10,
       android_channel_id: process.config.one_signal.urgent_channel_id,

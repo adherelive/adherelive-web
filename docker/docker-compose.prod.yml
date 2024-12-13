@@ -69,7 +69,7 @@ services:
       #- MYSQL_PASSWORD=eK7tz4s3CBkYPjUaSBAl
 
   mongo:
-    image: mongo:4.4
+    image: mongo:latest
     restart: always
     ports:
       - "27017:27017"
@@ -130,3 +130,4 @@ volumes:
   adhere_storage_stack3: null
   adhere_storage_stack4: null
   adhere_mongo:
+    driver: local

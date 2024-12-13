@@ -3,7 +3,7 @@ const collectionName = "notificationLogs";
 const chalk = require("chalk");
 const moment = require("moment");
 
-mongoose.set('strictQuery', true); // Add this line to handle the deprecation warning
+mongoose.set("strictQuery", true); // Add this line to handle the deprecation warning
 
 let notificationSchema = new mongoose.Schema(
   {

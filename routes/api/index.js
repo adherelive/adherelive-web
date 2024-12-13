@@ -64,7 +64,7 @@ import FlashCardRouter from "./flashCard";
 import reassignAudit from "./reassignAudit";
 import NotesRouter from "./notes";
 import { getTime } from "../../app/helper/timer";
-import prescriptionRouter from "./prescription"
+import prescriptionRouter from "./prescription";
 
 router.use(async function (req, res, next) {
   console.log("api-index-1" + getTime() + getTime());

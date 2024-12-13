@@ -8,6 +8,7 @@
 
 const jwt = require("jsonwebtoken");
 import Log from "../../../libs/log";
+
 const Response = require("../helper/responseFormat");
 import hisService from "../../services/his/his.service";
 import Controller from "../index";

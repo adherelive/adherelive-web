@@ -109,8 +109,8 @@ GETSTREAM_APP_ID=95904
 #GETSTREAM_API_SECRET=9bqv9h5w6jxqdx5hdf3qg7wrd7vrxpnaprra8yyxeccarp4c8kgs2srhqk8upqmy
 #GETSTREAM_REGION=us-east
 #GETSTREAM_APP_ID=1143860
- # -2
 
+# GetStream API Keys - 2
 # Older GetStream Account IDs
 #GETSTREAM_API_KEY=ywtzg5hdvp7t
 #GETSTREAM_API_SECRET=zbrxan8wdzg3phz6qffj8jnx4jraxvxu7zc3zzkqqvzaumb6mwjqfxh6jf7fc42w
@@ -170,13 +170,12 @@ RAZORPAY_SECRET=wDuxUaX3u7elvqAhoII84ebg
 
 DEFAULT_CURRENCY=INR
 
-# Algolia  Credentials
+# Algolia Credentials
 ALGOLIA_APP_ID=WCKMPH5GKD
 ALGOLIA_BACKEND_KEY=208bfb2174b1eff2baa19f7da17b041a
 ALGOLIA_APP_KEY=a0879b7bec37ddf9d16458df5eac525f
 ALGOLIA_MEDICINE_INDEX=live_adhere_medicine
 ALGOLIA_OBJECT_ID_PREFIX=SUBHARTI
-
 # Older Algolia Account IDs
 #ALGOLIA_APP_ID=L265NW21LP
 #ALGOLIA_APP_KEY=29949acb7166301727cff20315b80951

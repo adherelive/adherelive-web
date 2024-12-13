@@ -345,7 +345,8 @@ class AppointmentController extends Controller {
         details: {
           care_plan_id,
           treatment_id,
-          reason, description,
+          reason,
+          description,
           type,
           type_description,
           critical,
@@ -550,7 +551,8 @@ class AppointmentController extends Controller {
           care_plan_id,
           treatment_id,
           reason,
-          type, description,
+          type,
+          description,
           type_description,
           radiology_type,
           critical,
@@ -650,7 +652,7 @@ class AppointmentController extends Controller {
     const { raiseSuccess, raiseServerError } = this;
     try {
       const { params: { id } = {}, userDetails: { userId } = {} } = req;
-      const { date } = req.query
+      const { date } = req.query;
       const appointmentList = await appointmentService.getAppointmentsByDate(
         date
       );
@@ -686,7 +688,7 @@ class AppointmentController extends Controller {
       Logger.debug("getAppointmentForPatient 500 error", error);
       return raiseServerError(res);
     }
-  }
+  };
 
   getAppointmentForPatient = async (req, res) => {
     const { raiseSuccess, raiseServerError } = this;

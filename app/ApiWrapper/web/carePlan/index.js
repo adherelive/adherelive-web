@@ -134,17 +134,22 @@ class CarePlanWrapper extends BaseCarePlan {
       this.getCareplnSecondaryProfiles() || [];
 
     const primary_doctor = this.getDoctorId();
-    let doctors = {}
+    let doctors = {};
     for (let i in secondary_doctor_user_role_ids) {
-      doctors[secondary_doctor_user_role_ids[i]] = await DoctorService.getDoctorByUserId(secondary_doctor_user_role_ids[i])
+      doctors[secondary_doctor_user_role_ids[i]] =
+        await DoctorService.getDoctorByUserId(
+          secondary_doctor_user_role_ids[i]
+        );
     }
 
-    let primary_doctor_details = await DoctorService.getDoctorByUserId(primary_doctor)
+    let primary_doctor_details = await DoctorService.getDoctorByUserId(
+      primary_doctor
+    );
 
     return {
       primary_doctor_details,
       secondary_doctor_user_role_ids,
-      doctors
+      doctors,
     };
   };
 

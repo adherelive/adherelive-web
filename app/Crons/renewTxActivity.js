@@ -6,6 +6,7 @@ import Database from "../../libs/mysql";
 import { TABLE_NAME as serviceSubscribeTranactionTable } from "../models/serviceSubscribeTranaction";
 import moment from "moment";
 import { Op } from "sequelize";
+
 const Log = new Logger("CRON > RENEW > SUBSCRIPTION");
 
 class RenewTxActivity {
