@@ -268,7 +268,8 @@ class MReminderController extends Controller {
         start_date,
         end_date,
         details: {
-          medicine_id, description,
+          medicine_id,
+          description,
           medicine_type,
           start_time: start_time ? start_time : moment(),
           end_time: start_time ? start_time : moment(),
@@ -434,7 +435,8 @@ class MReminderController extends Controller {
           when_to_take,
           when_to_take_abbr,
           medication_stage,
-          critical, description,
+          critical,
+          description,
         },
       };
 

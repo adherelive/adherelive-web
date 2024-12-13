@@ -4,7 +4,7 @@ import appointmentService from "../../services/appointment/appointment.service";
 import medicationReminderService from "../../services/medicationReminder/mReminder.service";
 import carePlanMedicationService from "../../services/carePlanMedication/carePlanMedication.service";
 import carePlanAppointmentService from "../../services/carePlanAppointment/carePlanAppointment.service";
-import doctorService from "../../services/doctor/doctor.service"
+import doctorService from "../../services/doctor/doctor.service";
 // import templateMedicationService from "../../services/templateMedication/templateMedication.service";
 // import templateAppointmentService from "../../services/templateAppointment/templateAppointment.service";
 // import medicineService from "../../services/medicine/medicine.service";
@@ -161,7 +161,6 @@ export const getCareplanDataWithDoctor = async ({
       carePlanData = { ...carePlanData, ...care_plans };
     }
     return {
-
       care_plans: {
         ...carePlanData,
       },
@@ -171,7 +170,6 @@ export const getCareplanDataWithDoctor = async ({
     return {};
   }
 };
-
 
 export const getCareplanData = async ({
   carePlans = [],
@@ -378,7 +376,8 @@ export const createVitals = async ({
           end_date,
           details: {
             repeat_interval_id,
-            repeat_days, description,
+            repeat_days,
+            description,
           },
           care_plan_id: carePlanId,
         });

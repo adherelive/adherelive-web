@@ -1,6 +1,7 @@
 import Controller from "../index";
 import Log from "../../../libs/log";
 import moment from "moment";
+
 const XLSX = require("xlsx");
 import userService from "../../services/user/user.service";
 import doctorService from "../../services/doctor/doctor.service";
@@ -79,6 +80,7 @@ import {
   NO_APPOINTMENT,
   NO_ACTION,
 } from "../../../constant";
+
 var fs = require("fs");
 import { getFilePath, completePath } from "../../helper/filePath";
 import getReferenceId from "../../helper/referenceIdGenerator";
@@ -904,8 +906,8 @@ class DoctorController extends Controller {
           doctorName.length === 3
             ? doctorName[2]
             : doctorName.length === 2
-              ? doctorName[1]
-              : "";
+            ? doctorName[1]
+            : "";
 
         doctor_data["first_name"] = first_name;
         doctor_data["middle_name"] = middle_name;
@@ -4009,7 +4011,6 @@ class DoctorController extends Controller {
               [userRoleWrapper.getId()]: { ...userRoleWrapper.getBasicInfo() },
             };
           }
-
         }
 
         return raiseSuccess(
@@ -4198,7 +4199,6 @@ class DoctorController extends Controller {
   // };
 
   medicineModificationDocs = async (req, res) => {
-
     const { raiseServerError, raiseSuccess, raiseClientError } = this;
     try {
       const {
@@ -4208,7 +4208,6 @@ class DoctorController extends Controller {
       const file = req.file;
       let doctorUserId = userId;
       if (doctor_id) {
-
         if (category !== USER_CATEGORY.PROVIDER) {
           return raiseClientError(res, 401, {}, "UNAUTHORIZED");
         }

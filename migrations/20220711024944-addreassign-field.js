@@ -3,7 +3,6 @@
 import { TABLE_NAME } from "../app/models/transactionActivity";
 
 module.exports = {
-
   up: (queryInterface, Sequelize) => {
     return Promise.all([
       queryInterface.addColumn(TABLE_NAME, "is_reassigned", {

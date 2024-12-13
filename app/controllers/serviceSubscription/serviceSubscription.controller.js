@@ -3,8 +3,10 @@ import Logger from "../../../libs/log";
 // services
 import ServiceSubscriptionService from "../../services/serviceSubscription/serviceSubscription.service";
 import ServiceSubscriptionMapping from "../../services/serviceSubscriptionMapping/serviceSubscritpionMapping.service";
+
 const Log = new Logger("WEB > CONTROLLER > Service Offering");
 import { USER_CATEGORY } from "../../../constant";
+
 class ServiceSubscriptionController extends Controller {
   constructor() {
     super();
@@ -57,7 +59,6 @@ class ServiceSubscriptionController extends Controller {
           ...serviceSubecription,
           ...data,
         });
-
 
       return raiseSuccess(
         res,
@@ -153,7 +154,6 @@ class ServiceSubscriptionController extends Controller {
       let serviceSubscriptions =
         await serviceSubscriptionService.getAllServiceSubscriptionByData(query);
 
-
       let serviceSubscriptionsData = [];
       for (let serviceSubscription in serviceSubscriptions) {
         let serviceSubData = serviceSubscriptions[serviceSubscription];
@@ -219,8 +219,6 @@ class ServiceSubscriptionController extends Controller {
     }
 
     try {
-
-
       const serviceSubscriptionService = new ServiceSubscriptionService();
       let serviceSubscriptions =
         await serviceSubscriptionService.getAllServiceSubscriptionByData(data);

@@ -175,12 +175,12 @@ class AppointmentService {
       let endOfDay = moment().endOf("day").toISOString();
 
       if (date) {
-        console.log("in if condition")
-        startOfDay = moment(date, 'DD-MM-YYYY').startOf("day").toISOString();
-        endOfDay = moment(date, 'DD-MM-YYYY').endOf("day").toISOString();
+        console.log("in if condition");
+        startOfDay = moment(date, "DD-MM-YYYY").startOf("day").toISOString();
+        endOfDay = moment(date, "DD-MM-YYYY").endOf("day").toISOString();
       }
 
-      console.log({ date, startOfDay, endOfDay })
+      console.log({ date, startOfDay, endOfDay });
 
       const appointments = await Database.getModel(TABLE_NAME).findAll({
         where: {
@@ -189,7 +189,7 @@ class AppointmentService {
               start_date: {
                 [Op.between]: [startOfDay, endOfDay],
               },
-            }
+            },
             // {
             //   [Op.or]: [
             //     {
@@ -212,7 +212,6 @@ class AppointmentService {
       throw error;
     }
   };
-
 
   getDayAppointmentForDoctor = async (doctor_id, provider_id, date) => {
     try {

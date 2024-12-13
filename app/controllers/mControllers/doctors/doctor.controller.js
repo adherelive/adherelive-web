@@ -96,6 +96,7 @@ const APPOINTMENT_QUERY_TYPE = {
   DAY: "d",
   MONTH: "m",
 };
+
 class MobileDoctorController extends Controller {
   constructor() {
     super();

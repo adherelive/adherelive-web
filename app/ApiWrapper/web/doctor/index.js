@@ -121,7 +121,6 @@ class DoctorWrapper extends BaseDoctor {
       }
     }
 
-
     const doctorUserId = this.getUserId();
     const UserRole = await userRoleService.getFirstUserRole(doctorUserId);
     let userRoleId = null;
@@ -193,7 +192,6 @@ class DoctorWrapper extends BaseDoctor {
       // ];
       // End - 28 - Sept - 2023 comment
     }
-
 
     return {
       basic_info: {

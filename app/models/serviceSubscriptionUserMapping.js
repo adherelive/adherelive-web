@@ -11,6 +11,7 @@ import {
   USER_STATUS,
   PATIENT_STATUS,
 } from "../../constant";
+
 export const TABLE_NAME = "service_subscription_user_mappings";
 
 export const db = (database) => {

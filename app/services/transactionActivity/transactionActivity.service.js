@@ -27,13 +27,13 @@ export default class ServiceSubscriptionMapping {
       where: data,
       raw: true,
       // order: [["test_date", "DESC"]],
-    }
+    };
     if (sort_duedate) {
       query_args = {
         where: data,
         raw: true,
         order: [["due_date", sort_duedate.toUpperCase()]],
-      }
+      };
     }
     try {
       let mappingData = await Database.getModel(TABLE_NAME).findAll(query_args);

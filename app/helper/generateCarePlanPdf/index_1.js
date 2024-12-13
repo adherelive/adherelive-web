@@ -1028,7 +1028,8 @@ function printAppointment({
             //   width: medicineXStart - drXStart,
             // })
             .text(
-              `${type_description}${radiology_type ? `-${radiology_type}` : ""
+              `${type_description}${
+                radiology_type ? `-${radiology_type}` : ""
               }(${APPOINTMENT_TYPE[type].title})`,
               medicineXStart,
               medicationYLevel,
@@ -1180,7 +1181,8 @@ function printConsultation({
             //   width: medicineXStart - drXStart,
             // })
             .text(
-              `${type_description}${radiology_type ? `-${radiology_type}` : ""
+              `${type_description}${
+                radiology_type ? `-${radiology_type}` : ""
               }(${APPOINTMENT_TYPE[type].title})`,
               medicineXStart,
               medicationYLevel,

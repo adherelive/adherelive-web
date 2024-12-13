@@ -79,38 +79,38 @@ class PatientsService {
   };
 
   /* TODO: Code has been removed in the recent merge-2 branch
-   * 
-  getPatientByName = async (keyword) => {
-    try {
-      const patient = await Database.getModel(TABLE_NAME).findAll({
-        where: {
-          [Op.or]: [
-            {
-              first_name: {
-                [Op.like]: `%${keyword}%`,
+     *
+    getPatientByName = async (keyword) => {
+      try {
+        const patient = await Database.getModel(TABLE_NAME).findAll({
+          where: {
+            [Op.or]: [
+              {
+                first_name: {
+                  [Op.like]: `%${keyword}%`,
+                },
               },
-            },
-            {
-              middle_name: {
-                [Op.like]: `%${keyword}%`,
+              {
+                middle_name: {
+                  [Op.like]: `%${keyword}%`,
+                },
               },
-            },
-            {
-              last_name: {
-                [Op.like]: `%${keyword}%`,
+              {
+                last_name: {
+                  [Op.like]: `%${keyword}%`,
+                },
               },
-            },
-          ],
-        },
+            ],
+          },
 
-        include: [Database.getModel(userTableName)],
-      });
-      return patient;
-    } catch (error) {
-      throw error;
-    }
-  };
-  */
+          include: [Database.getModel(userTableName)],
+        });
+        return patient;
+      } catch (error) {
+        throw error;
+      }
+    };
+    */
 
   getPatientById = async (data) => {
     try {

@@ -142,8 +142,8 @@ export const db = (database) => {
         defaultValue: false,
       },
       data: {
-        type: DataTypes.JSON
-      }
+        type: DataTypes.JSON,
+      },
     },
     {
       underscored: true,
@@ -172,7 +172,7 @@ export const db = (database) => {
             appointment_time: this.appointment_time,
             service_sub_tx_id: this.service_sub_tx_id,
             is_reassigned: this.is_reassigned || false,
-            data: this.data || {}
+            data: this.data || {},
           };
         },
       },

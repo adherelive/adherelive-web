@@ -77,7 +77,8 @@ class VitalController extends Controller {
           end_date,
           details: {
             repeat_interval_id,
-            repeat_days, description
+            repeat_days,
+            description,
           },
           // description,
         });

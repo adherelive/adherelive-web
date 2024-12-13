@@ -1,7 +1,7 @@
 import BaseReport from "../../../services/reports";
 import ReportService from "../../../services/reports/report.service";
 import uploadDocumentService from "../../../services/uploadDocuments/uploadDocuments.service";
-import FlashCardService from "../../../services/flashCard/flashCard.service"
+import FlashCardService from "../../../services/flashCard/flashCard.service";
 import DocumentWrapper from "../../web/uploadDocument";
 
 import Logger from "../../../../libs/log";
@@ -16,8 +16,15 @@ class ReportWrapper extends BaseReport {
 
   getBasicInfo = () => {
     const { _data } = this;
-    const { id, patient_id, uploader_id, uploader_type, name, test_date, flas_card_id, } =
-      _data || {};
+    const {
+      id,
+      patient_id,
+      uploader_id,
+      uploader_type,
+      name,
+      test_date,
+      flas_card_id,
+    } = _data || {};
 
     return {
       basic_info: {
@@ -25,7 +32,8 @@ class ReportWrapper extends BaseReport {
         patient_id,
         name,
       },
-      test_date, flas_card_id,
+      test_date,
+      flas_card_id,
       uploader: {
         id: uploader_id,
         category: uploader_type,
@@ -77,17 +85,18 @@ class ReportWrapper extends BaseReport {
       }
 
       const ref = await getAllInfo();
-      let isAdd = false
+      let isAdd = false;
       if (ref["flas_card_id"]) {
         const flasCardService = new FlashCardService();
         const flascards = await flasCardService.getAllFlashCardByData({
-          id: ref["flas_card_id"], is_published: true
+          id: ref["flas_card_id"],
+          is_published: true,
         });
         if (flascards.length > 0) {
-          isAdd = true
-        } 
+          isAdd = true;
+        }
         ref["flashCard"] = flascards;
-        ref["isAdd"] = isAdd
+        ref["isAdd"] = isAdd;
       } else {
         return {
           reports: {
@@ -99,7 +108,7 @@ class ReportWrapper extends BaseReport {
           report_ids: [getId()],
         };
       }
-      if (!isAdd) return {}
+      if (!isAdd) return {};
       return {
         reports: {
           [getId()]: ref,

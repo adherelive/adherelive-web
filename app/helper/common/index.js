@@ -30,7 +30,6 @@ export const checkAndCreateDirectory = (directoryPath) => {
 export const fileExists = (filePath) => fs.existsSync(filePath);
 
 export const getRoomId = (doctor, patient) => {
-
   return `careplan-${doctor}-${patient}-${process.config.twilio.CHANNEL_SERVER}`;
 };
 
