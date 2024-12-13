@@ -187,14 +187,14 @@ class CarePlanTemplateWrapper extends BaseCarePlanTemplate {
     }
 
     /** TODO: Check if the following are required, else remove them
-         exercise_details,
-         exercises,
-         repetitions,
-         food_items,
-         food_item_details,
-         portions,
-         medicines,
-         */
+     exercise_details,
+     exercises,
+     repetitions,
+     food_items,
+     food_item_details,
+     portions,
+     medicines,
+     */
 
     return {
       care_plan_templates: {

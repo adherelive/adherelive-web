@@ -16,7 +16,7 @@ module.exports = async () => {
     //const connectionString = `mongodb://${process.env.MONGO_DB_USER}:${process.env.MONGO_DB_PASSWORD}@${process.env.MONGO_DB_HOST}:${process.env.MONGO_DB_PORT}/${process.env.MONGO_DB_NAME}`;
     const connectionString = process.env.MONGO_DB_URI;
 
-    mongoose
+    await mongoose
       .connect(connectionString, dbConfig)
       .then(() => console.log("Connected to MongoDB!"))
       .catch((err) => console.error("Error connecting to MongoDB:", err));

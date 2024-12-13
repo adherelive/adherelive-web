@@ -1,19 +1,19 @@
-version: "3.0"
+version: "3.8"
 
 services:
   #nginx:
-  #build:
-  #context: ./nginx
-  #restart: unless-stopped
-  #ports:
-  #- "80:80"
-  #- "443:443"
-  #volumes:
-  #- "./nginx/ssl.conf:/etc/nginx/nginx.conf"
-  #- "./nginx/certbot/conf:/etc/letsencrypt"
-  #- "./nginx/certbot/www:/var/www/certbot"
-  #links:
-  #- node
+    #build:
+      #context: ./nginx
+      #restart: unless-stopped
+    #ports:
+      #- "80:80"
+      #- "443:443"
+    #volumes:
+      #- "./nginx/ssl.conf:/etc/nginx/nginx.conf"
+      #- "./nginx/certbot/conf:/etc/letsencrypt"
+      #- "./nginx/certbot/www:/var/www/certbot"
+    #links:
+      #- node
   certbot:
     image: "certbot/certbot:latest"
     restart: always
@@ -27,10 +27,10 @@ services:
   node:
     build:
       context: .
-      #dockerfile: ./docker/DockerfileProd
-      #image: gagneet/adherelive:portal-be
-      #env_file:
-      #- ./env-files/.env_prod
+      #dockerfile: ./docker/DockerfileDemo
+    #image: gagneet/adherelive:portal-be-demo
+    #env_file:
+      #- ./env-files/.env_demo
     restart: always
     command:
       - npm
@@ -42,17 +42,18 @@ services:
     logging:
       options:
         max-size: 150m
-        max-file: "3"
+        max-file: '3'
     #tty: true
     volumes:
       - ./:/usr/src/app
       - ./.node_env:/usr/src/app/.env
-      #    links:
-      #- mysql
-  #      - minio1
-  #      - minio2
-  #      - minio3
-  #      - minio4
+    links:
+      - mysql
+      - mongo
+      - minio1
+      - minio2
+      - minio3
+      - minio4
 
   mysql:
     image: mysql:latest
@@ -131,3 +132,4 @@ volumes:
   #  adhere_storage_stack4: null
   adhere_mongo:
     driver: local
+    

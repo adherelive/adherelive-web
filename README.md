@@ -316,6 +316,8 @@ Build the image using below commands
 $ cd ~/adherelive-web/
 $ git pull --all
 $ docker image build -t adherelive-be .
+$ cd ~/docker_env
+$ docker-compose up -d backend
 ```
 
 ## Frontend

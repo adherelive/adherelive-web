@@ -11,7 +11,7 @@ import templateAppointmentService from "../../services/templateAppointment/templ
 import medicineService from "../../services/medicine/medicine.service";
 import userRoleService from "../../services/userRoles/userRoles.service";
 import carePlanSecondaryDoctorMappingService from "../../services/careplanSecondaryDoctorMappings/careplanSecondaryDoctorMappings.service";
-// import twilioService from "../../services/twilio/twilio.service";
+//import twilioService from "../../services/twilio/twilio.service";
 
 import {
   getCarePlanAppointmentIds,
@@ -332,8 +332,8 @@ class CarePlanController extends Controller {
           let newMedication =
             await carePlanMedicationService.addCarePlanMedication(
               data_to_create
-            );
-
+          );
+            
           // TODO: testing gaurav
           const eventScheduleDataNew = {
             patient_id: patient_id,

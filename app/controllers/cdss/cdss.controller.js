@@ -10,7 +10,7 @@ const Logger = new Log("Web CDSS user controller");
 
 mongoose.set("strictQuery", true); // Add this line to handle the deprecation warning
 
-class cdssController extends Controller {
+class CdssController extends Controller {
   constructor() {
     super();
   }
@@ -28,9 +28,9 @@ class cdssController extends Controller {
       return res.status(400).send({ error: true, message: "Already Added" });
 
     /*
-        dbcdss = await cdss.find({dia:data.dia});
-        if(dbcdss) return res.status(400).send({error: true, message: 'Dia Already Added'});
-        */
+    dbcdss = await Cdss.find({dia:data.dia});
+    if(dbcdss) return res.status(400).send({error: true, message: 'Dia Already Added'});
+    */
     let cdssResponse = [];
     if (data.dia.length > 0) {
       for (let i in data.dia) {
@@ -96,4 +96,4 @@ class cdssController extends Controller {
   };
 }
 
-export default new cdssController();
+export default new CdssController();
