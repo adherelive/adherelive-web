@@ -6,33 +6,36 @@
  * @desc topic model.
  */
 
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
+//require('dotenv').config();
+mongoose.set("strictQuery", true); // Add this line to handle the deprecation warning
+
 const reassignAudit = mongoose.Schema(
-    {
-        assignedBy: {
-            type: String,
-            required: true,
-        },
-        assignedTo: {
-            type: String,
-            required: true,
-        },
-        activity_id: {
-            type: String,
-            required: true
-        },
-        reason: {
-            type: String,
-            required: true,
-        },
-        status: {
-            type: Boolean,
-        },
-        isAcceptedByDoctor: {
-            type: Boolean,
-        },
+  {
+    assignedBy: {
+      type: String,
+      required: true,
     },
-    { timestamp: true }
+    assignedTo: {
+      type: String,
+      required: true,
+    },
+    activity_id: {
+      type: String,
+      required: true,
+    },
+    reason: {
+      type: String,
+      required: true,
+    },
+    status: {
+      type: Boolean,
+    },
+    isAcceptedByDoctor: {
+      type: Boolean,
+    },
+  },
+  { timestamp: true }
 );
 
-module.exports = mongoose.model('ReassignAudit', reassignAudit);
+module.exports = mongoose.model("ReassignAudit", reassignAudit);

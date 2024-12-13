@@ -53,7 +53,7 @@ import dietRouter from "./diet";
 import portionRouter from "./portion";
 import exerciseRouter from "./exercises";
 import workoutRouter from "./workouts";
-import CdssRouter from "./cdss";
+import cdssRouter from "./cdss";
 import serviceOfferingRouter from "./serviceOffering";
 import serviceSubscriptionRouter from "./serviceSubscription";
 import serviceUserMappingRouter from "./serviceUserMapping";
@@ -64,7 +64,7 @@ import FlashCardRouter from "./flashCard";
 import reassignAudit from "./reassignAudit";
 import NotesRouter from "./notes";
 import { getTime } from "../../app/helper/timer";
-import prescriptionRouter from "./prescription"
+import prescriptionRouter from "./prescription";
 
 router.use(async function (req, res, next) {
   console.log("api-index-1" + getTime() + getTime());
@@ -223,7 +223,7 @@ router.use("/servicesubtx", serviceSubscribeTxRouter);
 router.use("/txactivities", TxActivitiesRouter);
 router.use("/flashcard", FlashCardRouter);
 router.use("/notes", NotesRouter);
-router.use("/cdss", CdssRouter);
+router.use("/cdss", cdssRouter);
 router.use("/his", hisOperationRouter);
 router.use("/prescription", prescriptionRouter);
 router.use("/reassignaudit", reassignAudit);

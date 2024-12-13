@@ -130,3 +130,4 @@ volumes:
 #  adhere_storage_stack3: null
 #  adhere_storage_stack4: null
   adhere_mongo:
+    driver: local
