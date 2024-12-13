@@ -1,4 +1,4 @@
-version: "3.0"
+version: "3.8"
 
 services:
   #nginx:
@@ -64,7 +64,7 @@ services:
       - MYSQL_PASSWORD=password
 
   mongo:
-    image: mongo:latest
+    image: mongo:4.4
     restart: always
     ports:
       - "27017:27017"
