@@ -2,13 +2,16 @@ import Log from "../../../libs/log";
 import Controller from "../index";
 import mongoose from "mongoose";
 // import fs from "fs";
+// const express = require('express');
+// const mongoose = require(('mongoose');
 const Response = require("../helper/responseFormat");
 
 const cdss = require("../../models/mongoModel/cdss");
 
 const Logger = new Log("Web CDSS user controller");
 
-mongoose.set("strictQuery", true); // Add this line to handle the deprecation warning
+// Add this line to handle the deprecation warning
+//mongoose.set("strictQuery", true);
 
 class CdssController extends Controller {
   constructor() {
@@ -28,9 +31,9 @@ class CdssController extends Controller {
       return res.status(400).send({ error: true, message: "Already Added" });
 
     /*
-    dbcdss = await Cdss.find({dia:data.dia});
-    if(dbcdss) return res.status(400).send({error: true, message: 'Dia Already Added'});
-    */
+        dbcdss = await Cdss.find({dia:data.dia});
+        if(dbcdss) return res.status(400).send({error: true, message: 'Dia Already Added'});
+        */
     let cdssResponse = [];
     if (data.dia.length > 0) {
       for (let i in data.dia) {

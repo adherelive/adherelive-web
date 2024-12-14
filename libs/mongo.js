@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 
-mongoose.set("strictQuery", true); // Add this line to handle the deprecation warning
+// Add this line to handle the deprecation warning
+//mongoose.set("strictQuery", true);
 
 module.exports = async () => {
   try {
