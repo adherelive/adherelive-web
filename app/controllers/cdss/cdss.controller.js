@@ -6,7 +6,7 @@ import mongoose from "mongoose";
 // const mongoose = require(('mongoose');
 const Response = require("../helper/responseFormat");
 
-const cdss = require("../../models/mongoModel/cdss");
+const Cdss = require("../../models/mongoModel/Cdss");
 
 const Logger = new Log("Web CDSS user controller");
 
@@ -26,29 +26,29 @@ class CdssController extends Controller {
     }
 
     // check if it is already exist or not.
-    let dbcdss = await cdss.find(data);
-    if (!dbcdss)
+    let dbCdss = await Cdss.find(data);
+    if (!dbCdss)
       return res.status(400).send({ error: true, message: "Already Added" });
 
     /*
-        dbcdss = await Cdss.find({dia:data.dia});
-        if(dbcdss) return res.status(400).send({error: true, message: 'Dia Already Added'});
+        dbCdss = await Cdss.find({dia:data.dia});
+        if(dbCdss) return res.status(400).send({error: true, message: 'Dia Already Added'});
         */
-    let cdssResponse = [];
+    let CdssResponse = [];
     if (data.dia.length > 0) {
       for (let i in data.dia) {
         let newDia = data.dia[i];
         let newData = { ...data, dia: newDia };
-        let cdss = new cdss(newData);
-        cdss = await cdss.save();
-        cdssResponse.push(cdss);
+        let Cdss = new Cdss(newData);
+        Cdss = await Cdss.save();
+        CdssResponse.push(Cdss);
       }
     } else {
-      let cdss = new cdss(data);
-      cdss = await cdss.save();
-      cdssResponse.push(cdss);
+      let Cdss = new Cdss(data);
+      Cdss = await Cdss.save();
+      CdssResponse.push(Cdss);
     }
-    return res.status(201).send(cdssResponse);
+    return res.status(201).send(CdssResponse);
   };
 
   getDiagnosis = async (req, res) => {
@@ -64,16 +64,16 @@ class CdssController extends Controller {
       searchObject.push(symp);
     }
 
-    let cdss = await cdss.find({
+    let Cdss = await Cdss.find({
       $or: searchObject,
     });
 
     let dict = {};
 
-    for (let i = 0; i < cdss.length; i++) {
+    for (let i = 0; i < Cdss.length; i++) {
       let count = 0;
-      for (let k in data) if (cdss[i][data[k]]) count += 1;
-      dict[cdss[i]["dia"]] = count;
+      for (let k in data) if (Cdss[i][data[k]]) count += 1;
+      dict[Cdss[i]["dia"]] = count;
     }
 
     let keysSorted = Object.keys(dict).sort((a, b) => dict[b] - dict[a]);
@@ -87,10 +87,10 @@ class CdssController extends Controller {
       let data = {
         $or: [{ dia: { $regex: keyword, $options: "i" } }],
       };
-      let cdss = await cdss.find(data);
+      let Cdss = await Cdss.find(data);
       let filterDia = [];
-      for (let i in cdss) {
-        filterDia.push(cdss[i].dia);
+      for (let i in Cdss) {
+        filterDia.push(Cdss[i].dia);
       }
       return res.status(200).send(filterDia);
     } catch (ex) {

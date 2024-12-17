@@ -19,4 +19,4 @@ const topicSchema = mongoose.Schema(
   }
 );
 
-module.exports = mongoose.model("cdss", topicSchema);
+module.exports = mongoose.model("Cdss", topicSchema);
