@@ -1,5 +1,7 @@
 FROM gauravsharma6421/ubuntulibs
 #FROM node:16.10.0 as builder
+# Install build-essential
+RUN apt-get update && apt-get install -y build-essential && rm -rf /var/lib/apt/lists/*
 RUN useradd -d /home/azureuser -m -s /bin/bash azureuser
 LABEL application="adherelive-backend"
 LABEL owner="AdhereLive Pvt Ltd"

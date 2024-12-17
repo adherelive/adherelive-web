@@ -1,5 +1,6 @@
 FROM gagneet/ubuntulibs
 #FROM node:14.15.0 as builder
+RUN apt-get update && apt-get install -y build-essential && rm -rf /var/lib/apt/lists/*
 RUN useradd -d /home/azureuser -m -s /bin/bash azureuser
 LABEL application="adherelive-backend"
 LABEL owner="Gaurav Sharma"
