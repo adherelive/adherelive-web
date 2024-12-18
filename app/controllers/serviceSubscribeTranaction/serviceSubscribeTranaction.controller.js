@@ -13,6 +13,7 @@ import ABC from "../../services/provider/provider.service";
 import ServiceSubscriptionMapping from "../../services/serviceSubscriptionMapping/serviceSubscritpionMapping.service";
 import TransactionActivite from "../../services/transactionActivity/transactionActivity.service";
 import { USER_CATEGORY } from "../../../constant";
+
 const Log = new Logger("WEB > CONTROLLER > Service Offering");
 
 class ServiceSubscriptionTxController extends Controller {
@@ -93,8 +94,11 @@ class ServiceSubscriptionTxController extends Controller {
         provider_type: USER_CATEGORY.DOCTOR,
       };
     }
-// change constants.
-    if (req.userDetails.userRoleData.basic_info.linked_with === USER_CATEGORY.PROVIDER) {
+    // change constants.
+    if (
+      req.userDetails.userRoleData.basic_info.linked_with ===
+      USER_CATEGORY.PROVIDER
+    ) {
       provider_id = req.userDetails.userRoleData.basic_info.linked_id;
       doctor_id = req.userDetails.userCategoryData.basic_info.id;
       data = {

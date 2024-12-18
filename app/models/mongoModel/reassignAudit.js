@@ -7,8 +7,9 @@
  */
 
 const mongoose = require("mongoose");
-//require('dotenv').config();
-mongoose.set("strictQuery", true); // Add this line to handle the deprecation warning
+
+// Add this line to handle the deprecation warning
+//mongoose.set("strictQuery", true);
 
 const reassignAudit = mongoose.Schema(
   {

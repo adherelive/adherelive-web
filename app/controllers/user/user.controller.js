@@ -567,7 +567,6 @@ class UserController extends Controller {
 
   onAppStart = async (req, res) => {
     try {
-
       if (req.userDetails.exists) {
         const {
           userId,
@@ -605,15 +604,12 @@ class UserController extends Controller {
             userCategoryData = await patientService.getPatientByUserId(userId);
             break;
           case USER_CATEGORY.DOCTOR:
-
             userCategoryData = await doctorService.getDoctorByUserId(userId);
 
             if (userCategoryData) {
-
               userCategoryApiWrapper = await DoctorWrapper(userCategoryData);
 
               let watchlist_patient_ids = [];
-
 
               // gaurav new changes
               // const watchlistRecords =
@@ -662,12 +658,9 @@ class UserController extends Controller {
 
             break;
           case USER_CATEGORY.HSP:
-
-
             userCategoryData = await doctorService.getDoctorByUserId(userId);
 
             if (userCategoryData) {
-
               userCategoryApiWrapper = await DoctorWrapper(userCategoryData);
               // Gaurav new Changes
               // let watchlist_patient_ids = [];
@@ -712,7 +705,6 @@ class UserController extends Controller {
                 providerApiData[providerId] =
                   await providerWrapper.getAllInfo();
               }
-
             }
             break;
           case USER_CATEGORY.PROVIDER:

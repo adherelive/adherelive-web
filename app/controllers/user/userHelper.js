@@ -42,7 +42,6 @@ export const doctorQualificationData = async (userId) => {
 
     let doctor = await doctorService.getDoctorByUserId(userId);
 
-
     if (doctor) {
       let docInfo = doctor.getBasicInfo;
       const {
@@ -64,7 +63,6 @@ export const doctorQualificationData = async (userId) => {
         await qualificationService.getQualificationsByDoctorId(docId);
 
       for (let qualification of docQualifications) {
-
         let qualificationData = {};
         let qualificationId = qualification.get("id");
         qualificationData.degree = qualification.get("degree");

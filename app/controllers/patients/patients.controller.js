@@ -307,7 +307,6 @@ class PatientController extends Controller {
     );
   };
 
-
   // Care_plans seconday details iD start
   getPatientCarePlanSecondaryDocDetails = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
@@ -333,22 +332,21 @@ class PatientController extends Controller {
         );
       }
 
-      const carePlans = (await carePlanService.getMultipleCarePlanByData({ id })) || [];
+      const carePlans =
+        (await carePlanService.getMultipleCarePlanByData({ id })) || [];
 
-      const { care_plans } =
-        await carePlanHelper.getCareplanDataWithDoctor({
-          carePlans,
-          userCategory: category,
-          doctorId: userCategoryId,
-          userRoleId,
-        });
+      const { care_plans } = await carePlanHelper.getCareplanDataWithDoctor({
+        carePlans,
+        userCategory: category,
+        doctorId: userCategoryId,
+        userRoleId,
+      });
 
       return raiseSuccess(
         res,
         200,
         {
           care_plans: care_plans,
-
         },
         "Patient care plan details fetched successfully"
       );
@@ -360,7 +358,6 @@ class PatientController extends Controller {
   };
 
   // careplan secondary details id end
-
 
   getPatientCarePlanDetails = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
@@ -941,40 +938,40 @@ class PatientController extends Controller {
   };
 
   /* TODO: This function has been removed in the recent code for
-   * branch merge-2    
-  searchPatientByName = async (req, res) => {
-    const { raiseSuccess, raiseServerError } = this;
-    try {
-      Logger.info(`searchPatient request query : ${req.query.value}`);
-      const { query: { value = "" } = {} } = req;
-      const {
-        userDetails: { userId, userRoleId, userData: { category } = {} } = {},
-      } = req;
-      let authDoctor = null;
-      if (category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP) {
-        authDoctor = await doctorService.getDoctorByData({ user_id: userId });
+     * branch merge-2
+    searchPatientByName = async (req, res) => {
+      const { raiseSuccess, raiseServerError } = this;
+      try {
+        Logger.info(`searchPatient request query : ${req.query.value}`);
+        const { query: { value = "" } = {} } = req;
+        const {
+          userDetails: { userId, userRoleId, userData: { category } = {} } = {},
+        } = req;
+        let authDoctor = null;
+        if (category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP) {
+          authDoctor = await doctorService.getDoctorByData({ user_id: userId });
+        }
+        const patients = await patientService.getPatientByName(value);
+        if (patients.length > 0)
+          return raiseSuccess(
+            res,
+            200,
+            { patients },
+            "Patients fetched successfully"
+          );
+        else
+          return raiseSuccess(
+            res,
+            201,
+            {},
+            "No patient linked with the given phone number"
+          );
+      } catch (error) {
+        Logger.debug("searchPatient 500 error", error);
+        return raiseServerError(res);
       }
-      const patients = await patientService.getPatientByName(value);
-      if (patients.length > 0)
-        return raiseSuccess(
-          res,
-          200,
-          { patients },
-          "Patients fetched successfully"
-        );
-      else
-        return raiseSuccess(
-          res,
-          201,
-          {},
-          "No patient linked with the given phone number"
-        );
-    } catch (error) {
-      Logger.debug("searchPatient 500 error", error);
-      return raiseServerError(res);
-    }
-  };
-  */
+    };
+    */
 
   searchPatientOld = async (req, res) => {
     const { raiseSuccess, raiseServerError } = this;
@@ -1674,7 +1671,7 @@ class PatientController extends Controller {
             type_description = "",
             radiology_type = "",
             description = "",
-            reason = ""
+            reason = "",
           } = appointmentWrapper.getDetails() || {};
           suggestedInvestigations.push({
             type,
@@ -1684,7 +1681,7 @@ class PatientController extends Controller {
             provider_id,
             start_date: startDate,
             organizer,
-            reason
+            reason,
           });
           // }
         }
@@ -1939,13 +1936,13 @@ class PatientController extends Controller {
       checkAndCreateDirectory(S3_DOWNLOAD_FOLDER);
 
       const doctorSignImage = `${S3_DOWNLOAD_FOLDER}/${full_name}.jpeg`;
-      console.log("\n\n\n\n\n\n\n\n\n\n\n================================")
-      console.log({ doctorSignImage })
+      console.log("\n\n\n\n\n\n\n\n\n\n\n================================");
+      console.log({ doctorSignImage });
       const downloadImage = await downloadFileFromS3(
         getFilePath(signature_pic),
         doctorSignImage
       );
-      console.log("================================\n\n\n\n\n\n\n\n\n\n\n")
+      console.log("================================\n\n\n\n\n\n\n\n\n\n\n");
 
       const doctorQualifications =
         await qualificationService.getQualificationsByDoctorId(doctor_id);
@@ -2097,9 +2094,9 @@ class PatientController extends Controller {
       };
 
       checkAndCreateDirectory(PRESCRIPTION_PDF_FOLDER);
-      console.log("\n\n\n\n\n\n\n\n\n\n\n================================")
-      console.log({ doctorSignImage })
-      console.log("================================\n\n\n\n\n\n\n\n\n\n\n")
+      console.log("\n\n\n\n\n\n\n\n\n\n\n================================");
+      console.log({ doctorSignImage });
+      console.log("================================\n\n\n\n\n\n\n\n\n\n\n");
       const pdfFileName = await generatePDF(dataForPdf, doctorSignImage);
 
       const pdfFile = `${pdfFileName}.pdf`;
@@ -2360,18 +2357,18 @@ class PatientController extends Controller {
       let allPatientIds = [];
 
       /** TODO: Check if these are required now or not.
-       userId (auth) [DOCTOR]
-       
-       SORT
-       created_at [asc, desc]
-       name [asc, desc]
-       
-       FILTER
-       diagnosis [description, type]
-       treatment
-       
-       doctors -> careplans -> patients
-       */
+             userId (auth) [DOCTOR]
+
+             SORT
+             created_at [asc, desc]
+             name [asc, desc]
+
+             FILTER
+             diagnosis [description, type]
+             treatment
+
+             doctors -> careplans -> patients
+             */
 
       const {
         offset = 0,

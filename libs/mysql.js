@@ -5,7 +5,7 @@ const Log = new Logger("SEQUELIZE QUERY");
 // const Config = require("../config/config");
 // Config();
 
-// MODELS
+// Get the details of all the Models created for MySQL - 114 till date
 import * as ActionDetails from "../app/models/actionDetails";
 import * as Actions from "../app/models/actions";
 import * as Adherence from "../app/models/adherence";
@@ -124,7 +124,7 @@ import * as TransactionActivities from "../app/models/transactionActivity";
 import * as FlashCard from "../app/models/flashCard";
 import * as Notes from "../app/models/notes";
 
-// Models List...
+// Create a Models List to be used with the DB connection
 const models = [
   AccountDetails,
   ActionDetails,
@@ -250,57 +250,61 @@ class Database {
   static connection = null;
 
   static getDatabase = async () => {
-    // console.log("=====", Database.connection);
     if (Database.connection === null) {
-      Database.connection = await new Sequelize(
-        process.config.db.name,
-        process.config.db.username,
-        process.config.db.password,
-        {
-          host: process.config.db.host,
-          port: process.config.db.port,
-          dialect: process.config.db.dialect,
-          pool: {
-            max: 50, // 100
-            min: 0,
-            acquire: 120000, // 100 * 1000,
-            idle: 10000,
-          },
-          logging: false,
-          // logging: function (str) {
-          //   Log.debug("query", str);
-          // },
-        }
-      );
-      // TODO: Add a try-catch to check if the connection has been
-      //  established or not. We can get issues as the parameters used are
-      //  in the config - .node_env file.
-      // Database.connection
-      //   .authenticate()
-      //   .then(() => {
-      //     console.log('Connection has been established successfully.');
-      //   })
-      //   .catch((err) => {
-      //     console.log('Unable to connect to the database:', err);
-      //   });
-    }
+      try {
+        Database.connection = new Sequelize(
+          process.config.db.name,
+          process.config.db.username,
+          process.config.db.password,
+          {
+            host: process.config.db.host,
+            port: process.config.db.port,
+            dialect: process.config.db.dialect,
+            pool: {
+              max: 50,
+              min: 0,
+              acquire: 120000,
+              idle: 10000,
+            },
+            logging: false,
+          }
+        );
 
+        // Test the connection
+        await Database.connection.authenticate();
+        console.log("Connection has been established successfully.");
+      } catch (err) {
+        console.log("Unable to connect to the database:", err);
+        Database.connection = null; // Reset connection on failure
+      }
+    }
     return Database.connection;
   };
 
-  static getModel = (dbName) => Database.connection.models[dbName];
+  static getModel = (dbName) => {
+    if (Database.connection) {
+      return Database.connection.models[dbName];
+    }
+    throw new Error("Database connection has not been established");
+  };
 
-  static initTransaction = () => Database.connection.transaction();
+  static initTransaction = () => {
+    if (Database.connection) {
+      return Database.connection.transaction();
+    }
+    throw new Error("Database connection has not been established");
+  };
 
   static performRawQuery = async (query, options = {}) => {
     const database = await Database.getDatabase();
-    return await database.queryInterface.sequelize.query(query, options);
+    return database.query(query, options);
+    //return await database.queryInterface.sequelize.query(query, options);
   };
 
   static init = async () => {
     try {
       const database = await Database.getDatabase();
-      await database.authenticate();
+      //await database.authenticate();
 
       for (const model of models) {
         model.db(database);
@@ -309,9 +313,9 @@ class Database {
       for (const model of models) {
         model.associate(database);
       }
-      Log.info("Db and tables have been created...");
+      console.log("Db and tables have been created...");
     } catch (err) {
-      Log.err(1000, "Db connect error is: ", err);
+      console.error("Db connect error is:", err);
     }
   };
   

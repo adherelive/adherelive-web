@@ -38,13 +38,13 @@ export default class ServiceUserMapping {
     const transaction = await Database.initTransaction();
     try {
       /**
-       * {
-  notes: 'asdasdasdasdasd',
-  durations: 2,
-  service_charge: 1000,
-  patient_status: 'active'
-} 8
-       */
+             * {
+             notes: 'asdasdasdasdasd',
+             durations: 2,
+             service_charge: 1000,
+             patient_status: 'active'
+             } 8
+             */
       console.log(data, id);
       const serviceSubscriptionUserMapping = await Database.getModel(
         TABLE_NAME

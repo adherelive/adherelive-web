@@ -18,7 +18,7 @@ info:
        |**429 Too Many Requests**      | The user has sent too many requests beyond the throttling limit. | 
        |**500 Internal Server Error**  | An unexpected internal error occurred.                           | 
        |**503 Service Unavailable**    | The service is temporarily unavailable.                          | 
-     
+
   termsOfService: 'https://adhere.live/terms/'
   contact:
     email: info@adhere.live
@@ -117,13 +117,13 @@ paths:
                 $ref: '#/components/schemas/Graphs'
         '400':
           description: Invalid number supplied
-          content: {}
+          content: { }
         '404':
           description: Graph not found
-          content: {}
+          content: { }
         '405':
           description: Validation exception
-          content: {}
+          content: { }
       security:
         - adhere_auth:
             - 'write:patients'
@@ -203,13 +203,13 @@ paths:
                 $ref: '#/components/schemas/Patients'
         '400':
           description: Invalid ID supplied
-          content: {}
+          content: { }
         '404':
           description: No records found
-          content: {}
+          content: { }
         '405':
           description: Validation exception
-          content: {}
+          content: { }
       security:
         - adhere_auth:
             - 'write:patients'
@@ -254,16 +254,16 @@ paths:
       responses:
         '200':
           description: Patient Record Updated
-          content: {}
+          content: { }
         '400':
           description: Invalid ID supplied
-          content: {}
+          content: { }
         '404':
           description: Patient not found
-          content: {}
+          content: { }
         '405':
           description: Validation exception
-          content: {}
+          content: { }
       security:
         - adhere_auth:
             - 'write:patients'
@@ -306,10 +306,10 @@ paths:
       responses:
         '201':
           description: Patient Record Created
-          content: {}
+          content: { }
         '405':
           description: Invalid input
-          content: {}
+          content: { }
       security:
         - adhere_auth:
             - 'write:patients'
@@ -376,13 +376,13 @@ paths:
                 $ref: '#/components/schemas/Patient'
         '400':
           description: Invalid ID supplied
-          content: {}
+          content: { }
         '404':
           description: Patient not found
-          content: {}
+          content: { }
         '405':
           description: Validation exception
-          content: {}
+          content: { }
       security:
         - adhere_auth:
             - 'write:patients'

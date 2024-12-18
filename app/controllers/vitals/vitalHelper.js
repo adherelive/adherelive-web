@@ -31,7 +31,8 @@ export const getVitalUpdateData = ({
     dataToUpdate["details"] = repeat_days;
     dataToUpdate["details"] = {
       ...prevDetails,
-      repeat_days, description
+      repeat_days,
+      description,
     };
     prevDetails = { ...prevDetails, repeat_days };
   }
