@@ -100,3 +100,9 @@ module.exports = {
     });
   },
 };
+
+//   down: (queryInterface) => {
+//     return queryInterface.bulkDelete(TABLE_NAME, null, {});
+//   },
+// }
+// };
