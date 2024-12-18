@@ -3,13 +3,13 @@ APP_ENV=Development
 NODE_ENV=development
 APP_NAME="adherelive"
 
-API_URL=https://demo.adhere.live
-WEB_URL=https://demo.adhere.live
-APP_URL=https://demo.adhere.live
+API_URL=https://adherelivelenia.centralindia.cloudapp.azure.com
+WEB_URL=https://adherelivelenia.centralindia.cloudapp.azure.com
+APP_URL=https://adherelivelenia.centralindia.cloudapp.azure.com
 
 INVITE_LINK=/validation/
 
-RESET_PASSWORD_LINK=https://demo.adhere.live/reset-password/
+RESET_PASSWORD_LINK=https://adherelivelenia.centralindia.cloudapp.azure.com/reset-password/
 
 MOBILE_INVITE_LINK=verify
 
@@ -38,7 +38,7 @@ DB_PASSWORD=password
 DB_DIALECT=mysql
 
 # MongoDB parameters
-MONGO_DB_URI="mongodb://mongouser:password@localhost:27017/adhere?authSource=admin"
+MONGO_DB_URI=mongodb://mongouser:password@localhost:27017/adhere?authSource=admin
 
 SALT_ROUNDS=5
 
@@ -73,21 +73,13 @@ S3_SECRET_KEY=Gc_Gj4sNAeo5zlSM56xPWa0dLpGaOUD_FtLiUydhKmOTDK15VbZeWb1wl9NwiD1t_p
 S3_EXPIRY_TIME=30
 EXPIRY_TIME=30
 
-# Twilio old Account Details
-#TWILIO_ACCOUNT_SID=ACeea90f2fe2b66e50da207e946954c52d
-#TWILIO_API_KEY=SKa7af6661cd0eba6f72d98fb95f2f4647
-#TWILIO_API_SECRET=K22GweB91vDuHppwD79cVmA7nMZMLWT6
-#TWILIO_CHAT_SERVICE_SID=IS86f1dcb573a74909a8248b944aa90d9c
-#TWILIO_AUTH_TOKEN=1cf5b1a6801c773fe8bd138bb0bb50d4
-#TWILIO_CHANNEL_SERVER=adherelive-demo
-
-# Twilio new Account Details
-TWILIO_ACCOUNT_SID=ACc0ae118b6501943fbfffbb1d42954a9f
-TWILIO_API_KEY=SK17ed82b6829e198a51d8331153b03951
-TWILIO_API_SECRET=TsPfxgrRdFhKSVwjhqTTfE21Crskayqi
-TWILIO_CHAT_SERVICE_SID=ISc62d50dcf3cf49aeb1861ffb50f68471
-TWILIO_AUTH_TOKEN=b2ae9db8ecb24661d385db1b2f6a8d02
-TWILIO_CHANNEL_SERVER=adhere-live
+# Twilio Account Details
+TWILIO_ACCOUNT_SID=ACeea90f2fe2b66e50da207e946954c52d
+TWILIO_API_KEY=SKa7af6661cd0eba6f72d98fb95f2f4647
+TWILIO_API_SECRET=K22GweB91vDuHppwD79cVmA7nMZMLWT6
+TWILIO_CHAT_SERVICE_SID=IS86f1dcb573a74909a8248b944aa90d9c
+TWILIO_AUTH_TOKEN=1cf5b1a6801c773fe8bd138bb0bb50d4
+TWILIO_CHANNEL_SERVER=adherelive-demo
 
 device_token=
 
@@ -98,19 +90,15 @@ MINIO_REGION=us-east-1
 MINIO_ENDPOINT=minio1
 MINIO_BUCKET_NAME=adherelive-production
 
-# GetStream Latest API Keys- mail 'info@adhere.live'
-GETSTREAM_API_KEY=kmvug7bs2v52
-GETSTREAM_API_SECRET=mqdvv7jv26sfxmt8wahqv7p9vx77p7r3u9au5qzv6v9f9utk67v4vzf4tbv35u49
-GETSTREAM_REGION=us-east
-GETSTREAM_APP_ID=95904
-
-# GetStream API Keys - 1
+# GetStream API Keys
 #GETSTREAM_API_KEY=fjakqnrvnsq7
 #GETSTREAM_API_SECRET=9bqv9h5w6jxqdx5hdf3qg7wrd7vrxpnaprra8yyxeccarp4c8kgs2srhqk8upqmy
 #GETSTREAM_REGION=us-east
 #GETSTREAM_APP_ID=1143860
-
-# GetStream API Keys - 2
+GETSTREAM_API_KEY=kmvug7bs2v52
+GETSTREAM_API_SECRET=mqdvv7jv26sfxmt8wahqv7p9vx77p7r3u9au5qzv6v9f9utk67v4vzf4tbv35u49
+GETSTREAM_REGION=us-east
+GETSTREAM_APP_ID=95904
 # Older GetStream Account IDs
 #GETSTREAM_API_KEY=ywtzg5hdvp7t
 #GETSTREAM_API_SECRET=zbrxan8wdzg3phz6qffj8jnx4jraxvxu7zc3zzkqqvzaumb6mwjqfxh6jf7fc42w
@@ -141,7 +129,7 @@ BRANCH_IO_KEY=key_live_hbL5zlRfxNiPzCmRlQcXVihbywdivtNo
 BRANCH_IO_BASE_URL=https://api2.branch.io/v1/url
 
 # TODO: Add your Email ID here
-DEVELOPER_EMAIL=sagar.agrawal@adhere.live,ankur.agrawal@adhere.live,akshay.nagargoje@myrl.tech,gaurav@myrl.tech
+DEVELOPER_EMAIL=sagar.agrawal@adhere.live,ankur.agrawal@adhere.live,gagneet.singh@adhere.live
 SUPPORT_EMAIL=customersupport@adhere.live
 
 EVENT_FETCH_COUNT=7
@@ -187,13 +175,10 @@ ADMIN_MEDICINE_ONE_PAGE_LIMIT=10
 ANDROID_ICON_NAME=ic_stat_onesignal_default
 
 # Agora Credentials
-AGORA_APP_ID=92e6bf32127d465699951a92ba40cc6d
-AGORA_APP_CERTIFICATE=d24d921ebf4041a7a4aef2dec0634ef9
-AGORA_APP_CHANNEL_NAME=adhere-video
+AGORA_APP_ID=e43158c06dc841ebb186afb1854a125c
+AGORA_APP_CERTIFICATE=7df432e4412e432bacf96881010a2f67
+AGORA_APP_CHANNEL_NAME=adherelive-demo
 # Older Agora Account IDs
-#AGORA_APP_ID=e43158c06dc841ebb186afb1854a125c
-#AGORA_APP_CERTIFICATE=7df432e4412e432bacf96881010a2f67
-#AGORA_APP_CHANNEL_NAME=adherelive-demo
 #AGORA_APP_ID=92e6bf32127d465699951a92ba40cc6d
 #AGORA_APP_CERTIFICATE=d24d921ebf4041a7a4aef2dec0634ef9
 #AGORA_APP_CHANNEL=adhere-video

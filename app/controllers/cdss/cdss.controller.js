@@ -1,22 +1,14 @@
 import Log from "../../../libs/log";
 import Controller from "../index";
-// import mongoose from "mongoose";
-// import fs from "fs";
 
-// const express = require('express');
-// const mongoose = require(('mongoose');
 const Response = require("../helper/responseFormat");
-
 const Cdss = require("../../models/mongoModel/cdss");
-
 const Logger = new Log("Web CDSS user controller");
 
 // Add this line to handle the deprecation warning
 //mongoose.set("strictQuery", true);
 
 class CdssController extends Controller {
-  newVar;
-
   constructor() {
     super();
   }
