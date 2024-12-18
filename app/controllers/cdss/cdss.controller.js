@@ -22,85 +22,84 @@ class CdssController extends Controller {
   }
 
   addDiagnosis = async (req, res) => {
-    let data = req.body;
+    const data = req.body;
 
     if (!data.dia) {
       return res
-        .status(201)
+        .status(400)
         .send({ error: "Please add the Diagnosis in the form" });
     }
 
     // Check if the symptoms combination already exists or not
-    let dbcdss = await Cdss.find(data);
-    if (!dbcdss)
-      return res.status(400).send({ error: true, message: "Already Added" });
-
-    /*
-          dbCdss = await Cdss.find({dia:data.dia});
-          if(dbCdss) return res.status(400).send({error: true, message: 'Dia Already Added'});
-         */
-    let cdssResponse = [];
-    if (data.dia.length > 0) {
-      for (let i in data.dia) {
-        let newDia = data.dia[i];
-        this.newVar = { ...data, dia: newDia };
-        let newData = this.newVar;
-        let cdss = new Cdss(newData);
-        cdss = await cdss.save();
-        cdssResponse.push(cdss);
-      }
-    } else {
-      let cdss = new Cdss(data);
-      cdss = await cdss.save();
-      cdssResponse.push(cdss);
+    const dbcdss = await Cdss.findOne({ dia: data.dia });
+    if (dbcdss) {
+      return res
+        .status(400)
+        .send({ error: true, message: "Diagnosis already exists" });
     }
+
+    const cdssResponse = [];
+
+    if (Array.isArray(data.dia) && data.dia.length > 0) {
+      const promises = data.dia.map(async (newDia) => {
+        const newData = { ...data, dia: newDia };
+        const cdss = new Cdss(newData);
+        return cdss.save();
+      });
+      cdssResponse.push(...(await Promise.all(promises)));
+    } else {
+      const cdss = new Cdss(data);
+      cdssResponse.push(await cdss.save());
+    }
+
     return res.status(201).send(cdssResponse);
   };
 
   getDiagnosis = async (req, res) => {
-    let data = req.body;
+    const data = req.body;
 
-    if (!(data.length > 0)) {
+    if (!Array.isArray(data) || data.length === 0) {
       return res.status(200).send([]);
     }
-    let searchObject = [];
-    for (let i in data) {
-      let symp = {};
-      symp[data[i]] = true;
-      searchObject.push(symp);
+
+    const searchObject = data.map((symptom) => ({ [symptom]: true }));
+
+    try {
+      const cdss = await Cdss.find({ $or: searchObject });
+
+      const dict = cdss.reduce((acc, item) => {
+        const count = data.reduce(
+          (sum, symptom) => sum + (item[symptom] ? 1 : 0),
+          0
+        );
+        acc[item.dia] = (acc[item.dia] || 0) + count;
+        return acc;
+      }, {});
+
+      const keysSorted = Object.keys(dict).sort((a, b) => dict[b] - dict[a]);
+      return res.status(200).send(keysSorted);
+    } catch (error) {
+      return res
+        .status(500)
+        .send({ error: "Error fetching data from database" });
     }
-
-    let cdss = await Cdss.find({
-      $or: searchObject,
-    });
-
-    let dict = {};
-
-    for (let i = 0; i < cdss.length; i++) {
-      let count = 0;
-      for (let k in data) if (cdss[i][data[k]]) count += 1;
-      dict[cdss[i]["dia"]] = count;
-    }
-
-    let keysSorted = Object.keys(dict).sort((a, b) => dict[b] - dict[a]);
-    return res.status(200).send([...keysSorted]);
   };
 
   listDiagnosis = async (req, res) => {
-    let keyword = "";
-    if (req.query.dia) keyword = req.query.dia;
+    const { dia = "" } = req.query;
+
     try {
-      let data = {
-        $or: [{ dia: { $regex: keyword, $options: "i" } }],
-      };
-      let cdss = await Cdss.find(data);
-      let filterDia = [];
-      for (let i in cdss) {
-        filterDia.push(cdss[i].dia);
-      }
+      const data = { dia: { $regex: dia, $options: "i" } };
+      const cdss = await Cdss.find(data);
+
+      const filterDia = cdss.map((item) => item.dia);
+
       return res.status(200).send(filterDia);
     } catch (ex) {
       console.log(ex);
+      return res
+        .status(500)
+        .send({ error: "Error fetching data from database" });
     }
   };
 }
