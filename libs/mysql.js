@@ -318,7 +318,6 @@ class Database {
       console.error("Db connect error is:", err);
     }
   };
-  
 }
 
 export default Database;
