@@ -1,12 +1,13 @@
 import Log from "../../../libs/log";
 import Controller from "../index";
-import mongoose from "mongoose";
+// import mongoose from "mongoose";
 // import fs from "fs";
+
 // const express = require('express');
 // const mongoose = require(('mongoose');
 const Response = require("../helper/responseFormat");
 
-const Cdss = require("../../models/mongoModel/Cdss");
+const Cdss = require("../../models/mongoModel/cdss");
 
 const Logger = new Log("Web CDSS user controller");
 
@@ -14,6 +15,8 @@ const Logger = new Log("Web CDSS user controller");
 //mongoose.set("strictQuery", true);
 
 class CdssController extends Controller {
+  newVar;
+
   constructor() {
     super();
   }
@@ -22,33 +25,36 @@ class CdssController extends Controller {
     let data = req.body;
 
     if (!data.dia) {
-      return res.status(201).send({ error: "Please add Diagnosis in Body" });
+      return res
+        .status(201)
+        .send({ error: "Please add the Diagnosis in the form" });
     }
 
-    // check if it is already exist or not.
-    let dbCdss = await Cdss.find(data);
-    if (!dbCdss)
+    // Check if the symptoms combination already exists or not
+    let dbcdss = await Cdss.find(data);
+    if (!dbcdss)
       return res.status(400).send({ error: true, message: "Already Added" });
 
     /*
-        dbCdss = await Cdss.find({dia:data.dia});
-        if(dbCdss) return res.status(400).send({error: true, message: 'Dia Already Added'});
-        */
-    let CdssResponse = [];
+          dbCdss = await Cdss.find({dia:data.dia});
+          if(dbCdss) return res.status(400).send({error: true, message: 'Dia Already Added'});
+         */
+    let cdssResponse = [];
     if (data.dia.length > 0) {
       for (let i in data.dia) {
         let newDia = data.dia[i];
-        let newData = { ...data, dia: newDia };
-        let Cdss = new Cdss(newData);
-        Cdss = await Cdss.save();
-        CdssResponse.push(Cdss);
+        this.newVar = { ...data, dia: newDia };
+        let newData = this.newVar;
+        let cdss = new Cdss(newData);
+        cdss = await cdss.save();
+        cdssResponse.push(cdss);
       }
     } else {
-      let Cdss = new Cdss(data);
-      Cdss = await Cdss.save();
-      CdssResponse.push(Cdss);
+      let cdss = new Cdss(data);
+      cdss = await cdss.save();
+      cdssResponse.push(cdss);
     }
-    return res.status(201).send(CdssResponse);
+    return res.status(201).send(cdssResponse);
   };
 
   getDiagnosis = async (req, res) => {
@@ -64,16 +70,16 @@ class CdssController extends Controller {
       searchObject.push(symp);
     }
 
-    let Cdss = await Cdss.find({
+    let cdss = await Cdss.find({
       $or: searchObject,
     });
 
     let dict = {};
 
-    for (let i = 0; i < Cdss.length; i++) {
+    for (let i = 0; i < cdss.length; i++) {
       let count = 0;
-      for (let k in data) if (Cdss[i][data[k]]) count += 1;
-      dict[Cdss[i]["dia"]] = count;
+      for (let k in data) if (cdss[i][data[k]]) count += 1;
+      dict[cdss[i]["dia"]] = count;
     }
 
     let keysSorted = Object.keys(dict).sort((a, b) => dict[b] - dict[a]);
@@ -87,10 +93,10 @@ class CdssController extends Controller {
       let data = {
         $or: [{ dia: { $regex: keyword, $options: "i" } }],
       };
-      let Cdss = await Cdss.find(data);
+      let cdss = await Cdss.find(data);
       let filterDia = [];
-      for (let i in Cdss) {
-        filterDia.push(Cdss[i].dia);
+      for (let i in cdss) {
+        filterDia.push(cdss[i].dia);
       }
       return res.status(200).send(filterDia);
     } catch (ex) {

@@ -7,7 +7,7 @@
  */
 
 const mongoose = require("mongoose");
-//require('dotenv').config();
+
 // Add this line to handle the deprecation warning
 //mongoose.set("strictQuery", true);
 
