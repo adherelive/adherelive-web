@@ -11,7 +11,7 @@ COPY package-lock.json /usr/src/app
 RUN npm config set registry https://registry.npmmirror.com/ --global
 RUN npm install && npm cache clean --force --loglevel=error
 COPY . /usr/src/app
-COPY env_files/.node_env_demo /usr/src/app/.env
+COPY env_files/.node_env_prod /usr/src/app/.env
 EXPOSE 5000
 CMD ["npm", "start"]
 HEALTHCHECK NONE
