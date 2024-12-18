@@ -298,11 +298,14 @@ class Database {
   static performRawQuery = async (query, options = {}) => {
     const database = await Database.getDatabase();
     return database.query(query, options);
+    //return await database.queryInterface.sequelize.query(query, options);
   };
 
   static init = async () => {
     try {
       const database = await Database.getDatabase();
+      //await database.authenticate();
+
       for (const model of models) {
         model.db(database);
       }
@@ -315,7 +318,6 @@ class Database {
       console.error("Db connect error is:", err);
     }
   };
-  
 }
 
 export default Database;
