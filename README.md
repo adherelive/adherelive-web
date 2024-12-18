@@ -303,11 +303,9 @@ https://www.dataquest.io/blog/install-and-configure-docker-swarm-on-ubuntu/
 Use the following command to join the swarm or initialize it:
 
 ```sh
-docker swarm init
-
-docker swarm join --token SWMTKN-1-0ze0jjcqdey3kihgctz5c4ftcus5i8wchdz4oinz6uumo6sbpt-csamsodj5uu7nepysq12kjrzl 10.2.0.5:2377
-
-docker swarm join-token manager
+$ docker swarm init
+$ docker swarm join --token SWMTKN-1-0ze0jjcqdey3kihgctz5c4ftcus5i8wchdz4oinz6uumo6sbpt-csamsodj5uu7nepysq12kjrzl 10.2.0.5:2377
+$ docker swarm join-token manager
 ```
 
 ## Backend
@@ -315,19 +313,25 @@ docker swarm join-token manager
 Build the image using below commands
 
 ```sh
-cd ~/akshay/adherelive-web/
-git pull
-docker image build -t adhere-backend-9 .
-cd ~/akshay/docker_env
-docker-compose up -d backend
+$ cd ~/adherelive-web/
+$ git pull --all
+$ docker image build -t adherelive-be .
+$ cd ~/docker_env
+$ docker-compose up -d backend
 ```
 
 ## Frontend
 
 ```sh
-$ cd /home/azureuser/akshay/adherelive-fe
+$ cd /adherelive-fe
 $ git pull
-$ docker image build -t adhere-frontend-11 .
+$ docker image build -t adherelive-fe .
+```
+
+### For local run
+
+```shell
+$ docker-compose up -d backend
 $ docker-compose  up -d frontend
 ```
 

@@ -3,6 +3,9 @@ const collectionName = "notificationLogs";
 const chalk = require("chalk");
 const moment = require("moment");
 
+// Add this line to handle the deprecation warning
+//mongoose.set("strictQuery", true);
+
 let notificationSchema = new mongoose.Schema(
   {
     data: { type: mongoose.Schema.Types.Mixed },

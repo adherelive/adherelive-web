@@ -4,6 +4,7 @@ import appointmentService from "../../services/appointment/appointment.service";
 import medicationReminderService from "../../services/medicationReminder/mReminder.service";
 import carePlanMedicationService from "../../services/carePlanMedication/carePlanMedication.service";
 import carePlanAppointmentService from "../../services/carePlanAppointment/carePlanAppointment.service";
+import doctorService from "../../services/doctor/doctor.service";
 // import templateMedicationService from "../../services/templateMedication/templateMedication.service";
 // import templateAppointmentService from "../../services/templateAppointment/templateAppointment.service";
 // import medicineService from "../../services/medicine/medicine.service";
@@ -139,6 +140,30 @@ export const getCareplanDataWithImp = async ({
       },
       care_plan_ids: carePlanIds,
       current_careplan_id: currentCareplanId,
+    };
+  } catch (error) {
+    Log.debug("getCareplanData catch error", error);
+    return {};
+  }
+};
+
+export const getCareplanDataWithDoctor = async ({
+  carePlans = [],
+  userCategory,
+  doctorId,
+  userRoleId,
+}) => {
+  try {
+    let carePlanData = {};
+    for (let index = 0; index < carePlans.length; index++) {
+      const careplan = await CarePlanWrapper(carePlans[index]);
+      const { care_plans } = await careplan.getReferenceInfoWithSecDocDetails();
+      carePlanData = { ...carePlanData, ...care_plans };
+    }
+    return {
+      care_plans: {
+        ...carePlanData,
+      },
     };
   } catch (error) {
     Log.debug("getCareplanData catch error", error);
@@ -351,7 +376,8 @@ export const createVitals = async ({
           end_date,
           details: {
             repeat_interval_id,
-            repeat_days, description,
+            repeat_days,
+            description,
           },
           care_plan_id: carePlanId,
         });

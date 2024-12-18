@@ -14,14 +14,12 @@ class AgoraService {
   getRoomId = (doctor, patient) => {
     //process.config.twilio.TWILIO_CHAT_SERVICE_SID,app_channel_name
     if (!channelNameAgora) {
-
       channelNameAgora = "adherelive-demo";
     }
     return `${doctor}-${channelNameAgora}-${patient}`;
   };
 
   async videoTokenGenerator(userId, channelName) {
-
     let finalUserId = parseInt(userId);
 
     const role = RtcRole.PUBLISHER;

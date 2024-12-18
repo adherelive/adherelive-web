@@ -14,6 +14,7 @@ import UserWrapper from "../../ApiWrapper/web/user";
 import { USER_CATEGORY } from "../../../constant";
 import AppNotification from "../../NotificationSdk/inApp";
 import { getTime } from "../../../app/helper/timer";
+
 const Log = new Logger("WEB > CONTROLLER > PAYMENTS");
 
 class UserRoleController extends Controller {
@@ -39,7 +40,6 @@ class UserRoleController extends Controller {
       let providers = {};
       let admins = {};
       let user_roles = {};
-
 
       for (let i = 0; i < userRoles.length; i++) {
         const userRole = userRoles[i];
@@ -78,7 +78,6 @@ class UserRoleController extends Controller {
   getUserRoles = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
-
       const { userDetails: { userId = null } = {} } = req;
 
       if (!userId) {
@@ -112,7 +111,6 @@ class UserRoleController extends Controller {
 
         if (userRoleDoctors && Object.keys(userRoleDoctors).length) {
           for (let i in userRoleDoctors) {
-
             const each = userRoleDoctors[i] || {};
             const { watchlist_ids = [] } = each;
           }

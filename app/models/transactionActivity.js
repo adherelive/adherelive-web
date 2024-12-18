@@ -137,6 +137,13 @@ export const db = (database) => {
         allowNull: false,
         defaultValue: false,
       },
+      is_reassigned: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+      },
+      data: {
+        type: DataTypes.JSON,
+      },
     },
     {
       underscored: true,
@@ -164,6 +171,8 @@ export const db = (database) => {
             appointment_id: this.appointment_id,
             appointment_time: this.appointment_time,
             service_sub_tx_id: this.service_sub_tx_id,
+            is_reassigned: this.is_reassigned || false,
+            data: this.data || {},
           };
         },
       },

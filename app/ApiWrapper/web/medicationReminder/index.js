@@ -9,6 +9,7 @@ import { EVENT_STATUS, EVENT_TYPE } from "../../../../constant";
 import EventWrapper from "../../common/scheduleEvents";
 import doctorService from "../../../services/doctor/doctor.service";
 import { getTime } from "../../../helper/timer";
+
 class MReminderWrapper extends BaseMedicationReminder {
   constructor(data) {
     super(data);

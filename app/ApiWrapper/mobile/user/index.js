@@ -79,25 +79,25 @@ class MUserWrapper extends BaseUser {
   };
 
   /*
-    getCategoryInfo = async () => {
-      const { _data } = this;
-      const { doctor = null, patient = null } = _data || {};
+      getCategoryInfo = async () => {
+        const { _data } = this;
+        const { doctor = null, patient = null } = _data || {};
 
-      if (doctor) {
-        const doctorData = await DoctorWrapper(doctor);
-        return {
-          userCategoryData: doctorData.getBasicInfo(),
-          userCategoryId: doctorData.getDoctorId(),
-        };
-      } else if (patient) {
-        const patientData = await PatientWrapper(patient);
-        return {
-          userCategoryData: patientData.getBasicInfo(),
-          userCategoryId: patientData.getPatientId(),
-        };
-      }
-    };
-    */
+        if (doctor) {
+          const doctorData = await DoctorWrapper(doctor);
+          return {
+            userCategoryData: doctorData.getBasicInfo(),
+            userCategoryId: doctorData.getDoctorId(),
+          };
+        } else if (patient) {
+          const patientData = await PatientWrapper(patient);
+          return {
+            userCategoryData: patientData.getBasicInfo(),
+            userCategoryId: patientData.getPatientId(),
+          };
+        }
+      };
+      */
   getCategoryInfo = async () => {
     const { _data } = this;
     const { doctor = null, patient = null, provider = null } = _data || {};

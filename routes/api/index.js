@@ -61,9 +61,10 @@ import serviceSubscriptionUserMapping from "./serviceSubscriptionUserMapping";
 import serviceSubscribeTxRouter from "./serviceSubscribeTranaction";
 import TxActivitiesRouter from "./transactionActivity";
 import FlashCardRouter from "./flashCard";
+import reassignAudit from "./reassignAudit";
 import NotesRouter from "./notes";
 import { getTime } from "../../app/helper/timer";
-import prescriptionRouter from "./prescription"
+import prescriptionRouter from "./prescription";
 
 router.use(async function (req, res, next) {
   console.log("api-index-1" + getTime() + getTime());
@@ -225,5 +226,6 @@ router.use("/notes", NotesRouter);
 router.use("/cdss", CdssRouter);
 router.use("/his", hisOperationRouter);
 router.use("/prescription", prescriptionRouter);
+router.use("/reassignaudit", reassignAudit);
 
 module.exports = router;

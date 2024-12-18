@@ -5,12 +5,14 @@ import ServiceUserMappingService from "../../services/serviceUserMapping/service
 import ServiceOffering from "../../services/serviceOffering/serviceOffering.service";
 import { USER_STATUS, USER_CATEGORY } from "../../../constant";
 import TxService from "../../services/serviceSubscribeTranaction/serviceSubscribeTranaction";
+
 const Log = new Logger("WEB > CONTROLLER > Service Offering");
 
 class ServiceUserMappingController extends Controller {
   constructor() {
     super();
   }
+
   create = async (req, res) => {
     const { raiseSuccess, raiseServerError } = this;
     Log.debug("service user mapping controller - create - called");
@@ -35,8 +37,6 @@ class ServiceUserMappingController extends Controller {
       doctor_id = req.userDetails.userCategoryData.basic_info.id;
       provider_type = req.userDetails.userRoleData.basic_info.linked_with;
     }
-
-
 
     try {
       let date = new Date();
@@ -107,7 +107,6 @@ class ServiceUserMappingController extends Controller {
       const serviceuserMappingServices = new ServiceUserMappingService();
       let userServices =
         await serviceuserMappingServices.getAllServiceUserMappingByData(data);
-
 
       let serviceDatas = [];
       for (let userService in userServices) {

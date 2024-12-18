@@ -19,14 +19,14 @@ class UpdateJob extends VitalJob {
   }
 
   /**
-   * 
-   *  const {
-      participants = [],
-      actor: { id: actorId, user_role_id } = {},
-      event_id: eventId = null,
-    } = getData() || {};
+     *
+     *  const {
+     participants = [],
+     actor: { id: actorId, user_role_id } = {},
+     event_id: eventId = null,
+     } = getData() || {};
 
-   */
+     */
 
   getPushAppTemplate = async () => {
     const { getData } = this;

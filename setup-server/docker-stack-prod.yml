@@ -1,0 +1,95 @@
+version: '3.8'
+services:
+  mysql:
+    image: mysql:latest
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+    #secrets:
+      #- mysql_root_password
+      #- mysql_user_password
+    environment:
+      MYSQL_ROOT_PASSWORD: eK7tz4s3CBkYPjUaSBAl
+      MYSQL_DATABASE: adhere
+      MYSQL_USER: adherelive
+      MYSQL_PASSWORD: eK7tz4s3CBkYPjUaSBAl
+      MYSQL_HOSTNAME: adherelive-prod-db.mysql.database.azure.com
+    #volumes:
+      #- mysql_data:/var/lib/mysql
+    networks:
+      - al_ntwrk
+
+  mongodb:
+    image: mongo:latest
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+    #secrets:
+      #- mongodb_password
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: adherelive
+      MONGO_INITDB_ROOT_PASSWORD: Q3xbZbp5f7O0AqR4
+    #volumes:
+      #- mongodb_data:/data/db
+    networks:
+      - al_ntwrk
+    ports:
+      - "27017:27017"
+
+  backend:
+    image: adherelive-be:latest
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      update_config:
+        parallelism: 1
+        delay: 10s
+    #secrets:
+      #- mysql_user_password
+    env_file:
+      - .env
+    environment:
+      MONGO_URI: mongodb+srv://adherelive:Q3xbZbp5f7O0AqR4@adherelive.aqaaqxe.mongodb.net/?retryWrites=true&w=docker majority
+    networks:
+      - al_ntwrk
+    volumes:
+      - ./.env:/user/src/app/.env
+    ports:
+      - "5000:5000"
+
+  frontend:
+    image: adherelive-fe:latest
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      update_config:
+        parallelism: 1
+        delay: 10s
+    env_file:
+      - .env
+    networks:
+      - al_ntwrk
+    ports:
+      - "3000:80"
+
+networks:
+  al_ntwrk:
+    driver: overlay
+
+#volumes:
+  #mysql_data:
+    #driver: local
+  #mongodb_data:
+    #driver: local
+
+#secrets:
+  #mysql_root_password:
+    #external: true
+  #mysql_user_password:
+    #external: true
+  #mongodb_password:
+    #external: true

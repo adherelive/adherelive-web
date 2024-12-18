@@ -8,6 +8,15 @@
 
 const mongoose = require("mongoose");
 
-const topicSchema = mongoose.Schema({}, { strict: false, timestamp: true });
+// Add this line to handle the deprecation warning
+//mongoose.set("strictQuery", true);
 
-module.exports = mongoose.model("CDSS", topicSchema);
+const topicSchema = mongoose.Schema(
+  {},
+  {
+    strict: false,
+    timestamp: true,
+  }
+);
+
+module.exports = mongoose.model("cdss", topicSchema);

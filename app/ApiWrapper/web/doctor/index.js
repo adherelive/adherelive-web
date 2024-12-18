@@ -88,6 +88,135 @@ class DoctorWrapper extends BaseDoctor {
     };
   };
 
+  getAllInfoWithOutCarePlanDetails = async () => {
+    const { _data, getDoctorId } = this;
+    const {
+      id,
+      user_id,
+      gender,
+      first_name,
+      middle_name,
+      last_name,
+      full_name,
+      qualifications,
+      activated_on,
+      profile_pic,
+      city,
+      speciality_id,
+      razorpay_account_id,
+      signature_pic,
+    } = _data || {};
+
+    const consentService = new ConsentService();
+
+    const watchlistPatients = await doctorService.getAllWatchlist({
+      doctor_id: getDoctorId(),
+    });
+
+    let watchlist_patient_ids = [];
+
+    if (watchlistPatients.length > 0) {
+      for (const watchlist of watchlistPatients) {
+        watchlist_patient_ids.push(watchlist.patient_id);
+      }
+    }
+
+    const doctorUserId = this.getUserId();
+    const UserRole = await userRoleService.getFirstUserRole(doctorUserId);
+    let userRoleId = null;
+    if (UserRole) {
+      const userRoleWrapper = await UserRoleWrapper(UserRole);
+      userRoleId = await userRoleWrapper.getId();
+    }
+
+    // get all user roles
+    const { rows: userRoles } =
+      (await userRoleService.findAndCountAll({
+        where: {
+          user_identity: this.getUserId(),
+        },
+        attributes: ["id"],
+      })) || [];
+
+    const userRoleIds = userRoles.map((userRole) => userRole.id);
+
+    let carePlanIds = {};
+    let watchlistPatientIds = {};
+
+    for (let index = 0; index < userRoleIds.length; index++) {
+      let patientIds = [];
+
+      const consents = await consentService.getAllByData({
+        user_role_id: userRoleIds[index],
+      });
+
+      if (consents.length > 0) {
+        for (const consentData of consents) {
+          const consent = await ConsentWrapper({ data: consentData });
+          patientIds.push(consent.getPatientId());
+        }
+      }
+
+      const watchlistRecords = await DoctorPatientWatchlistService.getAllByData(
+        { user_role_id: userRoleIds[index] }
+      );
+      const userRoleId = userRoleIds[index];
+      let curreRoleIdPatientIds = [];
+      if (watchlistRecords && watchlistRecords.length) {
+        for (let i = 0; i < watchlistRecords.length; i++) {
+          const watchlistWrapper = await DoctorPatientWatchlistWrapper(
+            watchlistRecords[i]
+          );
+          const patient_id = await watchlistWrapper.getPatientId();
+          curreRoleIdPatientIds.push(patient_id);
+        }
+
+        watchlistPatientIds[userRoleId] = [...curreRoleIdPatientIds];
+      }
+      // Start - 28 - Sept - 2023 comment
+      // const { rows: doctorCarePlans } =
+      //   (await carePlanService.findAndCountAll({
+      //     where: {
+      //       [Op.or]: [
+      //         { user_role_id: userRoleIds[index] },
+      //         { patient_id: patientIds },
+      //       ],
+      //     },
+      //     order: [["expired_on", "ASC"]],
+      //     attributes: ["id"],
+      //     userRoleId: userRoleIds[index],
+      //   })) || [];
+
+      // carePlanIds[userRoleIds[index]] = [
+      //   ...new Set(doctorCarePlans.map((carePlan) => carePlan.id)),
+      // ];
+      // End - 28 - Sept - 2023 comment
+    }
+
+    return {
+      basic_info: {
+        id,
+        user_id,
+        gender,
+        first_name,
+        middle_name,
+        last_name,
+        full_name,
+        speciality_id,
+        profile_pic: completePath(profile_pic),
+        signature_pic: completePath(signature_pic),
+      },
+      city,
+      qualifications,
+      activated_on,
+      care_plan_ids: carePlanIds,
+      watchlist_patient_ids,
+      razorpay_account_id,
+      watchlist_ids: watchlistPatientIds,
+      // provider_id: providerId
+    };
+  };
+
   getAllInfo = async () => {
     const { _data, getDoctorId } = this;
     const {
@@ -108,9 +237,6 @@ class DoctorWrapper extends BaseDoctor {
     } = _data || {};
 
     const consentService = new ConsentService();
-    // const consents = await consentService.getAllByData({
-    //   doctor_id: getDoctorId()
-    // });
 
     const watchlistPatients = await doctorService.getAllWatchlist({
       doctor_id: getDoctorId(),
@@ -201,7 +327,7 @@ class DoctorWrapper extends BaseDoctor {
       carePlanIds[userRoleIds[index]] = [
         ...new Set(doctorCarePlans.map((carePlan) => carePlan.id)),
       ];
-            // End - 28 - Sept - 2023 comment
+      // End - 28 - Sept - 2023 comment
     }
 
     // const carePlansDoctor =

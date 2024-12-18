@@ -30,7 +30,7 @@ class EventController extends Controller {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       Log.debug("req.params", req.params);
-     
+
       const {
         params: { patient_id } = {},
         userDetails: {
@@ -40,14 +40,14 @@ class EventController extends Controller {
         } = {},
       } = req;
       const EventService = new eventService();
-  
+
       let carePlan = null,
         vital_ids = [],
         appointment_ids = [],
         medication_ids = [],
         diet_ids = [],
         workout_ids = [];
-  
+
       const carePlanData = await CarePlanService.getSingleCarePlanByData({
         patient_id,
         ...((category === USER_CATEGORY.DOCTOR ||
@@ -55,9 +55,8 @@ class EventController extends Controller {
       });
 
       if (carePlanData) {
-    
         carePlan = await CarePlanWrapper(carePlanData);
-   
+
         const {
           vital_ids: cPvital_ids = [],
           appointment_ids: cPappointment_ids = [],
@@ -65,7 +64,7 @@ class EventController extends Controller {
           diet_ids: cPdiet_ids = [],
           workout_ids: cPworkout_ids = [],
         } = (await carePlan.getAllInfo()) || {};
-     
+
         vital_ids = cPvital_ids;
         appointment_ids = cPappointment_ids;
         medication_ids = cPmedication_ids;
@@ -76,14 +75,13 @@ class EventController extends Controller {
       let symptomData = {};
       let documentData = {};
       const lastVisitData = [];
-  
+
       const latestSymptom =
         (await SymptomService.getLastUpdatedData({
           patient_id,
         })) || [];
-  
+
       if (latestSymptom.length > 0) {
-    
         for (const symptoms of latestSymptom) {
           const symptom = await SymptomWrapper({ data: symptoms });
           const { symptoms: latestSymptom } = await symptom.getAllInfo();
@@ -91,10 +89,8 @@ class EventController extends Controller {
           const { upload_documents } = await symptom.getReferenceInfo();
           documentData = { ...documentData, ...upload_documents };
         }
-     
       }
 
-     
       const vitalEvents = await EventService.getLastVisitData({
         event_id: [
           ...vital_ids,
@@ -127,7 +123,6 @@ class EventController extends Controller {
       //   date: moment().subtract(7, "days").utc().toISOString(),
       //   sort: "DESC",
       // });
-    
 
       // const dietEvents = await EventService.getLastVisitData({
       //   event_id: diet_ids,
@@ -135,7 +130,6 @@ class EventController extends Controller {
       //   date: moment().subtract(7, "days").utc().toISOString(),
       //   sort: "DESC",
       // });
-   
 
       // const workoutEvents = await EventService.getLastVisitData({
       //   event_id: workout_ids,
@@ -143,7 +137,7 @@ class EventController extends Controller {
       //   date: moment().subtract(7, "days").utc().toISOString(),
       //   sort: "DESC",
       // });
-     
+
       let scheduleEvents = [
         ...vitalEvents,
         // ...appointmentEvents,
@@ -162,7 +156,7 @@ class EventController extends Controller {
         });
 
         const allIds = [];
- 
+
         let scheduleEventData = {};
         // for (const scheduleEvent of scheduleEvents) {
         //   const event = await EventWrapper(scheduleEvent);
@@ -186,12 +180,12 @@ class EventController extends Controller {
           const eventWrapper = await EventWrapper(event);
           scheduleEventData[eventWrapper.getScheduleEventId()] =
             eventWrapper.getAllInfo();
-       
+
           if (key === 3) {
             break;
           }
         }
-   
+
         lastVisitData.sort((activityA, activityB) => {
           const { updatedAt: a } = activityA || {};
           const { updatedAt: b } = activityB || {};
@@ -230,7 +224,7 @@ class EventController extends Controller {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       Log.debug("req.params", req.params);
-     
+
       const {
         params: { patient_id } = {},
         userDetails: {
@@ -240,7 +234,7 @@ class EventController extends Controller {
         } = {},
       } = req;
       const EventService = new eventService();
-     
+
       let carePlan = null,
         vital_ids = [],
         appointment_ids = [],
@@ -253,11 +247,10 @@ class EventController extends Controller {
         ...((category === USER_CATEGORY.DOCTOR ||
           category === USER_CATEGORY.HSP) && { user_role_id: userRoleId }),
       });
-     
+
       if (carePlanData) {
-   
         carePlan = await CarePlanWrapper(carePlanData);
- 
+
         const {
           vital_ids: cPvital_ids = [],
           appointment_ids: cPappointment_ids = [],
@@ -265,7 +258,7 @@ class EventController extends Controller {
           diet_ids: cPdiet_ids = [],
           workout_ids: cPworkout_ids = [],
         } = (await carePlan.getAllInfo()) || {};
-    
+
         vital_ids = cPvital_ids;
         appointment_ids = cPappointment_ids;
         medication_ids = cPmedication_ids;
@@ -276,14 +269,13 @@ class EventController extends Controller {
       let symptomData = {};
       let documentData = {};
       const lastVisitData = [];
- 
+
       const latestSymptom =
         (await SymptomService.getLastUpdatedData({
           patient_id,
         })) || [];
-    
-      if (latestSymptom.length > 0) {
 
+      if (latestSymptom.length > 0) {
         for (const symptoms of latestSymptom) {
           const symptom = await SymptomWrapper({ data: symptoms });
           const { symptoms: latestSymptom } = await symptom.getAllInfo();
@@ -291,38 +283,35 @@ class EventController extends Controller {
           const { upload_documents } = await symptom.getReferenceInfo();
           documentData = { ...documentData, ...upload_documents };
         }
-      
       }
 
-     
       const vitalEvents = await EventService.getLastVisitData({
         event_id: vital_ids,
         event_type: EVENT_TYPE.VITALS,
         date: moment().subtract(7, "days").utc().toISOString(),
         sort: "DESC",
       });
-   
+
       const appointmentEvents = await EventService.getLastVisitData({
         event_id: appointment_ids,
         event_type: EVENT_TYPE.APPOINTMENT,
         date: moment().subtract(7, "days").utc().toISOString(),
         sort: "DESC",
       });
-  
+
       const medicationEvents = await EventService.getLastVisitData({
         event_id: medication_ids,
         event_type: EVENT_TYPE.MEDICATION_REMINDER,
         date: moment().subtract(7, "days").utc().toISOString(),
         sort: "DESC",
       });
-     
+
       const dietEvents = await EventService.getLastVisitData({
         event_id: diet_ids,
         event_type: EVENT_TYPE.DIET,
         date: moment().subtract(7, "days").utc().toISOString(),
         sort: "DESC",
       });
-
 
       const workoutEvents = await EventService.getLastVisitData({
         event_id: workout_ids,
@@ -338,7 +327,7 @@ class EventController extends Controller {
         ...dietEvents,
         ...workoutEvents,
       ];
-     
+
       if (scheduleEvents.length > 0) {
         scheduleEvents.sort((activityA, activityB) => {
           const { updatedAt: a } = activityA || {};
@@ -349,7 +338,7 @@ class EventController extends Controller {
         });
 
         const allIds = [];
-   
+
         let scheduleEventData = {};
         // for (const scheduleEvent of scheduleEvents) {
         //   const event = await EventWrapper(scheduleEvent);
@@ -374,12 +363,12 @@ class EventController extends Controller {
           const eventWrapper = await EventWrapper(event);
           scheduleEventData[eventWrapper.getScheduleEventId()] =
             eventWrapper.getAllInfo();
-        
+
           if (key === 3) {
             break;
           }
         }
-   
+
         lastVisitData.sort((activityA, activityB) => {
           const { updatedAt: a } = activityA || {};
           const { updatedAt: b } = activityB || {};
@@ -387,7 +376,7 @@ class EventController extends Controller {
           if (moment(a).isAfter(moment(b))) return -1;
           return 0;
         });
-     
+
         return raiseSuccess(
           res,
           200,

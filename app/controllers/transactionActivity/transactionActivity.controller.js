@@ -10,6 +10,8 @@ import DoctorService from "../../services/doctor/doctor.service";
 import PatientService from "../../services/patients/patients.service";
 import PatientWrapper from "../../ApiWrapper/web/patient";
 import { USER_CATEGORY } from "../../../constant";
+
+const ReassignAudit = require("../../models/mongoModel/reassignAudit");
 const Log = new Logger("WEB > CONTROLLER > Service Offering");
 
 class ServiceSubscriptionTxController extends Controller {
@@ -23,7 +25,6 @@ class ServiceSubscriptionTxController extends Controller {
       userDetails: { userId, userData: { category } = {}, userCategoryId } = {},
       permissions = [],
     } = req;
-
 
     let doctor_id,
       provider_id = null;
@@ -52,7 +53,10 @@ class ServiceSubscriptionTxController extends Controller {
 
     const txActivitiesService = new TxActivities();
 
-    let txActivities = await txActivitiesService.getAllTxActivitiesByData(data, sort_duedate);
+    let txActivities = await txActivitiesService.getAllTxActivitiesByData(
+      data,
+      sort_duedate
+    );
 
     let response = [];
     for (let i in txActivities) {
@@ -83,10 +87,7 @@ class ServiceSubscriptionTxController extends Controller {
     return raiseSuccess(res, 200, { ...txActivities }, "Success");
   };
 
-
-
   getTxActivitiesbyPatient = async (req, res) => {
-
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     const {
       userDetails: { userId, userData: { category } = {}, userCategoryId } = {},
@@ -95,32 +96,35 @@ class ServiceSubscriptionTxController extends Controller {
     let doctor_id,
       provider_id = null;
     let data = null;
-    let { status, patient_id, service_offering_id, service_subscription_id } = req.query;
+    let { status, patient_id, service_offering_id, service_subscription_id } =
+      req.query;
     if (category === USER_CATEGORY.DOCTOR) {
       doctor_id = req.userDetails.userCategoryData.basic_info.id;
       data = {
         doctor_id,
-        provider_type: USER_CATEGORY.DOCTOR, patient_id
+        provider_type: USER_CATEGORY.DOCTOR,
+        patient_id,
       };
-      if (service_offering_id) data = { ...data, service_offering_id, service_subscription_id: null }
-      if (service_subscription_id) data = { ...data, service_subscription_id }
+      if (service_offering_id)
+        data = { ...data, service_offering_id, service_subscription_id: null };
+      if (service_subscription_id) data = { ...data, service_subscription_id };
     }
 
     if (req.userDetails.userRoleData.basic_info.linked_with === "provider") {
       provider_id = req.userDetails.userRoleData.basic_info.linked_id;
       doctor_id = req.userDetails.userCategoryData.basic_info.id;
       data = {
-        doctor_id, patient_id,
+        doctor_id,
+        patient_id,
         provider_id,
         provider_type: req.userDetails.userRoleData.basic_info.linked_with,
       };
       if (service_offering_id) {
-        data = { ...data, service_offering_id, service_subscription_id: null }
+        data = { ...data, service_offering_id, service_subscription_id: null };
       }
       if (service_subscription_id) {
-        data = { ...data, service_subscription_id }
+        data = { ...data, service_subscription_id };
       }
-
     }
 
     if (status) data["status"] = status;
@@ -142,9 +146,12 @@ class ServiceSubscriptionTxController extends Controller {
       txActivities[i].patient = patientData;
       let serviceSubscription = new ServiceSubscription();
 
-      console.log("=========================================")
-      console.log({ value: txActivities[i].service_subscription_id != null, mytestservice_subid: txActivities[i].service_subscription_id })
-      console.log("=========================================")
+      console.log("=========================================");
+      console.log({
+        value: txActivities[i].service_subscription_id != null,
+        mytestservice_subid: txActivities[i].service_subscription_id,
+      });
+      console.log("=========================================");
 
       if (txActivities[i].service_subscription_id != null) {
         let serviceSubscriptionDetails =
@@ -155,7 +162,7 @@ class ServiceSubscriptionTxController extends Controller {
           serviceSubscriptionDetails;
         let serviceOffering = new ServiceOffering();
         let details = await serviceOffering.getServiceOfferingByData({
-          id: txActivities[i].service_offering_id
+          id: txActivities[i].service_offering_id,
         });
         txActivities[i]["details"] = details;
         response.push(txActivities);
@@ -175,12 +182,9 @@ class ServiceSubscriptionTxController extends Controller {
         txActivities[i]["details"] = details;
         response.push(txActivities);
       }
-
     }
     return raiseSuccess(res, 200, { ...txActivities }, "Success");
   };
-
-
 
   updateTxActivities = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
@@ -205,6 +209,62 @@ class ServiceSubscriptionTxController extends Controller {
         200,
         {
           ...txActivitie,
+        },
+        "Activity updated successfully"
+      );
+    } catch (error) {
+      Log.debug("updateService 500 error", error);
+      return raiseServerError(res);
+    }
+  };
+
+  reassignTxActivities = async (req, res) => {
+    const { raiseSuccess, raiseClientError, raiseServerError } = this;
+    try {
+      let { params: { id } = {}, body } = req;
+      Log.info(`Report : id = ${id}`);
+      if (!id) {
+        return raiseClientError(
+          res,
+          422,
+          {},
+          "Please select correct Id to update"
+        );
+      }
+      const serviceSubscriptionUserMappingService =
+        new ServiceSubscriptionUserMappingService();
+      const txActivities = new TxActivities();
+
+      const { assignedBy, assignedTo, reason, ...rest } = body;
+
+      if (!(assignedBy || assignedTo)) {
+        return raiseClientError(
+          res,
+          422,
+          {},
+          "Please select correct assignedBy and to assignedTo"
+        );
+      }
+
+      // Audit Logic Here.
+      let reassignAudit = new ReassignAudit({
+        activity_id: id,
+        assignedBy,
+        assignedTo,
+        reason,
+      });
+      reassignAudit = reassignAudit.save();
+
+      let txActivitie = await txActivities.updateTxActivities(
+        { ...rest, is_reassigned: true },
+        id
+      );
+      return raiseSuccess(
+        res,
+        200,
+        {
+          ...txActivitie,
+          reassignAudit,
         },
         "Activity updated successfully"
       );

@@ -3,12 +3,14 @@ import Logger from "../../../libs/log";
 // services
 import NotesService from "../../services/notes/notes.service";
 import { USER_CATEGORY } from "../../../constant";
+
 const Log = new Logger("WEB > CONTROLLER > Service Offering");
 
 class NotesController extends Controller {
   constructor() {
     super();
   }
+
   create = async (req, res) => {
     const { raiseSuccess, raiseServerError } = this;
     Log.debug("flash card controller - create - called");
