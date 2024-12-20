@@ -5,7 +5,7 @@
  */
 import http from "http";
 import debug from "debug";
-import app from "../app";
+import app from "../app.js";
 //import { init as initializeDatabase } from "../libs/mysql";
 //import { initializeMongo } from "../libs/mongo";
 import Log from "../../libs/log";
