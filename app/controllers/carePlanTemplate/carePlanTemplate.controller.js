@@ -23,7 +23,8 @@ import moment from "moment";
 
 import PERMISSIONS from "../../../config/permissions";
 
-Log.setFileName("WEB > CAREPLAN_TEMPLATE > CONTROLLER");
+// Log.setFileName("WEB > CAREPLAN_TEMPLATE > CONTROLLER");
+const log = Log("WEB > CAREPLAN_TEMPLATE > CONTROLLER");
 
 class CarePlanTemplateController extends Controller {
   constructor() {
@@ -68,7 +69,7 @@ class CarePlanTemplateController extends Controller {
         follow_up_advise,
       } = body || {};
 
-      Log.info(`name : ${name}`);
+      log.info(`name : ${name}`);
 
       const existingTemplate =
         (await carePlanTemplateService.getSingleTemplateByData({
@@ -94,7 +95,7 @@ class CarePlanTemplateController extends Controller {
             template_workouts: workoutData,
           })) || null;
 
-        Log.debug("createTemplate value", createTemplate);
+        log.debug("createTemplate value", createTemplate);
 
         if (createTemplate) {
           const template = await CarePlanTemplateWrapper(createTemplate);
@@ -164,7 +165,7 @@ class CarePlanTemplateController extends Controller {
         );
       }
     } catch (error) {
-      Log.debug("create 500 error - template already present", error);
+      log.debug("create 500 error - template already present", error);
       return raiseServerError(res);
     }
   };
@@ -352,7 +353,7 @@ class CarePlanTemplateController extends Controller {
         return raiseSuccess(res, 200, {}, "No templates created at the moment");
       }
     } catch (error) {
-      Log.debug("getAllForDoctor 500 error", error);
+      log.debug("getAllForDoctor 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -542,7 +543,7 @@ class CarePlanTemplateController extends Controller {
         return raiseSuccess(res, 200, {}, "No templates created at the moment");
       }
     } catch (error) {
-      Log.debug("getAllForDoctor 500 error", error);
+      log.debug("getAllForDoctor 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -560,7 +561,7 @@ class CarePlanTemplateController extends Controller {
         permissions = [],
       } = req;
 
-      Log.info(`careplan template id to duplicate : ${id}`);
+      log.info(`careplan template id to duplicate : ${id}`);
 
       if (!id) {
         return raiseClientError(
@@ -791,7 +792,7 @@ class CarePlanTemplateController extends Controller {
         );
       }
     } catch (error) {
-      Log.debug("duplicate 500 error", error);
+      log.debug("duplicate 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -800,8 +801,8 @@ class CarePlanTemplateController extends Controller {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       const { params: { id: careplanTemplateId } = {}, body = {} } = req;
-      Log.info(`careplan template id : ${careplanTemplateId}`);
-      Log.debug("request body", body);
+      log.info(`careplan template id : ${careplanTemplateId}`);
+      log.debug("request body", body);
 
       const {
         userDetails: {
@@ -965,7 +966,7 @@ class CarePlanTemplateController extends Controller {
           }
         }
 
-        Log.debug("updateTemplate value", updateTemplate);
+        log.debug("updateTemplate value", updateTemplate);
 
         if (updateTemplate !== null && updateTemplate.length > 0) {
           const template = await CarePlanTemplateWrapper(
@@ -1025,7 +1026,7 @@ class CarePlanTemplateController extends Controller {
         );
       }
     } catch (error) {
-      Log.debug("update 500 error", error);
+      log.debug("update 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -1045,7 +1046,7 @@ class CarePlanTemplateController extends Controller {
         permissions = [],
       } = req;
 
-      Log.info(
+      log.info(
         `Template = id : ${id} | appointment : ${appointment} | medication : ${medication} | vital : ${vital} | diet : ${diet} | workout : ${workout}`
       );
 
@@ -1141,7 +1142,7 @@ class CarePlanTemplateController extends Controller {
         "Template related details deleted successfully"
       );
     } catch (error) {
-      Log.debug("delete 500 error", error);
+      log.debug("delete 500 error", error);
       return raiseServerError(res);
     }
   };
