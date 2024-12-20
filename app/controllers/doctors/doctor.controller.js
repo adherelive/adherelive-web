@@ -85,7 +85,6 @@ import { v4 as uuidv4 } from "uuid";
 import { uploadImageS3 } from "../user/userHelper";
 import { EVENTS, Proxy_Sdk } from "../../proxySdk";
 import UserVerificationServices from "../../services/userVerifications/userVerifications.services";
-import UserPreferenceService from "../../services/userPreferences/userPreference.service";
 import userPreferenceService from "../../services/userPreferences/userPreference.service";
 import doctorPatientWatchlistService from "../../services/doctorPatientWatchlist/doctorPatientWatchlist.service";
 import { getRoomId, getSeparateName } from "../../helper/common";
@@ -1380,7 +1379,7 @@ class DoctorController extends Controller {
         const userRoleWrapper = await UserRoleWrapper(userRole);
         const newUserRoleId = await userRoleWrapper.getId();
 
-        await UserPreferenceService.addUserPreference({
+        await userPreferenceService.addUserPreference({
           user_id: newUserId,
           details: {
             timings: PATIENT_MEAL_TIMINGS,

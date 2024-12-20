@@ -8,8 +8,7 @@ class UserPreferenceService {
 
   addUserPreference = async (data) => {
     try {
-      const userPreference = await Database.getModel(TABLE_NAME).create(data);
-      return userPreference;
+      return await Database.getModel(TABLE_NAME).create(data);
     } catch (error) {
       throw error;
     }
@@ -17,10 +16,9 @@ class UserPreferenceService {
 
   getPreferenceByData = async (data) => {
     try {
-      const userPreference = await Database.getModel(TABLE_NAME).findOne({
+      return await Database.getModel(TABLE_NAME).findOne({
         where: data,
       });
-      return userPreference;
     } catch (error) {
       throw error;
     }
