@@ -3,31 +3,35 @@
 /**
  * Module dependencies.
  */
-var Config = require("../../config/config");
+import http from "http";
+import debug from "debug";
+import app from "../app";
+//import { init as initializeDatabase } from "../libs/mysql";
+//import { initializeMongo } from "../libs/mongo";
+import Log from "../../libs/log";
+
+const log = Log("www");
+
+/**
+ * Load configuration
+ */
+import Config from "../../config/config";
 Config();
-var app = require("../app");
-var debug = require("debug")("econsulting-rest:server");
-var http = require("http");
-var Log = require("../../libs/log")("www");
 
 /**
  * Get port from environment and store in Express.
  */
-
-var port = normalizePort(process.env.APP_PORT || "5000");
+const port = normalizePort(process.env.APP_PORT || "5000");
 app.set("port", port);
 
 /**
  * Create HTTP server.
  */
-
-var server = http.createServer(app);
-
+const server = http.createServer(app);
 
 /**
  * Listen on provided port, on all network interfaces.
  */
-
 server.listen(port);
 server.on("error", onError);
 server.on("listening", onListening);
@@ -35,42 +39,37 @@ server.on("listening", onListening);
 /**
  * Normalize a port into a number, string, or false.
  */
-
 function normalizePort(val) {
-    var port = parseInt(val, 10);
-
+    const port = parseInt(val, 10);
     if (isNaN(port)) {
         // named pipe
         return val;
     }
-
     if (port >= 0) {
         // port number
         return port;
     }
-
     return false;
 }
 
 /**
  * Event listener for HTTP server "error" event.
  */
-
 function onError(error) {
     if (error.syscall !== "listen") {
         throw error;
     }
 
-    var bind = typeof port === "string" ? "Pipe " + port : "Port " + port;
+    const bind = typeof port === "string" ? "Pipe " + port : "Port " + port;
 
-    // handle specific listen errors with friendly messages
+    // Handle specific listen errors with friendly messages
     switch (error.code) {
         case "EACCES":
-            console.error(bind + " requires elevated privileges");
+            console.error(`${bind} requires elevated privileges`);
             process.exit(1);
             break;
         case "EADDRINUSE":
-            console.error(bind + " is already in use");
+            console.error(`${bind} is already in use`);
             process.exit(1);
             break;
         default:
@@ -81,10 +80,23 @@ function onError(error) {
 /**
  * Event listener for HTTP server "listening" event.
  */
-
 function onListening() {
-    var addr = server.address();
-    var bind = typeof addr === "string" ? "pipe " + addr : "port " + addr.port;
-    debug("Listening on " + bind);
-    Log.info(`Starting server at ${bind}`);
+    const addr = server.address();
+    const bind = typeof addr === "string" ? "pipe " + addr : `port ${addr.port}`;
+    debug("adherelive-rest:server")(`Listening on ${bind}`);
+    log.info(`Starting server at ${bind}`);
 }
+
+/**
+ * Initialize databases
+ * For now, these are being initialized in the 'app' for performance
+ */
+// (async () => {
+//     try {
+//         await initializeDatabase();
+//         initializeMongo();
+//         // Add any other initialization logic if needed
+//     } catch (err) {
+//         console.error("Error during initialization:", err);
+//     }
+// })();

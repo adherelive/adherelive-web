@@ -1,8 +1,6 @@
 import Controller from "../index";
 import Log from "../../../libs/log";
 import moment from "moment";
-
-const XLSX = require("xlsx");
 import userService from "../../services/user/user.service";
 import doctorService from "../../services/doctor/doctor.service";
 import doctorsService from "../../services/doctors/doctors.service";
@@ -11,7 +9,7 @@ import treatmentService from "../../services/treatment/treatment.service";
 import specialityService from "../../services/speciality/speciality.service";
 import patientService from "../../../app/services/patients/patients.service";
 import medicineService from "../../services/medicine/medicine.service";
-import UserRoleService from "../../services/userRoles/userRoles.service";
+import userRolesService from "../../services/userRoles/userRoles.service";
 import qualificationService from "../../services/doctorQualifications/doctorQualification.service";
 import clinicService from "../../services/doctorClinics/doctorClinics.service";
 import documentService from "../../services/uploadDocuments/uploadDocuments.service";
@@ -19,7 +17,6 @@ import registrationService from "../../services/doctorRegistration/doctorRegistr
 import carePlanTemplateService from "../../services/carePlanTemplate/carePlanTemplate.service";
 import carePlanService from "../../services/carePlan/carePlan.service";
 import appointmentService from "../../services/appointment/appointment.service";
-import SymptomService from "../../services/symptom/symptom.service";
 // import medicineService from "../../services/medicine/medicine.service";
 // import templateMedicationService from "../../services/templateMedication/templateMedication.service";
 // import templateAppointmentService from "../../services/templateAppointment/templateAppointment.service";
@@ -68,21 +65,18 @@ import {
   ALLOWED_DOC_TYPE_DOCTORS,
   DOCUMENT_PARENT_TYPE,
   EMAIL_TEMPLATE_NAME,
-  EVENT_TYPE,
+  FEATURES,
+  NO_ACTION,
+  NO_APPOINTMENT,
+  NO_MEDICATION,
+  NOTIFICATION_VERB,
   ONBOARDING_STATUS,
+  PATIENT_MEAL_TIMINGS,
   SIGN_IN_CATEGORY,
   USER_CATEGORY,
   VERIFICATION_TYPE,
-  PATIENT_MEAL_TIMINGS,
-  FEATURES,
-  NOTIFICATION_VERB,
-  NO_MEDICATION,
-  NO_APPOINTMENT,
-  NO_ACTION,
 } from "../../../constant";
-
-var fs = require("fs");
-import { getFilePath, completePath } from "../../helper/filePath";
+import { completePath, getFilePath } from "../../helper/filePath";
 import getReferenceId from "../../helper/referenceIdGenerator";
 import getUniversalLink from "../../helper/universalLink";
 import getAge from "../../helper/getAge";
@@ -92,11 +86,14 @@ import { uploadImageS3 } from "../user/userHelper";
 import { EVENTS, Proxy_Sdk } from "../../proxySdk";
 import UserVerificationServices from "../../services/userVerifications/userVerifications.services";
 import UserPreferenceService from "../../services/userPreferences/userPreference.service";
-import userRolesService from "../../services/userRoles/userRoles.service";
+import userPreferenceService from "../../services/userPreferences/userPreference.service";
 import doctorPatientWatchlistService from "../../services/doctorPatientWatchlist/doctorPatientWatchlist.service";
 import { getRoomId, getSeparateName } from "../../helper/common";
-import userPreferenceService from "../../services/userPreferences/userPreference.service";
 import { raiseClientError } from "../../../routes/api/helper";
+
+const XLSX = require("xlsx");
+
+var fs = require("fs");
 // import doctor from "../../ApiWrapper/web/doctor";
 // import college from "../../ApiWrapper/web/college";
 
@@ -4253,7 +4250,7 @@ class DoctorController extends Controller {
           data = { ...data, details };
 
           try {
-            let medicaineUpdate = await medicineService.updateMedicine(
+            let medicineUpdate = await medicineService.updateMedicine(
               data,
               medicinId
             );
