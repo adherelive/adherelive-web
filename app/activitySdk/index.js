@@ -1,8 +1,9 @@
 import { EventEmitter } from "events";
 import { ACTIVITIES, STAGES } from "./activityType";
 import { ACTIVITY_TYPE, EVENT_TYPE } from "../../constant";
-
-const log = require("../../libs/log")("ACTIVITY_SDK");
+// const log = require("../../libs/log")("ACTIVITY_SDK");
+import Log from "../../libs/log";
+const log = Log("ACTIVITY_SDK");
 
 class Activity extends EventEmitter {
   constructor() {
