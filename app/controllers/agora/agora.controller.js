@@ -9,7 +9,7 @@ import {
 import Logger from "../../../libs/log";
 
 import AgoraJob from "../../JobSdk/Agora/observer";
-import NotificationSdk from "../../NotificationSdk";
+import NotificationSdk from "../../notificationSdk";
 
 const Log = new Logger("WEB > AGORA > CONTROLLER");
 

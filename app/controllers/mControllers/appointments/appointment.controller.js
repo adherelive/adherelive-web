@@ -15,7 +15,7 @@ import moment from "moment";
 
 import Log from "../../../../libs/log";
 import AppointmentJob from "../../../JobSdk/Appointments/observer";
-import NotificationSdk from "../../../NotificationSdk";
+import NotificationSdk from "../../../notificationSdk";
 import { uploadImageS3 } from "../user/userHelper";
 import { getFilePath } from "../../../helper/filePath";
 import { downloadFileFromS3 } from "../user/userHelper";

@@ -26,7 +26,7 @@ import {
   getCarePlanSeverityDetails,
 } from "../../carePlans/carePlanHelper";
 import MedicationJob from "../../../JobSdk/Medications/observer";
-import NotificationSdk from "../../../NotificationSdk";
+import NotificationSdk from "../../../notificationSdk";
 
 // SERVICES...
 import doctorService from "../../../services/doctor/doctor.service";

@@ -12,7 +12,7 @@ import UserRoleWrapper from "../../ApiWrapper/web/userRoles";
 import UserWrapper from "../../ApiWrapper/web/user";
 
 import { USER_CATEGORY } from "../../../constant";
-import AppNotification from "../../NotificationSdk/inApp";
+import AppNotification from "../../notificationSdk/inApp";
 import { getTime } from "../../../app/helper/timer";
 
 const Log = new Logger("WEB > CONTROLLER > PAYMENTS");

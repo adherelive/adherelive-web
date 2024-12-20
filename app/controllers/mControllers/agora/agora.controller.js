@@ -10,7 +10,7 @@ import {
 import Log from "../../../../libs/log";
 
 import AgoraJob from "../../../JobSdk/Agora/observer";
-import NotificationSdk from "../../../NotificationSdk";
+import NotificationSdk from "../../../notificationSdk";
 
 Log.setFileName("MOBILE > AGORA > CONTROLLER");
 

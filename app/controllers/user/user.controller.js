@@ -48,7 +48,7 @@ const errMessage = require("../../../config/messages.json").errMessages;
 import { getCarePlanSeverityDetails } from "../carePlans/carePlanHelper";
 import LinkVerificationWrapper from "../../ApiWrapper/mobile/userVerification";
 
-import AppNotification from "../../NotificationSdk/inApp";
+import AppNotification from "../../notificationSdk/inApp";
 import AdhocJob from "../../JobSdk/Adhoc/observer";
 import { getSeparateName } from "../../helper/common";
 

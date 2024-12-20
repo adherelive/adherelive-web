@@ -26,7 +26,7 @@ import Log from "../../../libs/log";
 import { raiseClientError } from "../../../routes/api/helper";
 
 import AppointmentJob from "../../JobSdk/Appointments/observer";
-import NotificationSdk from "../../NotificationSdk";
+import NotificationSdk from "../../notificationSdk";
 
 // SERVICES...
 import queueService from "../../services/awsQueue/queue.service";
@@ -421,7 +421,7 @@ class AppointmentController extends Controller {
 
       Logger.debug("appointmentJob ---> ", appointmentJob.getInAppTemplate());
 
-      // NotificationSdk.execute(EVENT_TYPE.SEND_MAIL, appointmentJob);
+      // notificationSdk.execute(EVENT_TYPE.SEND_MAIL, appointmentJob);
 
       // TODO: schedule event and notifications here
       // await Proxy_Sdk.scheduleEvent({ data: eventScheduleData });

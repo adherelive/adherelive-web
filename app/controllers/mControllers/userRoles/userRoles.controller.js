@@ -3,7 +3,7 @@ import Logger from "../../../../libs/log";
 import jwt from "jsonwebtoken";
 import base64 from "js-base64";
 
-import AppNotification from "../../../NotificationSdk/inApp";
+import AppNotification from "../../../notificationSdk/inApp";
 
 // SERVICES --------------------------------
 import userRoleService from "../../../services/userRoles/userRoles.service";

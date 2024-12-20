@@ -15,7 +15,7 @@ import ScheduleEventWrapper from "../ApiWrapper/common/scheduleEvents";
 import * as CronHelper from "./helper";
 
 import JobSdk from "../JobSdk";
-import NotificationSdk from "../NotificationSdk";
+import NotificationSdk from "../notificationSdk";
 import AppointmentJob from "../JobSdk/Appointments/observer";
 import MedicationJob from "../JobSdk/Medications/observer";
 import CarePlanJob from "../JobSdk/CarePlan/observer";
@@ -138,7 +138,7 @@ class StartCron {
       //     eventStage: NOTIFICATION_STAGES.START,
       //     event
       // });
-      // NotificationSdk.execute(job);
+      // notificationSdk.execute(job);
     } catch (error) {
       Log.debug("handleAppointmentStart 500 error ---->", error);
     }
@@ -184,7 +184,7 @@ class StartCron {
       //     eventStage: NOTIFICATION_STAGES.START,
       //     event
       // });
-      // NotificationSdk.execute(job);
+      // notificationSdk.execute(job);
     } catch (error) {
       Log.debug("handleVitalStart 500 error ---->", error);
     }

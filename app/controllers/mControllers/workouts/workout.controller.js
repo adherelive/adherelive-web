@@ -23,7 +23,7 @@ import EventWrapper from "../../../ApiWrapper/common/scheduleEvents";
 // import WorkoutTemplateWrapper from "../../../ApiWrapper/mobile/workoutTemplates";
 
 import WorkoutJob from "../../../JobSdk/Workout/observer";
-import NotificationSdk from "../../../NotificationSdk";
+import NotificationSdk from "../../../notificationSdk";
 
 import {
   DAYS,

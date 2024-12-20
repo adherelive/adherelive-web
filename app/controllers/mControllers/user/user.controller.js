@@ -57,7 +57,7 @@ import UserRolesWrapper from "../../../ApiWrapper/mobile/userRoles";
 import DoctorWrapper from "../../../ApiWrapper/mobile/doctor";
 
 import generateOTP from "../../../helper/generateOtp";
-import AppNotification from "../../../NotificationSdk/inApp";
+import AppNotification from "../../../notificationSdk/inApp";
 import AdhocJob from "../../../JobSdk/Adhoc/observer";
 import { getSeparateName } from "../../../helper/common";
 

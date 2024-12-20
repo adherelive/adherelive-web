@@ -16,7 +16,7 @@ class Activity extends EventEmitter {
         this.emit(ACTIVITIES.FOLLOW_UP[stage], data);
         break;
       default:
-        log.warn(`invalid activity Type: ${activityType}`);
+        log.warn(`Invalid Activity Type: ${activityType}`);
     }
   }
 
@@ -35,7 +35,7 @@ class Activity extends EventEmitter {
         this.emit(ACTIVITIES.MEDICATION_REMINDER[stage], data);
         break;
       default:
-        log.warn(`invalid event Type:${eventType}`);
+        log.warn(`Invalid Event Type: ${eventType}`);
     }
   }
 }

@@ -15,7 +15,7 @@ import WorkoutJob from "../JobSdk/Workout/observer";
 
 import * as CronHelper from "./helper";
 
-import NotificationSdk from "../NotificationSdk";
+import NotificationSdk from "../notificationSdk";
 
 const Log = new Logger("CRON > PRIOR");
 

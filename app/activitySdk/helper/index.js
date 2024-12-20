@@ -11,7 +11,7 @@ import {
   EVENT_IS,
   USER_CATEGORY,
 } from "../../../constant";
-// const { NotificationSdk } = require("../../notificationSdk");
+const { NotificationSdk } = require("../../notificationSdk");
 const log = require("../../../libs/log")("ACTIVITY_SDK");
 
 const notify = (participants, payload) => {

@@ -15,7 +15,7 @@ import EventWrapper from "../../ApiWrapper/common/scheduleEvents";
 import DietResponseWrapper from "../../ApiWrapper/web/dietResponse";
 
 import DietJob from "../../JobSdk/Diet/observer";
-import NotificationSdk from "../../NotificationSdk";
+import NotificationSdk from "../../notificationSdk";
 
 import * as medicationHelper from "../medicationReminder/medicationHelper";
 import * as DietHelper from "./dietHelper";

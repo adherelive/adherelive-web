@@ -53,7 +53,7 @@ import {
 } from "../carePlans/carePlanHelper";
 import { RRule } from "rrule";
 import MedicationJob from "../../JobSdk/Medications/observer";
-import NotificationSdk from "../../NotificationSdk";
+import NotificationSdk from "../../notificationSdk";
 
 const FILE_NAME = "WEB - MEDICATION REMINDER CONTROLLER";
 const Logger = new Log(FILE_NAME);

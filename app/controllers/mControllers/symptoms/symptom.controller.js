@@ -31,7 +31,7 @@ import carePlanService from "../../../services/carePlan/carePlan.service";
 
 import ChatJob from "../../../JobSdk/Chat/observer";
 import SymptomsJob from "../../../JobSdk/Symptoms/observer";
-import NotificationSdk from "../../../NotificationSdk";
+import NotificationSdk from "../../../notificationSdk";
 
 const Log = new Logger("MOBILE > SYMPTOM > CONTROLLER");
 
@@ -234,7 +234,7 @@ class SymptomController extends Controller {
         //   MESSAGE_TYPES.USER_MESSAGE,
         //   eventData
         // );
-        // await NotificationSdk.execute(chatJob);
+        // await notificationSdk.execute(chatJob);
       }
 
       if (Object.keys(allUniqueDoctorsToNotifyData).length > 0) {
@@ -267,7 +267,7 @@ class SymptomController extends Controller {
           //   MESSAGE_TYPES.USER_MESSAGE,
           //   allUniqueDoctorsToNotifyData[doctorId].eventData
           // );
-          // await NotificationSdk.execute(chatJob);
+          // await notificationSdk.execute(chatJob);
 
           // twilio
           const { content } = alluniqueChatChannelData[chatChannel] || {};

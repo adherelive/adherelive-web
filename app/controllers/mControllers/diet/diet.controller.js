@@ -17,7 +17,7 @@ import DietResponseWrapper from "../../../ApiWrapper/mobile/dietResponse";
 
 import * as DietHelper from "../../diet/dietHelper";
 import DietJob from "../../../JobSdk/Diet/observer";
-import NotificationSdk from "../../../NotificationSdk";
+import NotificationSdk from "../../../notificationSdk";
 
 import { getTimeWiseDietFoodGroupMappings } from "../../diet/dietHelper";
 

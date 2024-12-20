@@ -21,7 +21,7 @@ import DoctorWrapper from "../../../ApiWrapper/mobile/doctor";
 import PatientWrapper from "../../../ApiWrapper/mobile/patient";
 
 import JobSdk from "../../../JobSdk";
-import NotificationSdk from "../../../NotificationSdk";
+import NotificationSdk from "../../../notificationSdk";
 
 import ChatJob from "../../../JobSdk/Chat/observer";
 import {
@@ -427,7 +427,7 @@ class VitalController extends Controller {
       //   MESSAGE_TYPES.USER_MESSAGE,
       //   eventData
       // );
-      // await NotificationSdk.execute(chatJob);
+      // await notificationSdk.execute(chatJob);
 
       const eventScheduleData = {
         type: EVENT_TYPE.VITALS,
