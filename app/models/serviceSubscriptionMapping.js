@@ -59,16 +59,21 @@ export const db = (database) => {
 
 export const associate = (database) => {
   const {
-    service_subscribe_plan_mapping,
-    service_subscription,
-    service_offerings,
+    service_subscribe_plan_mappings: ServiceSubscribePlanMapping,
+    service_subscription: ServiceSubscription,
+    service_offering: ServiceOffering,
   } = database.models || {};
-  service_subscribe_plan_mapping.belongsTo(service_subscription, {
-    foreignKey: "subscription_plan_id",
-    targetKey: "id",
-  });
-  service_subscribe_plan_mapping.belongsTo(service_offerings, {
-    foreignKey: "service_plan_id",
-    targetKey: "id",
-  });
+
+  if (ServiceSubscribePlanMapping && ServiceSubscription && ServiceOffering) {
+    ServiceSubscribePlanMapping.belongsTo(ServiceSubscription, {
+      foreignKey: "subscription_plan_id",
+      targetKey: "id",
+    });
+    ServiceSubscribePlanMapping.belongsTo(ServiceOffering, {
+      foreignKey: "service_plan_id",
+      targetKey: "id",
+    });
+  } else {
+    console.error("One or more models are undefined");
+  }
 };
