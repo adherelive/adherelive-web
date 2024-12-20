@@ -1,6 +1,12 @@
 #!/usr/bin/env node
 
 /**
+ * Load configuration
+ */
+const config = require("../../config/config");
+config();
+
+/**
  * Module dependencies.
  */
 // import http from "http";
@@ -10,20 +16,13 @@
 // import { initializeMongo } from "../libs/mongo";
 // import Log from "../../libs/log";
 //const log = Log("www");
-var http = require("http");
-var app = require("../app");
-var debug = require("debug")("adherelive-rest:server");
-var log = require("../../libs/log")("www");
+const http = require("http");
+const app = require("../app");
+const debug = require("debug")("adherelive-rest:server");
+const log = require("../../libs/log")("www");
 
 // const { init: initializeDatabase } = require('../libs/mysql');
 // const initModels = require('../libs/initModels');
-
-/**
- * Load configuration
- */
-// import Config from "../../config/config";
-var Config = require("../../config/config");
-Config();
 
 /**
  * Get port from environment and store in Express.

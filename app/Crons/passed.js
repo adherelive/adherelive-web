@@ -235,7 +235,7 @@ class PassedCron {
 
       if (
         moment(currentTime).diff(event.getStartTime(), "hours") >=
-        process.config.app.careplan_activation_reschedule_hours
+        process.config.app.carePlan_activation_reschedule_hours
       ) {
         const updateEventStatus = await scheduleEventService.update(
           {
