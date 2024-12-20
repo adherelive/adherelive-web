@@ -9,22 +9,21 @@
 // import { init as initializeDatabase } from "../libs/mysql";
 // import { initializeMongo } from "../libs/mongo";
 // import Log from "../../libs/log";
-
 //const log = Log("www");
+var http = require("http");
+var app = require("../app");
+var debug = require("debug")("adherelive-rest:server");
+var log = require("../../libs/log")("www");
 
-const http = require('http');
-const app = require('../app');
-const debug = require('debug')('adherelive-rest:server');
 // const { init: initializeDatabase } = require('../libs/mysql');
 // const initModels = require('../libs/initModels');
-const Log = require('../../libs/log')('www');
 
 /**
  * Load configuration
  */
 // import Config from "../../config/config";
-// Config();
-require('../../config/config')();
+var Config = require("../../config/config");
+Config();
 
 /**
  * Get port from environment and store in Express.
