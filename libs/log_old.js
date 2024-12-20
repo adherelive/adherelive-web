@@ -2,13 +2,15 @@ import chalk from "chalk";
 import moment from "moment";
 
 class Log {
-  constructor() {
+  constructor(filename) {
+    this.source = filename;
     this._dashString =
       "------------------------------------------------------------------------------------------------------";
   }
 
   fileName = (filename) => {
     this.source = filename;
+    return this;
   };
 
   getLogDate() {
@@ -20,11 +22,6 @@ class Log {
   };
 
   debug(msg, code) {
-    // console.log(
-    //   `\n ${chalk.yellow(this.getLogDate())}  ${chalk.yellow(
-    //     "( " + this.source + " )"
-    //   )} : ${msg} \n`
-    // );
     console.log(
       `${this._dashString}\n${this.getLogDate()} [${chalk.yellow(
         this.source
@@ -32,6 +29,17 @@ class Log {
       code
     );
   }
+
+  objectInfo = (msg, obj) => {
+    let data = "";
+    Object.keys(obj).forEach((prop) => {
+      data += `${prop} : ${obj[prop]}\n`;
+    });
+
+    console.log(
+      `${this.source} ${this.getLogDate()} \n\n${msg} -> \n\n ${data} \n`
+    );
+  };
 
   request(data) {
     console.log(
@@ -128,4 +136,6 @@ class Log {
   }
 }
 
-export default new Log();
+module.exports = (filename) => {
+  return new Log(filename);
+};

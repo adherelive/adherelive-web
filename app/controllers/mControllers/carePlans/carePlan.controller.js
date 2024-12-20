@@ -32,7 +32,7 @@ import PatientWrapper from "../../../ApiWrapper/mobile/patient";
 import AppointmentWrapper from "../../../ApiWrapper/mobile/appointments";
 import MedicationWrapper from "../../../ApiWrapper/mobile/medicationReminder";
 import CarePlanTemplateWrapper from "../../../ApiWrapper/mobile/carePlanTemplate";
-// import Log from "../../../../libs/log_new";
+// import Log from "../../../../libs/log";
 import queueService from "../../../services/awsQueue/queue.service";
 // import SqsQueueService from "../../../services/awsQueue/queue.service";
 import ScheduleEventService from "../../../services/scheduleEvents/scheduleEvent.service";

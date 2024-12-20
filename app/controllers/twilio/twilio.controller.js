@@ -2,7 +2,7 @@ import faker from "faker";
 import twilioService from "../../services/twilio/twilio.service";
 import Controller from "../";
 
-import Log from "../../../libs/log_new";
+import Log from "../../../libs/log";
 
 Log.fileName("WEB > TWILIO > CONTROLLER");
 

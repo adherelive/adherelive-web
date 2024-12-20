@@ -2,9 +2,9 @@ import faker from "faker";
 import twilioService from "../../../services/twilio/twilio.service";
 import Controller from "../../";
 
-import Log from "../../../../libs/log_new";
+import Log from "../../../../libs/log";
 
-Log.fileName("MOBILE > TWILIO > CONTROLLER");
+Log.setFileName("MOBILE > TWILIO > CONTROLLER");
 
 class TwilioController extends Controller {
   constructor() {

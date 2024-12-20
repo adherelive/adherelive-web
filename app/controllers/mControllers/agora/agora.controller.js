@@ -7,12 +7,12 @@ import {
   AGORA_CALL_NOTIFICATION_TYPES,
 } from "../../../../constant";
 
-import Log from "../../../../libs/log_new";
+import Log from "../../../../libs/log";
 
 import AgoraJob from "../../../JobSdk/Agora/observer";
 import NotificationSdk from "../../../NotificationSdk";
 
-Log.fileName("MOBILE > AGORA > CONTROLLER");
+Log.setFileName("MOBILE > AGORA > CONTROLLER");
 
 class AgoraController extends Controller {
   constructor() {

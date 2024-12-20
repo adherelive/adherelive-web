@@ -1,5 +1,5 @@
 import Controller from "../";
-import Log from "../../../libs/log_new";
+import Log from "../../../libs/log";
 
 // services
 import carePlanTemplateService from "../../services/carePlanTemplate/carePlanTemplate.service";
@@ -23,7 +23,7 @@ import moment from "moment";
 
 import PERMISSIONS from "../../../config/permissions";
 
-Log.fileName("WEB > CAREPLAN_TEMPLATE > CONTROLLER");
+Log.setFileName("WEB > CAREPLAN_TEMPLATE > CONTROLLER");
 
 class CarePlanTemplateController extends Controller {
   constructor() {

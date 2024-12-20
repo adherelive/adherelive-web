@@ -3,29 +3,28 @@
 /**
  * Module dependencies.
  */
-import http from "http";
-import debug from "debug";
-import app from "../app.js";
-//import { init as initializeDatabase } from "../libs/mysql";
-//import { initializeMongo } from "../libs/mongo";
-import Log from "../../libs/log";
+// import http from "http";
+// import debug from "debug";
+// import app from "../app.js";
+// import { init as initializeDatabase } from "../libs/mysql";
+// import { initializeMongo } from "../libs/mongo";
+// import Log from "../../libs/log";
 
-const log = Log("www");
+//const log = Log("www");
 
-//const http = require('http');
-//const app = require('../app');
-//const debug = require('debug')('adherelive-rest:server');
-//const { init: initializeDatabase } = require('../libs/mysql');
-//const initModels = require('../libs/initModels');
-//const Log = require('../../libs/log')('www');
+const http = require('http');
+const app = require('../app');
+const debug = require('debug')('adherelive-rest:server');
+// const { init: initializeDatabase } = require('../libs/mysql');
+// const initModels = require('../libs/initModels');
+const Log = require('../../libs/log')('www');
 
 /**
  * Load configuration
  */
-import Config from "../../config/config";
-Config();
-//require('../../config/config')();
-
+// import Config from "../../config/config";
+// Config();
+require('../../config/config')();
 
 /**
  * Get port from environment and store in Express.
