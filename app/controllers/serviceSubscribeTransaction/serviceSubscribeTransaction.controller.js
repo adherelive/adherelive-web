@@ -9,9 +9,9 @@ import ServiceUserMapping from "../../services/serviceUserMapping/serviceUserMap
 import ServiceOffering from "../../services/serviceOffering/serviceOffering.service";
 import DoctorService from "../../services/doctor/doctor.service";
 import PatientService from "../../services/patients/patients.service";
-import ABC from "../../services/provider/provider.service";
+import ProviderService from "../../services/provider/provider.service";
 import ServiceSubscriptionMapping from "../../services/serviceSubscriptionMapping/serviceSubscritpionMapping.service";
-import TransactionActivite from "../../services/transactionActivity/transactionActivity.service";
+import TransactionActivate from "../../services/transactionActivity/transactionActivity.service";
 import { USER_CATEGORY } from "../../../constant";
 
 const Log = new Logger("WEB > CONTROLLER > Service Offering");
@@ -55,8 +55,8 @@ class ServiceSubscriptionTxController extends Controller {
         doctor_id = req.body.doctor_id;
       }
 
-      const serviceSubscribeTransaction = new ServiceSubscribeTx();
-      let tranaction = serviceSubscribeTransaction.addServiceSubscriptionTx({
+      const serviceSubscribeTransaction = new ServiceSubscribeTransaction();
+      let transaction = serviceSubscribeTransaction.addServiceSubscriptionTx({
         doctor_id,
         provider_id,
         provider_type,
@@ -67,7 +67,7 @@ class ServiceSubscriptionTxController extends Controller {
         res,
         200,
         {
-          tranaction,
+          transaction,
         },
         "Service added successfully"
       );
@@ -117,25 +117,24 @@ class ServiceSubscriptionTxController extends Controller {
     }
 
     // const serviceSubscribeTransaction = new ServiceSubscribeTransaction();
-    let tranactions = await ServiceSubscribeTx.getAllServiceSubscriptionTx(
-      data
-    );
+    let transactions =
+      await ServiceSubscribeTransaction.getAllServiceSubscriptionTx(data);
 
-    for (let i = 0; i < tranactions.length; i++) {
-      tranactions[i].doctor = await DoctorService.getDoctorByDoctorId(
-        tranactions[i].doctor_id
+    for (let i = 0; i < transactions.length; i++) {
+      transactions[i].doctor = await DoctorService.getDoctorByDoctorId(
+        transactions[i].doctor_id
       );
       let users = await PatientService.getPatientById({
-        id: tranactions[i].patient_id,
+        id: transactions[i].patient_id,
       });
 
-      tranactions[i].patient = users.dataValues;
-      if (tranactions[i].subscription_user_plan_id) {
+      transactions[i].patient = users.dataValues;
+      if (transactions[i].subscription_user_plan_id) {
         const serviceSubscriptionUserMappingService =
           new ServiceSubscriptionUserMappingService();
         let userServicesSubscriptions =
           await serviceSubscriptionUserMappingService.getAllServiceSubscriptionUserMappingByData(
-            { id: tranactions[i].subscription_user_plan_id }
+            { id: transactions[i].subscription_user_plan_id }
           );
         let serviceSubscription = new ServiceSubscription();
         let details = await serviceSubscription.getServiceSubscriptionByData({
@@ -143,13 +142,13 @@ class ServiceSubscriptionTxController extends Controller {
         });
         userServicesSubscriptions["details"] = details;
         userServicesSubscriptions[0]["details"] = details;
-        tranactions[i].subplan = userServicesSubscriptions;
+        transactions[i].subplan = userServicesSubscriptions;
       }
 
-      if (tranactions[i].service_user_plan_id) {
+      if (transactions[i].service_user_plan_id) {
         let service = new ServiceUserMapping();
         let services = await service.getAllServiceUserMappingByData({
-          id: tranactions[i].service_user_plan_id,
+          id: transactions[i].service_user_plan_id,
         });
 
         let serviceOffering = new ServiceOffering();
@@ -157,12 +156,12 @@ class ServiceSubscriptionTxController extends Controller {
           id: services[0]["service_plan_id"],
         });
         services[0]["details"] = details;
-        // tranactions[i].subplan = services
+        // transactions[i].subPlan = services
 
-        tranactions[i].services = services;
+        transactions[i].services = services;
       }
     }
-    return raiseSuccess(res, 200, { ...tranactions }, "Success");
+    return raiseSuccess(res, 200, { ...transactions }, "Success");
   };
   // create activities.
   createActivity = async (req, res) => {
@@ -170,16 +169,14 @@ class ServiceSubscriptionTxController extends Controller {
     try {
       const { id, service_subscription_id, service_plan_id } = req.body;
       // id is tx id that we will get from service_subscription_transactions table.
-
       // we can get the service_user_mapping tx.
-
       // we can get the service_sub_user_mapping tx.
+      let transactions =
+        await ServiceSubscribeTransaction.getAllServiceSubscriptionTx({
+          id: id,
+        });
 
-      let tranactions = await ServiceSubscribeTx.getAllServiceSubscriptionTx({
-        id: id,
-      });
-
-      await ServiceSubscribeTx.updateServiceSubscriptionTx(
+      await ServiceSubscribeTransaction.updateServiceSubscriptionTx(
         {
           patient_status: "active",
           due_date: moment(new Date(), "DD-MM-YYYY"),
@@ -195,11 +192,11 @@ class ServiceSubscriptionTxController extends Controller {
         amount,
         subscription_user_plan_id,
         service_user_plan_id,
-      } = tranactions[0];
+      } = transactions[0];
 
       if (service_user_plan_id) {
         const serviceUserMapping = new ServiceUserMapping();
-        serviceUserMapping.updateServiceUserMapping(
+        await serviceUserMapping.updateServiceUserMapping(
           { patient_status: "active" },
           service_user_plan_id
         );
@@ -216,7 +213,7 @@ class ServiceSubscriptionTxController extends Controller {
 
         let { durations } = userServicesSubscriptions[0];
 
-        serviceSubUserMapping.updateServiceSubscriptionUserMapping(
+        await serviceSubUserMapping.updateServiceSubscriptionUserMapping(
           {
             patient_status: "active",
             service_date: moment(new Date(), "DD-MM-YYYY"),
@@ -235,7 +232,7 @@ class ServiceSubscriptionTxController extends Controller {
 
       if (service_plan_id) {
         let response = [];
-        let activitieData = {
+        let activitiesData = {
           service_offering_id: service_plan_id,
           doctor_id,
           provider_id,
@@ -248,23 +245,23 @@ class ServiceSubscriptionTxController extends Controller {
           billing_frequency: "onces",
           due_date: moment(new Date(), "DD-MM-YYYY").add(7, "days"),
         };
-        const txActivities = new TransactionActivite();
-        txActivities.addTransactionActivite(activitieData);
-        response.push(activitieData);
+        const txActivities = new TransactionActivate();
+        await txActivities.addTransactionActivite(activitiesData);
+        response.push(activitiesData);
         return raiseSuccess(res, 200, { response }, "Success");
       }
 
       const serviceSubscriptionMapping = new ServiceSubscriptionMapping();
-      let servicedata = { subscription_plan_id: service_subscription_id };
+      let serviceData = { subscription_plan_id: service_subscription_id };
       let services =
         await serviceSubscriptionMapping.getAllServiceSubscriptionMappingByData(
-          servicedata
+          serviceData
         );
 
       let response = [];
       Object.keys(services).forEach((id) => {
         for (let i = 0; i < services[id]["service_frequency"]; i++) {
-          let activitieData = {
+          let activitiesData = {
             service_offering_id: services[id]["service_plan_id"],
             doctor_id,
             provider_id,
@@ -278,9 +275,9 @@ class ServiceSubscriptionTxController extends Controller {
             service_subscription_id: service_subscription_id,
           };
 
-          const txActivities = new TransactionActivite();
-          txActivities.addTransactionActivite(activitieData);
-          response.push(activitieData);
+          const txActivities = new TransactionActivate();
+          txActivities.addTransactionActivite(activitiesData);
+          response.push(activitiesData);
         }
       });
       return raiseSuccess(res, 200, { response }, "Success");
@@ -294,7 +291,7 @@ class ServiceSubscriptionTxController extends Controller {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       let { params: { id } = {}, body } = req;
-      let { servicesusermapping, subscriptionusermapping, ...txbody } =
+      let { servicesUserMapping, subscriptionUserMapping, ...txBody } =
         req.body;
       Log.info(`Report : id = ${id}`);
       if (!id) {
@@ -302,27 +299,31 @@ class ServiceSubscriptionTxController extends Controller {
       }
       // const serviceSubscribeTransaction = new ServiceSubscribeTransaction();
       let userServicesSubscriptions =
-        await ServiceSubscribeTx.updateServiceSubscriptionTx(txbody, id);
+        await ServiceSubscribeTransaction.updateServiceSubscriptionTx(
+          txBody,
+          id
+        );
 
-      // need to update serviceoffering user mapping
-      let tranactions = await ServiceSubscribeTx.getAllServiceSubscriptionTx({
-        id,
-      });
-      let { patient_status } = txbody;
-      for (let i = 0; i < tranactions.length; i++) {
-        if (tranactions[i].subscription_user_plan_id) {
+      // need to update service-offering user mapping
+      let transactions =
+        await ServiceSubscribeTransaction.getAllServiceSubscriptionTx({
+          id,
+        });
+      let { patient_status } = txBody;
+      for (let i = 0; i < transactions.length; i++) {
+        if (transactions[i].subscription_user_plan_id) {
           const serviceSubscriptionUserMappingService =
             new ServiceSubscriptionUserMappingService();
           await serviceSubscriptionUserMappingService.updateServiceSubscriptionUserMapping(
             { patient_status },
-            tranactions[i].subscription_user_plan_id
+            transactions[i].subscription_user_plan_id
           );
         }
-        if (tranactions[i].service_user_plan_id) {
+        if (transactions[i].service_user_plan_id) {
           let service = new ServiceUserMapping();
           await service.updateServiceUserMapping(
             { patient_status },
-            tranactions[i].service_user_plan_id
+            transactions[i].service_user_plan_id
           );
         }
       }
