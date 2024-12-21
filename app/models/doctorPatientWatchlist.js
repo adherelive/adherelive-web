@@ -5,7 +5,7 @@ import { TABLE_NAME as patientTableName } from "./patients";
 import { TABLE_NAME as userRoleTableName } from "./userRoles";
 import { USER_CATEGORY, SIGN_IN_CATEGORY } from "../../constant";
 
-export const TABLE_NAME = "doctor_patient_watchlist";
+export const TABLE_NAME = "doctor_patient_watchlists";
 
 export const db = (database) => {
   database.define(
