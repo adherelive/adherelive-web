@@ -17,7 +17,7 @@ import * as CronHelper from "./helper";
 
 import NotificationSdk from "../notificationSdk";
 
-const Log = new Logger("CRON > PRIOR");
+const Log = new Logger("CRON-JOBS > PRIOR");
 
 class PriorCron {
   allPriorAppointmentEvents;
