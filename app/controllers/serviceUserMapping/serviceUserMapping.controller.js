@@ -4,7 +4,7 @@ import Logger from "../../../libs/log";
 import ServiceUserMappingService from "../../services/serviceUserMapping/serviceUserMapping.service";
 import ServiceOffering from "../../services/serviceOffering/serviceOffering.service";
 import { USER_STATUS, USER_CATEGORY } from "../../../constant";
-import TxService from "../../services/serviceSubscribeTranaction/serviceSubscribeTranaction";
+import TxService from "../../services/serviceSubscribeTransaction/serviceSubscribeTransaction";
 
 const Log = new Logger("WEB > CONTROLLER > Service Offering");
 
@@ -149,13 +149,13 @@ class ServiceUserMappingController extends Controller {
       }
 
       const serviceUserMappingService = new ServiceUserMappingService();
-      let serviceSubecription =
+      let serviceSubscription =
         await serviceUserMappingService.updateServiceUserMapping(body, id);
       return raiseSuccess(
         res,
         200,
         {
-          ...serviceSubecription,
+          ...serviceSubscription,
         },
         "Service updated successfully"
       );

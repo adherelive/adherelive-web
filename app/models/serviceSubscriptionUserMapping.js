@@ -3,7 +3,7 @@ import { DataTypes } from "sequelize";
 import { TABLE_NAME as patientsTableName } from "./patients";
 import { TABLE_NAME as doctorsTableName } from "./doctors";
 import { TABLE_NAME as serviceOfferingTableName } from "./serviceOffering";
-import { TABLE_NAME as serviceSubscriptionPlanTableName } from "./serviceSubecriptions";
+import { TABLE_NAME as serviceSubscriptionPlanTableName } from "./serviceSubscriptions";
 import { TABLE_NAME as providersTableName } from "./providers";
 import {
   CURRENCY,

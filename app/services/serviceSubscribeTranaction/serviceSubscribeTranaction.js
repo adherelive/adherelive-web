@@ -1,10 +1,10 @@
 import Database from "../../../libs/mysql";
-import { TABLE_NAME } from "../../models/serviceSubscribeTranaction";
+import { TABLE_NAME } from "../../models/serviceSubscribeTransaction";
 import { TABLE_NAME as patientTableName } from "../../models/patients";
 import { TABLE_NAME as doctorTableName } from "../../models/doctors";
 import { TABLE_NAME as providerTableName } from "../../models/providers";
 import { TABLE_NAME as serviceOfferingTableName } from "../../models/serviceOffering";
-import { TABLE_NAME as serviceSubscriptionTableName } from "../../models/serviceSubecriptions";
+import { TABLE_NAME as serviceSubscriptionTableName } from "../../models/serviceSubscriptions";
 
 class serviceSubscribeTx {
   // constructor() { }

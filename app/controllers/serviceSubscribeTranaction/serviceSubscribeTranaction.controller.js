@@ -2,7 +2,7 @@ import Controller from "../index";
 import Logger from "../../../libs/log";
 import moment from "moment";
 // services
-import ServiceSubscribeTx from "../../services/serviceSubscribeTranaction/serviceSubscribeTranaction";
+import ServiceSubscribeTx from "../../services/serviceSubscribeTransaction/serviceSubscribeTransaction";
 import ServiceSubscription from "../../services/serviceSubscription/serviceSubscription.service";
 import ServiceSubscriptionUserMappingService from "../../services/serviceSubscriptionUserMapping/serviceSubscriptionUserMapping.service";
 import ServiceUserMapping from "../../services/serviceUserMapping/serviceUserMapping.service";

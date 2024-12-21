@@ -13,7 +13,7 @@ import * as CarePlans from "../app/models/carePlan";
 import * as CarePlanAppointments from "../app/models/carePlanAppointments";
 import * as CarePlanMedications from "../app/models/carePlanMedications";
 import * as CarePlanTemplates from "../app/models/careplanTemplate";
-import * as CareplanSecondaryDoctorMappings from "../app/models/careplanSecondaryDoctorMappings";
+import * as CarePlanSecondaryDoctorMappings from "../app/models/careplanSecondaryDoctorMappings";
 import * as Clinics from "../app/models/clinics";
 import * as Colleges from "../app/models/college";
 import * as Conditions from "../app/models/conditions";
@@ -38,6 +38,7 @@ import * as Exercise from "../app/models/exercise";
 import * as ExerciseDetails from "../app/models/exerciseDetails";
 import * as ExerciseGroup from "../app/models/exerciseGroup";
 import * as ExerciseContent from "../app/models/exerciseContents";
+import * as ExerciseUserCreatedMapping from "../app/models/exerciseUserCreatedMapping";
 
 import * as FeatureDetails from "../app/models/featureDetails";
 import * as Features from "../app/models/features";
@@ -102,7 +103,7 @@ import * as UserRoles from "../app/models/userRoles";
 import * as Vitals from "../app/models/vitals";
 import * as VitalTemplates from "../app/models/vitalTemplates";
 
-import * as Watchlist from "../app/models/doctor_patient_watchlist";
+import * as Watchlist from "../app/models/doctorPatientWatchlist";
 import * as Workouts from "../app/models/workout";
 import * as WorkoutResponses from "../app/models/workoutResponses";
 import * as WorkoutExerciseGroupMapping from "../app/models/workoutExerciseGroupMapping";
@@ -111,11 +112,11 @@ import * as WorkoutTemplateExerciseMapping from "../app/models/workoutTemplateEx
 import * as His from "../app/models/his";
 
 import * as ServiceOffering from "../app/models/serviceOffering";
-import * as ServiceSubscription from "../app/models/serviceSubecriptions";
+import * as ServiceSubscription from "../app/models/serviceSubscriptions";
 import * as ServiceSubscriptionMapping from "../app/models/serviceSubscriptionMapping";
 import * as ServiceUserMapping from "../app/models/serviceUserMapping";
 import * as ServiceSubscriptionUserMapping from "../app/models/serviceSubscriptionUserMapping";
-import * as ServiceSubscibeTranaction from "../app/models/serviceSubscribeTranaction";
+import * as ServiceSubscribeTransaction from "../app/models/serviceSubscribeTransaction";
 import * as TransactionActivities from "../app/models/transactionActivity";
 import * as FlashCard from "../app/models/flashCard";
 import * as Notes from "../app/models/notes";
@@ -137,7 +138,7 @@ const models = [
   CarePlanAppointments,
   CarePlanMedications,
   CarePlanTemplates,
-  CareplanSecondaryDoctorMappings,
+  CarePlanSecondaryDoctorMappings,
   Clinics,
   Colleges,
   Conditions,
@@ -163,6 +164,7 @@ const models = [
   ExerciseRepetitions,
   ExerciseGroup,
   ExerciseContent,
+  ExerciseUserCreatedMapping,
 
   FeatureDetails,
   Features,
@@ -239,7 +241,7 @@ const models = [
   ServiceSubscriptionMapping,
   ServiceUserMapping,
   ServiceSubscriptionUserMapping,
-  ServiceSubscibeTranaction,
+  ServiceSubscribeTransaction,
   TransactionActivities,
   FlashCard,
   Notes,

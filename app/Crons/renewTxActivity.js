@@ -1,9 +1,9 @@
-import serviceSubscribeTx from "../services/serviceSubscribeTranaction/serviceSubscribeTranaction";
+import serviceSubscribeTx from "../services/serviceSubscribeTransaction/serviceSubscribeTransaction";
 import ServiceSubscriptionUserMapping from "../services/serviceSubscriptionUserMapping/serviceSubscriptionUserMapping.service";
 import { TABLE_NAME as serviceSubscriptionUserMappingTable } from "../models/serviceSubscriptionUserMapping";
 import Logger from "../../libs/log";
 import Database from "../../libs/mysql";
-import { TABLE_NAME as serviceSubscribeTranactionTable } from "../models/serviceSubscribeTranaction";
+import { TABLE_NAME as serviceSubscribeTransactionTable } from "../models/serviceSubscribeTransaction";
 import moment from "moment";
 import { Op } from "sequelize";
 
@@ -44,7 +44,7 @@ class RenewTxActivity {
           const transaction = await Database.initTransaction();
           try {
             console.log("updating tx table");
-            await Database.getModel(serviceSubscribeTranactionTable).update(
+            await Database.getModel(serviceSubscribeTransactionTable).update(
               { is_next_tx_create: true },
               {
                 where: { id: all_details[0]["id"] },
@@ -62,7 +62,7 @@ class RenewTxActivity {
             };
             console.log("creating in  tx table new entry -> ", { txDetails });
 
-            await Database.getModel(serviceSubscribeTranactionTable).create(
+            await Database.getModel(serviceSubscribeTransactionTable).create(
               txDetails,
               {
                 raw: true,

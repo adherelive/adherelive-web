@@ -1,5 +1,5 @@
 import express from "express";
-import serviceSubscribeTx from "../../../app/controllers/serviceSubscribeTranaction/serviceSubscribeTranaction.controller";
+import serviceSubscribeTx from "../../../app/controllers/serviceSubscribeTransaction/serviceSubscribeTransaction.controller";
 import isAllowed from "../../middlewares/permissions";
 import PERMISSIONS from "../../../config/permissions";
 // import Authenticate from "../middleware/auth";

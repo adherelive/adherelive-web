@@ -5,7 +5,7 @@ const { createReport } = require("./genrateTable");
 import FlashCardService from "../../services/flashCard/flashCard.service";
 import ReportService from "../../services/reports/report.service";
 import TxActivity from "../../services/transactionActivity/transactionActivity.service";
-import serviceSubscriptionTx from "../../services/serviceSubscribeTranaction/serviceSubscribeTranaction";
+import serviceSubscriptionTx from "../../services/serviceSubscribeTransaction/serviceSubscribeTransaction";
 import { getFilePath } from "../../helper/filePath";
 import ServiceUserMappingService from "../../services/serviceUserMapping/serviceUserMapping.service";
 import { DOCUMENT_PARENT_TYPE } from "../../../constant";
@@ -88,11 +88,11 @@ class FlashCardController extends Controller {
 
       if (service_subscription_id) {
         const serviceSubscriptionService = new ServiceSubscriptionService();
-        let serviceSubecription =
+        let serviceSubscription =
           await serviceSubscriptionService.getServiceSubscriptionByData({
             id: service_subscription_id,
           });
-        flashCardName = `${serviceSubecription["notes"]} - ${flashCardName}`;
+        flashCardName = `${serviceSubscription["notes"]} - ${flashCardName}`;
       }
       ////////////////////////////
       if (service_sub_tx_id) {

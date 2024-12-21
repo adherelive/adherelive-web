@@ -1,6 +1,6 @@
 "use strict";
 
-import { TABLE_NAME } from "../app/models/doctor_patient_watchlist";
+import { TABLE_NAME } from "../app/models/doctorPatientWatchlist";
 import { TABLE_NAME as userRoleTableName } from "../app/models/userRoles";
 
 module.exports = {

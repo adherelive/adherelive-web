@@ -2,7 +2,7 @@
 
 import { DataTypes } from "sequelize";
 import { TABLE_NAME as servicePlanTableName } from "./serviceOffering";
-import { TABLE_NAME as subscriptionPlanTableName } from "./serviceSubecriptions";
+import { TABLE_NAME as subscriptionPlanTableName } from "./serviceSubscriptions";
 
 export const TABLE_NAME = "service_subscribe_plan_mappings";
 

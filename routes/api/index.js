@@ -58,7 +58,7 @@ import serviceOfferingRouter from "./serviceOffering";
 import serviceSubscriptionRouter from "./serviceSubscription";
 import serviceUserMappingRouter from "./serviceUserMapping";
 import serviceSubscriptionUserMapping from "./serviceSubscriptionUserMapping";
-import serviceSubscribeTxRouter from "./serviceSubscribeTranaction";
+import serviceSubscribeTxRouter from "./serviceSubscribeTransaction";
 import TxActivitiesRouter from "./transactionActivity";
 import FlashCardRouter from "./flashCard";
 import reassignAudit from "./reassignAudit";
