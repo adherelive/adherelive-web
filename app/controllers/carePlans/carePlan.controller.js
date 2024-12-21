@@ -39,7 +39,7 @@ import queueService from "../../services/awsQueue/queue.service";
 
 import * as carePlanHelper from "./carePlanHelper";
 import MedicationWrapper from "../../ApiWrapper/web/medicationReminder";
-import MedicationJob from "../../JobSdk/Medications/observer";
+import MedicationJob from "../../jobSdk/Medications/observer";
 
 import PERMISSIONS from "../../../config/permissions";
 // import { ConfigurationServicePlaceholders } from "aws-sdk/lib/config_service_placeholders";
@@ -332,8 +332,8 @@ class CarePlanController extends Controller {
           let newMedication =
             await carePlanMedicationService.addCarePlanMedication(
               data_to_create
-          );
-            
+            );
+
           // TODO: testing gaurav
           const eventScheduleDataNew = {
             patient_id: patient_id,

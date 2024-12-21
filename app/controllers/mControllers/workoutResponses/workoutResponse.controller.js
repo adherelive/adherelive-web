@@ -15,7 +15,7 @@ import DoctorWrapper from "../../../ApiWrapper/mobile/doctor";
 import EventWrapper from "../../../ApiWrapper/common/scheduleEvents";
 import ExerciseContentWrapper from "../../../ApiWrapper/mobile/exerciseContents";
 
-import WorkoutJob from "../../../JobSdk/Workout/observer";
+import WorkoutJob from "../../../jobSdk/Workout/observer";
 import NotificationSdk from "../../../notificationSdk";
 
 import Logger from "../../../../libs/log";

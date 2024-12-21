@@ -19,7 +19,7 @@ class CdssController extends Controller {
     if (!data.dia) {
       return res
         .status(400)
-        .send({ error: "Please add the Diagnosis in the form" });
+        .send({ error: "Please add the Diagnosis in the form for MongoDB" });
     }
 
     // Check if the symptoms combination already exists or not
@@ -27,7 +27,7 @@ class CdssController extends Controller {
     if (dbcdss) {
       return res
         .status(400)
-        .send({ error: true, message: "Diagnosis already exists" });
+        .send({ error: true, message: "Diagnosis already exists in MongoDB" });
     }
 
     const cdssResponse = [];
@@ -73,7 +73,7 @@ class CdssController extends Controller {
     } catch (error) {
       return res
         .status(500)
-        .send({ error: "Error fetching data from database" });
+        .send({ error: "Error fetching data from mongodb database" });
     }
   };
 
@@ -91,7 +91,7 @@ class CdssController extends Controller {
       console.log(ex);
       return res
         .status(500)
-        .send({ error: "Error fetching data from database" });
+        .send({ error: "Error fetching data from mongodb database" });
     }
   };
 }

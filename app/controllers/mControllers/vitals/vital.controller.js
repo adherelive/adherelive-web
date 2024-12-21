@@ -20,10 +20,10 @@ import CarePlanWrapper from "../../../ApiWrapper/mobile/carePlan";
 import DoctorWrapper from "../../../ApiWrapper/mobile/doctor";
 import PatientWrapper from "../../../ApiWrapper/mobile/patient";
 
-import JobSdk from "../../../JobSdk";
+import JobSdk from "../../../jobSdk";
 import NotificationSdk from "../../../notificationSdk";
 
-import ChatJob from "../../../JobSdk/Chat/observer";
+import ChatJob from "../../../jobSdk/Chat/observer";
 import {
   DAYS,
   EVENT_STATUS,

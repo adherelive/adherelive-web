@@ -30,7 +30,7 @@ import moment from "moment";
 
 import eventService from "../../services/scheduleEvents/scheduleEvent.service";
 import EventWrapper from "../../ApiWrapper/common/scheduleEvents";
-import JobSdk from "../../JobSdk";
+import JobSdk from "../../jobSdk";
 import NotificationSdk from "../../notificationSdk";
 
 const Log = new Logger("WEB > VITALS > CONTROLLER");

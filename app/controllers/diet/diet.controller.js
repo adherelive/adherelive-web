@@ -14,7 +14,7 @@ import UserPreferenceWrapper from "../../ApiWrapper/mobile/userPreference";
 import EventWrapper from "../../ApiWrapper/common/scheduleEvents";
 import DietResponseWrapper from "../../ApiWrapper/web/dietResponse";
 
-import DietJob from "../../JobSdk/Diet/observer";
+import DietJob from "../../jobSdk/Diet/observer";
 import NotificationSdk from "../../notificationSdk";
 
 import * as medicationHelper from "../medicationReminder/medicationHelper";

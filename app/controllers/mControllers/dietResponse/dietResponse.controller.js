@@ -11,7 +11,7 @@ import DoctorWrapper from "../../../ApiWrapper/mobile/doctor";
 
 import * as UploadHelper from "../../../helper/uploadDocuments";
 
-import DietJob from "../../../JobSdk/Diet/observer";
+import DietJob from "../../../jobSdk/Diet/observer";
 import NotificationSdk from "../../../notificationSdk";
 
 import Logger from "../../../../libs/log";

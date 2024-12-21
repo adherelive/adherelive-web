@@ -49,7 +49,7 @@ import { getCarePlanSeverityDetails } from "../carePlans/carePlanHelper";
 import LinkVerificationWrapper from "../../ApiWrapper/mobile/userVerification";
 
 import AppNotification from "../../notificationSdk/inApp";
-import AdhocJob from "../../JobSdk/Adhoc/observer";
+import AdhocJob from "../../jobSdk/Adhoc/observer";
 import { getSeparateName } from "../../helper/common";
 
 const Logger = new Log("WEB USER CONTROLLER");

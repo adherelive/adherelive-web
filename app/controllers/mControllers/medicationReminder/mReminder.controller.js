@@ -25,7 +25,7 @@ import {
   getCarePlanMedicationIds,
   getCarePlanSeverityDetails,
 } from "../../carePlans/carePlanHelper";
-import MedicationJob from "../../../JobSdk/Medications/observer";
+import MedicationJob from "../../../jobSdk/Medications/observer";
 import NotificationSdk from "../../../notificationSdk";
 
 // SERVICES...

@@ -2,7 +2,7 @@ import Controller from "../";
 import Logger from "../../../libs/log";
 import { getDataForNotification } from "./notification.controller.helper";
 
-import ChatJob from "../../JobSdk/Chat/observer";
+import ChatJob from "../../jobSdk/Chat/observer";
 import NotificationSdk from "../../notificationSdk";
 
 import {

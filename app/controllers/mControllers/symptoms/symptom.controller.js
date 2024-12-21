@@ -29,8 +29,8 @@ import {
 import { getFilePath } from "../../../helper/filePath";
 import carePlanService from "../../../services/carePlan/carePlan.service";
 
-import ChatJob from "../../../JobSdk/Chat/observer";
-import SymptomsJob from "../../../JobSdk/Symptoms/observer";
+import ChatJob from "../../../jobSdk/Chat/observer";
+import SymptomsJob from "../../../jobSdk/Symptoms/observer";
 import NotificationSdk from "../../../notificationSdk";
 
 const Log = new Logger("MOBILE > SYMPTOM > CONTROLLER");

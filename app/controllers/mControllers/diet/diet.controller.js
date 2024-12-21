@@ -16,7 +16,7 @@ import EventWrapper from "../../../ApiWrapper/common/scheduleEvents";
 import DietResponseWrapper from "../../../ApiWrapper/mobile/dietResponse";
 
 import * as DietHelper from "../../diet/dietHelper";
-import DietJob from "../../../JobSdk/Diet/observer";
+import DietJob from "../../../jobSdk/Diet/observer";
 import NotificationSdk from "../../../notificationSdk";
 
 import { getTimeWiseDietFoodGroupMappings } from "../../diet/dietHelper";

@@ -53,7 +53,7 @@ import TreatmentWrapper from "../../ApiWrapper/web/treatments";
 import UserRoleWrapper from "../../ApiWrapper/web/userRoles";
 import SpecialityWrapper from "../../ApiWrapper/web/speciality";
 import UserPreferenceWrapper from "../../ApiWrapper/web/userPreference";
-import AuthJob from "../../JobSdk/Auth/observer";
+import AuthJob from "../../jobSdk/Auth/observer";
 import NotificationSdk from "../../notificationSdk";
 // import { createNewUser } from "../user/userHelper";
 // import { generatePassword } from "../helper/passwordGenerator";

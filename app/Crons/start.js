@@ -14,13 +14,13 @@ import ScheduleEventWrapper from "../ApiWrapper/common/scheduleEvents";
 
 import * as CronHelper from "./helper";
 
-import JobSdk from "../JobSdk";
+import JobSdk from "../jobSdk";
 import NotificationSdk from "../notificationSdk";
-import AppointmentJob from "../JobSdk/Appointments/observer";
-import MedicationJob from "../JobSdk/Medications/observer";
-import CarePlanJob from "../JobSdk/CarePlan/observer";
-import DietJob from "../JobSdk/Diet/observer";
-import WorkoutJob from "../JobSdk/Workout/observer";
+import AppointmentJob from "../jobSdk/Appointments/observer";
+import MedicationJob from "../jobSdk/Medications/observer";
+import CarePlanJob from "../jobSdk/CarePlan/observer";
+import DietJob from "../jobSdk/Diet/observer";
+import WorkoutJob from "../jobSdk/Workout/observer";
 
 const Log = new Logger("CRON > START");
 
@@ -133,7 +133,7 @@ class StartCron {
       });
       await NotificationSdk.execute(appointmentJob);
 
-      // const job = JobSdk.execute({
+      // const job = jobSdk.execute({
       //     eventType: EVENT_TYPE.APPOINTMENT,
       //     eventStage: NOTIFICATION_STAGES.START,
       //     event
@@ -179,7 +179,7 @@ class StartCron {
         );
       }
 
-      // const job = JobSdk.execute({
+      // const job = jobSdk.execute({
       //     eventType: EVENT_TYPE.MEDICATION_REMINDER,
       //     eventStage: NOTIFICATION_STAGES.START,
       //     event

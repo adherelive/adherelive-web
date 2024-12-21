@@ -25,7 +25,7 @@ const path = require("path");
 import Log from "../../../libs/log";
 import { raiseClientError } from "../../../routes/api/helper";
 
-import AppointmentJob from "../../JobSdk/Appointments/observer";
+import AppointmentJob from "../../jobSdk/Appointments/observer";
 import NotificationSdk from "../../notificationSdk";
 
 // SERVICES...

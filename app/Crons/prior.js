@@ -9,9 +9,9 @@ import ScheduleEventService from "../services/scheduleEvents/scheduleEvent.servi
 // Wrappers
 import ScheduleEventWrapper from "../ApiWrapper/common/scheduleEvents";
 
-import AppointmentJob from "../JobSdk/Appointments/observer";
-import DietJob from "../JobSdk/Diet/observer";
-import WorkoutJob from "../JobSdk/Workout/observer";
+import AppointmentJob from "../jobSdk/Appointments/observer";
+import DietJob from "../jobSdk/Diet/observer";
+import WorkoutJob from "../jobSdk/Workout/observer";
 
 import * as CronHelper from "./helper";
 

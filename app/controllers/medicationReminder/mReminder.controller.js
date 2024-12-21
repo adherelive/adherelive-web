@@ -52,7 +52,7 @@ import {
   getCarePlanSeverityDetails,
 } from "../carePlans/carePlanHelper";
 import { RRule } from "rrule";
-import MedicationJob from "../../JobSdk/Medications/observer";
+import MedicationJob from "../../jobSdk/Medications/observer";
 import NotificationSdk from "../../notificationSdk";
 
 const FILE_NAME = "WEB - MEDICATION REMINDER CONTROLLER";

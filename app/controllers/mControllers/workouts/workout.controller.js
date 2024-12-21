@@ -22,7 +22,7 @@ import WorkoutResponseWrapper from "../../../ApiWrapper/mobile/workoutResponse";
 import EventWrapper from "../../../ApiWrapper/common/scheduleEvents";
 // import WorkoutTemplateWrapper from "../../../ApiWrapper/mobile/workoutTemplates";
 
-import WorkoutJob from "../../../JobSdk/Workout/observer";
+import WorkoutJob from "../../../jobSdk/Workout/observer";
 import NotificationSdk from "../../../notificationSdk";
 
 import {
