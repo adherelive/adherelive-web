@@ -3,10 +3,10 @@ import moment from "moment";
 
 import { EVENT_STATUS, EVENT_TYPE } from "../../constant";
 
-// SERVICES ---------------
+// Services
 import ScheduleEventService from "../services/scheduleEvents/scheduleEvent.service";
 
-// WRAPPERS ---------------
+// Wrappers
 import ScheduleEventWrapper from "../ApiWrapper/common/scheduleEvents";
 
 import AppointmentJob from "../JobSdk/Appointments/observer";
@@ -24,7 +24,7 @@ class PriorCron {
     this.scheduleEventService = new ScheduleEventService();
   }
 
-  getScheduleData = async (priorDuration, type) => {
+  async getScheduleData(priorDuration, type) {
     // const scheduleEventService = new ScheduleEventService();
     const priorTime = moment().add(priorDuration, "minutes").utc().toDate();
     Log.debug("priorTime ---> ", priorTime);
@@ -34,14 +34,15 @@ class PriorCron {
       [];
     Log.debug("scheduleEvents ---> ", scheduleEvents);
     return scheduleEvents || [];
-  };
+  }
 
-  runObserver = async () => {
+  async runObserver() {
     try {
       // for event type : appointment
-      const allPriorAppointmentEvents = await this.getScheduleData(
+      await this.processEvents(
         process.config.app.appointment_prior_time,
-        EVENT_TYPE.APPOINTMENT
+        EVENT_TYPE.APPOINTMENT,
+        this.handleAppointmentPrior
       );
 
       for (const scheduleEvent of allPriorAppointmentEvents) {
@@ -50,48 +51,34 @@ class PriorCron {
       }
 
       // for event type : diet
-      const allPriorDietEvents = await this.getScheduleData(
+      await this.processEvents(
         process.config.app.diet_prior_time,
-        EVENT_TYPE.DIET
+        EVENT_TYPE.DIET,
+        this.handleDietPrior
       );
 
-      if (allPriorDietEvents.length > 0) {
-        for (const scheduleEvent of allPriorDietEvents) {
-          const event = await ScheduleEventWrapper(scheduleEvent);
-          return this.handleDietPrior(event.getAllInfo());
-        }
-      }
-
-      // for event type : workout
-      const allPriorWorkoutEvents = await this.getScheduleData(
+      await this.processEvents(
         process.config.app.workout_prior_time,
-        EVENT_TYPE.WORKOUT
+        EVENT_TYPE.WORKOUT,
+        this.handleWorkoutPrior
       );
-
-      if (allPriorWorkoutEvents.length > 0) {
-        for (const scheduleEvent of allPriorWorkoutEvents) {
-          const event = await ScheduleEventWrapper(scheduleEvent);
-          return this.handleWorkoutPrior(event.getAllInfo());
-        }
-      }
     } catch (error) {
       Log.debug("prior runObserver catch error", error);
     }
-  };
+  }
 
-  handleAppointmentPrior = async (event) => {
+  async processEvents(priorTime, eventType, handler) {
+    const events = await this.getScheduleData(priorTime, eventType);
+
+    for (const scheduleEvent of events) {
+      const event = await ScheduleEventWrapper(scheduleEvent);
+      await handler.call(this, event);
+    }
+  }
+
+  async handleAppointmentPrior(event) {
     try {
       const { id, event_id, details } = event.getData() || {};
-      // const data = {
-      //     participants: event.getParticipants(),
-      //     // actor: {
-      //     //     id: "",
-      //     //     details: {
-      //     //         category: ""
-      //     //     }
-      //     // },
-      //     id: event.getEventId()
-      // }
 
       const participants = await CronHelper.getNotificationUsers(
         EVENT_TYPE.APPOINTMENT,
@@ -111,11 +98,11 @@ class PriorCron {
         id
       );
     } catch (error) {
-      throw error;
+      Log.debug("handleAppointmentPrior error", error);
     }
-  };
+  }
 
-  handleDietPrior = async (event) => {
+  async handleDietPrior(event) {
     try {
       const { id } = event || {};
       const dietJob = DietJob.execute(EVENT_STATUS.PRIOR, event);
@@ -129,11 +116,11 @@ class PriorCron {
         id
       );
     } catch (error) {
-      throw error;
+      Log.debug("handleDietPrior error", error);
     }
-  };
+  }
 
-  handleWorkoutPrior = async (event) => {
+  async handleWorkoutPrior(event) {
     try {
       const { id } = event || {};
       const workoutJob = WorkoutJob.execute(EVENT_STATUS.PRIOR, event);
@@ -147,9 +134,9 @@ class PriorCron {
         id
       );
     } catch (error) {
-      throw error;
+      Log.debug("handleWorkoutPrior error", error);
     }
-  };
+  }
 }
 
 export default new PriorCron();

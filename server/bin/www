@@ -18,11 +18,11 @@ config();
 // const log = Log("www");
 const http = require("http");
 const app = require("../app");
-const debug = require("debug")("adherelive-rest:server");
-const log = require("../../libs/log");
+const createDebug = require("debug");
+const Log = require("../../libs/log");
 
-// const { init: initializeDatabase } = require('../libs/mysql');
-// const initModels = require('../libs/initModels');
+const debug = createDebug("adherelive-rest:server");
+const log = Log("www");
 
 /**
  * Get port from environment and store in Express.
@@ -89,20 +89,6 @@ function onError(error) {
 function onListening() {
     const addr = server.address();
     const bind = typeof addr === "string" ? "pipe " + addr : `port ${addr.port}`;
-    debug("adherelive-rest:server")(`Listening on ${bind}`);
+    debug(`Listening on ${bind}`);
     log.info(`Starting server at ${bind}`);
 }
-
-/**
- * Initialize databases
- * For now, these are being initialized in the 'app' for performance
- */
-// (async () => {
-//     try {
-//         await initializeDatabase();
-//         initializeMongo();
-//         // Add any other initialization logic if needed
-//     } catch (err) {
-//         console.error("Error during initialization:", err);
-//     }
-// })();

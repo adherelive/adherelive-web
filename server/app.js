@@ -41,6 +41,9 @@ app.use(express.urlencoded({ extended: true, limit: "50mb" }));
 app.use(cookieParser());
 app.use(cors());
 
+/* ananjay add code
+ * Add a check to handle cases where process.config.cookieKey might be undefined or not a valid JSON string
+ */
 let cookieKeys = [];
 
 try {
@@ -63,27 +66,6 @@ app.use(
     keys: cookieKeys,
   })
 );
-
-/* ananjay add code
- * Add a check to handle cases where process.config.cookieKey might be undefined or not a valid JSON string
- */
-// let cookieKeys = [];
-// if (process.config.cookieKey) {
-//   try {
-//     cookieKeys = JSON.parse(process.config.cookieKey);
-//   } catch (error) {
-//     console.error('Error parsing cookieKey:', error);
-//   }
-// } else {
-//   console.warn('process.config.cookieKey is undefined or null');
-// }
-//
-// app.use(
-//   cookieSession({
-//     maxAge: 30 * 24 * 60 * 60 * 1000,
-//     keys: cookieKeys,
-//   })
-// );
 
 // Serve static files
 app.use(express.static(path.join(__dirname, "../public")));
