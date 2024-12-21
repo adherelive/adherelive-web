@@ -13,7 +13,7 @@ import { TABLE_NAME as doctorsTableName } from "./doctors";
 import { TABLE_NAME as serviceSubscriptionUserMapping } from "./serviceSubscriptionUserMapping";
 import { TABLE_NAME as providersTableName } from "./providers";
 
-export const TABLE_NAME = "service_subscription_tranactions";
+export const TABLE_NAME = "service_subscription_transactions";
 
 export const db = (database) => {
   database.define(
