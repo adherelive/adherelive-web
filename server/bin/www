@@ -19,10 +19,10 @@ config();
 const http = require("http");
 const app = require("../app");
 const createDebug = require("debug");
-const Log = require("../../libs/log");
+// const Log = require("../../libs/log");
 
 const debug = createDebug("adherelive-rest:server");
-const log = Log("www");
+// const log = Log("www");
 
 /**
  * Get port from environment and store in Express.
@@ -90,5 +90,5 @@ function onListening() {
     const addr = server.address();
     const bind = typeof addr === "string" ? "pipe " + addr : `port ${addr.port}`;
     debug(`Listening on ${bind}`);
-    log.info(`Starting server at ${bind}`);
+    console.log(`Starting server at ${bind}`);
 }
