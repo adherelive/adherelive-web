@@ -41,17 +41,28 @@ app.use(express.urlencoded({ extended: true, limit: "50mb" }));
 app.use(cookieParser());
 app.use(cors());
 
+let cookieKeys = [];
+
 try {
-  const cookieKeys = JSON.parse(process.env.cookieKey);
-  app.use(
-    cookieSession({
-      maxAge: 30 * 24 * 60 * 60 * 1000,
-      keys: cookieKeys,
-    })
-  );
+  if (process.config && process.config.cookieKey) {
+    cookieKeys = JSON.parse(process.config.cookieKey);
+  } else {
+    console.warn("process.config.cookieKey is undefined or null");
+    // Set a default value if cookieKey is not defined
+    cookieKeys = ["cookie938", "abc123xyz456abc789xyz012"];
+  }
 } catch (error) {
   console.error("Error parsing cookieKey:", error);
+  // Set a default value in case of error
+  cookieKeys = ["cookie938", "abc123xyz456abc789xyz012"];
 }
+
+app.use(
+  cookieSession({
+    maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
+    keys: cookieKeys,
+  })
+);
 
 /* ananjay add code
  * Add a check to handle cases where process.config.cookieKey might be undefined or not a valid JSON string
