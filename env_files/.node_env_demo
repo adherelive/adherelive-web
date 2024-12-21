@@ -39,7 +39,6 @@ DB_DIALECT=mysql
 
 # MongoDB parameters
 MONGO_DB_URI=mongodb://mongouser:password@localhost:27017/adhere?authSource=admin
-#MONGO_DB_URI="mongodb://mongouser:password@172.17.0.1:30000/adhere"
 
 SALT_ROUNDS=5
 

@@ -63,11 +63,16 @@ export const associate = (database) => {
     service_subscription,
     service_offerings,
   } = database.models || {};
-  service_subscribe_plan_mapping.belongsTo(service_subscription, {
-    foreignKey: "subscription_plan_id",
-    targetKey: "id",
-  });
-  service_subscribe_plan_mapping.belongsTo(service_offerings, {
+  database.models[TABLE_NAME].belongsTo(
+    database.models[subscriptionPlanTableName],
+    {
+      //service_subscribe_plan_mapping.belongsTo(subscriptionPlanTableName, {
+      foreignKey: "subscription_plan_id",
+      targetKey: "id",
+    }
+  );
+  database.models[TABLE_NAME].belongsTo(database.models[servicePlanTableName], {
+    //service_subscribe_plan_mapping.belongsTo(service_offerings, {
     foreignKey: "service_plan_id",
     targetKey: "id",
   });

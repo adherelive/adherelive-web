@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 export default async function InitializeMongo() {
   try {
-    console.log({ mongo_db_details: process.config.mongo });
+    console.log({ mongo_db_details: process.config.mongo.db_uri });
 
     // ConnectOptions for the MongoDB connection
     // Removed the 'authSource', as it may be different between DEV and PROD
