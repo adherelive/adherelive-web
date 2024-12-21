@@ -2,7 +2,7 @@ import Controller from "../../index";
 import medicineService from "../../../services/medicine/medicine.service";
 import AlgoliaService from "../../../services/algolia/algolia.service";
 
-import MedicineApiWrapper from "../../../ApiWrapper/mobile/medicine";
+import MedicineApiWrapper from "../../../apiWrapper/mobile/medicine";
 import Log from "../../../../libs/log";
 
 const FILE_NAME = "MOBILE MEDICINE CONTROLLER";

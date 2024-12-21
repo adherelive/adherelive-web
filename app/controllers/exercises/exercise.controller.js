@@ -7,8 +7,8 @@ import ExerciseDetailService from "../../services/exerciseDetails/exerciseDetail
 import ExerciseContentService from "../../services/exerciseContents/exerciseContent.service";
 
 // wrappers
-import ExerciseWrapper from "../../ApiWrapper/web/exercises";
-import ExerciseContentWrapper from "../../ApiWrapper/web/exerciseContents";
+import ExerciseWrapper from "../../apiWrapper/web/exercises";
+import ExerciseContentWrapper from "../../apiWrapper/web/exerciseContents";
 
 import * as UploadHelper from "../../helper/uploadDocuments";
 import { DOCUMENT_PARENT_TYPE } from "../../../constant";

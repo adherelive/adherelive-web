@@ -6,7 +6,7 @@ import Logger from "../../../../libs/log";
 import WorkoutTemplateService from "../../../services/workoutTemplates/workoutTemplate.service";
 
 // wrappers
-import WorkoutTemplateWrapper from "../../../ApiWrapper/mobile/workoutTemplates";
+import WorkoutTemplateWrapper from "../../../apiWrapper/mobile/workoutTemplates";
 
 const Log = new Logger("MOBILE > WORKOUT_TEMPLATE > CONTROLLER");
 

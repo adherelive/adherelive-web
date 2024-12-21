@@ -9,13 +9,13 @@ import PaymentProductService from "../../services/paymentProducts/paymentProduct
 import watchlistService from "../../services/doctorPatientWatchlist/doctorPatientWatchlist.service";
 
 // wrappers
-import UserWrapper from "../../ApiWrapper/web/user";
-import CarePlanWrapper from "../../ApiWrapper/web/carePlan";
-import DoctorWrapper from "../../ApiWrapper/web/doctor";
-import UserRoleWrapper from "../../ApiWrapper/web/userRoles";
-import UserPreferenceWrapper from "../../ApiWrapper/web/userPreference";
-import PaymentProductsWrapper from "../../ApiWrapper/web/paymentProducts";
-import WatchlistWrapper from "../../ApiWrapper/web/doctorPatientWatchlist";
+import UserWrapper from "../../apiWrapper/web/user";
+import CarePlanWrapper from "../../apiWrapper/web/carePlan";
+import DoctorWrapper from "../../apiWrapper/web/doctor";
+import UserRoleWrapper from "../../apiWrapper/web/userRoles";
+import UserPreferenceWrapper from "../../apiWrapper/web/userPreference";
+import PaymentProductsWrapper from "../../apiWrapper/web/paymentProducts";
+import WatchlistWrapper from "../../apiWrapper/web/doctorPatientWatchlist";
 
 import permissions from "../../../config/permissions";
 import * as PermissionHelper from "../../helper/userCategoryPermisssions";

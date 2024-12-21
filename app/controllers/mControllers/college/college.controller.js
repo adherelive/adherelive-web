@@ -1,6 +1,6 @@
 import Controller from "../../";
 import collegeService from "../../../services/college/college.service";
-import CollegeWrapper from "../../../ApiWrapper/mobile/college";
+import CollegeWrapper from "../../../apiWrapper/mobile/college";
 
 import Log from "../../../../libs/log";
 

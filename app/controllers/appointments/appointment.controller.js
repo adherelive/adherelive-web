@@ -40,13 +40,13 @@ import ScheduleEventService from "../../services/scheduleEvents/scheduleEvent.se
 import documentService from "../../services/uploadDocuments/uploadDocuments.service";
 
 // WRAPPERS...
-import CarePlanWrapper from "../../ApiWrapper/web/carePlan";
-import AppointmentWrapper from "../../ApiWrapper/web/appointments";
-import FeatureDetailsWrapper from "../../ApiWrapper/web/featureDetails";
-import DoctorWrapper from "../../ApiWrapper/web/doctor";
-import PatientWrapper from "../../ApiWrapper/web/patient";
-import UploadDocumentWrapper from "../../ApiWrapper/web/uploadDocument";
-import EventWrapper from "../../ApiWrapper/common/scheduleEvents";
+import CarePlanWrapper from "../../apiWrapper/web/carePlan";
+import AppointmentWrapper from "../../apiWrapper/web/appointments";
+import FeatureDetailsWrapper from "../../apiWrapper/web/featureDetails";
+import DoctorWrapper from "../../apiWrapper/web/doctor";
+import PatientWrapper from "../../apiWrapper/web/patient";
+import UploadDocumentWrapper from "../../apiWrapper/web/uploadDocument";
+import EventWrapper from "../../apiWrapper/common/scheduleEvents";
 
 // import eventService from "../../services/scheduleEvents/scheduleEvent.service";
 

@@ -9,7 +9,7 @@ import ServiceOffering from "../../services/serviceOffering/serviceOffering.serv
 import TxService from "../../services/serviceSubscribeTransaction/serviceSubscribeTransaction";
 import doctorService from "../../services/doctor/doctor.service";
 import providerService from "../../services/provider/provider.service";
-import ProviderWrapper from "../../ApiWrapper/web/provider";
+import ProviderWrapper from "../../apiWrapper/web/provider";
 import { USER_CATEGORY, USER_STATUS } from "../../../constant";
 
 const Log = new Logger("WEB > CONTROLLER > Service Offering");

@@ -4,7 +4,7 @@ import { EVENT_TYPE, NOTIFICATION_VERB } from "../../../../constant";
 
 import UserRoleService from "../../../services/userRoles/userRoles.service";
 import UserDeviceService from "../../../services/userDevices/userDevice.service";
-import UserDeviceWrapper from "../../../ApiWrapper/mobile/userDevice";
+import UserDeviceWrapper from "../../../apiWrapper/mobile/userDevice";
 
 class ResponseJob extends WorkoutJob {
   constructor(data) {

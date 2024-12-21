@@ -10,7 +10,7 @@ import DietService from "../services/diet/diet.service";
 import WorkoutService from "../services/workouts/workout.service";
 
 // WRAPPERS ---------------
-import ScheduleEventWrapper from "../ApiWrapper/common/scheduleEvents";
+import ScheduleEventWrapper from "../apiWrapper/common/scheduleEvents";
 
 import * as CronHelper from "./helper";
 

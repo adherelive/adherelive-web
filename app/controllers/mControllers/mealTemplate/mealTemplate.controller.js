@@ -4,7 +4,7 @@ import Controller from "../../";
 import MealTemplateService from "../../../services/mealTemplate/mealTemplate.service";
 
 //Wrappers
-import MealTemplateWrapper from "../../../ApiWrapper/mobile/mealTemplate";
+import MealTemplateWrapper from "../../../apiWrapper/mobile/mealTemplate";
 
 import Logger from "../../../../libs/log";
 

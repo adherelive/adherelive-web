@@ -2,7 +2,7 @@ import AuthJob from "../";
 import moment from "moment";
 
 import UserDeviceService from "../../../services/userDevices/userDevice.service";
-import UserDeviceWrapper from "../../../ApiWrapper/mobile/userDevice";
+import UserDeviceWrapper from "../../../apiWrapper/mobile/userDevice";
 import { NOTIFICATION_VERB, USER_CATEGORY } from "../../../../constant";
 
 export default class DeactivateDoctorJob extends AuthJob {

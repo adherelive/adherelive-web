@@ -5,11 +5,11 @@ import medicineService from "../../../services/medicine/medicine.service";
 import vitalTemplateService from "../../../services/vitalTemplates/vitalTemplate.service";
 
 // wrapper
-import TemplateAppointmentWrapper from "../../../ApiWrapper/web/templateAppointment";
-import TemplateMedicationWrapper from "../../../ApiWrapper/web/templateMedication";
-import TemplateVitalWrapper from "../../../ApiWrapper/web/templateVital";
-import MedicineWrapper from "../../../ApiWrapper/mobile/medicine";
-import VitalTemplateWrapper from "../../../ApiWrapper/web/vitalTemplates";
+import TemplateAppointmentWrapper from "../../web/templateAppointment";
+import TemplateMedicationWrapper from "../../web/templateMedication";
+import TemplateVitalWrapper from "../../web/templateVital";
+import MedicineWrapper from "../../mobile/medicine";
+import VitalTemplateWrapper from "../../web/vitalTemplates";
 import TemplateDietWrapper from "../templateDiet";
 import TemplateWorkoutWrapper from "../templateWorkout";
 

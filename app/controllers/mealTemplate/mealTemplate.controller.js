@@ -3,7 +3,7 @@ import Controller from "..";
 import MealTemplateService from "../../services/mealTemplate/mealTemplate.service";
 
 //Wrappers
-import MealTemplateWrapper from "../../ApiWrapper/web/mealTemplate";
+import MealTemplateWrapper from "../../apiWrapper/web/mealTemplate";
 
 import Logger from "../../../libs/log";
 

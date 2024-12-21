@@ -5,8 +5,8 @@ import featuresService from "../../../services/features/features.service";
 import carePlanService from "../../../services/carePlan/carePlan.service";
 import doctorPatientFeatureMappingService from "../../../services/doctorPatientFeatureMapping/doctorPatientFeatureMapping.service";
 
-import MCarePlanWrapper from "../../../ApiWrapper/mobile/carePlan";
-import FeatureMappingWrapper from "../../../ApiWrapper/mobile/doctorPatientFeatureMapping";
+import MCarePlanWrapper from "../../../apiWrapper/mobile/carePlan";
+import FeatureMappingWrapper from "../../../apiWrapper/mobile/doctorPatientFeatureMapping";
 
 import { USER_CATEGORY } from "../../../../constant";
 

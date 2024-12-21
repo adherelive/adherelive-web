@@ -2,9 +2,9 @@ import SubscriptionService from "../services/subscriptions/subscription.service"
 import TwilioService from "../services/twilio/twilio.service";
 
 // wrappers
-import SubscriptionWrapper from "../ApiWrapper/mobile/subscriptions";
-import DoctorWrapper from "../ApiWrapper/mobile/doctor";
-import PatientWrapper from "../ApiWrapper/mobile/patient";
+import SubscriptionWrapper from "../apiWrapper/mobile/subscriptions";
+import DoctorWrapper from "../apiWrapper/mobile/doctor";
+import PatientWrapper from "../apiWrapper/mobile/patient";
 import { USER_CATEGORY } from "../../constant";
 
 import Logger from "../../libs/log";

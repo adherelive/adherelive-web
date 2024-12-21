@@ -9,8 +9,8 @@ import MedicationService from "../../services/medicationReminder/mReminder.servi
 import CareplanMedicationService from "../../services/carePlanMedication/carePlanMedication.service";
 import ScheduleEventService from "../../services/scheduleEvents/scheduleEvent.service";
 
-import MedicineWrapper from "../../ApiWrapper/web/medicine";
-import DoctorWrapper from "../../ApiWrapper/web/doctor";
+import MedicineWrapper from "../../apiWrapper/web/medicine";
+import DoctorWrapper from "../../apiWrapper/web/doctor";
 
 import Log from "../../../libs/log";
 import { EVENT_TYPE } from "../../../constant";

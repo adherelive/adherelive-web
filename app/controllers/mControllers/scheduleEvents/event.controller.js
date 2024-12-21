@@ -8,10 +8,10 @@ import EventService from "../../../services/scheduleEvents/scheduleEvent.service
 import CarePlanService from "../../../services/carePlan/carePlan.service";
 
 // WRAPPERS -------------------
-import EventWrapper from "../../../ApiWrapper/common/scheduleEvents";
-import VitalWrapper from "../../../ApiWrapper/mobile/vitals";
-import CarePlanWrapper from "../../../ApiWrapper/mobile/carePlan";
-import SymptomWrapper from "../../../ApiWrapper/mobile/symptoms";
+import EventWrapper from "../../../apiWrapper/common/scheduleEvents";
+import VitalWrapper from "../../../apiWrapper/mobile/vitals";
+import CarePlanWrapper from "../../../apiWrapper/mobile/carePlan";
+import SymptomWrapper from "../../../apiWrapper/mobile/symptoms";
 
 import { EVENT_STATUS, EVENT_TYPE, USER_CATEGORY } from "../../../../constant";
 import * as EventHelper from "../../scheduleEvents/eventHelper";

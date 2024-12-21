@@ -4,16 +4,18 @@ import BaseVital from "../../../services/vitals";
 
 // SERVICES
 import VitalService from "../../../services/vitals/vital.service";
-import eventService from "../../../services/scheduleEvents/scheduleEvent.service";
 
 // WRAPPERS
-import VitalTemplateWrapper from "../../../ApiWrapper/mobile/vitalTemplates";
-import CarePlanWrapper from "../../../ApiWrapper/mobile/carePlan";
-import EventWrapper from "../../common/scheduleEvents";
-import { EVENT_STATUS, EVENT_TYPE } from "../../../../constant";
+import VitalTemplateWrapper from "../../web/vitalTemplates";
+import CarePlanWrapper from "../../web/carePlan";
 import moment from "moment";
+import eventService from "../../../services/scheduleEvents/scheduleEvent.service";
+import EventWrapper from "../../common/scheduleEvents";
+import { EVENT_STATUS, EVENT_TYPE, FEATURE_TYPE } from "../../../../constant";
+import FeatureDetailService from "../../../services/featureDetails/featureDetails.service";
+import FeatureDetailWrapper from "../featureDetails";
 
-const Log = new Logger("MOBILE > API_WRAPPER > VITALS");
+const Log = new Logger("SERVICES > VITALS");
 
 class VitalWrapper extends BaseVital {
   constructor(data) {
@@ -46,47 +48,43 @@ class VitalWrapper extends BaseVital {
   };
 
   getAllInfo = async () => {
-    const { getBasicInfo, getVitalId } = this;
+    const { getBasicInfo, getVitalId, getStartDate } = this;
+
     const EventService = new eventService();
 
     const currentDate = moment().endOf("day").utc().toDate();
 
-    const scheduleEvents = await EventService.getAllPreviousByData({
+    const scheduleEvents = await EventService.getAllPastData({
+      startDate: getStartDate(),
       event_id: getVitalId(),
       date: currentDate,
-      event_type: EVENT_TYPE.VITALS,
     });
 
     let vitalEvents = {};
     let remaining = 0;
     let latestPendingEventId;
-    let lastCompletedEventId;
-    let lastCompletedEventEndTime = null;
+
+    const vitalData = await FeatureDetailService.getDetailsByData({
+      feature_type: FEATURE_TYPE.VITAL,
+    });
+
+    const vitalDetails = await FeatureDetailWrapper(vitalData);
+    const { repeat_intervals = {} } = vitalDetails.getFeatureDetails() || {};
 
     const scheduleEventIds = [];
     for (const events of scheduleEvents) {
       const scheduleEvent = await EventWrapper(events);
-      scheduleEventIds.push(scheduleEvent.getScheduleEventId());
+      const x = scheduleEvent.getAllInfo();
+      // Log.debug("28739812372 scheduleEvent.getAllInfo() ---> ", x.details.details.repeat_interval_id);
+      if (scheduleEvent.getEventType() === EVENT_TYPE.VITALS) {
+        scheduleEventIds.push(scheduleEvent.getScheduleEventId());
 
-      if (scheduleEvent.getStatus() !== EVENT_STATUS.COMPLETED) {
-        if (
-          !latestPendingEventId &&
-          scheduleEvent.getStatus() !== EVENT_STATUS.EXPIRED
-        ) {
-          latestPendingEventId = scheduleEvent.getScheduleEventId();
+        if (scheduleEvent.getStatus() !== EVENT_STATUS.COMPLETED) {
+          if (!latestPendingEventId) {
+            latestPendingEventId = scheduleEvent.getScheduleEventId();
+          }
+          remaining++;
         }
-        remaining++;
-      } else {
-        lastCompletedEventId = scheduleEvent.getScheduleEventId();
-        lastCompletedEventEndTime = scheduleEvent.getEndTime();
-      }
-    }
-
-    let upcoming_event_id = latestPendingEventId;
-    if (lastCompletedEventEndTime) {
-      const diff = moment().diff(moment(lastCompletedEventEndTime), "minutes");
-      if (diff < 0) {
-        upcoming_event_id = lastCompletedEventId;
       }
     }
 
@@ -95,16 +93,15 @@ class VitalWrapper extends BaseVital {
         [getVitalId()]: {
           ...getBasicInfo(),
           remaining,
-          total: scheduleEvents.length,
-          upcoming_event_id: upcoming_event_id,
+          total: scheduleEventIds.length,
         },
       },
     };
   };
 
   getReferenceInfo = async () => {
-    const { _data, getVitalTemplateId, getAllInfo } = this;
-    const { getVitalId, vital_template, care_plan } = _data || {};
+    const { _data, getAllInfo, getVitalTemplateId } = this;
+    const { vital_template, care_plan } = _data || {};
 
     const vitalTemplateData = {};
     const carePlanData = {};

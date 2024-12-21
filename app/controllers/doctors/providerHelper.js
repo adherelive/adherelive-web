@@ -4,9 +4,9 @@ import doctorService from "../../services/doctor/doctor.service";
 import providerService from "../../services/provider/provider.service";
 import doctorProviderMappingService from "../../services/doctorProviderMapping/doctorProviderMapping.service";
 
-import UserWrapper from "../../ApiWrapper/web/user";
-import DoctorWrapper from "../../ApiWrapper/web/doctor";
-import ProviderWrapper from "../../ApiWrapper/web/provider";
+import UserWrapper from "../../apiWrapper/web/user";
+import DoctorWrapper from "../../apiWrapper/web/doctor";
+import ProviderWrapper from "../../apiWrapper/web/provider";
 
 import { createNewUser } from "../user/userHelper";
 import { generatePassword } from "../helper/passwordGenerator";

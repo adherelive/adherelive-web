@@ -9,8 +9,8 @@ import CarePlanService from "../services/carePlan/carePlan.service";
 import ScheduleEventService from "../services/scheduleEvents/scheduleEvent.service";
 
 // wrappers
-import ProviderWrapper from "../ApiWrapper/web/provider";
-import CarePlanWrapper from "../ApiWrapper/web/carePlan";
+import ProviderWrapper from "../apiWrapper/web/provider";
+import CarePlanWrapper from "../apiWrapper/web/carePlan";
 import { EVENT_STATUS, EVENT_TYPE } from "../../constant";
 
 const Log = new Logger("CRON - ACTIVE_PATIENT");

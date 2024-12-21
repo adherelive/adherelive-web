@@ -11,7 +11,7 @@ import ServiceUserMappingService from "../../services/serviceUserMapping/service
 import { DOCUMENT_PARENT_TYPE } from "../../../constant";
 import uploadDocumentService from "../../services/uploadDocuments/uploadDocuments.service";
 import * as ReportHelper from "../reports/reportHelper"; // wrappers
-import ReportWrapper from "../../ApiWrapper/web/reports";
+import ReportWrapper from "../../apiWrapper/web/reports";
 import ServiceSubscriptionService from "../../services/serviceSubscription/serviceSubscription.service";
 import ServiceOfferingService from "../../services/serviceOffering/serviceOffering.service";
 

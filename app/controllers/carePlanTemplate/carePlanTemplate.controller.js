@@ -11,8 +11,8 @@ import TemplateWorkoutService from "../../services/templateWorkouts/templateWork
 import ExerciseContentService from "../../services/exerciseContents/exerciseContent.service";
 
 // wrapper
-import ExerciseContentWrapper from "../../ApiWrapper/web/exerciseContents";
-import CarePlanTemplateWrapper from "../../ApiWrapper/web/carePlanTemplate";
+import ExerciseContentWrapper from "../../apiWrapper/web/exerciseContents";
+import CarePlanTemplateWrapper from "../../apiWrapper/web/carePlanTemplate";
 
 import {
   TEMPLATE_DUPLICATE_TEXT,

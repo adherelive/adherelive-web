@@ -1,6 +1,6 @@
 import Controller from "../../";
 import councilService from "../../../services/council/council.service";
-import CouncilWrapper from "../../../ApiWrapper/mobile/council";
+import CouncilWrapper from "../../../apiWrapper/mobile/council";
 
 import Log from "../../../../libs/log";
 

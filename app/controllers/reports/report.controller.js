@@ -7,7 +7,7 @@ import ReportService from "../../services/reports/report.service";
 import uploadDocumentService from "../../services/uploadDocuments/uploadDocuments.service";
 
 // wrappers
-import ReportWrapper from "../../ApiWrapper/web/reports";
+import ReportWrapper from "../../apiWrapper/web/reports";
 
 import { DOCUMENT_PARENT_TYPE } from "../../../constant";
 import { getFilePath } from "../../helper/filePath";

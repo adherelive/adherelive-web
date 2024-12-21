@@ -10,8 +10,8 @@ import UserRoleService from "../../../services/userRoles/userRoles.service";
 import ProviderService from "../../../services/provider/provider.service";
 import UserDeviceService from "../../../services/userDevices/userDevice.service";
 
-import UserDeviceWrapper from "../../../ApiWrapper/mobile/userDevice";
-import VitalWrapper from "../../../ApiWrapper/mobile/vitals";
+import UserDeviceWrapper from "../../../apiWrapper/mobile/userDevice";
+import VitalWrapper from "../../../apiWrapper/mobile/vitals";
 
 class ResponseJob extends VitalJob {
   constructor(data) {

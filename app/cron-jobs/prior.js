@@ -7,7 +7,7 @@ import { EVENT_STATUS, EVENT_TYPE } from "../../constant";
 import ScheduleEventService from "../services/scheduleEvents/scheduleEvent.service";
 
 // Wrappers
-import ScheduleEventWrapper from "../ApiWrapper/common/scheduleEvents";
+import ScheduleEventWrapper from "../apiWrapper/common/scheduleEvents";
 
 import AppointmentJob from "../jobSdk/Appointments/observer";
 import DietJob from "../jobSdk/Diet/observer";
@@ -20,6 +20,7 @@ import NotificationSdk from "../notificationSdk";
 const Log = new Logger("CRON > PRIOR");
 
 class PriorCron {
+  allPriorAppointmentEvents;
   constructor() {
     this.scheduleEventService = new ScheduleEventService();
   }
@@ -45,7 +46,7 @@ class PriorCron {
         this.handleAppointmentPrior
       );
 
-      for (const scheduleEvent of allPriorAppointmentEvents) {
+      for (const scheduleEvent of this.allPriorAppointmentEvents) {
         const event = await ScheduleEventWrapper(scheduleEvent);
         await this.handleAppointmentPrior(event);
       }

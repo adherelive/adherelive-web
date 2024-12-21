@@ -2,8 +2,8 @@ import BaseCarePlanAppointment from "../../../services/carePlanAppointment";
 import carePlanAppointmentService from "../../../services/carePlanAppointment/carePlanAppointment.service";
 import appointmentService from "../../../services/appointment/appointment.service";
 import carePlanService from "../../../services/carePlan/carePlan.service";
-import AppointmentWrapper from "../../../ApiWrapper/mobile/appointments";
-import CarePlanWrapper from "../../../ApiWrapper/mobile/carePlan";
+import AppointmentWrapper from "../../mobile/appointments";
+import CarePlanWrapper from "../../mobile/carePlan";
 
 class CarePlanAppointmentWrapper extends BaseCarePlanAppointment {
   constructor(data) {

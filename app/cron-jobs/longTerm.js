@@ -13,8 +13,8 @@ import DietService from "../services/diet/diet.service";
 import WorkoutService from "../services/workouts/workout.service";
 
 // wrappers
-import VitalWrapper from "../ApiWrapper/mobile/vitals";
-// import PatientWrapper from "../ApiWrapper/mobile/patient";
+import VitalWrapper from "../apiWrapper/mobile/vitals";
+// import PatientWrapper from "../apiWrapper/mobile/patient";
 
 const Log = new Logger("LONG_TERM > CRONS");
 

@@ -4,7 +4,7 @@ import moment from "moment";
 import UserRoleService from "../../../services/userRoles/userRoles.service";
 import ProviderService from "../../../services/provider/provider.service";
 import UserDeviceService from "../../../services/userDevices/userDevice.service";
-import UserDeviceWrapper from "../../../ApiWrapper/mobile/userDevice";
+import UserDeviceWrapper from "../../../apiWrapper/mobile/userDevice";
 import {
   EVENT_TYPE,
   NOTIFICATION_VERB,

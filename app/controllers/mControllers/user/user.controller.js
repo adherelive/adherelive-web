@@ -11,13 +11,13 @@ import Log from "../../../../libs/log";
 
 const Response = require("../../helper/responseFormat");
 
-import MPatientWrapper from "../../../ApiWrapper/mobile/patient";
-import MUserWrapper from "../../../ApiWrapper/mobile/user";
-import MDoctorWrapper from "../../../ApiWrapper/mobile/doctor";
-import MCarePlanWrapper from "../../../ApiWrapper/mobile/carePlan";
-import LinkVerificationWrapper from "../../../ApiWrapper/mobile/userVerification";
-import DoctorProviderMappingWrapper from "../../../ApiWrapper/web/doctorProviderMapping";
-import ProvidersWrapper from "../../../ApiWrapper/web/provider";
+import MPatientWrapper from "../../../apiWrapper/mobile/patient";
+import MUserWrapper from "../../../apiWrapper/mobile/user";
+import MDoctorWrapper from "../../../apiWrapper/mobile/doctor";
+import MCarePlanWrapper from "../../../apiWrapper/mobile/carePlan";
+import LinkVerificationWrapper from "../../../apiWrapper/mobile/userVerification";
+import DoctorProviderMappingWrapper from "../../../apiWrapper/web/doctorProviderMapping";
+import ProvidersWrapper from "../../../apiWrapper/web/provider";
 
 import userService from "../../../services/user/user.service";
 import patientService from "../../../services/patients/patients.service";
@@ -29,7 +29,7 @@ import doctorProviderMappingService from "../../../services/doctorProviderMappin
 import userRolesService from "../../../services/userRoles/userRoles.service";
 import userPreferenceService from "../../../services/userPreferences/userPreference.service";
 
-import DoctorPatientWatchlistWrapper from "../../../ApiWrapper/mobile/doctorPatientWatchlist";
+import DoctorPatientWatchlistWrapper from "../../../apiWrapper/mobile/doctorPatientWatchlist";
 import doctorPatientWatchlistService from "../../../services/doctorPatientWatchlist/doctorPatientWatchlist.service";
 
 import { getServerSpecificConstants } from "./userHelper";
@@ -47,14 +47,14 @@ import { Proxy_Sdk, EVENTS } from "../../../proxySdk";
 
 const errMessage = require("../../../../config/messages.json").errMessages;
 import treatmentService from "../../../services/treatment/treatment.service";
-import MTreatmentWrapper from "../../../ApiWrapper/mobile/treatments";
+import MTreatmentWrapper from "../../../apiWrapper/mobile/treatments";
 import severityService from "../../../services/severity/severity.service";
-import MSeverityWrapper from "../../../ApiWrapper/mobile/severity";
+import MSeverityWrapper from "../../../apiWrapper/mobile/severity";
 import conditionService from "../../../services/condition/condition.service";
-import MConditionWrapper from "../../../ApiWrapper/mobile/conditions";
-import UserWrapper from "../../../ApiWrapper/web/user";
-import UserRolesWrapper from "../../../ApiWrapper/mobile/userRoles";
-import DoctorWrapper from "../../../ApiWrapper/mobile/doctor";
+import MConditionWrapper from "../../../apiWrapper/mobile/conditions";
+import UserWrapper from "../../../apiWrapper/web/user";
+import UserRolesWrapper from "../../../apiWrapper/mobile/userRoles";
+import DoctorWrapper from "../../../apiWrapper/mobile/doctor";
 
 import generateOTP from "../../../helper/generateOtp";
 import AppNotification from "../../../notificationSdk/inApp";

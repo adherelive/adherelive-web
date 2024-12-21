@@ -1,6 +1,6 @@
 import Controller from "../../";
 import degreeService from "../../../services/degree/degree.service";
-import DegreeWrapper from "../../../ApiWrapper/mobile/degree";
+import DegreeWrapper from "../../../apiWrapper/mobile/degree";
 
 import Log from "../../../../libs/log";
 

@@ -11,10 +11,10 @@ import eventService from "../../services/scheduleEvents/scheduleEvent.service";
 import SymptomService from "../../services/symptom/symptom.service";
 
 // WRAPPER
-import CarePlanWrapper from "../../ApiWrapper/web/carePlan";
-import EventWrapper from "../../ApiWrapper/common/scheduleEvents";
-import SymptomWrapper from "../../ApiWrapper/web/symptoms";
-import VitalWrapper from "../../ApiWrapper/web/vitals";
+import CarePlanWrapper from "../../apiWrapper/web/carePlan";
+import EventWrapper from "../../apiWrapper/common/scheduleEvents";
+import SymptomWrapper from "../../apiWrapper/web/symptoms";
+import VitalWrapper from "../../apiWrapper/web/vitals";
 
 // Timer
 import { getTime } from "../../helper/timer";

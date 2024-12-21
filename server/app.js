@@ -11,15 +11,15 @@ import ApiRouter from "../routes/api";
 import mApiRouter from "../routes/m-api";
 import EventObserver from "../app/proxySdk/eventObserver";
 import ActivityObserver from "../app/activitySdk/activityObserver";
-import RenewSubscription from "../app/Crons/renewSubscription";
+import RenewSubscription from "../app/cron-jobs/renewSubscription";
 
-import Start from "../app/Crons/start";
-import Passed from "../app/Crons/passed";
-import Prior from "../app/Crons/prior";
-import ActivePatient from "../app/Crons/activePatient";
-import RemoveDocuments from "../app/Crons/removeDocuments";
-import LongTerm from "../app/Crons/longTerm";
-import RenewTxActivity from "../app/Crons/renewTxActivity";
+import Start from "../app/cron-jobs/start";
+import Passed from "../app/cron-jobs/passed";
+import Prior from "../app/cron-jobs/prior";
+import ActivePatient from "../app/cron-jobs/activePatient";
+import RemoveDocuments from "../app/cron-jobs/removeDocuments";
+import LongTerm from "../app/cron-jobs/longTerm";
+import RenewTxActivity from "../app/cron-jobs/renewTxActivity";
 
 // Initialize database connections
 (async () => {

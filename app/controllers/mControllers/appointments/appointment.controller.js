@@ -34,15 +34,15 @@ import ScheduleEventService from "../../../services/scheduleEvents/scheduleEvent
 import featureDetailService from "../../../services/featureDetails/featureDetails.service";
 
 // WRAPPERS...
-// import ProviderWrapper from "../../../ApiWrapper/mobile/provider";
-import UploadDocumentWrapper from "../../../ApiWrapper/mobile/uploadDocument";
-import MAppointmentWrapper from "../../../ApiWrapper/mobile/appointments";
-import DoctorWrapper from "../../../ApiWrapper/mobile/doctor";
-import PatientWrapper from "../../../ApiWrapper/mobile/patient";
-import CarePlanAppointmentWrapper from "../../../ApiWrapper/mobile/carePlanAppointment";
-import CarePlanWrapper from "../../../ApiWrapper/mobile/carePlan";
-// import EventWrapper from "../../../ApiWrapper/common/scheduleEvents";
-import FeatureDetailsWrapper from "../../../ApiWrapper/mobile/featureDetails";
+// import ProviderWrapper from "../../../apiWrapper/mobile/provider";
+import UploadDocumentWrapper from "../../../apiWrapper/mobile/uploadDocument";
+import MAppointmentWrapper from "../../../apiWrapper/mobile/appointments";
+import DoctorWrapper from "../../../apiWrapper/mobile/doctor";
+import PatientWrapper from "../../../apiWrapper/mobile/patient";
+import CarePlanAppointmentWrapper from "../../../apiWrapper/mobile/carePlanAppointment";
+import CarePlanWrapper from "../../../apiWrapper/mobile/carePlan";
+// import EventWrapper from "../../../apiWrapper/common/scheduleEvents";
+import FeatureDetailsWrapper from "../../../apiWrapper/mobile/featureDetails";
 
 import * as AppointmentHelper from "./helper";
 

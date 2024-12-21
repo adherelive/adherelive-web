@@ -4,10 +4,10 @@ import md5 from "js-md5";
 import { completePath } from "../helper/filePath";
 import { EVENT_TYPE } from "../../constant";
 
-import CareplanWrapper from "../ApiWrapper/web/carePlan";
-import PatientWrapper from "../ApiWrapper/web/patient";
-import DietWrapper from "../ApiWrapper/web/diet";
-import VitalWrapper from "../ApiWrapper/web/vitals";
+import CareplanWrapper from "../apiWrapper/web/carePlan";
+import PatientWrapper from "../apiWrapper/web/patient";
+import DietWrapper from "../apiWrapper/web/diet";
+import VitalWrapper from "../apiWrapper/web/vitals";
 
 import carePlanAppointmentService from "../services/carePlanAppointment/carePlanAppointment.service";
 

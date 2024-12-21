@@ -19,17 +19,17 @@ import doctorProviderMappingService from "../../services/doctorProviderMapping/d
 import userRolesService from "../../services/userRoles/userRoles.service";
 import doctorPatientWatchlistService from "../../services/doctorPatientWatchlist/doctorPatientWatchlist.service";
 
-import UserWrapper from "../../ApiWrapper/web/user";
-import DoctorWrapper from "../../ApiWrapper/web/doctor";
-import PatientWrapper from "../../ApiWrapper/web/patient";
-import CarePlanWrapper from "../../ApiWrapper/web/carePlan";
-import TreatmentWrapper from "../../ApiWrapper/web/treatments";
-import SeverityWrapper from "../../ApiWrapper/web/severity";
-import ConditionWrapper from "../../ApiWrapper/web/conditions";
-import ProvidersWrapper from "../../ApiWrapper/web/provider";
-import DoctorProviderMappingWrapper from "../../ApiWrapper/web/doctorProviderMapping";
-import UserRolesWrapper from "../../ApiWrapper/web/userRoles";
-import DoctorPatientWatchlistWrapper from "../../ApiWrapper/web/doctorPatientWatchlist";
+import UserWrapper from "../../apiWrapper/web/user";
+import DoctorWrapper from "../../apiWrapper/web/doctor";
+import PatientWrapper from "../../apiWrapper/web/patient";
+import CarePlanWrapper from "../../apiWrapper/web/carePlan";
+import TreatmentWrapper from "../../apiWrapper/web/treatments";
+import SeverityWrapper from "../../apiWrapper/web/severity";
+import ConditionWrapper from "../../apiWrapper/web/conditions";
+import ProvidersWrapper from "../../apiWrapper/web/provider";
+import DoctorProviderMappingWrapper from "../../apiWrapper/web/doctorProviderMapping";
+import UserRolesWrapper from "../../apiWrapper/web/userRoles";
+import DoctorPatientWatchlistWrapper from "../../apiWrapper/web/doctorPatientWatchlist";
 
 import doctorService from "../../services/doctors/doctors.service";
 import UserVerificationServices from "../../services/userVerifications/userVerifications.services";
@@ -46,7 +46,7 @@ import { Proxy_Sdk, EVENTS } from "../../proxySdk";
 // import  EVENTS from "../../proxySdk/proxyEvents";
 const errMessage = require("../../../config/messages.json").errMessages;
 import { getCarePlanSeverityDetails } from "../carePlans/carePlanHelper";
-import LinkVerificationWrapper from "../../ApiWrapper/mobile/userVerification";
+import LinkVerificationWrapper from "../../apiWrapper/mobile/userVerification";
 
 import AppNotification from "../../notificationSdk/inApp";
 import AdhocJob from "../../jobSdk/Adhoc/observer";

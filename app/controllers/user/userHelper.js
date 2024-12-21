@@ -7,7 +7,7 @@ import userPreferenceService from "../../services/userPreferences/userPreference
 import UserVerificationServices from "../../services/userVerifications/userVerifications.services";
 import userRolesService from "../../services/userRoles/userRoles.service";
 
-import UserRolesWrapper from "../../ApiWrapper/web/userRoles";
+import UserRolesWrapper from "../../apiWrapper/web/userRoles";
 
 // import  EVENTS from "../../proxySdk/proxyEvents";
 import minioService from "../../../app/services/minio/minio.service";

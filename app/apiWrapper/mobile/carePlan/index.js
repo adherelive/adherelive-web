@@ -7,7 +7,7 @@ import DietService from "../../../services/diet/diet.service";
 import WorkoutService from "../../../services/workouts/workout.service";
 import CarePlanSecondaryDoctorMappingsService from "../../../services/careplanSecondaryDoctorMappings/careplanSecondaryDoctorMappings.service";
 import DoctorService from "../../../services/doctor/doctor.service";
-// import CarePlanAppointmentWrapper from "../../../ApiWrapper/mobile/carePlanAppointment";
+// import CarePlanAppointmentWrapper from "../../../apiWrapper/mobile/carePlanAppointment";
 import DoctorWrapper from "../../web/doctor";
 import UserRoleWrapper from "../userRoles";
 import ProviderWrapper from "../provider";

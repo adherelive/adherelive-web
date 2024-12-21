@@ -4,7 +4,7 @@ import BaseTransaction from "../../../services/transactions";
 import TransactionService from "../../../services/transactions/transaction.service";
 
 // wrappers ...
-import PaymentProductWrapper from "../../../ApiWrapper/web/paymentProducts";
+import PaymentProductWrapper from "../../mobile/paymentProducts";
 
 class TransactionWrapper extends BaseTransaction {
   constructor(data) {
@@ -25,7 +25,6 @@ class TransactionWrapper extends BaseTransaction {
       payee_type,
       status,
       transaction_response,
-      updated_at,
     } = _data;
 
     return {
@@ -46,7 +45,6 @@ class TransactionWrapper extends BaseTransaction {
         category: payee_type,
       },
       transaction_response,
-      updated_at,
     };
   };
 

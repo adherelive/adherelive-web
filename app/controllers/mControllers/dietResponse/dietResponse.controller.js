@@ -4,10 +4,10 @@ import Controller from "../../index";
 import DietResponseService from "../../../services/dietResponses/dietResponses.service";
 
 // wrappers
-import DietResponseWrapper from "../../../ApiWrapper/mobile/dietResponse";
-import DietWrapper from "../../../ApiWrapper/mobile/diet";
-import CareplanWrapper from "../../../ApiWrapper/mobile/carePlan";
-import DoctorWrapper from "../../../ApiWrapper/mobile/doctor";
+import DietResponseWrapper from "../../../apiWrapper/mobile/dietResponse";
+import DietWrapper from "../../../apiWrapper/mobile/diet";
+import CareplanWrapper from "../../../apiWrapper/mobile/carePlan";
+import DoctorWrapper from "../../../apiWrapper/mobile/doctor";
 
 import * as UploadHelper from "../../../helper/uploadDocuments";
 

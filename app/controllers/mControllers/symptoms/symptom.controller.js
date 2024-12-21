@@ -6,11 +6,11 @@ import UploadDocumentService from "../../../services/uploadDocuments/uploadDocum
 import twilioService from "../../../services/twilio/twilio.service";
 
 // WRAPPERS ----------
-import SymptomWrapper from "../../../ApiWrapper/mobile/symptoms";
-import DocumentWrapper from "../../../ApiWrapper/mobile/uploadDocument";
-import CarePlanWrapper from "../../../ApiWrapper/mobile/carePlan";
-// import DoctorWrapper from "../../../ApiWrapper/mobile/doctor";
-import PatientWrapper from "../../../ApiWrapper/mobile/patient";
+import SymptomWrapper from "../../../apiWrapper/mobile/symptoms";
+import DocumentWrapper from "../../../apiWrapper/mobile/uploadDocument";
+import CarePlanWrapper from "../../../apiWrapper/mobile/carePlan";
+// import DoctorWrapper from "../../../apiWrapper/mobile/doctor";
+import PatientWrapper from "../../../apiWrapper/mobile/patient";
 
 import {
   uploadAudio,

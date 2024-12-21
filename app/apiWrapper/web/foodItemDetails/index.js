@@ -1,8 +1,8 @@
 //services
 import BaseFoodItemDetails from "../../../services/foodItemDetails/index";
 import FoodItemDetailsService from "../../../services/foodItemDetails/foodItemDetails.service";
-import FoodItemWrapper from "../../../ApiWrapper/web/foodItem";
-import PortionWrapper from "../../../ApiWrapper/web/portions";
+import FoodItemWrapper from "../../web/foodItem";
+import PortionWrapper from "../../web/portions";
 
 class FoodItemDetailsWrapper extends BaseFoodItemDetails {
   constructor(data) {

@@ -15,13 +15,13 @@ import WorkoutResponseService from "../../services/workoutResponses/workoutRespo
 // import WorkoutTemplateService from "../../../services/workoutTemplates/workoutTemplate.service";
 
 // wrappers
-import WorkoutWrapper from "../../ApiWrapper/web/workouts";
-import CareplanWrapper from "../../ApiWrapper/web/carePlan";
-import PatientWrapper from "../../ApiWrapper/web/patient";
-import ExerciseContentWrapper from "../../ApiWrapper/web/exerciseContents";
-import WorkoutResponseWrapper from "../../ApiWrapper/web/workoutResponse";
-import EventWrapper from "../../ApiWrapper/common/scheduleEvents";
-// import WorkoutTemplateWrapper from "../../../ApiWrapper/mobile/workoutTemplates";
+import WorkoutWrapper from "../../apiWrapper/web/workouts";
+import CareplanWrapper from "../../apiWrapper/web/carePlan";
+import PatientWrapper from "../../apiWrapper/web/patient";
+import ExerciseContentWrapper from "../../apiWrapper/web/exerciseContents";
+import WorkoutResponseWrapper from "../../apiWrapper/web/workoutResponse";
+import EventWrapper from "../../apiWrapper/common/scheduleEvents";
+// import WorkoutTemplateWrapper from "../../../apiWrapper/mobile/workoutTemplates";
 
 import WorkoutJob from "../../jobSdk/Workout/observer";
 import NotificationSdk from "../../notificationSdk";

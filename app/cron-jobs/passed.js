@@ -8,8 +8,8 @@ import ScheduleEventService from "../services/scheduleEvents/scheduleEvent.servi
 import FeatureDetailService from "../services/featureDetails/featureDetails.service";
 
 // WRAPPERS ---------------
-import ScheduleEventWrapper from "../ApiWrapper/common/scheduleEvents";
-import FeatureDetailWrapper from "../ApiWrapper/mobile/featureDetails";
+import ScheduleEventWrapper from "../apiWrapper/common/scheduleEvents";
+import FeatureDetailWrapper from "../apiWrapper/mobile/featureDetails";
 
 const Log = new Logger("CRON > PASSED");
 
