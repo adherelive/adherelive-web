@@ -1,10 +1,6 @@
 import { Sequelize } from "sequelize";
 import Logger from "./log";
 
-const Log = new Logger("SEQUELIZE QUERY");
-// const Config = require("../config/config");
-// Config();
-
 // Get the details of all the Models created for MySQL - 114 till date
 import * as ActionDetails from "../app/models/actionDetails";
 import * as Actions from "../app/models/actions";
@@ -123,6 +119,10 @@ import * as ServiceSubscibeTranaction from "../app/models/serviceSubscribeTranac
 import * as TransactionActivities from "../app/models/transactionActivity";
 import * as FlashCard from "../app/models/flashCard";
 import * as Notes from "../app/models/notes";
+
+const log = new Logger("SEQUELIZE QUERY");
+// const Config = require("../config/config");
+// Config();
 
 // Create a Models List to be used with the DB connection
 const models = [
@@ -272,9 +272,9 @@ class Database {
 
         // Test the connection
         await Database.connection.authenticate();
-        console.log("Connection has been established successfully.");
+        console.log("MySQL connection has been established successfully.");
       } catch (err) {
-        console.log("Unable to connect to the database:", err);
+        console.log("Unable to connect to the MySQL database:", err);
         Database.connection = null; // Reset connection on failure
       }
     }
@@ -285,14 +285,14 @@ class Database {
     if (Database.connection) {
       return Database.connection.models[dbName];
     }
-    throw new Error("Database connection has not been established");
+    throw new Error("MySQL database connection has not been established");
   };
 
   static initTransaction = () => {
     if (Database.connection) {
       return Database.connection.transaction();
     }
-    throw new Error("Database connection has not been established");
+    throw new Error("MySQL database connection has not been established");
   };
 
   static performRawQuery = async (query, options = {}) => {
@@ -313,9 +313,9 @@ class Database {
       for (const model of models) {
         model.associate(database);
       }
-      console.log("Db and tables have been created...");
+      console.log("MySQL DB and related tables have been created");
     } catch (err) {
-      console.error("Db connect error is:", err);
+      console.error("MySQL DB connection error is: ", err);
     }
   };
 }

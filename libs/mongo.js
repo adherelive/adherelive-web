@@ -1,18 +1,18 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
-module.exports = async () => {
+export default async function InitializeMongo() {
   try {
     console.log({ mongo_db_details: process.env.MONGO_DB_URI });
 
     // ConnectOptions for the MongoDB connection
     // Removed the 'authSource', as it may be different between DEV and PROD
     const dbConfig = {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
+      // useNewUrlParser: true,
+      // useUnifiedTopology: true,
+      // authSource: "admin",
       serverSelectionTimeoutMS: 5000,
       socketTimeoutMS: 10000,
       connectTimeoutMS: 10000,
-      //authSource: "admin",
     };
 
     // Note: Sample string can be used or individual values. Here I have specified the string used in the ENV file
@@ -22,7 +22,7 @@ module.exports = async () => {
 
     await mongoose
       .connect(connectionString, dbConfig)
-      .then(() => console.log("Connected to MongoDB!"))
+      .then(() => console.log("Connected to MongoDB!", dbConfig))
       .catch((err) => console.error("Error connecting to MongoDB:", err));
 
     console.log(
@@ -32,4 +32,4 @@ module.exports = async () => {
   } catch (err) {
     console.log("Error connecting to MongoDB:", err);
   }
-};
+}
