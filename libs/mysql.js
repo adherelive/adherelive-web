@@ -268,12 +268,16 @@ class Database {
               acquire: 120000,
               idle: 10000,
             },
-            logging: false,
+            logging: console.log, // Log SQL queries
+            benchmark: true, // Log query execution time
           }
         );
 
         // Test the connection
-        await Database.connection.authenticate();
+        await Database.connection
+          .authenticate()
+          .then(() => console.log("The MySQL Database has connected"))
+          .catch((err) => console.log("Error with MySQL DB: " + err));
         console.log("MySQL connection has been established successfully.");
       } catch (err) {
         console.log("Unable to connect to the MySQL database:", err);
