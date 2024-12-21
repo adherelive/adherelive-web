@@ -1,4 +1,4 @@
-import serviceSubscribeTx from "../services/serviceSubscribeTransaction/serviceSubscribeTransaction";
+import serviceSubscribeTransaction from "../services/serviceSubscribeTransaction/serviceSubscribeTransaction";
 import ServiceSubscriptionUserMapping from "../services/serviceSubscriptionUserMapping/serviceSubscriptionUserMapping.service";
 import { TABLE_NAME as serviceSubscriptionUserMappingTable } from "../models/serviceSubscriptionUserMapping";
 import Logger from "../../libs/log";
@@ -33,10 +33,11 @@ class RenewTxActivity {
         );
 
       for (let i in newTxs) {
-        let all_details = await serviceSubscribeTx.getAllServiceSubscriptionTx({
-          subscription_user_plan_id: newTxs[i]["id"],
-          is_next_tx_create: false,
-        });
+        let all_details =
+          await serviceSubscribeTransaction.getAllServiceSubscriptionTx({
+            subscription_user_plan_id: newTxs[i]["id"],
+            is_next_tx_create: false,
+          });
 
         console.log({ id: newTxs[i]["id"], all_details });
 

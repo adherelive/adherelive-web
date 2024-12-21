@@ -4,7 +4,7 @@ import Authenticate from "../middleware/auth";
 import { isDoctor } from "../middleware/doctor";
 
 const router = express.Router();
-// router.post("/", Authenticate, serviceSubscribeTx.create);
+// router.post("/", Authenticate, serviceSubscribeTransaction.create);
 router.get("/", Authenticate, isDoctor, transactionActivity.getTxActivities);
 router.get(
   "/tasks",

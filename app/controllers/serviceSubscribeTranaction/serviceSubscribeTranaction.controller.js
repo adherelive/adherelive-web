@@ -55,8 +55,8 @@ class ServiceSubscriptionTxController extends Controller {
         doctor_id = req.body.doctor_id;
       }
 
-      const serviceSubscribeTx = new ServiceSubscribeTx();
-      let tranaction = serviceSubscribeTx.addServiceSubscriptionTx({
+      const serviceSubscribeTransaction = new ServiceSubscribeTx();
+      let tranaction = serviceSubscribeTransaction.addServiceSubscriptionTx({
         doctor_id,
         provider_id,
         provider_type,
@@ -116,7 +116,7 @@ class ServiceSubscriptionTxController extends Controller {
       };
     }
 
-    // const serviceSubscribeTx = new ServiceSubscribeTx();
+    // const serviceSubscribeTransaction = new ServiceSubscribeTx();
     let tranactions = await ServiceSubscribeTx.getAllServiceSubscriptionTx(
       data
     );
@@ -300,7 +300,7 @@ class ServiceSubscriptionTxController extends Controller {
       if (!id) {
         return raiseClientError(res, 422, {}, "Please provide tx id.");
       }
-      // const serviceSubscribeTx = new ServiceSubscribeTx();
+      // const serviceSubscribeTransaction = new ServiceSubscribeTx();
       let userServicesSubscriptions =
         await ServiceSubscribeTx.updateServiceSubscriptionTx(txbody, id);
 

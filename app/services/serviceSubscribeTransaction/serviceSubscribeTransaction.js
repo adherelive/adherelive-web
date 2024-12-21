@@ -6,7 +6,7 @@ import { TABLE_NAME as providerTableName } from "../../models/providers";
 import { TABLE_NAME as serviceOfferingTableName } from "../../models/serviceOffering";
 import { TABLE_NAME as serviceSubscriptionTableName } from "../../models/serviceSubscriptions";
 
-class serviceSubscribeTx {
+class serviceSubscribeTransaction {
   // constructor() { }
 
   addServiceSubscriptionTx = async (data) => {
@@ -62,4 +62,4 @@ class serviceSubscribeTx {
   };
 }
 
-export default new serviceSubscribeTx();
+export default new serviceSubscribeTransaction();
