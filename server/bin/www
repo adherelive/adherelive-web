@@ -15,7 +15,7 @@ config();
 // import { init as initializeDatabase } from "../libs/mysql";
 // import { initializeMongo } from "../libs/mongo";
 // import Log from "../../libs/log";
-// const log = Log("www");
+
 const http = require("http");
 const app = require("../app");
 const createDebug = require("debug");

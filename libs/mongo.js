@@ -2,14 +2,14 @@ import mongoose from "mongoose";
 
 export default async function InitializeMongo() {
   try {
-    console.log({ mongo_db_details: process.env.MONGO_DB_URI });
+    console.log({ mongo_db_details: process.config.mongo });
 
     // ConnectOptions for the MongoDB connection
     // Removed the 'authSource', as it may be different between DEV and PROD
     const dbConfig = {
       // useNewUrlParser: true,
       // useUnifiedTopology: true,
-      // authSource: "admin",
+      authSource: "admin",
       serverSelectionTimeoutMS: 5000,
       socketTimeoutMS: 10000,
       connectTimeoutMS: 10000,

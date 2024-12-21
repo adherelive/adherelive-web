@@ -11,6 +11,7 @@ import ApiRouter from "../routes/api";
 import mApiRouter from "../routes/m-api";
 import EventObserver from "../app/proxySdk/eventObserver";
 import ActivityObserver from "../app/activitySdk/activityObserver";
+import RenewSubscription from "../app/Crons/renewSubscription";
 
 import Start from "../app/Crons/start";
 import Passed from "../app/Crons/passed";
