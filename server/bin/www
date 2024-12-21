@@ -14,12 +14,12 @@ config();
 // import app from "../app.js";
 // import { init as initializeDatabase } from "../libs/mysql";
 // import { initializeMongo } from "../libs/mongo";
-import Log from "../../libs/log";
-const log = Log("www");
+// import Log from "../../libs/log";
+// const log = Log("www");
 const http = require("http");
 const app = require("../app");
 const debug = require("debug")("adherelive-rest:server");
-// const log = require("../../libs/log")("www");
+const log = require("../../libs/log");
 
 // const { init: initializeDatabase } = require('../libs/mysql');
 // const initModels = require('../libs/initModels');
