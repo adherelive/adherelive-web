@@ -140,7 +140,7 @@ class PatientsService {
           },
         ],
       });
-      Logger.debug("GETPDATA--------------->", id);
+      Logger.debug("GETPDATA--->", id);
       Logger.debug("PATIENTTTTTTTT====>", patient);
       return patient;
     } catch (error) {

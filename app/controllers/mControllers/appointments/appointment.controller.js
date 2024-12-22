@@ -471,7 +471,7 @@ class MobileAppointmentController extends Controller {
   delete = async (req, res) => {
     const { raiseSuccess, raiseServerError } = this;
     try {
-      Logger.debug("REQUEST DATA ----> ", req.params);
+      Logger.debug("REQUEST DATA ---> ", req.params);
       const {
         params: { id: appointment_id } = {},
         userDetails: { userId } = {},
@@ -615,7 +615,7 @@ class MobileAppointmentController extends Controller {
 
       const { originalname: file_name = "" } = file;
 
-      Logger.debug("file ----> ", file);
+      Logger.debug("file ---> ", file);
 
       // const scheduleEventService = new ScheduleEventService();
 

@@ -372,7 +372,7 @@ class MReminderController extends Controller {
         "Medication added successfully"
       );
     } catch (error) {
-      Logger.debug("Add m-reminder error ---->", error);
+      Logger.debug("Add m-reminder error --->", error);
       return raiseServerError(res);
     }
   };
@@ -583,7 +583,7 @@ class MReminderController extends Controller {
         "create medication basic details"
       );
     } catch (error) {
-      Logger.debug("Get m-reminder details error ----> ", error);
+      Logger.debug("Get m-reminder details error ---> ", error);
       return raiseServerError(res);
     }
   };
@@ -847,7 +847,7 @@ class MReminderController extends Controller {
   getMedicationResponseTimeline = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
-      Logger.debug("req.params medication id---->", req.params);
+      Logger.debug("req.params medication id--->", req.params);
       const { params: { id } = {} } = req;
       const EventService = new eventService();
 

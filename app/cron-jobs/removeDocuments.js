@@ -52,10 +52,7 @@ class RemoveDocuments {
       const uploadFolderName = getAWSFolderName(path);
       fs.readdir(path, function (err, files) {
         if (err) {
-          Log.debug(
-            "REMOVE_DOCUMENTS: could not list the directory ---->",
-            err
-          );
+          Log.debug("REMOVE_DOCUMENTS: could not list the directory --->", err);
           return;
         }
         const totalFiles = files.length;
@@ -160,7 +157,7 @@ class RemoveDocuments {
         this.readDirectory(S3_DOWNLOAD_FOLDER);
       }
     } catch (error) {
-      Log.debug("REMOVE_DOCUMENTS runObserver 500 error ---->", error);
+      Log.debug("REMOVE_DOCUMENTS runObserver 500 error --->", error);
     }
   };
 }

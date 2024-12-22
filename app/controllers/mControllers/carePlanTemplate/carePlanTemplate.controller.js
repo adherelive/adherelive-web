@@ -715,7 +715,7 @@ class CarePlanTemplateController extends Controller {
             createCarePlanTemplate
           );
 
-          //------------------>>>
+          //--->
 
           const allCareplanTemplates =
             (await carePlanTemplateService.getAllTemplatesForDoctor({

@@ -357,7 +357,7 @@ class VitalController extends Controller {
   getVitalResponseTimeline = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
-      Log.debug("req.params vital id---->", req.params);
+      Log.debug("req.params vital id--->", req.params);
       const { params: { id } = {} } = req;
       const EventService = new eventService();
 

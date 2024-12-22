@@ -545,7 +545,7 @@ class PatientController extends Controller {
   getPatientSymptoms = async (req, res) => {
     const { raiseSuccess, raiseServerError, raiseClientError } = this;
     try {
-      Logger.debug("req.params ----->", req.params);
+      Logger.debug("req.params --->", req.params);
       const {
         params: { patient_id } = {},
         userDetails: {
@@ -725,7 +725,7 @@ class PatientController extends Controller {
   getPatientPartSymptoms = async (req, res) => {
     const { raiseSuccess, raiseServerError, raiseClientError } = this;
     try {
-      Logger.debug("req.params ----->", req.params);
+      Logger.debug("req.params --->", req.params);
       const {
         query: { duration = "5" } = {},
         params: { patient_id } = {},
@@ -2634,7 +2634,7 @@ class PatientController extends Controller {
         "Payment terms changed successfully."
       );
     } catch (error) {
-      Logger.debug("acceptPaymentsTerms 500 error ----> ", error);
+      Logger.debug("acceptPaymentsTerms 500 error ---> ", error);
       return this.raiseServerError(res);
     }
   };

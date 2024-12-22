@@ -324,7 +324,7 @@ class UserController extends Controller {
         return this.raiseClientError(res, 401, {}, "Invalid Credentials");
       }
     } catch (error) {
-      Logger.debug("signIn 500 error ----> ", error);
+      Logger.debug("signIn 500 error ---> ", error);
 
       // notification
       const crashJob = await AdhocJob.execute("crash", { apiName: "signIn" });
@@ -417,7 +417,7 @@ class UserController extends Controller {
         "Initial data retrieved successfully"
       );
     } catch (error) {
-      Logger.debug("giveConsent 500 error ----> ", error);
+      Logger.debug("giveConsent 500 error ---> ", error);
       return this.raiseServerError(res);
     }
   };
@@ -1464,7 +1464,7 @@ class UserController extends Controller {
         "doctor registration data fetched successfully"
       );
     } catch (error) {
-      Logger.debug("GET DOCTOR REGISTRATION DATA 500 ERROR ---->", error);
+      Logger.debug("GET DOCTOR REGISTRATION DATA 500 ERROR --->", error);
       return raiseServerError(res);
     }
   };
@@ -1563,10 +1563,7 @@ class UserController extends Controller {
         "doctor qualification updated successfully"
       );
     } catch (error) {
-      Logger.debug(
-        "uploadDoctorRegistrationDocuments CATCH ERROR ---->",
-        error
-      );
+      Logger.debug("uploadDoctorRegistrationDocuments CATCH ERROR --->", error);
       return raiseServerError(res);
     }
   };
@@ -1621,10 +1618,7 @@ class UserController extends Controller {
         "doctor registration document deleted successfully"
       );
     } catch (error) {
-      Logger.debug(
-        "DOCTOR REGISTRATION DOCUMENT DELETE 500 ERROR ---->",
-        error
-      );
+      Logger.debug("DOCTOR REGISTRATION DOCUMENT DELETE 500 ERROR --->", error);
       return raiseServerError(res);
     }
   };
@@ -2074,12 +2068,7 @@ class UserController extends Controller {
       const patient_id = patient.get("id");
       const doctor_id = doctor.get("id");
 
-      Logger.debug(
-        "9872683794 ------------->",
-        doctor,
-        doctor.get("id"),
-        doctor_id
-      );
+      Logger.debug("9872683794 --->", doctor, doctor.get("id"), doctor_id);
       const care_plan_template_id = carePlanTemplate
         ? carePlanTemplate.get("id")
         : null;
@@ -2134,10 +2123,7 @@ class UserController extends Controller {
           type: VERIFICATION_TYPE.FORGOT_PASSWORD,
         });
 
-        Logger.debug(
-          "process.config.WEB_URL --------------->",
-          process.config.WEB_URL
-        );
+        Logger.debug("process.config.WEB_URL --->", process.config.WEB_URL);
 
         const emailPayload = {
           toAddress: email,
@@ -2264,7 +2250,7 @@ class UserController extends Controller {
       }
 
       const user = await userService.getUserById(userId);
-      Logger.debug("user -------------->", user);
+      Logger.debug("user --->", user);
       const userData = await UserWrapper(user.get());
 
       const salt = await bcrypt.genSalt(Number(process.config.saltRounds));

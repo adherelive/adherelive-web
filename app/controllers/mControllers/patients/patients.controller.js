@@ -1168,7 +1168,7 @@ class MPatientController extends Controller {
   getPatientSymptoms = async (req, res) => {
     const { raiseSuccess, raiseServerError, raiseClientError } = this;
     try {
-      Logger.debug("req.params ----->", req.params);
+      Logger.debug("req.params --->", req.params);
       const { params: { patient_id } = {}, userDetails: { userId } = {} } = req;
 
       const symptomData = await SymptomService.getAllByData({ patient_id });
@@ -1261,7 +1261,7 @@ class MPatientController extends Controller {
   getPatientPartSymptoms = async (req, res) => {
     const { raiseSuccess, raiseServerError, raiseClientError } = this;
     try {
-      Logger.debug("req.params ----->", req.params);
+      Logger.debug("req.params --->", req.params);
       const { query: { duration = "5" } = {}, params: { patient_id } = {} } =
         req;
 
@@ -2615,7 +2615,7 @@ class MPatientController extends Controller {
         "Payment terms changed successfully."
       );
     } catch (error) {
-      Logger.debug("acceptPaymentsTerms 500 error ----> ", error);
+      Logger.debug("acceptPaymentsTerms 500 error ---> ", error);
       return this.raiseServerError(res);
     }
   };
@@ -2785,7 +2785,7 @@ class MPatientController extends Controller {
         "Payment links data fetched successfully."
       );
     } catch (error) {
-      Logger.debug("getAllRelatedDoctorPaymentLinks 500 error ----> ", error);
+      Logger.debug("getAllRelatedDoctorPaymentLinks 500 error ---> ", error);
       return this.raiseServerError(res);
     }
   };

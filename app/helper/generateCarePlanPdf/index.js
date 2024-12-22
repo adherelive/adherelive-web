@@ -11,9 +11,7 @@ import {
 import moment from "moment";
 import PDFDocument from "pdfkit";
 import { getConvertedTime } from "../getUserTime/index";
-// const PDFDocument = require("pdfkit");
-const fs = require("fs");
-// const moment = require("moment");
+import fs from "fs";
 
 const DOC_MARGIN = 30;
 const DOC_WIDTH_MARGIN = 550;
@@ -1512,7 +1510,7 @@ function isMedicationsUpdatedInExistingMedicin(medications) {
     let created_date = `${moment(new Date(created_at)).format("DD MMM YY")}`;
 
     if (created_date !== updated_date) {
-      // all medicin written in same days an there is no update on medicins
+      // all medicine written in same days an there is no update on medicines
       isMedicinsUpdate = true;
     }
     return isMedicinsUpdate;
@@ -1520,8 +1518,7 @@ function isMedicationsUpdatedInExistingMedicin(medications) {
   return date;
 }
 
-// AKSHAY NEW CODE IMPLEMETATIONS
-
+// AKSHAY NEW CODE IMPLEMENTATIONS
 function renderChiefComplaints({ symptoms }) {
   try {
     let finalSymptom = "";
@@ -1567,7 +1564,6 @@ function printCarePlanData({
     const medicationsList = formatMedicationsData(medications, medicines);
 
     // AKSHAY NEW CODE IMPLEMENTATIONS
-
     let stringSymptomArray = [];
     let stringSymptom = "";
 
