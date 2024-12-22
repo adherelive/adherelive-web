@@ -6,11 +6,11 @@ import ExerciseContentService from "../../services/exerciseContents/exerciseCont
 import EventService from "../../services/scheduleEvents/scheduleEvent.service";
 
 // wrappers
-import WorkoutResponseWrapper from "../../ApiWrapper/web/workoutResponse";
-import WorkoutWrapper from "../../ApiWrapper/web/workouts";
-import EventWrapper from "../../ApiWrapper/common/scheduleEvents";
-import ExerciseContentWrapper from "../../ApiWrapper/web/exerciseContents";
-import CareplanWrapper from "../../ApiWrapper/web/carePlan";
+import WorkoutResponseWrapper from "../../apiWrapper/web/workoutResponse";
+import WorkoutWrapper from "../../apiWrapper/web/workouts";
+import EventWrapper from "../../apiWrapper/common/scheduleEvents";
+import ExerciseContentWrapper from "../../apiWrapper/web/exerciseContents";
+import CareplanWrapper from "../../apiWrapper/web/carePlan";
 import Logger from "../../../libs/log";
 
 const Log = new Logger("WEB > WORKOUT_RESPONSE > CONTROLLER");

@@ -8,11 +8,11 @@ import patientService from "../../services/patients/patients.service";
 import userRolesService from "../../services/userRoles/userRoles.service";
 
 // wrappers
-import TransactionWrapper from "../../ApiWrapper/web/transactions";
-import PaymentProductWrapper from "../../ApiWrapper/web/paymentProducts";
-import DoctorWrapper from "../../ApiWrapper/web/doctor";
-import PatientWrapper from "../../ApiWrapper/web/patient";
-import UserRolesWrapper from "../../ApiWrapper/web/userRoles";
+import TransactionWrapper from "../../apiWrapper/web/transactions";
+import PaymentProductWrapper from "../../apiWrapper/web/paymentProducts";
+import DoctorWrapper from "../../apiWrapper/web/doctor";
+import PatientWrapper from "../../apiWrapper/web/patient";
+import UserRolesWrapper from "../../apiWrapper/web/userRoles";
 
 // helpers
 import { USER_CATEGORY } from "../../../constant";

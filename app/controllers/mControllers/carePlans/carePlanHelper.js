@@ -14,14 +14,14 @@ import WorkoutService from "../../../services/workouts/workout.service";
 // services
 
 // wrappers
-import CarePlanWrapper from "../../../ApiWrapper/mobile/carePlan";
-import AppointmentWrapper from "../../../ApiWrapper/mobile/appointments";
-import MedicationWrapper from "../../../ApiWrapper/mobile/medicationReminder";
-import VitalWrapper from "../../../ApiWrapper/mobile/vitals";
-import PatientWrapper from "../../../ApiWrapper/mobile/patient";
-import DietWrapper from "../../../ApiWrapper/mobile/diet";
-import WorkoutWrapper from "../../../ApiWrapper/mobile/workouts";
-import UserRoleWrapper from "../../../ApiWrapper/mobile/userRoles";
+import CarePlanWrapper from "../../../apiWrapper/mobile/carePlan";
+import AppointmentWrapper from "../../../apiWrapper/mobile/appointments";
+import MedicationWrapper from "../../../apiWrapper/mobile/medicationReminder";
+import VitalWrapper from "../../../apiWrapper/mobile/vitals";
+import PatientWrapper from "../../../apiWrapper/mobile/patient";
+import DietWrapper from "../../../apiWrapper/mobile/diet";
+import WorkoutWrapper from "../../../apiWrapper/mobile/workouts";
+import UserRoleWrapper from "../../../apiWrapper/mobile/userRoles";
 
 import Logger from "../../../../libs/log";
 import {

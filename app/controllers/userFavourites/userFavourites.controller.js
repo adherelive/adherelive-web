@@ -7,8 +7,8 @@ import Logger from "../../../libs/log";
 import UserFavouritesService from "../../services/userFavourites/userFavourites.service";
 
 // WRAPPERS...
-import UserFavouritesWrapper from "../../ApiWrapper/web/userFavourites";
-import UserWrapper from "../../ApiWrapper/web/user";
+import UserFavouritesWrapper from "../../apiWrapper/web/userFavourites";
+import UserWrapper from "../../apiWrapper/web/user";
 import { FAVOURITE_TYPE } from "../../../constant";
 
 const Log = new Logger("WEB > CONTROLLER > USER_FAVOURITES");

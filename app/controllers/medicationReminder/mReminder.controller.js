@@ -13,13 +13,13 @@ import ScheduleEventService from "../../services/scheduleEvents/scheduleEvent.se
 import eventService from "../../services/scheduleEvents/scheduleEvent.service";
 
 // API WRAPPERS ----------------------------------------------
-import MedicationWrapper from "../../ApiWrapper/web/medicationReminder";
-import MedicineWrapper from "../../ApiWrapper/web/medicine";
-import CarePlanWrapper from "../../ApiWrapper/web/carePlan";
-import PatientWrapper from "../../ApiWrapper/web/patient";
-// import DoctorWrapper from "../../ApiWrapper/web/doctor";
-import UserPreferenceWrapper from "../../ApiWrapper/web/userPreference";
-import EventWrapper from "../../ApiWrapper/common/scheduleEvents";
+import MedicationWrapper from "../../apiWrapper/web/medicationReminder";
+import MedicineWrapper from "../../apiWrapper/web/medicine";
+import CarePlanWrapper from "../../apiWrapper/web/carePlan";
+import PatientWrapper from "../../apiWrapper/web/patient";
+// import DoctorWrapper from "../../apiWrapper/web/doctor";
+import UserPreferenceWrapper from "../../apiWrapper/web/userPreference";
+import EventWrapper from "../../apiWrapper/common/scheduleEvents";
 
 import * as medicationHelper from "./medicationHelper";
 import { getTime } from "../../helper/timer";
@@ -52,8 +52,8 @@ import {
   getCarePlanSeverityDetails,
 } from "../carePlans/carePlanHelper";
 import { RRule } from "rrule";
-import MedicationJob from "../../JobSdk/Medications/observer";
-import NotificationSdk from "../../NotificationSdk";
+import MedicationJob from "../../jobSdk/Medications/observer";
+import NotificationSdk from "../../notificationSdk";
 
 const FILE_NAME = "WEB - MEDICATION REMINDER CONTROLLER";
 const Logger = new Log(FILE_NAME);

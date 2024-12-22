@@ -14,16 +14,16 @@ import WorkoutResponseService from "../../../services/workoutResponses/workoutRe
 // import WorkoutTemplateService from "../../../services/workoutTemplates/workoutTemplate.service";
 
 // wrappers
-import WorkoutWrapper from "../../../ApiWrapper/mobile/workouts";
-import CareplanWrapper from "../../../ApiWrapper/mobile/carePlan";
-import PatientWrapper from "../../../ApiWrapper/mobile/patient";
-import ExerciseContentWrapper from "../../../ApiWrapper/mobile/exerciseContents";
-import WorkoutResponseWrapper from "../../../ApiWrapper/mobile/workoutResponse";
-import EventWrapper from "../../../ApiWrapper/common/scheduleEvents";
-// import WorkoutTemplateWrapper from "../../../ApiWrapper/mobile/workoutTemplates";
+import WorkoutWrapper from "../../../apiWrapper/mobile/workouts";
+import CareplanWrapper from "../../../apiWrapper/mobile/carePlan";
+import PatientWrapper from "../../../apiWrapper/mobile/patient";
+import ExerciseContentWrapper from "../../../apiWrapper/mobile/exerciseContents";
+import WorkoutResponseWrapper from "../../../apiWrapper/mobile/workoutResponse";
+import EventWrapper from "../../../apiWrapper/common/scheduleEvents";
+// import WorkoutTemplateWrapper from "../../../apiWrapper/mobile/workoutTemplates";
 
-import WorkoutJob from "../../../JobSdk/Workout/observer";
-import NotificationSdk from "../../../NotificationSdk";
+import WorkoutJob from "../../../jobSdk/Workout/observer";
+import NotificationSdk from "../../../notificationSdk";
 
 import {
   DAYS,

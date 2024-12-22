@@ -12,7 +12,7 @@ import {
 
 import userPreferenceService from "../../../services/userPreferences/userPreference.service";
 
-import UserPreferenceWrapper from "../../../ApiWrapper/mobile/userPreference";
+import UserPreferenceWrapper from "../../../apiWrapper/mobile/userPreference";
 
 const Logger = new Log("WEB GRAPH CONTROLLER");
 

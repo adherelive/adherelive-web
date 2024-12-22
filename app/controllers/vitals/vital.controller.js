@@ -11,12 +11,12 @@ import ScheduleEventService from "../../services/scheduleEvents/scheduleEvent.se
 import carePlanService from "../../services/carePlan/carePlan.service";
 
 // WRAPPERS
-import VitalTemplateWrapper from "../../ApiWrapper/web/vitalTemplates";
-import VitalWrapper from "../../ApiWrapper/web/vitals";
-import FeatureDetailWrapper from "../../ApiWrapper/web/featureDetails";
-import CarePlanWrapper from "../../ApiWrapper/web/carePlan";
-import DoctorWrapper from "../../ApiWrapper/web/doctor";
-import PatientWrapper from "../../ApiWrapper/web/patient";
+import VitalTemplateWrapper from "../../apiWrapper/web/vitalTemplates";
+import VitalWrapper from "../../apiWrapper/web/vitals";
+import FeatureDetailWrapper from "../../apiWrapper/web/featureDetails";
+import CarePlanWrapper from "../../apiWrapper/web/carePlan";
+import DoctorWrapper from "../../apiWrapper/web/doctor";
+import PatientWrapper from "../../apiWrapper/web/patient";
 
 import {
   DAYS,
@@ -29,9 +29,9 @@ import {
 import moment from "moment";
 
 import eventService from "../../services/scheduleEvents/scheduleEvent.service";
-import EventWrapper from "../../ApiWrapper/common/scheduleEvents";
-import JobSdk from "../../JobSdk";
-import NotificationSdk from "../../NotificationSdk";
+import EventWrapper from "../../apiWrapper/common/scheduleEvents";
+import JobSdk from "../../jobSdk";
+import NotificationSdk from "../../notificationSdk";
 
 const Log = new Logger("WEB > VITALS > CONTROLLER");
 

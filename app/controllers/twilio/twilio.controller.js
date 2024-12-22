@@ -1,10 +1,9 @@
 import faker from "faker";
 import twilioService from "../../services/twilio/twilio.service";
 import Controller from "../";
-
-import Log from "../../../libs/log_new";
-
-Log.fileName("WEB > TWILIO > CONTROLLER");
+import Log from "../../../libs/log";
+const log = Log("WEB > TWILIO > CONTROLLER");
+// Log.fileName("WEB > TWILIO > CONTROLLER");
 
 class TwilioController extends Controller {
   constructor() {
@@ -26,7 +25,7 @@ class TwilioController extends Controller {
         "Created new chat token with userId"
       );
     } catch (error) {
-      Log.debug("generateTwilioChatAccessToken 500 error", error);
+      log.debug("generateTwilioChatAccessToken 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -49,7 +48,7 @@ class TwilioController extends Controller {
         "Created new video token"
       );
     } catch (error) {
-      Log.debug("generateTwilioVideoAccessToken 500 error", error);
+      log.debug("generateTwilioVideoAccessToken 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -74,7 +73,7 @@ class TwilioController extends Controller {
         "Fetched Connected Participants"
       );
     } catch (error) {
-      Log.debug("getConnectedParticipants 500 error", error);
+      log.debug("getConnectedParticipants 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -86,7 +85,7 @@ class TwilioController extends Controller {
 
       return raiseSuccess(res, 200, {}, "DELETED ALL CHAT MESSAGES");
     } catch (error) {
-      Log.debug("deleteChat 500 error", error);
+      log.debug("deleteChat 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -96,11 +95,11 @@ class TwilioController extends Controller {
     try {
       const allChannels = await twilioService.getAllMessages();
 
-      Log.debug("all Channels", allChannels);
+      log.debug("all Channels", allChannels);
 
       return raiseSuccess(res, 200, {}, "GET ALL CHAT MESSAGES");
     } catch (error) {
-      Log.debug("deleteChat 500 error", error);
+      log.debug("deleteChat 500 error", error);
       return raiseServerError(res);
     }
   };

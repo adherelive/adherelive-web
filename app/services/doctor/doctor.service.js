@@ -1,6 +1,6 @@
 import Database from "../../../libs/mysql";
 import { TABLE_NAME } from "../../models/doctors";
-import { TABLE_NAME as watchlistTableName } from "../../models/doctor_patient_watchlist";
+import { TABLE_NAME as watchlistTableName } from "../../models/doctorPatientWatchlist";
 import { TABLE_NAME as specialityTableName } from "../../models/specialities";
 import { TABLE_NAME as userTableName } from "../../models/users";
 import { Op } from "sequelize";

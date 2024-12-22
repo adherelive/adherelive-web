@@ -25,8 +25,8 @@ import {
   getCarePlanMedicationIds,
   getCarePlanSeverityDetails,
 } from "../../carePlans/carePlanHelper";
-import MedicationJob from "../../../JobSdk/Medications/observer";
-import NotificationSdk from "../../../NotificationSdk";
+import MedicationJob from "../../../jobSdk/Medications/observer";
+import NotificationSdk from "../../../notificationSdk";
 
 // SERVICES...
 import doctorService from "../../../services/doctor/doctor.service";
@@ -38,13 +38,13 @@ import carePlanMedicationService from "../../../services/carePlanMedication/care
 import userPreferenceService from "../../../services/userPreferences/userPreference.service";
 
 // WRAPPERS...
-import DoctorWrapper from "../../../ApiWrapper/mobile/doctor";
-import PatientWrapper from "../../../ApiWrapper/mobile/patient";
-import MobileMReminderWrapper from "../../../ApiWrapper/mobile/medicationReminder";
-import MedicineApiWrapper from "../../../ApiWrapper/mobile/medicine";
-import CarePlanWrapper from "../../../ApiWrapper/mobile/carePlan";
-import MedicationWrapper from "../../../ApiWrapper/mobile/medicationReminder";
-import UserPreferenceWrapper from "../../../ApiWrapper/mobile/userPreference";
+import DoctorWrapper from "../../../apiWrapper/mobile/doctor";
+import PatientWrapper from "../../../apiWrapper/mobile/patient";
+import MobileMReminderWrapper from "../../../apiWrapper/mobile/medicationReminder";
+import MedicineApiWrapper from "../../../apiWrapper/mobile/medicine";
+import CarePlanWrapper from "../../../apiWrapper/mobile/carePlan";
+import MedicationWrapper from "../../../apiWrapper/mobile/medicationReminder";
+import UserPreferenceWrapper from "../../../apiWrapper/mobile/userPreference";
 
 import * as medicationHelper from "../../medicationReminder/medicationHelper";
 

@@ -1,19 +1,21 @@
 import FollowUpActivity from "./followUp";
 import ReminderActivity from "./reminder";
 import MedicationReminderActivity from "./medicationReminder";
+import Log from "../../libs/log";
+const log = new Log("activitySdk:ActivityObserver");
 
-const Log = require("../../libs/log")("activitySdk:ActivityObserver");
+//const Log = require("../../libs/log")("activitySdk:ActivityObserver");
 
 class ActivityObserver {
   constructor() {}
 
   runObservers() {
     FollowUpActivity.runObservers();
-    Log.info(`Observing FOLLOWUP activity..!!`);
+    log.info(`Observing FOLLOWUP activity..!!`);
     ReminderActivity.runObservers();
-    Log.info(`Observing REMINDER activity..!!`);
+    log.info(`Observing REMINDER activity..!!`);
     MedicationReminderActivity.runObservers();
-    Log.info(`Observing MEDICATION_REMINDER activity..!!`);
+    log.info(`Observing MEDICATION_REMINDER activity..!!`);
   }
 }
 

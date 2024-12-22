@@ -8,16 +8,16 @@ import EventService from "../../../services/scheduleEvents/scheduleEvent.service
 import DietResponsesService from "../../../services/dietResponses/dietResponses.service";
 
 // Wrappers
-import CareplanWrapper from "../../../ApiWrapper/web/carePlan";
-import DietWrapper from "../../../ApiWrapper/mobile/diet";
-import PatientWrapper from "../../../ApiWrapper/mobile/patient";
-import UserPreferenceWrapper from "../../../ApiWrapper/mobile/userPreference";
-import EventWrapper from "../../../ApiWrapper/common/scheduleEvents";
-import DietResponseWrapper from "../../../ApiWrapper/mobile/dietResponse";
+import CareplanWrapper from "../../../apiWrapper/web/carePlan";
+import DietWrapper from "../../../apiWrapper/mobile/diet";
+import PatientWrapper from "../../../apiWrapper/mobile/patient";
+import UserPreferenceWrapper from "../../../apiWrapper/mobile/userPreference";
+import EventWrapper from "../../../apiWrapper/common/scheduleEvents";
+import DietResponseWrapper from "../../../apiWrapper/mobile/dietResponse";
 
 import * as DietHelper from "../../diet/dietHelper";
-import DietJob from "../../../JobSdk/Diet/observer";
-import NotificationSdk from "../../../NotificationSdk";
+import DietJob from "../../../jobSdk/Diet/observer";
+import NotificationSdk from "../../../notificationSdk";
 
 import { getTimeWiseDietFoodGroupMappings } from "../../diet/dietHelper";
 

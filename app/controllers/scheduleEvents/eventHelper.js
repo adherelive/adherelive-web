@@ -11,13 +11,13 @@ import patientService from "../../services/patients/patients.service";
 import userRoleService from "../../services/userRoles/userRoles.service";
 import doctorService from "../../services/doctor/doctor.service";
 // wrappers
-import CarePlanWrapper from "../../ApiWrapper/web/carePlan";
-import EventWrapper from "../../ApiWrapper/common/scheduleEvents";
-import PatientWrapper from "../../ApiWrapper/web/patient";
-import DoctorWrapper from "../../ApiWrapper/web/doctor";
-import UserRoleWrapper from "../../ApiWrapper/web/userRoles";
-import DietWrapper from "../../ApiWrapper/web/diet";
-import WorkoutWrppaer from "../../ApiWrapper/web/workouts";
+import CarePlanWrapper from "../../apiWrapper/web/carePlan";
+import EventWrapper from "../../apiWrapper/common/scheduleEvents";
+import PatientWrapper from "../../apiWrapper/web/patient";
+import DoctorWrapper from "../../apiWrapper/web/doctor";
+import UserRoleWrapper from "../../apiWrapper/web/userRoles";
+import DietWrapper from "../../apiWrapper/web/diet";
+import WorkoutWrppaer from "../../apiWrapper/web/workouts";
 import { getTime } from "../../helper/timer";
 
 export const doctorChart = async (req) => {

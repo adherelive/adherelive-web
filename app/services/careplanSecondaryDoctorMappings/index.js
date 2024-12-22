@@ -1,4 +1,4 @@
-export default class CareplanSecondaryDoctorMappings {
+export default class CarePlanSecondaryDoctorMappings {
   constructor(data) {
     this._data = data;
   }

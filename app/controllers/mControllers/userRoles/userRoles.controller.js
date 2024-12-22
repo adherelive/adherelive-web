@@ -3,15 +3,15 @@ import Logger from "../../../../libs/log";
 import jwt from "jsonwebtoken";
 import base64 from "js-base64";
 
-import AppNotification from "../../../NotificationSdk/inApp";
+import AppNotification from "../../../notificationSdk/inApp";
 
 // SERVICES --------------------------------
 import userRoleService from "../../../services/userRoles/userRoles.service";
 import userService from "../../../services/user/user.service";
 
 //WRAPPERS
-import UserRoleWrapper from "../../../ApiWrapper/mobile/userRoles";
-import UserWrapper from "../../../ApiWrapper/mobile/user";
+import UserRoleWrapper from "../../../apiWrapper/mobile/userRoles";
+import UserWrapper from "../../../apiWrapper/mobile/user";
 
 const Log = new Logger("MOBILE > CONTROLLER > USER_ROLES");
 

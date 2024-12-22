@@ -12,18 +12,18 @@ import twilioService from "../../../services/twilio/twilio.service";
 import queueService from "../../../services/awsQueue/queue.service";
 
 // WRAPPERS
-import VitalTemplateWrapper from "../../../ApiWrapper/mobile/vitalTemplates";
-import VitalWrapper from "../../../ApiWrapper/mobile/vitals";
-import FeatureDetailWrapper from "../../../ApiWrapper/mobile/featureDetails";
-import EventWrapper from "../../../ApiWrapper/common/scheduleEvents";
-import CarePlanWrapper from "../../../ApiWrapper/mobile/carePlan";
-import DoctorWrapper from "../../../ApiWrapper/mobile/doctor";
-import PatientWrapper from "../../../ApiWrapper/mobile/patient";
+import VitalTemplateWrapper from "../../../apiWrapper/mobile/vitalTemplates";
+import VitalWrapper from "../../../apiWrapper/mobile/vitals";
+import FeatureDetailWrapper from "../../../apiWrapper/mobile/featureDetails";
+import EventWrapper from "../../../apiWrapper/common/scheduleEvents";
+import CarePlanWrapper from "../../../apiWrapper/mobile/carePlan";
+import DoctorWrapper from "../../../apiWrapper/mobile/doctor";
+import PatientWrapper from "../../../apiWrapper/mobile/patient";
 
-import JobSdk from "../../../JobSdk";
-import NotificationSdk from "../../../NotificationSdk";
+import JobSdk from "../../../jobSdk";
+import NotificationSdk from "../../../notificationSdk";
 
-import ChatJob from "../../../JobSdk/Chat/observer";
+import ChatJob from "../../../jobSdk/Chat/observer";
 import {
   DAYS,
   EVENT_STATUS,
@@ -427,7 +427,7 @@ class VitalController extends Controller {
       //   MESSAGE_TYPES.USER_MESSAGE,
       //   eventData
       // );
-      // await NotificationSdk.execute(chatJob);
+      // await notificationSdk.execute(chatJob);
 
       const eventScheduleData = {
         type: EVENT_TYPE.VITALS,

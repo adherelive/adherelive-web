@@ -11,10 +11,10 @@ import { TABLE_NAME as serviceUserMapping } from "./serviceUserMapping";
 import { TABLE_NAME as patientsTableName } from "./patients";
 import { TABLE_NAME as doctorsTableName } from "./doctors";
 import { TABLE_NAME as serviceOffering } from "./serviceOffering";
-import { TABLE_NAME as serviceSubscription } from "./serviceSubecriptions";
+import { TABLE_NAME as serviceSubscription } from "./serviceSubscriptions";
 import { TABLE_NAME as providersTableName } from "./providers";
 import { TABLE_NAME as appointmentTableName } from "./appointments";
-import { TABLE_NAME as serviceSubTxTableName } from "./serviceSubscribeTranaction";
+import { TABLE_NAME as serviceSubTxTableName } from "./serviceSubscribeTransaction";
 
 export const TABLE_NAME = "tranaction_activities";
 

@@ -1,6 +1,6 @@
 "use strict";
 import { TABLE_NAME } from "../app/models/serviceSubscriptionUserMapping";
-import { TABLE_NAME as subscribePlanTableName } from "../app/models/serviceSubecriptions";
+import { TABLE_NAME as subscribePlanTableName } from "../app/models/serviceSubscriptions";
 import { TABLE_NAME as patientsTableName } from "../app/models/patients";
 import { TABLE_NAME as doctorsTableName } from "../app/models/doctors";
 import { TABLE_NAME as providersTableName } from "../app/models/providers";

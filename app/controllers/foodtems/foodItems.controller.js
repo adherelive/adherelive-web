@@ -5,10 +5,10 @@ import FoodItemService from "../../services/foodItems/foodItems.service";
 // import FoodItemDetailService from "../../services/foodItemDetails/foodItemDetails.service";
 
 //wrappers
-import FoodItemWrapper from "../../ApiWrapper/web/foodItem";
-import FoodItemDetailsWrapper from "../../ApiWrapper/web/foodItemDetails";
-// import PortionWrapper from "../../ApiWrapper/web/portions";
-// import DoctorWrapper from "../../ApiWrapper/web/doctor";
+import FoodItemWrapper from "../../apiWrapper/web/foodItem";
+import FoodItemDetailsWrapper from "../../apiWrapper/web/foodItemDetails";
+// import PortionWrapper from "../../apiWrapper/web/portions";
+// import DoctorWrapper from "../../apiWrapper/web/doctor";
 
 import Log from "../../../libs/log";
 import { USER_CATEGORY } from "../../../constant";

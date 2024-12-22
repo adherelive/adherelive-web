@@ -3,10 +3,10 @@ import Controller from "../index";
 import accountDetailsService from "../../services/accountDetails/accountDetails.service";
 import userService from "../../services/user/user.service";
 
-import AccountsWrapper from "../../ApiWrapper/web/accountsDetails";
-import UserWrapper from "../../ApiWrapper/web/user";
-import DoctorWrapper from "../../ApiWrapper/web/doctor";
-import ProviderWrapper from "../../ApiWrapper/web/provider";
+import AccountsWrapper from "../../apiWrapper/web/accountsDetails";
+import UserWrapper from "../../apiWrapper/web/user";
+import DoctorWrapper from "../../apiWrapper/web/doctor";
+import ProviderWrapper from "../../apiWrapper/web/provider";
 
 import Log from "../../../libs/log";
 

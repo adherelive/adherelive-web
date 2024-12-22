@@ -1,6 +1,6 @@
 import Controller from "../";
 import PortionService from "../../services/portions/portions.service";
-import PortionWrapper from "../../ApiWrapper/web/portions";
+import PortionWrapper from "../../apiWrapper/web/portions";
 
 import Log from "../../../libs/log";
 

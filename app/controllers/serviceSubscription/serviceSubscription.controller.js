@@ -52,11 +52,11 @@ class ServiceSubscriptionController extends Controller {
     }
 
     try {
-      let serviceSubecription = req.body;
+      let serviceSubscription = req.body;
       const serviceSubscriptionService = new ServiceSubscriptionService();
-      serviceSubecription =
+      serviceSubscription =
         await serviceSubscriptionService.addServiceSubscription({
-          ...serviceSubecription,
+          ...serviceSubscription,
           ...data,
         });
 
@@ -64,7 +64,7 @@ class ServiceSubscriptionController extends Controller {
         res,
         200,
         {
-          serviceSubecription,
+          serviceSubscription,
         },
         "Subscription added successfully"
       );
@@ -88,13 +88,13 @@ class ServiceSubscriptionController extends Controller {
         );
       }
       const serviceSubscriptionService = new ServiceSubscriptionService();
-      let serviceSubecription =
+      let serviceSubscription =
         await serviceSubscriptionService.updateServiceSubscription(body, id);
       return raiseSuccess(
         res,
         200,
         {
-          ...serviceSubecription,
+          ...serviceSubscription,
         },
         "Service updated successfully"
       );
@@ -120,7 +120,7 @@ class ServiceSubscriptionController extends Controller {
       }
       let data = { id };
       const serviceSubscriptionService = new ServiceSubscriptionService();
-      let serviceSubecription =
+      let serviceSubscription =
         await serviceSubscriptionService.getServiceSubscriptionByData(data);
 
       const serviceSubscriptionMapping = new ServiceSubscriptionMapping();
@@ -129,13 +129,13 @@ class ServiceSubscriptionController extends Controller {
         await serviceSubscriptionMapping.getAllServiceSubscriptionMappingByData(
           servicedata
         );
-      serviceSubecription.services = services;
+      serviceSubscription.services = services;
 
       return raiseSuccess(
         res,
         200,
         {
-          ...serviceSubecription,
+          ...serviceSubscription,
         },
         "success"
       );

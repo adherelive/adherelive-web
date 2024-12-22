@@ -6,8 +6,8 @@ import SymptomService from "../../services/symptom/symptom.service";
 // import DocumentService from "../../services/uploadDocuments/uploadDocuments.service";
 
 // WRAPPERS
-import SymptomWrapper from "../../ApiWrapper/web/symptoms";
-import DocumentWrapper from "../../ApiWrapper/web/uploadDocument";
+import SymptomWrapper from "../../apiWrapper/web/symptoms";
+import DocumentWrapper from "../../apiWrapper/web/uploadDocument";
 
 import { DOCUMENT_PARENT_TYPE } from "../../../constant";
 

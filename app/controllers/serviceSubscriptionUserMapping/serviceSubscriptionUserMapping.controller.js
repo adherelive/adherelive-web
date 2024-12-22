@@ -6,10 +6,10 @@ import ServiceUserMappingService from "../../services/serviceUserMapping/service
 import ServiceSubscriptionService from "../../services/serviceSubscription/serviceSubscription.service";
 import ServiceSubscriptionMapping from "../../services/serviceSubscriptionMapping/serviceSubscritpionMapping.service";
 import ServiceOffering from "../../services/serviceOffering/serviceOffering.service";
-import TxService from "../../services/serviceSubscribeTranaction/serviceSubscribeTranaction";
+import TxService from "../../services/serviceSubscribeTransaction/serviceSubscribeTransaction";
 import doctorService from "../../services/doctor/doctor.service";
 import providerService from "../../services/provider/provider.service";
-import ProviderWrapper from "../../ApiWrapper/web/provider";
+import ProviderWrapper from "../../apiWrapper/web/provider";
 import { USER_CATEGORY, USER_STATUS } from "../../../constant";
 
 const Log = new Logger("WEB > CONTROLLER > Service Offering");
@@ -163,7 +163,7 @@ class ServiceSubscriptionUserMappingController extends Controller {
         let data = { id: subId };
         let serviceSubscriptionService = new ServiceSubscriptionService();
 
-        let serviceSubecription =
+        let serviceSubscription =
           await serviceSubscriptionService.getServiceSubscriptionByData(data);
 
         const serviceSubscriptionMapping = new ServiceSubscriptionMapping();
@@ -173,9 +173,9 @@ class ServiceSubscriptionUserMappingController extends Controller {
           await serviceSubscriptionMapping.getAllServiceSubscriptionMappingByData(
             servicedata
           );
-        serviceSubecription.services = services;
+        serviceSubscription.services = services;
 
-        response[subId] = { ...serviceSubecription };
+        response[subId] = { ...serviceSubscription };
       }
 
       return raiseSuccess(
@@ -261,7 +261,7 @@ class ServiceSubscriptionUserMappingController extends Controller {
 
       let serviceSubscriptionService = new ServiceSubscriptionService();
 
-      let serviceSubecription =
+      let serviceSubscription =
         await serviceSubscriptionService.getAllServiceSubscriptionByData(data);
 
       const serviceSubscriptionMapping = new ServiceSubscriptionMapping();
@@ -271,15 +271,15 @@ class ServiceSubscriptionUserMappingController extends Controller {
         await serviceSubscriptionMapping.getAllServiceSubscriptionMappingByData(
           servicedata
         );
-      // serviceSubecription.services = {...services};
+      // serviceSubscription.services = {...services};
 
       response[userServicesSubscriptions[userServicesSubscription]["id"]] = {
         ...userServicesSubscriptions[userServicesSubscription],
-        subscriptions: { ...serviceSubecription[0] },
+        subscriptions: { ...serviceSubscription[0] },
         details: userServicesSubscriptions[userServicesSubscription],
         services: { ...services },
       };
-      // response.push({...serviceSubecription});
+      // response.push({...serviceSubscription});
     }
 
     let servicesSubResponse = response;
@@ -505,7 +505,7 @@ class ServiceSubscriptionUserMappingController extends Controller {
 
         let serviceSubscriptionService = new ServiceSubscriptionService();
 
-        let serviceSubecription =
+        let serviceSubscription =
           await serviceSubscriptionService.getAllServiceSubscriptionByData(
             data
           );
@@ -517,14 +517,14 @@ class ServiceSubscriptionUserMappingController extends Controller {
           await serviceSubscriptionMapping.getAllServiceSubscriptionMappingByData(
             servicedata
           );
-        // serviceSubecription.services = {...services};
+        // serviceSubscription.services = {...services};
 
         response[userServicesSubscriptions[userServicesSubscription]["id"]] = {
-          ...serviceSubecription[0],
+          ...serviceSubscription[0],
           details: userServicesSubscriptions[userServicesSubscription],
           services: { ...services },
         };
-        // response.push({...serviceSubecription});
+        // response.push({...serviceSubscription});
       }
 
       let servicesSubResponse = response;

@@ -15,14 +15,14 @@ import DietService from "../../services/diet/diet.service";
 import WorkoutService from "../../services/workouts/workout.service";
 
 // wrappers
-import CarePlanWrapper from "../../ApiWrapper/web/carePlan";
-import AppointmentWrapper from "../../ApiWrapper/web/appointments";
-import MedicationWrapper from "../../ApiWrapper/web/medicationReminder";
-import VitalWrapper from "../../ApiWrapper/web/vitals";
-import PatientWrapper from "../../ApiWrapper/web/patient";
-import DietWrapper from "../../ApiWrapper/web/diet";
-import WorkoutWrapper from "../../ApiWrapper/web/workouts";
-import UserRoleWrapper from "../../ApiWrapper/web/userRoles";
+import CarePlanWrapper from "../../apiWrapper/web/carePlan";
+import AppointmentWrapper from "../../apiWrapper/web/appointments";
+import MedicationWrapper from "../../apiWrapper/web/medicationReminder";
+import VitalWrapper from "../../apiWrapper/web/vitals";
+import PatientWrapper from "../../apiWrapper/web/patient";
+import DietWrapper from "../../apiWrapper/web/diet";
+import WorkoutWrapper from "../../apiWrapper/web/workouts";
+import UserRoleWrapper from "../../apiWrapper/web/userRoles";
 
 import Logger from "../../../libs/log";
 import {

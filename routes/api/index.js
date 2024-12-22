@@ -6,8 +6,8 @@ import jwt from "jsonwebtoken";
 import userService from "../../app/services/user/user.service";
 import userRolesService from "../../app/services/userRoles/userRoles.service";
 
-import UserWrapper from "../../app/ApiWrapper/web/user";
-import UserRoleWrapper from "../../app/ApiWrapper/mobile/userRoles";
+import UserWrapper from "../../app/apiWrapper/web/user";
+import UserRoleWrapper from "../../app/apiWrapper/mobile/userRoles";
 
 import Logger from "../../libs/log";
 
@@ -58,7 +58,7 @@ import serviceOfferingRouter from "./serviceOffering";
 import serviceSubscriptionRouter from "./serviceSubscription";
 import serviceUserMappingRouter from "./serviceUserMapping";
 import serviceSubscriptionUserMapping from "./serviceSubscriptionUserMapping";
-import serviceSubscribeTxRouter from "./serviceSubscribeTranaction";
+import serviceSubscribeTxRouter from "./serviceSubscribeTransaction";
 import TxActivitiesRouter from "./transactionActivity";
 import FlashCardRouter from "./flashCard";
 import reassignAudit from "./reassignAudit";

@@ -13,8 +13,8 @@ import {
 import userPreferenceService from "../../services/userPreferences/userPreference.service";
 import ProviderService from "../../services/provider/provider.service";
 
-import UserPreferenceWrapper from "../../ApiWrapper/web/userPreference";
-import ProviderWrapper from "../../ApiWrapper/web/provider";
+import UserPreferenceWrapper from "../../apiWrapper/web/userPreference";
+import ProviderWrapper from "../../apiWrapper/web/provider";
 import userRolesService from "../../services/userRoles/userRoles.service";
 
 const Logger = new Log("WEB GRAPH CONTROLLER");

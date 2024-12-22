@@ -39,7 +39,6 @@ DB_DIALECT=mysql
 
 # MongoDB parameters
 MONGO_DB_URI=mongodb+srv://adherelive:Q3xbZbp5f7O0AqR4@adherelive.aqaaqxe.mongodb.net/?retryWrites=true&w=majority
-#MONGO_DB_URI="mongodb://172.18.0.1:30000/adhere"
 
 SALT_ROUNDS=5
 
@@ -131,7 +130,7 @@ GOOGLE_REDIRECT_URI=postmessage
 FACEBOOK_APP_TOKEN=279463729603660
 FACEBOOK_SECRET_TOKEN=1f756a8c109e56b9476e41c0fac468a8
 
-COOKIE_KEY=["cookey938"]
+COOKIE_KEY=["cookie938"]
 
 FORCE_COLOR=1
 

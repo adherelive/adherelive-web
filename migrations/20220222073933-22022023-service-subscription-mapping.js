@@ -1,7 +1,7 @@
 "use strict";
 
 import { TABLE_NAME } from "../app/models/serviceSubscriptionMapping";
-import { TABLE_NAME as subscribePlanTableName } from "../app/models/serviceSubecriptions";
+import { TABLE_NAME as subscribePlanTableName } from "../app/models/serviceSubscriptions";
 import { TABLE_NAME as serviceOfferingTableName } from "../app/models/serviceOffering";
 
 module.exports = {

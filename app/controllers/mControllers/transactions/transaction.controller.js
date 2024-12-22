@@ -10,14 +10,14 @@ import doctorProviderMappingService from "../../../services/doctorProviderMappin
 import userRolesService from "../../../services/userRoles/userRoles.service";
 
 // WRAPPERS ...
-import PaymentProductWrapper from "../../../ApiWrapper/mobile/paymentProducts";
-import TransactionWrapper from "../../../ApiWrapper/mobile/transactions";
-import DoctorWrapper from "../../../ApiWrapper/mobile/doctor";
-import SubscriptionWrapper from "../../../ApiWrapper/mobile/subscriptions";
-import AccountDetailsWrapper from "../../../ApiWrapper/mobile/accountDetails";
-import DoctorProviderMappingWrapper from "../../../ApiWrapper/web/doctorProviderMapping";
+import PaymentProductWrapper from "../../../apiWrapper/mobile/paymentProducts";
+import TransactionWrapper from "../../../apiWrapper/mobile/transactions";
+import DoctorWrapper from "../../../apiWrapper/mobile/doctor";
+import SubscriptionWrapper from "../../../apiWrapper/mobile/subscriptions";
+import AccountDetailsWrapper from "../../../apiWrapper/mobile/accountDetails";
+import DoctorProviderMappingWrapper from "../../../apiWrapper/web/doctorProviderMapping";
 // used for web as no ui for provider on mobile
-import ProviderWrapper from "../../../ApiWrapper/web/provider";
+import ProviderWrapper from "../../../apiWrapper/web/provider";
 
 // MODELS ...
 import { CHECKOUT, STATUS, UPI } from "../../../models/transactions";

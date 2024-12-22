@@ -5,12 +5,12 @@ import providerService from "../../../services/provider/provider.service";
 import appointmentService from "../../../services/appointment/appointment.service";
 import UserRoleService from "../../../services/userRoles/userRoles.service";
 import DoctorService from "../../../services/doctor/doctor.service";
-import UserWrapper from "../../../ApiWrapper/web/user";
-import DoctorWrapper from "../../../ApiWrapper/web/doctor";
-import ProviderWrapper from "../../../ApiWrapper/web/provider";
-import AppointmentWrapper from "../../../ApiWrapper/web/appointments";
-import PatientWrapper from "../../../ApiWrapper/web/patient";
-import UserRoleWrapper from "../../../ApiWrapper/web/userRoles";
+import UserWrapper from "../../../apiWrapper/web/user";
+import DoctorWrapper from "../../../apiWrapper/web/doctor";
+import ProviderWrapper from "../../../apiWrapper/web/provider";
+import AppointmentWrapper from "../../../apiWrapper/web/appointments";
+import PatientWrapper from "../../../apiWrapper/web/patient";
+import UserRoleWrapper from "../../../apiWrapper/web/userRoles";
 import { USER_CATEGORY } from "../../../../constant";
 
 const Logger = new Log("MOBILE > PROVIDERS > CONTROLLER");

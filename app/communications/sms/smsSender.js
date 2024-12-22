@@ -1,5 +1,7 @@
-const AWS = require("aws-sdk");
-const log = require("../../../libs/log")("communications ---> smsManger");
+import AWS from "aws-sdk";
+// const log = require("../../../libs/log")("communications ---> smsManger");
+import Log from "../../../libs/log";
+const log = Log("communications ---> smsManger");
 const axios = require("axios");
 
 class SmsManager {

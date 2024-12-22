@@ -10,7 +10,7 @@ import userRolesService from "../../services/userRoles/userRoles.service";
 import doctorService from "../../services/doctor/doctor.service";
 
 // WRAPPERS...
-import PaymentProductWrapper from "../../ApiWrapper/web/paymentProducts";
+import PaymentProductWrapper from "../../apiWrapper/web/paymentProducts";
 import { USER_CATEGORY } from "../../../constant";
 
 const Log = new Logger("WEB > CONTROLLER > PAYMENTS");

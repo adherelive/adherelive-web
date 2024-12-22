@@ -8,15 +8,15 @@ import ExerciseContentService from "../../../services/exerciseContents/exerciseC
 import carePlanService from "../../../services/carePlan/carePlan.service";
 
 // wrappers
-import WorkoutResponseWrapper from "../../../ApiWrapper/mobile/workoutResponse";
-import WorkoutWrapper from "../../../ApiWrapper/mobile/workouts";
-import CareplanWrapper from "../../../ApiWrapper/mobile/carePlan";
-import DoctorWrapper from "../../../ApiWrapper/mobile/doctor";
-import EventWrapper from "../../../ApiWrapper/common/scheduleEvents";
-import ExerciseContentWrapper from "../../../ApiWrapper/mobile/exerciseContents";
+import WorkoutResponseWrapper from "../../../apiWrapper/mobile/workoutResponse";
+import WorkoutWrapper from "../../../apiWrapper/mobile/workouts";
+import CareplanWrapper from "../../../apiWrapper/mobile/carePlan";
+import DoctorWrapper from "../../../apiWrapper/mobile/doctor";
+import EventWrapper from "../../../apiWrapper/common/scheduleEvents";
+import ExerciseContentWrapper from "../../../apiWrapper/mobile/exerciseContents";
 
-import WorkoutJob from "../../../JobSdk/Workout/observer";
-import NotificationSdk from "../../../NotificationSdk";
+import WorkoutJob from "../../../jobSdk/Workout/observer";
+import NotificationSdk from "../../../notificationSdk";
 
 import Logger from "../../../../libs/log";
 import {

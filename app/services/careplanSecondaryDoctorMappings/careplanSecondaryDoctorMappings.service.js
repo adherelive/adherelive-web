@@ -6,7 +6,7 @@ import { TABLE_NAME as userRolesTableName } from "../../models/userRoles";
 
 const DEFAULT_ORDER = [["created_at", "DESC"]];
 
-class CareplanSecondaryDoctorMappingsService {
+class CarePlanSecondaryDoctorMappingsService {
   findAndCountAll = async ({ where, order = DEFAULT_ORDER, attributes }) => {
     try {
       return await Database.getModel(TABLE_NAME).findAndCountAll({
@@ -80,4 +80,4 @@ class CareplanSecondaryDoctorMappingsService {
   };
 }
 
-export default new CareplanSecondaryDoctorMappingsService();
+export default new CarePlanSecondaryDoctorMappingsService();

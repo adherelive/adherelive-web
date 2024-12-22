@@ -8,7 +8,7 @@ import ServiceUserMapping from "../../services/serviceUserMapping/serviceUserMap
 import ServiceOffering from "../../services/serviceOffering/serviceOffering.service";
 import DoctorService from "../../services/doctor/doctor.service";
 import PatientService from "../../services/patients/patients.service";
-import PatientWrapper from "../../ApiWrapper/web/patient";
+import PatientWrapper from "../../apiWrapper/web/patient";
 import { USER_CATEGORY } from "../../../constant";
 
 const ReassignAudit = require("../../models/mongoModel/reassignAudit");

@@ -1,6 +1,6 @@
 import Controller from "../../";
 import conditionService from "../../../services/condition/condition.service";
-import ConditionWrapper from "../../../ApiWrapper/mobile/conditions";
+import ConditionWrapper from "../../../apiWrapper/mobile/conditions";
 
 import Log from "../../../../libs/log";
 

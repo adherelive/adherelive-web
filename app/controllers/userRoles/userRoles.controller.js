@@ -8,11 +8,11 @@ import userRoleService from "../../services/userRoles/userRoles.service";
 import userService from "../../services/user/user.service";
 
 //WRAPPERS
-import UserRoleWrapper from "../../ApiWrapper/web/userRoles";
-import UserWrapper from "../../ApiWrapper/web/user";
+import UserRoleWrapper from "../../apiWrapper/web/userRoles";
+import UserWrapper from "../../apiWrapper/web/user";
 
 import { USER_CATEGORY } from "../../../constant";
-import AppNotification from "../../NotificationSdk/inApp";
+import AppNotification from "../../notificationSdk/inApp";
 import { getTime } from "../../../app/helper/timer";
 
 const Log = new Logger("WEB > CONTROLLER > PAYMENTS");

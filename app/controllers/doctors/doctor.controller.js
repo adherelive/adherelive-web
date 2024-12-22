@@ -1,8 +1,6 @@
 import Controller from "../index";
 import Log from "../../../libs/log";
 import moment from "moment";
-
-const XLSX = require("xlsx");
 import userService from "../../services/user/user.service";
 import doctorService from "../../services/doctor/doctor.service";
 import doctorsService from "../../services/doctors/doctors.service";
@@ -11,7 +9,7 @@ import treatmentService from "../../services/treatment/treatment.service";
 import specialityService from "../../services/speciality/speciality.service";
 import patientService from "../../../app/services/patients/patients.service";
 import medicineService from "../../services/medicine/medicine.service";
-import UserRoleService from "../../services/userRoles/userRoles.service";
+import userRolesService from "../../services/userRoles/userRoles.service";
 import qualificationService from "../../services/doctorQualifications/doctorQualification.service";
 import clinicService from "../../services/doctorClinics/doctorClinics.service";
 import documentService from "../../services/uploadDocuments/uploadDocuments.service";
@@ -19,7 +17,6 @@ import registrationService from "../../services/doctorRegistration/doctorRegistr
 import carePlanTemplateService from "../../services/carePlanTemplate/carePlanTemplate.service";
 import carePlanService from "../../services/carePlan/carePlan.service";
 import appointmentService from "../../services/appointment/appointment.service";
-import SymptomService from "../../services/symptom/symptom.service";
 // import medicineService from "../../services/medicine/medicine.service";
 // import templateMedicationService from "../../services/templateMedication/templateMedication.service";
 // import templateAppointmentService from "../../services/templateAppointment/templateAppointment.service";
@@ -32,35 +29,35 @@ import doctorProviderMappingService from "../../services/doctorProviderMapping/d
 import featuresService from "../../services/features/features.service";
 import doctorPatientFeatureMappingService from "../../services/doctorPatientFeatureMapping/doctorPatientFeatureMapping.service";
 import careplanSecondaryDoctorMappingService from "../../services/careplanSecondaryDoctorMappings/careplanSecondaryDoctorMappings.service";
-// import TemplateMedicationWrapper from "../../ApiWrapper/web/templateMedication";
-// import TemplateAppointmentWrapper from "../../ApiWrapper/web/templateAppointment";
-import AppointmentWrapper from "../../ApiWrapper/web/appointments";
-import DegreeWrapper from "../../ApiWrapper/mobile/degree";
-import UserWrapper from "../../ApiWrapper/web/user";
-import DoctorWrapper from "../../ApiWrapper/web/doctor";
-import PatientWrapper from "../../ApiWrapper/web/patient";
-import UploadDocumentWrapper from "../../ApiWrapper/web/uploadDocument";
-import CarePlanWrapper from "../../ApiWrapper/web/carePlan";
-import QualificationWrapper from "../../ApiWrapper/web/doctorQualification";
-import RegistrationWrapper from "../../ApiWrapper/web/doctorRegistration";
-import CarePlanTemplateWrapper from "../../ApiWrapper/web/carePlanTemplate";
-import ClinicWrapper from "../../ApiWrapper/web/doctorClinic";
-// import MedicineApiWrapper from "../../ApiWrapper/web/medicine";
-// import DegreeWrapper from "../../ApiWrapper/web/degree";
-import CollegeWrapper from "../../ApiWrapper/web/college";
-import CouncilWrapper from "../../ApiWrapper/web/council";
-import AccountDetailsWrapper from "../../ApiWrapper/web/accountsDetails";
-import ProviderWrapper from "../../ApiWrapper/web/provider";
-import FeatureMappingWrapper from "../../ApiWrapper/web/doctorPatientFeatureMapping";
-import TreatmentWrapper from "../../ApiWrapper/web/treatments";
-import UserRoleWrapper from "../../ApiWrapper/web/userRoles";
-import SpecialityWrapper from "../../ApiWrapper/web/speciality";
-import UserPreferenceWrapper from "../../ApiWrapper/web/userPreference";
-import AuthJob from "../../JobSdk/Auth/observer";
-import NotificationSdk from "../../NotificationSdk";
+// import TemplateMedicationWrapper from "../../apiWrapper/web/templateMedication";
+// import TemplateAppointmentWrapper from "../../apiWrapper/web/templateAppointment";
+import AppointmentWrapper from "../../apiWrapper/web/appointments";
+import DegreeWrapper from "../../apiWrapper/mobile/degree";
+import UserWrapper from "../../apiWrapper/web/user";
+import DoctorWrapper from "../../apiWrapper/web/doctor";
+import PatientWrapper from "../../apiWrapper/web/patient";
+import UploadDocumentWrapper from "../../apiWrapper/web/uploadDocument";
+import CarePlanWrapper from "../../apiWrapper/web/carePlan";
+import QualificationWrapper from "../../apiWrapper/web/doctorQualification";
+import RegistrationWrapper from "../../apiWrapper/web/doctorRegistration";
+import CarePlanTemplateWrapper from "../../apiWrapper/web/carePlanTemplate";
+import ClinicWrapper from "../../apiWrapper/web/doctorClinic";
+// import MedicineApiWrapper from "../../apiWrapper/web/medicine";
+// import DegreeWrapper from "../../apiWrapper/web/degree";
+import CollegeWrapper from "../../apiWrapper/web/college";
+import CouncilWrapper from "../../apiWrapper/web/council";
+import AccountDetailsWrapper from "../../apiWrapper/web/accountsDetails";
+import ProviderWrapper from "../../apiWrapper/web/provider";
+import FeatureMappingWrapper from "../../apiWrapper/web/doctorPatientFeatureMapping";
+import TreatmentWrapper from "../../apiWrapper/web/treatments";
+import UserRoleWrapper from "../../apiWrapper/web/userRoles";
+import SpecialityWrapper from "../../apiWrapper/web/speciality";
+import UserPreferenceWrapper from "../../apiWrapper/web/userPreference";
+import AuthJob from "../../jobSdk/Auth/observer";
+import NotificationSdk from "../../notificationSdk";
 // import { createNewUser } from "../user/userHelper";
 // import { generatePassword } from "../helper/passwordGenerator";
-import DoctorPatientWatchlistWrapper from "../../ApiWrapper/web/doctorPatientWatchlist";
+import DoctorPatientWatchlistWrapper from "../../apiWrapper/web/doctorPatientWatchlist";
 
 import { addProviderDoctor } from "./providerHelper";
 
@@ -69,20 +66,18 @@ import {
   DOCUMENT_PARENT_TYPE,
   EMAIL_TEMPLATE_NAME,
   EVENT_TYPE,
+  FEATURES,
+  NO_ACTION,
+  NO_APPOINTMENT,
+  NO_MEDICATION,
+  NOTIFICATION_VERB,
   ONBOARDING_STATUS,
+  PATIENT_MEAL_TIMINGS,
   SIGN_IN_CATEGORY,
   USER_CATEGORY,
   VERIFICATION_TYPE,
-  PATIENT_MEAL_TIMINGS,
-  FEATURES,
-  NOTIFICATION_VERB,
-  NO_MEDICATION,
-  NO_APPOINTMENT,
-  NO_ACTION,
 } from "../../../constant";
-
-var fs = require("fs");
-import { getFilePath, completePath } from "../../helper/filePath";
+import { completePath, getFilePath } from "../../helper/filePath";
 import getReferenceId from "../../helper/referenceIdGenerator";
 import getUniversalLink from "../../helper/universalLink";
 import getAge from "../../helper/getAge";
@@ -91,14 +86,16 @@ import { v4 as uuidv4 } from "uuid";
 import { uploadImageS3 } from "../user/userHelper";
 import { EVENTS, Proxy_Sdk } from "../../proxySdk";
 import UserVerificationServices from "../../services/userVerifications/userVerifications.services";
-import UserPreferenceService from "../../services/userPreferences/userPreference.service";
-import userRolesService from "../../services/userRoles/userRoles.service";
+import userPreferenceService from "../../services/userPreferences/userPreference.service";
 import doctorPatientWatchlistService from "../../services/doctorPatientWatchlist/doctorPatientWatchlist.service";
 import { getRoomId, getSeparateName } from "../../helper/common";
-import userPreferenceService from "../../services/userPreferences/userPreference.service";
 import { raiseClientError } from "../../../routes/api/helper";
-// import doctor from "../../ApiWrapper/web/doctor";
-// import college from "../../ApiWrapper/web/college";
+
+const XLSX = require("xlsx");
+
+var fs = require("fs");
+// import doctor from "../../apiWrapper/web/doctor";
+// import college from "../../apiWrapper/web/college";
 
 const Logger = new Log("WEB > DOCTOR > CONTROLLER");
 const APPOINTMENT_QUERY_TYPE = {
@@ -1383,7 +1380,7 @@ class DoctorController extends Controller {
         const userRoleWrapper = await UserRoleWrapper(userRole);
         const newUserRoleId = await userRoleWrapper.getId();
 
-        await UserPreferenceService.addUserPreference({
+        await userPreferenceService.addUserPreference({
           user_id: newUserId,
           details: {
             timings: PATIENT_MEAL_TIMINGS,
@@ -4253,7 +4250,7 @@ class DoctorController extends Controller {
           data = { ...data, details };
 
           try {
-            let medicaineUpdate = await medicineService.updateMedicine(
+            let medicineUpdate = await medicineService.updateMedicine(
               data,
               medicinId
             );

@@ -4,9 +4,9 @@ import accountDetailsService from "../../../services/accountDetails/accountDetai
 
 import userService from "../../../services/user/user.service";
 
-import MAccountsWrapper from "../../../ApiWrapper/mobile/accountDetails";
-import UserWrapper from "../../../ApiWrapper/mobile/user";
-import ProviderWrapper from "../../../ApiWrapper/mobile/provider";
+import MAccountsWrapper from "../../../apiWrapper/mobile/accountDetails";
+import UserWrapper from "../../../apiWrapper/mobile/user";
+import ProviderWrapper from "../../../apiWrapper/mobile/provider";
 
 import Log from "../../../../libs/log";
 

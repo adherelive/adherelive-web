@@ -1,7 +1,7 @@
 import Controller from "../";
 import patientService from "../../../app/services/patients/patients.service";
 import carePlanService from "../../services/carePlan/carePlan.service";
-import CarePlanWrapper from "../../ApiWrapper/web/carePlan";
+import CarePlanWrapper from "../../apiWrapper/web/carePlan";
 import appointmentService from "../../services/appointment/appointment.service";
 import medicationReminderService from "../../services/medicationReminder/mReminder.service";
 import carePlanMedicationService from "../../services/carePlanMedication/carePlanMedication.service";
@@ -24,22 +24,22 @@ import {
   EVENT_TYPE,
   USER_CATEGORY,
 } from "../../../constant";
-import UserRoleWrapper from "../../ApiWrapper/web/userRoles";
+import UserRoleWrapper from "../../apiWrapper/web/userRoles";
 import doctorService from "../../services/doctor/doctor.service";
-import DoctorWrapper from "../../ApiWrapper/web/doctor";
-import PatientWrapper from "../../ApiWrapper/web/patient";
-import AppointmentWrapper from "../../ApiWrapper/web/appointments";
-// import MedicationWrapper from "../../ApiWrapper/web/medicationReminder";
+import DoctorWrapper from "../../apiWrapper/web/doctor";
+import PatientWrapper from "../../apiWrapper/web/patient";
+import AppointmentWrapper from "../../apiWrapper/web/appointments";
+// import MedicationWrapper from "../../apiWrapper/web/medicationReminder";
 import carePlanTemplateService from "../../services/carePlanTemplate/carePlanTemplate.service";
-import CarePlanTemplateWrapper from "../../ApiWrapper/web/carePlanTemplate";
+import CarePlanTemplateWrapper from "../../apiWrapper/web/carePlanTemplate";
 import Logger from "../../../libs/log";
 // import ScheduleEventService from "../../services/scheduleEvents/scheduleEvent.service";
 import moment from "moment";
 import queueService from "../../services/awsQueue/queue.service";
 
 import * as carePlanHelper from "./carePlanHelper";
-import MedicationWrapper from "../../ApiWrapper/web/medicationReminder";
-import MedicationJob from "../../JobSdk/Medications/observer";
+import MedicationWrapper from "../../apiWrapper/web/medicationReminder";
+import MedicationJob from "../../jobSdk/Medications/observer";
 
 import PERMISSIONS from "../../../config/permissions";
 // import { ConfigurationServicePlaceholders } from "aws-sdk/lib/config_service_placeholders";
@@ -332,8 +332,8 @@ class CarePlanController extends Controller {
           let newMedication =
             await carePlanMedicationService.addCarePlanMedication(
               data_to_create
-          );
-            
+            );
+
           // TODO: testing gaurav
           const eventScheduleDataNew = {
             patient_id: patient_id,

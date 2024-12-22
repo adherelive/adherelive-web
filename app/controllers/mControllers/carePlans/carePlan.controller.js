@@ -2,7 +2,7 @@ import Controller from "../../index";
 import patientService from "../../../../app/services/patients/patients.service";
 import carePlanService from "../../../services/carePlan/carePlan.service";
 import carePlanTemplateService from "../../../services/carePlanTemplate/carePlanTemplate.service";
-import CarePlanWrapper from "../../../ApiWrapper/mobile/carePlan";
+import CarePlanWrapper from "../../../apiWrapper/mobile/carePlan";
 import appointmentService from "../../../services/appointment/appointment.service";
 import medicationReminderService from "../../../services/medicationReminder/mReminder.service";
 import carePlanMedicationService from "../../../services/carePlanMedication/carePlanMedication.service";
@@ -12,7 +12,7 @@ import templateAppointmentService from "../../../services/templateAppointment/te
 import medicineService from "../../../services/medicine/medicine.service";
 import careplanSecondaryDoctorMappingService from "../../../services/careplanSecondaryDoctorMappings/careplanSecondaryDoctorMappings.service";
 import twilioService from "../../../services/twilio/twilio.service";
-import UserRoleWrapper from "../../../ApiWrapper/mobile/userRoles";
+import UserRoleWrapper from "../../../apiWrapper/mobile/userRoles";
 
 import {
   getCarePlanAppointmentIds,
@@ -27,12 +27,12 @@ import {
   WHEN_TO_TAKE_ABBREVATIONS,
 } from "../../../../constant";
 import doctorService from "../../../services/doctor/doctor.service";
-import DoctorWrapper from "../../../ApiWrapper/mobile/doctor";
-import PatientWrapper from "../../../ApiWrapper/mobile/patient";
-import AppointmentWrapper from "../../../ApiWrapper/mobile/appointments";
-import MedicationWrapper from "../../../ApiWrapper/mobile/medicationReminder";
-import CarePlanTemplateWrapper from "../../../ApiWrapper/mobile/carePlanTemplate";
-// import Log from "../../../../libs/log_new";
+import DoctorWrapper from "../../../apiWrapper/mobile/doctor";
+import PatientWrapper from "../../../apiWrapper/mobile/patient";
+import AppointmentWrapper from "../../../apiWrapper/mobile/appointments";
+import MedicationWrapper from "../../../apiWrapper/mobile/medicationReminder";
+import CarePlanTemplateWrapper from "../../../apiWrapper/mobile/carePlanTemplate";
+// import Log from "../../../../libs/log";
 import queueService from "../../../services/awsQueue/queue.service";
 // import SqsQueueService from "../../../services/awsQueue/queue.service";
 import ScheduleEventService from "../../../services/scheduleEvents/scheduleEvent.service";
