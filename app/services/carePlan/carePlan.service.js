@@ -13,7 +13,7 @@ import { TABLE_NAME as carePlanMedicationTableName } from "../../models/carePlan
 import { TABLE_NAME as medicationTableName } from "../../models/medicationReminders";
 import { TABLE_NAME as medicineTableName } from "../../models/medicines";
 import { TABLE_NAME as userRolesTableName } from "../../models/userRoles";
-import { TABLE_NAME as careplanSecondaryDoctorMappingsTableName } from "../../models/careplanSecondaryDoctorMappings";
+import { TABLE_NAME as carePlanSecondaryDoctorMappingsTableName } from "../../models/carePlanSecondaryDoctorMappings";
 import { USER_CATEGORY } from "../../../constant";
 
 const DEFAULT_ORDER = [["created_at", "DESC"]];
@@ -72,7 +72,7 @@ class CarePlanService {
             },
           },
           {
-            model: Database.getModel(careplanSecondaryDoctorMappingsTableName),
+            model: Database.getModel(carePlanSecondaryDoctorMappingsTableName),
             required: false,
           },
         ],
@@ -117,7 +117,7 @@ class CarePlanService {
             },
           },
           {
-            model: Database.getModel(careplanSecondaryDoctorMappingsTableName),
+            model: Database.getModel(carePlanSecondaryDoctorMappingsTableName),
             required: false,
           },
         ],
@@ -152,7 +152,7 @@ class CarePlanService {
             },
           },
           {
-            model: Database.getModel(careplanSecondaryDoctorMappingsTableName),
+            model: Database.getModel(carePlanSecondaryDoctorMappingsTableName),
             required: false,
           },
         ],
@@ -208,7 +208,7 @@ class CarePlanService {
             },
           },
           {
-            model: Database.getModel(careplanSecondaryDoctorMappingsTableName),
+            model: Database.getModel(carePlanSecondaryDoctorMappingsTableName),
             required: false,
           },
           // {
@@ -571,7 +571,7 @@ class CarePlanService {
             },
           },
           {
-            model: Database.getModel(careplanSecondaryDoctorMappingsTableName),
+            model: Database.getModel(carePlanSecondaryDoctorMappingsTableName),
             required: false,
           },
           // {

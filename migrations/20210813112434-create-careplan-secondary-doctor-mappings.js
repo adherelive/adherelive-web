@@ -1,7 +1,7 @@
 "use strict";
 
-import { TABLE_NAME } from "../app/models/careplanSecondaryDoctorMappings";
-import { TABLE_NAME as careplanTableName } from "../app/models/carePlan";
+import { TABLE_NAME } from "../app/models/carePlanSecondaryDoctorMappings";
+import { TABLE_NAME as carePlanTableName } from "../app/models/carePlan";
 import { TABLE_NAME as userRoleTableName } from "../app/models/userRoles";
 
 module.exports = {
@@ -18,7 +18,7 @@ module.exports = {
         allowNull: false,
         references: {
           model: {
-            tableName: careplanTableName,
+            tableName: carePlanTableName,
           },
           key: "id",
         },

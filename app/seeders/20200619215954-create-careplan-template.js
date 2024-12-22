@@ -1,6 +1,6 @@
 "use strict";
 
-import { TABLE_NAME } from "../models/careplanTemplate";
+import { TABLE_NAME } from "../models/carePlanTemplate";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {

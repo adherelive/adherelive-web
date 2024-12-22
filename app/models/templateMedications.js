@@ -1,7 +1,7 @@
 "use strict";
 import { DataTypes } from "sequelize";
 import { TABLE_NAME as medicineTableName } from "./medicines"; // todo :: doesn't makes sense here
-import { TABLE_NAME as carePlanTemplateTableName } from "./careplanTemplate";
+import { TABLE_NAME as carePlanTemplateTableName } from "./carePlanTemplate";
 
 export const TABLE_NAME = "template_medications";
 

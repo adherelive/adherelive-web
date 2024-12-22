@@ -17,7 +17,7 @@ import WorkoutService from "../../../services/workouts/workout.service";
 import RepetitionService from "../../../services/exerciseRepetitions/repetition.service";
 import PortionServiceService from "../../../services/portions/portions.service";
 import DietService from "../../../services/diet/diet.service";
-import careplanSecondaryDoctorMappingService from "../../../services/careplanSecondaryDoctorMappings/careplanSecondaryDoctorMappings.service";
+import careplanSecondaryDoctorMappingService from "../../../services/carePlanSecondaryDoctorMappings/carePlanSecondaryDoctorMappings.service";
 // WRAPPERS ------------
 import ExerciseContentWrapper from "../../../apiWrapper/mobile/exerciseContents";
 import VitalWrapper from "../../../apiWrapper/mobile/vitals";
