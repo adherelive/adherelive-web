@@ -1,3 +1,6 @@
+const express = require("express");
+const router = express.Router();
+
 import jwt from "jsonwebtoken";
 
 import userService from "../../app/services/user/user.service";
@@ -60,9 +63,6 @@ import reassignAudit from "./reassignAudit";
 import NotesRouter from "./notes";
 import { getTime } from "../../app/helper/timer";
 import prescriptionRouter from "./prescription";
-
-const express = require("express");
-const router = express.Router();
 
 const Log = new Logger("API > INDEX");
 
