@@ -5,13 +5,14 @@ import cookieSession from "cookie-session";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 
-import Database from "../libs/mysql";
+import initializeDatabase from "../libs/mysql";
 import initializeMongo from "../libs/mongo";
 import ApiRouter from "../routes/api";
 import mApiRouter from "../routes/m-api";
 import EventObserver from "../app/proxySdk/eventObserver";
 import ActivityObserver from "../app/activitySdk/activityObserver";
 import RenewSubscription from "../app/cron-jobs/renewSubscription";
+import connection from "../libs/dbConnection";
 
 import Start from "../app/cron-jobs/start";
 import Passed from "../app/cron-jobs/passed";
@@ -24,7 +25,7 @@ import RenewTxActivity from "../app/cron-jobs/renewTxActivity";
 // Initialize database connections
 (async () => {
   try {
-    await Database.init();
+    await initializeDatabase.init();
     await initializeMongo();
     // Initialize event observers
     EventObserver.runObservers();
@@ -68,7 +69,7 @@ app.use(
   })
 );
 
-// Removed the code that serves the React frontend
+// TODO: Remove the code that serves the React frontend
 // Serve static files
 app.use(express.static(path.join(__dirname, "../public")));
 
@@ -101,7 +102,7 @@ schedule.scheduleJob(perDayUtcRule, async () => {
   await RemoveDocuments.runObserver();
 });
 
-//const perHourCron = schedule.scheduleJob("0 0 */1 * * *", async () => {
+// const perHourCron = schedule.scheduleJob("0 0 */1 * * *", async () => {
 schedule.scheduleJob("0 0 */2 * * *", async () => {
   await ActivePatient.runObserver();
   await RenewTxActivity.runObserver();

@@ -1,20 +1,19 @@
+// Fetch details from the Services
 import carePlanService from "../../services/carePlan/carePlan.service";
 import carePlanTemplateService from "../../services/carePlanTemplate/carePlanTemplate.service";
 import appointmentService from "../../services/appointment/appointment.service";
 import medicationReminderService from "../../services/medicationReminder/mReminder.service";
 import carePlanMedicationService from "../../services/carePlanMedication/carePlanMedication.service";
 import carePlanAppointmentService from "../../services/carePlanAppointment/carePlanAppointment.service";
-import doctorService from "../../services/doctor/doctor.service";
-// import templateMedicationService from "../../services/templateMedication/templateMedication.service";
-// import templateAppointmentService from "../../services/templateAppointment/templateAppointment.service";
-// import medicineService from "../../services/medicine/medicine.service";
-
-// services
 import vitalService from "../../services/vitals/vital.service";
 import DietService from "../../services/diet/diet.service";
 import WorkoutService from "../../services/workouts/workout.service";
+import doctorService from "../../services/doctor/doctor.service";
+import medicineService from "../../services/medicine/medicine.service";
+// import templateMedicationService from "../../services/templateMedication/templateMedication.service";
+// import templateAppointmentService from "../../services/templateAppointment/templateAppointment.service";
 
-// wrappers
+// Fetch details from Wrappers
 import CarePlanWrapper from "../../apiWrapper/web/carePlan";
 import AppointmentWrapper from "../../apiWrapper/web/appointments";
 import MedicationWrapper from "../../apiWrapper/web/medicationReminder";
@@ -52,18 +51,15 @@ function getTime() {
 
   // current month
   let month = ("0" + (date_ob.getMonth() + 1)).slice(-2);
-
   // current year
   let year = date_ob.getFullYear();
-
   // current hours
   let hours = date_ob.getHours();
-
   // current minutes
   let minutes = date_ob.getMinutes();
-
   // current seconds
   let seconds = date_ob.getSeconds();
+
   return (
     year +
     "-" +
@@ -90,8 +86,8 @@ export const getCarePlanDataWithImp = async ({
     let carePlanIds = [];
     let appointmentIds = [];
     let medicationIds = [];
-    let currentCareplanTime = null;
-    let currentCareplanId = null;
+    let currentCarePlanTime = null;
+    let currentCarePlanId = null;
     for (let index = 0; index < carePlans.length; index++) {
       const careplan = await CarePlanWrapper(carePlans[index]);
 
@@ -111,7 +107,7 @@ export const getCarePlanDataWithImp = async ({
       const isUserRoleAllowed = [user_role_id, ...secondaryDoctorUserRoleIds]
         .map((id) => parseInt(id))
         .includes(userRoleId);
-      // get latest careplan id
+      // Get the latest Care Plan ID
       if (
         (userCategory === USER_CATEGORY.DOCTOR ||
           userCategory === USER_CATEGORY.HSP) &&
@@ -120,17 +116,17 @@ export const getCarePlanDataWithImp = async ({
         // if(userCategory === USER_CATEGORY.DOCTOR && doctorId === doctor_id) {
         if (
           moment(careplan.getCreatedAt()).diff(
-            moment(currentCareplanTime),
+            moment(currentCarePlanTime),
             "minutes"
           ) > 0
         ) {
-          currentCareplanTime = careplan.getCreatedAt();
-          currentCareplanId = careplan.getCarePlanId();
+          currentCarePlanTime = careplan.getCreatedAt();
+          currentCarePlanId = careplan.getCarePlanId();
         }
 
-        if (currentCareplanTime === null) {
-          currentCareplanTime = careplan.getCreatedAt();
-          currentCareplanId = careplan.getCarePlanId();
+        if (currentCarePlanTime === null) {
+          currentCarePlanTime = careplan.getCreatedAt();
+          currentCarePlanId = careplan.getCarePlanId();
         }
       }
     }
@@ -139,15 +135,15 @@ export const getCarePlanDataWithImp = async ({
         ...carePlanData,
       },
       care_plan_ids: carePlanIds,
-      current_careplan_id: currentCareplanId,
+      current_care_plan_id: currentCarePlanId,
     };
   } catch (error) {
-    Log.debug("getCareplanData catch error", error);
+    Log.debug("Issue with getCarePlanData catch error", error);
     return {};
   }
 };
 
-export const getCareplanDataWithDoctor = async ({
+export const getCarePlanDataWithDoctor = async ({
   carePlans = [],
   userCategory,
   doctorId,
@@ -166,12 +162,12 @@ export const getCareplanDataWithDoctor = async ({
       },
     };
   } catch (error) {
-    Log.debug("getCareplanData catch error", error);
+    Log.debug("getCarePlanData catch error", error);
     return {};
   }
 };
 
-export const getCareplanData = async ({
+export const getCarePlanData = async ({
   carePlans = [],
   userCategory,
   doctorId,
@@ -196,8 +192,8 @@ export const getCareplanData = async ({
     let providerData = {};
     let userRoleData = {};
 
-    let currentCareplanTime = null;
-    let currentCareplanId = null;
+    let currentCarePlanTime = null;
+    let currentCarePlanId = null;
 
     for (let index = 0; index < carePlans.length; index++) {
       const careplan = await CarePlanWrapper(carePlans[index]);
@@ -231,17 +227,17 @@ export const getCareplanData = async ({
         // if(userCategory === USER_CATEGORY.DOCTOR && doctorId === doctor_id) {
         if (
           moment(careplan.getCreatedAt()).diff(
-            moment(currentCareplanTime),
+            moment(currentCarePlanTime),
             "minutes"
           ) > 0
         ) {
-          currentCareplanTime = careplan.getCreatedAt();
-          currentCareplanId = careplan.getCarePlanId();
+          currentCarePlanTime = careplan.getCreatedAt();
+          currentCarePlanId = careplan.getCarePlanId();
         }
 
-        if (currentCareplanTime === null) {
-          currentCareplanTime = careplan.getCreatedAt();
-          currentCareplanId = careplan.getCarePlanId();
+        if (currentCarePlanTime === null) {
+          currentCarePlanTime = careplan.getCreatedAt();
+          currentCarePlanId = careplan.getCarePlanId();
         }
       }
 
@@ -321,10 +317,10 @@ export const getCareplanData = async ({
         ...userRoleData,
       },
       care_plan_ids: carePlanIds,
-      current_careplan_id: currentCareplanId,
+      current_care_plan_id: currentCarePlanId,
     };
   } catch (error) {
-    Log.debug("getCareplanData catch error", error);
+    Log.debug("getCarePlanData catch error", error);
     return {};
   }
 };

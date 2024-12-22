@@ -440,7 +440,7 @@ class MPatientController extends Controller {
           care_plans,
           user_roles = {},
           care_plan_ids,
-          current_careplan_id,
+          current_care_plan_id,
         } = await carePlanHelper.getCarePlanDataWithImp({
           carePlans,
           userCategory: category,
@@ -451,7 +451,7 @@ class MPatientController extends Controller {
         // care plans
         carePlanApiDetails = { ...carePlanApiDetails, ...care_plans };
         //        carePlanIds = [...care_plan_ids];
-        latestCarePlanId = current_careplan_id;
+        latestCarePlanId = current_care_plan_id;
         medicationApiDetails = { ...medicationApiDetails, ...medications };
         allProvidersData = { ...allProvidersData, ...providers };
         allUserRoleData = { ...allUserRoleData, ...user_roles };
@@ -527,7 +527,7 @@ class MPatientController extends Controller {
             ...otherCarePlanTemplates,
           },
           care_plan_template_ids: [...carePlanTemplateIds],
-          current_careplan_id: latestCarePlanId,
+          current_care_plan_id: latestCarePlanId,
 
           template_appointments: {
             ...templateAppointmentData,
@@ -627,7 +627,7 @@ class MPatientController extends Controller {
       let vitalTemplateData = {};
 
       if (carePlans.length > 0) {
-        const { care_plans, care_plan_ids, current_careplan_id } =
+        const { care_plans, care_plan_ids, current_care_plan_id } =
           await carePlanHelper.getCarePlanDataWithImp({
             carePlans,
             userCategory: category,
@@ -750,7 +750,7 @@ class MPatientController extends Controller {
           // vital_templates
 
           // added by gaurav end
-          current_careplan_id: latestCarePlanId,
+          current_care_plan_id: latestCarePlanId,
           care_plan_ids: carePlanIds,
           care_plan_template_ids: [...carePlanTemplateIds],
           care_plan_templates: {
@@ -871,8 +871,8 @@ class MPatientController extends Controller {
           providers = {},
           user_roles = {},
           care_plan_ids,
-          current_careplan_id,
-        } = await carePlanHelper.getCareplanData({
+          current_care_plan_id,
+        } = await carePlanHelper.getCarePlanData({
           carePlans,
           userCategory: category,
           doctorId: userCategoryId,
@@ -886,7 +886,7 @@ class MPatientController extends Controller {
         carePlanIds = [...care_plan_ids];
 
         // latest care plan id
-        latestCarePlanId = current_careplan_id;
+        latestCarePlanId = current_care_plan_id;
 
         // doctors
         doctorData = { ...doctorData, ...doctors };
@@ -1073,7 +1073,7 @@ class MPatientController extends Controller {
                         ...otherCarePlanTemplates,
                       },
                       care_plan_template_ids: [...carePlanTemplateIds],
-                      current_careplan_id: latestCarePlanId,
+                      current_care_plan_id: latestCarePlanId,
 
                       template_appointments: {
                         ...templateAppointmentData,
@@ -1096,7 +1096,7 @@ class MPatientController extends Controller {
             ...otherCarePlanTemplates,
           },
           care_plan_template_ids: [...carePlanTemplateIds],
-          current_careplan_id: latestCarePlanId,
+          current_care_plan_id: latestCarePlanId,
           medicines: {
             ...medicineApiData,
           },
@@ -2495,7 +2495,7 @@ class MPatientController extends Controller {
       }
 
       // get other doctor basic details
-      // todo: check with others if this data is already present for multi careplan
+      // TODO: check with others if this data is already present for multi care plan
       let doctorData = {};
       if (doctorIds.length > 0) {
         const allDoctors =

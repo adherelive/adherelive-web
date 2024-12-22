@@ -333,9 +333,9 @@ class PatientController extends Controller {
       }
 
       const carePlans =
-        (await carePlanService.getMultiplecarePlanByData({ id })) || [];
+        (await carePlanService.getMultipleCarePlanByData({ id })) || [];
 
-      const { care_plans } = await carePlanHelper.getcarePlanDataWithDoctor({
+      const { care_plans } = await carePlanHelper.getCarePlanDataWithDoctor({
         carePlans,
         userCategory: category,
         doctorId: userCategoryId,
@@ -388,7 +388,7 @@ class PatientController extends Controller {
       }
 
       const carePlans =
-        (await carePlanService.getMultiplecarePlanByData({
+        (await carePlanService.getMultipleCarePlanByData({
           patient_id,
           // user_role_id: userRoleId,
         })) || [];
@@ -659,7 +659,7 @@ class PatientController extends Controller {
       }
 
       const carePlans =
-        (await carePlanService.getMultiplecarePlanByData({
+        (await carePlanService.getMultipleCarePlanByData({
           id: carePlan_id,
         })) || [];
 
