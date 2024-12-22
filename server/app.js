@@ -42,7 +42,7 @@ app.use(express.urlencoded({ extended: true, limit: "50mb" }));
 app.use(cookieParser());
 app.use(cors());
 
-/* ananjay add code
+/*
  * Add a check to handle cases where process.config.cookieKey might be undefined or not a valid JSON string
  */
 let cookieKeys = [];
@@ -68,6 +68,7 @@ app.use(
   })
 );
 
+// Removed the code that serves the React frontend
 // Serve static files
 app.use(express.static(path.join(__dirname, "../public")));
 
@@ -75,6 +76,7 @@ app.use(express.static(path.join(__dirname, "../public")));
 app.use("/api", ApiRouter);
 app.use("/m-api", mApiRouter);
 
+// This is used for the frontend. As we have moved that to a different repository, removing from here.
 app.get("/*", (req, res) => {
   res.sendFile(path.resolve("public/index.html"));
 });

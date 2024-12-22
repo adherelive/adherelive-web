@@ -42,7 +42,7 @@ class AppNotification {
       );
       const userToken = client.createUserToken(template.actor.toString());
 
-      // Log.debug("client --> ", client);
+      Log.debug("client --> ", client);
 
       let result = {};
       const feed = client.feed("notification", template.object);
