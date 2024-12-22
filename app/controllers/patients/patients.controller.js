@@ -85,7 +85,7 @@ import { getSeparateName, getRoomId } from "../../helper/common";
 import generateOTP from "../../helper/generateOtp";
 import { EVENTS, Proxy_Sdk } from "../../proxySdk";
 import carePlan from "../../apiWrapper/web/carePlan";
-import generatePDF from "../../helper/generatecarePlanPdf";
+import generatePDF from "../../helper/generateCarePlanPdf";
 import { downloadFileFromS3 } from "../user/userHelper";
 import { getFilePath } from "../../helper/filePath";
 import { checkAndCreateDirectory } from "../../helper/common";
