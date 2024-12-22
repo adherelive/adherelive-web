@@ -34,7 +34,7 @@ import moment from "moment";
 
 const Log = new Logger("CARE_PLAN > HELPER");
 
-export const getCareplanDataWithImp = async ({
+export const getCarePlanDataWithImp = async ({
   carePlans = [],
   userCategory,
   userRoleId,

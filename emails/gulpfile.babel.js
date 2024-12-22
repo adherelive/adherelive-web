@@ -196,19 +196,25 @@ function aws() {
   );
 }
 
-// Send email to Litmus for testing. If no AWS creds then do not replace img urls.
+// Send email to Litmus for testing. If no AWS credentials then do not replace img urls.
+// This code snippet is used to conditionally replace local asset paths in your HTML files with AWS URLs.
+// If awsURL is defined, it replaces all occurrences of
+// ='/assets/img or ="/assets/img with ='<awsURL> or ="<awsURL>
+// to point to the AWS-hosted assets instead of local ones.
 function litmus() {
-  var awsURL =
+  const awsURL =
     !!CONFIG && !!CONFIG.aws && !!CONFIG.aws.url ? CONFIG.aws.url : false;
 
+  // Reports single char alternation in a RegExp. It is simpler to use a character class instead.
+  // This may also provide better matching performance. a|b|e|d = [abed]
   return gulp
     .src("dist/**/*.html")
-    .pipe($.if(!!awsURL, $.replace(/=('|")(\/?assets\/img)/g, "=$1" + awsURL)))
+    .pipe($.if(!!awsURL, $.replace(/=(['"])(\/?assets\/img)/g, "=$1" + awsURL)))
     .pipe($.litmus(CONFIG.litmus))
     .pipe(gulp.dest("dist"));
 }
 
-// Send email to specified email for testing. If no AWS creds then do not replace img urls.
+// Send email to specified email for testing. If no AWS credentials then do not replace img urls.
 function mail() {
   var awsURL =
     !!CONFIG && !!CONFIG.aws && !!CONFIG.aws.url ? CONFIG.aws.url : false;
@@ -217,9 +223,11 @@ function mail() {
     CONFIG.mail.to = [EMAIL];
   }
 
+  // Reports single char alternation in a RegExp. It is simpler to use a character class instead.
+  // This may also provide better matching performance. a|b|e|d = [abed]
   return gulp
     .src("dist/**/*.html")
-    .pipe($.if(!!awsURL, $.replace(/=('|")(\/?assets\/img)/g, "=$1" + awsURL)))
+    .pipe($.if(!!awsURL, $.replace(/=(['"])(\/?assets\/img)/g, "=$1" + awsURL)))
     .pipe($.mail(CONFIG.mail))
     .pipe(gulp.dest("dist"));
 }
@@ -232,7 +240,7 @@ function zip() {
   function getHtmlFiles(dir) {
     return fs.readdirSync(dir).filter(function (file) {
       var fileExt = path.join(dir, file);
-      var isHtml = path.extname(fileExt) == ext;
+      var isHtml = path.extname(fileExt) === ext;
       return fs.statSync(fileExt).isFile() && isHtml;
     });
   }

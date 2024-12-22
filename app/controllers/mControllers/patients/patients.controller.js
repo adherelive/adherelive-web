@@ -441,7 +441,7 @@ class MPatientController extends Controller {
           user_roles = {},
           care_plan_ids,
           current_careplan_id,
-        } = await carePlanHelper.getCareplanDataWithImp({
+        } = await carePlanHelper.getCarePlanDataWithImp({
           carePlans,
           userCategory: category,
           doctorId: userCategoryId,
@@ -628,7 +628,7 @@ class MPatientController extends Controller {
 
       if (carePlans.length > 0) {
         const { care_plans, care_plan_ids, current_careplan_id } =
-          await carePlanHelper.getCareplanDataWithImp({
+          await carePlanHelper.getCarePlanDataWithImp({
             carePlans,
             userCategory: category,
             doctorId: userCategoryId,

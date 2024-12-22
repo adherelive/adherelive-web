@@ -79,7 +79,7 @@ function getTime() {
   );
 }
 
-export const getCareplanDataWithImp = async ({
+export const getCarePlanDataWithImp = async ({
   carePlans = [],
   userCategory,
   doctorId,

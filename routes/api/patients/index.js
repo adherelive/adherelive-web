@@ -124,7 +124,7 @@ router.get(
 router.post(
   "/add-careplan-for-patient/:patient_id",
   Authenticated,
-  PatientController.createNewCareplanforPatient
+  PatientController.createNewCarePlanForPatient
 );
 
 router.get(
