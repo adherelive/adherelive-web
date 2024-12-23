@@ -51,9 +51,7 @@ function generateCookieKey() {
     "key_" + Math.random().toString(36).substr(2) + Date.now().toString(36)
   );
 }
-
 console.log(generateCookieKey());
-
 let cookieKeys = [];
 
 try {
