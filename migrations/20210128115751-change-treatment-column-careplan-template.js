@@ -1,5 +1,5 @@
 "use strict";
-import { TABLE_NAME } from "../app/models/carePlanTemplate";
+import { TABLE_NAME } from "../app/models/careplanTemplate";
 import { DataTypes } from "sequelize";
 
 module.exports = {

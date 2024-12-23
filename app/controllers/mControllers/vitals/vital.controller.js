@@ -7,7 +7,7 @@ import * as vitalHelper from "../../vitals/vitalHelper";
 import VitalService from "../../../services/vitals/vital.service";
 import VitalTemplateService from "../../../services/vitalTemplates/vitalTemplate.service";
 import FeatureDetailService from "../../../services/featureDetails/featureDetails.service";
-import EventService from "../../../services/scheduleEvents/scheduleEvent.service";
+import eventService from "../../../services/scheduleEvents/scheduleEvent.service";
 import twilioService from "../../../services/twilio/twilio.service";
 import queueService from "../../../services/awsQueue/queue.service";
 
@@ -175,7 +175,7 @@ class VitalController extends Controller {
         body: { start_date, end_date } = {},
         params: { id } = {},
       } = req;
-      const eventService = new EventService();
+      const EventService = new eventService();
 
       const doesVitalExists = await VitalService.getByData({ id });
 
@@ -228,7 +228,7 @@ class VitalController extends Controller {
 
         Log.debug("eventScheduleData", eventScheduleData);
 
-        const deletedEvents = await eventService.deleteBatch({
+        const deletedEvents = await EventService.deleteBatch({
           event_id: vitals.getVitalId(),
           event_type: EVENT_TYPE.VITALS,
         });
@@ -336,7 +336,7 @@ class VitalController extends Controller {
         userDetails: { userRoleId, userData: { category } = {} } = {},
         body: { response } = {},
       } = req;
-      const eventService = new EventService();
+      const EventService = new eventService();
 
       if (category !== USER_CATEGORY.PATIENT) {
         return raiseClientError(res, 401, {}, "Unauthorized");
@@ -367,7 +367,7 @@ class VitalController extends Controller {
           createdTime,
         });
 
-        const updateEvent = await eventService.update(
+        const updateEvent = await EventService.update(
           {
             details: {
               ...event.getDetails(),
@@ -479,16 +479,16 @@ class VitalController extends Controller {
   getVitalResponseTimeline = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
-      Log.debug("req.params vital id--->", req.params);
+      Log.debug("req.params vital id---->", req.params);
       const { params: { id } = {} } = req;
-      const eventService = new EventService();
+      const EventService = new eventService();
 
       const today = moment().utc().toISOString();
 
       const vital = await VitalWrapper({ id });
 
       const completeEvents =
-        await eventService.getAllPassedAndCompletedEventsData({
+        await EventService.getAllPassedAndCompletedEventsData({
           event_id: id,
           event_type: EVENT_TYPE.VITALS,
           date: vital.getStartDate(),

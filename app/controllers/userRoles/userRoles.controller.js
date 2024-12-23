@@ -229,7 +229,7 @@ class UserRoleController extends Controller {
         "User data for RoleId retrieved successfully"
       );
     } catch (error) {
-      Log.debug("switchRoleId data 500 error ---> ", error);
+      Log.debug("switchRoleId data 500 error ----> ", error);
 
       // notification
       // const crashJob = await AdhocJob.execute("crash", {

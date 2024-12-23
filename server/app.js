@@ -45,19 +45,13 @@ app.use(cors());
 /*
  * Add a check to handle cases where process.config.cookieKey might be undefined or not a valid JSON string
  */
-// function generateCookieKey() {
-//   return (
-//     "key_" + Math.random().toString(36).substr(2) + Date.now().toString(36)
-//   );
-// }
-// console.log(generateCookieKey());
 let cookieKeys = [];
 
 try {
   if (process.config && process.config.cookieKey) {
     cookieKeys = JSON.parse(process.config.cookieKey);
   } else {
-    console.warn("Cookie Key is undefined or null", process.config.cookieKey);
+    console.warn("process.config.cookieKey is undefined or null");
     // Set a default value if cookieKey is not defined
     cookieKeys = ["cookie938", "abc123xyz456abc789xyz012"];
   }
@@ -74,7 +68,7 @@ app.use(
   })
 );
 
-// TODO: Remove the code that serves the React frontend
+// Removed the code that serves the React frontend
 // Serve static files
 app.use(express.static(path.join(__dirname, "../public")));
 
@@ -107,7 +101,7 @@ schedule.scheduleJob(perDayUtcRule, async () => {
   await RemoveDocuments.runObserver();
 });
 
-// const perHourCron = schedule.scheduleJob("0 0 */1 * * *", async () => {
+//const perHourCron = schedule.scheduleJob("0 0 */1 * * *", async () => {
 schedule.scheduleJob("0 0 */2 * * *", async () => {
   await ActivePatient.runObserver();
   await RenewTxActivity.runObserver();

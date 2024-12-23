@@ -11,5 +11,4 @@ router.get(
   isDoctor,
   reassignAuditController.getAuditByActivityId
 );
-
 export default router;

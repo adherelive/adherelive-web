@@ -2,7 +2,7 @@
 
 import { DataTypes } from "sequelize";
 import { TABLE_NAME as userRoleTableName } from "./userRoles";
-import { TABLE_NAME as carePlanTableName } from "./carePlan";
+import { TABLE_NAME as careplanTableName } from "./carePlan";
 
 export const TABLE_NAME = "careplan_secondary_doctor_mappings";
 
@@ -21,7 +21,7 @@ export const db = (database) => {
         allowNull: false,
         references: {
           model: {
-            tableName: carePlanTableName,
+            tableName: careplanTableName,
           },
           key: "id",
         },

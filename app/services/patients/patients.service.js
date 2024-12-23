@@ -3,7 +3,7 @@ import Database from "../../../libs/mysql";
 import { Op } from "sequelize";
 import { TABLE_NAME } from "../../models/patients";
 import { TABLE_NAME as userTableName } from "../../models/users";
-import { TABLE_NAME as carePlanTableName } from "../../models/carePlan";
+import { TABLE_NAME as careplanTableName } from "../../models/carePlan";
 import Log from "../../../libs/log";
 import { TABLE_NAME as doctorTableName } from "../../models/doctors";
 
@@ -140,7 +140,7 @@ class PatientsService {
           },
         ],
       });
-      Logger.debug("GETPDATA--->", id);
+      Logger.debug("GETPDATA--------------->", id);
       Logger.debug("PATIENTTTTTTTT====>", patient);
       return patient;
     } catch (error) {
@@ -254,7 +254,7 @@ class PatientsService {
 
   getPaginatedPatients = async ({ doctor_id, order }) => {
     const query = `
-    SELECT cp.doctor_id, cp.patient_id FROM ${carePlanTableName} AS cp
+    SELECT cp.doctor_id, cp.patient_id FROM ${careplanTableName} AS cp
     
     `;
     try {
@@ -262,7 +262,7 @@ class PatientsService {
         attributes: ["each", []],
         include: [
           {
-            model: Database.getModel(carePlanTableName),
+            model: Database.getModel(careplanTableName),
             where: {
               "$care_plan.doctor_id$": doctor_id,
             },

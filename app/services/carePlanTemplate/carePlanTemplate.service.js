@@ -1,7 +1,7 @@
 import { Op } from "sequelize";
 import Database from "../../../libs/mysql";
 
-import { TABLE_NAME } from "../../models/carePlanTemplate";
+import { TABLE_NAME } from "../../models/careplanTemplate";
 import { TABLE_NAME as appointmentTemplateTableName } from "../../models/templateAppointments";
 import { TABLE_NAME as medicationTemplateTableName } from "../../models/templateMedications";
 import { TABLE_NAME as vitalTemplateTableName } from "../../models/templateVitals";

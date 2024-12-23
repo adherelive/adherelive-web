@@ -28,7 +28,7 @@ import providerService from "../../services/provider/provider.service";
 import doctorProviderMappingService from "../../services/doctorProviderMapping/doctorProviderMapping.service";
 import featuresService from "../../services/features/features.service";
 import doctorPatientFeatureMappingService from "../../services/doctorPatientFeatureMapping/doctorPatientFeatureMapping.service";
-import careplanSecondaryDoctorMappingService from "../../services/carePlanSecondaryDoctorMappings/carePlanSecondaryDoctorMappings.service";
+import careplanSecondaryDoctorMappingService from "../../services/careplanSecondaryDoctorMappings/careplanSecondaryDoctorMappings.service";
 // import TemplateMedicationWrapper from "../../apiWrapper/web/templateMedication";
 // import TemplateAppointmentWrapper from "../../apiWrapper/web/templateAppointment";
 import AppointmentWrapper from "../../apiWrapper/web/appointments";
@@ -2011,7 +2011,7 @@ class DoctorController extends Controller {
 
       const { mimetype } = file || {};
       const fileType = mimetype.split("/");
-      Logger.debug("mimetype ---> ", mimetype);
+      Logger.debug("mimetype ------> ", mimetype);
       if (!ALLOWED_DOC_TYPE_DOCTORS.includes(fileType[1])) {
         return this.raiseClientError(
           res,
@@ -2062,7 +2062,7 @@ class DoctorController extends Controller {
 
       const { mimetype } = file || {};
       const fileType = mimetype.split("/");
-      Logger.debug("456786754676798675645546789 mimetype ---> ", mimetype);
+      Logger.debug("456786754676798675645546789 mimetype ------> ", mimetype);
       if (!ALLOWED_DOC_TYPE_DOCTORS.includes(fileType[1])) {
         return this.raiseClientError(
           res,
@@ -2829,7 +2829,7 @@ class DoctorController extends Controller {
       if (parseInt(doctor_id) > 0) {
         doctorWrapper = await DoctorWrapper(null, doctor_id);
       } else {
-        Logger.debug("76578937476238497923847238492342 ---> doctors", doctors);
+        Logger.debug("76578937476238497923847238492342 ----> doctors", doctors);
 
         if (!doctors) {
           return raiseClientError(res, 422, {}, "Doctor details not updated");
@@ -3148,7 +3148,7 @@ class DoctorController extends Controller {
       );
     } catch (error) {
       Logger.debug(
-        "DOCTOR QUALIFICATION DOCUMENT DELETE 500 ERROR --->",
+        "DOCTOR QUALIFICATION DOCUMENT DELETE 500 ERROR ---->",
         error
       );
       return raiseServerError(res);
@@ -3176,7 +3176,10 @@ class DoctorController extends Controller {
         "doctor registration document deleted successfully"
       );
     } catch (error) {
-      Logger.debug("DOCTOR REGISTRATION DOCUMENT DELETE 500 ERROR --->", error);
+      Logger.debug(
+        "DOCTOR REGISTRATION DOCUMENT DELETE 500 ERROR ---->",
+        error
+      );
       return raiseServerError(res);
     }
   };
@@ -3189,7 +3192,7 @@ class DoctorController extends Controller {
     const { doctor_id = null } = body;
 
     const file = req.file;
-    Logger.debug("file ---> ", file);
+    Logger.debug("file ----> ", file);
     // const fileExt= file.originalname.replace(/\s+/g, '');
     try {
       let doctorUserId = userId;
@@ -4213,7 +4216,7 @@ class DoctorController extends Controller {
       const { mimetype } = file || {};
       const fileType = mimetype.split("/");
 
-      Logger.debug("mimetype ---> ", mimetype);
+      Logger.debug("mimetype ------> ", mimetype);
       if (!ALLOWED_DOC_TYPE_DOCTORS.includes(fileType[1])) {
         return this.raiseClientError(
           res,

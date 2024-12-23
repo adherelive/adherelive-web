@@ -68,7 +68,7 @@ class PassedCron {
       }
       Log.info(`92313 count : ${count} / ${scheduleEvents.length}`);
     } catch (error) {
-      Log.debug("scheduleEvents 500 error --->", error);
+      Log.debug("scheduleEvents 500 error ---->", error);
     }
   };
 
@@ -89,7 +89,7 @@ class PassedCron {
         );
       }
     } catch (error) {
-      Log.debug("handleDietPassed 500 error --->", error);
+      Log.debug("handleDietPassed 500 error ---->", error);
     }
   };
 
@@ -110,7 +110,7 @@ class PassedCron {
         );
       }
     } catch (error) {
-      Log.debug("handleWorkoutPassed 500 error --->", error);
+      Log.debug("handleWorkoutPassed 500 error ---->", error);
     }
   };
 
@@ -147,7 +147,7 @@ class PassedCron {
         );
       }
     } catch (error) {
-      Log.debug("handleVitalPassed 500 error --->", error);
+      Log.debug("handleVitalPassed 500 error ---->", error);
     }
   };
 
@@ -200,7 +200,7 @@ class PassedCron {
         );
       }
     } catch (error) {
-      Log.debug("handleMedicationPassed 500 error --->", error);
+      Log.debug("handleMedicationPassed 500 error ---->", error);
     }
   };
 
@@ -221,7 +221,7 @@ class PassedCron {
         );
       }
     } catch (error) {
-      Log.debug("handleMedicationPassed 500 error --->", error);
+      Log.debug("handleMedicationPassed 500 error ---->", error);
     }
   };
 
@@ -247,7 +247,7 @@ class PassedCron {
         );
       }
     } catch (error) {
-      Log.debug("handleCarePlanPassed 500 error --->", error);
+      Log.debug("handleCarePlanPassed 500 error ---->", error);
     }
   };
 }

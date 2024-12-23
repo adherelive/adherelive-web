@@ -747,7 +747,7 @@ class AppointmentController extends Controller {
   delete = async (req, res) => {
     const { raiseSuccess, raiseServerError } = this;
     try {
-      Logger.debug("REQUEST ---> ", req.params);
+      Logger.debug("REQUEST ------> ", req.params);
       const { params: { appointment_id } = {}, userDetails: { userId } = {} } =
         req;
 

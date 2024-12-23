@@ -61,7 +61,7 @@ class SmsManager {
       // let smsPublishResponse = await this.sns
       //   .publish(smsData, (err, data) => {
       //     if (err) {
-      //       log.info("sending sms error --->", err);
+      //       log.info("sending sms error ------->>>>", err);
       //     }
       //     if (data) {
       //       log.info("sms sentttttt...........!!", data);
@@ -76,16 +76,16 @@ class SmsManager {
       //   .publish(smsData, (err, data) => {
 
       //     if (err) {
-      //       log.info("sending sms error --->", err);
+      //       log.info("sending sms error ------->>>>", err);
       //     }
       //     if (data) {
-      //       log.info("SMS has been sent: ", data);
+      //       log.info("sms sent...........!!", data);
       //     }
       //   })
       //   .promise();
       //return smsPublishResponse;
     } catch (err) {
-      log.info("sending sms error --->", err);
+      log.info("sending sms error ------->>>>", err);
       return err.data;
     }
   }

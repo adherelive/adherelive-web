@@ -11,6 +11,8 @@ import UserRoleWrapper from "../../app/apiWrapper/mobile/userRoles";
 
 import Logger from "../../libs/log";
 
+const Log = new Logger("API > INDEX");
+
 import userRouter from "./user";
 
 import appointmentRouter from "./appointments";
@@ -51,7 +53,7 @@ import dietRouter from "./diet";
 import portionRouter from "./portion";
 import exerciseRouter from "./exercises";
 import workoutRouter from "./workouts";
-import cdssRouter from "./cdss";
+import CdssRouter from "./cdss";
 import serviceOfferingRouter from "./serviceOffering";
 import serviceSubscriptionRouter from "./serviceSubscription";
 import serviceUserMappingRouter from "./serviceUserMapping";
@@ -64,8 +66,6 @@ import NotesRouter from "./notes";
 import { getTime } from "../../app/helper/timer";
 import prescriptionRouter from "./prescription";
 
-const Log = new Logger("API > INDEX");
-
 router.use(async function (req, res, next) {
   console.log("api-index-1" + getTime() + getTime());
   try {
@@ -75,12 +75,11 @@ router.use(async function (req, res, next) {
       userRoleData;
     const { cookies = {} } = req;
     console.log("api-index-2" + getTime());
-    // Commenting out the below, as it is not required here currently
     // if (cookies.accessToken) {
     //   accessToken = cookies.accessToken;
     // }
     // console.log("api-index-3" + getTime());
-    // const { accessToken: aT = "" } = req.headers || {};
+    // const { accesstoken: aT = "" } = req.headers || {};
     // if (aT) {
     //   accessToken = aT;
     // }
@@ -224,7 +223,7 @@ router.use("/servicesubtx", serviceSubscribeTxRouter);
 router.use("/txactivities", TxActivitiesRouter);
 router.use("/flashcard", FlashCardRouter);
 router.use("/notes", NotesRouter);
-router.use("/cdss", cdssRouter);
+router.use("/cdss", CdssRouter);
 router.use("/his", hisOperationRouter);
 router.use("/prescription", prescriptionRouter);
 router.use("/reassignaudit", reassignAudit);

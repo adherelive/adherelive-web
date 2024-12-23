@@ -11,7 +11,7 @@ import {
 } from "../../../../constant";
 
 import moment from "moment";
-import carePlanSecondaryDoctorMappingsService from "../../../services/carePlanSecondaryDoctorMappings/carePlanSecondaryDoctorMappings.service";
+import careplanSecondaryDoctorMappingsService from "../../../services/careplanSecondaryDoctorMappings/careplanSecondaryDoctorMappings.service";
 
 class StartJob extends AgoraJob {
   constructor(data) {
@@ -50,9 +50,7 @@ class StartJob extends AgoraJob {
       })) || {};
 
     let providerId = null;
-    console.log(
-      "============== Start job for Agora using index.html ========================="
-    );
+    console.log("==============start job index.html=========================");
 
     console.log(userRoles);
     for (const userRole of userRoles) {

@@ -50,7 +50,7 @@ class SmsManager {
           smsSent = true;
         })
         .catch((error) => {
-          log.info("sending sms error --->", error);
+          log.info("sending sms error ------->>>>", error);
           smsSent = false;
         });
 
@@ -61,16 +61,16 @@ class SmsManager {
       //
       //
       //     if (err) {
-      //       log.info("sending sms error --->", err);
+      //       log.info("sending sms error ------->>>>", err);
       //     }
       //     if (data) {
-      //       log.info("SMS has been sent: ", data);
+      //       log.info("sms sent...........!!", data);
       //     }
       //   })
       //   .promise();
       // return smsPublishResponse;
     } catch (err) {
-      log.info("sending sms error --->", err);
+      log.info("sending sms error ------->>>>", err);
       return err.data;
     }
   }

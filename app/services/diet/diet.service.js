@@ -2,7 +2,7 @@ import { Op } from "sequelize";
 
 import Database from "../../../libs/mysql";
 import { TABLE_NAME } from "../../models/diet";
-import { TABLE_NAME as carePlanTableName } from "../../models/carePlan";
+import { TABLE_NAME as careplanTableName } from "../../models/carePlan";
 import { TABLE_NAME as dietFoodGroupMappingTableName } from "../../models/dietFoodGroupMapping";
 import { TABLE_NAME as similiarFoodMappingTableName } from "../../models/similarFoodMapping";
 import { TABLE_NAME as foodGroupTableName } from "../../models/foodGroups";
@@ -318,7 +318,7 @@ class DietService {
   //       where: {
   //         id,
   //       },
-  //       include: [Database.getModel(carePlanTableName)],
+  //       include: [Database.getModel(careplanTableName)],
   //       raw: true,
   //       transaction,
   //     });

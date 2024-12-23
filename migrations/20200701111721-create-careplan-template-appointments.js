@@ -2,7 +2,7 @@
 
 import { DB_TABLES } from "../constant";
 import { TABLE_NAME } from "../app/models/templateAppointments";
-import { TABLE_NAME as carePlanTemplateTableName } from "../app/models/carePlanTemplate";
+import { TABLE_NAME as carePlanTemplateTableName } from "../app/models/careplanTemplate";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {

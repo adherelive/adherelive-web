@@ -15,7 +15,7 @@ router.get(
   CarePlanTemplate.getAllForDoctor
 );
 
-// Search changes for finding Patients
+// gaurav chnages
 router.get(
   "/search",
   Authenticate,
@@ -27,7 +27,7 @@ router.post(
   "/",
   Authenticate,
   isAllowed(PERMISSIONS.CARE_PLAN_TEMPLATE.ADD),
-  // validator.validateCarePlanTemplateData,
+  // validator.validateCareplanTemplateData,
   CarePlanTemplate.create
 );
 

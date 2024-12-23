@@ -10,7 +10,7 @@ import templateMedicationService from "../../services/templateMedication/templat
 import templateAppointmentService from "../../services/templateAppointment/templateAppointment.service";
 import medicineService from "../../services/medicine/medicine.service";
 import userRoleService from "../../services/userRoles/userRoles.service";
-import carePlanSecondaryDoctorMappingService from "../../services/carePlanSecondaryDoctorMappings/carePlanSecondaryDoctorMappings.service";
+import carePlanSecondaryDoctorMappingService from "../../services/careplanSecondaryDoctorMappings/careplanSecondaryDoctorMappings.service";
 //import twilioService from "../../services/twilio/twilio.service";
 
 import {
@@ -626,7 +626,7 @@ class CarePlanController extends Controller {
       let carePlansResponse = [];
 
       if (carePlans.length > 0) {
-        const { care_plans } = await carePlanHelper.getCarePlanDataWithImp({
+        const { care_plans } = await carePlanHelper.getCareplanDataWithImp({
           carePlans,
           userCategory: category,
           doctorId: userCategoryId,

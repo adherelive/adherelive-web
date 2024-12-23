@@ -1,19 +1,3 @@
-/**
- * In JavaScript, the top-level this typically refers to the global object when you're not inside any function or class.
- * However, in the context of a Node.js module, the top-level this is module.exports,
- * which represents the exports of the module. This means that if you use this outside of a function or class in
- * a Node.jsfile, it's not particularly useful or meaningful.
- *
- * By making sure raiseSuccess, raiseClientError, and raiseServerError are accessible within the function,
- * you avoid the misuse of top-level this and ensure your code runs as intended.
- *
- * @param req
- * @param res
- * @param raiseSuccess
- * @param raiseClientError
- * @param raiseServerError
- * @returns {Promise<*>}
- */
 const { raiseSuccess, raiseClientError, raiseServerError } = this;
 
 try {
@@ -50,16 +34,16 @@ try {
   let carePlanIds = [];
   let latestCarePlanId = null;
 
-  let carePlansS = null;
+  let care_planss = null;
   if (carePlans.length > 0) {
-    const { care_plans, care_plan_ids, current_care_plan_id } =
-      await carePlanHelper.getCarePlanDataWithImp({
+    const { care_plans, care_plan_ids, current_careplan_id } =
+      await carePlanHelper.getCareplanDataWithImp({
         carePlans,
         userCategory: category,
         doctorId: userCategoryId,
         userRoleId,
       });
-    carePlansS = care_plans;
+    care_planss = care_plans;
     // care plan ids
     carePlanIds = [...care_plan_ids];
   }
@@ -68,7 +52,7 @@ try {
     newData.length > 0 &&
     newData.filter((id) => {
       const { basic_info: { patient_id: carePlanPatientId = "0" } = {} } =
-        carePlansS[id] || {};
+        care_planss[id] || {};
     });
 
   if (patientCarePlans.length > 0) {
@@ -77,11 +61,13 @@ try {
   return raiseSuccess(
     res,
     200,
-    { care_plans: carePlansS },
+    {
+      care_plans: care_planss,
+    },
     "Patient care plan details fetched successfully"
   );
 } catch (error) {
-  Log.debug("Get CarePlan 500 error ---> ", error);
-  console.log("GET PATIENT DETAILS ERROR CarePlan ---> ", error);
+  // Logger.debug("get careplan 500 error ---> ", error);
+  console.log("GET PATIENT DETAILS ERROR careplan --> ", error);
   return raiseServerError(res);
 }

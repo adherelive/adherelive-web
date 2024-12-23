@@ -1,6 +1,6 @@
 "use strict";
 import { DataTypes } from "sequelize";
-import { TABLE_NAME as carePlanTemplateTableName } from "./carePlanTemplate";
+import { TABLE_NAME as carePlanTemplateTableName } from "./careplanTemplate";
 
 export const TABLE_NAME = "template_diets";
 

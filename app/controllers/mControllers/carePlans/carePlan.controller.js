@@ -10,7 +10,7 @@ import carePlanAppointmentService from "../../../services/carePlanAppointment/ca
 import templateMedicationService from "../../../services/templateMedication/templateMedication.service";
 import templateAppointmentService from "../../../services/templateAppointment/templateAppointment.service";
 import medicineService from "../../../services/medicine/medicine.service";
-import careplanSecondaryDoctorMappingService from "../../../services/carePlanSecondaryDoctorMappings/carePlanSecondaryDoctorMappings.service";
+import careplanSecondaryDoctorMappingService from "../../../services/careplanSecondaryDoctorMappings/careplanSecondaryDoctorMappings.service";
 import twilioService from "../../../services/twilio/twilio.service";
 import UserRoleWrapper from "../../../apiWrapper/mobile/userRoles";
 

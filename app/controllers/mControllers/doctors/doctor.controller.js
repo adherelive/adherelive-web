@@ -17,7 +17,7 @@ import uploadDocumentService from "../../../services/uploadDocuments/uploadDocum
 import featuresService from "../../../services/features/features.service";
 import doctorPatientFeatureMappingService from "../../../services/doctorPatientFeatureMapping/doctorPatientFeatureMapping.service";
 import userRolesService from "../../../services/userRoles/userRoles.service";
-import careplanSecondaryDoctorMappingService from "../../../services/carePlanSecondaryDoctorMappings/carePlanSecondaryDoctorMappings.service";
+import careplanSecondaryDoctorMappingService from "../../../services/careplanSecondaryDoctorMappings/careplanSecondaryDoctorMappings.service";
 import UserRoleService from "../../../services/userRoles/userRoles.service";
 // m-api wrappers
 import PatientWrapper from "../../../apiWrapper/mobile/patient";
@@ -942,7 +942,7 @@ class MobileDoctorController extends Controller {
 
       const { mimetype } = file || {};
       const fileType = mimetype.split("/");
-      Logger.debug("mimetype ---> ", mimetype);
+      Logger.debug("mimetype ------> ", mimetype);
       if (!ALLOWED_DOC_TYPE_DOCTORS.includes(fileType[1])) {
         return this.raiseClientError(
           res,
@@ -1752,7 +1752,7 @@ class MobileDoctorController extends Controller {
       );
     } catch (error) {
       Logger.debug(
-        "DOCTOR QUALIFICATION DOCUMENT DELETE 500 ERROR --->",
+        "DOCTOR QUALIFICATION DOCUMENT DELETE 500 ERROR ---->",
         error
       );
       return raiseServerError(res);
@@ -1780,7 +1780,10 @@ class MobileDoctorController extends Controller {
         "doctor registration document deleted successfully"
       );
     } catch (error) {
-      Logger.debug("DOCTOR REGISTRATION DOCUMENT DELETE 500 ERROR --->", error);
+      Logger.debug(
+        "DOCTOR REGISTRATION DOCUMENT DELETE 500 ERROR ---->",
+        error
+      );
       return raiseServerError(res);
     }
   };
@@ -1978,7 +1981,7 @@ class MobileDoctorController extends Controller {
     const { userDetails, body } = req;
     const { userId = "3" } = userDetails || {};
     const file = req.file;
-    Logger.debug("file ---> ", file);
+    Logger.debug("file ----> ", file);
     // const fileExt= file.originalname.replace(/\s+/g, '');
     try {
       let files = await uploadImageS3(userId, file);

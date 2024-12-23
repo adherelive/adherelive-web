@@ -7,7 +7,7 @@ articles
 carePlanAppointments
 carePlanMedications
 carePlan
-carePlanSecondaryDoctorMappings
+careplanSecondaryDoctorMappings
 careplanTemplate
 clinics
 college
