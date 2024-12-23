@@ -6,6 +6,7 @@ import DietService from "../../../services/diet/diet.service";
 import WorkoutService from "../../../services/workouts/workout.service";
 import CarePlanSecondaryDoctorMappingsService from "../../../services/carePlanSecondaryDoctorMappings/carePlanSecondaryDoctorMappings.service";
 import DoctorService from "../../../services/doctor/doctor.service";
+
 // WRAPPERS...
 import DoctorWrapper from "../doctor";
 import PatientWrapper from "../patient";
@@ -103,7 +104,7 @@ class CarePlanWrapper extends BaseCarePlan {
       });
     }
 
-    // get care plan basci info
+    // get care plan -> basic info
     const basic_info = getBasicInfo();
 
     if (basic_info["basic_info"]["doctor_id"])

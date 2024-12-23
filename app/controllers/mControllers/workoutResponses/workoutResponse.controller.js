@@ -396,8 +396,8 @@ class WorkoutResponseController extends Controller {
         await workout.getReferenceInfo();
 
       const workoutCareplanId = await workout.getCareplanId();
-      const careplanWrapper = await CareplanWrapper(null, workoutCareplanId);
-      const careplanCreatorId = careplanWrapper.getDoctorId();
+      const carePlanWrapper = await CareplanWrapper(null, workoutCareplanId);
+      const careplanCreatorId = carePlanWrapper.getDoctorId();
 
       // exercise contents
       const exerciseContentService = new ExerciseContentService();

@@ -33,7 +33,7 @@ class StartJob extends AgoraJob {
     const participants = roomId.split(
       `-${process.config.twilio.CHANNEL_SERVER}-`
     );
-    console.log("12312313212312312312312312312312312312");
+    console.log("Inside getPush App Template");
     console.log(JSON.stringify(getAgoraData()));
     console.log(participants);
     console.log(roomId);

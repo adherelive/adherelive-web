@@ -1473,9 +1473,9 @@ class PatientController extends Controller {
         userDetails: { userCategoryId } = {},
       } = req;
       Logger.info(`params: patient_id = ${patient_id}`);
-      console.log(
-        `getPatientReports in PatientController has PatientID as: ${patient_id}`
-      );
+      // console.log(
+      //   `getPatientReports in PatientController has PatientID as: ${patient_id}`
+      // );
 
       if (!patient_id) {
         return raiseClientError(res, 422, {}, "Please select correct patient");
@@ -1897,10 +1897,7 @@ class PatientController extends Controller {
         }
       });
 
-      // Logger.debug(
-      //   "sortedInvestigations",
-      //   sortedInvestigations
-      // );
+      // Logger.debug("sortedInvestigations", sortedInvestigations);
 
       if (nextAppointment) {
         nextAppointmentDuration =

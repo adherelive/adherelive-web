@@ -647,8 +647,8 @@ const getFormattedData = async (
       case EVENT_TYPE.DIET:
         const dietWrapper = await DietWrapper({ id: diet_id });
         const careplan_id = await dietWrapper.getCareplanId();
-        const careplanWrapper = await CarePlanWrapper(null, careplan_id);
-        const patientId = await careplanWrapper.getPatientId();
+        const carePlanWrapper = await CarePlanWrapper(null, careplan_id);
+        const patientId = await carePlanWrapper.getPatientId();
 
         const { basic_info: { name: diet_name = "" } = {} } =
           event_diets[diet_id] || {};
@@ -910,8 +910,8 @@ const getFormattedDataWithoutIds = async (
       case EVENT_TYPE.DIET:
         const dietWrapper = await DietWrapper({ id: diet_id });
         const careplan_id = await dietWrapper.getCareplanId();
-        const careplanWrapper = await CarePlanWrapper(null, careplan_id);
-        const patientId = await careplanWrapper.getPatientId();
+        const carePlanWrapper = await CarePlanWrapper(null, careplan_id);
+        const patientId = await carePlanWrapper.getPatientId();
 
         const { basic_info: { name: diet_name = "" } = {} } =
           event_diets[diet_id] || {};

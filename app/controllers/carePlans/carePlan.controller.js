@@ -721,7 +721,7 @@ class CarePlanController extends Controller {
         vital_ids,
       };
 
-      Log.debug("87937198123 careplan", carePlanApiData);
+      Log.debug("Care Plan API data: ", carePlanApiData);
 
       let templateMedications = {};
       let templateAppointments = {};

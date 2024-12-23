@@ -58,8 +58,8 @@ class DietController extends Controller {
 
       const dietWrapper = await DietWrapper({ data: dietData });
       const careplan_id = dietWrapper.getCareplanId();
-      const careplanWrapper = await CareplanWrapper(null, careplan_id);
-      const doctor_id = await careplanWrapper.getDoctorId();
+      const carePlanWrapper = await CareplanWrapper(null, careplan_id);
+      const doctor_id = await carePlanWrapper.getDoctorId();
 
       //other doctor's diet as food item and details only visible to creator doc
       // if (userCategoryId.toString() !== doctor_id.toString()) {
@@ -280,8 +280,8 @@ class DietController extends Controller {
 
       const carePlanId = dietWrapper.getCareplanId();
 
-      const careplanWrapper = await CareplanWrapper(null, carePlanId);
-      const patientId = await careplanWrapper.getPatientId();
+      const carePlanWrapper = await CareplanWrapper(null, carePlanId);
+      const patientId = await carePlanWrapper.getPatientId();
       const patient = await PatientWrapper(null, patientId);
       const { user_role_id: patientRoleId } = await patient.getAllInfo();
 
@@ -499,8 +499,8 @@ class DietController extends Controller {
       });
 
       // create new schedule events
-      const careplanWrapper = await CareplanWrapper(null, care_plan_id);
-      const patientId = await careplanWrapper.getPatientId();
+      const carePlanWrapper = await CareplanWrapper(null, care_plan_id);
+      const patientId = await carePlanWrapper.getPatientId();
       const patient = await PatientWrapper(null, patientId);
       const { user_role_id: patientRoleId } = await patient.getAllInfo();
 

@@ -67,9 +67,9 @@ class WorkoutController extends Controller {
         workout_exercise_groups = [],
       } = body;
 
-      const careplanWrapper = await CareplanWrapper(null, care_plan_id);
-      const current_careplan_doctor_id = await careplanWrapper.getDoctorId();
-      const patientId = await careplanWrapper.getPatientId();
+      const carePlanWrapper = await CareplanWrapper(null, care_plan_id);
+      const current_careplan_doctor_id = await carePlanWrapper.getDoctorId();
+      const patientId = await carePlanWrapper.getPatientId();
       const patient = await PatientWrapper(null, patientId);
       const { user_role_id: patientRoleId } = await patient.getAllInfo();
 
@@ -170,8 +170,8 @@ class WorkoutController extends Controller {
         {
           ...(await workout.getReferenceInfo()),
           care_plans: {
-            [careplanWrapper.getCarePlanId()]:
-              await careplanWrapper.getAllInfo(),
+            [carePlanWrapper.getCarePlanId()]:
+              await carePlanWrapper.getAllInfo(),
           },
         },
         "Workout created successfully."
@@ -210,9 +210,9 @@ class WorkoutController extends Controller {
         delete_exercise_group_ids = [],
       } = body;
 
-      const careplanWrapper = await CareplanWrapper(null, care_plan_id);
-      const current_careplan_doctor_id = await careplanWrapper.getDoctorId();
-      const patientId = await careplanWrapper.getPatientId();
+      const carePlanWrapper = await CareplanWrapper(null, care_plan_id);
+      const current_careplan_doctor_id = await carePlanWrapper.getDoctorId();
+      const patientId = await carePlanWrapper.getPatientId();
 
       const { count = 0, rows = [] } = await carePlanService.findAndCountAll({
         where: {
@@ -304,8 +304,8 @@ class WorkoutController extends Controller {
         });
 
         // create new schedule events
-        const careplanWrapper = await CareplanWrapper(null, care_plan_id);
-        const patientId = await careplanWrapper.getPatientId();
+        const carePlanWrapper = await CareplanWrapper(null, care_plan_id);
+        const patientId = await carePlanWrapper.getPatientId();
         const patient = await PatientWrapper(null, patientId);
         const { user_role_id: patientRoleId } = await patient.getAllInfo();
 
