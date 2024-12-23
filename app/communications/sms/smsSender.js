@@ -76,7 +76,7 @@ class SmsManager {
       //   .publish(smsData, (err, data) => {
 
       //     if (err) {
-      //       log.info("Sending SMS error ---> ", err);
+      //       log.info("Sending SMS has an error ---> ", err);
       //     }
       //     if (data) {
       //       log.info("SMS has been sent: ", data);
@@ -85,7 +85,7 @@ class SmsManager {
       //   .promise();
       //return smsPublishResponse;
     } catch (err) {
-      log.info("Sending SMS error --->", err);
+      log.info("Sending SMS has an error --->", err);
       return err.data;
     }
   }

@@ -11,6 +11,8 @@ import UserRoleWrapper from "../../app/apiWrapper/mobile/userRoles";
 
 import Logger from "../../libs/log";
 
+const Log = new Logger("API > INDEX");
+
 import userRouter from "./user";
 
 import appointmentRouter from "./appointments";
@@ -63,8 +65,6 @@ import reassignAudit from "./reassignAudit";
 import NotesRouter from "./notes";
 import { getTime } from "../../app/helper/timer";
 import prescriptionRouter from "./prescription";
-
-const Log = new Logger("API > INDEX");
 
 router.use(async function (req, res, next) {
   console.log("api-index-1" + getTime() + getTime());

@@ -50,7 +50,7 @@ try {
   let carePlanIds = [];
   let latestCarePlanId = null;
 
-  let carePlansS = null;
+  let care_plans_set = null;
   if (carePlans.length > 0) {
     const { care_plans, care_plan_ids, current_care_plan_id } =
       await carePlanHelper.getCarePlanDataWithImp({
@@ -59,7 +59,7 @@ try {
         doctorId: userCategoryId,
         userRoleId,
       });
-    carePlansS = care_plans;
+    care_plans_set = care_plans;
     // care plan ids
     carePlanIds = [...care_plan_ids];
   }
@@ -68,7 +68,7 @@ try {
     newData.length > 0 &&
     newData.filter((id) => {
       const { basic_info: { patient_id: carePlanPatientId = "0" } = {} } =
-        carePlansS[id] || {};
+        care_plans_set[id] || {};
     });
 
   if (patientCarePlans.length > 0) {
@@ -77,11 +77,11 @@ try {
   return raiseSuccess(
     res,
     200,
-    { care_plans: carePlansS },
+    { care_plans: care_plans_set },
     "Patient care plan details fetched successfully"
   );
 } catch (error) {
   Log.debug("Get CarePlan 500 error ---> ", error);
-  console.log("GET PATIENT DETAILS ERROR CarePlan ---> ", error);
+  console.log("GET PATIENT DETAILS ERROR Care Plan ---> ", error);
   return raiseServerError(res);
 }

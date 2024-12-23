@@ -11,7 +11,7 @@ import {
 } from "../../../../constant";
 
 import moment from "moment";
-import carePlanSecondaryDoctorMappingsService from "../../../services/carePlanSecondaryDoctorMappings/carePlanSecondaryDoctorMappings.service";
+import CarePlanSecondaryDoctorMappingsService from "../../../services/carePlanSecondaryDoctorMappings/carePlanSecondaryDoctorMappings.service";
 
 class StartJob extends AgoraJob {
   constructor(data) {

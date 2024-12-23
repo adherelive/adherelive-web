@@ -41,12 +41,12 @@ import ExerciseContentWrapper from "../../apiWrapper/web/exerciseContents";
 import UserRolesWrapper from "../../apiWrapper/web/userRoles";
 import VitalWrapper from "../../apiWrapper/web/vitals";
 import UserWrapper from "../../apiWrapper/web/user";
-import carePlanWrapper from "../../apiWrapper/web/carePlan";
+import CarePlanWrapper from "../../apiWrapper/web/carePlan";
 import AppointmentWrapper from "../../apiWrapper/web/appointments";
 import MReminderWrapper from "../../apiWrapper/web/medicationReminder";
-import carePlanTemplateWrapper from "../../apiWrapper/web/carePlanTemplate";
-import TemplateMedicationWrapper from "../../apiWrapper/web/templateMedication";
-import TemplateAppointmentWrapper from "../../apiWrapper/web/templateAppointment";
+import CarePlanTemplateWrapper from "../../apiWrapper/web/carePlanTemplate";
+// import TemplateMedicationWrapper from "../../apiWrapper/web/templateMedication";
+// import TemplateAppointmentWrapper from "../../apiWrapper/web/templateAppointment";
 import MedicineApiWrapper from "../../apiWrapper/mobile/medicine";
 import SymptomWrapper from "../../apiWrapper/web/symptoms";
 import DoctorWrapper from "../../apiWrapper/web/doctor";
@@ -85,7 +85,7 @@ import {
 import { getSeparateName, getRoomId } from "../../helper/common";
 import generateOTP from "../../helper/generateOtp";
 import { EVENTS, Proxy_Sdk } from "../../proxySdk";
-import carePlan from "../../apiWrapper/web/carePlan";
+// import careplan from "../../apiWrapper/web/carePlan";
 import generatePDF from "../../helper/generateCarePlanPdf";
 import { downloadFileFromS3 } from "../user/userHelper";
 import { getFilePath } from "../../helper/filePath";
@@ -442,7 +442,7 @@ class PatientController extends Controller {
         });
       }
 
-      // get all care plan templates for user(doctor)
+      // get all care plan templates for user (doctor)
       const carePlanTemplates =
         (await carePlanTemplateService.getCarePlanTemplateData({
           user_id: userId,
@@ -450,7 +450,7 @@ class PatientController extends Controller {
         })) || [];
       if (carePlanTemplates.length > 0) {
         for (let index = 0; index < carePlanTemplates.length; index++) {
-          const carePlanTemplate = await carePlanTemplateWrapper(
+          const carePlanTemplate = await CarePlanTemplateWrapper(
             carePlanTemplates[index]
           );
 
@@ -653,9 +653,9 @@ class PatientController extends Controller {
       const { userDetails: { userRoleId = null } = {} } = req;
       let patient_id = null;
 
-      const careplanWrapper = await CarePlanWrapper(null, careplan_id);
-      if (careplanWrapper) {
-        patient_id = await careplanWrapper.getPatientId();
+      const carePlanWrapper = await CarePlanWrapper(null, careplan_id);
+      if (carePlanWrapper) {
+        patient_id = await carePlanWrapper.getPatientId();
       }
 
       const carePlans =
@@ -886,9 +886,9 @@ class PatientController extends Controller {
               patient_id,
             });
             for (let i = 0; i < careplanData.length; i++) {
-              // getsecondary careplan mapping
+              // getSecondary care plan mapping
               const carePlan = await CarePlanWrapper(careplanData[i]);
-              let secondayDoctorMapping =
+              let secondaryDoctorMapping =
                 await carePlanSecondaryDoctorMappingService.findAndCountAll({
                   where: {
                     secondary_doctor_role_id: userRoleId,
@@ -896,7 +896,7 @@ class PatientController extends Controller {
                   },
                 });
 
-              if (secondayDoctorMapping.count > 0) {
+              if (secondaryDoctorMapping.count > 0) {
                 isPatientAvailableForDoctor = true;
                 break;
               }
@@ -1522,7 +1522,6 @@ class PatientController extends Controller {
         for (let index = 0; index < allDoctors.length; index++) {
           const doctor = await DoctorWrapper(allDoctors[index]);
           // const doctorId = doctor.getDoctorId();
-
           doctorData[doctor.getDoctorId()] = await doctor.getAllInfo();
         }
       }
@@ -2158,7 +2157,7 @@ class PatientController extends Controller {
       const {
         count: careplansCount = 0,
         rows: careplanAsSecondaryDoctor = [],
-      } = await careplanSecondaryDoctorMappingService.findAndCountAll({
+      } = await carePlanSecondaryDoctorMappingService.findAndCountAll({
         where: {
           secondary_doctor_role_id: userRoleId,
         },
@@ -2403,7 +2402,7 @@ class PatientController extends Controller {
       const {
         count: careplansCount = 0,
         rows: careplanAsSecondaryDoctor = [],
-      } = await careplanSecondaryDoctorMappingService.findAndCountAll({
+      } = await carePlanSecondaryDoctorMappingService.findAndCountAll({
         where: {
           secondary_doctor_role_id: userRoleId,
         },

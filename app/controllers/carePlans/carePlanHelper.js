@@ -1,4 +1,3 @@
-// Fetch details from the Services
 import carePlanService from "../../services/carePlan/carePlan.service";
 import carePlanTemplateService from "../../services/carePlanTemplate/carePlanTemplate.service";
 import appointmentService from "../../services/appointment/appointment.service";
@@ -9,7 +8,7 @@ import vitalService from "../../services/vitals/vital.service";
 import DietService from "../../services/diet/diet.service";
 import WorkoutService from "../../services/workouts/workout.service";
 import doctorService from "../../services/doctor/doctor.service";
-import medicineService from "../../services/medicine/medicine.service";
+// import medicineService from "../../services/medicine/medicine.service";
 // import templateMedicationService from "../../services/templateMedication/templateMedication.service";
 // import templateAppointmentService from "../../services/templateAppointment/templateAppointment.service";
 
@@ -36,13 +35,13 @@ const Log = new Logger("CARE_PLAN > HELPER");
 
 /**
  *
- *medicines,
- medications,
- appointments,
- doctors,
- providers = {},
- user_roles = {},
- schedule_events,
+   medicines,
+   medications,
+   appointments,
+   doctors,
+   providers = {},
+   user_roles = {},
+   schedule_events,
  */
 
 function getTime() {

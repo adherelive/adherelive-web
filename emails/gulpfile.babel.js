@@ -198,8 +198,7 @@ function aws() {
 
 // Send email to Litmus for testing. If no AWS credentials then do not replace img urls.
 // This code snippet is used to conditionally replace local asset paths in your HTML files with AWS URLs.
-// If awsURL is defined, it replaces all occurrences of
-// ='/assets/img or ="/assets/img with ='<awsURL> or ="<awsURL>
+// If awsURL is defined, it replaces all occurrences of ='/assets/img' or ="/assets/img" with ='<awsURL>' or ="<awsURL>"
 // to point to the AWS-hosted assets instead of local ones.
 function litmus() {
   var awsURL =
