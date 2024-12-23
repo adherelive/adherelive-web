@@ -12,7 +12,6 @@ import mApiRouter from "../routes/m-api";
 import EventObserver from "../app/proxySdk/eventObserver";
 import ActivityObserver from "../app/activitySdk/activityObserver";
 import RenewSubscription from "../app/cron-jobs/renewSubscription";
-import connection from "../libs/dbConnection";
 
 import Start from "../app/cron-jobs/start";
 import Passed from "../app/cron-jobs/passed";
@@ -46,29 +45,26 @@ app.use(cors());
 /*
  * Add a check to handle cases where process.config.cookieKey might be undefined or not a valid JSON string
  */
-function generateCookieKey() {
-  return (
-    "key_" + Math.random().toString(36).substr(2) + Date.now().toString(36)
-  );
-}
-console.log(generateCookieKey());
+// function generateCookieKey() {
+//   return (
+//     "key_" + Math.random().toString(36).substr(2) + Date.now().toString(36)
+//   );
+// }
+// console.log(generateCookieKey());
 let cookieKeys = [];
 
 try {
-  if (process.config || process.config.COOKIE_KEY) {
-    cookieKeys = JSON.parse(process.config.COOKIE_KEY);
+  if (process.config && process.config.cookieKey) {
+    cookieKeys = JSON.parse(process.config.cookieKey);
   } else {
-    console.warn(
-      "process.config.COOKIE_KEY is undefined or null",
-      process.config.COOKIE_KEY
-    );
+    console.warn("Cookie Key is undefined or null", process.config.cookieKey);
     // Set a default value if cookieKey is not defined
-    cookieKeys = generateCookieKey(); //["cookie938", "abc123xyz456abc789xyz012"];
+    cookieKeys = ["cookie938", "abc123xyz456abc789xyz012"];
   }
 } catch (error) {
   console.error("Error parsing cookieKey:", error);
   // Set a default value in case of error
-  cookieKeys = generateCookieKey(); //["cookie938", "abc123xyz456abc789xyz012"];
+  cookieKeys = ["cookie938", "abc123xyz456abc789xyz012"];
 }
 
 app.use(

@@ -137,7 +137,7 @@ module.exports = () => {
       app_certificate: process.env.AGORA_APP_CERTIFICATE,
       app_channel_name: process.env.AGORA_APP_CHANNEL_NAME,
     },
-    COOKIE_KEY: process.env.COOKIE_KEY,
+    cookieKey: process.env.COOKIE_KEY,
     PORT: process.env.WEB_SERVER_PORT,
     APP_URL: process.env.APP_URL,
     WEB_URL: process.env.WEB_URL,
