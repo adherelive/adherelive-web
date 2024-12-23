@@ -34,7 +34,7 @@ import providerService from "../../services/provider/provider.service";
 import ExerciseContentService from "../../services/exerciseContents/exerciseContent.service";
 import WorkoutService from "../../services/workouts/workout.service";
 import userPreferenceService from "../../services/userPreferences/userPreference.service";
-import careplanSecondaryDoctorMappingService from "../../services/careplanSecondaryDoctorMappings/careplanSecondaryDoctorMappings.service";
+import careplanSecondaryDoctorMappingService from "../../services/carePlanSecondaryDoctorMappings/carePlanSecondaryDoctorMappings.service";
 // WRAPPERS --------------------------------
 import ExerciseContentWrapper from "../../apiWrapper/web/exerciseContents";
 import UserRolesWrapper from "../../apiWrapper/web/userRoles";

@@ -1,6 +1,6 @@
 "use strict";
 
-import { TABLE_NAME } from "../app/models/careplanSecondaryDoctorMappings";
+import { TABLE_NAME } from "../app/models/carePlanSecondaryDoctorMappings";
 import { TABLE_NAME as careplanTableName } from "../app/models/carePlan";
 import { TABLE_NAME as userRoleTableName } from "../app/models/userRoles";
 

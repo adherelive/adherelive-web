@@ -28,7 +28,7 @@ import providerService from "../../services/provider/provider.service";
 import doctorProviderMappingService from "../../services/doctorProviderMapping/doctorProviderMapping.service";
 import featuresService from "../../services/features/features.service";
 import doctorPatientFeatureMappingService from "../../services/doctorPatientFeatureMapping/doctorPatientFeatureMapping.service";
-import careplanSecondaryDoctorMappingService from "../../services/careplanSecondaryDoctorMappings/careplanSecondaryDoctorMappings.service";
+import careplanSecondaryDoctorMappingService from "../../services/carePlanSecondaryDoctorMappings/carePlanSecondaryDoctorMappings.service";
 // import TemplateMedicationWrapper from "../../apiWrapper/web/templateMedication";
 // import TemplateAppointmentWrapper from "../../apiWrapper/web/templateAppointment";
 import AppointmentWrapper from "../../apiWrapper/web/appointments";
