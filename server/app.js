@@ -5,7 +5,7 @@ import cookieSession from "cookie-session";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 
-import initializeDatabase from "../libs/mysql";
+import Database from "../libs/mysql";
 import initializeMongo from "../libs/mongo";
 import ApiRouter from "../routes/api";
 import mApiRouter from "../routes/m-api";
@@ -25,7 +25,7 @@ import RenewTxActivity from "../app/cron-jobs/renewTxActivity";
 // Initialize database connections
 (async () => {
   try {
-    await initializeDatabase.init();
+    await Database.init();
     await initializeMongo();
     // Initialize event observers
     EventObserver.runObservers();

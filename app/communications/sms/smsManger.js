@@ -64,7 +64,7 @@ class SmsManager {
       //       log.info("sending sms error --->", err);
       //     }
       //     if (data) {
-      //       log.info("sms sent...........!!", data);
+      //       log.info("SMS has been sent: ", data);
       //     }
       //   })
       //   .promise();

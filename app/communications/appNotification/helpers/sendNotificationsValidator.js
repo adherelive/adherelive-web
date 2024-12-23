@@ -35,7 +35,7 @@ const actionList = {
 
 class SendNotificationValidator {
   type(type) {
-    if (NOTIFICATION_ENUM.indexOf(type) !== -1) {
+    if (NOTIFICATION_ENUM.indexOf(type) != -1) {
       this.notificationType = type;
       return this;
     } else {

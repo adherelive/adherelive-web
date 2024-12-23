@@ -202,14 +202,14 @@ function aws() {
 // ='/assets/img or ="/assets/img with ='<awsURL> or ="<awsURL>
 // to point to the AWS-hosted assets instead of local ones.
 function litmus() {
-  const awsURL =
+  var awsURL =
     !!CONFIG && !!CONFIG.aws && !!CONFIG.aws.url ? CONFIG.aws.url : false;
 
   // Reports single char alternation in a RegExp. It is simpler to use a character class instead.
   // This may also provide better matching performance. a|b|e|d = [abed]
   return gulp
     .src("dist/**/*.html")
-    .pipe($.if(!!awsURL, $.replace(/=(['"])(\/?assets\/img)/g, "=$1" + awsURL)))
+    .pipe($.if(!!awsURL, $.replace(/=('|")(\/?assets\/img)/g, "=$1" + awsURL)))
     .pipe($.litmus(CONFIG.litmus))
     .pipe(gulp.dest("dist"));
 }
@@ -227,7 +227,7 @@ function mail() {
   // This may also provide better matching performance. a|b|e|d = [abed]
   return gulp
     .src("dist/**/*.html")
-    .pipe($.if(!!awsURL, $.replace(/=(['"])(\/?assets\/img)/g, "=$1" + awsURL)))
+    .pipe($.if(!!awsURL, $.replace(/=('|")(\/?assets\/img)/g, "=$1" + awsURL)))
     .pipe($.mail(CONFIG.mail))
     .pipe(gulp.dest("dist"));
 }
@@ -240,7 +240,7 @@ function zip() {
   function getHtmlFiles(dir) {
     return fs.readdirSync(dir).filter(function (file) {
       var fileExt = path.join(dir, file);
-      var isHtml = path.extname(fileExt) === ext;
+      var isHtml = path.extname(fileExt) == ext;
       return fs.statSync(fileExt).isFile() && isHtml;
     });
   }
