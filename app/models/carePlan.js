@@ -2,7 +2,7 @@
 import { DataTypes } from "sequelize";
 import { TABLE_NAME as doctorTableName } from "./doctors";
 import { TABLE_NAME as patientTableName } from "./patients";
-import { TABLE_NAME as carePlanTemplateTableName } from "./careplanTemplate";
+import { TABLE_NAME as carePlanTemplateTableName } from "./carePlanTemplate";
 import { TABLE_NAME as carePlanAppointmentTableName } from "./carePlanAppointments";
 import { TABLE_NAME as carePlanMedicationTableName } from "./carePlanMedications";
 import { TABLE_NAME as userRolesTableName } from "./userRoles";

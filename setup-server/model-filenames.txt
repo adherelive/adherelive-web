@@ -8,7 +8,7 @@ carePlanAppointments
 carePlanMedications
 carePlan
 careplanSecondaryDoctorMappings
-careplanTemplate
+carePlanTemplate
 clinics
 college
 conditions

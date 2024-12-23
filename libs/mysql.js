@@ -12,7 +12,7 @@ import * as AccountDetails from "../app/models/accountDetails";
 import * as CarePlans from "../app/models/carePlan";
 import * as CarePlanAppointments from "../app/models/carePlanAppointments";
 import * as CarePlanMedications from "../app/models/carePlanMedications";
-import * as CarePlanTemplates from "../app/models/careplanTemplate";
+import * as CarePlanTemplates from "../app/models/carePlanTemplate";
 import * as CarePlanSecondaryDoctorMappings from "../app/models/careplanSecondaryDoctorMappings";
 import * as Clinics from "../app/models/clinics";
 import * as Colleges from "../app/models/college";
