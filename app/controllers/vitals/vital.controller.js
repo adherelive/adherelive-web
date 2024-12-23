@@ -9,6 +9,7 @@ import FeatureDetailService from "../../services/featureDetails/featureDetails.s
 import queueService from "../../services/awsQueue/queue.service";
 import ScheduleEventService from "../../services/scheduleEvents/scheduleEvent.service";
 import carePlanService from "../../services/carePlan/carePlan.service";
+import EventService from "../../services/scheduleEvents/scheduleEvent.service";
 
 // WRAPPERS
 import VitalTemplateWrapper from "../../apiWrapper/web/vitalTemplates";
@@ -28,7 +29,6 @@ import {
 } from "../../../constant";
 import moment from "moment";
 
-import eventService from "../../services/scheduleEvents/scheduleEvent.service";
 import EventWrapper from "../../apiWrapper/common/scheduleEvents";
 import JobSdk from "../../jobSdk";
 import NotificationSdk from "../../notificationSdk";
@@ -173,7 +173,7 @@ class VitalController extends Controller {
         body: { start_date, end_date } = {},
         params: { id } = {},
       } = req;
-      const EventService = new eventService();
+      const eventService = new EventService();
       const QueueService = new queueService();
 
       const doesVitalExists = await VitalService.getByData({ id });
@@ -234,7 +234,7 @@ class VitalController extends Controller {
         Log.debug("eventScheduleData", eventScheduleData);
 
         // Delete previously scheduled events
-        const deletedEvents = await EventService.deleteBatch({
+        const deletedEvents = await eventService.deleteBatch({
           event_id: vitals.getVitalId(),
           event_type: EVENT_TYPE.VITALS,
         });
@@ -265,7 +265,7 @@ class VitalController extends Controller {
         );
       }
     } catch (error) {
-      Log.debug("create 500 error - vitals added", error);
+      Log.debug("Cannot create vitals 500 error -> vitals added: ", error);
       return raiseServerError(res);
     }
   };
@@ -357,16 +357,16 @@ class VitalController extends Controller {
   getVitalResponseTimeline = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
-      Log.debug("req.params vital id---->", req.params);
+      Log.debug("req.params vital id ---> ", req.params);
       const { params: { id } = {} } = req;
-      const EventService = new eventService();
+      const eventService = new EventService();
 
       const today = moment().utc().toISOString();
 
       const vital = await VitalWrapper({ id });
 
       const completeEvents =
-        await EventService.getAllPassedAndCompletedEventsData({
+        await eventService.getAllPassedAndCompletedEventsData({
           event_id: id,
           event_type: EVENT_TYPE.VITALS,
           date: vital.getStartDate(),
@@ -409,7 +409,7 @@ class VitalController extends Controller {
         );
       }
     } catch (error) {
-      Log.debug("getVitalResponse 500 error", error);
+      Log.debug("Cannot getVitalResponse 500 error", error);
       return raiseServerError(res);
     }
   };

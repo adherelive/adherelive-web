@@ -286,7 +286,7 @@ class EmailManger {
     try {
       let payload = await this.emailPayloadTransformer(emailPayload);
       Log.info(
-        "validting email payload!! ========>     ",
+        "Validating email payload!! ---> ",
         process.config.SMTP_USER,
         process.config.SMTP_KEY
       );
@@ -297,15 +297,15 @@ class EmailManger {
 
       if (payload.error && payload.error == 1) return payload;
 
-      Log.info("Email payload transformed successfully!!");
-      Log.info("Sending email......!!");
+      Log.info("Email payload transformed successfully!");
+      Log.info("Sending email...");
       // let publishResponse = this.ses
       //   .sendEmail(payload, (err, data) => {
       //     if (err) {
-      //       Log.info("sending mail error.........!!", err);
+      //       Log.info("Sending an Email error!!", err);
       //     }
       //     if (data) {
-      //       Log.info("email sent...........!!", data);
+      //       Log.info("Email sent successfully!!", data);
       //     }
       //   })
       //   .promise();

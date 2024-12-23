@@ -161,7 +161,7 @@ class UserRoleController extends Controller {
         "Account switched successfully."
       );
     } catch (error) {
-      Log.debug("switchRoleId data 500 error ----> ", error);
+      Log.debug("switchRoleId data 500 error ---> ", error);
       return raiseServerError(res);
     }
   };

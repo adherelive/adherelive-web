@@ -6,7 +6,7 @@ import { TABLE_NAME as carePlanTemplateTableName } from "./carePlanTemplate";
 import { TABLE_NAME as carePlanAppointmentTableName } from "./carePlanAppointments";
 import { TABLE_NAME as carePlanMedicationTableName } from "./carePlanMedications";
 import { TABLE_NAME as userRolesTableName } from "./userRoles";
-import { TABLE_NAME as careplanSecondaryDoctorMappingsTableName } from "./carePlanSecondaryDoctorMappings";
+import { TABLE_NAME as carePlanSecondaryDoctorMappingsTableName } from "./carePlanSecondaryDoctorMappings";
 
 export const TABLE_NAME = "care_plans";
 
@@ -142,7 +142,7 @@ export const associate = (database) => {
   );
 
   database.models[TABLE_NAME].hasMany(
-    database.models[careplanSecondaryDoctorMappingsTableName],
+    database.models[carePlanSecondaryDoctorMappingsTableName],
     {
       foreignKey: "care_plan_id",
       sourceKey: "id",

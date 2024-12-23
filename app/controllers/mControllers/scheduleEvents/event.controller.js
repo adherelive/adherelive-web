@@ -503,7 +503,7 @@ class EventController extends Controller {
           // doctor_id: category === USER_CATEGORY.DOCTOR ? userCategoryId : "", (revious before conflict resolve)
         })) || [];
 
-      const EventService = new eventService();
+      const eventService = new EventService();
 
       let appointmentCritical = [];
       let appointmentNonCritical = [];
@@ -533,7 +533,7 @@ class EventController extends Controller {
         // get appointment count
         for (let id of appointment_ids) {
           const criticalAppointment =
-            (await EventService.getCount({
+            (await eventService.getCount({
               event_type: EVENT_TYPE.APPOINTMENT,
               event_id: id,
               status: EVENT_STATUS.EXPIRED,
@@ -541,7 +541,7 @@ class EventController extends Controller {
             })) || 0;
 
           const nonCriticalAppointment =
-            (await EventService.getCount({
+            (await eventService.getCount({
               event_type: EVENT_TYPE.APPOINTMENT,
               event_id: id,
               status: EVENT_STATUS.EXPIRED,
@@ -559,7 +559,7 @@ class EventController extends Controller {
         // get medication count
         for (let id of medication_ids) {
           const criticalMedication =
-            (await EventService.getCount({
+            (await eventService.getCount({
               event_type: EVENT_TYPE.MEDICATION_REMINDER,
               event_id: id,
               status: EVENT_STATUS.EXPIRED,
@@ -567,7 +567,7 @@ class EventController extends Controller {
             })) || 0;
 
           const nonCriticalMedication =
-            (await EventService.getCount({
+            (await eventService.getCount({
               event_type: EVENT_TYPE.MEDICATION_REMINDER,
               event_id: id,
               status: EVENT_STATUS.EXPIRED,
@@ -585,7 +585,7 @@ class EventController extends Controller {
         // get vitals count (action)
         for (let id of vital_ids) {
           const criticalVital =
-            (await EventService.getCount({
+            (await eventService.getCount({
               event_type: EVENT_TYPE.VITALS,
               event_id: id,
               status: EVENT_STATUS.EXPIRED,
@@ -593,7 +593,7 @@ class EventController extends Controller {
             })) || 0;
 
           const nonCriticalVital =
-            (await EventService.getCount({
+            (await eventService.getCount({
               event_type: EVENT_TYPE.VITALS,
               event_id: id,
               status: EVENT_STATUS.EXPIRED,
@@ -611,7 +611,7 @@ class EventController extends Controller {
         // get diets count
         for (let id of diet_ids) {
           const criticalDiet =
-            (await EventService.getCount({
+            (await eventService.getCount({
               event_type: EVENT_TYPE.DIET,
               event_id: id,
               status: EVENT_STATUS.EXPIRED,
@@ -619,7 +619,7 @@ class EventController extends Controller {
             })) || 0;
 
           const nonCriticalDiet =
-            (await EventService.getCount({
+            (await eventService.getCount({
               event_type: EVENT_TYPE.DIET,
               event_id: id,
               status: EVENT_STATUS.EXPIRED,
@@ -637,7 +637,7 @@ class EventController extends Controller {
         // get workouts count
         for (let id of workout_ids) {
           const criticalWorkout =
-            (await EventService.getCount({
+            (await eventService.getCount({
               event_type: EVENT_TYPE.WORKOUT,
               event_id: id,
               status: EVENT_STATUS.EXPIRED,
@@ -645,7 +645,7 @@ class EventController extends Controller {
             })) || 0;
 
           const nonCriticalWorkout =
-            (await EventService.getCount({
+            (await eventService.getCount({
               event_type: EVENT_TYPE.WORKOUT,
               event_id: id,
               status: EVENT_STATUS.EXPIRED,
@@ -711,7 +711,7 @@ class EventController extends Controller {
         params: { patient_id } = {},
         userDetails: { userData: { category } = {}, userRoleId = null } = {},
       } = req;
-      const EventService = new eventService();
+      const eventService = new EventService();
       let carePlan = null,
         vital_ids = [],
         appointment_ids = [],
@@ -761,35 +761,35 @@ class EventController extends Controller {
 
       // TODO: need to rethink logic for latest events from last visit to include all types
 
-      const vitalEvents = await EventService.getLastVisitData({
+      const vitalEvents = await eventService.getLastVisitData({
         event_id: vital_ids,
         event_type: EVENT_TYPE.VITALS,
         date: moment().subtract(7, "days").utc().toISOString(),
         sort: "DESC",
       });
 
-      const appointmentEvents = await EventService.getLastVisitData({
+      const appointmentEvents = await eventService.getLastVisitData({
         event_id: appointment_ids,
         event_type: EVENT_TYPE.APPOINTMENT,
         date: moment().subtract(7, "days").utc().toISOString(),
         sort: "DESC",
       });
 
-      const medicationEvents = await EventService.getLastVisitData({
+      const medicationEvents = await eventService.getLastVisitData({
         event_id: medication_ids,
         event_type: EVENT_TYPE.MEDICATION_REMINDER,
         date: moment().subtract(7, "days").utc().toISOString(),
         sort: "DESC",
       });
 
-      const dietEvents = await EventService.getLastVisitData({
+      const dietEvents = await eventService.getLastVisitData({
         event_id: diet_ids,
         event_type: EVENT_TYPE.DIET,
         date: moment().subtract(7, "days").utc().toISOString(),
         sort: "DESC",
       });
 
-      const workoutEvents = await EventService.getLastVisitData({
+      const workoutEvents = await eventService.getLastVisitData({
         event_id: workout_ids,
         event_type: EVENT_TYPE.WORKOUT,
         date: moment().subtract(7, "days").utc().toISOString(),
@@ -897,9 +897,9 @@ class EventController extends Controller {
         );
       }
 
-      const EventService = new eventService();
+      const eventService = new EventService();
 
-      const eventData = await EventService.getEventByData({
+      const eventData = await eventService.getEventByData({
         id,
       });
 
@@ -911,7 +911,7 @@ class EventController extends Controller {
         eventId = event.getEventId();
         const afterDeleteResponse = prevResponse.splice(index, 1);
 
-        await EventService.update(
+        await eventService.update(
           {
             details: {
               ...event.getDetails(),
@@ -923,7 +923,7 @@ class EventController extends Controller {
 
         if (eventId) {
           const vital = await VitalWrapper({ id: eventId });
-          const completeEvents = await EventService.getAllPassedByData({
+          const completeEvents = await eventService.getAllPassedByData({
             event_id: vital.getVitalId(),
             event_type: EVENT_TYPE.VITALS,
             date: vital.getStartDate(),
@@ -1000,9 +1000,9 @@ class EventController extends Controller {
         );
       }
 
-      const EventService = new eventService();
+      const eventService = new EventService();
 
-      const eventData = await EventService.getEventByData({
+      const eventData = await eventService.getEventByData({
         id,
       });
 
@@ -1020,7 +1020,7 @@ class EventController extends Controller {
           createdTime: response.createdTime,
         });
 
-        await EventService.update(
+        await eventService.update(
           {
             details: {
               ...event.getDetails(),
@@ -1032,7 +1032,7 @@ class EventController extends Controller {
         if (eventId) {
           const vital = await VitalWrapper({ id: eventId });
           const completeEvents =
-            (await EventService.getAllPassedByData({
+            (await eventService.getAllPassedByData({
               event_id: vital.getVitalId(),
               event_type: EVENT_TYPE.VITALS,
               date: vital.getStartDate(),
@@ -1104,10 +1104,10 @@ class EventController extends Controller {
         );
       }
 
-      const EventService = new eventService();
+      const eventService = new EventService();
 
       const existingEvent =
-        (await EventService.getEventByData({
+        (await eventService.getEventByData({
           id,
         })) || null;
 
@@ -1161,7 +1161,7 @@ class EventController extends Controller {
           .add(process.config.app.event_reschedule_time, "minutes")
           .toISOString();
         const newScheduledEvent =
-          (await EventService.create({
+          (await eventService.create({
             ...allEventInfo,
             status: EVENT_STATUS.PENDING,
             start_time: newStartTime,

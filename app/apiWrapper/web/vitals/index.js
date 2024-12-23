@@ -9,7 +9,7 @@ import VitalService from "../../../services/vitals/vital.service";
 import VitalTemplateWrapper from "../../web/vitalTemplates";
 import CarePlanWrapper from "../../web/carePlan";
 import moment from "moment";
-import eventService from "../../../services/scheduleEvents/scheduleEvent.service";
+import EventService from "../../../services/scheduleEvents/scheduleEvent.service";
 import EventWrapper from "../../common/scheduleEvents";
 import { EVENT_STATUS, EVENT_TYPE, FEATURE_TYPE } from "../../../../constant";
 import FeatureDetailService from "../../../services/featureDetails/featureDetails.service";
@@ -50,11 +50,11 @@ class VitalWrapper extends BaseVital {
   getAllInfo = async () => {
     const { getBasicInfo, getVitalId, getStartDate } = this;
 
-    const EventService = new eventService();
+    const eventService = new EventService();
 
     const currentDate = moment().endOf("day").utc().toDate();
 
-    const scheduleEvents = await EventService.getAllPastData({
+    const scheduleEvents = await eventService.getAllPastData({
       startDate: getStartDate(),
       event_id: getVitalId(),
       date: currentDate,

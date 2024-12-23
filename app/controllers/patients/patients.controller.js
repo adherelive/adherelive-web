@@ -34,18 +34,19 @@ import providerService from "../../services/provider/provider.service";
 import ExerciseContentService from "../../services/exerciseContents/exerciseContent.service";
 import WorkoutService from "../../services/workouts/workout.service";
 import userPreferenceService from "../../services/userPreferences/userPreference.service";
-import careplanSecondaryDoctorMappingService from "../../services/carePlanSecondaryDoctorMappings/carePlanSecondaryDoctorMappings.service";
+import carePlanSecondaryDoctorMappingService from "../../services/carePlanSecondaryDoctorMappings/carePlanSecondaryDoctorMappings.service";
+
 // WRAPPERS --------------------------------
 import ExerciseContentWrapper from "../../apiWrapper/web/exerciseContents";
 import UserRolesWrapper from "../../apiWrapper/web/userRoles";
 import VitalWrapper from "../../apiWrapper/web/vitals";
 import UserWrapper from "../../apiWrapper/web/user";
-import CarePlanWrapper from "../../apiWrapper/web/carePlan";
+import carePlanWrapper from "../../apiWrapper/web/carePlan";
 import AppointmentWrapper from "../../apiWrapper/web/appointments";
 import MReminderWrapper from "../../apiWrapper/web/medicationReminder";
-import CarePlanTemplateWrapper from "../../apiWrapper/web/carePlanTemplate";
-// import TemplateMedicationWrapper from "../../apiWrapper/web/templateMedication";
-// import TemplateAppointmentWrapper from "../../apiWrapper/web/templateAppointment";
+import carePlanTemplateWrapper from "../../apiWrapper/web/carePlanTemplate";
+import TemplateMedicationWrapper from "../../apiWrapper/web/templateMedication";
+import TemplateAppointmentWrapper from "../../apiWrapper/web/templateAppointment";
 import MedicineApiWrapper from "../../apiWrapper/mobile/medicine";
 import SymptomWrapper from "../../apiWrapper/web/symptoms";
 import DoctorWrapper from "../../apiWrapper/web/doctor";
@@ -84,7 +85,7 @@ import {
 import { getSeparateName, getRoomId } from "../../helper/common";
 import generateOTP from "../../helper/generateOtp";
 import { EVENTS, Proxy_Sdk } from "../../proxySdk";
-// import carePlan from "../../apiWrapper/web/carePlan";
+import carePlan from "../../apiWrapper/web/carePlan";
 import generatePDF from "../../helper/generateCarePlanPdf";
 import { downloadFileFromS3 } from "../user/userHelper";
 import { getFilePath } from "../../helper/filePath";
@@ -307,7 +308,7 @@ class PatientController extends Controller {
     );
   };
 
-  // Care_plans seconday details iD start
+  // Care Plans Secondary details ID start
   getPatientCarePlanSecondaryDocDetails = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
@@ -328,14 +329,14 @@ class PatientController extends Controller {
           res,
           422,
           {},
-          "Please select correct careplan id to continue"
+          "Please select correct CarePlan ID to continue"
         );
       }
 
       const carePlans =
         (await carePlanService.getMultipleCarePlanByData({ id })) || [];
 
-      const { care_plans } = await carePlanHelper.getCareplanDataWithDoctor({
+      const { care_plans } = await carePlanHelper.getCarePlanDataWithDoctor({
         carePlans,
         userCategory: category,
         doctorId: userCategoryId,
@@ -351,13 +352,12 @@ class PatientController extends Controller {
         "Patient care plan details fetched successfully"
       );
     } catch (error) {
-      // Logger.debug("get careplan 500 error ---> ", error);
+      // Logger.debug("get carePlan 500 error ---> ", error);
       console.log(error);
       return raiseServerError(res);
     }
   };
-
-  // careplan secondary details id end
+  // Care Plan Secondary details ID end
 
   getPatientCarePlanDetails = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
@@ -409,8 +409,8 @@ class PatientController extends Controller {
       let vitalTemplateData = {};
       let care_planss = null;
       if (carePlans.length > 0) {
-        const { care_plans, care_plan_ids, current_careplan_id } =
-          await carePlanHelper.getCareplanDataWithImp({
+        const { care_plans, care_plan_ids, current_care_plan_id } =
+          await carePlanHelper.getCarePlanDataWithImp({
             carePlans,
             userCategory: category,
             doctorId: userCategoryId,
@@ -421,14 +421,17 @@ class PatientController extends Controller {
         carePlanIds = [...care_plan_ids];
 
         // latest care plan id
-        // latestCarePlanId = current_careplan_id;
+        // latestCarePlanId = current_care_plan_id;
 
-        // get all treatment ids from careplan for templates
+        // get all treatment ids from care plan for templates
         Object.keys(care_plans).forEach((id) => {
           const { details: { treatment_id } = {} } = care_plans[id] || {};
           treatmentIds.push(treatment_id);
           let careplan = care_plans[id];
           if (
+            // Changed from == (double equals) to === (triple equals) to handle type comparison
+            // == (Loose Equality): Performs type coercion (automatic type conversion) before comparing values.
+            // === (Strict Equality): Does not perform type coercion. It compares both the value and the type of the operands.
             (careplan["basic_info"]["patient_id"] == patient_id &&
               careplan["basic_info"]["user_role_id"] == userRoleId) ||
             (careplan["basic_info"]["patient_id"] == patient_id &&
@@ -439,7 +442,7 @@ class PatientController extends Controller {
         });
       }
 
-      // get all careplan templates for user(doctor)
+      // get all care plan templates for user(doctor)
       const carePlanTemplates =
         (await carePlanTemplateService.getCarePlanTemplateData({
           user_id: userId,
@@ -447,7 +450,7 @@ class PatientController extends Controller {
         })) || [];
       if (carePlanTemplates.length > 0) {
         for (let index = 0; index < carePlanTemplates.length; index++) {
-          const carePlanTemplate = await CarePlanTemplateWrapper(
+          const carePlanTemplate = await carePlanTemplateWrapper(
             carePlanTemplates[index]
           );
 
@@ -512,7 +515,7 @@ class PatientController extends Controller {
         200,
         {
           care_plans: care_planss,
-          current_careplan_id: parseInt(latestCarePlanId),
+          current_care_plan_id: parseInt(latestCarePlanId),
           care_plan_ids: carePlanIds,
           care_plan_template_ids: [...carePlanTemplateIds],
           care_plan_templates: {
@@ -536,7 +539,7 @@ class PatientController extends Controller {
         "Patient care plan details fetched successfully"
       );
     } catch (error) {
-      // Logger.debug("get careplan 500 error ---> ", error);
+      // Logger.debug("get care plan 500 error ---> ", error);
       console.log(error);
       return raiseServerError(res);
     }
@@ -545,7 +548,7 @@ class PatientController extends Controller {
   getPatientSymptoms = async (req, res) => {
     const { raiseSuccess, raiseServerError, raiseClientError } = this;
     try {
-      Logger.debug("req.params ----->", req.params);
+      Logger.debug("req.params ---> ", req.params);
       const {
         params: { patient_id } = {},
         userDetails: {
@@ -660,7 +663,7 @@ class PatientController extends Controller {
           id: careplan_id,
         })) || [];
 
-      const { care_plans } = await carePlanHelper.getCareplanDataWithImp({
+      const { care_plans } = await carePlanHelper.getCarePlanDataWithImp({
         carePlans,
       });
 
@@ -725,7 +728,7 @@ class PatientController extends Controller {
   getPatientPartSymptoms = async (req, res) => {
     const { raiseSuccess, raiseServerError, raiseClientError } = this;
     try {
-      Logger.debug("req.params ----->", req.params);
+      Logger.debug("req.params ---> ", req.params);
       const {
         query: { duration = "5" } = {},
         params: { patient_id } = {},
@@ -886,7 +889,7 @@ class PatientController extends Controller {
               // getsecondary careplan mapping
               const carePlan = await CarePlanWrapper(careplanData[i]);
               let secondayDoctorMapping =
-                await careplanSecondaryDoctorMappingService.findAndCountAll({
+                await carePlanSecondaryDoctorMappingService.findAndCountAll({
                   where: {
                     secondary_doctor_role_id: userRoleId,
                     care_plan_id: carePlan.getCarePlanId(),
@@ -1331,7 +1334,7 @@ class PatientController extends Controller {
     }
   };
 
-  createNewCareplanforPatient = async (req, res) => {
+  createNewCarePlanForPatient = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       const {
@@ -1454,10 +1457,10 @@ class PatientController extends Controller {
             ...doctorData,
           },
         },
-        "Careplan added successfully"
+        "Care Plan added successfully"
       );
     } catch (error) {
-      Logger.debug("ADD CAREPLAN PATIENT 500 ERROR", error);
+      Logger.debug("ADD CARE PLAN PATIENT 500 ERROR", error);
       return raiseServerError(res);
     }
   };
@@ -1470,6 +1473,9 @@ class PatientController extends Controller {
         userDetails: { userCategoryId } = {},
       } = req;
       Logger.info(`params: patient_id = ${patient_id}`);
+      console.log(
+        `getPatientReports in PatientController has PatientID as: ${patient_id}`
+      );
 
       if (!patient_id) {
         return raiseClientError(res, 422, {}, "Please select correct patient");
@@ -1505,7 +1511,7 @@ class PatientController extends Controller {
       }
 
       // get other doctor basic details
-      // todo: check with others if this data is already present for multi careplan
+      // TODO: check with others if this data is already present for multi careplan
       let doctorData = {};
       if (doctorIds.length > 0) {
         const allDoctors =
@@ -1515,6 +1521,8 @@ class PatientController extends Controller {
 
         for (let index = 0; index < allDoctors.length; index++) {
           const doctor = await DoctorWrapper(allDoctors[index]);
+          // const doctorId = doctor.getDoctorId();
+
           doctorData[doctor.getDoctorId()] = await doctor.getAllInfo();
         }
       }
@@ -1891,7 +1899,7 @@ class PatientController extends Controller {
       });
 
       // Logger.debug(
-      //   "98273917312 sortedInvestigations ",
+      //   "sortedInvestigations",
       //   sortedInvestigations
       // );
 
@@ -2059,8 +2067,6 @@ class PatientController extends Controller {
         medications,
         clinical_notes,
         follow_up_advise,
-        clinical_notes,
-        follow_up_advise,
         medicines,
         care_plans: {
           [carePlanData.getCarePlanId()]: {
@@ -2148,7 +2154,7 @@ class PatientController extends Controller {
       let count = 0;
       let treatments = {};
 
-      // careplan ids as secondary doctor
+      // care plan ids as secondary doctor
       const {
         count: careplansCount = 0,
         rows: careplanAsSecondaryDoctor = [],
@@ -2393,7 +2399,7 @@ class PatientController extends Controller {
       let count = 0;
       let treatments = {};
 
-      // careplan ids as secondary doctor
+      // care plan ids as secondary doctor
       const {
         count: careplansCount = 0,
         rows: careplanAsSecondaryDoctor = [],
@@ -2634,7 +2640,7 @@ class PatientController extends Controller {
         "Payment terms changed successfully."
       );
     } catch (error) {
-      Logger.debug("acceptPaymentsTerms 500 error ----> ", error);
+      Logger.debug("acceptPaymentsTerms 500 error ---> ", error);
       return this.raiseServerError(res);
     }
   };

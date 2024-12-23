@@ -20,7 +20,7 @@ import NotificationSdk from "../notificationSdk";
 const Log = new Logger("CRON-JOBS > PRIOR");
 
 class PriorCron {
-  allPriorAppointmentEvents;
+  // allPriorAppointmentEvents;
   constructor() {
     this.scheduleEventService = new ScheduleEventService();
   }
@@ -30,6 +30,7 @@ class PriorCron {
     const priorTime = moment().add(priorDuration, "minutes").utc().toDate();
     Log.debug("priorTime ---> ", priorTime);
     Log.debug("currentTime ---> ", moment().utc().toDate());
+
     const scheduleEvents =
       (await this.scheduleEventService.getPriorEventByData(priorTime, type)) ||
       [];
@@ -46,10 +47,10 @@ class PriorCron {
         this.handleAppointmentPrior
       );
 
-      for (const scheduleEvent of this.allPriorAppointmentEvents) {
-        const event = await ScheduleEventWrapper(scheduleEvent);
-        await this.handleAppointmentPrior(event);
-      }
+      // for (const scheduleEvent of this.allPriorAppointmentEvents) {
+      //   const event = await ScheduleEventWrapper(scheduleEvent);
+      //   await this.handleAppointmentPrior(event);
+      // }
 
       // for event type : diet
       await this.processEvents(
@@ -91,13 +92,11 @@ class PriorCron {
       });
 
       await NotificationSdk.execute(appointmentJob);
-
       const updateEventStatus = await this.scheduleEventService.update(
-        {
-          status: EVENT_STATUS.PRIOR,
-        },
+        { status: EVENT_STATUS.PRIOR },
         id
       );
+      // const updateEventStatus = await this.scheduleEventService.update({ status: EVENT_STATUS.PRIOR }, id);
     } catch (error) {
       Log.debug("handleAppointmentPrior error", error);
     }
@@ -109,11 +108,8 @@ class PriorCron {
       const dietJob = DietJob.execute(EVENT_STATUS.PRIOR, event);
 
       await NotificationSdk.execute(dietJob);
-
       await this.scheduleEventService.update(
-        {
-          status: EVENT_STATUS.PRIOR,
-        },
+        { status: EVENT_STATUS.PRIOR },
         id
       );
     } catch (error) {
@@ -127,11 +123,8 @@ class PriorCron {
       const workoutJob = WorkoutJob.execute(EVENT_STATUS.PRIOR, event);
 
       await NotificationSdk.execute(workoutJob);
-
       await this.scheduleEventService.update(
-        {
-          status: EVENT_STATUS.PRIOR,
-        },
+        { status: EVENT_STATUS.PRIOR },
         id
       );
     } catch (error) {

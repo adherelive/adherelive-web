@@ -295,7 +295,7 @@ class SymptomController extends Controller {
   uploadAudio = async (req, res) => {
     const { raiseSuccess, raiseServerError } = this;
     try {
-      Log.debug("req.file ----> ", req.file);
+      Log.debug("req.file ---> ", req.file);
 
       const { userDetails: { userId } = {} } = req;
 
@@ -319,7 +319,7 @@ class SymptomController extends Controller {
   uploadVideo = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
-      Log.debug("req.file ----> ", req.file);
+      Log.debug("req.file ---> ", req.file);
 
       const {
         file: videoFile,
@@ -370,7 +370,7 @@ class SymptomController extends Controller {
   uploadPhotos = async (req, res) => {
     const { raiseSuccess, raiseServerError } = this;
     try {
-      Log.debug("req.file ----> ", req.file);
+      Log.debug("req.file ---> ", req.file);
 
       const { userDetails: { userId } = {} } = req;
 
@@ -396,7 +396,7 @@ class SymptomController extends Controller {
   getSymptomDetails = async (req, res) => {
     const { raiseSuccess, raiseServerError } = this;
     try {
-      Log.debug("req.body ----> ", req.body);
+      Log.debug("req.body ---> ", req.body);
       const { body: { symptom_ids = [] } = {} } = req;
 
       let documentData = {};

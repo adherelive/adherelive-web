@@ -5,6 +5,13 @@ const errMessage = require("../../../config/messages.json").errMessages;
 const Response = require("../../../app/controllers/helper/responseFormat");
 import doRequest from "../../../app/controllers/helper/doRequest";
 
+/** This is the API being used to connect to and link the data from any HIS
+ *
+ * @param req
+ * @param res
+ * @param next
+ * @returns {Promise<*>}
+ */
 export default async (req, res, next) => {
   console.log("auth-middle-ware - 1");
   try {
@@ -48,7 +55,7 @@ export default async (req, res, next) => {
     if (err.name === "TokenExpiredError") {
       payload = {
         code: 401,
-        error: "session expired",
+        error: "Session expired",
       };
     } else {
       payload = {

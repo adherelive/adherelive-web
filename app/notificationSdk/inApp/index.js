@@ -49,7 +49,7 @@ class AppNotification {
 
       Log.debug("feed --> ", template);
       const response = await feed.addActivity(template).catch((err) => {
-        Log.debug("response err ------>", err);
+        Log.debug("response err ---> ", err);
       });
 
       Log.debug("sendAppNotification Response", response);

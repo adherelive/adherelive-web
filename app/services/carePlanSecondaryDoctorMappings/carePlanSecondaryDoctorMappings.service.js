@@ -1,7 +1,7 @@
 import { Op } from "sequelize";
 import Database from "../../../libs/mysql";
 import { TABLE_NAME } from "../../models/carePlanSecondaryDoctorMappings";
-import { TABLE_NAME as careplanTableName } from "../../models/carePlan";
+import { TABLE_NAME as carePlanTableName } from "../../models/carePlan";
 import { TABLE_NAME as userRolesTableName } from "../../models/userRoles";
 
 const DEFAULT_ORDER = [["created_at", "DESC"]];
@@ -12,7 +12,7 @@ class CarePlanSecondaryDoctorMappingsService {
       return await Database.getModel(TABLE_NAME).findAndCountAll({
         where,
         include: [
-          Database.getModel(careplanTableName),
+          Database.getModel(carePlanTableName),
           Database.getModel(userRolesTableName),
         ],
         order,

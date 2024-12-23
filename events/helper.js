@@ -93,7 +93,7 @@ export const handleAppointments = async (appointment) => {
       dtstart: moment(start_time).utc().toDate(),
     });
 
-    Log.debug("rrule ----> ", rrule.all());
+    Log.debug("rrule ---> ", rrule.all());
 
     // create schedule for the date
     const scheduleData = {
@@ -162,7 +162,7 @@ export const handleMedications = async (data) => {
 
     const scheduleEventArr = [];
 
-    Log.debug("213971203 createMedicationSchedule -->", {
+    Log.debug("createMedicationSchedule ---> ", {
       medicine_id,
       data: medicine.getBasicInfo(),
       when_to_take,
@@ -1020,7 +1020,7 @@ const repeatDays = (days) => {
         daysArr.push(RRule.SU);
         break;
       default:
-        Log.debug("day ----> ", day);
+        Log.debug("day ---> ", day);
     }
   }
 

@@ -626,7 +626,7 @@ class CarePlanController extends Controller {
       let carePlansResponse = [];
 
       if (carePlans.length > 0) {
-        const { care_plans } = await carePlanHelper.getCareplanDataWithImp({
+        const { care_plans } = await carePlanHelper.getCarePlanDataWithImp({
           carePlans,
           userCategory: category,
           doctorId: userCategoryId,

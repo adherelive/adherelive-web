@@ -53,7 +53,7 @@ class RemoveDocuments {
       fs.readdir(path, function (err, files) {
         if (err) {
           Log.debug(
-            "REMOVE_DOCUMENTS: could not list the directory ---->",
+            "REMOVE_DOCUMENTS: could not list the directory ---> ",
             err
           );
           return;
@@ -160,7 +160,7 @@ class RemoveDocuments {
         this.readDirectory(S3_DOWNLOAD_FOLDER);
       }
     } catch (error) {
-      Log.debug("REMOVE_DOCUMENTS runObserver 500 error ---->", error);
+      Log.debug("REMOVE_DOCUMENTS runObserver 500 error ---> ", error);
     }
   };
 }
