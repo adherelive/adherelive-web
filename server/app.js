@@ -46,20 +46,31 @@ app.use(cors());
 /*
  * Add a check to handle cases where process.config.cookieKey might be undefined or not a valid JSON string
  */
+function generateCookieKey() {
+  return (
+    "key_" + Math.random().toString(36).substr(2) + Date.now().toString(36)
+  );
+}
+
+console.log(generateCookieKey());
+
 let cookieKeys = [];
 
 try {
-  if (process.config && process.config.cookieKey) {
-    cookieKeys = JSON.parse(process.config.cookieKey);
+  if (process.config || process.config.COOKIE_KEY) {
+    cookieKeys = JSON.parse(process.config.COOKIE_KEY);
   } else {
-    console.warn("process.config.cookieKey is undefined or null");
+    console.warn(
+      "process.config.COOKIE_KEY is undefined or null",
+      process.config.COOKIE_KEY
+    );
     // Set a default value if cookieKey is not defined
-    cookieKeys = ["cookie938", "abc123xyz456abc789xyz012"];
+    cookieKeys = generateCookieKey(); //["cookie938", "abc123xyz456abc789xyz012"];
   }
 } catch (error) {
   console.error("Error parsing cookieKey:", error);
   // Set a default value in case of error
-  cookieKeys = ["cookie938", "abc123xyz456abc789xyz012"];
+  cookieKeys = generateCookieKey(); //["cookie938", "abc123xyz456abc789xyz012"];
 }
 
 app.use(
