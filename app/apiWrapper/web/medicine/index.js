@@ -26,6 +26,7 @@ class MedicineWrapper extends BaseMedicine {
         details,
         description,
         creator_id,
+        // details,
         public_medicine,
       },
     };
@@ -101,7 +102,7 @@ export default async (data = null, id = null) => {
     const medicine = await medicineService.getMedicineById(id);
     return new MedicineWrapper(medicine);
   } catch (error) {
-    console.error("Error fetching medicine:", error);
+    console.error("Error fetching medicine: ", error);
     return new MedicineWrapper(null); // Or throw the error if you want it to propagate
   }
 };

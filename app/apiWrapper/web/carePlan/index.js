@@ -112,8 +112,8 @@ class CarePlanWrapper extends BaseCarePlan {
         await DoctorService.getDoctorByDoctorId(
           basic_info["basic_info"]["doctor_id"]
         );
-    // get doctor by doctoriD.
 
+    // get doctor by doctor ID
     return {
       ...basic_info,
       appointment_ids: care_plan_appointments.map((appointment) =>

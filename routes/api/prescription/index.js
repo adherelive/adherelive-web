@@ -1117,44 +1117,64 @@ router.get("/details/:care_plan_id", Authenticated, async (req, res) => {
         conditions
       );
 
-    const stringSymptomArray = [];
+    let stringSymptomArray = [];
     let stringSymptom = "";
 
     if (symptoms) {
       try {
-        const parsedSymptoms = JSON.parse(symptoms);
-
-        if (Array.isArray(parsedSymptoms)) {
-          // Crucial check: Is it an array?
-          parsedSymptoms.forEach((element) => {
-            if (
-              typeof element === "object" &&
-              element !== null &&
-              element.symptomName &&
-              element.duration
-            ) {
-              // Check if element is an object and has required properties
-              const bodyPart =
-                Array.isArray(element.bodyParts) && element.bodyParts.length > 0
-                  ? `(${element.bodyParts.join(", ")})` // Join array elements with commas
-                  : "";
-              stringSymptomArray.push(
-                `${element.symptomName} ${bodyPart} for ${element.duration}`
-              );
-            } else {
-              console.warn("Invalid symptom element: ", element); // Log invalid elements
-            }
-          });
-        } else {
-          console.warn("Symptoms data is not an array: ", parsedSymptoms);
-          stringSymptom = symptoms;
-        }
+        let object = JSON.parse(symptoms);
+        object.forEach((element) => {
+          let symName = element.symptomName;
+          let bodyPart =
+            element.bodyParts.length > 0
+              ? `(${String(element.bodyParts)})`
+              : "";
+          let duration = element.duration;
+          stringSymptomArray.push(`${symName} ${bodyPart} for ${duration}`);
+        });
       } catch (e) {
-        console.error("Error parsing symptoms: ", e);
         stringSymptom = symptoms;
       }
     }
 
+    // const stringSymptomArray = [];
+    // let stringSymptom = "";
+    //
+    // if (symptoms) {
+    //   try {
+    //     const parsedSymptoms = JSON.parse(symptoms);
+    //
+    //     if (Array.isArray(parsedSymptoms)) {
+    //       // Crucial check: Is it an array?
+    //       parsedSymptoms.forEach((element) => {
+    //         if (
+    //           typeof element === "object" &&
+    //           element !== null &&
+    //           element.symptomName &&
+    //           element.duration
+    //         ) {
+    //           // Check if element is an object and has required properties
+    //           const bodyPart =
+    //             Array.isArray(element.bodyParts) && element.bodyParts.length > 0
+    //               ? `(${element.bodyParts.join(", ")})` // Join array elements with commas
+    //               : "";
+    //           stringSymptomArray.push(
+    //             `${element.symptomName} ${bodyPart} for ${element.duration}`
+    //           );
+    //         } else {
+    //           console.warn("Invalid symptom element: ", element); // Log invalid elements
+    //         }
+    //       });
+    //     } else {
+    //       console.warn("Symptoms data is not an array: ", parsedSymptoms);
+    //       stringSymptom = symptoms;
+    //     }
+    //   } catch (e) {
+    //     console.error("Error parsing symptoms: ", e);
+    //     stringSymptom = symptoms;
+    //   }
+    // }
+    //
     // if (stringSymptomArray.length > 0) {
     //     return stringSymptomArray;
     // } else {

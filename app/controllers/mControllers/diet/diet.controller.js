@@ -61,7 +61,7 @@ class DietController extends Controller {
       }
 
       const dietWrapper = await DietWrapper({ data: dietData });
-      const careplan_id = dietWrapper.getCareplanId();
+      const careplan_id = dietWrapper.getCarePlanId();
       const carePlanWrapper = await CarePlanWrapper(null, careplan_id);
       const doctor_id = await carePlanWrapper.getDoctorId();
       const patient_id = carePlanWrapper.getPatientId();
@@ -284,7 +284,7 @@ class DietController extends Controller {
 
       const referenceInfo = await dietWrapper.getReferenceInfo();
 
-      const carePlanId = dietWrapper.getCareplanId();
+      const carePlanId = dietWrapper.getCarePlanId();
 
       const carePlanWrapper = await CarePlanWrapper(null, carePlanId);
       const patientId = await carePlanWrapper.getPatientId();

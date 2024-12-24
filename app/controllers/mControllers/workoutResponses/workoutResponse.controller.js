@@ -126,7 +126,7 @@ class WorkoutResponseController extends Controller {
       if (workoutResponseId) {
         // get doctor for workout
         const workout = await WorkoutWrapper({ id: workout_id });
-        const carePlan = await CarePlanWrapper(null, workout.getCareplanId());
+        const carePlan = await CarePlanWrapper(null, workout.getCarePlanId());
 
         const doctorRoleId = carePlan.getUserRoleId();
         const doctor = await DoctorWrapper(null, carePlan.getDoctorId());
@@ -395,7 +395,7 @@ class WorkoutResponseController extends Controller {
       const { exercises, exercise_groups, exercise_details } =
         await workout.getReferenceInfo();
 
-      const workoutCareplanId = await workout.getCareplanId();
+      const workoutCareplanId = await workout.getCarePlanId();
       const carePlanWrapper = await CarePlanWrapper(null, workoutCareplanId);
       const careplanCreatorId = carePlanWrapper.getDoctorId();
 

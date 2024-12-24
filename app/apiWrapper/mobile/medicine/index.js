@@ -68,8 +68,8 @@ class MobileMedicineWrapper extends BaseMedicine {
       creator_id,
       details,
       public_medicine,
-      updated_at,
-      created_at,
+      updatedAt,
+      createdAt,
     } = _data || {};
 
     return {
@@ -82,8 +82,8 @@ class MobileMedicineWrapper extends BaseMedicine {
         public_medicine,
       },
       details,
-      updated_at: updated_at,
-      created_at: created_at,
+      updated_at: updatedAt,
+      created_at: createdAt,
     };
   };
 }

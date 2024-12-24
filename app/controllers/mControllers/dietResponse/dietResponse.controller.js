@@ -117,7 +117,7 @@ class DietResponseController extends Controller {
       if (dietResponseId) {
         // get doctor for diet
         const diet = await DietWrapper({ id: diet_id });
-        const carePlan = await CarePlanWrapper(null, diet.getCareplanId());
+        const carePlan = await CarePlanWrapper(null, diet.getCarePlanId());
         const doctorRoleId = carePlan.getUserRoleId();
 
         const doctor = await DoctorWrapper(null, carePlan.getDoctorId());

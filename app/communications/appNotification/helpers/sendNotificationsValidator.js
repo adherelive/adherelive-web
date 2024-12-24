@@ -29,13 +29,13 @@ const actionList = {
   CREATE: "create",
   RESCHEDULE: "reschedule",
   START: "start",
-  PROIR: "prior",
+  PRIOR: "prior",
   DELETE: "delete",
 };
 
 class SendNotificationValidator {
   type(type) {
-    if (NOTIFICATION_ENUM.indexOf(type) != -1) {
+    if (NOTIFICATION_ENUM.indexOf(type) !== -1) {
       this.notificationType = type;
       return this;
     } else {
@@ -68,7 +68,7 @@ class SendNotificationValidator {
         case actionList.RESCHEDULE:
           return await this.sendNotification(validData);
 
-        case actionList.PROIR:
+        case actionList.PRIOR:
           await this.sendNotification(validData);
           break;
         case actionList.START:

@@ -3,7 +3,7 @@ export default class CarePlanSecondaryDoctorMappings {
     this._data = data;
   }
 
-  getCareplanId() {
+  getCarePlanId() {
     return this._data.get("care_plan_id");
   }
 

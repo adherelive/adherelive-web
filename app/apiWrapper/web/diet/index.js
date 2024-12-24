@@ -1,10 +1,9 @@
-//services
 import BaseDiet from "../../../services/diet/index";
 import DietService from "../../../services/diet/diet.service";
 
-//Wrapper
-import CarePlanWrapper from "../carePlan";
-import DietFoodGroupMappingWrapper from "../dietFoodGroupMapping";
+// Wrapper
+import CarePlanWrapper from "../../web/carePlan";
+import DietFoodGroupMappingWrapper from "../../web/dietFoodGroupMapping";
 
 class DietWrapper extends BaseDiet {
   constructor(data) {
@@ -43,8 +42,8 @@ class DietWrapper extends BaseDiet {
     const { getDietFoodGroupMappings } = this;
     const dietFoodGroupMappings = getDietFoodGroupMappings() || [];
 
-    const careplanId = await this.getCareplanId();
-    const carePlanData = await CarePlanWrapper(null, careplanId);
+    const carePlanId = await this.getCarePlanId();
+    const carePlanData = await CarePlanWrapper(null, carePlanId);
 
     let dietFoodGroupMappingData = {},
       dietsApiData = {},
@@ -52,7 +51,7 @@ class DietWrapper extends BaseDiet {
       portionsApiData = {},
       foodItemsApiData = {},
       foodItemDetailsApiData = {};
-    let careplanApiData = {},
+    let carePlanApiData = {},
       similarFoodMappingApiData;
 
     if (dietFoodGroupMappings.length > 0) {
@@ -92,14 +91,14 @@ class DietWrapper extends BaseDiet {
       }
     }
 
-    careplanApiData[carePlanData.getCarePlanId()] =
+    carePlanApiData[carePlanData.getCarePlanId()] =
       await carePlanData.getAllInfo();
 
     return {
       diets: {
         ...dietsApiData,
       },
-      care_plans: { ...careplanApiData },
+      care_plans: { ...carePlanApiData },
       diet_food_group_mappings: {
         ...dietFoodGroupMappingData,
       },

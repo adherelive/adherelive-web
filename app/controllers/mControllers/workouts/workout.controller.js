@@ -137,7 +137,7 @@ class WorkoutController extends Controller {
 
       const workout = await WorkoutWrapper({ id: workout_id });
 
-      const carePlanId = workout.getCareplanId();
+      const carePlanId = workout.getCarePlanId();
 
       const eventScheduleData = {
         patient_user_id: patient.getUserId(),
@@ -277,7 +277,7 @@ class WorkoutController extends Controller {
 
       const workout = await WorkoutWrapper({ id: workout_id });
 
-      const carePlanId = workout.getCareplanId();
+      const carePlanId = workout.getCarePlanId();
 
       const eventScheduleData = {
         patient_user_id: patient.getUserId(),
