@@ -592,7 +592,7 @@ class MobileUserController extends Controller {
         let providerApiData = {};
         let userCategoryApiData = null;
         let userCategoryId = "";
-        let careplanData = [];
+        let carePlanData = [];
         let doctorIds = [];
         let patientIds = [];
         let userIds = [userId];
@@ -612,11 +612,11 @@ class MobileUserController extends Controller {
               userCatApiData[userCategoryApiData.getPatientId()] =
                 userCategoryApiData.getBasicInfo();
 
-              careplanData = await carePlanService.getCarePlanByData({
+              carePlanData = await carePlanService.getCarePlanByData({
                 patient_id: userCategoryId,
               });
 
-              await careplanData.forEach(async (carePlan) => {
+              await carePlanData.forEach(async (carePlan) => {
                 const carePlanApiWrapper = await MCarePlanWrapper(carePlan);
                 doctorIds.push(carePlanApiWrapper.getDoctorId());
                 carePlanApiData[carePlanApiWrapper.getCarePlanId()] =
@@ -669,13 +669,13 @@ class MobileUserController extends Controller {
 
               userCatApiData[userCategoryApiData.getDoctorId()] = allInfo;
 
-              // careplanData = await carePlanService.getCarePlanByData({
+              // carePlanData = await carePlanService.getCarePlanByData({
               //   user_role_id: userRoleId,
               // });
 
-              // Logger.debug("careplan mobile doctor", careplanData);
+              // Logger.debug("careplan mobile doctor", carePlanData);
 
-              // await careplanData.forEach(async (carePlan) => {
+              // await carePlanData.forEach(async (carePlan) => {
               //   const carePlanApiWrapper = await MCarePlanWrapper(carePlan);
               //   patientIds.push(carePlanApiWrapper.getPatientId());
               //   carePlanApiData[carePlanApiWrapper.getCarePlanId()] =
@@ -1172,7 +1172,7 @@ class MobileUserController extends Controller {
       for (const item of registration_details) {
         const { number, council, year, expiry_date, id = 0 } = item;
 
-        if (id && id !== "0") {
+        if (id && id !== 0) {
           let registration = await registrationService.updateRegistration(
             { doctor_id, number, year, council, expiry_date },
             id

@@ -1370,10 +1370,9 @@ function printPatientBlockData(
       continued: true,
     })
     .font(REGULAR_FONT)
-    .text(`${patientName}`, DOC_MARGIN + 10, doctorBlockEndRowLevel + 20),
-    {
+    .text(`${patientName}`, DOC_MARGIN + 10, doctorBlockEndRowLevel + 20, {
       continued: true,
-    };
+    });
 
   doc
     .fontSize(NORMAL_FONT_SIZE)
@@ -1498,27 +1497,43 @@ function printPatientBlockData(
   return doc.y + 10;
 }
 
-function isMedicationsUpdatedInExistingMedicin(medications) {
+function isMedicationUpdatedInExistingMedicine(medications) {
   const medicationIds = Object.keys(medications);
-  let date = null;
-  let isMedicinsUpdate = false;
+  let isMedicineUpdate = false;
+  let firstCreatedAt = null; // Store the created_at of the first medication
+
   for (const medicationId of medicationIds) {
     const {
-      [medicationId]: {
-        basic_info: { updated_at, created_at } = {},
-        details: mobileDetails = null,
-      },
+      [medicationId]: { basic_info: { updated_at, created_at } = {} },
     } = medications;
-    let updated_date = `${moment(new Date(updated_at)).format("DD MMM YY")}`;
-    let created_date = `${moment(new Date(created_at)).format("DD MMM YY")}`;
+
+    if (!updated_at || !created_at) {
+      console.warn(
+        `medicationId ${medicationId} has missing created_at or updated_at`
+      );
+      continue; // Skip to the next medication
+    }
+
+    let updated_date = moment(new Date(updated_at)).format("DD MMM YY");
+    let created_date = moment(new Date(created_at)).format("DD MMM YY");
+
+    if (!firstCreatedAt) {
+      firstCreatedAt = created_date; // Store the first created_at
+    }
 
     if (created_date !== updated_date) {
-      // all medicine written in same days an there is no update on medicines
-      isMedicinsUpdate = true;
+      isMedicineUpdate = true;
+      break; // Exit the loop early if an update is found
     }
-    return isMedicinsUpdate;
   }
-  return date;
+
+  if (isMedicineUpdate) {
+    return isMedicineUpdate; // Return true if any update is found
+  } else if (medicationIds.length > 0 && firstCreatedAt) {
+    return firstCreatedAt; // Return the first created_at if no updates and medications exist
+  } else {
+    return null; // Return null if there are no medications
+  }
 }
 
 // AKSHAY NEW CODE IMPLEMENTATIONS
@@ -1539,7 +1554,7 @@ function renderChiefComplaints({ symptoms }) {
 
     return finalSymptom;
   } catch (err) {
-    console.log("error in chief complience", err);
+    console.log("Error in chief complaints: ", err);
   }
 }
 
@@ -1729,7 +1744,7 @@ function printCarePlanData({
       let { date: latestUpdateDate, isPrescriptionUpdated } =
         getLatestUpdateDate(medications);
       let isMedicationsUpdate =
-        isMedicationsUpdatedInExistingMedicin(medications);
+        isMedicationUpdatedInExistingMedicine(medications);
       let wantToShow = true;
       if (isPrescriptionUpdated || isMedicationsUpdate) wantToShow = false;
       // Gaurav New Chnages - end

@@ -1476,11 +1476,14 @@ class MPatientController extends Controller {
           const { users, patients, patient_id } = await user.getReferenceInfo();
           patientIds.push(patient_id);
           userDetails = { ...userDetails, ...users };
-          let careplanData = await carePlanService.getCarePlanByData({
-            doctor_id: authDoctor.get("id"),
-            patient_id,
-          });
-          isPatientAvailableForDoctor = careplanData.length > 0;
+          let carePlanData = [];
+          if (authDoctor) {
+            carePlanData = await carePlanService.getCarePlanByData({
+              doctor_id: authDoctor.get("id"),
+              patient_id,
+            });
+          }
+          isPatientAvailableForDoctor = carePlanData.length > 0;
 
           patientDetails = {
             ...patientDetails,
@@ -1488,13 +1491,13 @@ class MPatientController extends Controller {
             // isPatientAvailableForDoctor,
           };
           if (!isPatientAvailableForDoctor) {
-            let careplanData = await carePlanService.getCarePlanByData({
+            let carePlanData = await carePlanService.getCarePlanByData({
               patient_id,
             });
-            for (let i = 0; i < careplanData.length; i++) {
-              // getsecondary careplan mapping
-              const carePlan = await CarePlanWrapper(careplanData[i]);
-              let secondayDoctorMapping =
+            for (let i = 0; i < carePlanData.length; i++) {
+              // Get Secondary Care Plan mapping
+              const carePlan = await CarePlanWrapper(carePlanData[i]);
+              let secondaryDoctorMapping =
                 await carePlanSecondaryDoctorMappingService.findAndCountAll({
                   where: {
                     secondary_doctor_role_id: userRoleId,
@@ -1502,7 +1505,7 @@ class MPatientController extends Controller {
                   },
                 });
 
-              if (secondayDoctorMapping.count > 0) {
+              if (secondaryDoctorMapping.count > 0) {
                 isPatientAvailableForDoctor = true;
                 break;
               }
@@ -1662,12 +1665,15 @@ class MPatientController extends Controller {
           authDoctor = await DoctorService.getDoctorByData({ user_id: userId });
         }
 
-        const consentData = await consentService.create({
-          type: CONSENT_TYPE.CARE_PLAN,
-          doctor_id: authDoctor.get("id"),
-          patient_id,
-          user_role_id: userRoleId,
-        });
+        let consentData = [];
+        if (authDoctor) {
+          consentData = await consentService.create({
+            type: CONSENT_TYPE.CARE_PLAN,
+            doctor_id: authDoctor.get("id"),
+            patient_id,
+            user_role_id: userRoleId,
+          });
+        }
         const consents = await ConsentWrapper({ data: consentData });
 
         const carePlans = await carePlanService.getCarePlanByData({
@@ -2643,11 +2649,11 @@ class MPatientController extends Controller {
         const patientApiWrapper = await PatientWrapper(patientData);
         patientId = patientApiWrapper.getPatientId();
 
-        const careplanData = await carePlanService.getCarePlanByData({
+        const carePlanData = await carePlanService.getCarePlanByData({
           patient_id: patientId,
         });
 
-        await careplanData.forEach(async (carePlan) => {
+        await carePlanData.forEach(async (carePlan) => {
           const carePlanApiWrapper = await CarePlanWrapper(carePlan);
           doctorIds.push(carePlanApiWrapper.getDoctorId());
           doctorRoleIds.push(carePlanApiWrapper.getUserRoleId());

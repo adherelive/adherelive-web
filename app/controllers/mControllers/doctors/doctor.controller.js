@@ -662,7 +662,7 @@ class MobileDoctorController extends Controller {
         const degreeWrapper = await DegreeWrapper(degree);
         degreeData[degreeWrapper.getDegreeId()] = degreeWrapper.getBasicInfo();
 
-        if (id && id !== "0") {
+        if (id && id !== 0) {
           let collegeId = college_id;
           if (college_name) {
             const college = await collegeService.create({
@@ -766,7 +766,7 @@ class MobileDoctorController extends Controller {
         councilData[councilWrapper.getCouncilId()] =
           councilWrapper.getBasicInfo();
 
-        if (id && id !== "0") {
+        if (id && id !== 0) {
           const registration = await registrationService.updateRegistration(
             {
               doctor_id: doctorData.getDoctorId(),

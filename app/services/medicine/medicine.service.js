@@ -147,7 +147,7 @@ class MedicineService {
   };
 
   updateMedicine = async (data, id) => {
-    console.log("updateMedicine Called-service");
+    console.log("updateMedicine called-service");
     try {
       console.log({ data, id });
       const transaction = await Database.initTransaction();
@@ -160,7 +160,7 @@ class MedicineService {
       console.log("in service", { medicine });
       await transaction.commit();
 
-      medicine;
+      return medicine;
     } catch (err) {
       await transaction.rollback();
       throw err;

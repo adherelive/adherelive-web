@@ -872,11 +872,14 @@ class PatientController extends Controller {
           const { users, patients, patient_id } = await user.getReferenceInfo();
           patientIds.push(patient_id);
 
-          let careplanData = await carePlanService.getCarePlanByData({
-            doctor_id: authDoctor.get("id"),
-            patient_id,
-          });
-          isPatientAvailableForDoctor = careplanData.length > 0;
+          let carePlanData = [];
+          if (authDoctor) {
+            carePlanData = await carePlanService.getCarePlanByData({
+              doctor_id: authDoctor.get("id"),
+              patient_id,
+            });
+          }
+          isPatientAvailableForDoctor = carePlanData.length > 0;
 
           userDetails = {
             ...userDetails,
@@ -885,12 +888,12 @@ class PatientController extends Controller {
           };
 
           if (!isPatientAvailableForDoctor) {
-            let careplanData = await carePlanService.getCarePlanByData({
+            let carePlanData = await carePlanService.getCarePlanByData({
               patient_id,
             });
-            for (let i = 0; i < careplanData.length; i++) {
+            for (let i = 0; i < carePlanData.length; i++) {
               // getSecondary care plan mapping
-              const carePlan = await CarePlanWrapper(careplanData[i]);
+              const carePlan = await CarePlanWrapper(carePlanData[i]);
               let secondaryDoctorMapping =
                 await carePlanSecondaryDoctorMappingService.findAndCountAll({
                   where: {
@@ -1268,12 +1271,15 @@ class PatientController extends Controller {
           authDoctor = await doctorService.getDoctorByData({ user_id: userId });
         }
 
-        const consentData = await consentService.create({
-          type: CONSENT_TYPE.CARE_PLAN,
-          doctor_id: authDoctor.get("id"),
-          patient_id,
-          user_role_id: userRoleId,
-        });
+        let consentData = [];
+        if (authDoctor) {
+          consentData = await consentService.create({
+            type: CONSENT_TYPE.CARE_PLAN,
+            doctor_id: authDoctor.get("id"),
+            patient_id,
+            user_role_id: userRoleId,
+          });
+        }
         const consents = await ConsentWrapper({ data: consentData });
 
         const carePlans = await carePlanService.getCarePlanByData({
@@ -2763,95 +2769,97 @@ class PatientController extends Controller {
         userData = await UserWrapper(null, user_id);
       }
 
-      if (userExists.length > 0 || patientExistByHisId.length > 0) {
-        const { patient_id } = await userData.getReferenceInfo();
-        patientData = await PatientWrapper(null, patient_id);
+      if (userData) {
+        if (userExists.length > 0 || patientExistByHisId.length > 0) {
+          const { patient_id } = await userData.getReferenceInfo();
+          patientData = await PatientWrapper(null, patient_id);
 
-        const previousDetails = patientData.getDetails();
-        const updateResponse = await patientService.update(
-          {
+          const previousDetails = patientData.getDetails();
+          const updateResponse = await patientService.update(
+            {
+              height,
+              weight,
+              address,
+              first_name,
+              middle_name,
+              last_name,
+              gender,
+              dob: date_of_birth,
+              age: getAge(moment(date_of_birth)),
+              details: { ...previousDetails, ...patientOtherDetails },
+            },
+            patient_id
+          );
+
+          patientData = await PatientWrapper(null, patient_id);
+        } else {
+          const password = process.config.DEFAULT_PASSWORD;
+          const salt = await bcrypt.genSalt(Number(process.config.saltRounds));
+          const hash = await bcrypt.hash(password, salt);
+          let useradddata = (useradddata = {
+            prefix,
+            mobile_number,
+            password: hash,
+            sign_in_type: SIGN_IN_CATEGORY.BASIC,
+            category: USER_CATEGORY.PATIENT,
+            onboarded: false,
+            onboarding_status: ONBOARDING_STATUS.PATIENT.PROFILE_REGISTERED,
+            verified: true,
+            activated_on: moment().format(),
+          });
+          if (!(his_id == "" || his_id == undefined || his_id == null))
+            useradddata = { ...useradddata, his_id };
+
+          let user = await userService.addUser(useradddata);
+          userData = await UserWrapper(user.get());
+
+          if (clinical_notes) {
+            carePlanOtherDetails["clinical_notes"] = clinical_notes;
+          }
+          if (symptoms) {
+            carePlanOtherDetails["symptoms"] = symptoms;
+          }
+
+          let newUserId = userData.getId();
+          // const uid = uuidv4();
+          const birth_date = moment(date_of_birth);
+          const age = getAge(date_of_birth);
+          const patient = await patientService.addPatient({
+            first_name,
+            gender,
+            middle_name,
+            last_name,
+            user_id: newUserId,
+            birth_date,
+            age,
+            dob: date_of_birth,
+            details: {
+              ...patientOtherDetails,
+            },
             height,
             weight,
             address,
-            first_name,
-            middle_name,
-            last_name,
-            gender,
-            dob: date_of_birth,
-            age: getAge(moment(date_of_birth)),
-            details: { ...previousDetails, ...patientOtherDetails },
-          },
-          patient_id
-        );
+          });
+          const uid = patient_uid;
 
-        patientData = await PatientWrapper(null, patient_id);
-      } else {
-        const password = process.config.DEFAULT_PASSWORD;
-        const salt = await bcrypt.genSalt(Number(process.config.saltRounds));
-        const hash = await bcrypt.hash(password, salt);
-        let useradddata = (useradddata = {
-          prefix,
-          mobile_number,
-          password: hash,
-          sign_in_type: SIGN_IN_CATEGORY.BASIC,
-          category: USER_CATEGORY.PATIENT,
-          onboarded: false,
-          onboarding_status: ONBOARDING_STATUS.PATIENT.PROFILE_REGISTERED,
-          verified: true,
-          activated_on: moment().format(),
-        });
-        if (!(his_id == "" || his_id == undefined || his_id == null))
-          useradddata = { ...useradddata, his_id };
+          const patientWrapper = await PatientWrapper(patient);
+          const patientUserId = await patientWrapper.getUserId();
+          const userRole = await userRolesService.create({
+            user_identity: patientUserId,
+          });
+          const userRoleWrapper = await UserRoleWrapper(userRole);
+          const newUserRoleId = await userRoleWrapper.getId();
 
-        let user = await userService.addUser(useradddata);
-        userData = await UserWrapper(user.get());
-
-        if (clinical_notes) {
-          carePlanOtherDetails["clinical_notes"] = clinical_notes;
+          await userPreferenceService.addUserPreference({
+            user_id: newUserId,
+            details: {
+              timings: PATIENT_MEAL_TIMINGS,
+            },
+            user_role_id: newUserRoleId,
+          });
+          await patientService.update({ uid }, patient.get("id"));
+          patientData = await PatientWrapper(null, patient.get("id"));
         }
-        if (symptoms) {
-          carePlanOtherDetails["symptoms"] = symptoms;
-        }
-
-        let newUserId = userData.getId();
-        // const uid = uuidv4();
-        const birth_date = moment(date_of_birth);
-        const age = getAge(date_of_birth);
-        const patient = await patientService.addPatient({
-          first_name,
-          gender,
-          middle_name,
-          last_name,
-          user_id: newUserId,
-          birth_date,
-          age,
-          dob: date_of_birth,
-          details: {
-            ...patientOtherDetails,
-          },
-          height,
-          weight,
-          address,
-        });
-        const uid = patient_uid;
-
-        const patientWrapper = await PatientWrapper(patient);
-        const patientUserId = await patientWrapper.getUserId();
-        const userRole = await userRolesService.create({
-          user_identity: patientUserId,
-        });
-        const userRoleWrapper = await UserRoleWrapper(userRole);
-        const newUserRoleId = await userRoleWrapper.getId();
-
-        await userPreferenceService.addUserPreference({
-          user_id: newUserId,
-          details: {
-            timings: PATIENT_MEAL_TIMINGS,
-          },
-          user_role_id: newUserRoleId,
-        });
-        await patientService.update({ uid }, patient.get("id"));
-        patientData = await PatientWrapper(null, patient.get("id"));
       }
 
       const patient_id = patientData.getPatientId();

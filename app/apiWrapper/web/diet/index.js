@@ -44,7 +44,7 @@ class DietWrapper extends BaseDiet {
     const dietFoodGroupMappings = getDietFoodGroupMappings() || [];
 
     const careplanId = await this.getCareplanId();
-    const careplanData = await CarePlanWrapper(null, careplanId);
+    const carePlanData = await CarePlanWrapper(null, careplanId);
 
     let dietFoodGroupMappingData = {},
       dietsApiData = {},
@@ -92,8 +92,8 @@ class DietWrapper extends BaseDiet {
       }
     }
 
-    careplanApiData[careplanData.getCarePlanId()] =
-      await careplanData.getAllInfo();
+    careplanApiData[carePlanData.getCarePlanId()] =
+      await carePlanData.getAllInfo();
 
     return {
       diets: {

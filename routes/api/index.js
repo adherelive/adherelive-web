@@ -118,10 +118,10 @@ router.use(async function (req, res, next) {
         userRoleId = parseInt(decodedUserRoleId);
         userRoleData = userRole.getBasicInfo();
       } else {
-        (req.his_id = his_id),
-          (req.userDetails = {
-            exists: false,
-          });
+        req.his_id = his_id;
+        req.userDetails = {
+          exists: false,
+        };
         next();
         return;
       }

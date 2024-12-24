@@ -73,17 +73,17 @@ class WorkoutResponsesService {
     }
   };
 
-  findOne = async (data) => {
-    try {
-      const diet = await Database.getModel(TABLE_NAME).findOne({
-        where: data,
-        raw: true,
-      });
-      return diet;
-    } catch (error) {
-      throw error;
-    }
-  };
+  // findOne = async (data) => {
+  //   try {
+  //     const diet = await Database.getModel(TABLE_NAME).findOne({
+  //       where: data,
+  //       raw: true,
+  //     });
+  //     return diet;
+  //   } catch (error) {
+  //     throw error;
+  //   }
+  // };
 
   delete = async (id) => {
     try {

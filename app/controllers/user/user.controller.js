@@ -594,7 +594,7 @@ class UserController extends Controller {
         let userCategoryId = null;
         // let patientIds = [];
         let userIds = [userId];
-        // let careplanData = [];
+        // let carePlanData = [];
 
         let treatmentIds = [];
         let doctorProviderId = null;
@@ -841,7 +841,7 @@ class UserController extends Controller {
         let userCategoryId = null;
         // let patientIds = [];
         let userIds = [userId];
-        // let careplanData = [];
+        // let carePlanData = [];
 
         let treatmentIds = [];
         let conditionIds = [];
@@ -1358,7 +1358,7 @@ class UserController extends Controller {
       for (const item of registration_details) {
         const { number, council, year, expiry_date, id = 0 } = item;
 
-        if (id && id !== "0") {
+        if (id && id !== 0) {
           let registration = await registrationService.updateRegistration(
             { doctor_id, number, year, council, expiry_date },
             id

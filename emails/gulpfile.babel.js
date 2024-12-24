@@ -130,8 +130,8 @@ function watch() {
 
 // Inlines CSS into HTML, adds media query CSS into the <style> tag of the email, and compresses the HTML
 function inliner(css) {
-  var css = fs.readFileSync(css).toString();
-  var mqCss = siphon(css);
+  var thisCss = fs.readFileSync(css).toString();
+  var mqCss = siphon(thisCss);
 
   var pipe = lazypipe()
     .pipe($.inlineCss, {

@@ -1031,7 +1031,7 @@ class DoctorController extends Controller {
               collegeId = collegeWrapper.getCollegeId();
             }
 
-            if (id && id !== "0") {
+            if (id && id !== 0) {
               let qualification_data = {};
               if (degree_id) {
                 qualification_data["degree_id"] = degree_id;
@@ -1146,7 +1146,7 @@ class DoctorController extends Controller {
               updateDataRegistration["expiry_date"] = moment(expiryDate);
             }
             updateDataRegistration["doctor_id"] = doctorData.getDoctorId();
-            if (id && id !== "0") {
+            if (id && id !== 0) {
               const registration = await registrationService.updateRegistration(
                 updateDataRegistration,
                 id
@@ -1192,7 +1192,7 @@ class DoctorController extends Controller {
             }
             clinicDetails["doctor_id"] = doctor_id;
             Logger.debug("datatata", clinicDetails);
-            if (id && id !== "0") {
+            if (id && id !== 0) {
               const newClinic = await clinicService.updateClinic(
                 clinicDetails,
                 id
@@ -1712,7 +1712,7 @@ class DoctorController extends Controller {
         const degreeWrapper = await DegreeWrapper(degree);
         degreeData[degreeWrapper.getDegreeId()] = degreeWrapper.getBasicInfo();
 
-        if (id && id !== "0") {
+        if (id && id !== 0) {
           let collegeId = college_id;
           if (college_name !== "") {
             const existingCollege = await collegeService.getByData({
@@ -1829,7 +1829,7 @@ class DoctorController extends Controller {
         councilData[councilWrapper.getCouncilId()] =
           councilWrapper.getBasicInfo();
 
-        if (id && id !== "0") {
+        if (id && id !== 0) {
           const registration = await registrationService.updateRegistration(
             {
               doctor_id: doctorData.getDoctorId(),

@@ -1401,7 +1401,7 @@ router.get("/details/:care_plan_id", Authenticated, async (req, res) => {
       investigations,
       nextConsultation,
       medicationsList,
-      diteFormattedData: { ...dietApiData },
+      dietFormattedData: { ...dietApiData },
       dietIds,
       diet_output,
       pre_workouts,
