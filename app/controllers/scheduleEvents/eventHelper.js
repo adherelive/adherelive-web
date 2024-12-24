@@ -646,9 +646,9 @@ const getFormattedData = async (
 
       case EVENT_TYPE.DIET:
         const dietWrapper = await DietWrapper({ id: diet_id });
-        const careplan_id = await dietWrapper.getCareplanId();
-        const careplanWrapper = await CarePlanWrapper(null, careplan_id);
-        const patientId = await careplanWrapper.getPatientId();
+        const careplan_id = await dietWrapper.getCarePlanId();
+        const carePlanWrapper = await CarePlanWrapper(null, careplan_id);
+        const patientId = await carePlanWrapper.getPatientId();
 
         const { basic_info: { name: diet_name = "" } = {} } =
           event_diets[diet_id] || {};
@@ -688,7 +688,7 @@ const getFormattedData = async (
 
       case EVENT_TYPE.WORKOUT:
         const workoutWrapper = await WorkoutWrppaer({ id: workout_id });
-        const workout_careplan_id = await workoutWrapper.getCareplanId();
+        const workout_careplan_id = await workoutWrapper.getCarePlanId();
         const workoutCareplanWrapper = await CarePlanWrapper(
           null,
           workout_careplan_id
@@ -909,9 +909,9 @@ const getFormattedDataWithoutIds = async (
 
       case EVENT_TYPE.DIET:
         const dietWrapper = await DietWrapper({ id: diet_id });
-        const careplan_id = await dietWrapper.getCareplanId();
-        const careplanWrapper = await CarePlanWrapper(null, careplan_id);
-        const patientId = await careplanWrapper.getPatientId();
+        const careplan_id = await dietWrapper.getCarePlanId();
+        const carePlanWrapper = await CarePlanWrapper(null, careplan_id);
+        const patientId = await carePlanWrapper.getPatientId();
 
         const { basic_info: { name: diet_name = "" } = {} } =
           event_diets[diet_id] || {};
@@ -941,7 +941,7 @@ const getFormattedDataWithoutIds = async (
 
       case EVENT_TYPE.WORKOUT:
         const workoutWrapper = await WorkoutWrppaer({ id: workout_id });
-        const workout_careplan_id = await workoutWrapper.getCareplanId();
+        const workout_careplan_id = await workoutWrapper.getCarePlanId();
         const workoutCareplanWrapper = await CarePlanWrapper(
           null,
           workout_careplan_id

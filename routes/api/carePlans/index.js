@@ -1,12 +1,14 @@
 import express from "express";
 import Authenticated from "../middleware/auth";
 import CarePlanController from "../../../app/controllers/carePlans/carePlan.controller";
-// import multer from "multer";
-// var storage = multer.memoryStorage();
-// var upload = multer({ dest: "../app/public/", storage: storage });
+
 import * as validator from "./validator";
 import isAllowed from "../../middlewares/permissions";
 import PERMISSIONS from "../../../config/permissions";
+
+// import multer from "multer";
+// var storage = multer.memoryStorage();
+// var upload = multer({ dest: "../app/public/", storage: storage });
 
 const router = express.Router();
 
@@ -40,6 +42,7 @@ router.get(
   Authenticated,
   CarePlanController.getPatientCarePlanDetails
 );
+
 router.get(
   "/patient-care-plan-details-sec/:patient_id",
   Authenticated,

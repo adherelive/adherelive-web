@@ -27,7 +27,7 @@ router.post(
   "/",
   Authenticate,
   isAllowed(PERMISSIONS.CARE_PLAN_TEMPLATE.ADD),
-  // validator.validateCareplanTemplateData,
+  // validator.validateCarePlanTemplateData,
   CarePlanTemplate.create
 );
 

@@ -46,11 +46,11 @@ class SmsManager {
         .publish(smsData)
         .promise()
         .then((data) => {
-          log.info("sms sent...........!!", data);
+          log.info("SMS has been sent!", data);
           smsSent = true;
         })
         .catch((error) => {
-          log.info("sending sms error --->", error);
+          log.info("Sending SMS has an error ---> ", error);
           smsSent = false;
         });
 
@@ -61,16 +61,16 @@ class SmsManager {
       //
       //
       //     if (err) {
-      //       log.info("sending sms error --->", err);
+      //       log.info("Sending SMS has an error ---> ", err);
       //     }
       //     if (data) {
-      //       log.info("sms sent...........!!", data);
+      //       log.info("SMS has been sent: ", data);
       //     }
       //   })
       //   .promise();
       // return smsPublishResponse;
     } catch (err) {
-      log.info("sending sms error --->", err);
+      log.info("Sending SMS has an error ---> ", err);
       return err.data;
     }
   }

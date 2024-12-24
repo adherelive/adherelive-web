@@ -161,7 +161,7 @@ If you're running the project first time. Run the following command
  .add(330, "minutes")
 ```
 
-`app/ApiWrapper/mobile/medicine/index.js` and `webwrapper` also.
+`app/apiWrapper/mobile/medicine/index.js` and `webwrapper` also.
 
 ```
 id,

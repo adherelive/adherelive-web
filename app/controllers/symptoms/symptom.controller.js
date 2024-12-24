@@ -21,7 +21,7 @@ class SymptomController extends Controller {
   getBatchSymptomDetails = async (req, res) => {
     const { raiseSuccess, raiseServerError } = this;
     try {
-      Log.debug("req.body ---> ", req.body);
+      Log.debug("getBatchSymptomDetails req.body ---> ", req.body);
       const { body: { symptom_ids = [] } = {} } = req;
 
       let documentData = {};

@@ -68,19 +68,19 @@ class DoctorQualificationService {
     }
   };
 
-  getQualificationsByDoctorId = async (doctor_id) => {
-    try {
-      const doctorQualification = await Database.getModel(TABLE_NAME).findAll({
-        where: {
-          doctor_id,
-          deleted_at: null,
-        },
-      });
-      return doctorQualification;
-    } catch (error) {
-      throw error;
-    }
-  };
+  // getQualificationsByDoctorId = async (doctor_id) => {
+  //   try {
+  //     const doctorQualification = await Database.getModel(TABLE_NAME).findAll({
+  //       where: {
+  //         doctor_id,
+  //         deleted_at: null,
+  //       },
+  //     });
+  //     return doctorQualification;
+  //   } catch (error) {
+  //     throw error;
+  //   }
+  // };
 
   getQualificationByData = async (doctor_id, degree, college, year) => {
     try {

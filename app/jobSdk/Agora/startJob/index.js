@@ -11,7 +11,7 @@ import {
 } from "../../../../constant";
 
 import moment from "moment";
-import carePlanSecondaryDoctorMappingsService from "../../../services/carePlanSecondaryDoctorMappings/carePlanSecondaryDoctorMappings.service";
+// import CarePlanSecondaryDoctorMappingsService from "../../../services/carePlanSecondaryDoctorMappings/carePlanSecondaryDoctorMappings.service";
 
 class StartJob extends AgoraJob {
   constructor(data) {
@@ -33,7 +33,7 @@ class StartJob extends AgoraJob {
     const participants = roomId.split(
       `-${process.config.twilio.CHANNEL_SERVER}-`
     );
-    console.log("12312313212312312312312312312312312312");
+    console.log("Inside getPush App Template");
     console.log(JSON.stringify(getAgoraData()));
     console.log(participants);
     console.log(roomId);
@@ -50,7 +50,7 @@ class StartJob extends AgoraJob {
       })) || {};
 
     let providerId = null;
-    console.log("==============start job index.html=========================");
+    console.log("========= Start job for Agora using index.html =========");
 
     console.log(userRoles);
     for (const userRole of userRoles) {

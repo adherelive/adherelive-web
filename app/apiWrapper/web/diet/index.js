@@ -1,10 +1,9 @@
-//services
 import BaseDiet from "../../../services/diet/index";
 import DietService from "../../../services/diet/diet.service";
 
-//Wrapper
-import CareplanWrapper from "../carePlan";
-import DietFoodGroupMappingWrapper from "../dietFoodGroupMapping";
+// Wrapper
+import CarePlanWrapper from "../../web/carePlan";
+import DietFoodGroupMappingWrapper from "../../web/dietFoodGroupMapping";
 
 class DietWrapper extends BaseDiet {
   constructor(data) {
@@ -43,8 +42,8 @@ class DietWrapper extends BaseDiet {
     const { getDietFoodGroupMappings } = this;
     const dietFoodGroupMappings = getDietFoodGroupMappings() || [];
 
-    const careplanId = await this.getCareplanId();
-    const careplanData = await CareplanWrapper(null, careplanId);
+    const carePlanId = await this.getCarePlanId();
+    const carePlanData = await CarePlanWrapper(null, carePlanId);
 
     let dietFoodGroupMappingData = {},
       dietsApiData = {},
@@ -52,8 +51,8 @@ class DietWrapper extends BaseDiet {
       portionsApiData = {},
       foodItemsApiData = {},
       foodItemDetailsApiData = {};
-    let careplanApiData = {},
-      similiarFoodMappingApiData;
+    let carePlanApiData = {},
+      similarFoodMappingApiData;
 
     if (dietFoodGroupMappings.length > 0) {
       for (let i = 0; i < dietFoodGroupMappings.length; i++) {
@@ -85,21 +84,21 @@ class DietWrapper extends BaseDiet {
           ...foodItemDetailsApiData,
           ...food_item_details,
         };
-        similiarFoodMappingApiData = {
-          ...similiarFoodMappingApiData,
+        similarFoodMappingApiData = {
+          ...similarFoodMappingApiData,
           ...similar_food_mappings,
         };
       }
     }
 
-    careplanApiData[careplanData.getCarePlanId()] =
-      await careplanData.getAllInfo();
+    carePlanApiData[carePlanData.getCarePlanId()] =
+      await carePlanData.getAllInfo();
 
     return {
       diets: {
         ...dietsApiData,
       },
-      care_plans: { ...careplanApiData },
+      care_plans: { ...carePlanApiData },
       diet_food_group_mappings: {
         ...dietFoodGroupMappingData,
       },
@@ -116,7 +115,7 @@ class DietWrapper extends BaseDiet {
         ...foodItemDetailsApiData,
       },
       similar_food_mappings: {
-        ...similiarFoodMappingApiData,
+        ...similarFoodMappingApiData,
       },
     };
   };

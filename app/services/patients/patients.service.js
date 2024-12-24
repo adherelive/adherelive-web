@@ -140,8 +140,8 @@ class PatientsService {
           },
         ],
       });
-      Logger.debug("GETPDATA--->", id);
-      Logger.debug("PATIENTTTTTTTT====>", patient);
+      Logger.debug("GETPDATA ---> ", id);
+      Logger.debug("PATIENT ---> ", patient);
       return patient;
     } catch (error) {
       throw error;
@@ -253,10 +253,7 @@ class PatientsService {
   };
 
   getPaginatedPatients = async ({ doctor_id, order }) => {
-    const query = `
-    SELECT cp.doctor_id, cp.patient_id FROM ${carePlanTableName} AS cp
-    
-    `;
+    const query = `SELECT cp.doctor_id, cp.patient_id FROM ${carePlanTableName} AS cp`;
     try {
       return await Database.getModel(TABLE_NAME).findAll({
         attributes: ["each", []],

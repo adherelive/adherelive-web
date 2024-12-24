@@ -119,11 +119,11 @@ class AdminController extends Controller {
             userRoleId = (await userRoleWrapper).getId() || null;
           }
 
-          const careplanData = await carePlanService.getCarePlanByData({
+          const carePlanData = await carePlanService.getCarePlanByData({
             user_role_id: userRoleId,
           });
 
-          for (const carePlan of careplanData) {
+          for (const carePlan of carePlanData) {
             const carePlanApiWrapper = await CarePlanWrapper(carePlan);
             const patientId = carePlanApiWrapper.getPatientId();
 

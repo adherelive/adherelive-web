@@ -8,7 +8,7 @@ import EventService from "../../../services/scheduleEvents/scheduleEvent.service
 import DietResponsesService from "../../../services/dietResponses/dietResponses.service";
 
 // Wrappers
-import CareplanWrapper from "../../../apiWrapper/web/carePlan";
+import CarePlanWrapper from "../../../apiWrapper/web/carePlan";
 import DietWrapper from "../../../apiWrapper/mobile/diet";
 import PatientWrapper from "../../../apiWrapper/mobile/patient";
 import UserPreferenceWrapper from "../../../apiWrapper/mobile/userPreference";
@@ -61,10 +61,10 @@ class DietController extends Controller {
       }
 
       const dietWrapper = await DietWrapper({ data: dietData });
-      const careplan_id = dietWrapper.getCareplanId();
-      const careplanWrapper = await CareplanWrapper(null, careplan_id);
-      const doctor_id = await careplanWrapper.getDoctorId();
-      const patient_id = careplanWrapper.getPatientId();
+      const careplan_id = dietWrapper.getCarePlanId();
+      const carePlanWrapper = await CarePlanWrapper(null, careplan_id);
+      const doctor_id = await carePlanWrapper.getDoctorId();
+      const patient_id = carePlanWrapper.getPatientId();
 
       //other doctor's diet as food item and details only visible to creator doc
       if (
@@ -284,10 +284,10 @@ class DietController extends Controller {
 
       const referenceInfo = await dietWrapper.getReferenceInfo();
 
-      const carePlanId = dietWrapper.getCareplanId();
+      const carePlanId = dietWrapper.getCarePlanId();
 
-      const careplanWrapper = await CareplanWrapper(null, carePlanId);
-      const patientId = await careplanWrapper.getPatientId();
+      const carePlanWrapper = await CarePlanWrapper(null, carePlanId);
+      const patientId = await carePlanWrapper.getPatientId();
       const patient = await PatientWrapper(null, patientId);
       const { user_role_id: patientRoleId } = await patient.getAllInfo();
 
@@ -505,8 +505,8 @@ class DietController extends Controller {
       });
 
       // create new schedule events
-      const careplanWrapper = await CareplanWrapper(null, care_plan_id);
-      const patientId = await careplanWrapper.getPatientId();
+      const carePlanWrapper = await CarePlanWrapper(null, care_plan_id);
+      const patientId = await carePlanWrapper.getPatientId();
       const patient = await PatientWrapper(null, patientId);
       const { user_role_id: patientRoleId } = await patient.getAllInfo();
 
@@ -738,7 +738,10 @@ class DietController extends Controller {
   getDietResponseTimeline = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
-      Logger.debug("73575273512732 req.params diet id--->", req.params);
+      Logger.debug(
+        "getDietResponseTimeline req.params diet id ---> ",
+        req.params
+      );
       const { params: { id } = {} } = req;
       const eventService = new EventService();
 

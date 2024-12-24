@@ -4,7 +4,7 @@ import md5 from "js-md5";
 import { completePath } from "../helper/filePath";
 import { EVENT_TYPE } from "../../constant";
 
-import CareplanWrapper from "../apiWrapper/web/carePlan";
+import CarePlanWrapper from "../apiWrapper/web/carePlan";
 import PatientWrapper from "../apiWrapper/web/patient";
 import DietWrapper from "../apiWrapper/web/diet";
 import VitalWrapper from "../apiWrapper/web/vitals";
@@ -78,7 +78,7 @@ const appointmentUsers = async (appointment_id) => {
 
     const { care_plan_id } = await careplanAppointment;
 
-    const carePlan = await CareplanWrapper(null, care_plan_id);
+    const carePlan = await CarePlanWrapper(null, care_plan_id);
 
     const patient = await PatientWrapper(null, carePlan.getPatientId());
     const { user_role_id: patientUserRoleId } = await patient.getAllInfo();
@@ -107,7 +107,7 @@ const medicationUsers = async (medication_id) => {};
 const vitalUsers = async (vital_id) => {
   try {
     const vital = await VitalWrapper({ id: vital_id });
-    const carePlan = await CareplanWrapper(null, vital.getCarePlanId());
+    const carePlan = await CarePlanWrapper(null, vital.getCarePlanId());
 
     const patient = await PatientWrapper(null, carePlan.getPatientId());
     const { user_role_id: patientUserRoleId } = await patient.getAllInfo();

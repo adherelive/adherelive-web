@@ -8,7 +8,7 @@ import vitalTemplateService from "../../../services/vitalTemplates/vitalTemplate
 import TemplateAppointmentWrapper from "../../web/templateAppointment";
 import TemplateMedicationWrapper from "../../web/templateMedication";
 import TemplateVitalWrapper from "../../web/templateVital";
-import MedicineWrapper from "../../mobile/medicine";
+import MedicineWrapper from "../../web/medicine";
 import VitalTemplateWrapper from "../../web/vitalTemplates";
 import TemplateDietWrapper from "../templateDiet";
 import TemplateWorkoutWrapper from "../templateWorkout";

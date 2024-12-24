@@ -29,13 +29,13 @@ const actionList = {
   CREATE: "create",
   RESCHEDULE: "reschedule",
   START: "start",
-  PROIR: "prior",
+  PRIOR: "prior",
   DELETE: "delete",
 };
 
 class SendNotificationValidator {
   type(type) {
-    if (NOTIFICATION_ENUM.indexOf(type) != -1) {
+    if (NOTIFICATION_ENUM.indexOf(type) !== -1) {
       this.notificationType = type;
       return this;
     } else {
@@ -59,7 +59,7 @@ class SendNotificationValidator {
     }
   }
 
-  async isValidAppointementData(validData) {
+  async isValidAppointmentData(validData) {
     try {
       switch (this.actionType) {
         case actionList.CREATE:
@@ -67,12 +67,12 @@ class SendNotificationValidator {
 
         case actionList.RESCHEDULE:
           return await this.sendNotification(validData);
-          break;
-        case actionList.PROIR:
-          this.sendNotification(validData);
+
+        case actionList.PRIOR:
+          await this.sendNotification(validData);
           break;
         case actionList.START:
-          this.sendNotification(validData);
+          await this.sendNotification(validData);
           break;
 
         default:
@@ -103,7 +103,7 @@ class SendNotificationValidator {
 
     switch (this.notificationType) {
       case APPOINTMENT:
-        return await this.isValidAppointementData(validData);
+        return await this.isValidAppointmentData(validData);
       //   case REMINDER:
       //     return await this.isValidReminderData(notificatonID);
       //   case ARTICLE:

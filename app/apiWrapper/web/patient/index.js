@@ -103,6 +103,7 @@ class PatientWrapper extends BasePatient {
     const { _data, getAllInfo, getPatientId } = this;
     const { user } = _data || {};
     const users = await UserWrapper(user.get());
+    // console.log("getReferenceInfo in PatientWrapper has PatientID/User as: ", users);
 
     return {
       patients: {

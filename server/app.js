@@ -11,15 +11,15 @@ import ApiRouter from "../routes/api";
 import mApiRouter from "../routes/m-api";
 import EventObserver from "../app/proxySdk/eventObserver";
 import ActivityObserver from "../app/activitySdk/activityObserver";
-import RenewSubscription from "../app/cron-jobs/renewSubscription";
+import RenewSubscription from "../app/cronJobs/renewSubscription";
 
-import Start from "../app/cron-jobs/start";
-import Passed from "../app/cron-jobs/passed";
-import Prior from "../app/cron-jobs/prior";
-import ActivePatient from "../app/cron-jobs/activePatient";
-import RemoveDocuments from "../app/cron-jobs/removeDocuments";
-import LongTerm from "../app/cron-jobs/longTerm";
-import RenewTxActivity from "../app/cron-jobs/renewTxActivity";
+import Start from "../app/cronJobs/start";
+import Passed from "../app/cronJobs/passed";
+import Prior from "../app/cronJobs/prior";
+import ActivePatient from "../app/cronJobs/activePatient";
+import RemoveDocuments from "../app/cronJobs/removeDocuments";
+import LongTerm from "../app/cronJobs/longTerm";
+import RenewTxActivity from "../app/cronJobs/renewTxActivity";
 
 // Initialize database connections
 (async () => {
@@ -45,6 +45,12 @@ app.use(cors());
 /*
  * Add a check to handle cases where process.config.cookieKey might be undefined or not a valid JSON string
  */
+// function generateCookieKey() {
+//   return (
+//     "key_" + Math.random().toString(36).substr(2) + Date.now().toString(36)
+//   );
+// }
+// console.log(generateCookieKey());
 let cookieKeys = [];
 
 try {
@@ -52,6 +58,7 @@ try {
     cookieKeys = JSON.parse(process.config.cookieKey);
   } else {
     console.warn("process.config.cookieKey is undefined or null");
+    // console.log("Cookie Key is undefined or null: ", process.config.cookieKey);
     // Set a default value if cookieKey is not defined
     cookieKeys = ["cookie938", "abc123xyz456abc789xyz012"];
   }
@@ -68,7 +75,7 @@ app.use(
   })
 );
 
-// Removed the code that serves the React frontend
+// TODO: Remove the code that serves the React frontend
 // Serve static files
 app.use(express.static(path.join(__dirname, "../public")));
 
@@ -101,7 +108,7 @@ schedule.scheduleJob(perDayUtcRule, async () => {
   await RemoveDocuments.runObserver();
 });
 
-//const perHourCron = schedule.scheduleJob("0 0 */1 * * *", async () => {
+// const perHourCron = schedule.scheduleJob("0 0 */1 * * *", async () => {
 schedule.scheduleJob("0 0 */2 * * *", async () => {
   await ActivePatient.runObserver();
   await RenewTxActivity.runObserver();

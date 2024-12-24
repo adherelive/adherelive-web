@@ -159,19 +159,21 @@ class MobileMReminderController extends Controller {
 
       const { user_role_id: patientRoleId } = await patient.getAllInfo();
 
-      const eventData = {
-        participants: [userRoleId, patientRoleId],
-        actor: {
-          id: userId,
-          user_role_id: userRoleId,
-          details: {
-            name: categoryData.getName(),
-            category,
+      if (categoryData) {
+        const eventData = {
+          participants: [userRoleId, patientRoleId],
+          actor: {
+            id: userId,
+            user_role_id: userRoleId,
+            details: {
+              name: categoryData.getName(),
+              category,
+            },
           },
-        },
-        medicationId: mReminderApiWrapper.getMReminderId(),
-        event_id: mReminderApiWrapper.getMReminderId(),
-      };
+          medicationId: mReminderApiWrapper.getMReminderId(),
+          event_id: mReminderApiWrapper.getMReminderId(),
+        };
+      }
 
       let details = mReminderDetails.getBasicInfo.details;
       details = { ...details, ...eventData };
@@ -333,19 +335,22 @@ class MobileMReminderController extends Controller {
 
       const { user_role_id: patientRoleId } = await patient.getAllInfo();
 
-      const eventData = {
-        participants: [userRoleId, patientRoleId],
-        actor: {
-          id: userId,
-          user_role_id: userRoleId,
-          details: {
-            name: categoryData.getName(),
-            category,
+      let eventData = [];
+      if (categoryData) {
+        eventData = {
+          participants: [userRoleId, patientRoleId],
+          actor: {
+            id: userId,
+            user_role_id: userRoleId,
+            details: {
+              name: categoryData.getName(),
+              category,
+            },
           },
-        },
-        medicationId: mReminderDetails.get("id"),
-        event_id: mReminderDetails.get("id"),
-      };
+          medicationId: mReminderDetails.get("id"),
+          event_id: mReminderDetails.get("id"),
+        };
+      }
 
       let details = mReminderDetails.getBasicInfo.details;
       details = { ...details, ...eventData };

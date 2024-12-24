@@ -92,11 +92,11 @@ class PriorCron {
       });
 
       await NotificationSdk.execute(appointmentJob);
-      await this.scheduleEventService.update(
+      const updateEventStatus = await this.scheduleEventService.update(
         { status: EVENT_STATUS.PRIOR },
         id
       );
-      // const updateEventStatus = await this.scheduleEventService.update({ status: EVENT_STATUS.PRIOR }, id);
+      // const updateEventStatus = await this.scheduleEventService.update({ status: EVENT_STATUS.PRIOR, }, id);
     } catch (error) {
       Log.debug("handleAppointmentPrior error", error);
     }

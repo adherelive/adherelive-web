@@ -10,7 +10,7 @@ import WorkoutResponseWrapper from "../../apiWrapper/web/workoutResponse";
 import WorkoutWrapper from "../../apiWrapper/web/workouts";
 import EventWrapper from "../../apiWrapper/common/scheduleEvents";
 import ExerciseContentWrapper from "../../apiWrapper/web/exerciseContents";
-import CareplanWrapper from "../../apiWrapper/web/carePlan";
+import CarePlanWrapper from "../../apiWrapper/web/carePlan";
 import Logger from "../../../libs/log";
 
 const Log = new Logger("WEB > WORKOUT_RESPONSE > CONTROLLER");
@@ -62,9 +62,9 @@ class WorkoutResponseController extends Controller {
 
       const { exercises, exercise_groups, exercise_details } =
         await workout.getReferenceInfo();
-      const workoutCareplanId = await workout.getCareplanId();
-      const careplanWrapper = await CareplanWrapper(null, workoutCareplanId);
-      const careplanCreatorId = careplanWrapper.getDoctorId();
+      const workoutCareplanId = await workout.getCarePlanId();
+      const carePlanWrapper = await CarePlanWrapper(null, workoutCareplanId);
+      const careplanCreatorId = carePlanWrapper.getDoctorId();
 
       // exercise contents
       const exerciseContentService = new ExerciseContentService();

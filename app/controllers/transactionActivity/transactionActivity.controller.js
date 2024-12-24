@@ -14,7 +14,7 @@ import { USER_CATEGORY } from "../../../constant";
 const ReassignAudit = require("../../models/mongoModel/reassignAudit");
 const Log = new Logger("WEB > CONTROLLER > Service Offering");
 
-class ServiceSubscriptionTxController extends Controller {
+class TransactionActivityController extends Controller {
   constructor() {
     super();
   }
@@ -275,4 +275,4 @@ class ServiceSubscriptionTxController extends Controller {
   };
 }
 
-export default new ServiceSubscriptionTxController();
+export default new TransactionActivityController();

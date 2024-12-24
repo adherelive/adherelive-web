@@ -114,8 +114,10 @@ export const addProviderDoctor = async (
       const doctorUserWrapper = await UserWrapper(doctorUserDetails);
       doctorUserId = doctorUserWrapper.getId();
 
-      if (!doctor_id || doctorUserId !== prevDoctorData.getUserId()) {
-        return raiseClientError(res, 422, {}, "Email already exists.");
+      if (prevDoctorData) {
+        if (!doctor_id || doctorUserId !== prevDoctorData.getUserId()) {
+          return raiseClientError(res, 422, {}, "Email already exists.");
+        }
       }
     } else {
       // const password = generatePassword();

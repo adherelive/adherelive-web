@@ -67,7 +67,7 @@ class TwilioService {
         return connectedParticipants;
       } catch (error) {
         rej(error);
-        console.log("error--->", error);
+        console.log("Twilio Service error ---> ", error);
       }
     });
   }
@@ -147,7 +147,11 @@ class TwilioService {
         .services(process.config.twilio.TWILIO_CHAT_SERVICE_SID)
         .channels.list()
         .then((channels) => {
-          console.log("channels ---> ", channels, channels.length);
+          console.log(
+            "Twilio Get All channels ---> ",
+            channels,
+            channels.length
+          );
           return channels;
         })
         .then((channels) => {
@@ -185,7 +189,11 @@ class TwilioService {
         .services(process.config.twilio.TWILIO_CHAT_SERVICE_SID)
         .channels.list()
         .then((channels) => {
-          console.log("channels ---> ", channels, channels.length);
+          console.log(
+            "Twilio Delete All channels ---> ",
+            channels,
+            channels.length
+          );
           return channels;
         })
         .then((channels) => {

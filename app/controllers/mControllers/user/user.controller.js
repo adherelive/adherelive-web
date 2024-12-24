@@ -179,7 +179,7 @@ class MobileUserController extends Controller {
       //   permissions = await apiUserDetails.getPermissions();
       // }
       //
-      // Logger.debug("apiUserDetails ---> ", apiUserDetails.isActivated());
+      // Logger.debug("MobileUserController apiUserDetails ---> ", apiUserDetails.isActivated());
 
       return this.raiseSuccess(
         res,
@@ -252,7 +252,7 @@ class MobileUserController extends Controller {
         const notificationToken = appNotification.getUserToken(`${userRoleId}`);
         const feedId = base64.encode(`${userRoleId}`);
 
-        Logger.debug("userData ---> ", userData.isActivated());
+        Logger.debug("verifyOtp userData ---> ", userData.isActivated());
         return raiseSuccess(
           res,
           200,
@@ -592,7 +592,7 @@ class MobileUserController extends Controller {
         let providerApiData = {};
         let userCategoryApiData = null;
         let userCategoryId = "";
-        let careplanData = [];
+        let carePlanData = [];
         let doctorIds = [];
         let patientIds = [];
         let userIds = [userId];
@@ -612,11 +612,11 @@ class MobileUserController extends Controller {
               userCatApiData[userCategoryApiData.getPatientId()] =
                 userCategoryApiData.getBasicInfo();
 
-              careplanData = await carePlanService.getCarePlanByData({
+              carePlanData = await carePlanService.getCarePlanByData({
                 patient_id: userCategoryId,
               });
 
-              await careplanData.forEach(async (carePlan) => {
+              await carePlanData.forEach(async (carePlan) => {
                 const carePlanApiWrapper = await MCarePlanWrapper(carePlan);
                 doctorIds.push(carePlanApiWrapper.getDoctorId());
                 carePlanApiData[carePlanApiWrapper.getCarePlanId()] =
@@ -669,13 +669,13 @@ class MobileUserController extends Controller {
 
               userCatApiData[userCategoryApiData.getDoctorId()] = allInfo;
 
-              // careplanData = await carePlanService.getCarePlanByData({
+              // carePlanData = await carePlanService.getCarePlanByData({
               //   user_role_id: userRoleId,
               // });
 
-              // Logger.debug("careplan mobile doctor", careplanData);
+              // Logger.debug("careplan mobile doctor", carePlanData);
 
-              // await careplanData.forEach(async (carePlan) => {
+              // await carePlanData.forEach(async (carePlan) => {
               //   const carePlanApiWrapper = await MCarePlanWrapper(carePlan);
               //   patientIds.push(carePlanApiWrapper.getPatientId());
               //   carePlanApiData[carePlanApiWrapper.getCarePlanId()] =
@@ -1172,7 +1172,7 @@ class MobileUserController extends Controller {
       for (const item of registration_details) {
         const { number, council, year, expiry_date, id = 0 } = item;
 
-        if (id && id !== "0") {
+        if (id && id !== 0) {
           let registration = await registrationService.updateRegistration(
             { doctor_id, number, year, council, expiry_date },
             id
@@ -1592,7 +1592,7 @@ class MobileUserController extends Controller {
       );
     } catch (error) {
       Logger.debug(
-        "M-API uploadDoctorRegistrationDocuments CATCH ERROR --->",
+        "M-API uploadDoctorRegistrationDocuments CATCH ERROR ---> ",
         error
       );
       return raiseServerError(res);
@@ -1815,7 +1815,10 @@ class MobileUserController extends Controller {
         "doctor registration document deleted successfully"
       );
     } catch (error) {
-      Logger.debug("DOCTOR REGISTRATION DOCUMENT DELETE 500 ERROR --->", error);
+      Logger.debug(
+        "DOCTOR REGISTRATION DOCUMENT DELETE 500 ERROR ---> ",
+        error
+      );
       return raiseServerError(res);
     }
   };
@@ -1885,7 +1888,7 @@ class MobileUserController extends Controller {
         "doctor registration data fetched successfully"
       );
     } catch (error) {
-      Logger.debug("GET DOCTOR REGISTRATION DATA 500 ERROR --->", error);
+      Logger.debug("GET DOCTOR REGISTRATION DATA 500 ERROR ---> ", error);
       return raiseServerError(res);
     }
   };
@@ -1916,7 +1919,10 @@ class MobileUserController extends Controller {
         });
         // let uId = userInfo.get("id");
 
-        Logger.debug("process.config.WEB_URL --->", process.config.WEB_URL);
+        Logger.debug(
+          "forgotPassword process.config.WEB_URL ---> ",
+          process.config.WEB_URL
+        );
 
         const emailPayload = {
           toAddress: email,
@@ -2036,7 +2042,7 @@ class MobileUserController extends Controller {
       }
 
       const user = await userService.getUserById(userId);
-      Logger.debug("user --->", user);
+      Logger.debug("updateUserPassword user ---> ", user);
       const userData = await UserWrapper(user.get());
 
       const salt = await bcrypt.genSalt(Number(process.config.saltRounds));

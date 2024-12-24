@@ -10,7 +10,7 @@ import carePlanAppointmentService from "../../../services/carePlanAppointment/ca
 import templateMedicationService from "../../../services/templateMedication/templateMedication.service";
 import templateAppointmentService from "../../../services/templateAppointment/templateAppointment.service";
 import medicineService from "../../../services/medicine/medicine.service";
-import careplanSecondaryDoctorMappingService from "../../../services/carePlanSecondaryDoctorMappings/carePlanSecondaryDoctorMappings.service";
+import carePlanSecondaryDoctorMappingService from "../../../services/carePlanSecondaryDoctorMappings/carePlanSecondaryDoctorMappings.service";
 import twilioService from "../../../services/twilio/twilio.service";
 import UserRoleWrapper from "../../../apiWrapper/mobile/userRoles";
 
@@ -887,12 +887,12 @@ class CarePlanController extends Controller {
         secondary_doctor_role_id: user_role_id,
       };
       const existingMapping =
-        (await careplanSecondaryDoctorMappingService.getByData(dataToAdd)) ||
+        (await carePlanSecondaryDoctorMappingService.getByData(dataToAdd)) ||
         null;
 
       if (!existingMapping) {
         const createdMapping =
-          (await careplanSecondaryDoctorMappingService.create(dataToAdd)) ||
+          (await carePlanSecondaryDoctorMappingService.create(dataToAdd)) ||
           null;
 
         if (createdMapping) {

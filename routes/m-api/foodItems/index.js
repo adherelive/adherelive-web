@@ -1,7 +1,6 @@
-// const express = require("express");
 import express from "express";
 import Authenticate from "../middlewares/auth";
-import FoodItemController from "../../../app/controllers/mControllers/foodtems/foodItems.controller";
+import FoodItemController from "../../../app/controllers/mControllers/foodItems/foodItems.controller";
 import { isDoctor } from "../middlewares/doctor";
 import * as Validator from "./validate";
 

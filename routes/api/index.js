@@ -11,6 +11,8 @@ import UserRoleWrapper from "../../app/apiWrapper/mobile/userRoles";
 
 import Logger from "../../libs/log";
 
+const Log = new Logger("API > INDEX");
+
 import userRouter from "./user";
 
 import appointmentRouter from "./appointments";
@@ -64,8 +66,6 @@ import NotesRouter from "./notes";
 import { getTime } from "../../app/helper/timer";
 import prescriptionRouter from "./prescription";
 
-const Log = new Logger("API > INDEX");
-
 router.use(async function (req, res, next) {
   console.log("api-index-1" + getTime() + getTime());
   try {
@@ -118,10 +118,10 @@ router.use(async function (req, res, next) {
         userRoleId = parseInt(decodedUserRoleId);
         userRoleData = userRole.getBasicInfo();
       } else {
-        (req.his_id = his_id),
-          (req.userDetails = {
-            exists: false,
-          });
+        req.his_id = his_id;
+        req.userDetails = {
+          exists: false,
+        };
         next();
         return;
       }

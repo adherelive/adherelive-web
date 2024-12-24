@@ -17,7 +17,7 @@ import WorkoutService from "../../../services/workouts/workout.service";
 import RepetitionService from "../../../services/exerciseRepetitions/repetition.service";
 import PortionServiceService from "../../../services/portions/portions.service";
 import DietService from "../../../services/diet/diet.service";
-import careplanSecondaryDoctorMappingService from "../../../services/carePlanSecondaryDoctorMappings/carePlanSecondaryDoctorMappings.service";
+import carePlanSecondaryDoctorMappingService from "../../../services/carePlanSecondaryDoctorMappings/carePlanSecondaryDoctorMappings.service";
 // WRAPPERS ------------
 import ExerciseContentWrapper from "../../../apiWrapper/mobile/exerciseContents";
 import VitalWrapper from "../../../apiWrapper/mobile/vitals";
@@ -440,8 +440,8 @@ class MPatientController extends Controller {
           care_plans,
           user_roles = {},
           care_plan_ids,
-          current_careplan_id,
-        } = await carePlanHelper.getCareplanDataWithImp({
+          current_care_plan_id,
+        } = await carePlanHelper.getCarePlanDataWithImp({
           carePlans,
           userCategory: category,
           doctorId: userCategoryId,
@@ -451,7 +451,7 @@ class MPatientController extends Controller {
         // care plans
         carePlanApiDetails = { ...carePlanApiDetails, ...care_plans };
         //        carePlanIds = [...care_plan_ids];
-        latestCarePlanId = current_careplan_id;
+        latestCarePlanId = current_care_plan_id;
         medicationApiDetails = { ...medicationApiDetails, ...medications };
         allProvidersData = { ...allProvidersData, ...providers };
         allUserRoleData = { ...allUserRoleData, ...user_roles };
@@ -527,7 +527,7 @@ class MPatientController extends Controller {
             ...otherCarePlanTemplates,
           },
           care_plan_template_ids: [...carePlanTemplateIds],
-          current_careplan_id: latestCarePlanId,
+          current_care_plan_id: latestCarePlanId,
 
           template_appointments: {
             ...templateAppointmentData,
@@ -627,8 +627,8 @@ class MPatientController extends Controller {
       let vitalTemplateData = {};
 
       if (carePlans.length > 0) {
-        const { care_plans, care_plan_ids, current_careplan_id } =
-          await carePlanHelper.getCareplanDataWithImp({
+        const { care_plans, care_plan_ids, current_care_plan_id } =
+          await carePlanHelper.getCarePlanDataWithImp({
             carePlans,
             userCategory: category,
             doctorId: userCategoryId,
@@ -750,7 +750,7 @@ class MPatientController extends Controller {
           // vital_templates
 
           // added by gaurav end
-          current_careplan_id: latestCarePlanId,
+          current_care_plan_id: latestCarePlanId,
           care_plan_ids: carePlanIds,
           care_plan_template_ids: [...carePlanTemplateIds],
           care_plan_templates: {
@@ -871,8 +871,8 @@ class MPatientController extends Controller {
           providers = {},
           user_roles = {},
           care_plan_ids,
-          current_careplan_id,
-        } = await carePlanHelper.getCareplanData({
+          current_care_plan_id,
+        } = await carePlanHelper.getCarePlanData({
           carePlans,
           userCategory: category,
           doctorId: userCategoryId,
@@ -886,7 +886,7 @@ class MPatientController extends Controller {
         carePlanIds = [...care_plan_ids];
 
         // latest care plan id
-        latestCarePlanId = current_careplan_id;
+        latestCarePlanId = current_care_plan_id;
 
         // doctors
         doctorData = { ...doctorData, ...doctors };
@@ -1066,25 +1066,25 @@ class MPatientController extends Controller {
       }
 
       /*
-                  care_plans: {
-                        ...carePlanApiDetails,
-                      },
-                      care_plan_templates: {
-                        ...otherCarePlanTemplates,
-                      },
-                      care_plan_template_ids: [...carePlanTemplateIds],
-                      current_careplan_id: latestCarePlanId,
+        care_plans: {
+              ...carePlanApiDetails,
+            },
+            care_plan_templates: {
+              ...otherCarePlanTemplates,
+            },
+            care_plan_template_ids: [...carePlanTemplateIds],
+            current_care_plan_id: latestCarePlanId,
 
-                      template_appointments: {
-                        ...templateAppointmentData,
-                      },
-                      template_medications: {
-                        ...templateMedicationData,
-                      },
-                      vital_templates: {
-                        ...vitalTemplateData,
-                      },
-                      */
+            template_appointments: {
+              ...templateAppointmentData,
+            },
+            template_medications: {
+              ...templateMedicationData,
+            },
+            vital_templates: {
+              ...vitalTemplateData,
+            },
+      */
       return this.raiseSuccess(
         res,
         200,
@@ -1096,7 +1096,7 @@ class MPatientController extends Controller {
             ...otherCarePlanTemplates,
           },
           care_plan_template_ids: [...carePlanTemplateIds],
-          current_careplan_id: latestCarePlanId,
+          current_care_plan_id: latestCarePlanId,
           medicines: {
             ...medicineApiData,
           },
@@ -1168,7 +1168,7 @@ class MPatientController extends Controller {
   getPatientSymptoms = async (req, res) => {
     const { raiseSuccess, raiseServerError, raiseClientError } = this;
     try {
-      Logger.debug("req.params --->", req.params);
+      Logger.debug("getPatientSymptoms req.params ---> ", req.params);
       const { params: { patient_id } = {}, userDetails: { userId } = {} } = req;
 
       const symptomData = await SymptomService.getAllByData({ patient_id });
@@ -1261,7 +1261,7 @@ class MPatientController extends Controller {
   getPatientPartSymptoms = async (req, res) => {
     const { raiseSuccess, raiseServerError, raiseClientError } = this;
     try {
-      Logger.debug("req.params --->", req.params);
+      Logger.debug("getPatientPartSymptoms req.params ---> ", req.params);
       const { query: { duration = "5" } = {}, params: { patient_id } = {} } =
         req;
 
@@ -1476,11 +1476,14 @@ class MPatientController extends Controller {
           const { users, patients, patient_id } = await user.getReferenceInfo();
           patientIds.push(patient_id);
           userDetails = { ...userDetails, ...users };
-          let careplanData = await carePlanService.getCarePlanByData({
-            doctor_id: authDoctor.get("id"),
-            patient_id,
-          });
-          isPatientAvailableForDoctor = careplanData.length > 0;
+          let carePlanData = [];
+          if (authDoctor) {
+            carePlanData = await carePlanService.getCarePlanByData({
+              doctor_id: authDoctor.get("id"),
+              patient_id,
+            });
+          }
+          isPatientAvailableForDoctor = carePlanData.length > 0;
 
           patientDetails = {
             ...patientDetails,
@@ -1488,21 +1491,21 @@ class MPatientController extends Controller {
             // isPatientAvailableForDoctor,
           };
           if (!isPatientAvailableForDoctor) {
-            let careplanData = await carePlanService.getCarePlanByData({
+            let carePlanData = await carePlanService.getCarePlanByData({
               patient_id,
             });
-            for (let i = 0; i < careplanData.length; i++) {
-              // getsecondary careplan mapping
-              const carePlan = await CarePlanWrapper(careplanData[i]);
-              let secondayDoctorMapping =
-                await careplanSecondaryDoctorMappingService.findAndCountAll({
+            for (let i = 0; i < carePlanData.length; i++) {
+              // Get Secondary Care Plan mapping
+              const carePlan = await CarePlanWrapper(carePlanData[i]);
+              let secondaryDoctorMapping =
+                await carePlanSecondaryDoctorMappingService.findAndCountAll({
                   where: {
                     secondary_doctor_role_id: userRoleId,
                     care_plan_id: carePlan.getCarePlanId(),
                   },
                 });
 
-              if (secondayDoctorMapping.count > 0) {
+              if (secondaryDoctorMapping.count > 0) {
                 isPatientAvailableForDoctor = true;
                 break;
               }
@@ -1662,12 +1665,15 @@ class MPatientController extends Controller {
           authDoctor = await DoctorService.getDoctorByData({ user_id: userId });
         }
 
-        const consentData = await consentService.create({
-          type: CONSENT_TYPE.CARE_PLAN,
-          doctor_id: authDoctor.get("id"),
-          patient_id,
-          user_role_id: userRoleId,
-        });
+        let consentData = [];
+        if (authDoctor) {
+          consentData = await consentService.create({
+            type: CONSENT_TYPE.CARE_PLAN,
+            doctor_id: authDoctor.get("id"),
+            patient_id,
+            user_role_id: userRoleId,
+          });
+        }
         const consents = await ConsentWrapper({ data: consentData });
 
         const carePlans = await carePlanService.getCarePlanByData({
@@ -2495,7 +2501,7 @@ class MPatientController extends Controller {
       }
 
       // get other doctor basic details
-      // todo: check with others if this data is already present for multi careplan
+      // TODO: check with others if this data is already present for multi care plan
       let doctorData = {};
       if (doctorIds.length > 0) {
         const allDoctors =
@@ -2643,11 +2649,11 @@ class MPatientController extends Controller {
         const patientApiWrapper = await PatientWrapper(patientData);
         patientId = patientApiWrapper.getPatientId();
 
-        const careplanData = await carePlanService.getCarePlanByData({
+        const carePlanData = await carePlanService.getCarePlanByData({
           patient_id: patientId,
         });
 
-        await careplanData.forEach(async (carePlan) => {
+        await carePlanData.forEach(async (carePlan) => {
           const carePlanApiWrapper = await CarePlanWrapper(carePlan);
           doctorIds.push(carePlanApiWrapper.getDoctorId());
           doctorRoleIds.push(carePlanApiWrapper.getUserRoleId());

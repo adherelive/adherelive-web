@@ -15,7 +15,7 @@ import WorkoutResponseService from "../../../services/workoutResponses/workoutRe
 
 // wrappers
 import WorkoutWrapper from "../../../apiWrapper/mobile/workouts";
-import CareplanWrapper from "../../../apiWrapper/mobile/carePlan";
+import CarePlanWrapper from "../../../apiWrapper/mobile/carePlan";
 import PatientWrapper from "../../../apiWrapper/mobile/patient";
 import ExerciseContentWrapper from "../../../apiWrapper/mobile/exerciseContents";
 import WorkoutResponseWrapper from "../../../apiWrapper/mobile/workoutResponse";
@@ -67,9 +67,9 @@ class WorkoutController extends Controller {
         workout_exercise_groups = [],
       } = body;
 
-      const careplanWrapper = await CareplanWrapper(null, care_plan_id);
-      const current_careplan_doctor_id = await careplanWrapper.getDoctorId();
-      const patientId = await careplanWrapper.getPatientId();
+      const carePlanWrapper = await CarePlanWrapper(null, care_plan_id);
+      const current_careplan_doctor_id = await carePlanWrapper.getDoctorId();
+      const patientId = await carePlanWrapper.getPatientId();
       const patient = await PatientWrapper(null, patientId);
       const { user_role_id: patientRoleId } = await patient.getAllInfo();
 
@@ -87,9 +87,9 @@ class WorkoutController extends Controller {
         // new
         for (let each in rows) {
           const { id: careplan_id = null } = rows[each] || {};
-          const eachCareplanWrapper = await CareplanWrapper(null, careplan_id);
-          if (eachCareplanWrapper) {
-            const { workout_ids = [] } = await eachCareplanWrapper.getAllInfo();
+          const eachCarePlanWrapper = await CarePlanWrapper(null, careplan_id);
+          if (eachCarePlanWrapper) {
+            const { workout_ids = [] } = await eachCarePlanWrapper.getAllInfo();
 
             for (let id of workout_ids) {
               const workoutWrapper = await WorkoutWrapper({ id });
@@ -137,7 +137,7 @@ class WorkoutController extends Controller {
 
       const workout = await WorkoutWrapper({ id: workout_id });
 
-      const carePlanId = workout.getCareplanId();
+      const carePlanId = workout.getCarePlanId();
 
       const eventScheduleData = {
         patient_user_id: patient.getUserId(),
@@ -172,8 +172,8 @@ class WorkoutController extends Controller {
         {
           ...(await workout.getReferenceInfo()),
           care_plans: {
-            [careplanWrapper.getCarePlanId()]:
-              await careplanWrapper.getAllInfo(),
+            [carePlanWrapper.getCarePlanId()]:
+              await carePlanWrapper.getAllInfo(),
           },
         },
         "Workout created successfully."
@@ -210,9 +210,9 @@ class WorkoutController extends Controller {
         workout_exercise_groups = [],
       } = body;
 
-      const careplanWrapper = await CareplanWrapper(null, care_plan_id);
-      const current_careplan_doctor_id = await careplanWrapper.getDoctorId();
-      const patientId = await careplanWrapper.getPatientId();
+      const carePlanWrapper = await CarePlanWrapper(null, care_plan_id);
+      const current_careplan_doctor_id = await carePlanWrapper.getDoctorId();
+      const patientId = await carePlanWrapper.getPatientId();
       const patient = await PatientWrapper(null, patientId);
       const { user_role_id: patientRoleId } = await patient.getAllInfo();
 
@@ -228,9 +228,9 @@ class WorkoutController extends Controller {
       if (count > 0) {
         for (let each in rows) {
           const { id: careplan_id = null } = rows[each] || {};
-          const eachCareplanWrapper = await CareplanWrapper(null, careplan_id);
-          if (eachCareplanWrapper) {
-            const { workout_ids = [] } = await eachCareplanWrapper.getAllInfo();
+          const eachCarePlanWrapper = await CarePlanWrapper(null, careplan_id);
+          if (eachCarePlanWrapper) {
+            const { workout_ids = [] } = await eachCarePlanWrapper.getAllInfo();
 
             for (let id of workout_ids) {
               const workoutWrapper = await WorkoutWrapper({ id });
@@ -277,7 +277,7 @@ class WorkoutController extends Controller {
 
       const workout = await WorkoutWrapper({ id: workout_id });
 
-      const carePlanId = workout.getCareplanId();
+      const carePlanId = workout.getCarePlanId();
 
       const eventScheduleData = {
         patient_user_id: patient.getUserId(),
@@ -313,8 +313,8 @@ class WorkoutController extends Controller {
         {
           ...(await workout.getReferenceInfo()),
           care_plans: {
-            [careplanWrapper.getCarePlanId()]:
-              await careplanWrapper.getAllInfo(),
+            [carePlanWrapper.getCarePlanId()]:
+              await carePlanWrapper.getAllInfo(),
           },
         },
         "Workout created successfully."
@@ -353,9 +353,9 @@ class WorkoutController extends Controller {
         delete_exercise_group_ids = [],
       } = body;
 
-      const careplanWrapper = await CareplanWrapper(null, care_plan_id);
-      const current_careplan_doctor_id = await careplanWrapper.getDoctorId();
-      const patientId = await careplanWrapper.getPatientId();
+      const carePlanWrapper = await CarePlanWrapper(null, care_plan_id);
+      const current_careplan_doctor_id = await carePlanWrapper.getDoctorId();
+      const patientId = await carePlanWrapper.getPatientId();
 
       const { count = 0, rows = [] } = await carePlanService.findAndCountAll({
         where: {
@@ -369,9 +369,9 @@ class WorkoutController extends Controller {
       if (count > 0) {
         for (let each in rows) {
           const { id: careplan_id = null } = rows[each] || {};
-          const eachCareplanWrapper = await CareplanWrapper(null, careplan_id);
-          if (eachCareplanWrapper) {
-            const { workout_ids = [] } = await eachCareplanWrapper.getAllInfo();
+          const eachCarePlanWrapper = await CarePlanWrapper(null, careplan_id);
+          if (eachCarePlanWrapper) {
+            const { workout_ids = [] } = await eachCarePlanWrapper.getAllInfo();
 
             for (let id of workout_ids) {
               const workoutWrapper = await WorkoutWrapper({ id });
@@ -446,8 +446,8 @@ class WorkoutController extends Controller {
         });
 
         // create new schedule events
-        const careplanWrapper = await CareplanWrapper(null, care_plan_id);
-        const patientId = await careplanWrapper.getPatientId();
+        const carePlanWrapper = await CarePlanWrapper(null, care_plan_id);
+        const patientId = await carePlanWrapper.getPatientId();
         const patient = await PatientWrapper(null, patientId);
 
         const { user_role_id: patientRoleId } = await patient.getAllInfo();

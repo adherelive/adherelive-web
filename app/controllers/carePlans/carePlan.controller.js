@@ -626,7 +626,7 @@ class CarePlanController extends Controller {
       let carePlansResponse = [];
 
       if (carePlans.length > 0) {
-        const { care_plans } = await carePlanHelper.getCareplanDataWithImp({
+        const { care_plans } = await carePlanHelper.getCarePlanDataWithImp({
           carePlans,
           userCategory: category,
           doctorId: userCategoryId,
@@ -721,7 +721,7 @@ class CarePlanController extends Controller {
         vital_ids,
       };
 
-      Log.debug("87937198123 careplan", carePlanApiData);
+      Log.debug("Care Plan API data: ", carePlanApiData);
 
       let templateMedications = {};
       let templateAppointments = {};

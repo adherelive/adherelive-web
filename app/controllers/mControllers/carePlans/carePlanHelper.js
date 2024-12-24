@@ -34,7 +34,7 @@ import moment from "moment";
 
 const Log = new Logger("CARE_PLAN > HELPER");
 
-export const getCareplanDataWithImp = async ({
+export const getCarePlanDataWithImp = async ({
   carePlans = [],
   userCategory,
   userRoleId,
@@ -54,8 +54,8 @@ export const getCareplanDataWithImp = async ({
     let providerData = {};
     let userRoleData = {};
 
-    let currentCareplanTime = null;
-    let currentCareplanId = null;
+    let currentCarePlanTime = null;
+    let currentCarePlanId = null;
 
     for (let index = 0; index < carePlans.length; index++) {
       const careplan = await CarePlanWrapper(carePlans[index]);
@@ -85,17 +85,17 @@ export const getCareplanDataWithImp = async ({
       ) {
         if (
           moment(careplan.getCreatedAt()).diff(
-            moment(currentCareplanTime),
+            moment(currentCarePlanTime),
             "minutes"
           ) > 0
         ) {
-          currentCareplanTime = careplan.getCreatedAt();
-          currentCareplanId = careplan.getCarePlanId();
+          currentCarePlanTime = careplan.getCreatedAt();
+          currentCarePlanId = careplan.getCarePlanId();
         }
 
-        if (currentCareplanTime === null) {
-          currentCareplanTime = careplan.getCreatedAt();
-          currentCareplanId = careplan.getCarePlanId();
+        if (currentCarePlanTime === null) {
+          currentCarePlanTime = careplan.getCreatedAt();
+          currentCarePlanId = careplan.getCarePlanId();
         }
       }
 
@@ -115,7 +115,7 @@ export const getCareplanDataWithImp = async ({
       }
     }
 
-    Log.info(`8912731893 currentCareplanId ${currentCareplanId}`);
+    Log.info(`currentCarePlanId ${currentCarePlanId}`);
     // medications
     const allMedications =
       (await medicationReminderService.getAllMedicationByData({
@@ -147,15 +147,15 @@ export const getCareplanDataWithImp = async ({
         ...userRoleData,
       },
       care_plan_ids: carePlanIds,
-      current_careplan_id: currentCareplanId,
+      current_care_plan_id: currentCarePlanId,
     };
   } catch (error) {
-    Log.debug("getCareplanData catch error", error);
+    Log.debug("getCarePlanData catch error", error);
     return {};
   }
 };
 
-export const getCareplanData = async ({
+export const getCarePlanData = async ({
   carePlans = [],
   userCategory,
   doctorId,
@@ -180,8 +180,8 @@ export const getCareplanData = async ({
     let providerData = {};
     let userRoleData = {};
 
-    let currentCareplanTime = null;
-    let currentCareplanId = null;
+    let currentCarePlanTime = null;
+    let currentCarePlanId = null;
 
     for (let index = 0; index < carePlans.length; index++) {
       const careplan = await CarePlanWrapper(carePlans[index]);
@@ -204,8 +204,8 @@ export const getCareplanData = async ({
       medicationIds = [...medicationIds, ...medication_ids];
 
       // get latest careplan id
-      // Log.debug("7123731 careplan --> ", careplan.getCreatedAt());
-      // Log.debug("71237312 careplan --> ", moment(currentCareplanTime));
+      // Log.debug("getCarePlanData Care Plan --> ", careplan.getCreatedAt());
+      // Log.debug("getCarePlanData Care Plan --> ", moment(currentCarePlanTime));
 
       const isUserRoleAllowed = [user_role_id, ...secondaryDoctorUserRoleIds]
         .map((id) => parseInt(id))
@@ -219,17 +219,17 @@ export const getCareplanData = async ({
         // if(userCategory === USER_CATEGORY.DOCTOR && doctorId === doctor_id) {
         if (
           moment(careplan.getCreatedAt()).diff(
-            moment(currentCareplanTime),
+            moment(currentCarePlanTime),
             "minutes"
           ) > 0
         ) {
-          currentCareplanTime = careplan.getCreatedAt();
-          currentCareplanId = careplan.getCarePlanId();
+          currentCarePlanTime = careplan.getCreatedAt();
+          currentCarePlanId = careplan.getCarePlanId();
         }
 
-        if (currentCareplanTime === null) {
-          currentCareplanTime = careplan.getCreatedAt();
-          currentCareplanId = careplan.getCarePlanId();
+        if (currentCarePlanTime === null) {
+          currentCarePlanTime = careplan.getCreatedAt();
+          currentCarePlanId = careplan.getCarePlanId();
         }
       }
 
@@ -251,7 +251,7 @@ export const getCareplanData = async ({
       }
     }
 
-    Log.info(`8912731893 currentCareplanId ${currentCareplanId}`);
+    Log.info(`getCarePlanData currentCarePlanId ${currentCarePlanId}`);
 
     // appointments
     const allAppointments =
@@ -312,10 +312,10 @@ export const getCareplanData = async ({
         ...userRoleData,
       },
       care_plan_ids: carePlanIds,
-      current_careplan_id: currentCareplanId,
+      current_care_plan_id: currentCarePlanId,
     };
   } catch (error) {
-    Log.debug("getCareplanData catch error", error);
+    Log.debug("getCarePlanData catch error", error);
     return {};
   }
 };
