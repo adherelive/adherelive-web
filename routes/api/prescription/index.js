@@ -73,6 +73,7 @@ import { getFilePath } from "../../../app/helper/filePath";
 import { checkAndCreateDirectory } from "../../../app/helper/common";
 
 import { getDoctorCurrentTime } from "../../../app/helper/getUserTime";
+import diet from "../../../app/apiWrapper/web/diet";
 
 const fs = require("fs");
 const path = require("path");
@@ -1116,25 +1117,50 @@ router.get("/details/:care_plan_id", Authenticated, async (req, res) => {
         conditions
       );
 
-    let stringSymptomArray = [];
+    const stringSymptomArray = [];
     let stringSymptom = "";
 
     if (symptoms) {
       try {
-        let object = JSON.parse(symptoms);
-        object.forEach((element) => {
-          let symName = element.symptomName;
-          let bodyPart =
-            element.bodyParts.length > 0
-              ? `(${String(element.bodyParts)})`
-              : "";
-          let duration = element.duration;
-          stringSymptomArray.push(`${symName} ${bodyPart} for ${duration}`);
-        });
+        const parsedSymptoms = JSON.parse(symptoms);
+
+        if (Array.isArray(parsedSymptoms)) {
+          // Crucial check: Is it an array?
+          parsedSymptoms.forEach((element) => {
+            if (
+              typeof element === "object" &&
+              element !== null &&
+              element.symptomName &&
+              element.duration
+            ) {
+              // Check if element is an object and has required properties
+              const bodyPart =
+                Array.isArray(element.bodyParts) && element.bodyParts.length > 0
+                  ? `(${element.bodyParts.join(", ")})` // Join array elements with commas
+                  : "";
+              stringSymptomArray.push(
+                `${element.symptomName} ${bodyPart} for ${element.duration}`
+              );
+            } else {
+              console.warn("Invalid symptom element: ", element); // Log invalid elements
+            }
+          });
+        } else {
+          console.warn("Symptoms data is not an array: ", parsedSymptoms);
+          stringSymptom = symptoms;
+        }
       } catch (e) {
+        console.error("Error parsing symptoms: ", e);
         stringSymptom = symptoms;
       }
     }
+
+    // if (stringSymptomArray.length > 0) {
+    //     return stringSymptomArray;
+    // } else {
+    //     return stringSymptom;
+    // }
+
     let symptoms_final_value = "";
     if (stringSymptomArray.length < 1) {
       symptoms_final_value = `${renderChiefComplaints({
