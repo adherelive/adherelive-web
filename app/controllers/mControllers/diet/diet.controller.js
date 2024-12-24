@@ -8,7 +8,7 @@ import EventService from "../../../services/scheduleEvents/scheduleEvent.service
 import DietResponsesService from "../../../services/dietResponses/dietResponses.service";
 
 // Wrappers
-import CareplanWrapper from "../../../apiWrapper/web/carePlan";
+import CarePlanWrapper from "../../../apiWrapper/web/carePlan";
 import DietWrapper from "../../../apiWrapper/mobile/diet";
 import PatientWrapper from "../../../apiWrapper/mobile/patient";
 import UserPreferenceWrapper from "../../../apiWrapper/mobile/userPreference";
@@ -62,7 +62,7 @@ class DietController extends Controller {
 
       const dietWrapper = await DietWrapper({ data: dietData });
       const careplan_id = dietWrapper.getCareplanId();
-      const carePlanWrapper = await CareplanWrapper(null, careplan_id);
+      const carePlanWrapper = await CarePlanWrapper(null, careplan_id);
       const doctor_id = await carePlanWrapper.getDoctorId();
       const patient_id = carePlanWrapper.getPatientId();
 
@@ -286,7 +286,7 @@ class DietController extends Controller {
 
       const carePlanId = dietWrapper.getCareplanId();
 
-      const carePlanWrapper = await CareplanWrapper(null, carePlanId);
+      const carePlanWrapper = await CarePlanWrapper(null, carePlanId);
       const patientId = await carePlanWrapper.getPatientId();
       const patient = await PatientWrapper(null, patientId);
       const { user_role_id: patientRoleId } = await patient.getAllInfo();
@@ -505,7 +505,7 @@ class DietController extends Controller {
       });
 
       // create new schedule events
-      const carePlanWrapper = await CareplanWrapper(null, care_plan_id);
+      const carePlanWrapper = await CarePlanWrapper(null, care_plan_id);
       const patientId = await carePlanWrapper.getPatientId();
       const patient = await PatientWrapper(null, patientId);
       const { user_role_id: patientRoleId } = await patient.getAllInfo();
@@ -738,7 +738,10 @@ class DietController extends Controller {
   getDietResponseTimeline = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
-      Logger.debug("req.params diet id ---> ", req.params);
+      Logger.debug(
+        "getDietResponseTimeline req.params diet id ---> ",
+        req.params
+      );
       const { params: { id } = {} } = req;
       const eventService = new EventService();
 

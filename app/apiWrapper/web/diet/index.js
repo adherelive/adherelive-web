@@ -3,7 +3,7 @@ import BaseDiet from "../../../services/diet/index";
 import DietService from "../../../services/diet/diet.service";
 
 //Wrapper
-import CareplanWrapper from "../carePlan";
+import CarePlanWrapper from "../carePlan";
 import DietFoodGroupMappingWrapper from "../dietFoodGroupMapping";
 
 class DietWrapper extends BaseDiet {
@@ -44,7 +44,7 @@ class DietWrapper extends BaseDiet {
     const dietFoodGroupMappings = getDietFoodGroupMappings() || [];
 
     const careplanId = await this.getCareplanId();
-    const careplanData = await CareplanWrapper(null, careplanId);
+    const careplanData = await CarePlanWrapper(null, careplanId);
 
     let dietFoodGroupMappingData = {},
       dietsApiData = {},
@@ -53,7 +53,7 @@ class DietWrapper extends BaseDiet {
       foodItemsApiData = {},
       foodItemDetailsApiData = {};
     let careplanApiData = {},
-      similiarFoodMappingApiData;
+      similarFoodMappingApiData;
 
     if (dietFoodGroupMappings.length > 0) {
       for (let i = 0; i < dietFoodGroupMappings.length; i++) {
@@ -85,8 +85,8 @@ class DietWrapper extends BaseDiet {
           ...foodItemDetailsApiData,
           ...food_item_details,
         };
-        similiarFoodMappingApiData = {
-          ...similiarFoodMappingApiData,
+        similarFoodMappingApiData = {
+          ...similarFoodMappingApiData,
           ...similar_food_mappings,
         };
       }
@@ -116,7 +116,7 @@ class DietWrapper extends BaseDiet {
         ...foodItemDetailsApiData,
       },
       similar_food_mappings: {
-        ...similiarFoodMappingApiData,
+        ...similarFoodMappingApiData,
       },
     };
   };

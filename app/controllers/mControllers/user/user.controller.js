@@ -179,7 +179,7 @@ class MobileUserController extends Controller {
       //   permissions = await apiUserDetails.getPermissions();
       // }
       //
-      // Logger.debug("apiUserDetails ---> ", apiUserDetails.isActivated());
+      // Logger.debug("MobileUserController apiUserDetails ---> ", apiUserDetails.isActivated());
 
       return this.raiseSuccess(
         res,
@@ -252,7 +252,7 @@ class MobileUserController extends Controller {
         const notificationToken = appNotification.getUserToken(`${userRoleId}`);
         const feedId = base64.encode(`${userRoleId}`);
 
-        Logger.debug("userData ---> ", userData.isActivated());
+        Logger.debug("verifyOtp userData ---> ", userData.isActivated());
         return raiseSuccess(
           res,
           200,
@@ -1888,7 +1888,7 @@ class MobileUserController extends Controller {
         "doctor registration data fetched successfully"
       );
     } catch (error) {
-      Logger.debug("GET DOCTOR REGISTRATION DATA 500 ERROR --->", error);
+      Logger.debug("GET DOCTOR REGISTRATION DATA 500 ERROR ---> ", error);
       return raiseServerError(res);
     }
   };
@@ -1919,7 +1919,10 @@ class MobileUserController extends Controller {
         });
         // let uId = userInfo.get("id");
 
-        Logger.debug("process.config.WEB_URL ---> ", process.config.WEB_URL);
+        Logger.debug(
+          "forgotPassword process.config.WEB_URL ---> ",
+          process.config.WEB_URL
+        );
 
         const emailPayload = {
           toAddress: email,
@@ -2039,7 +2042,7 @@ class MobileUserController extends Controller {
       }
 
       const user = await userService.getUserById(userId);
-      Logger.debug("user ---> ", user);
+      Logger.debug("updateUserPassword user ---> ", user);
       const userData = await UserWrapper(user.get());
 
       const salt = await bcrypt.genSalt(Number(process.config.saltRounds));

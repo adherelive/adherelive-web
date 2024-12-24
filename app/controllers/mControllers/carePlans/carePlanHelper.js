@@ -204,8 +204,8 @@ export const getCarePlanData = async ({
       medicationIds = [...medicationIds, ...medication_ids];
 
       // get latest careplan id
-      // Log.debug("Care Plan --> ", careplan.getCreatedAt());
-      // Log.debug("Care Plan --> ", moment(currentCarePlanTime));
+      // Log.debug("getCarePlanData Care Plan --> ", careplan.getCreatedAt());
+      // Log.debug("getCarePlanData Care Plan --> ", moment(currentCarePlanTime));
 
       const isUserRoleAllowed = [user_role_id, ...secondaryDoctorUserRoleIds]
         .map((id) => parseInt(id))
@@ -251,7 +251,7 @@ export const getCarePlanData = async ({
       }
     }
 
-    Log.info(`currentCarePlanId ${currentCarePlanId}`);
+    Log.info(`getCarePlanData currentCarePlanId ${currentCarePlanId}`);
 
     // appointments
     const allAppointments =

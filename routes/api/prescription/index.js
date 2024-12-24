@@ -45,6 +45,7 @@ import PortionWrapper from "../../../app/apiWrapper/web/portions";
 import WorkoutWrapper from "../../../app/apiWrapper/web/workouts";
 import UserPreferenceWrapper from "../../../app/apiWrapper/web/userPreference";
 import * as DietHelper from "../../../app/controllers/diet/dietHelper";
+
 import moment from "moment";
 
 import {
@@ -72,7 +73,6 @@ import { getFilePath } from "../../../app/helper/filePath";
 import { checkAndCreateDirectory } from "../../../app/helper/common";
 
 import { getDoctorCurrentTime } from "../../../app/helper/getUserTime";
-import diet from "../../../app/apiWrapper/web/diet";
 
 const fs = require("fs");
 const path = require("path");
@@ -554,7 +554,7 @@ function getLatestUpdateDate(medications) {
   return { date, isPrescriptionUpdated };
 }
 
-router.get("/detailss/:care_plan_id", Authenticated, async (req, res) => {
+router.get("/details/:care_plan_id", Authenticated, async (req, res) => {
   try {
     const { care_plan_id = null } = req.params;
     const {

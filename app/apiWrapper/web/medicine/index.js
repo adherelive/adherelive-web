@@ -8,6 +8,7 @@ class MedicineWrapper extends BaseMedicine {
 
   getBasicInfo = () => {
     const { _data } = this;
+    if (!_data) return { basic_info: {} }; // Handle null _data upfront
     const {
       id,
       name,
@@ -25,7 +26,6 @@ class MedicineWrapper extends BaseMedicine {
         details,
         description,
         creator_id,
-        details,
         public_medicine,
       },
     };
@@ -33,6 +33,7 @@ class MedicineWrapper extends BaseMedicine {
 
   getBasicInfoBulk = () => {
     const { _arrData, getExistingData, setCurrentData, _objectName } = this;
+    if (!_arrData || _arrData.length === 0) return { [_objectName]: {} };
 
     let cumulativeData = {};
     _arrData.forEach((data) => {
@@ -61,6 +62,7 @@ class MedicineWrapper extends BaseMedicine {
 
   getAllInfo = () => {
     const { _data } = this;
+    if (!_data) return {}; // Handle null _data upfront
     const {
       id,
       name,
@@ -93,6 +95,13 @@ export default async (data = null, id = null) => {
   if (data) {
     return new MedicineWrapper(data);
   }
-  const medicine = await medicineService.getMedicineById(id);
-  return new MedicineWrapper(medicine);
+  if (!id) return new MedicineWrapper(null); // Handle null id case
+
+  try {
+    const medicine = await medicineService.getMedicineById(id);
+    return new MedicineWrapper(medicine);
+  } catch (error) {
+    console.error("Error fetching medicine:", error);
+    return new MedicineWrapper(null); // Or throw the error if you want it to propagate
+  }
 };

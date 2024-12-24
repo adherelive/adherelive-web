@@ -38,7 +38,7 @@ const Authenticated = async (req, res, next) => {
       req.user = decodedAccessToken; // Attach decoded token to request object
       console.log("auth-middle-ware - 4");
     } catch (error) {
-      console.error("Token verification failed:", error);
+      console.error("Token verification failed: ", error);
       throw error;
     }
 

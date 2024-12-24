@@ -324,7 +324,7 @@ class UserController extends Controller {
         return this.raiseClientError(res, 401, {}, "Invalid Credentials");
       }
     } catch (error) {
-      Logger.debug("signIn 500 error ---> ", error);
+      Logger.debug("User Controller signIn 500 error ---> ", error);
 
       // notification
       const crashJob = await AdhocJob.execute("crash", { apiName: "signIn" });
@@ -2134,7 +2134,10 @@ class UserController extends Controller {
           type: VERIFICATION_TYPE.FORGOT_PASSWORD,
         });
 
-        Logger.debug("process.config.WEB_URL ---> ", process.config.WEB_URL);
+        Logger.debug(
+          "forgotPassword User Controller Web URL ---> ",
+          process.config.WEB_URL
+        );
 
         const emailPayload = {
           toAddress: email,

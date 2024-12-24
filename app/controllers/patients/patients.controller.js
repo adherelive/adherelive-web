@@ -1,6 +1,6 @@
 import Controller from "../";
 
-// SERVICES --------------------------------
+// SERVICES --->
 import userService from "../../../app/services/user/user.service";
 import patientService from "../../../app/services/patients/patients.service";
 import doctorService from "../../../app/services/doctor/doctor.service";
@@ -36,7 +36,7 @@ import WorkoutService from "../../services/workouts/workout.service";
 import userPreferenceService from "../../services/userPreferences/userPreference.service";
 import carePlanSecondaryDoctorMappingService from "../../services/carePlanSecondaryDoctorMappings/carePlanSecondaryDoctorMappings.service";
 
-// WRAPPERS --------------------------------
+// WRAPPERS --->
 import ExerciseContentWrapper from "../../apiWrapper/web/exerciseContents";
 import UserRolesWrapper from "../../apiWrapper/web/userRoles";
 import VitalWrapper from "../../apiWrapper/web/vitals";
@@ -85,13 +85,13 @@ import {
 import { getSeparateName, getRoomId } from "../../helper/common";
 import generateOTP from "../../helper/generateOtp";
 import { EVENTS, Proxy_Sdk } from "../../proxySdk";
-// import careplan from "../../apiWrapper/web/carePlan";
+// import carePlan from "../../apiWrapper/web/carePlan";
 import generatePDF from "../../helper/generateCarePlanPdf";
 import { downloadFileFromS3 } from "../user/userHelper";
 import { getFilePath } from "../../helper/filePath";
 import { checkAndCreateDirectory } from "../../helper/common";
 
-// helpers
+// Helpers
 import bcrypt from "bcrypt";
 import * as carePlanHelper from "../carePlans/carePlanHelper";
 import { getDoctorCurrentTime } from "../../helper/getUserTime";
@@ -352,7 +352,10 @@ class PatientController extends Controller {
         "Patient care plan details fetched successfully"
       );
     } catch (error) {
-      // Logger.debug("get carePlan 500 error ---> ", error);
+      Logger.debug(
+        "getPatientCarePlanSecondaryDocDetails Care Plan 500 error ---> ",
+        error
+      );
       console.log(error);
       return raiseServerError(res);
     }
@@ -548,7 +551,7 @@ class PatientController extends Controller {
   getPatientSymptoms = async (req, res) => {
     const { raiseSuccess, raiseServerError, raiseClientError } = this;
     try {
-      Logger.debug("req.params ---> ", req.params);
+      Logger.debug("getPatientSymptoms req.params ---> ", req.params);
       const {
         params: { patient_id } = {},
         userDetails: {
@@ -728,7 +731,7 @@ class PatientController extends Controller {
   getPatientPartSymptoms = async (req, res) => {
     const { raiseSuccess, raiseServerError, raiseClientError } = this;
     try {
-      Logger.debug("req.params ---> ", req.params);
+      Logger.debug("getPatientPartSymptoms req.params ---> ", req.params);
       const {
         query: { duration = "5" } = {},
         params: { patient_id } = {},
@@ -1899,8 +1902,10 @@ class PatientController extends Controller {
           return -1;
         }
       });
-
-      // Logger.debug("sortedInvestigations", sortedInvestigations);
+      Logger.debug(
+        "generatePrescription sortedInvestigations",
+        sortedInvestigations
+      );
 
       if (nextAppointment) {
         nextAppointmentDuration =

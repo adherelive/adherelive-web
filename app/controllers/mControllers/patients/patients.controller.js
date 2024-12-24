@@ -17,7 +17,7 @@ import WorkoutService from "../../../services/workouts/workout.service";
 import RepetitionService from "../../../services/exerciseRepetitions/repetition.service";
 import PortionServiceService from "../../../services/portions/portions.service";
 import DietService from "../../../services/diet/diet.service";
-import careplanSecondaryDoctorMappingService from "../../../services/carePlanSecondaryDoctorMappings/carePlanSecondaryDoctorMappings.service";
+import carePlanSecondaryDoctorMappingService from "../../../services/carePlanSecondaryDoctorMappings/carePlanSecondaryDoctorMappings.service";
 // WRAPPERS ------------
 import ExerciseContentWrapper from "../../../apiWrapper/mobile/exerciseContents";
 import VitalWrapper from "../../../apiWrapper/mobile/vitals";
@@ -1168,7 +1168,7 @@ class MPatientController extends Controller {
   getPatientSymptoms = async (req, res) => {
     const { raiseSuccess, raiseServerError, raiseClientError } = this;
     try {
-      Logger.debug("req.params ---> ", req.params);
+      Logger.debug("getPatientSymptoms req.params ---> ", req.params);
       const { params: { patient_id } = {}, userDetails: { userId } = {} } = req;
 
       const symptomData = await SymptomService.getAllByData({ patient_id });
@@ -1261,7 +1261,7 @@ class MPatientController extends Controller {
   getPatientPartSymptoms = async (req, res) => {
     const { raiseSuccess, raiseServerError, raiseClientError } = this;
     try {
-      Logger.debug("req.params ---> ", req.params);
+      Logger.debug("getPatientPartSymptoms req.params ---> ", req.params);
       const { query: { duration = "5" } = {}, params: { patient_id } = {} } =
         req;
 
@@ -1495,7 +1495,7 @@ class MPatientController extends Controller {
               // getsecondary careplan mapping
               const carePlan = await CarePlanWrapper(careplanData[i]);
               let secondayDoctorMapping =
-                await careplanSecondaryDoctorMappingService.findAndCountAll({
+                await carePlanSecondaryDoctorMappingService.findAndCountAll({
                   where: {
                     secondary_doctor_role_id: userRoleId,
                     care_plan_id: carePlan.getCarePlanId(),

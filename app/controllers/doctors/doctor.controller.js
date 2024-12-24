@@ -28,7 +28,7 @@ import providerService from "../../services/provider/provider.service";
 import doctorProviderMappingService from "../../services/doctorProviderMapping/doctorProviderMapping.service";
 import featuresService from "../../services/features/features.service";
 import doctorPatientFeatureMappingService from "../../services/doctorPatientFeatureMapping/doctorPatientFeatureMapping.service";
-import careplanSecondaryDoctorMappingService from "../../services/carePlanSecondaryDoctorMappings/carePlanSecondaryDoctorMappings.service";
+import carePlanSecondaryDoctorMappingService from "../../services/carePlanSecondaryDoctorMappings/carePlanSecondaryDoctorMappings.service";
 // import TemplateMedicationWrapper from "../../apiWrapper/web/templateMedication";
 // import TemplateAppointmentWrapper from "../../apiWrapper/web/templateAppointment";
 import AppointmentWrapper from "../../apiWrapper/web/appointments";
@@ -90,12 +90,12 @@ import userPreferenceService from "../../services/userPreferences/userPreference
 import doctorPatientWatchlistService from "../../services/doctorPatientWatchlist/doctorPatientWatchlist.service";
 import { getRoomId, getSeparateName } from "../../helper/common";
 import { raiseClientError } from "../../../routes/api/helper";
+// import doctor from "../../apiWrapper/web/doctor";
+// import college from "../../apiWrapper/web/college";
 
 const XLSX = require("xlsx");
 
 var fs = require("fs");
-// import doctor from "../../apiWrapper/web/doctor";
-// import college from "../../apiWrapper/web/college";
 
 const Logger = new Log("WEB > DOCTOR > CONTROLLER");
 const APPOINTMENT_QUERY_TYPE = {
@@ -2062,7 +2062,7 @@ class DoctorController extends Controller {
 
       const { mimetype } = file || {};
       const fileType = mimetype.split("/");
-      Logger.debug("mimetype ---> ", mimetype);
+      Logger.debug("updateRegistrationDocs mimetype ---> ", mimetype);
       if (!ALLOWED_DOC_TYPE_DOCTORS.includes(fileType[1])) {
         return this.raiseClientError(
           res,
@@ -2829,7 +2829,10 @@ class DoctorController extends Controller {
       if (parseInt(doctor_id) > 0) {
         doctorWrapper = await DoctorWrapper(null, doctor_id);
       } else {
-        Logger.debug("doctorWrapper doctors ---> ", doctors);
+        Logger.debug(
+          "getAllDoctorDetails Doctor Controller doctors ---> ",
+          doctors
+        );
 
         if (!doctors) {
           return raiseClientError(res, 422, {}, "Doctor details not updated");
@@ -3692,7 +3695,7 @@ class DoctorController extends Controller {
       const {
         count: careplansCount = 0,
         rows: careplanAsSecondaryDoctor = [],
-      } = await careplanSecondaryDoctorMappingService.findAndCountAll({
+      } = await carePlanSecondaryDoctorMappingService.findAndCountAll({
         where: {
           secondary_doctor_role_id: userRoleId,
         },
@@ -4216,7 +4219,7 @@ class DoctorController extends Controller {
       const { mimetype } = file || {};
       const fileType = mimetype.split("/");
 
-      Logger.debug("mimetype ---> ", mimetype);
+      Logger.debug("medicineModificationDocs mimetype ---> ", mimetype);
       if (!ALLOWED_DOC_TYPE_DOCTORS.includes(fileType[1])) {
         return this.raiseClientError(
           res,

@@ -57,7 +57,8 @@ try {
   if (process.config && process.config.cookieKey) {
     cookieKeys = JSON.parse(process.config.cookieKey);
   } else {
-    console.log("Cookie Key is undefined or null: ", process.config.cookieKey);
+    console.warn("process.config.cookieKey is undefined or null");
+    // console.log("Cookie Key is undefined or null: ", process.config.cookieKey);
     // Set a default value if cookieKey is not defined
     cookieKeys = ["cookie938", "abc123xyz456abc789xyz012"];
   }

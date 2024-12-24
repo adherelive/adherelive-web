@@ -10,7 +10,7 @@ import carePlanService from "../../../services/carePlan/carePlan.service";
 // wrappers
 import WorkoutResponseWrapper from "../../../apiWrapper/mobile/workoutResponse";
 import WorkoutWrapper from "../../../apiWrapper/mobile/workouts";
-import CareplanWrapper from "../../../apiWrapper/mobile/carePlan";
+import CarePlanWrapper from "../../../apiWrapper/mobile/carePlan";
 import DoctorWrapper from "../../../apiWrapper/mobile/doctor";
 import EventWrapper from "../../../apiWrapper/common/scheduleEvents";
 import ExerciseContentWrapper from "../../../apiWrapper/mobile/exerciseContents";
@@ -126,7 +126,7 @@ class WorkoutResponseController extends Controller {
       if (workoutResponseId) {
         // get doctor for workout
         const workout = await WorkoutWrapper({ id: workout_id });
-        const carePlan = await CareplanWrapper(null, workout.getCareplanId());
+        const carePlan = await CarePlanWrapper(null, workout.getCareplanId());
 
         const doctorRoleId = carePlan.getUserRoleId();
         const doctor = await DoctorWrapper(null, carePlan.getDoctorId());
@@ -396,7 +396,7 @@ class WorkoutResponseController extends Controller {
         await workout.getReferenceInfo();
 
       const workoutCareplanId = await workout.getCareplanId();
-      const carePlanWrapper = await CareplanWrapper(null, workoutCareplanId);
+      const carePlanWrapper = await CarePlanWrapper(null, workoutCareplanId);
       const careplanCreatorId = carePlanWrapper.getDoctorId();
 
       // exercise contents

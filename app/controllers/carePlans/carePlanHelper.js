@@ -136,7 +136,7 @@ export const getCarePlanDataWithImp = async ({
       current_care_plan_id: currentCarePlanId,
     };
   } catch (error) {
-    Log.debug("Issue with getCarePlanData catch error: ", error);
+    Log.debug("Issue with getCarePlanDataWithImp catch error: ", error);
     return {};
   }
 };
@@ -160,7 +160,7 @@ export const getCarePlanDataWithDoctor = async ({
       },
     };
   } catch (error) {
-    Log.debug("getCarePlanData catch error: ", error);
+    Log.debug("getCarePlanDataWithDoctor catch error: ", error);
     return {};
   }
 };
@@ -318,7 +318,7 @@ export const getCarePlanData = async ({
       current_care_plan_id: currentCarePlanId,
     };
   } catch (error) {
-    Log.debug("getCarePlanData catch error: ", error);
+    Log.debug("getCarePlanData issues catch error: ", error);
     return {};
   }
 };

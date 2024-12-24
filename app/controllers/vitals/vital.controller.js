@@ -357,7 +357,10 @@ class VitalController extends Controller {
   getVitalResponseTimeline = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
-      Log.debug("req.params vital id ---> ", req.params);
+      Log.debug(
+        "getVitalResponseTimeline req.params vital id ---> ",
+        req.params
+      );
       const { params: { id } = {} } = req;
       const eventService = new EventService();
 
@@ -409,7 +412,7 @@ class VitalController extends Controller {
         );
       }
     } catch (error) {
-      Log.debug("Cannot getVitalResponse 500 error", error);
+      Log.debug("Cannot getVitalResponseTimeline 500 error: ", error);
       return raiseServerError(res);
     }
   };
