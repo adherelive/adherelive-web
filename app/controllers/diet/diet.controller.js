@@ -251,7 +251,6 @@ class DietController extends Controller {
       } = userDetails || {};
 
       const { body = {} } = req;
-      Logger.debug("Create request body: ", body);
 
       // TODO: Check why end date is null ?
       const {
@@ -264,6 +263,7 @@ class DietController extends Controller {
         repeat_days = [],
         diet_food_groups = [],
       } = body;
+      Logger.debug("Create request body: ", body);
 
       const dietService = new DietService();
       const diet =
@@ -360,6 +360,7 @@ class DietController extends Controller {
         const options = await UserPreferenceWrapper(timingPreference);
         const { timings: userTimings = {} } = options.getAllDetails();
 
+        // TODO: Check on why this code has been commented out
         // const medicationTimings = medicationHelper.getTimings(userTimings);
 
         // medicationTimings.sort((activityA, activityB) => {
@@ -659,6 +660,7 @@ class DietController extends Controller {
     }
   };
 
+  // TODO: Check why this function is no longer being used?
   // getPatientDiets = async (req, res) => {
   //   const { raiseSuccess, raiseClientError, raiseServerError } = this;
   //   try {

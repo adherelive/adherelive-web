@@ -2948,6 +2948,7 @@ class DoctorController extends Controller {
         degreeData[degreeWrapper.getDegreeId()] = degreeWrapper.getBasicInfo();
       }
 
+      // TODO: Check on why this code is commented and not being used
       // const courses = await courseService.getAll();
       // let courseData = {};
       // for(const course of courses) {
@@ -2973,11 +2974,14 @@ class DoctorController extends Controller {
 
       const refInfo = await doctorWrapper.getReferenceInfo();
       const { doctors: docss = {}, users: userss = {} } = refInfo;
-      Logger.debug("2864235427654723867432648327", {
-        refInfo,
-        doctors: docss,
-        users: userss,
-      });
+      Logger.debug(
+        "Get all Doctor details -> getAllDoctorDetails, users and doctors: ",
+        {
+          refInfo,
+          doctors: docss,
+          users: userss,
+        }
+      );
 
       return raiseSuccess(
         res,

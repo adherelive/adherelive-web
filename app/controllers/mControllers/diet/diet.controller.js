@@ -248,8 +248,6 @@ class DietController extends Controller {
       } = userDetails || {};
 
       // const { body = {} } = req;
-      Logger.debug("create request: ", body);
-
       // TODO: Check why end date is null ?
       const {
         name = "",
@@ -261,6 +259,7 @@ class DietController extends Controller {
         not_to_do = "",
         diet_food_groups = [],
       } = body;
+      Logger.debug("create request: ", body);
 
       const dietService = new DietService();
       // TODO: Try with the following, if this does not work:
