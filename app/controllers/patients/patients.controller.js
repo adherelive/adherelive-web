@@ -45,8 +45,8 @@ import CarePlanWrapper from "../../apiWrapper/web/carePlan";
 import AppointmentWrapper from "../../apiWrapper/web/appointments";
 import MReminderWrapper from "../../apiWrapper/web/medicationReminder";
 import CarePlanTemplateWrapper from "../../apiWrapper/web/carePlanTemplate";
-import TemplateMedicationWrapper from "../../apiWrapper/web/templateMedication";
-import TemplateAppointmentWrapper from "../../apiWrapper/web/templateAppointment";
+// import TemplateMedicationWrapper from "../../apiWrapper/web/templateMedication";
+// import TemplateAppointmentWrapper from "../../apiWrapper/web/templateAppointment";
 import MedicineApiWrapper from "../../apiWrapper/mobile/medicine";
 import SymptomWrapper from "../../apiWrapper/web/symptoms";
 import DoctorWrapper from "../../apiWrapper/web/doctor";
@@ -85,7 +85,7 @@ import {
 import { getSeparateName, getRoomId } from "../../helper/common";
 import generateOTP from "../../helper/generateOtp";
 import { EVENTS, Proxy_Sdk } from "../../proxySdk";
-import carePlan from "../../apiWrapper/web/carePlan";
+// import carePlan from "../../apiWrapper/web/carePlan";
 import generatePDF from "../../helper/generateCarePlanPdf";
 import { downloadFileFromS3 } from "../user/userHelper";
 import { getFilePath } from "../../helper/filePath";
@@ -872,13 +872,13 @@ class PatientController extends Controller {
           const { users, patients, patient_id } = await user.getReferenceInfo();
           patientIds.push(patient_id);
 
-          // let carePlanData = [];
-          // if (authDoctor) {
-          let carePlanData = await carePlanService.getCarePlanByData({
-            doctor_id: authDoctor.get("id"),
-            patient_id,
-          });
-          // }
+          let carePlanData = [];
+          if (authDoctor) {
+            carePlanData = await carePlanService.getCarePlanByData({
+              doctor_id: authDoctor.get("id"),
+              patient_id,
+            });
+          }
           isPatientAvailableForDoctor = carePlanData.length > 0;
 
           userDetails = {
@@ -1271,15 +1271,15 @@ class PatientController extends Controller {
           authDoctor = await doctorService.getDoctorByData({ user_id: userId });
         }
 
-        // let consentData = [];
-        // if (authDoctor) {
-        const consentData = await consentService.create({
-          type: CONSENT_TYPE.CARE_PLAN,
-          doctor_id: authDoctor.get("id"),
-          patient_id,
-          user_role_id: userRoleId,
-        });
-        // }
+        let consentData = [];
+        if (authDoctor) {
+          consentData = await consentService.create({
+            type: CONSENT_TYPE.CARE_PLAN,
+            doctor_id: authDoctor.get("id"),
+            patient_id,
+            user_role_id: userRoleId,
+          });
+        }
         const consents = await ConsentWrapper({ data: consentData });
 
         const carePlans = await carePlanService.getCarePlanByData({

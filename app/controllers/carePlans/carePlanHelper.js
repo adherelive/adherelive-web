@@ -8,7 +8,7 @@ import vitalService from "../../services/vitals/vital.service";
 import DietService from "../../services/diet/diet.service";
 import WorkoutService from "../../services/workouts/workout.service";
 import doctorService from "../../services/doctor/doctor.service";
-import medicineService from "../../services/medicine/medicine.service";
+// import medicineService from "../../services/medicine/medicine.service";
 // import templateMedicationService from "../../services/templateMedication/templateMedication.service";
 // import templateAppointmentService from "../../services/templateAppointment/templateAppointment.service";
 
