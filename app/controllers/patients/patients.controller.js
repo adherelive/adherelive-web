@@ -2369,6 +2369,256 @@ class PatientController extends Controller {
             patient["care_plan_id"] = care_plan_id;
             const { id = null } = { ...patient };
 
+            if (allPatientIds.includes(id)) continue;
+
+            allPatientIds.push(id);
+            const patientData = await PatientWrapper(null, id);
+            const { user_role_id = null } = await patientData.getAllInfo();
+            patient["user_role_id"] = user_role_id;
+
+            rowData.push({
+              care_plans: {
+                id: care_plan_id,
+                details: care_plan_details,
+                created_at: care_plan_created_at,
+                expired_on: care_plan_expired_on,
+                activated_on: care_plan_activated_on,
+              },
+              patients: {
+                ...patient,
+              },
+            });
+          }
+        }
+      }
+      //count
+      return raiseSuccess(
+        res,
+        200,
+        {
+          rowData,
+          treatments,
+          total: count,
+        },
+        "success"
+      );
+    } catch (error) {
+      Logger.debug("getAllPatientsPagination 500", error);
+      return raiseServerError(res);
+    }
+  };
+
+  getAllPatientsPaginationBackup = async (req, res) => {
+    const { raiseSuccess, raiseClientError, raiseServerError } = this;
+    try {
+      const { query, userDetails } = req;
+
+      const {
+        userId,
+        userRoleId,
+        userData: { category } = {},
+        userCategoryId,
+      } = userDetails || {};
+
+      let allPatientIds = [];
+
+      /** TODO: Check if these are required now or not.
+             userId (auth) [DOCTOR]
+
+             SORT
+             created_at [asc, desc]
+             name [asc, desc]
+
+             FILTER
+             diagnosis [description, type]
+             treatment
+
+             doctors -> careplans -> patients
+             */
+
+      const {
+        offset = 0,
+        sort_name = null,
+        sort_createdAt = null,
+        filter_treatment = null,
+        filter_diagnosis = null,
+        watchlist = 0,
+      } = query || {};
+
+      const limit = process.config.PATIENT_LIST_SIZE_LIMIT;
+      // 0
+
+      const offsetLimit = parseInt(limit, 10) * parseInt(offset, 10);
+      const endLimit = parseInt(limit, 10);
+      const getWatchListPatients = parseInt(watchlist, 10) === 0 ? 0 : 1;
+
+      let patientsForDoctor = [];
+
+      let rowData = [];
+
+      let count = 0;
+      let treatments = {};
+
+      // care plan ids as secondary doctor
+      const {
+        count: careplansCount = 0,
+        rows: careplanAsSecondaryDoctor = [],
+      } = await carePlanSecondaryDoctorMappingService.findAndCountAll({
+        where: {
+          secondary_doctor_role_id: userRoleId,
+        },
+      });
+
+      let careplanIdsAsSecondaryDoctor = [];
+
+      if (careplansCount) {
+        for (let each of careplanAsSecondaryDoctor) {
+          const { care_plan: { id = null, patient_id = null } = {} } =
+            each || {};
+          careplanIdsAsSecondaryDoctor.push(id);
+        }
+      }
+
+      const secondary_careplan_ids = careplanIdsAsSecondaryDoctor.toString()
+        ? careplanIdsAsSecondaryDoctor.toString()
+        : null;
+
+      if (category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP) {
+        let watchlistQuery = "";
+        const doctor = await doctorService.getDoctorByData({
+          user_id: userId,
+        });
+
+        if (doctor && getWatchListPatients) {
+          const doctorData = await DoctorWrapper(doctor);
+
+          const doctorAllInfo = await doctorData.getAllInfo();
+          // let { watchlist_patient_ids = []} = doctorAllInfo || {};
+          let watchlist_patient_ids = [];
+          const watchlistRecords =
+            await doctorPatientWatchlistService.getAllByData({
+              user_role_id: userRoleId,
+            });
+
+          // watchlisted patient ids
+
+          if (watchlistRecords && watchlistRecords.length) {
+            for (let i = 0; i < watchlistRecords.length; i++) {
+              const watchlistWrapper = await DoctorPatientWatchlistWrapper(
+                watchlistRecords[i]
+              );
+              const patientId = await watchlistWrapper.getPatientId();
+              watchlist_patient_ids.push(patientId);
+            }
+          }
+          watchlist_patient_ids = watchlist_patient_ids.length
+            ? watchlist_patient_ids
+            : null; // if no patient id watchlisted , check patinetIds for (null) as watchlist_patient_ids=[]
+          watchlistQuery = `AND (carePlan.user_role_id = ${userRoleId} OR carePlan.id in ( ${secondary_careplan_ids} ) ) AND carePlan.patient_id IN (${watchlist_patient_ids})`;
+          // let { watchlist_patient_ids = [] } = doctorAllInfo || {};
+          // watchlist_patient_ids = watchlist_patient_ids.length
+          //   ? watchlist_patient_ids
+          //   : null; // if no patient id watchlisted , check patinetIds for (null) as watchlist_patient_ids=[]
+          // watchlistQuery = `AND carePlan.doctor_id = ${userCategoryId} AND carePlan.patient_id IN (${watchlist_patient_ids})`;
+        }
+
+        // filter to get name sorted paginated data
+        if (sort_name) {
+          const order = sort_name === "0" ? "ASC" : "DESC";
+          [count, patientsForDoctor] =
+            (await carePlanService.getPaginatedPatients({
+              doctor_id: userCategoryId,
+              user_role_id: userRoleId,
+              order: `patient.first_name ${order}`,
+              offset: offsetLimit,
+              limit: endLimit,
+              watchlist: watchlistQuery,
+              // watchlistPatientIds,
+              // watchlist: getWatchListPatients,
+              secondary_careplan_ids,
+            })) || [];
+        } else if (sort_createdAt) {
+          // filter to get date sorted paginated data
+
+          const order = sort_createdAt === "0" ? "ASC" : "DESC";
+          [count, patientsForDoctor] =
+            (await carePlanService.getPaginatedPatients({
+              doctor_id: userCategoryId,
+              user_role_id: userRoleId,
+              order: `patient.created_at ${order}`,
+              offset: offsetLimit,
+              limit: endLimit,
+              watchlist: watchlistQuery,
+              secondary_careplan_ids,
+            })) || [];
+        } else if (filter_treatment) {
+          const allTreatments =
+            (await treatmentService.searchByName(filter_treatment)) || [];
+
+          // get all treatment
+          if (allTreatments.length > 0) {
+            for (let index = 0; index < allTreatments.length; index++) {
+              const treatment = await TreatmentWrapper(allTreatments[index]);
+              treatments = {
+                ...treatments,
+                [treatment.getTreatmentId()]: treatment.getBasicInfo(),
+              };
+            }
+
+            const treatmentIds =
+              allTreatments.map((treatment) => treatment.id) || [];
+            [count, patientsForDoctor] =
+              (await carePlanService.getPaginatedPatients({
+                doctor_id: userCategoryId,
+                filter: `JSON_VALUE(carePlan.details, '$.treatment_id') IN (${treatmentIds}) 
+             
+              `,
+                offset: offsetLimit,
+                limit: endLimit,
+                watchlist: watchlistQuery,
+                user_role_id: userRoleId,
+                secondary_careplan_ids,
+              })) || [];
+          }
+        } else if (filter_diagnosis) {
+          // diagnosis filter
+
+          let diagnosis_type = null;
+
+          if (DIAGNOSIS_TYPE.FINAL.text.includes(filter_diagnosis)) {
+            diagnosis_type = DIAGNOSIS_TYPE.FINAL.id;
+          } else if (DIAGNOSIS_TYPE.PROBABLE.text.includes(filter_diagnosis)) {
+            diagnosis_type = DIAGNOSIS_TYPE.PROBABLE.id;
+          } else {
+            diagnosis_type = null;
+          }
+          [count, patientsForDoctor] =
+            (await carePlanService.getPaginatedPatients({
+              doctor_id: userCategoryId,
+              user_role_id: userRoleId,
+              filter: `(JSON_VALUE(carePlan.details, '$.diagnosis.description') LIKE '${filter_diagnosis}%' OR
+                JSON_VALUE(carePlan.details, '$.diagnosis.type') = ${diagnosis_type})`,
+              // TODO: Duplicate user_role_id, commenting it
+              //user_role_id: userRoleId,
+              offset: offsetLimit,
+              limit: endLimit,
+              watchlist: watchlistQuery,
+              secondary_careplan_ids,
+            })) || [];
+        }
+        if (patientsForDoctor.length > 0) {
+          for (let index = 0; index < patientsForDoctor.length; index++) {
+            const {
+              care_plan_id,
+              care_plan_details,
+              care_plan_created_at,
+              care_plan_expired_on,
+              care_plan_activated_on,
+              ...patient
+            } = patientsForDoctor[index] || {};
+            patient["care_plan_id"] = care_plan_id;
+            const { id = null } = { ...patient };
+
             if (allPatientIds.includes(id)) {
               continue;
             }
