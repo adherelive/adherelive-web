@@ -1154,10 +1154,10 @@
 //     return doc.y + 10;
 //   }
 
-//   function isMedicationsUpdatedInExistingMedicin(medications) {
+//   function isMedicationUpdatedInExistingMedicine(medications) {
 //     const medicationIds = Object.keys(medications);
 //     let date = null;
-//     let isMedicinsUpdate = false;
+//     let isMedicineUpdate = false;
 //     for (const medicationId of medicationIds) {
 //       const {
 //         [medicationId]: {
@@ -1170,9 +1170,9 @@
 
 //       if (created_date !== updated_date) {
 //         // all medicin written in same days an there is no update on medicins
-//         isMedicinsUpdate = true;
+//         isMedicineUpdate = true;
 //       }
-//       return isMedicinsUpdate;
+//       return isMedicineUpdate;
 //     }
 //     return date;
 //   }
@@ -1340,7 +1340,7 @@
 //         let { date: latestUpdateDate, isPrescriptionUpdated } =
 //           getLatestUpdateDate(medications);
 //         let isMedicationsUpdate =
-//           isMedicationsUpdatedInExistingMedicin(medications);
+//           isMedicationUpdatedInExistingMedicine(medications);
 //         let wantToShow = true;
 
 //         if (isPrescriptionUpdated || isMedicationsUpdate) wantToShow = false;

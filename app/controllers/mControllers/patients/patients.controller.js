@@ -17,7 +17,7 @@ import WorkoutService from "../../../services/workouts/workout.service";
 import RepetitionService from "../../../services/exerciseRepetitions/repetition.service";
 import PortionServiceService from "../../../services/portions/portions.service";
 import DietService from "../../../services/diet/diet.service";
-import careplanSecondaryDoctorMappingService from "../../../services/carePlanSecondaryDoctorMappings/carePlanSecondaryDoctorMappings.service";
+import carePlanSecondaryDoctorMappingService from "../../../services/carePlanSecondaryDoctorMappings/carePlanSecondaryDoctorMappings.service";
 // WRAPPERS ------------
 import ExerciseContentWrapper from "../../../apiWrapper/mobile/exerciseContents";
 import VitalWrapper from "../../../apiWrapper/mobile/vitals";
@@ -200,13 +200,13 @@ class MPatientController extends Controller {
             profilePic = file_name;
           }
         } else {
-          // todo
+          // TODO: check what comes here for else
         }
       } else {
         if (userId) {
           profilePic = profile_pic;
         } else {
-          // todo
+          // TODO: check what comes here for else
         }
       }
 
@@ -214,7 +214,7 @@ class MPatientController extends Controller {
 
       // Logger.debug("18371823 profilePicUrl ---> ", profilePicUrl);
 
-      // todo minio configure here
+      // TODO: minio configure here
 
       const previousDetails = (await initialPatientData.getDetails()) || {};
       const { basic_info: prevBasicInfo } =
@@ -387,7 +387,7 @@ class MPatientController extends Controller {
     }
   };
 
-  //TODO: need to delete below function if all working fine in mobile app.
+  // TODO: need to delete below function if all working fine in mobile app.
   getPatientCarePlanDetailsWithImp1 = async (req, res) => {
     try {
       const { id: patient_id = 1 } = req.params;
@@ -782,7 +782,7 @@ class MPatientController extends Controller {
     }
   };
 
-  //TODO: need to delete below function if all working fine in mobile app.
+  // TODO: need to delete below function if all working fine in mobile app.
   getPatientCarePlanDetails = async (req, res) => {
     try {
       const { id: patient_id = 1 } = req.params;
@@ -1168,7 +1168,7 @@ class MPatientController extends Controller {
   getPatientSymptoms = async (req, res) => {
     const { raiseSuccess, raiseServerError, raiseClientError } = this;
     try {
-      Logger.debug("req.params ---> ", req.params);
+      Logger.debug("getPatientSymptoms req.params ---> ", req.params);
       const { params: { patient_id } = {}, userDetails: { userId } = {} } = req;
 
       const symptomData = await SymptomService.getAllByData({ patient_id });
@@ -1261,7 +1261,7 @@ class MPatientController extends Controller {
   getPatientPartSymptoms = async (req, res) => {
     const { raiseSuccess, raiseServerError, raiseClientError } = this;
     try {
-      Logger.debug("req.params ---> ", req.params);
+      Logger.debug("getPatientPartSymptoms req.params ---> ", req.params);
       const { query: { duration = "5" } = {}, params: { patient_id } = {} } =
         req;
 

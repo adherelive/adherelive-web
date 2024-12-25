@@ -156,7 +156,7 @@ class PassedCron {
       const scheduleEventService = new ScheduleEventService();
       const currentTime = moment().utc().toDate();
 
-      console.log("handleMedicationPassed ", {
+      console.log("937123873289 ", {
         condition:
           moment(currentTime).diff(event.updatedAt(), "minutes") ===
           this.RESCHEDULE_INTERVAL,
@@ -181,7 +181,7 @@ class PassedCron {
         );
       }
 
-      console.log("expired diff", {
+      console.log("12738123 expired diff", {
         count: moment(currentTime).diff(event.getStartTime(), "minutes"),
         condition:
           moment(currentTime).diff(event.getStartTime(), "minutes") >
@@ -200,7 +200,7 @@ class PassedCron {
         );
       }
     } catch (error) {
-      Log.debug("handleMedicationPassed 500 error ---> ", error);
+      Log.debug("handleMedicationPassed 500 error --->", error);
     }
   };
 
@@ -221,7 +221,7 @@ class PassedCron {
         );
       }
     } catch (error) {
-      Log.debug("handleMedicationPassed 500 error ---> ", error);
+      Log.debug("handleMedicationPassed 500 error --->", error);
     }
   };
 
@@ -247,7 +247,7 @@ class PassedCron {
         );
       }
     } catch (error) {
-      Log.debug("handleCarePlanPassed 500 error ---> ", error);
+      Log.debug("handleCarePlanPassed 500 error --->", error);
     }
   };
 }

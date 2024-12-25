@@ -56,7 +56,7 @@ import ScheduleEventService from "../../services/scheduleEvents/scheduleEvent.se
 import { Sequelize } from "sequelize";
 import bcrypt from "bcrypt";
 
-// helper
+// Helper
 import * as ProviderHelper from "./helper";
 import accountDetailsService from "../../services/accountDetails/accountDetails.service";
 import AccountsWrapper from "../../apiWrapper/web/accountsDetails";

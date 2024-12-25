@@ -11,15 +11,15 @@ import ApiRouter from "../routes/api";
 import mApiRouter from "../routes/m-api";
 import EventObserver from "../app/proxySdk/eventObserver";
 import ActivityObserver from "../app/activitySdk/activityObserver";
-import RenewSubscription from "../app/cron-jobs/renewSubscription";
+import RenewSubscription from "../app/cronJobs/renewSubscription";
 
-import Start from "../app/cron-jobs/start";
-import Passed from "../app/cron-jobs/passed";
-import Prior from "../app/cron-jobs/prior";
-import ActivePatient from "../app/cron-jobs/activePatient";
-import RemoveDocuments from "../app/cron-jobs/removeDocuments";
-import LongTerm from "../app/cron-jobs/longTerm";
-import RenewTxActivity from "../app/cron-jobs/renewTxActivity";
+import Start from "../app/cronJobs/start";
+import Passed from "../app/cronJobs/passed";
+import Prior from "../app/cronJobs/prior";
+import ActivePatient from "../app/cronJobs/activePatient";
+import RemoveDocuments from "../app/cronJobs/removeDocuments";
+import LongTerm from "../app/cronJobs/longTerm";
+import RenewTxActivity from "../app/cronJobs/renewTxActivity";
 
 // Initialize database connections
 (async () => {
@@ -57,7 +57,8 @@ try {
   if (process.config && process.config.cookieKey) {
     cookieKeys = JSON.parse(process.config.cookieKey);
   } else {
-    console.warn("Cookie Key is undefined or null", process.config.cookieKey);
+    console.warn("process.config.cookieKey is undefined or null");
+    // console.log("Cookie Key is undefined or null: ", process.config.cookieKey);
     // Set a default value if cookieKey is not defined
     cookieKeys = ["cookie938", "abc123xyz456abc789xyz012"];
   }

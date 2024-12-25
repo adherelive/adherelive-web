@@ -208,6 +208,7 @@ class EmailManger {
             payload.templateData,
             {}
           );
+          break;
         case "surveyInvite":
           templateString = await this.genrateEmailTemplateString(
             "surveyInvite",

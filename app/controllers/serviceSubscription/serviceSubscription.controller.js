@@ -211,9 +211,9 @@ class ServiceSubscriptionController extends Controller {
     if (category === "admin" && doctor_id) {
       provider_id = req.userDetails.userRoleData.basic_info.linked_id;
       // TODO: Check why this self-assignment has been done
-      // doctor_id = doctor_id;
+      let myDoctorId = doctor_id;
       data = {
-        // doctor_id,
+        // myDoctorId,
         provider_id,
         // provider_type: req.userDetails.userRoleData.basic_info.linked_with,
       };

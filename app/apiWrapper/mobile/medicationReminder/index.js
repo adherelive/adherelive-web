@@ -2,7 +2,7 @@ import BaseMedicationReminder from "../../../services/medicationReminder";
 
 import mReminderService from "../../../services/medicationReminder/mReminder.service";
 import carePlanMedicationService from "../../../services/carePlanMedication/carePlanMedication.service";
-import eventService from "../../../services/scheduleEvents/scheduleEvent.service";
+import EventService from "../../../services/scheduleEvents/scheduleEvent.service";
 import moment from "moment";
 import { EVENT_STATUS, EVENT_TYPE } from "../../../../constant";
 import EventWrapper from "../../common/scheduleEvents";
@@ -14,7 +14,7 @@ class MobileMReminderWrapper extends BaseMedicationReminder {
     super(data);
   }
 
-  // Gauarav changes
+  // Medication Reminder Service with HIS details
   getOrganizerDetailsFromId = async (organizer_id, organizer_type) => {
     let organizer = {};
 
@@ -69,7 +69,7 @@ class MobileMReminderWrapper extends BaseMedicationReminder {
 
   getAllInfo = async () => {
     const { getBasicInfo, getMReminderId } = this;
-    const EventService = new eventService();
+    const eventService = new EventService();
 
     const currentDate = moment().endOf("day").utc().toDate();
 
@@ -81,7 +81,7 @@ class MobileMReminderWrapper extends BaseMedicationReminder {
     const { care_plan_id = null } = medicationCareplan || {};
 
     const scheduleEvents =
-      (await EventService.getAllPreviousByData({
+      (await eventService.getAllPreviousByData({
         event_id: getMReminderId(),
         date: currentDate,
         event_type: EVENT_TYPE.MEDICATION_REMINDER,
@@ -94,7 +94,7 @@ class MobileMReminderWrapper extends BaseMedicationReminder {
 
     // get next due date for medication
     const nextDueEvent =
-      (await EventService.getEventByData({
+      (await eventService.getEventByData({
         status: EVENT_STATUS.PENDING,
         event_id: getMReminderId(),
         event_type: EVENT_TYPE.MEDICATION_REMINDER,
@@ -131,8 +131,8 @@ class MobileMReminderWrapper extends BaseMedicationReminder {
 
   getReferenceInfoWithImp = async () => {
     const { getAllInfo, getMReminderId, getMedicineId, _data } = this;
-    const EventService = new eventService();
-    const scheduleEvents = await EventService.getAllPreviousByData({
+    const eventService = new EventService();
+    const scheduleEvents = await eventService.getAllPreviousByData({
       event_id: getMReminderId(),
       date: moment().utc().toDate(),
       event_type: EVENT_TYPE.MEDICATION_REMINDER,
@@ -167,7 +167,7 @@ class MobileMReminderWrapper extends BaseMedicationReminder {
   getReferenceInfo = async () => {
     const { getAllInfo, getMReminderId, getMedicineId, _data } = this;
     const { medicine } = _data || {};
-    const EventService = new eventService();
+    const eventService = new EventService();
 
     let medicineData = {};
 
@@ -178,7 +178,7 @@ class MobileMReminderWrapper extends BaseMedicationReminder {
       medicineData = await MedicineWrapper(null, getMedicineId());
     }
 
-    const scheduleEvents = await EventService.getAllPreviousByData({
+    const scheduleEvents = await eventService.getAllPreviousByData({
       event_id: getMReminderId(),
       date: moment().utc().toDate(),
       event_type: EVENT_TYPE.MEDICATION_REMINDER,

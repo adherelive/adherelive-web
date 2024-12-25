@@ -6,7 +6,7 @@ import DietResponseService from "../../../services/dietResponses/dietResponses.s
 // wrappers
 import DietResponseWrapper from "../../../apiWrapper/mobile/dietResponse";
 import DietWrapper from "../../../apiWrapper/mobile/diet";
-import CareplanWrapper from "../../../apiWrapper/mobile/carePlan";
+import CarePlanWrapper from "../../../apiWrapper/mobile/carePlan";
 import DoctorWrapper from "../../../apiWrapper/mobile/doctor";
 
 import * as UploadHelper from "../../../helper/uploadDocuments";
@@ -117,7 +117,7 @@ class DietResponseController extends Controller {
       if (dietResponseId) {
         // get doctor for diet
         const diet = await DietWrapper({ id: diet_id });
-        const carePlan = await CareplanWrapper(null, diet.getCareplanId());
+        const carePlan = await CarePlanWrapper(null, diet.getCarePlanId());
         const doctorRoleId = carePlan.getUserRoleId();
 
         const doctor = await DoctorWrapper(null, carePlan.getDoctorId());

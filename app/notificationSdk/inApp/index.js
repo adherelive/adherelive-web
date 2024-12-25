@@ -42,14 +42,14 @@ class AppNotification {
       );
       const userToken = client.createUserToken(template.actor.toString());
 
-      Log.debug("client --> ", client);
+      Log.debug("sendAppNotification client --> ", client);
 
       let result = {};
       const feed = client.feed("notification", template.object);
 
       Log.debug("feed --> ", template);
       const response = await feed.addActivity(template).catch((err) => {
-        Log.debug("response err ---> ", err);
+        Log.debug("InApp sendAppNotification response err ---> ", err);
       });
 
       Log.debug("sendAppNotification Response", response);

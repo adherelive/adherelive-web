@@ -23,7 +23,7 @@ export default class Diet {
     return this._data.end_date;
   };
 
-  getCareplanId = () => {
+  getCarePlanId = () => {
     return this._data.care_plan_id;
   };
 

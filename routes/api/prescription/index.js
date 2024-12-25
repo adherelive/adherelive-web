@@ -45,6 +45,7 @@ import PortionWrapper from "../../../app/apiWrapper/web/portions";
 import WorkoutWrapper from "../../../app/apiWrapper/web/workouts";
 import UserPreferenceWrapper from "../../../app/apiWrapper/web/userPreference";
 import * as DietHelper from "../../../app/controllers/diet/dietHelper";
+
 import moment from "moment";
 
 import {
@@ -554,7 +555,7 @@ function getLatestUpdateDate(medications) {
   return { date, isPrescriptionUpdated };
 }
 
-router.get("/detailss/:care_plan_id", Authenticated, async (req, res) => {
+router.get("/details/:care_plan_id", Authenticated, async (req, res) => {
   try {
     const { care_plan_id = null } = req.params;
     const {
@@ -1135,6 +1136,51 @@ router.get("/detailss/:care_plan_id", Authenticated, async (req, res) => {
         stringSymptom = symptoms;
       }
     }
+
+    // const stringSymptomArray = [];
+    // let stringSymptom = "";
+    //
+    // if (symptoms) {
+    //   try {
+    //     const parsedSymptoms = JSON.parse(symptoms);
+    //
+    //     if (Array.isArray(parsedSymptoms)) {
+    //       // Crucial check: Is it an array?
+    //       parsedSymptoms.forEach((element) => {
+    //         if (
+    //           typeof element === "object" &&
+    //           element !== null &&
+    //           element.symptomName &&
+    //           element.duration
+    //         ) {
+    //           // Check if element is an object and has required properties
+    //           const bodyPart =
+    //             Array.isArray(element.bodyParts) && element.bodyParts.length > 0
+    //               ? `(${element.bodyParts.join(", ")})` // Join array elements with commas
+    //               : "";
+    //           stringSymptomArray.push(
+    //             `${element.symptomName} ${bodyPart} for ${element.duration}`
+    //           );
+    //         } else {
+    //           console.warn("Invalid symptom element: ", element); // Log invalid elements
+    //         }
+    //       });
+    //     } else {
+    //       console.warn("Symptoms data is not an array: ", parsedSymptoms);
+    //       stringSymptom = symptoms;
+    //     }
+    //   } catch (e) {
+    //     console.error("Error parsing symptoms: ", e);
+    //     stringSymptom = symptoms;
+    //   }
+    // }
+    //
+    // if (stringSymptomArray.length > 0) {
+    //     return stringSymptomArray;
+    // } else {
+    //     return stringSymptom;
+    // }
+
     let symptoms_final_value = "";
     if (stringSymptomArray.length < 1) {
       symptoms_final_value = `${renderChiefComplaints({
@@ -1375,7 +1421,7 @@ router.get("/detailss/:care_plan_id", Authenticated, async (req, res) => {
       investigations,
       nextConsultation,
       medicationsList,
-      diteFormattedData: { ...dietApiData },
+      dietFormattedData: { ...dietApiData },
       dietIds,
       diet_output,
       pre_workouts,

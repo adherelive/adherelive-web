@@ -130,8 +130,8 @@ function watch() {
 
 // Inlines CSS into HTML, adds media query CSS into the <style> tag of the email, and compresses the HTML
 function inliner(css) {
-  var css = fs.readFileSync(css).toString();
-  var mqCss = siphon(css);
+  var thisCss = fs.readFileSync(css).toString();
+  var mqCss = siphon(thisCss);
 
   var pipe = lazypipe()
     .pipe($.inlineCss, {
@@ -198,9 +198,7 @@ function aws() {
 
 // Send email to Litmus for testing. If no AWS credentials then do not replace img urls.
 // This code snippet is used to conditionally replace local asset paths in your HTML files with AWS URLs.
-// If awsURL is defined, it replaces all occurrences of
-// ='/assets/img or ="/assets/img with ='<awsURL> or ="<awsURL>
-// to point to the AWS-hosted assets instead of local ones.
+// If awsURL is defined, it replaces all occurrences to point to the AWS-hosted assets instead of local ones.
 function litmus() {
   var awsURL =
     !!CONFIG && !!CONFIG.aws && !!CONFIG.aws.url ? CONFIG.aws.url : false;

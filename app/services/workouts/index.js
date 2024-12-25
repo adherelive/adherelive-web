@@ -5,7 +5,7 @@ export default class Workout {
 
   getId = () => this._data.id;
 
-  getCareplanId = () => this._data.care_plan_id;
+  getCarePlanId = () => this._data.care_plan_id;
 
   getTime = () => this._data.time;
 

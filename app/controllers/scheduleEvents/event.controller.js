@@ -413,7 +413,7 @@ class EventController extends Controller {
         id
       );
 
-      Log.debug("1982732178 markEventComplete ---> ", markEventComplete);
+      Log.debug("markEventComplete ---> ", markEventComplete);
 
       const event = await EventWrapper(null, id);
       const { appointments = {}, schedule_events = {} } =

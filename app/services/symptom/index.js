@@ -14,7 +14,7 @@ export default class Symptom {
   };
 
   getText = () => {
-    return this, _data.get("text");
+    return this._data.get("text");
   };
 
   getSymptomId = () => {

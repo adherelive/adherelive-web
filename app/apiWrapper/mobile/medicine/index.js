@@ -22,10 +22,10 @@ class MobileMedicineWrapper extends BaseMedicine {
         id,
         name,
         type,
+        details,
         description,
         creator_id,
         public_medicine,
-        details,
       },
     };
   };
@@ -92,6 +92,13 @@ export default async (data = null, id = null) => {
   if (data) {
     return new MobileMedicineWrapper(data);
   }
-  const medicine = await medicineService.getMedicineById(id);
-  return new MobileMedicineWrapper(medicine);
+  if (!id) return new MobileMedicineWrapper(null); // Handle null id case
+
+  try {
+    const medicine = await medicineService.getMedicineById(id);
+    return new MobileMedicineWrapper(medicine);
+  } catch (error) {
+    console.error("Error fetching medicine:", error);
+    return new MobileMedicineWrapper(null); // Or throw the error if you want it to propagate
+  }
 };

@@ -324,7 +324,7 @@ class UserController extends Controller {
         return this.raiseClientError(res, 401, {}, "Invalid Credentials");
       }
     } catch (error) {
-      Logger.debug("signIn 500 error ---> ", error);
+      Logger.debug("User Controller signIn 500 error ---> ", error);
 
       // notification
       const crashJob = await AdhocJob.execute("crash", { apiName: "signIn" });
@@ -594,7 +594,7 @@ class UserController extends Controller {
         let userCategoryId = null;
         // let patientIds = [];
         let userIds = [userId];
-        // let careplanData = [];
+        // let carePlanData = [];
 
         let treatmentIds = [];
         let doctorProviderId = null;
@@ -841,7 +841,7 @@ class UserController extends Controller {
         let userCategoryId = null;
         // let patientIds = [];
         let userIds = [userId];
-        // let careplanData = [];
+        // let carePlanData = [];
 
         let treatmentIds = [];
         let conditionIds = [];
@@ -1358,7 +1358,7 @@ class UserController extends Controller {
       for (const item of registration_details) {
         const { number, council, year, expiry_date, id = 0 } = item;
 
-        if (id && id !== "0") {
+        if (id && id !== 0) {
           let registration = await registrationService.updateRegistration(
             { doctor_id, number, year, council, expiry_date },
             id
@@ -2134,7 +2134,10 @@ class UserController extends Controller {
           type: VERIFICATION_TYPE.FORGOT_PASSWORD,
         });
 
-        Logger.debug("process.config.WEB_URL ---> ", process.config.WEB_URL);
+        Logger.debug(
+          "forgotPassword User Controller Web URL ---> ",
+          process.config.WEB_URL
+        );
 
         const emailPayload = {
           toAddress: email,

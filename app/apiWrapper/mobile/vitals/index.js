@@ -4,7 +4,7 @@ import BaseVital from "../../../services/vitals";
 
 // SERVICES
 import VitalService from "../../../services/vitals/vital.service";
-import eventService from "../../../services/scheduleEvents/scheduleEvent.service";
+import EventService from "../../../services/scheduleEvents/scheduleEvent.service";
 
 // WRAPPERS
 import VitalTemplateWrapper from "../../mobile/vitalTemplates";
@@ -47,11 +47,11 @@ class VitalWrapper extends BaseVital {
 
   getAllInfo = async () => {
     const { getBasicInfo, getVitalId } = this;
-    const EventService = new eventService();
+    const eventService = new EventService();
 
     const currentDate = moment().endOf("day").utc().toDate();
 
-    const scheduleEvents = await EventService.getAllPreviousByData({
+    const scheduleEvents = await eventService.getAllPreviousByData({
       event_id: getVitalId(),
       date: currentDate,
       event_type: EVENT_TYPE.VITALS,

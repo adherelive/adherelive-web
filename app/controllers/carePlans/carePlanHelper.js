@@ -1,4 +1,3 @@
-// Fetch details from the Services
 import carePlanService from "../../services/carePlan/carePlan.service";
 import carePlanTemplateService from "../../services/carePlanTemplate/carePlanTemplate.service";
 import appointmentService from "../../services/appointment/appointment.service";
@@ -9,7 +8,7 @@ import vitalService from "../../services/vitals/vital.service";
 import DietService from "../../services/diet/diet.service";
 import WorkoutService from "../../services/workouts/workout.service";
 import doctorService from "../../services/doctor/doctor.service";
-import medicineService from "../../services/medicine/medicine.service";
+// import medicineService from "../../services/medicine/medicine.service";
 // import templateMedicationService from "../../services/templateMedication/templateMedication.service";
 // import templateAppointmentService from "../../services/templateAppointment/templateAppointment.service";
 
@@ -35,14 +34,13 @@ import moment from "moment";
 const Log = new Logger("CARE_PLAN > HELPER");
 
 /**
- *
- *medicines,
- medications,
- appointments,
- doctors,
- providers = {},
- user_roles = {},
- schedule_events,
+ * medicines,
+ * medications,
+ * appointments,
+ * doctors,
+ * providers = {},
+ * user_roles = {},
+ * schedule_events,
  */
 
 function getTime() {
@@ -138,7 +136,7 @@ export const getCarePlanDataWithImp = async ({
       current_care_plan_id: currentCarePlanId,
     };
   } catch (error) {
-    Log.debug("Issue with getCarePlanData catch error", error);
+    Log.debug("Issue with getCarePlanDataWithImp catch error: ", error);
     return {};
   }
 };
@@ -162,7 +160,7 @@ export const getCarePlanDataWithDoctor = async ({
       },
     };
   } catch (error) {
-    Log.debug("getCarePlanData catch error", error);
+    Log.debug("getCarePlanDataWithDoctor catch error: ", error);
     return {};
   }
 };
@@ -287,7 +285,7 @@ export const getCarePlanData = async ({
         const { medications, medicines } = await medication.getReferenceInfo();
         medicationData = { ...medicationData, ...medications };
         medicineData = { ...medicineData, ...medicines };
-        // todo: add schedule data
+        // TODO: add schedule data
       }
     }
 
@@ -320,7 +318,7 @@ export const getCarePlanData = async ({
       current_care_plan_id: currentCarePlanId,
     };
   } catch (error) {
-    Log.debug("getCarePlanData catch error", error);
+    Log.debug("getCarePlanData issues catch error: ", error);
     return {};
   }
 };
@@ -339,7 +337,7 @@ export const createVitals = async ({
     // vital templates
     let vitalTemplateData = {};
 
-    // template vital for careplan template
+    // template vital for care plan template
     let carePlanTemplateVitals = [];
 
     // for sqs events
@@ -429,7 +427,7 @@ export const createVitals = async ({
       vital_templates: vitalTemplateData,
     };
   } catch (error) {
-    Log.debug("createVitals catch error", error);
+    Log.debug("createVitals catch error: ", error);
     return {};
   }
 };
@@ -450,7 +448,7 @@ export const createDiet = async ({
 
     let dietIds = [];
 
-    // template vital for careplan template
+    // template vital for care plan template
     let carePlanTemplateDiets = [];
 
     // for sqs events
@@ -547,7 +545,7 @@ export const createDiet = async ({
       diet_ids: dietIds,
     };
   } catch (error) {
-    Log.debug("createDiet catch error", error);
+    Log.debug("createDiet catch error: ", error);
     return {};
   }
 };
@@ -567,7 +565,7 @@ export const createWorkout = async ({
 
     let workoutIds = [];
 
-    // template workout for careplan template
+    // template workout for care plan template
     let carePlanTemplateWorkouts = [];
 
     // for sqs events
@@ -672,7 +670,7 @@ export const createWorkout = async ({
       workout_ids: workoutIds,
     };
   } catch (error) {
-    Log.debug("createWorkout catch error", error);
+    Log.debug("createWorkout catch error: ", error);
     return {};
   }
 };
