@@ -263,6 +263,8 @@ class DietController extends Controller {
       } = body;
 
       const dietService = new DietService();
+      // TODO: Try with the following, if this does not work:
+      // const diet = (await dietService.findOne({ name, care_plan_id })) || null;
       const diet =
         (await dietService.getByData({ name, care_plan_id })) || null;
 

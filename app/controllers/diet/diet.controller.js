@@ -64,7 +64,8 @@ class DietController extends Controller {
       const careplan_id = dietWrapper.getCarePlanId();
       const carePlanWrapper = await CarePlanWrapper(null, careplan_id);
       const doctor_id = await carePlanWrapper.getDoctorId();
-      const patient_id = carePlanWrapper.getPatientId();
+      // TODO: Commenting this out, as it may be causing an issue with Pagination
+      //const patient_id = carePlanWrapper.getPatientId();
 
       // TODO: Why has this been commented in Web, but not in Mobile?
       //  Other doctor's diet as food item and details only visible to creator doc
@@ -250,7 +251,7 @@ class DietController extends Controller {
       } = userDetails || {};
 
       const { body = {} } = req;
-      Logger.debug("create request", body);
+      Logger.debug("Create request body: ", body);
 
       // TODO: Check why end date is null ?
       const {
@@ -335,7 +336,7 @@ class DietController extends Controller {
         "Diet created successfully."
       );
     } catch (error) {
-      Logger.debug("create 500 error - diet create web error: ", error);
+      Logger.debug("Create 500 error - diet create web error: ", error);
       return raiseServerError(res);
     }
   };
