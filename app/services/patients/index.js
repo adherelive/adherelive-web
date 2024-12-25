@@ -8,11 +8,12 @@ export default class Patient {
   };
 
   getPatientId = () => {
-    // if (!this._data.get("id")) {
-    //   throw new Error(
-    //     `Patient object is null or does not have a get method: this._data.get("id")`
-    //   );
-    // }
+    if (this._data.get("id")) {
+      throw new Error(
+        "Patient object is null or does not have a get method: ",
+        this._data.get("id")
+      );
+    }
     return this._data.get("id");
   };
 

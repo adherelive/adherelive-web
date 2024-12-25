@@ -115,7 +115,7 @@ export const getCarePlanDataWithImp = async ({
       }
     }
 
-    Log.info(`currentCarePlanId ${currentCarePlanId}`);
+    Log.info(`8912731893 currentCarePlanId ${currentCarePlanId}`);
     // medications
     const allMedications =
       (await medicationReminderService.getAllMedicationByData({
@@ -204,8 +204,8 @@ export const getCarePlanData = async ({
       medicationIds = [...medicationIds, ...medication_ids];
 
       // get latest careplan id
-      // Log.debug("getCarePlanData Care Plan --> ", careplan.getCreatedAt());
-      // Log.debug("getCarePlanData Care Plan --> ", moment(currentCarePlanTime));
+      // Log.debug("7123731 careplan --> ", careplan.getCreatedAt());
+      // Log.debug("71237312 careplan --> ", moment(currentCarePlanTime));
 
       const isUserRoleAllowed = [user_role_id, ...secondaryDoctorUserRoleIds]
         .map((id) => parseInt(id))
@@ -251,7 +251,7 @@ export const getCarePlanData = async ({
       }
     }
 
-    Log.info(`getCarePlanData currentCarePlanId ${currentCarePlanId}`);
+    Log.info(`8912731893 currentCarePlanId ${currentCarePlanId}`);
 
     // appointments
     const allAppointments =

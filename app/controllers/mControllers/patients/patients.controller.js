@@ -200,13 +200,13 @@ class MPatientController extends Controller {
             profilePic = file_name;
           }
         } else {
-          // todo
+          // TODO: check what comes here for else
         }
       } else {
         if (userId) {
           profilePic = profile_pic;
         } else {
-          // todo
+          // TODO: check what comes here for else
         }
       }
 
@@ -214,7 +214,7 @@ class MPatientController extends Controller {
 
       // Logger.debug("18371823 profilePicUrl ---> ", profilePicUrl);
 
-      // todo minio configure here
+      // TODO: minio configure here
 
       const previousDetails = (await initialPatientData.getDetails()) || {};
       const { basic_info: prevBasicInfo } =
@@ -387,7 +387,7 @@ class MPatientController extends Controller {
     }
   };
 
-  //TODO: need to delete below function if all working fine in mobile app.
+  // TODO: need to delete below function if all working fine in mobile app.
   getPatientCarePlanDetailsWithImp1 = async (req, res) => {
     try {
       const { id: patient_id = 1 } = req.params;
@@ -782,7 +782,7 @@ class MPatientController extends Controller {
     }
   };
 
-  //TODO: need to delete below function if all working fine in mobile app.
+  // TODO: need to delete below function if all working fine in mobile app.
   getPatientCarePlanDetails = async (req, res) => {
     try {
       const { id: patient_id = 1 } = req.params;
@@ -1476,14 +1476,11 @@ class MPatientController extends Controller {
           const { users, patients, patient_id } = await user.getReferenceInfo();
           patientIds.push(patient_id);
           userDetails = { ...userDetails, ...users };
-          let carePlanData = [];
-          if (authDoctor) {
-            carePlanData = await carePlanService.getCarePlanByData({
-              doctor_id: authDoctor.get("id"),
-              patient_id,
-            });
-          }
-          isPatientAvailableForDoctor = carePlanData.length > 0;
+          let careplanData = await carePlanService.getCarePlanByData({
+            doctor_id: authDoctor.get("id"),
+            patient_id,
+          });
+          isPatientAvailableForDoctor = careplanData.length > 0;
 
           patientDetails = {
             ...patientDetails,
@@ -1491,21 +1488,21 @@ class MPatientController extends Controller {
             // isPatientAvailableForDoctor,
           };
           if (!isPatientAvailableForDoctor) {
-            let carePlanData = await carePlanService.getCarePlanByData({
+            let careplanData = await carePlanService.getCarePlanByData({
               patient_id,
             });
-            for (let i = 0; i < carePlanData.length; i++) {
-              // Get Secondary Care Plan mapping
-              const carePlan = await CarePlanWrapper(carePlanData[i]);
-              let secondaryDoctorMapping =
-                await carePlanSecondaryDoctorMappingService.findAndCountAll({
+            for (let i = 0; i < careplanData.length; i++) {
+              // getsecondary careplan mapping
+              const carePlan = await CarePlanWrapper(careplanData[i]);
+              let secondayDoctorMapping =
+                await careplanSecondaryDoctorMappingService.findAndCountAll({
                   where: {
                     secondary_doctor_role_id: userRoleId,
                     care_plan_id: carePlan.getCarePlanId(),
                   },
                 });
 
-              if (secondaryDoctorMapping.count > 0) {
+              if (secondayDoctorMapping.count > 0) {
                 isPatientAvailableForDoctor = true;
                 break;
               }
@@ -1665,15 +1662,12 @@ class MPatientController extends Controller {
           authDoctor = await DoctorService.getDoctorByData({ user_id: userId });
         }
 
-        let consentData = [];
-        if (authDoctor) {
-          consentData = await consentService.create({
-            type: CONSENT_TYPE.CARE_PLAN,
-            doctor_id: authDoctor.get("id"),
-            patient_id,
-            user_role_id: userRoleId,
-          });
-        }
+        const consentData = await consentService.create({
+          type: CONSENT_TYPE.CARE_PLAN,
+          doctor_id: authDoctor.get("id"),
+          patient_id,
+          user_role_id: userRoleId,
+        });
         const consents = await ConsentWrapper({ data: consentData });
 
         const carePlans = await carePlanService.getCarePlanByData({
@@ -2649,11 +2643,11 @@ class MPatientController extends Controller {
         const patientApiWrapper = await PatientWrapper(patientData);
         patientId = patientApiWrapper.getPatientId();
 
-        const carePlanData = await carePlanService.getCarePlanByData({
+        const careplanData = await carePlanService.getCarePlanByData({
           patient_id: patientId,
         });
 
-        await carePlanData.forEach(async (carePlan) => {
+        await careplanData.forEach(async (carePlan) => {
           const carePlanApiWrapper = await CarePlanWrapper(carePlan);
           doctorIds.push(carePlanApiWrapper.getDoctorId());
           doctorRoleIds.push(carePlanApiWrapper.getUserRoleId());
