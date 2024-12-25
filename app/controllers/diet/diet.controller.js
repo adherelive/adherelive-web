@@ -94,10 +94,10 @@ class DietController extends Controller {
         food_groups = {},
         food_items = {},
         food_item_details = {},
-        portions = {},
+        // portions = {},
       } = referenceInfo || {};
 
-      const timeWise = await getTimeWiseDietFoodGroupMappings({
+      const timeWise = await DietHelper.getTimeWiseDietFoodGroupMappings({
         diet_food_group_mappings,
       });
 
@@ -227,7 +227,7 @@ class DietController extends Controller {
           },
           food_items,
           food_item_details,
-          portions,
+          // portions,
           food_groups_total_calories: dietFoodGroupsTotalCalories,
         },
         "Diet Data fetched successfully"
@@ -303,7 +303,7 @@ class DietController extends Controller {
         patient_id: patient.getUserId(),
         type: EVENT_TYPE.DIET,
         event_id: dietWrapper.getId(),
-        status: EVENT_STATUS.SCHEDULED,
+        // status: EVENT_STATUS.SCHEDULED,
         start_date,
         end_date,
         participants: [userRoleId, patientRoleId],

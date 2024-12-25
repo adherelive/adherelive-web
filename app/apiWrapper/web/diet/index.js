@@ -2,8 +2,8 @@ import BaseDiet from "../../../services/diet/index";
 import DietService from "../../../services/diet/diet.service";
 
 // Wrapper
-import CarePlanWrapper from "../../web/carePlan";
-import DietFoodGroupMappingWrapper from "../../web/dietFoodGroupMapping";
+import CarePlanWrapper from "../carePlan";
+import DietFoodGroupMappingWrapper from "../dietFoodGroupMapping";
 
 class DietWrapper extends BaseDiet {
   constructor(data) {
