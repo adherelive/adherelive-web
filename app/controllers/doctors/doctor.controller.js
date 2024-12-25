@@ -1031,6 +1031,7 @@ class DoctorController extends Controller {
               collegeId = collegeWrapper.getCollegeId();
             }
 
+            // TODO: Check if changing from "0" to 0, works or not
             if (id && id !== 0) {
               let qualification_data = {};
               if (degree_id) {
@@ -1146,6 +1147,7 @@ class DoctorController extends Controller {
               updateDataRegistration["expiry_date"] = moment(expiryDate);
             }
             updateDataRegistration["doctor_id"] = doctorData.getDoctorId();
+            // TODO: Check if changing from "0" to 0, works or not
             if (id && id !== 0) {
               const registration = await registrationService.updateRegistration(
                 updateDataRegistration,
@@ -1192,6 +1194,7 @@ class DoctorController extends Controller {
             }
             clinicDetails["doctor_id"] = doctor_id;
             Logger.debug("datatata", clinicDetails);
+            // TODO: Check if changing from "0" to 0, works or not
             if (id && id !== 0) {
               const newClinic = await clinicService.updateClinic(
                 clinicDetails,
@@ -1712,6 +1715,7 @@ class DoctorController extends Controller {
         const degreeWrapper = await DegreeWrapper(degree);
         degreeData[degreeWrapper.getDegreeId()] = degreeWrapper.getBasicInfo();
 
+        // TODO: Check if changing from "0" to 0, works or not
         if (id && id !== 0) {
           let collegeId = college_id;
           if (college_name !== "") {
@@ -1829,6 +1833,7 @@ class DoctorController extends Controller {
         councilData[councilWrapper.getCouncilId()] =
           councilWrapper.getBasicInfo();
 
+        // TODO: Check if changing from "0" to 0, works or not
         if (id && id !== 0) {
           const registration = await registrationService.updateRegistration(
             {

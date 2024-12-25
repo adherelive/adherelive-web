@@ -1,5 +1,6 @@
 import Controller from "../../index";
 import moment from "moment";
+
 // Services
 import DietService from "../../../services/diet/diet.service";
 import queueService from "../../../services/awsQueue/queue.service";
@@ -20,7 +21,6 @@ import DietJob from "../../../jobSdk/Diet/observer";
 import NotificationSdk from "../../../notificationSdk";
 
 import { getTimeWiseDietFoodGroupMappings } from "../../diet/dietHelper";
-
 // import * as medicationHelper from "../../medicationReminder/medicationHelper";
 
 import Log from "../../../../libs/log";
@@ -66,7 +66,8 @@ class DietController extends Controller {
       const doctor_id = await carePlanWrapper.getDoctorId();
       const patient_id = carePlanWrapper.getPatientId();
 
-      //other doctor's diet as food item and details only visible to creator doc
+      // TODO: Why has this been commented in Web, but not in Mobile?
+      //  Other doctor's diet as food item and details only visible to creator doc
       if (
         userCategoryId.toString() !== doctor_id.toString() &&
         userCategoryId !== patient_id
@@ -238,8 +239,7 @@ class DietController extends Controller {
   create = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
-      const { body, userDetails = {} } = req;
-      Logger.debug("create request", body);
+      const { userDetails = {} } = req;
       const {
         userId,
         userRoleId,
@@ -247,20 +247,24 @@ class DietController extends Controller {
         userCategoryData: { basic_info: { full_name = "" } = {} } = {},
       } = userDetails || {};
 
+      const { body = {} } = req;
+      Logger.debug("create request", body);
+
+      // TODO: Check why end date is null ?
       const {
         name = "",
         care_plan_id = null,
         start_date,
         end_date = null,
         total_calories = null,
-        repeat_days = [],
         not_to_do = "",
+        repeat_days = [],
         diet_food_groups = [],
       } = body;
 
       const dietService = new DietService();
-
-      const diet = (await dietService.findOne({ name, care_plan_id })) || null;
+      const diet =
+        (await dietService.getByData({ name, care_plan_id })) || null;
 
       if (diet) {
         return raiseClientError(
@@ -280,6 +284,7 @@ class DietController extends Controller {
         diet_food_groups,
         details: { not_to_do, repeat_days },
       });
+
       const dietWrapper = await DietWrapper({ id: diet_id });
 
       const referenceInfo = await dietWrapper.getReferenceInfo();
@@ -328,7 +333,7 @@ class DietController extends Controller {
         "Diet created successfully."
       );
     } catch (error) {
-      Logger.debug("create 500 error - diet created", error);
+      Logger.debug("create 500 error - diet create mobile error: ", error);
       return raiseServerError(res);
     }
   };
@@ -368,6 +373,7 @@ class DietController extends Controller {
         timings = DietHelper.getTimings(userTimings);
       } else {
         timings = DietHelper.getTimings(PATIENT_MEAL_TIMINGS);
+        // timings = MEDICATION_TIMING;
       }
 
       return raiseSuccess(
@@ -601,6 +607,8 @@ class DietController extends Controller {
 
     try {
       const { userDetails = {} } = req;
+      // TODO: Web has this:
+      // const { userCategoryId = null } = userDetails || {};
       const { userCategoryId = null, userRoleId = null } = userDetails || {};
 
       let allDietsApiWrapper = {};
@@ -779,10 +787,11 @@ class DietController extends Controller {
         for (const scheduleEvent of completeEvents) {
           const event = await EventWrapper(scheduleEvent);
 
-          const dietResponseData = await dietResponsesService.getByData({
-            diet_id: id,
-            schedule_event_id: event.getScheduleEventId(),
-          });
+          const dietResponseData =
+            (await dietResponsesService.getByData({
+              diet_id: id,
+              schedule_event_id: event.getScheduleEventId(),
+            })) || null;
 
           let allDietResponseData = {};
 
