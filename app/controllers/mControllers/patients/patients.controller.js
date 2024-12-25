@@ -548,7 +548,6 @@ class MPatientController extends Controller {
   };
 
   // Copy from the Web
-
   getTime = () => {
     let date_ob = new Date();
     let date = ("0" + date_ob.getDate()).slice(-2);

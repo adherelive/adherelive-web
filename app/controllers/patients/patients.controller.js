@@ -117,7 +117,7 @@ class PatientController extends Controller {
         );
       }
       const splitName = name.split(" ");
-      // todo minio configure here
+      // TODO: minio details to be configured here
       if (profile_pic) {
         await minioService.createBucket();
         // var file = path.join(__dirname, "../../../report.xlsx");
@@ -146,7 +146,7 @@ class PatientController extends Controller {
         middle_name,
         last_name,
         details: {
-          // todo: profile_pic
+          // TODO: profile_pic
         },
         uid: pid,
       };
@@ -212,7 +212,7 @@ class PatientController extends Controller {
         `appointment data for patient: ${id} fetched successfully`
       );
     } catch (error) {
-      Logger.debug("getPatientAppointments 500 error", error);
+      Logger.debug("getPatientAppointments 500 error: ", error);
       raiseServerError(res);
     }
   };
@@ -240,7 +240,7 @@ class PatientController extends Controller {
         medicineId.push(medicationWrapper.getMedicineId());
       }
 
-      Logger.debug("medicineId", medicationDetails);
+      Logger.debug("getPatientMedications medicineId: ", medicationDetails);
 
       const medicineData = await medicineService.getMedicineByData({
         id: medicineId,
@@ -254,7 +254,7 @@ class PatientController extends Controller {
           medicineWrapper.getBasicInfo();
       }
 
-      Logger.debug("medicineData", medicineData);
+      Logger.debug("getPatientMedications medicineData: ", medicineData);
 
       return raiseSuccess(
         res,
@@ -270,7 +270,7 @@ class PatientController extends Controller {
         "Medications fetched successfully"
       );
     } catch (error) {
-      Logger.debug("500 error ", error);
+      Logger.debug("getPatientMedications 500 error: ", error);
       return raiseServerError(res);
     }
   };
@@ -2178,6 +2178,13 @@ class PatientController extends Controller {
       let count = 0;
       let treatments = {};
 
+      console.log(
+        "Do I reach this place,Pagination with ID's: ",
+        limit,
+        offsetLimit,
+        getWatchListPatients
+      );
+      console.log("Patients for the Doctors: ", patientsForDoctor);
       // care plan ids as secondary doctor
       const {
         count: careplansCount = 0,
@@ -2208,6 +2215,7 @@ class PatientController extends Controller {
           user_id: userId,
         });
 
+        console.log("Get the Doctor for this page: ", doctor);
         if (doctor && getWatchListPatients) {
           const doctorData = await DoctorWrapper(doctor);
 
@@ -2240,6 +2248,17 @@ class PatientController extends Controller {
               );
               watchlist_patient_ids.push(patientId);
             }
+          }
+
+          const { id = null } = { ...patient };
+
+          if (id) {
+            // Use the id for further processing
+            const patientData = await PatientWrapper(null, id);
+            // ...
+          } else {
+            console.error("Patient object missing id property:", patient);
+            // Handle the case where id is missing (e.g., log error, skip this patient)
           }
 
           watchlist_patient_ids = watchlist_patient_ids.length
