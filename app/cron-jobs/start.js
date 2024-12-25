@@ -72,7 +72,7 @@ class StartCron {
       }
       Log.info(`START count : ${count} / ${scheduleEvents.length}`);
     } catch (error) {
-      Log.debug("scheduleEvents 500 error --->", error);
+      Log.debug("scheduleEvents 500 error ---> ", error);
     }
   };
 
@@ -105,7 +105,7 @@ class StartCron {
       });
       NotificationSdk.execute(job);
     } catch (error) {
-      Log.debug("handleVitalStart 500 error --->", error);
+      Log.debug("handleVitalStart 500 error ---> ", error);
     }
   };
 
@@ -140,7 +140,7 @@ class StartCron {
       // });
       // notificationSdk.execute(job);
     } catch (error) {
-      Log.debug("handleAppointmentStart 500 error --->", error);
+      Log.debug("handleAppointmentStart 500 error ---> ", error);
     }
   };
 
@@ -186,7 +186,7 @@ class StartCron {
       // });
       // notificationSdk.execute(job);
     } catch (error) {
-      Log.debug("handleVitalStart 500 error --->", error);
+      Log.debug("handleVitalStart 500 error ---> ", error);
     }
   };
 
@@ -292,7 +292,7 @@ class StartCron {
 
       await NotificationSdk.execute(carePlanJob);
     } catch (error) {
-      Log.debug("handleCarePlanStart 500 error --->", error);
+      Log.debug("handleCarePlanStart 500 error ---> ", error);
     }
   };
 }

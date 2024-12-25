@@ -2062,7 +2062,7 @@ class DoctorController extends Controller {
 
       const { mimetype } = file || {};
       const fileType = mimetype.split("/");
-      Logger.debug("456786754676798675645546789 mimetype ---> ", mimetype);
+      Logger.debug("mimetype ---> ", mimetype);
       if (!ALLOWED_DOC_TYPE_DOCTORS.includes(fileType[1])) {
         return this.raiseClientError(
           res,
@@ -2829,7 +2829,7 @@ class DoctorController extends Controller {
       if (parseInt(doctor_id) > 0) {
         doctorWrapper = await DoctorWrapper(null, doctor_id);
       } else {
-        Logger.debug("76578937476238497923847238492342 ---> doctors", doctors);
+        Logger.debug("doctorWrapper doctors ---> ", doctors);
 
         if (!doctors) {
           return raiseClientError(res, 422, {}, "Doctor details not updated");
@@ -3148,7 +3148,7 @@ class DoctorController extends Controller {
       );
     } catch (error) {
       Logger.debug(
-        "DOCTOR QUALIFICATION DOCUMENT DELETE 500 ERROR --->",
+        "DOCTOR QUALIFICATION DOCUMENT DELETE 500 ERROR ---> ",
         error
       );
       return raiseServerError(res);
@@ -3176,7 +3176,10 @@ class DoctorController extends Controller {
         "doctor registration document deleted successfully"
       );
     } catch (error) {
-      Logger.debug("DOCTOR REGISTRATION DOCUMENT DELETE 500 ERROR --->", error);
+      Logger.debug(
+        "DOCTOR REGISTRATION DOCUMENT DELETE 500 ERROR ---> ",
+        error
+      );
       return raiseServerError(res);
     }
   };

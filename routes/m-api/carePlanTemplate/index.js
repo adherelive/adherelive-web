@@ -49,7 +49,7 @@ router.delete(
   "/:id",
   Authenticate,
   isAllowed(PERMISSIONS.CARE_PLAN_TEMPLATE.DELETE),
-  // todo-v: add validator IMP
+  // TODO: add validator IMP
   CarePlanTemplate.delete
 );
 

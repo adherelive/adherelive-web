@@ -50,9 +50,7 @@ class StartJob extends AgoraJob {
       })) || {};
 
     let providerId = null;
-    console.log(
-      "============== Start job for Agora using index.html ========================="
-    );
+    console.log("========= Start job for Agora using index.html =========");
 
     console.log(userRoles);
     for (const userRole of userRoles) {

@@ -1592,7 +1592,7 @@ class MobileUserController extends Controller {
       );
     } catch (error) {
       Logger.debug(
-        "M-API uploadDoctorRegistrationDocuments CATCH ERROR --->",
+        "M-API uploadDoctorRegistrationDocuments CATCH ERROR ---> ",
         error
       );
       return raiseServerError(res);
@@ -1815,7 +1815,10 @@ class MobileUserController extends Controller {
         "doctor registration document deleted successfully"
       );
     } catch (error) {
-      Logger.debug("DOCTOR REGISTRATION DOCUMENT DELETE 500 ERROR --->", error);
+      Logger.debug(
+        "DOCTOR REGISTRATION DOCUMENT DELETE 500 ERROR ---> ",
+        error
+      );
       return raiseServerError(res);
     }
   };
@@ -1916,7 +1919,7 @@ class MobileUserController extends Controller {
         });
         // let uId = userInfo.get("id");
 
-        Logger.debug("process.config.WEB_URL --->", process.config.WEB_URL);
+        Logger.debug("process.config.WEB_URL ---> ", process.config.WEB_URL);
 
         const emailPayload = {
           toAddress: email,
@@ -2036,7 +2039,7 @@ class MobileUserController extends Controller {
       }
 
       const user = await userService.getUserById(userId);
-      Logger.debug("user --->", user);
+      Logger.debug("user ---> ", user);
       const userData = await UserWrapper(user.get());
 
       const salt = await bcrypt.genSalt(Number(process.config.saltRounds));

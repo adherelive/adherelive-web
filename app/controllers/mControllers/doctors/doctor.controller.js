@@ -1752,7 +1752,7 @@ class MobileDoctorController extends Controller {
       );
     } catch (error) {
       Logger.debug(
-        "DOCTOR QUALIFICATION DOCUMENT DELETE 500 ERROR --->",
+        "DOCTOR QUALIFICATION DOCUMENT DELETE 500 ERROR ---> ",
         error
       );
       return raiseServerError(res);
@@ -1780,7 +1780,10 @@ class MobileDoctorController extends Controller {
         "doctor registration document deleted successfully"
       );
     } catch (error) {
-      Logger.debug("DOCTOR REGISTRATION DOCUMENT DELETE 500 ERROR --->", error);
+      Logger.debug(
+        "DOCTOR REGISTRATION DOCUMENT DELETE 500 ERROR ---> ",
+        error
+      );
       return raiseServerError(res);
     }
   };

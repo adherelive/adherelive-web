@@ -56,15 +56,15 @@ class SmsManager {
       };
 
       let response = await axios(options);
-      log.info("sms sent manager...........!!", response.data);
+      log.info("SMS sent to manager: ", response.data);
       return response.data;
       // let smsPublishResponse = await this.sns
       //   .publish(smsData, (err, data) => {
       //     if (err) {
-      //       log.info("sending sms error --->", err);
+      //       log.info("Sending SMS error ---> ", err);
       //     }
       //     if (data) {
-      //       log.info("sms sentttttt...........!!", data);
+      //       log.info("SMS sent successfully", data);
       //     }
       //   })
       //   .promise();
@@ -76,7 +76,7 @@ class SmsManager {
       //   .publish(smsData, (err, data) => {
 
       //     if (err) {
-      //       log.info("sending sms error --->", err);
+      //       log.info("Sending SMS error ---> ", err);
       //     }
       //     if (data) {
       //       log.info("SMS has been sent: ", data);
@@ -85,7 +85,7 @@ class SmsManager {
       //   .promise();
       //return smsPublishResponse;
     } catch (err) {
-      log.info("sending sms error --->", err);
+      log.info("Sending SMS error --->", err);
       return err.data;
     }
   }

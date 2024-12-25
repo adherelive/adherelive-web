@@ -265,7 +265,7 @@ class VitalController extends Controller {
         );
       }
     } catch (error) {
-      Log.debug("Cannot create 500 error - vitals added", error);
+      Log.debug("Cannot create vitals 500 error -> vitals added: ", error);
       return raiseServerError(res);
     }
   };
@@ -357,7 +357,7 @@ class VitalController extends Controller {
   getVitalResponseTimeline = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
-      Log.debug("req.params vital id--->", req.params);
+      Log.debug("req.params vital id ---> ", req.params);
       const { params: { id } = {} } = req;
       const eventService = new EventService();
 

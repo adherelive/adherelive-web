@@ -738,7 +738,7 @@ class DietController extends Controller {
   getDietResponseTimeline = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
-      Logger.debug("73575273512732 req.params diet id--->", req.params);
+      Logger.debug("req.params diet id ---> ", req.params);
       const { params: { id } = {} } = req;
       const eventService = new EventService();
 
