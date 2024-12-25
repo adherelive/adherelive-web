@@ -2,7 +2,7 @@ import Controller from "../";
 import Logger from "../../../libs/log";
 import specialityService from "../../services/speciality/speciality.service";
 
-import SpecialityWrapper from "../../ApiWrapper/mobile/speciality";
+import SpecialityWrapper from "../../apiWrapper/mobile/speciality";
 
 const Log = new Logger("SPECIALITY WEB CONTROLLER");
 

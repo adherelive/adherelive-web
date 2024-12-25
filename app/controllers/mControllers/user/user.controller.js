@@ -11,13 +11,13 @@ import Log from "../../../../libs/log";
 
 const Response = require("../../helper/responseFormat");
 
-import MPatientWrapper from "../../../ApiWrapper/mobile/patient";
-import MUserWrapper from "../../../ApiWrapper/mobile/user";
-import MDoctorWrapper from "../../../ApiWrapper/mobile/doctor";
-import MCarePlanWrapper from "../../../ApiWrapper/mobile/carePlan";
-import LinkVerificationWrapper from "../../../ApiWrapper/mobile/userVerification";
-import DoctorProviderMappingWrapper from "../../../ApiWrapper/web/doctorProviderMapping";
-import ProvidersWrapper from "../../../ApiWrapper/web/provider";
+import MPatientWrapper from "../../../apiWrapper/mobile/patient";
+import MUserWrapper from "../../../apiWrapper/mobile/user";
+import MDoctorWrapper from "../../../apiWrapper/mobile/doctor";
+import MCarePlanWrapper from "../../../apiWrapper/mobile/carePlan";
+import LinkVerificationWrapper from "../../../apiWrapper/mobile/userVerification";
+import DoctorProviderMappingWrapper from "../../../apiWrapper/web/doctorProviderMapping";
+import ProvidersWrapper from "../../../apiWrapper/web/provider";
 
 import userService from "../../../services/user/user.service";
 import patientService from "../../../services/patients/patients.service";
@@ -29,7 +29,7 @@ import doctorProviderMappingService from "../../../services/doctorProviderMappin
 import userRolesService from "../../../services/userRoles/userRoles.service";
 import userPreferenceService from "../../../services/userPreferences/userPreference.service";
 
-import DoctorPatientWatchlistWrapper from "../../../ApiWrapper/mobile/doctorPatientWatchlist";
+import DoctorPatientWatchlistWrapper from "../../../apiWrapper/mobile/doctorPatientWatchlist";
 import doctorPatientWatchlistService from "../../../services/doctorPatientWatchlist/doctorPatientWatchlist.service";
 
 import { getServerSpecificConstants } from "./userHelper";
@@ -47,18 +47,18 @@ import { Proxy_Sdk, EVENTS } from "../../../proxySdk";
 
 const errMessage = require("../../../../config/messages.json").errMessages;
 import treatmentService from "../../../services/treatment/treatment.service";
-import MTreatmentWrapper from "../../../ApiWrapper/mobile/treatments";
+import MTreatmentWrapper from "../../../apiWrapper/mobile/treatments";
 import severityService from "../../../services/severity/severity.service";
-import MSeverityWrapper from "../../../ApiWrapper/mobile/severity";
+import MSeverityWrapper from "../../../apiWrapper/mobile/severity";
 import conditionService from "../../../services/condition/condition.service";
-import MConditionWrapper from "../../../ApiWrapper/mobile/conditions";
-import UserWrapper from "../../../ApiWrapper/web/user";
-import UserRolesWrapper from "../../../ApiWrapper/mobile/userRoles";
-import DoctorWrapper from "../../../ApiWrapper/mobile/doctor";
+import MConditionWrapper from "../../../apiWrapper/mobile/conditions";
+import UserWrapper from "../../../apiWrapper/web/user";
+import UserRolesWrapper from "../../../apiWrapper/mobile/userRoles";
+import DoctorWrapper from "../../../apiWrapper/mobile/doctor";
 
 import generateOTP from "../../../helper/generateOtp";
-import AppNotification from "../../../NotificationSdk/inApp";
-import AdhocJob from "../../../JobSdk/Adhoc/observer";
+import AppNotification from "../../../notificationSdk/inApp";
+import AdhocJob from "../../../jobSdk/Adhoc/observer";
 import { getSeparateName } from "../../../helper/common";
 
 const Logger = new Log("MOBILE USER CONTROLLER");
@@ -179,7 +179,7 @@ class MobileUserController extends Controller {
       //   permissions = await apiUserDetails.getPermissions();
       // }
       //
-      // Logger.debug("apiUserDetails ----> ", apiUserDetails.isActivated());
+      // Logger.debug("MobileUserController apiUserDetails ---> ", apiUserDetails.isActivated());
 
       return this.raiseSuccess(
         res,
@@ -252,7 +252,7 @@ class MobileUserController extends Controller {
         const notificationToken = appNotification.getUserToken(`${userRoleId}`);
         const feedId = base64.encode(`${userRoleId}`);
 
-        Logger.debug("userData ----> ", userData.isActivated());
+        Logger.debug("verifyOtp userData ---> ", userData.isActivated());
         return raiseSuccess(
           res,
           200,
@@ -592,7 +592,7 @@ class MobileUserController extends Controller {
         let providerApiData = {};
         let userCategoryApiData = null;
         let userCategoryId = "";
-        let careplanData = [];
+        let carePlanData = [];
         let doctorIds = [];
         let patientIds = [];
         let userIds = [userId];
@@ -612,11 +612,11 @@ class MobileUserController extends Controller {
               userCatApiData[userCategoryApiData.getPatientId()] =
                 userCategoryApiData.getBasicInfo();
 
-              careplanData = await carePlanService.getCarePlanByData({
+              carePlanData = await carePlanService.getCarePlanByData({
                 patient_id: userCategoryId,
               });
 
-              await careplanData.forEach(async (carePlan) => {
+              await carePlanData.forEach(async (carePlan) => {
                 const carePlanApiWrapper = await MCarePlanWrapper(carePlan);
                 doctorIds.push(carePlanApiWrapper.getDoctorId());
                 carePlanApiData[carePlanApiWrapper.getCarePlanId()] =
@@ -669,13 +669,13 @@ class MobileUserController extends Controller {
 
               userCatApiData[userCategoryApiData.getDoctorId()] = allInfo;
 
-              // careplanData = await carePlanService.getCarePlanByData({
+              // carePlanData = await carePlanService.getCarePlanByData({
               //   user_role_id: userRoleId,
               // });
 
-              // Logger.debug("careplan mobile doctor", careplanData);
+              // Logger.debug("careplan mobile doctor", carePlanData);
 
-              // await careplanData.forEach(async (carePlan) => {
+              // await carePlanData.forEach(async (carePlan) => {
               //   const carePlanApiWrapper = await MCarePlanWrapper(carePlan);
               //   patientIds.push(carePlanApiWrapper.getPatientId());
               //   carePlanApiData[carePlanApiWrapper.getCarePlanId()] =
@@ -1172,7 +1172,7 @@ class MobileUserController extends Controller {
       for (const item of registration_details) {
         const { number, council, year, expiry_date, id = 0 } = item;
 
-        if (id && id !== "0") {
+        if (id && id !== 0) {
           let registration = await registrationService.updateRegistration(
             { doctor_id, number, year, council, expiry_date },
             id
@@ -1592,7 +1592,7 @@ class MobileUserController extends Controller {
       );
     } catch (error) {
       Logger.debug(
-        "M-API uploadDoctorRegistrationDocuments CATCH ERROR ---->",
+        "M-API uploadDoctorRegistrationDocuments CATCH ERROR ---> ",
         error
       );
       return raiseServerError(res);
@@ -1816,7 +1816,7 @@ class MobileUserController extends Controller {
       );
     } catch (error) {
       Logger.debug(
-        "DOCTOR REGISTRATION DOCUMENT DELETE 500 ERROR ---->",
+        "DOCTOR REGISTRATION DOCUMENT DELETE 500 ERROR ---> ",
         error
       );
       return raiseServerError(res);
@@ -1888,7 +1888,7 @@ class MobileUserController extends Controller {
         "doctor registration data fetched successfully"
       );
     } catch (error) {
-      Logger.debug("GET DOCTOR REGISTRATION DATA 500 ERROR ---->", error);
+      Logger.debug("GET DOCTOR REGISTRATION DATA 500 ERROR ---> ", error);
       return raiseServerError(res);
     }
   };
@@ -1920,7 +1920,7 @@ class MobileUserController extends Controller {
         // let uId = userInfo.get("id");
 
         Logger.debug(
-          "process.config.WEB_URL --------------->",
+          "forgotPassword process.config.WEB_URL ---> ",
           process.config.WEB_URL
         );
 
@@ -2042,7 +2042,7 @@ class MobileUserController extends Controller {
       }
 
       const user = await userService.getUserById(userId);
-      Logger.debug("user -------------->", user);
+      Logger.debug("updateUserPassword user ---> ", user);
       const userData = await UserWrapper(user.get());
 
       const salt = await bcrypt.genSalt(Number(process.config.saltRounds));
@@ -2279,7 +2279,7 @@ class MobileUserController extends Controller {
         "Initial data retrieved successfully"
       );
     } catch (error) {
-      Logger.debug("giveConsent 500 error ----> ", error);
+      Logger.debug("giveConsent 500 error ---> ", error);
       return this.raiseServerError(res);
     }
   };

@@ -397,7 +397,7 @@ export const DB_TABLES = {
   SERVICE_SUBSCRIPTION_MAPPING: "service_subscribe_plan_mappings",
   SERVICE_USER_MAPPING: "service_user_mappings",
   SERVICE_SUBSCRIPTION_USER_MAPPING: "service_subscription_user_mappings",
-  SERVICE_SUBSCRIPTION_TRANACTIONS: "service_subscription_tranactions",
+  SERVICE_SUBSCRIPTION_TRANSACTIONS: "service_subscription_transactions",
   HIS_PROVIDER_TABLE: "his_provider_tables",
 };
 

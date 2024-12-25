@@ -5,7 +5,7 @@ import { TABLE_NAME as patientsTableName } from "../app/models/patients";
 import { TABLE_NAME as doctorsTableName } from "../app/models/doctors";
 import { TABLE_NAME as providersTableName } from "../app/models/providers";
 import { TABLE_NAME as appointmentsTableName } from "../app/models/appointments";
-import { TABLE_NAME as serviceSubTxTableName } from "../app/models/serviceSubscribeTranaction";
+import { TABLE_NAME as serviceSubTxTableName } from "../app/models/serviceSubscribeTransaction";
 import {
   USER_CATEGORY,
   CURRENCY,

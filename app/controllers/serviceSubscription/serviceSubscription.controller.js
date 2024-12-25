@@ -3,8 +3,10 @@ import Logger from "../../../libs/log";
 // services
 import ServiceSubscriptionService from "../../services/serviceSubscription/serviceSubscription.service";
 import ServiceSubscriptionMapping from "../../services/serviceSubscriptionMapping/serviceSubscritpionMapping.service";
+
 const Log = new Logger("WEB > CONTROLLER > Service Offering");
 import { USER_CATEGORY } from "../../../constant";
+
 class ServiceSubscriptionController extends Controller {
   constructor() {
     super();
@@ -38,31 +40,31 @@ class ServiceSubscriptionController extends Controller {
         provider_type: req.userDetails.userRoleData.basic_info.linked_with,
       };
     }
+    // chanage provider type to provider
     if (category === "provider" && req.body.doctor_id) {
       provider_id = req.userDetails.userCategoryData.basic_info.id;
       doctor_id = req.body.doctor_id;
       data = {
         doctor_id,
         provider_id,
-        provider_type: req.userDetails.userRoleData.basic_info.linked_with,
+        provider_type: USER_CATEGORY.PROVIDER,
       };
     }
 
     try {
-      let serviceSubecription = req.body;
+      let serviceSubscription = req.body;
       const serviceSubscriptionService = new ServiceSubscriptionService();
-      serviceSubecription =
+      serviceSubscription =
         await serviceSubscriptionService.addServiceSubscription({
-          ...serviceSubecription,
+          ...serviceSubscription,
           ...data,
         });
-
 
       return raiseSuccess(
         res,
         200,
         {
-          serviceSubecription,
+          serviceSubscription,
         },
         "Subscription added successfully"
       );
@@ -86,13 +88,13 @@ class ServiceSubscriptionController extends Controller {
         );
       }
       const serviceSubscriptionService = new ServiceSubscriptionService();
-      let serviceSubecription =
+      let serviceSubscription =
         await serviceSubscriptionService.updateServiceSubscription(body, id);
       return raiseSuccess(
         res,
         200,
         {
-          ...serviceSubecription,
+          ...serviceSubscription,
         },
         "Service updated successfully"
       );
@@ -118,7 +120,7 @@ class ServiceSubscriptionController extends Controller {
       }
       let data = { id };
       const serviceSubscriptionService = new ServiceSubscriptionService();
-      let serviceSubecription =
+      let serviceSubscription =
         await serviceSubscriptionService.getServiceSubscriptionByData(data);
 
       const serviceSubscriptionMapping = new ServiceSubscriptionMapping();
@@ -127,13 +129,13 @@ class ServiceSubscriptionController extends Controller {
         await serviceSubscriptionMapping.getAllServiceSubscriptionMappingByData(
           servicedata
         );
-      serviceSubecription.services = services;
+      serviceSubscription.services = services;
 
       return raiseSuccess(
         res,
         200,
         {
-          ...serviceSubecription,
+          ...serviceSubscription,
         },
         "success"
       );
@@ -151,7 +153,6 @@ class ServiceSubscriptionController extends Controller {
       const serviceSubscriptionService = new ServiceSubscriptionService();
       let serviceSubscriptions =
         await serviceSubscriptionService.getAllServiceSubscriptionByData(query);
-
 
       let serviceSubscriptionsData = [];
       for (let serviceSubscription in serviceSubscriptions) {
@@ -203,23 +204,22 @@ class ServiceSubscriptionController extends Controller {
       data = {
         doctor_id,
         provider_id,
-        provider_type: req.userDetails.userRoleData.basic_info.linked_with,
+        provider_type: USER_CATEGORY.PROVIDER,
       };
     }
 
     if (category === "admin" && doctor_id) {
       provider_id = req.userDetails.userRoleData.basic_info.linked_id;
-      doctor_id = doctor_id;
+      // TODO: Check why this self-assignment has been done
+      let myDoctorId = doctor_id;
       data = {
-        // doctor_id,
+        // myDoctorId,
         provider_id,
         // provider_type: req.userDetails.userRoleData.basic_info.linked_with,
       };
     }
 
     try {
-
-
       const serviceSubscriptionService = new ServiceSubscriptionService();
       let serviceSubscriptions =
         await serviceSubscriptionService.getAllServiceSubscriptionByData(data);
@@ -322,9 +322,9 @@ class ServiceSubscriptionController extends Controller {
       provider_id = req.userDetails.userRoleData.basic_info.linked_id;
       doctor_id = req.userDetails.userCategoryData.basic_info.id;
       data = {
-        // doctor_id,
+        doctor_id,
         provider_id,
-        // provider_type: req.userDetails.userRoleData.basic_info.linked_with,
+        provider_type: req.userDetails.userRoleData.basic_info.linked_with,
       };
     }
 

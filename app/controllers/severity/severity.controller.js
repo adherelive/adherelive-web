@@ -1,6 +1,6 @@
 import Controller from "../";
 import severityService from "../../services/severity/severity.service";
-import SeverityWrapper from "../../ApiWrapper/web/severity";
+import SeverityWrapper from "../../apiWrapper/web/severity";
 
 import Log from "../../../libs/log";
 

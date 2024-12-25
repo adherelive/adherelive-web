@@ -7,23 +7,23 @@ import * as vitalHelper from "../../vitals/vitalHelper";
 import VitalService from "../../../services/vitals/vital.service";
 import VitalTemplateService from "../../../services/vitalTemplates/vitalTemplate.service";
 import FeatureDetailService from "../../../services/featureDetails/featureDetails.service";
-import eventService from "../../../services/scheduleEvents/scheduleEvent.service";
+import EventService from "../../../services/scheduleEvents/scheduleEvent.service";
 import twilioService from "../../../services/twilio/twilio.service";
 import queueService from "../../../services/awsQueue/queue.service";
 
 // WRAPPERS
-import VitalTemplateWrapper from "../../../ApiWrapper/mobile/vitalTemplates";
-import VitalWrapper from "../../../ApiWrapper/mobile/vitals";
-import FeatureDetailWrapper from "../../../ApiWrapper/mobile/featureDetails";
-import EventWrapper from "../../../ApiWrapper/common/scheduleEvents";
-import CarePlanWrapper from "../../../ApiWrapper/mobile/carePlan";
-import DoctorWrapper from "../../../ApiWrapper/mobile/doctor";
-import PatientWrapper from "../../../ApiWrapper/mobile/patient";
+import VitalTemplateWrapper from "../../../apiWrapper/mobile/vitalTemplates";
+import VitalWrapper from "../../../apiWrapper/mobile/vitals";
+import FeatureDetailWrapper from "../../../apiWrapper/mobile/featureDetails";
+import EventWrapper from "../../../apiWrapper/common/scheduleEvents";
+import CarePlanWrapper from "../../../apiWrapper/mobile/carePlan";
+import DoctorWrapper from "../../../apiWrapper/mobile/doctor";
+import PatientWrapper from "../../../apiWrapper/mobile/patient";
 
-import JobSdk from "../../../JobSdk";
-import NotificationSdk from "../../../NotificationSdk";
+import JobSdk from "../../../jobSdk";
+import NotificationSdk from "../../../notificationSdk";
 
-import ChatJob from "../../../JobSdk/Chat/observer";
+import ChatJob from "../../../jobSdk/Chat/observer";
 import {
   DAYS,
   EVENT_STATUS,
@@ -175,7 +175,7 @@ class VitalController extends Controller {
         body: { start_date, end_date } = {},
         params: { id } = {},
       } = req;
-      const EventService = new eventService();
+      const eventService = new EventService();
 
       const doesVitalExists = await VitalService.getByData({ id });
 
@@ -228,7 +228,7 @@ class VitalController extends Controller {
 
         Log.debug("eventScheduleData", eventScheduleData);
 
-        const deletedEvents = await EventService.deleteBatch({
+        const deletedEvents = await eventService.deleteBatch({
           event_id: vitals.getVitalId(),
           event_type: EVENT_TYPE.VITALS,
         });
@@ -336,7 +336,7 @@ class VitalController extends Controller {
         userDetails: { userRoleId, userData: { category } = {} } = {},
         body: { response } = {},
       } = req;
-      const EventService = new eventService();
+      const eventService = new EventService();
 
       if (category !== USER_CATEGORY.PATIENT) {
         return raiseClientError(res, 401, {}, "Unauthorized");
@@ -367,7 +367,7 @@ class VitalController extends Controller {
           createdTime,
         });
 
-        const updateEvent = await EventService.update(
+        const updateEvent = await eventService.update(
           {
             details: {
               ...event.getDetails(),
@@ -427,7 +427,7 @@ class VitalController extends Controller {
       //   MESSAGE_TYPES.USER_MESSAGE,
       //   eventData
       // );
-      // await NotificationSdk.execute(chatJob);
+      // await notificationSdk.execute(chatJob);
 
       const eventScheduleData = {
         type: EVENT_TYPE.VITALS,
@@ -479,16 +479,16 @@ class VitalController extends Controller {
   getVitalResponseTimeline = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
-      Log.debug("req.params vital id---->", req.params);
+      Log.debug("req.params vital id ---> ", req.params);
       const { params: { id } = {} } = req;
-      const EventService = new eventService();
+      const eventService = new EventService();
 
       const today = moment().utc().toISOString();
 
       const vital = await VitalWrapper({ id });
 
       const completeEvents =
-        await EventService.getAllPassedAndCompletedEventsData({
+        await eventService.getAllPassedAndCompletedEventsData({
           event_id: id,
           event_type: EVENT_TYPE.VITALS,
           date: vital.getStartDate(),

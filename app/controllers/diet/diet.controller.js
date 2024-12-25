@@ -7,15 +7,15 @@ import userPreferenceService from "../../services/userPreferences/userPreference
 import EventService from "../../services/scheduleEvents/scheduleEvent.service";
 import DietResponsesService from "../../services/dietResponses/dietResponses.service";
 // Wrappers
-import CareplanWrapper from "../../ApiWrapper/web/carePlan";
-import DietWrapper from "../../ApiWrapper/web/diet";
-import PatientWrapper from "../../ApiWrapper/web/patient";
-import UserPreferenceWrapper from "../../ApiWrapper/mobile/userPreference";
-import EventWrapper from "../../ApiWrapper/common/scheduleEvents";
-import DietResponseWrapper from "../../ApiWrapper/web/dietResponse";
+import CareplanWrapper from "../../apiWrapper/web/carePlan";
+import DietWrapper from "../../apiWrapper/web/diet";
+import PatientWrapper from "../../apiWrapper/web/patient";
+import UserPreferenceWrapper from "../../apiWrapper/mobile/userPreference";
+import EventWrapper from "../../apiWrapper/common/scheduleEvents";
+import DietResponseWrapper from "../../apiWrapper/web/dietResponse";
 
-import DietJob from "../../JobSdk/Diet/observer";
-import NotificationSdk from "../../NotificationSdk";
+import DietJob from "../../jobSdk/Diet/observer";
+import NotificationSdk from "../../notificationSdk";
 
 import * as medicationHelper from "../medicationReminder/medicationHelper";
 import * as DietHelper from "./dietHelper";
@@ -643,7 +643,7 @@ class DietController extends Controller {
   getDietResponseTimeline = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
-      Logger.debug("73575273512732 req.params diet id---->", req.params);
+      Logger.debug("73575273512732 req.params diet id--->", req.params);
       const { params: { id } = {} } = req;
       const eventService = new EventService();
 

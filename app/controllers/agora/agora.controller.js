@@ -8,8 +8,8 @@ import {
 
 import Logger from "../../../libs/log";
 
-import AgoraJob from "../../JobSdk/Agora/observer";
-import NotificationSdk from "../../NotificationSdk";
+import AgoraJob from "../../jobSdk/Agora/observer";
+import NotificationSdk from "../../notificationSdk";
 
 const Log = new Logger("WEB > AGORA > CONTROLLER");
 
@@ -127,7 +127,7 @@ class AgoraController extends Controller {
           userCategoryData: { basic_info: { full_name } = {} } = {},
         } = {},
       } = req;
-
+      console.log("room id is ", roomId);
       const agoraJob = AgoraJob.execute(EVENT_STATUS.STARTED, {
         roomId,
         event_type: AGORA_CALL_NOTIFICATION_TYPES.START_CALL,

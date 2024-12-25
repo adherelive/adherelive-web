@@ -12,7 +12,7 @@ import {
 // lodash
 import isEmpty from "lodash/isEmpty";
 
-// SERVICES -------->
+// SERVICES --->
 import userService from "../../services/user/user.service";
 import AppointmentService from "../../services/appointment/appointment.service";
 import MedicationService from "../../services/medicationReminder/mReminder.service";
@@ -22,20 +22,20 @@ import carePlanService from "../../services/carePlan/carePlan.service";
 import userRolesService from "../../services/userRoles/userRoles.service";
 import SymptomService from "../../services/symptom/symptom.service";
 
-// API WRAPPERS -------->
-import AppointmentWrapper from "../../ApiWrapper/web/appointments";
-import MedicationWrapper from "../../ApiWrapper/web/medicationReminder";
-import EventWrapper from "../../ApiWrapper/common/scheduleEvents";
-import UserWrapper from "../../ApiWrapper/web/user";
-import VitalWrapper from "../../ApiWrapper/web/vitals";
-import VitalTemplateWrapper from "../../ApiWrapper/web/vitalTemplates";
-import CarePlanWrapper from "../../ApiWrapper/mobile/carePlan";
-import UserRoleWrapper from "../../ApiWrapper/mobile/userRoles";
-import SymptomWrapper from "../../ApiWrapper/mobile/symptoms";
-import DietResponseWrapper from "../../ApiWrapper/mobile/dietResponse";
-import DietWrapper from "../../ApiWrapper/mobile/diet";
-import WorkoutResponseWrapper from "../../ApiWrapper/mobile/workoutResponse";
-import WorkoutWrapper from "../../ApiWrapper/mobile/workouts";
+// API WRAPPERS --->
+import AppointmentWrapper from "../../apiWrapper/web/appointments";
+import MedicationWrapper from "../../apiWrapper/web/medicationReminder";
+import EventWrapper from "../../apiWrapper/common/scheduleEvents";
+import UserWrapper from "../../apiWrapper/web/user";
+import VitalWrapper from "../../apiWrapper/web/vitals";
+import VitalTemplateWrapper from "../../apiWrapper/web/vitalTemplates";
+import CarePlanWrapper from "../../apiWrapper/mobile/carePlan";
+import UserRoleWrapper from "../../apiWrapper/mobile/userRoles";
+import SymptomWrapper from "../../apiWrapper/mobile/symptoms";
+import DietResponseWrapper from "../../apiWrapper/mobile/dietResponse";
+import DietWrapper from "../../apiWrapper/mobile/diet";
+import WorkoutResponseWrapper from "../../apiWrapper/mobile/workoutResponse";
+import WorkoutWrapper from "../../apiWrapper/mobile/workouts";
 
 import { getRoomUsers } from "../../helper/common";
 

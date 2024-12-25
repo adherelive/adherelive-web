@@ -89,6 +89,13 @@ router.get(
   Authenticated,
   PatientController.getPatientCarePlanDetails
 );
+//getPatientCarePlanSecondaryDocDetails
+
+router.get(
+  "/:id/careplan-details-sec-doc",
+  Authenticated,
+  PatientController.getPatientCarePlanSecondaryDocDetails
+);
 
 router.get(
   "/:patient_id/symptoms",
@@ -117,7 +124,7 @@ router.get(
 router.post(
   "/add-careplan-for-patient/:patient_id",
   Authenticated,
-  PatientController.createNewCareplanforPatient
+  PatientController.createNewCarePlanForPatient
 );
 
 router.get(

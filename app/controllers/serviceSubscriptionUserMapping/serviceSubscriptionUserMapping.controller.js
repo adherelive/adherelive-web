@@ -6,10 +6,10 @@ import ServiceUserMappingService from "../../services/serviceUserMapping/service
 import ServiceSubscriptionService from "../../services/serviceSubscription/serviceSubscription.service";
 import ServiceSubscriptionMapping from "../../services/serviceSubscriptionMapping/serviceSubscritpionMapping.service";
 import ServiceOffering from "../../services/serviceOffering/serviceOffering.service";
-import TxService from "../../services/serviceSubscribeTranaction/serviceSubscribeTranaction";
+import TxService from "../../services/serviceSubscribeTransaction/serviceSubscribeTransaction";
 import doctorService from "../../services/doctor/doctor.service";
 import providerService from "../../services/provider/provider.service";
-import ProviderWrapper from "../../ApiWrapper/web/provider";
+import ProviderWrapper from "../../apiWrapper/web/provider";
 import { USER_CATEGORY, USER_STATUS } from "../../../constant";
 
 const Log = new Logger("WEB > CONTROLLER > Service Offering");
@@ -18,6 +18,7 @@ class ServiceSubscriptionUserMappingController extends Controller {
   constructor() {
     super();
   }
+
   create = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     Log.debug("service user mapping controller - create - called");
@@ -47,20 +48,25 @@ class ServiceSubscriptionUserMappingController extends Controller {
       const serviceSubscriptionUserMappingService =
         new ServiceSubscriptionUserMappingService();
       // check same subscription is attached to user or not...
-      let responseDb = await serviceSubscriptionUserMappingService.getAllServiceSubscriptionUserMappingByData({
-        provider_id,
-        doctor_id,
-        provider_type,
-        patient_id: req.body.patient_id,
-        service_subscription_plan_id: req.body.service_subscription_plan_id
-      })
+      let responseDb =
+        await serviceSubscriptionUserMappingService.getAllServiceSubscriptionUserMappingByData(
+          {
+            provider_id,
+            doctor_id,
+            provider_type,
+            patient_id: req.body.patient_id,
+            service_subscription_plan_id: req.body.service_subscription_plan_id,
+          }
+        );
 
       if (responseDb.length > 0) {
         for (let userServicesSubscription in responseDb) {
           // if subscription is attached then check is it expired or not
           // if it is not expired then doctor can not attach the subscription to the user
 
-          let expire_date = new Date(responseDb[userServicesSubscription]["expire_date"])
+          let expire_date = new Date(
+            responseDb[userServicesSubscription]["expire_date"]
+          );
           let today_date = new Date();
           if (today_date < expire_date) {
             // same subscription is already attached to user.
@@ -71,7 +77,6 @@ class ServiceSubscriptionUserMappingController extends Controller {
               "Same Subscription is already attached to patient."
             );
           }
-
         }
       }
 
@@ -96,13 +101,10 @@ class ServiceSubscriptionUserMappingController extends Controller {
         userServicesSubscription
       );
 
-
       userServicesSubscription =
         await serviceSubscriptionUserMappingService.addServiceSubscriptionUserMapping(
           userServicesSubscription
         );
-
-
 
       // tx create
       const txDetails = {
@@ -161,10 +163,8 @@ class ServiceSubscriptionUserMappingController extends Controller {
         let data = { id: subId };
         let serviceSubscriptionService = new ServiceSubscriptionService();
 
-        let serviceSubecription =
+        let serviceSubscription =
           await serviceSubscriptionService.getServiceSubscriptionByData(data);
-
-
 
         const serviceSubscriptionMapping = new ServiceSubscriptionMapping();
         let servicedata = { subscription_plan_id: subId };
@@ -173,11 +173,10 @@ class ServiceSubscriptionUserMappingController extends Controller {
           await serviceSubscriptionMapping.getAllServiceSubscriptionMappingByData(
             servicedata
           );
-        serviceSubecription.services = services;
+        serviceSubscription.services = services;
 
-        response[subId] = { ...serviceSubecription };
+        response[subId] = { ...serviceSubscription };
       }
-
 
       return raiseSuccess(
         res,
@@ -262,7 +261,7 @@ class ServiceSubscriptionUserMappingController extends Controller {
 
       let serviceSubscriptionService = new ServiceSubscriptionService();
 
-      let serviceSubecription =
+      let serviceSubscription =
         await serviceSubscriptionService.getAllServiceSubscriptionByData(data);
 
       const serviceSubscriptionMapping = new ServiceSubscriptionMapping();
@@ -272,15 +271,15 @@ class ServiceSubscriptionUserMappingController extends Controller {
         await serviceSubscriptionMapping.getAllServiceSubscriptionMappingByData(
           servicedata
         );
-      // serviceSubecription.services = {...services};
+      // serviceSubscription.services = {...services};
 
       response[userServicesSubscriptions[userServicesSubscription]["id"]] = {
         ...userServicesSubscriptions[userServicesSubscription],
-        subscriptions: { ...serviceSubecription[0] },
+        subscriptions: { ...serviceSubscription[0] },
         details: userServicesSubscriptions[userServicesSubscription],
         services: { ...services },
       };
-      // response.push({...serviceSubecription});
+      // response.push({...serviceSubscription});
     }
 
     let servicesSubResponse = response;
@@ -289,12 +288,10 @@ class ServiceSubscriptionUserMappingController extends Controller {
     let userServices =
       await serviceuserMappingServices.getAllServiceUserMappingByData(data);
 
-
     let serviceDatas = [];
 
     for (let userService in userServices) {
       let serviceData = userServices[userService];
-
 
       const serviceOffering = new ServiceOffering();
       let servicedata = { id: serviceData.service_plan_id };
@@ -367,7 +364,6 @@ class ServiceSubscriptionUserMappingController extends Controller {
         data
       );
 
-
     let doctors = {};
     let doctorsInproviders = {};
     for (let userServicesSubscription in userServicesSubscriptions) {
@@ -390,7 +386,6 @@ class ServiceSubscriptionUserMappingController extends Controller {
         doctor_id_for_sub &&
         !doctorsInproviders[doctor_id_for_sub]
       ) {
-
         let provider_id =
           userServicesSubscriptions[userServicesSubscription]["provider_id"];
 
@@ -407,8 +402,6 @@ class ServiceSubscriptionUserMappingController extends Controller {
           doctorDetails,
           providerDetails: providerBasicInfo,
         };
-
-
       }
     }
     const serviceuserMappingServices = new ServiceUserMappingService();
@@ -494,7 +487,6 @@ class ServiceSubscriptionUserMappingController extends Controller {
       if (USER_CATEGORY.DOCTOR === provider_type)
         data = { patient_id, provider_type, doctor_id };
 
-
       const serviceSubscriptionUserMappingService =
         new ServiceSubscriptionUserMappingService();
       let userServicesSubscriptions =
@@ -502,7 +494,6 @@ class ServiceSubscriptionUserMappingController extends Controller {
           data
         );
       let response = {};
-
 
       for (let userServicesSubscription in userServicesSubscriptions) {
         let subId =
@@ -514,7 +505,7 @@ class ServiceSubscriptionUserMappingController extends Controller {
 
         let serviceSubscriptionService = new ServiceSubscriptionService();
 
-        let serviceSubecription =
+        let serviceSubscription =
           await serviceSubscriptionService.getAllServiceSubscriptionByData(
             data
           );
@@ -526,14 +517,14 @@ class ServiceSubscriptionUserMappingController extends Controller {
           await serviceSubscriptionMapping.getAllServiceSubscriptionMappingByData(
             servicedata
           );
-        // serviceSubecription.services = {...services};
+        // serviceSubscription.services = {...services};
 
         response[userServicesSubscriptions[userServicesSubscription]["id"]] = {
-          ...serviceSubecription[0],
+          ...serviceSubscription[0],
           details: userServicesSubscriptions[userServicesSubscription],
           services: { ...services },
         };
-        // response.push({...serviceSubecription});
+        // response.push({...serviceSubscription});
       }
 
       let servicesSubResponse = response;
@@ -542,7 +533,6 @@ class ServiceSubscriptionUserMappingController extends Controller {
       let userServices =
         await serviceuserMappingServices.getAllServiceUserMappingByData(data);
 
-
       let serviceDatas = [];
 
       for (let userService in userServices) {
@@ -550,7 +540,6 @@ class ServiceSubscriptionUserMappingController extends Controller {
         const serviceOffering = new ServiceOffering();
         let servicedata = { id: serviceData.service_plan_id };
         let doctor_id_for_sub = userServices[userService]["doctor_id"];
-
 
         let services = await serviceOffering.getServiceOfferingByData(
           servicedata
@@ -591,7 +580,7 @@ class ServiceSubscriptionUserMappingController extends Controller {
         let expire_date = new Date(req.body.startDate);
 
         expire_date.setMonth(expire_date.getMonth() + req.body.durations);
-        body = { ...body, expire_date }
+        body = { ...body, expire_date };
       }
 
       let userServicesSubscriptions =

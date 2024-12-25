@@ -33,7 +33,7 @@ import {
   MID_MORNING,
 } from "../constant";
 
-import FeatureDetailWrapper from "../app/ApiWrapper/web/featureDetails";
+import FeatureDetailWrapper from "../app/apiWrapper/web/featureDetails";
 import { RRule } from "rrule";
 import moment from "moment";
 import Logger from "../libs/log";
@@ -46,12 +46,12 @@ import appointmentService from "../app/services/appointment/appointment.service"
 import queueService from "../app/services/awsQueue/queue.service";
 
 // WRAPPERS
-// import PatientWrapper from "../app/ApiWrapper/mobile/patient";
-import MedicineWrapper from "../app/ApiWrapper/mobile/medicine";
-import MedicationWrapper from "../app/ApiWrapper/mobile/medicationReminder";
-import AppointmentWrapper from "../app/ApiWrapper/mobile/appointments";
-import DietWrapper from "../app/ApiWrapper/mobile/diet";
-import WorkoutWrapper from "../app/ApiWrapper/mobile/workouts";
+// import PatientWrapper from "../app/apiWrapper/mobile/patient";
+import MedicineWrapper from "../app/apiWrapper/mobile/medicine";
+import MedicationWrapper from "../app/apiWrapper/mobile/medicationReminder";
+import AppointmentWrapper from "../app/apiWrapper/mobile/appointments";
+import DietWrapper from "../app/apiWrapper/mobile/diet";
+import WorkoutWrapper from "../app/apiWrapper/mobile/workouts";
 
 import { getTimeWiseDietFoodGroupMappings } from "../app/controllers/diet/dietHelper";
 import SimilarFoodMappingService from "../app/services/similarFoodMapping/similarFoodMapping.service";
@@ -93,7 +93,7 @@ export const handleAppointments = async (appointment) => {
       dtstart: moment(start_time).utc().toDate(),
     });
 
-    Log.debug("rrule ----> ", rrule.all());
+    Log.debug("handleAppointments rrule ---> ", rrule.all());
 
     // create schedule for the date
     const scheduleData = {
@@ -162,7 +162,7 @@ export const handleMedications = async (data) => {
 
     const scheduleEventArr = [];
 
-    Log.debug("213971203 createMedicationSchedule -->", {
+    Log.debug("handleMedications helper createMedicationSchedule ---> ", {
       medicine_id,
       data: medicine.getBasicInfo(),
       when_to_take,
@@ -1020,7 +1020,7 @@ const repeatDays = (days) => {
         daysArr.push(RRule.SU);
         break;
       default:
-        Log.debug("day ----> ", day);
+        Log.debug("repeatDays day ---> ", day);
     }
   }
 

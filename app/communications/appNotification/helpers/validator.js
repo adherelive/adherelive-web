@@ -79,7 +79,7 @@ class Validator {
     }
   }
 
-  async isValidAppointementData() {
+  async isValidAppointmentData() {
     try {
       let appointmentData = await eventServices.getEventById(
         this.notificatonID
@@ -314,7 +314,7 @@ class Validator {
       return new Error("empty or undefined notificationId");
     switch (this.notificationType) {
       case APPOINTMENT:
-        return await this.isValidAppointementData();
+        return await this.isValidAppointmentData();
       case REMINDER:
         return await this.isValidReminderData(notificatonID);
       case ARTICLE:

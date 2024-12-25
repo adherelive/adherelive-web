@@ -1,8 +1,9 @@
 import { EventEmitter } from "events";
 import { ACTIVITIES, STAGES } from "./activityType";
 import { ACTIVITY_TYPE, EVENT_TYPE } from "../../constant";
-
-const log = require("../../libs/log")("ACTIVITY_SDK");
+// const log = require("../../libs/log")("ACTIVITY_SDK");
+import Log from "../../libs/log";
+const log = Log("ACTIVITY_SDK");
 
 class Activity extends EventEmitter {
   constructor() {
@@ -15,7 +16,7 @@ class Activity extends EventEmitter {
         this.emit(ACTIVITIES.FOLLOW_UP[stage], data);
         break;
       default:
-        log.warn(`invalid activity Type: ${activityType}`);
+        log.warn(`Invalid Activity Type: ${activityType}`);
     }
   }
 
@@ -34,7 +35,7 @@ class Activity extends EventEmitter {
         this.emit(ACTIVITIES.MEDICATION_REMINDER[stage], data);
         break;
       default:
-        log.warn(`invalid event Type:${eventType}`);
+        log.warn(`Invalid Event Type: ${eventType}`);
     }
   }
 }

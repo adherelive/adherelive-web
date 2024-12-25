@@ -42,22 +42,24 @@ class ReportController extends Controller {
       } = req;
 
       provider_type = req.userDetails.userRoleData.basic_info.linked_with;
+
+      // when user is logged in as a doctor
       if (category === USER_CATEGORY.DOCTOR) {
         doctor_id = req.userDetails.userCategoryData.basic_info.id;
         provider_type = USER_CATEGORY.DOCTOR;
       }
-
+      // when user is logged in as a doctor in provider
       if (req.userDetails.userRoleData.basic_info.linked_with === "provider") {
         provider_id = req.userDetails.userRoleData.basic_info.linked_id;
         doctor_id = req.userDetails.userCategoryData.basic_info.id;
+        provider_type = req.userDetails.userRoleData.basic_info.linked_with;
       }
-
+      // login as a provider admin.
       if (category === "provider" && req.body.doctor_id) {
         provider_id = req.userDetails.userCategoryData.basic_info.id;
         doctor_id = req.body.doctor_id;
+        provider_type = USER_CATEGORY.PROVIDER;
       }
-
-
 
       const serviceOfferingService = new ServiceOfferingService();
       ({
@@ -237,13 +239,16 @@ class ReportController extends Controller {
       };
     }
 
-    if (req.userDetails.userRoleData.basic_info.linked_with === "provider") {
+    if (
+      req.userDetails.userRoleData.basic_info.linked_with ===
+      USER_CATEGORY.PROVIDER
+    ) {
       provider_id = req.userDetails.userRoleData.basic_info.linked_id;
       // doctor_id = req.userDetails.userCategoryData.basic_info.id;
       data = {
         doctor_id,
         provider_id,
-        provider_type: req.userDetails.userRoleData.basic_info.linked_with,
+        provider_type: USER_CATEGORY.PROVIDER,
       };
     }
     if (category === "provider" && doctor_id) {
@@ -251,7 +256,7 @@ class ReportController extends Controller {
       data = {
         doctor_id,
         provider_id,
-        provider_type: req.userDetails.userRoleData.basic_info.linked_with,
+        provider_type: USER_CATEGORY.PROVIDER,
       };
     }
 

@@ -15,14 +15,14 @@ import providerService from "../../services/provider/provider.service";
 import providerTermsMappingService from "../../services/providerTermsMapping/providerTermsMappings.service";
 import tacService from "../../services/termsAndConditions/termsAndConditions.service";
 
-import FeatureDetailsWrapper from "../../ApiWrapper/web/featureDetails";
-import DoctorWrapper from "../../ApiWrapper/web/doctor";
-import CarePlanWrapper from "../../ApiWrapper/web/carePlan";
-import DocumentWrapper from "../../ApiWrapper/web/uploadDocument";
-import UserRoleWrapper from "../../ApiWrapper/web/userRoles";
-import UserWrapper from "../../ApiWrapper/web/user";
-import ProviderWrapper from "../../ApiWrapper/web/provider";
-import TACWrapper from "../../ApiWrapper/web/termsAndConditions";
+import FeatureDetailsWrapper from "../../apiWrapper/web/featureDetails";
+import DoctorWrapper from "../../apiWrapper/web/doctor";
+import CarePlanWrapper from "../../apiWrapper/web/carePlan";
+import DocumentWrapper from "../../apiWrapper/web/uploadDocument";
+import UserRoleWrapper from "../../apiWrapper/web/userRoles";
+import UserWrapper from "../../apiWrapper/web/user";
+import ProviderWrapper from "../../apiWrapper/web/provider";
+import TACWrapper from "../../apiWrapper/web/termsAndConditions";
 
 import { USER_CATEGORY, TERMS_AND_CONDITIONS_TYPES } from "../../../constant";
 
@@ -119,11 +119,11 @@ class AdminController extends Controller {
             userRoleId = (await userRoleWrapper).getId() || null;
           }
 
-          const careplanData = await carePlanService.getCarePlanByData({
+          const carePlanData = await carePlanService.getCarePlanByData({
             user_role_id: userRoleId,
           });
 
-          for (const carePlan of careplanData) {
+          for (const carePlan of carePlanData) {
             const carePlanApiWrapper = await CarePlanWrapper(carePlan);
             const patientId = carePlanApiWrapper.getPatientId();
 

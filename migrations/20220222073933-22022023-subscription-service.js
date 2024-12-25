@@ -1,6 +1,6 @@
 "use strict";
 
-import { TABLE_NAME } from "../app/models/serviceSubecriptions";
+import { TABLE_NAME } from "../app/models/serviceSubscriptions";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {

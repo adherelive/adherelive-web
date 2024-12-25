@@ -17,22 +17,22 @@ import uploadDocumentService from "../../../services/uploadDocuments/uploadDocum
 import featuresService from "../../../services/features/features.service";
 import doctorPatientFeatureMappingService from "../../../services/doctorPatientFeatureMapping/doctorPatientFeatureMapping.service";
 import userRolesService from "../../../services/userRoles/userRoles.service";
-import careplanSecondaryDoctorMappingService from "../../../services/careplanSecondaryDoctorMappings/careplanSecondaryDoctorMappings.service";
+import carePlanSecondaryDoctorMappingService from "../../../services/carePlanSecondaryDoctorMappings/carePlanSecondaryDoctorMappings.service";
 import UserRoleService from "../../../services/userRoles/userRoles.service";
 // m-api wrappers
-import PatientWrapper from "../../../ApiWrapper/mobile/patient";
-import CarePlanTemplateWrapper from "../../../ApiWrapper/mobile/carePlanTemplate";
-import CarePlanWrapper from "../../../ApiWrapper/mobile/carePlan";
-import UserWrapper from "../../../ApiWrapper/mobile/user";
-import DoctorWrapper from "../../../ApiWrapper/mobile/doctor";
-import ClinicWrapper from "../../../ApiWrapper/mobile/doctorClinic";
-import QualificationWrapper from "../../../ApiWrapper/mobile/doctorQualification";
-import RegistrationWrapper from "../../../ApiWrapper/mobile/doctorRegistration";
-import UploadDocumentWrapper from "../../../ApiWrapper/mobile/uploadDocument";
-import FeatureMappingWrapper from "../../../ApiWrapper/mobile/doctorPatientFeatureMapping";
-import UserRoleWrapper from "../../../ApiWrapper/mobile/userRoles";
-import UserPreferenceWrapper from "../../../ApiWrapper/mobile/userPreference";
-import ProviderWrapper from "../../../ApiWrapper/mobile/provider";
+import PatientWrapper from "../../../apiWrapper/mobile/patient";
+import CarePlanTemplateWrapper from "../../../apiWrapper/mobile/carePlanTemplate";
+import CarePlanWrapper from "../../../apiWrapper/mobile/carePlan";
+import UserWrapper from "../../../apiWrapper/mobile/user";
+import DoctorWrapper from "../../../apiWrapper/mobile/doctor";
+import ClinicWrapper from "../../../apiWrapper/mobile/doctorClinic";
+import QualificationWrapper from "../../../apiWrapper/mobile/doctorQualification";
+import RegistrationWrapper from "../../../apiWrapper/mobile/doctorRegistration";
+import UploadDocumentWrapper from "../../../apiWrapper/mobile/uploadDocument";
+import FeatureMappingWrapper from "../../../apiWrapper/mobile/doctorPatientFeatureMapping";
+import UserRoleWrapper from "../../../apiWrapper/mobile/userRoles";
+import UserPreferenceWrapper from "../../../apiWrapper/mobile/userPreference";
+import ProviderWrapper from "../../../apiWrapper/mobile/provider";
 
 import Log from "../../../../libs/log";
 import {
@@ -56,27 +56,27 @@ import documentService from "../../../services/uploadDocuments/uploadDocuments.s
 import registrationService from "../../../services/doctorRegistration/doctorRegistration.service";
 import { uploadImageS3 } from "../user/userHelper";
 import clinicService from "../../../services/doctorClinics/doctorClinics.service";
-import DoctorQualificationWrapper from "../../../ApiWrapper/mobile/doctorQualification";
-import DoctorRegistrationWrapper from "../../../ApiWrapper/mobile/doctorRegistration";
+import DoctorQualificationWrapper from "../../../apiWrapper/mobile/doctorQualification";
+import DoctorRegistrationWrapper from "../../../apiWrapper/mobile/doctorRegistration";
 import doctorClinicService from "../../../services/doctorClinics/doctorClinics.service";
-import DoctorClinicWrapper from "../../../ApiWrapper/mobile/doctorClinic";
+import DoctorClinicWrapper from "../../../apiWrapper/mobile/doctorClinic";
 import degreeService from "../../../services/degree/degree.service";
-import DegreeWrapper from "../../../ApiWrapper/mobile/degree";
+import DegreeWrapper from "../../../apiWrapper/mobile/degree";
 import courseService from "../../../services/course/course.service";
-import CourseWrapper from "../../../ApiWrapper/mobile/course";
+import CourseWrapper from "../../../apiWrapper/mobile/course";
 import getReferenceId from "../../../helper/referenceIdGenerator";
 import collegeService from "../../../services/college/college.service";
-import CollegeWrapper from "../../../ApiWrapper/mobile/college";
+import CollegeWrapper from "../../../apiWrapper/mobile/college";
 import councilService from "../../../services/council/council.service";
-import CouncilWrapper from "../../../ApiWrapper/mobile/council";
-import DoctorPatientWatchlistWrapper from "../../../ApiWrapper/mobile/doctorPatientWatchlist";
+import CouncilWrapper from "../../../apiWrapper/mobile/council";
+import DoctorPatientWatchlistWrapper from "../../../apiWrapper/mobile/doctorPatientWatchlist";
 import appointmentService from "../../../services/appointment/appointment.service";
 import templateMedicationService from "../../../services/templateMedication/templateMedication.service";
-import TemplateMedicationWrapper from "../../../ApiWrapper/mobile/templateMedication";
+import TemplateMedicationWrapper from "../../../apiWrapper/mobile/templateMedication";
 import templateAppointmentService from "../../../services/templateAppointment/templateAppointment.service";
-import TemplateAppointmentWrapper from "../../../ApiWrapper/mobile/templateAppointment";
+import TemplateAppointmentWrapper from "../../../apiWrapper/mobile/templateAppointment";
 import medicineService from "../../../services/medicine/medicine.service";
-import MedicineApiWrapper from "../../../ApiWrapper/mobile/medicine";
+import MedicineApiWrapper from "../../../apiWrapper/mobile/medicine";
 import UserVerificationServices from "../../../services/userVerifications/userVerifications.services";
 import getUniversalLink from "../../../helper/universalLink";
 import getAge from "../../../helper/getAge";
@@ -87,8 +87,8 @@ import doctorsService from "../../../services/doctors/doctors.service";
 import doctorPatientWatchlistService from "../../../services/doctorPatientWatchlist/doctorPatientWatchlist.service";
 
 import specialityService from "../../../services/speciality/speciality.service";
-import SpecialityWrapper from "../../../ApiWrapper/mobile/speciality";
-// import DegreeWrapper from "../../../ApiWrapper/mobile/degree";
+import SpecialityWrapper from "../../../apiWrapper/mobile/speciality";
+// import DegreeWrapper from "../../../apiWrapper/mobile/degree";
 // import degreeService from "../../../services/degree/degree.service";
 
 const Logger = new Log("M-API DOCTOR CONTROLLER");
@@ -96,6 +96,7 @@ const APPOINTMENT_QUERY_TYPE = {
   DAY: "d",
   MONTH: "m",
 };
+
 class MobileDoctorController extends Controller {
   constructor() {
     super();
@@ -661,7 +662,7 @@ class MobileDoctorController extends Controller {
         const degreeWrapper = await DegreeWrapper(degree);
         degreeData[degreeWrapper.getDegreeId()] = degreeWrapper.getBasicInfo();
 
-        if (id && id !== "0") {
+        if (id && id !== 0) {
           let collegeId = college_id;
           if (college_name) {
             const college = await collegeService.create({
@@ -765,7 +766,7 @@ class MobileDoctorController extends Controller {
         councilData[councilWrapper.getCouncilId()] =
           councilWrapper.getBasicInfo();
 
-        if (id && id !== "0") {
+        if (id && id !== 0) {
           const registration = await registrationService.updateRegistration(
             {
               doctor_id: doctorData.getDoctorId(),
@@ -941,7 +942,7 @@ class MobileDoctorController extends Controller {
 
       const { mimetype } = file || {};
       const fileType = mimetype.split("/");
-      Logger.debug("mimetype ------> ", mimetype);
+      Logger.debug("updateQualificationDocs mimetype ---> ", mimetype);
       if (!ALLOWED_DOC_TYPE_DOCTORS.includes(fileType[1])) {
         return this.raiseClientError(
           res,
@@ -1751,7 +1752,7 @@ class MobileDoctorController extends Controller {
       );
     } catch (error) {
       Logger.debug(
-        "DOCTOR QUALIFICATION DOCUMENT DELETE 500 ERROR ---->",
+        "DOCTOR QUALIFICATION DOCUMENT DELETE 500 ERROR ---> ",
         error
       );
       return raiseServerError(res);
@@ -1780,7 +1781,7 @@ class MobileDoctorController extends Controller {
       );
     } catch (error) {
       Logger.debug(
-        "DOCTOR REGISTRATION DOCUMENT DELETE 500 ERROR ---->",
+        "DOCTOR REGISTRATION DOCUMENT DELETE 500 ERROR ---> ",
         error
       );
       return raiseServerError(res);
@@ -1980,7 +1981,7 @@ class MobileDoctorController extends Controller {
     const { userDetails, body } = req;
     const { userId = "3" } = userDetails || {};
     const file = req.file;
-    Logger.debug("file ----> ", file);
+    Logger.debug("uploadImage file ---> ", file);
     // const fileExt= file.originalname.replace(/\s+/g, '');
     try {
       let files = await uploadImageS3(userId, file);
@@ -2390,7 +2391,7 @@ class MobileDoctorController extends Controller {
       const {
         count: careplansCount = 0,
         rows: careplanAsSecondaryDoctor = [],
-      } = await careplanSecondaryDoctorMappingService.findAndCountAll({
+      } = await carePlanSecondaryDoctorMappingService.findAndCountAll({
         where: {
           secondary_doctor_role_id: userRoleId,
         },

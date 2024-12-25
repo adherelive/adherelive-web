@@ -4,9 +4,9 @@ import doctorService from "../../services/doctor/doctor.service";
 import providerService from "../../services/provider/provider.service";
 import doctorProviderMappingService from "../../services/doctorProviderMapping/doctorProviderMapping.service";
 
-import UserWrapper from "../../ApiWrapper/web/user";
-import DoctorWrapper from "../../ApiWrapper/web/doctor";
-import ProviderWrapper from "../../ApiWrapper/web/provider";
+import UserWrapper from "../../apiWrapper/web/user";
+import DoctorWrapper from "../../apiWrapper/web/doctor";
+import ProviderWrapper from "../../apiWrapper/web/provider";
 
 import { createNewUser } from "../user/userHelper";
 import { generatePassword } from "../helper/passwordGenerator";
@@ -114,8 +114,10 @@ export const addProviderDoctor = async (
       const doctorUserWrapper = await UserWrapper(doctorUserDetails);
       doctorUserId = doctorUserWrapper.getId();
 
-      if (!doctor_id || doctorUserId !== prevDoctorData.getUserId()) {
-        return raiseClientError(res, 422, {}, "Email already exists.");
+      if (prevDoctorData) {
+        if (!doctor_id || doctorUserId !== prevDoctorData.getUserId()) {
+          return raiseClientError(res, 422, {}, "Email already exists.");
+        }
       }
     } else {
       // const password = generatePassword();

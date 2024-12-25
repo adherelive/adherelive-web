@@ -8,8 +8,8 @@ import ExerciseDetailService from "../../../services/exerciseDetails/exerciseDet
 import ExerciseContentService from "../../../services/exerciseContents/exerciseContent.service";
 
 // wrappers
-import ExerciseWrapper from "../../../ApiWrapper/mobile/exercises";
-import ExerciseContentWrapper from "../../../ApiWrapper/mobile/exerciseContents";
+import ExerciseWrapper from "../../../apiWrapper/mobile/exercises";
+import ExerciseContentWrapper from "../../../apiWrapper/mobile/exerciseContents";
 
 import * as UploadHelper from "../../../helper/uploadDocuments";
 import { DOCUMENT_PARENT_TYPE } from "../../../../constant";

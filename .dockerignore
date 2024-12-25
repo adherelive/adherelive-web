@@ -1,14 +1,5 @@
 node_modules
-dump
 .idea
 .git
-emails
-!public/.gitkeep
-public
-.env
-.node_env
-docker-compose.yaml
-docker-compose.prod.yaml
-docker-compose.demo.yaml
 output.log
 README.md

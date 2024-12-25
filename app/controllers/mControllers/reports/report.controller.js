@@ -6,8 +6,8 @@ import ReportService from "../../../services/reports/report.service";
 import uploadDocumentService from "../../../services/uploadDocuments/uploadDocuments.service";
 
 // wrappers
-import ReportWrapper from "../../../ApiWrapper/mobile/reports";
-import DoctorWrapper from "../../../ApiWrapper/mobile/doctor";
+import ReportWrapper from "../../../apiWrapper/mobile/reports";
+import DoctorWrapper from "../../../apiWrapper/mobile/doctor";
 
 import { DOCUMENT_PARENT_TYPE, USER_CATEGORY } from "../../../../constant";
 import { getFilePath } from "../../../helper/filePath";

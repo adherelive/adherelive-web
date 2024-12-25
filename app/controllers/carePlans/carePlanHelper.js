@@ -4,24 +4,23 @@ import appointmentService from "../../services/appointment/appointment.service";
 import medicationReminderService from "../../services/medicationReminder/mReminder.service";
 import carePlanMedicationService from "../../services/carePlanMedication/carePlanMedication.service";
 import carePlanAppointmentService from "../../services/carePlanAppointment/carePlanAppointment.service";
-// import templateMedicationService from "../../services/templateMedication/templateMedication.service";
-// import templateAppointmentService from "../../services/templateAppointment/templateAppointment.service";
-// import medicineService from "../../services/medicine/medicine.service";
-
-// services
 import vitalService from "../../services/vitals/vital.service";
 import DietService from "../../services/diet/diet.service";
 import WorkoutService from "../../services/workouts/workout.service";
+import doctorService from "../../services/doctor/doctor.service";
+// import medicineService from "../../services/medicine/medicine.service";
+// import templateMedicationService from "../../services/templateMedication/templateMedication.service";
+// import templateAppointmentService from "../../services/templateAppointment/templateAppointment.service";
 
-// wrappers
-import CarePlanWrapper from "../../ApiWrapper/web/carePlan";
-import AppointmentWrapper from "../../ApiWrapper/web/appointments";
-import MedicationWrapper from "../../ApiWrapper/web/medicationReminder";
-import VitalWrapper from "../../ApiWrapper/web/vitals";
-import PatientWrapper from "../../ApiWrapper/web/patient";
-import DietWrapper from "../../ApiWrapper/web/diet";
-import WorkoutWrapper from "../../ApiWrapper/web/workouts";
-import UserRoleWrapper from "../../ApiWrapper/web/userRoles";
+// Fetch details from Wrappers
+import CarePlanWrapper from "../../apiWrapper/web/carePlan";
+import AppointmentWrapper from "../../apiWrapper/web/appointments";
+import MedicationWrapper from "../../apiWrapper/web/medicationReminder";
+import VitalWrapper from "../../apiWrapper/web/vitals";
+import PatientWrapper from "../../apiWrapper/web/patient";
+import DietWrapper from "../../apiWrapper/web/diet";
+import WorkoutWrapper from "../../apiWrapper/web/workouts";
+import UserRoleWrapper from "../../apiWrapper/web/userRoles";
 
 import Logger from "../../../libs/log";
 import {
@@ -35,14 +34,13 @@ import moment from "moment";
 const Log = new Logger("CARE_PLAN > HELPER");
 
 /**
- *
- *medicines,
- medications,
- appointments,
- doctors,
- providers = {},
- user_roles = {},
- schedule_events,
+ * medicines,
+ * medications,
+ * appointments,
+ * doctors,
+ * providers = {},
+ * user_roles = {},
+ * schedule_events,
  */
 
 function getTime() {
@@ -51,18 +49,15 @@ function getTime() {
 
   // current month
   let month = ("0" + (date_ob.getMonth() + 1)).slice(-2);
-
   // current year
   let year = date_ob.getFullYear();
-
   // current hours
   let hours = date_ob.getHours();
-
   // current minutes
   let minutes = date_ob.getMinutes();
-
   // current seconds
   let seconds = date_ob.getSeconds();
+
   return (
     year +
     "-" +
@@ -78,7 +73,7 @@ function getTime() {
   );
 }
 
-export const getCareplanDataWithImp = async ({
+export const getCarePlanDataWithImp = async ({
   carePlans = [],
   userCategory,
   doctorId,
@@ -89,8 +84,8 @@ export const getCareplanDataWithImp = async ({
     let carePlanIds = [];
     let appointmentIds = [];
     let medicationIds = [];
-    let currentCareplanTime = null;
-    let currentCareplanId = null;
+    let currentCarePlanTime = null;
+    let currentCarePlanId = null;
     for (let index = 0; index < carePlans.length; index++) {
       const careplan = await CarePlanWrapper(carePlans[index]);
 
@@ -110,7 +105,7 @@ export const getCareplanDataWithImp = async ({
       const isUserRoleAllowed = [user_role_id, ...secondaryDoctorUserRoleIds]
         .map((id) => parseInt(id))
         .includes(userRoleId);
-      // get latest careplan id
+      // Get the latest Care Plan ID
       if (
         (userCategory === USER_CATEGORY.DOCTOR ||
           userCategory === USER_CATEGORY.HSP) &&
@@ -119,17 +114,17 @@ export const getCareplanDataWithImp = async ({
         // if(userCategory === USER_CATEGORY.DOCTOR && doctorId === doctor_id) {
         if (
           moment(careplan.getCreatedAt()).diff(
-            moment(currentCareplanTime),
+            moment(currentCarePlanTime),
             "minutes"
           ) > 0
         ) {
-          currentCareplanTime = careplan.getCreatedAt();
-          currentCareplanId = careplan.getCarePlanId();
+          currentCarePlanTime = careplan.getCreatedAt();
+          currentCarePlanId = careplan.getCarePlanId();
         }
 
-        if (currentCareplanTime === null) {
-          currentCareplanTime = careplan.getCreatedAt();
-          currentCareplanId = careplan.getCarePlanId();
+        if (currentCarePlanTime === null) {
+          currentCarePlanTime = careplan.getCreatedAt();
+          currentCarePlanId = careplan.getCarePlanId();
         }
       }
     }
@@ -138,15 +133,39 @@ export const getCareplanDataWithImp = async ({
         ...carePlanData,
       },
       care_plan_ids: carePlanIds,
-      current_careplan_id: currentCareplanId,
+      current_care_plan_id: currentCarePlanId,
     };
   } catch (error) {
-    Log.debug("getCareplanData catch error", error);
+    Log.debug("Issue with getCarePlanDataWithImp catch error: ", error);
     return {};
   }
 };
 
-export const getCareplanData = async ({
+export const getCarePlanDataWithDoctor = async ({
+  carePlans = [],
+  userCategory,
+  doctorId,
+  userRoleId,
+}) => {
+  try {
+    let carePlanData = {};
+    for (let index = 0; index < carePlans.length; index++) {
+      const careplan = await CarePlanWrapper(carePlans[index]);
+      const { care_plans } = await careplan.getReferenceInfoWithSecDocDetails();
+      carePlanData = { ...carePlanData, ...care_plans };
+    }
+    return {
+      care_plans: {
+        ...carePlanData,
+      },
+    };
+  } catch (error) {
+    Log.debug("getCarePlanDataWithDoctor catch error: ", error);
+    return {};
+  }
+};
+
+export const getCarePlanData = async ({
   carePlans = [],
   userCategory,
   doctorId,
@@ -171,8 +190,8 @@ export const getCareplanData = async ({
     let providerData = {};
     let userRoleData = {};
 
-    let currentCareplanTime = null;
-    let currentCareplanId = null;
+    let currentCarePlanTime = null;
+    let currentCarePlanId = null;
 
     for (let index = 0; index < carePlans.length; index++) {
       const careplan = await CarePlanWrapper(carePlans[index]);
@@ -206,17 +225,17 @@ export const getCareplanData = async ({
         // if(userCategory === USER_CATEGORY.DOCTOR && doctorId === doctor_id) {
         if (
           moment(careplan.getCreatedAt()).diff(
-            moment(currentCareplanTime),
+            moment(currentCarePlanTime),
             "minutes"
           ) > 0
         ) {
-          currentCareplanTime = careplan.getCreatedAt();
-          currentCareplanId = careplan.getCarePlanId();
+          currentCarePlanTime = careplan.getCreatedAt();
+          currentCarePlanId = careplan.getCarePlanId();
         }
 
-        if (currentCareplanTime === null) {
-          currentCareplanTime = careplan.getCreatedAt();
-          currentCareplanId = careplan.getCarePlanId();
+        if (currentCarePlanTime === null) {
+          currentCarePlanTime = careplan.getCreatedAt();
+          currentCarePlanId = careplan.getCarePlanId();
         }
       }
 
@@ -266,7 +285,7 @@ export const getCareplanData = async ({
         const { medications, medicines } = await medication.getReferenceInfo();
         medicationData = { ...medicationData, ...medications };
         medicineData = { ...medicineData, ...medicines };
-        // todo: add schedule data
+        // TODO: add schedule data
       }
     }
 
@@ -296,10 +315,10 @@ export const getCareplanData = async ({
         ...userRoleData,
       },
       care_plan_ids: carePlanIds,
-      current_careplan_id: currentCareplanId,
+      current_care_plan_id: currentCarePlanId,
     };
   } catch (error) {
-    Log.debug("getCareplanData catch error", error);
+    Log.debug("getCarePlanData issues catch error: ", error);
     return {};
   }
 };
@@ -318,7 +337,7 @@ export const createVitals = async ({
     // vital templates
     let vitalTemplateData = {};
 
-    // template vital for careplan template
+    // template vital for care plan template
     let carePlanTemplateVitals = [];
 
     // for sqs events
@@ -351,7 +370,8 @@ export const createVitals = async ({
           end_date,
           details: {
             repeat_interval_id,
-            repeat_days, description,
+            repeat_days,
+            description,
           },
           care_plan_id: carePlanId,
         });
@@ -407,7 +427,7 @@ export const createVitals = async ({
       vital_templates: vitalTemplateData,
     };
   } catch (error) {
-    Log.debug("createVitals catch error", error);
+    Log.debug("createVitals catch error: ", error);
     return {};
   }
 };
@@ -428,7 +448,7 @@ export const createDiet = async ({
 
     let dietIds = [];
 
-    // template vital for careplan template
+    // template vital for care plan template
     let carePlanTemplateDiets = [];
 
     // for sqs events
@@ -525,7 +545,7 @@ export const createDiet = async ({
       diet_ids: dietIds,
     };
   } catch (error) {
-    Log.debug("createDiet catch error", error);
+    Log.debug("createDiet catch error: ", error);
     return {};
   }
 };
@@ -545,7 +565,7 @@ export const createWorkout = async ({
 
     let workoutIds = [];
 
-    // template workout for careplan template
+    // template workout for care plan template
     let carePlanTemplateWorkouts = [];
 
     // for sqs events
@@ -650,7 +670,7 @@ export const createWorkout = async ({
       workout_ids: workoutIds,
     };
   } catch (error) {
-    Log.debug("createWorkout catch error", error);
+    Log.debug("createWorkout catch error: ", error);
     return {};
   }
 };

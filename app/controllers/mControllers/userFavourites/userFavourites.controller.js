@@ -7,8 +7,8 @@ import Logger from "../../../../libs/log";
 import UserFavouritesService from "../../../services/userFavourites/userFavourites.service";
 
 // WRAPPERS...
-import UserFavouritesWrapper from "../../../ApiWrapper/mobile/userFavourites";
-import UserWrapper from "../../../ApiWrapper/mobile/user";
+import UserFavouritesWrapper from "../../../apiWrapper/mobile/userFavourites";
+import UserWrapper from "../../../apiWrapper/mobile/user";
 
 import { FAVOURITE_TYPE } from "../../../../constant";
 

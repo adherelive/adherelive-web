@@ -19,17 +19,17 @@ import doctorProviderMappingService from "../../services/doctorProviderMapping/d
 import userRolesService from "../../services/userRoles/userRoles.service";
 import doctorPatientWatchlistService from "../../services/doctorPatientWatchlist/doctorPatientWatchlist.service";
 
-import UserWrapper from "../../ApiWrapper/web/user";
-import DoctorWrapper from "../../ApiWrapper/web/doctor";
-import PatientWrapper from "../../ApiWrapper/web/patient";
-import CarePlanWrapper from "../../ApiWrapper/web/carePlan";
-import TreatmentWrapper from "../../ApiWrapper/web/treatments";
-import SeverityWrapper from "../../ApiWrapper/web/severity";
-import ConditionWrapper from "../../ApiWrapper/web/conditions";
-import ProvidersWrapper from "../../ApiWrapper/web/provider";
-import DoctorProviderMappingWrapper from "../../ApiWrapper/web/doctorProviderMapping";
-import UserRolesWrapper from "../../ApiWrapper/web/userRoles";
-import DoctorPatientWatchlistWrapper from "../../ApiWrapper/web/doctorPatientWatchlist";
+import UserWrapper from "../../apiWrapper/web/user";
+import DoctorWrapper from "../../apiWrapper/web/doctor";
+import PatientWrapper from "../../apiWrapper/web/patient";
+import CarePlanWrapper from "../../apiWrapper/web/carePlan";
+import TreatmentWrapper from "../../apiWrapper/web/treatments";
+import SeverityWrapper from "../../apiWrapper/web/severity";
+import ConditionWrapper from "../../apiWrapper/web/conditions";
+import ProvidersWrapper from "../../apiWrapper/web/provider";
+import DoctorProviderMappingWrapper from "../../apiWrapper/web/doctorProviderMapping";
+import UserRolesWrapper from "../../apiWrapper/web/userRoles";
+import DoctorPatientWatchlistWrapper from "../../apiWrapper/web/doctorPatientWatchlist";
 
 import doctorService from "../../services/doctors/doctors.service";
 import UserVerificationServices from "../../services/userVerifications/userVerifications.services";
@@ -46,10 +46,10 @@ import { Proxy_Sdk, EVENTS } from "../../proxySdk";
 // import  EVENTS from "../../proxySdk/proxyEvents";
 const errMessage = require("../../../config/messages.json").errMessages;
 import { getCarePlanSeverityDetails } from "../carePlans/carePlanHelper";
-import LinkVerificationWrapper from "../../ApiWrapper/mobile/userVerification";
+import LinkVerificationWrapper from "../../apiWrapper/mobile/userVerification";
 
-import AppNotification from "../../NotificationSdk/inApp";
-import AdhocJob from "../../JobSdk/Adhoc/observer";
+import AppNotification from "../../notificationSdk/inApp";
+import AdhocJob from "../../jobSdk/Adhoc/observer";
 import { getSeparateName } from "../../helper/common";
 
 const Logger = new Log("WEB USER CONTROLLER");
@@ -324,7 +324,7 @@ class UserController extends Controller {
         return this.raiseClientError(res, 401, {}, "Invalid Credentials");
       }
     } catch (error) {
-      Logger.debug("signIn 500 error ----> ", error);
+      Logger.debug("User Controller signIn 500 error ---> ", error);
 
       // notification
       const crashJob = await AdhocJob.execute("crash", { apiName: "signIn" });
@@ -417,7 +417,7 @@ class UserController extends Controller {
         "Initial data retrieved successfully"
       );
     } catch (error) {
-      Logger.debug("giveConsent 500 error ----> ", error);
+      Logger.debug("giveConsent 500 error ---> ", error);
       return this.raiseServerError(res);
     }
   };
@@ -567,7 +567,6 @@ class UserController extends Controller {
 
   onAppStart = async (req, res) => {
     try {
-
       if (req.userDetails.exists) {
         const {
           userId,
@@ -595,7 +594,7 @@ class UserController extends Controller {
         let userCategoryId = null;
         // let patientIds = [];
         let userIds = [userId];
-        // let careplanData = [];
+        // let carePlanData = [];
 
         let treatmentIds = [];
         let doctorProviderId = null;
@@ -605,15 +604,12 @@ class UserController extends Controller {
             userCategoryData = await patientService.getPatientByUserId(userId);
             break;
           case USER_CATEGORY.DOCTOR:
-
             userCategoryData = await doctorService.getDoctorByUserId(userId);
 
             if (userCategoryData) {
-
               userCategoryApiWrapper = await DoctorWrapper(userCategoryData);
 
               let watchlist_patient_ids = [];
-
 
               // gaurav new changes
               // const watchlistRecords =
@@ -662,12 +658,9 @@ class UserController extends Controller {
 
             break;
           case USER_CATEGORY.HSP:
-
-
             userCategoryData = await doctorService.getDoctorByUserId(userId);
 
             if (userCategoryData) {
-
               userCategoryApiWrapper = await DoctorWrapper(userCategoryData);
               // Gaurav new Changes
               // let watchlist_patient_ids = [];
@@ -712,7 +705,6 @@ class UserController extends Controller {
                 providerApiData[providerId] =
                   await providerWrapper.getAllInfo();
               }
-
             }
             break;
           case USER_CATEGORY.PROVIDER:
@@ -849,7 +841,7 @@ class UserController extends Controller {
         let userCategoryId = null;
         // let patientIds = [];
         let userIds = [userId];
-        // let careplanData = [];
+        // let carePlanData = [];
 
         let treatmentIds = [];
         let conditionIds = [];
@@ -1366,7 +1358,7 @@ class UserController extends Controller {
       for (const item of registration_details) {
         const { number, council, year, expiry_date, id = 0 } = item;
 
-        if (id && id !== "0") {
+        if (id && id !== 0) {
           let registration = await registrationService.updateRegistration(
             { doctor_id, number, year, council, expiry_date },
             id
@@ -1472,7 +1464,7 @@ class UserController extends Controller {
         "doctor registration data fetched successfully"
       );
     } catch (error) {
-      Logger.debug("GET DOCTOR REGISTRATION DATA 500 ERROR ---->", error);
+      Logger.debug("GET DOCTOR REGISTRATION DATA 500 ERROR ---> ", error);
       return raiseServerError(res);
     }
   };
@@ -1572,7 +1564,7 @@ class UserController extends Controller {
       );
     } catch (error) {
       Logger.debug(
-        "uploadDoctorRegistrationDocuments CATCH ERROR ---->",
+        "uploadDoctorRegistrationDocuments CATCH ERROR ---> ",
         error
       );
       return raiseServerError(res);
@@ -1630,7 +1622,7 @@ class UserController extends Controller {
       );
     } catch (error) {
       Logger.debug(
-        "DOCTOR REGISTRATION DOCUMENT DELETE 500 ERROR ---->",
+        "DOCTOR REGISTRATION DOCUMENT DELETE 500 ERROR ---> ",
         error
       );
       return raiseServerError(res);
@@ -2083,7 +2075,7 @@ class UserController extends Controller {
       const doctor_id = doctor.get("id");
 
       Logger.debug(
-        "9872683794 ------------->",
+        "Get Doctor ID's being used ---> ",
         doctor,
         doctor.get("id"),
         doctor_id
@@ -2143,7 +2135,7 @@ class UserController extends Controller {
         });
 
         Logger.debug(
-          "process.config.WEB_URL --------------->",
+          "forgotPassword User Controller Web URL ---> ",
           process.config.WEB_URL
         );
 
@@ -2272,7 +2264,7 @@ class UserController extends Controller {
       }
 
       const user = await userService.getUserById(userId);
-      Logger.debug("user -------------->", user);
+      Logger.debug("User ID being used ---> ", user);
       const userData = await UserWrapper(user.get());
 
       const salt = await bcrypt.genSalt(Number(process.config.saltRounds));

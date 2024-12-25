@@ -17,24 +17,24 @@ import WorkoutService from "../../../services/workouts/workout.service";
 import RepetitionService from "../../../services/exerciseRepetitions/repetition.service";
 import PortionServiceService from "../../../services/portions/portions.service";
 import DietService from "../../../services/diet/diet.service";
-import careplanSecondaryDoctorMappingService from "../../../services/careplanSecondaryDoctorMappings/careplanSecondaryDoctorMappings.service";
+import carePlanSecondaryDoctorMappingService from "../../../services/carePlanSecondaryDoctorMappings/carePlanSecondaryDoctorMappings.service";
 // WRAPPERS ------------
-import ExerciseContentWrapper from "../../../ApiWrapper/mobile/exerciseContents";
-import VitalWrapper from "../../../ApiWrapper/mobile/vitals";
-import PatientWrapper from "../../../ApiWrapper/mobile/patient";
-import DoctorWrapper from "../../../ApiWrapper/mobile/doctor";
-import ConsentWrapper from "../../../ApiWrapper/mobile/consent";
-import QualificationWrapper from "../../../ApiWrapper/mobile/doctorQualification";
-import DegreeWrapper from "../../../ApiWrapper/mobile/degree";
-import RegistrationWrapper from "../../../ApiWrapper/mobile/doctorRegistration";
-import CouncilWrapper from "../../../ApiWrapper/mobile/council";
-import ConditionWrapper from "../../../ApiWrapper/mobile/conditions";
-import UserPreferenceWrapper from "../../../ApiWrapper/mobile/userPreference";
-import ReportWrapper from "../../../ApiWrapper/mobile/reports";
-import PaymentProductWrapper from "../../../ApiWrapper/mobile/paymentProducts";
-import PortionWrapper from "../../../ApiWrapper/mobile/portions";
-import WorkoutWrapper from "../../../ApiWrapper/mobile/workouts";
-import DietWrapper from "../../../ApiWrapper/mobile/diet";
+import ExerciseContentWrapper from "../../../apiWrapper/mobile/exerciseContents";
+import VitalWrapper from "../../../apiWrapper/mobile/vitals";
+import PatientWrapper from "../../../apiWrapper/mobile/patient";
+import DoctorWrapper from "../../../apiWrapper/mobile/doctor";
+import ConsentWrapper from "../../../apiWrapper/mobile/consent";
+import QualificationWrapper from "../../../apiWrapper/mobile/doctorQualification";
+import DegreeWrapper from "../../../apiWrapper/mobile/degree";
+import RegistrationWrapper from "../../../apiWrapper/mobile/doctorRegistration";
+import CouncilWrapper from "../../../apiWrapper/mobile/council";
+import ConditionWrapper from "../../../apiWrapper/mobile/conditions";
+import UserPreferenceWrapper from "../../../apiWrapper/mobile/userPreference";
+import ReportWrapper from "../../../apiWrapper/mobile/reports";
+import PaymentProductWrapper from "../../../apiWrapper/mobile/paymentProducts";
+import PortionWrapper from "../../../apiWrapper/mobile/portions";
+import WorkoutWrapper from "../../../apiWrapper/mobile/workouts";
+import DietWrapper from "../../../apiWrapper/mobile/diet";
 
 import * as DietHelper from "../../diet/dietHelper";
 
@@ -46,9 +46,9 @@ import md5 from "js-md5";
 import { imgSync } from "base64-img";
 import appointmentService from "../../../services/appointment/appointment.service";
 import medicationReminderService from "../../../services/medicationReminder/mReminder.service";
-import MReminderWrapper from "../../../ApiWrapper/mobile/medicationReminder";
+import MReminderWrapper from "../../../apiWrapper/mobile/medicationReminder";
 import medicineService from "../../../services/medicine/medicine.service";
-import MedicineApiWrapper from "../../../ApiWrapper/mobile/medicine";
+import MedicineApiWrapper from "../../../apiWrapper/mobile/medicine";
 import carePlanService from "../../../services/carePlan/carePlan.service";
 // import carePlanMedicationService from "../../../services/carePlanMedication/carePlanMedication.service";
 // import carePlanAppointmentService from "../../../services/carePlanAppointment/carePlanAppointment.service";
@@ -57,18 +57,18 @@ import patientPaymentConsentMappingService from "../../../services/patientPaymen
 // import doctorProviderMappingService from "../../../services/doctorProviderMapping/doctorProviderMapping.service";
 import userRolesService from "../../../services/userRoles/userRoles.service";
 
-import UserWrapper from "../../../ApiWrapper/mobile/user";
-import UserRolesWrapper from "../../../ApiWrapper/mobile/userRoles";
-import CarePlanWrapper from "../../../ApiWrapper/mobile/carePlan";
-import CarePlanTemplateWrapper from "../../../ApiWrapper/web/carePlanTemplate";
-import AppointmentWrapper from "../../../ApiWrapper/mobile/appointments";
-// import TemplateMedicationWrapper from "../../../ApiWrapper/mobile/templateMedication";
-// import TemplateAppointmentWrapper from "../../../ApiWrapper/mobile/templateAppointment";
-import SymptomWrapper from "../../../ApiWrapper/mobile/symptoms";
-import ProviderWrapper from "../../../ApiWrapper/mobile/provider";
-import ProviderTermsMappingWrapper from "../../../ApiWrapper/mobile/providerTermsMappings";
-import PatientConsentMappingWrapper from "../../../ApiWrapper/mobile/patientPaymentConsentMapping";
-// import DoctorProviderMappingWrapper from "../../../ApiWrapper/web/doctorProviderMapping";
+import UserWrapper from "../../../apiWrapper/mobile/user";
+import UserRolesWrapper from "../../../apiWrapper/mobile/userRoles";
+import CarePlanWrapper from "../../../apiWrapper/mobile/carePlan";
+import CarePlanTemplateWrapper from "../../../apiWrapper/web/carePlanTemplate";
+import AppointmentWrapper from "../../../apiWrapper/mobile/appointments";
+// import TemplateMedicationWrapper from "../../../apiWrapper/mobile/templateMedication";
+// import TemplateAppointmentWrapper from "../../../apiWrapper/mobile/templateAppointment";
+import SymptomWrapper from "../../../apiWrapper/mobile/symptoms";
+import ProviderWrapper from "../../../apiWrapper/mobile/provider";
+import ProviderTermsMappingWrapper from "../../../apiWrapper/mobile/providerTermsMappings";
+import PatientConsentMappingWrapper from "../../../apiWrapper/mobile/patientPaymentConsentMapping";
+// import DoctorProviderMappingWrapper from "../../../apiWrapper/web/doctorProviderMapping";
 
 // import templateMedicationService from "../../../services/templateMedication/templateMedication.service";
 // import templateAppointmentService from "../../../services/templateAppointment/templateAppointment.service";
@@ -200,13 +200,13 @@ class MPatientController extends Controller {
             profilePic = file_name;
           }
         } else {
-          // todo
+          // TODO: check what comes here for else
         }
       } else {
         if (userId) {
           profilePic = profile_pic;
         } else {
-          // todo
+          // TODO: check what comes here for else
         }
       }
 
@@ -214,7 +214,7 @@ class MPatientController extends Controller {
 
       // Logger.debug("18371823 profilePicUrl ---> ", profilePicUrl);
 
-      // todo minio configure here
+      // TODO: minio configure here
 
       const previousDetails = (await initialPatientData.getDetails()) || {};
       const { basic_info: prevBasicInfo } =
@@ -387,7 +387,7 @@ class MPatientController extends Controller {
     }
   };
 
-  //TODO: need to delete below function if all working fine in mobile app.
+  // TODO: need to delete below function if all working fine in mobile app.
   getPatientCarePlanDetailsWithImp1 = async (req, res) => {
     try {
       const { id: patient_id = 1 } = req.params;
@@ -440,8 +440,8 @@ class MPatientController extends Controller {
           care_plans,
           user_roles = {},
           care_plan_ids,
-          current_careplan_id,
-        } = await carePlanHelper.getCareplanDataWithImp({
+          current_care_plan_id,
+        } = await carePlanHelper.getCarePlanDataWithImp({
           carePlans,
           userCategory: category,
           doctorId: userCategoryId,
@@ -451,7 +451,7 @@ class MPatientController extends Controller {
         // care plans
         carePlanApiDetails = { ...carePlanApiDetails, ...care_plans };
         //        carePlanIds = [...care_plan_ids];
-        latestCarePlanId = current_careplan_id;
+        latestCarePlanId = current_care_plan_id;
         medicationApiDetails = { ...medicationApiDetails, ...medications };
         allProvidersData = { ...allProvidersData, ...providers };
         allUserRoleData = { ...allUserRoleData, ...user_roles };
@@ -527,7 +527,7 @@ class MPatientController extends Controller {
             ...otherCarePlanTemplates,
           },
           care_plan_template_ids: [...carePlanTemplateIds],
-          current_careplan_id: latestCarePlanId,
+          current_care_plan_id: latestCarePlanId,
 
           template_appointments: {
             ...templateAppointmentData,
@@ -627,8 +627,8 @@ class MPatientController extends Controller {
       let vitalTemplateData = {};
 
       if (carePlans.length > 0) {
-        const { care_plans, care_plan_ids, current_careplan_id } =
-          await carePlanHelper.getCareplanDataWithImp({
+        const { care_plans, care_plan_ids, current_care_plan_id } =
+          await carePlanHelper.getCarePlanDataWithImp({
             carePlans,
             userCategory: category,
             doctorId: userCategoryId,
@@ -650,20 +650,20 @@ class MPatientController extends Controller {
           //
 
           /*
-                    "care_plans": {
-                          "1": {
-                              "basic_info": {
-                                  "id": 1,
-                                  "doctor_id": 1,
-                                  "patient_id": 1,
-                                  "care_plan_template_id": null,
-                                  "user_role_id": 1
-                              },
-                              "details": {
-                                  "severity_id": 1,
-                                  "condition_id": 1,
-                                  "treatment_id": 1
-                              },*/
+                              "care_plans": {
+                                    "1": {
+                                        "basic_info": {
+                                            "id": 1,
+                                            "doctor_id": 1,
+                                            "patient_id": 1,
+                                            "care_plan_template_id": null,
+                                            "user_role_id": 1
+                                        },
+                                        "details": {
+                                            "severity_id": 1,
+                                            "condition_id": 1,
+                                            "treatment_id": 1
+                                        },*/
 
           if (id["basic_info"]["patient_id"] === patient_id) {
             latestCarePlanId = id["basic_info"]["id"];
@@ -750,7 +750,7 @@ class MPatientController extends Controller {
           // vital_templates
 
           // added by gaurav end
-          current_careplan_id: latestCarePlanId,
+          current_care_plan_id: latestCarePlanId,
           care_plan_ids: carePlanIds,
           care_plan_template_ids: [...carePlanTemplateIds],
           care_plan_templates: {
@@ -782,7 +782,7 @@ class MPatientController extends Controller {
     }
   };
 
-  //TODO: need to delete below function if all working fine in mobile app.
+  // TODO: need to delete below function if all working fine in mobile app.
   getPatientCarePlanDetails = async (req, res) => {
     try {
       const { id: patient_id = 1 } = req.params;
@@ -871,8 +871,8 @@ class MPatientController extends Controller {
           providers = {},
           user_roles = {},
           care_plan_ids,
-          current_careplan_id,
-        } = await carePlanHelper.getCareplanData({
+          current_care_plan_id,
+        } = await carePlanHelper.getCarePlanData({
           carePlans,
           userCategory: category,
           doctorId: userCategoryId,
@@ -886,7 +886,7 @@ class MPatientController extends Controller {
         carePlanIds = [...care_plan_ids];
 
         // latest care plan id
-        latestCarePlanId = current_careplan_id;
+        latestCarePlanId = current_care_plan_id;
 
         // doctors
         doctorData = { ...doctorData, ...doctors };
@@ -1066,25 +1066,25 @@ class MPatientController extends Controller {
       }
 
       /*
-            care_plans: {
-                  ...carePlanApiDetails,
-                },
-                care_plan_templates: {
-                  ...otherCarePlanTemplates,
-                },
-                care_plan_template_ids: [...carePlanTemplateIds],
-                current_careplan_id: latestCarePlanId,
+        care_plans: {
+              ...carePlanApiDetails,
+            },
+            care_plan_templates: {
+              ...otherCarePlanTemplates,
+            },
+            care_plan_template_ids: [...carePlanTemplateIds],
+            current_care_plan_id: latestCarePlanId,
 
-                template_appointments: {
-                  ...templateAppointmentData,
-                },
-                template_medications: {
-                  ...templateMedicationData,
-                },
-                vital_templates: {
-                  ...vitalTemplateData,
-                },
-                */
+            template_appointments: {
+              ...templateAppointmentData,
+            },
+            template_medications: {
+              ...templateMedicationData,
+            },
+            vital_templates: {
+              ...vitalTemplateData,
+            },
+      */
       return this.raiseSuccess(
         res,
         200,
@@ -1096,7 +1096,7 @@ class MPatientController extends Controller {
             ...otherCarePlanTemplates,
           },
           care_plan_template_ids: [...carePlanTemplateIds],
-          current_careplan_id: latestCarePlanId,
+          current_care_plan_id: latestCarePlanId,
           medicines: {
             ...medicineApiData,
           },
@@ -1168,7 +1168,7 @@ class MPatientController extends Controller {
   getPatientSymptoms = async (req, res) => {
     const { raiseSuccess, raiseServerError, raiseClientError } = this;
     try {
-      Logger.debug("req.params ----->", req.params);
+      Logger.debug("getPatientSymptoms req.params ---> ", req.params);
       const { params: { patient_id } = {}, userDetails: { userId } = {} } = req;
 
       const symptomData = await SymptomService.getAllByData({ patient_id });
@@ -1261,7 +1261,7 @@ class MPatientController extends Controller {
   getPatientPartSymptoms = async (req, res) => {
     const { raiseSuccess, raiseServerError, raiseClientError } = this;
     try {
-      Logger.debug("req.params ----->", req.params);
+      Logger.debug("getPatientPartSymptoms req.params ---> ", req.params);
       const { query: { duration = "5" } = {}, params: { patient_id } = {} } =
         req;
 
@@ -1890,17 +1890,17 @@ class MPatientController extends Controller {
 
       const doctorUserRoleId = carePlanData.getUserRoleId();
       /*
-      if (
-        `${doctorUserRoleId}` !== `${userRoleId}` &&
-        category !== USER_CATEGORY.PATIENT
-      ) {
-        return raiseClientError(
-          res,
-          422,
-          {},
-          "You don't have the rights to access this prescription."
-        );
-      }*/
+            if (
+              `${doctorUserRoleId}` !== `${userRoleId}` &&
+              category !== USER_CATEGORY.PATIENT
+            ) {
+              return raiseClientError(
+                res,
+                422,
+                {},
+                "You don't have the rights to access this prescription."
+              );
+            }*/
       const userRoles = await userRolesService.getSingleUserRoleByData({
         id: doctorUserRoleId,
       });
@@ -1974,7 +1974,8 @@ class MPatientController extends Controller {
 
           const startDate = appointmentWrapper.getStartTime();
           const startDateObj = moment(startDate);
-          const { organizer, provider_id } = await appointmentWrapper.getBasicInfo();
+          const { organizer, provider_id } =
+            await appointmentWrapper.getBasicInfo();
           const diff = startDateObj.diff(now);
 
           if (diff > 0) {
@@ -1987,9 +1988,12 @@ class MPatientController extends Controller {
 
           // TODO: Removed the type != CONSULTATION
           //if (type !== CONSULTATION) {
-          const { type_description = "", radiology_type = "", description = "",
-            reason = "" } =
-            appointmentWrapper.getDetails() || {};
+          const {
+            type_description = "",
+            radiology_type = "",
+            description = "",
+            reason = "",
+          } = appointmentWrapper.getDetails() || {};
           suggestedInvestigations.push({
             type,
             type_description,
@@ -2491,7 +2495,7 @@ class MPatientController extends Controller {
       }
 
       // get other doctor basic details
-      // todo: check with others if this data is already present for multi careplan
+      // TODO: check with others if this data is already present for multi care plan
       let doctorData = {};
       if (doctorIds.length > 0) {
         const allDoctors =
@@ -2611,7 +2615,7 @@ class MPatientController extends Controller {
         "Payment terms changed successfully."
       );
     } catch (error) {
-      Logger.debug("acceptPaymentsTerms 500 error ----> ", error);
+      Logger.debug("acceptPaymentsTerms 500 error ---> ", error);
       return this.raiseServerError(res);
     }
   };
@@ -2781,7 +2785,7 @@ class MPatientController extends Controller {
         "Payment links data fetched successfully."
       );
     } catch (error) {
-      Logger.debug("getAllRelatedDoctorPaymentLinks 500 error ----> ", error);
+      Logger.debug("getAllRelatedDoctorPaymentLinks 500 error ---> ", error);
       return this.raiseServerError(res);
     }
   };

@@ -23,24 +23,24 @@ import DoctorService from "../../services/doctor/doctor.service";
 import providerTermsMappingService from "../../services/providerTermsMapping/providerTermsMappings.service";
 import tacService from "../../services/termsAndConditions/termsAndConditions.service";
 
-import UserWrapper from "../../ApiWrapper/web/user";
-import DoctorWrapper from "../../ApiWrapper/web/doctor";
-import ProviderWrapper from "../../ApiWrapper/web/provider";
-import DoctorProviderMappingWrapper from "../../ApiWrapper/web/doctorProviderMapping";
-import QualificationWrapper from "../../ApiWrapper/web/doctorQualification";
-import RegistrationWrapper from "../../ApiWrapper/web/doctorRegistration";
-import ClinicWrapper from "../../ApiWrapper/web/doctorClinic";
-import DegreeWrapper from "../../ApiWrapper/web/degree";
-import CollegeWrapper from "../../ApiWrapper/web/college";
-import CouncilWrapper from "../../ApiWrapper/web/council";
-import UploadDocumentWrapper from "../../ApiWrapper/web/uploadDocument";
-// import PaymentProductWrapper from "../../ApiWrapper/web/paymentProducts";
-import AppointmentWrapper from "../../ApiWrapper/web/appointments";
-import PatientWrapper from "../../ApiWrapper/web/patient";
-import CarePlanWrapper from "../../ApiWrapper/web/carePlan";
-import UserRoleWrapper from "../../ApiWrapper/web/userRoles";
+import UserWrapper from "../../apiWrapper/web/user";
+import DoctorWrapper from "../../apiWrapper/web/doctor";
+import ProviderWrapper from "../../apiWrapper/web/provider";
+import DoctorProviderMappingWrapper from "../../apiWrapper/web/doctorProviderMapping";
+import QualificationWrapper from "../../apiWrapper/web/doctorQualification";
+import RegistrationWrapper from "../../apiWrapper/web/doctorRegistration";
+import ClinicWrapper from "../../apiWrapper/web/doctorClinic";
+import DegreeWrapper from "../../apiWrapper/web/degree";
+import CollegeWrapper from "../../apiWrapper/web/college";
+import CouncilWrapper from "../../apiWrapper/web/council";
+import UploadDocumentWrapper from "../../apiWrapper/web/uploadDocument";
+// import PaymentProductWrapper from "../../apiWrapper/web/paymentProducts";
+import AppointmentWrapper from "../../apiWrapper/web/appointments";
+import PatientWrapper from "../../apiWrapper/web/patient";
+import CarePlanWrapper from "../../apiWrapper/web/carePlan";
+import UserRoleWrapper from "../../apiWrapper/web/userRoles";
 
-import TACWrapper from "../../ApiWrapper/web/termsAndConditions";
+import TACWrapper from "../../apiWrapper/web/termsAndConditions";
 // import * as PaymentHelper from "../payments/helper";
 
 // import bcrypt from "bcrypt";
@@ -56,10 +56,10 @@ import ScheduleEventService from "../../services/scheduleEvents/scheduleEvent.se
 import { Sequelize } from "sequelize";
 import bcrypt from "bcrypt";
 
-// helper
+// Helper
 import * as ProviderHelper from "./helper";
 import accountDetailsService from "../../services/accountDetails/accountDetails.service";
-import AccountsWrapper from "../../ApiWrapper/web/accountsDetails";
+import AccountsWrapper from "../../apiWrapper/web/accountsDetails";
 import { getFilePath } from "../../helper/filePath";
 
 // import { generatePassword } from "../helper/passwordGenerator";

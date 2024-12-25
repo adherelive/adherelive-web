@@ -23,11 +23,11 @@ export default class FoodItem {
     return this._data.creator_type;
   };
 
-  getCreatorId = () => {
-    return this._data.creator_id;
-  };
-
-  getCreatorType = () => {
-    return this._data.creator_type;
-  };
+  // getCreatorId = () => {
+  //   return this._data.creator_id;
+  // };
+  //
+  // getCreatorType = () => {
+  //   return this._data.creator_type;
+  // };
 }

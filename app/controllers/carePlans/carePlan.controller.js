@@ -1,7 +1,7 @@
 import Controller from "../";
 import patientService from "../../../app/services/patients/patients.service";
 import carePlanService from "../../services/carePlan/carePlan.service";
-import CarePlanWrapper from "../../ApiWrapper/web/carePlan";
+import CarePlanWrapper from "../../apiWrapper/web/carePlan";
 import appointmentService from "../../services/appointment/appointment.service";
 import medicationReminderService from "../../services/medicationReminder/mReminder.service";
 import carePlanMedicationService from "../../services/carePlanMedication/carePlanMedication.service";
@@ -10,8 +10,8 @@ import templateMedicationService from "../../services/templateMedication/templat
 import templateAppointmentService from "../../services/templateAppointment/templateAppointment.service";
 import medicineService from "../../services/medicine/medicine.service";
 import userRoleService from "../../services/userRoles/userRoles.service";
-import carePlanSecondaryDoctorMappingService from "../../services/careplanSecondaryDoctorMappings/careplanSecondaryDoctorMappings.service";
-// import twilioService from "../../services/twilio/twilio.service";
+import carePlanSecondaryDoctorMappingService from "../../services/carePlanSecondaryDoctorMappings/carePlanSecondaryDoctorMappings.service";
+//import twilioService from "../../services/twilio/twilio.service";
 
 import {
   getCarePlanAppointmentIds,
@@ -24,22 +24,22 @@ import {
   EVENT_TYPE,
   USER_CATEGORY,
 } from "../../../constant";
-import UserRoleWrapper from "../../ApiWrapper/web/userRoles";
+import UserRoleWrapper from "../../apiWrapper/web/userRoles";
 import doctorService from "../../services/doctor/doctor.service";
-import DoctorWrapper from "../../ApiWrapper/web/doctor";
-import PatientWrapper from "../../ApiWrapper/web/patient";
-import AppointmentWrapper from "../../ApiWrapper/web/appointments";
-// import MedicationWrapper from "../../ApiWrapper/web/medicationReminder";
+import DoctorWrapper from "../../apiWrapper/web/doctor";
+import PatientWrapper from "../../apiWrapper/web/patient";
+import AppointmentWrapper from "../../apiWrapper/web/appointments";
+// import MedicationWrapper from "../../apiWrapper/web/medicationReminder";
 import carePlanTemplateService from "../../services/carePlanTemplate/carePlanTemplate.service";
-import CarePlanTemplateWrapper from "../../ApiWrapper/web/carePlanTemplate";
+import CarePlanTemplateWrapper from "../../apiWrapper/web/carePlanTemplate";
 import Logger from "../../../libs/log";
 // import ScheduleEventService from "../../services/scheduleEvents/scheduleEvent.service";
 import moment from "moment";
 import queueService from "../../services/awsQueue/queue.service";
 
 import * as carePlanHelper from "./carePlanHelper";
-import MedicationWrapper from "../../ApiWrapper/web/medicationReminder";
-import MedicationJob from "../../JobSdk/Medications/observer";
+import MedicationWrapper from "../../apiWrapper/web/medicationReminder";
+import MedicationJob from "../../jobSdk/Medications/observer";
 
 import PERMISSIONS from "../../../config/permissions";
 // import { ConfigurationServicePlaceholders } from "aws-sdk/lib/config_service_placeholders";
@@ -52,7 +52,6 @@ class CarePlanController extends Controller {
   }
 
   createFromTemplate = async (req, res) => {
-
     try {
       const { carePlanId: care_plan_id } = req.params;
       const {
@@ -71,16 +70,16 @@ class CarePlanController extends Controller {
       } = req.body;
 
       const { userDetails, permissions = [] } = req;
-      
+
       const {
         userId,
         userRoleId,
         userData: { category } = {},
         userCategoryData,
       } = userDetails || {};
-      
+
       let full_name = userCategoryData.basic_info.full_name;
-      
+
       if (!care_plan_id) {
         return raiseClientError(
           res,
@@ -186,7 +185,8 @@ class CarePlanController extends Controller {
             end_time: end_time,
             details: {
               treatment_id,
-              reason, description,
+              reason,
+              description,
               type,
               type_description,
               radiology_type,
@@ -269,9 +269,7 @@ class CarePlanController extends Controller {
         permissions.includes(PERMISSIONS.MEDICATIONS.ADD) &&
         medicationsData.length > 0
       ) {
-
         for (const medication of medicationsData) {
-
           const {
             schedule_data: {
               end_date = "",
@@ -290,7 +288,6 @@ class CarePlanController extends Controller {
               critical = false,
             } = {},
             medicine_id = "",
-
           } = medication;
 
           // add medication
@@ -304,7 +301,8 @@ class CarePlanController extends Controller {
             start_date,
             end_date,
             details: {
-              medicine_id, description,
+              medicine_id,
+              description,
               medicine_type,
               start_time: start_time ? start_time : moment(),
               end_time: start_time ? start_time : moment(),
@@ -324,8 +322,6 @@ class CarePlanController extends Controller {
             dataToSave
           );
 
-
-
           const medicationWrapper = await MedicationWrapper(mReminderDetails);
 
           const data_to_create = {
@@ -336,8 +332,8 @@ class CarePlanController extends Controller {
           let newMedication =
             await carePlanMedicationService.addCarePlanMedication(
               data_to_create
-          );
-            
+            );
+
           // TODO: testing gaurav
           const eventScheduleDataNew = {
             patient_id: patient_id,
@@ -385,7 +381,6 @@ class CarePlanController extends Controller {
                 : EVENT_LONG_TERM_VALUE,
             },
           });
-
         }
       }
 
@@ -408,7 +403,6 @@ class CarePlanController extends Controller {
         patientId: carePlanData.getPatientId(),
       });
 
-
       // diets ----------------------------------------
       const {
         diets,
@@ -426,7 +420,6 @@ class CarePlanController extends Controller {
         patientId: carePlanData.getPatientId(),
       });
 
-
       const {
         workouts,
         exercise_groups,
@@ -443,12 +436,10 @@ class CarePlanController extends Controller {
         patientId: carePlanData.getPatientId(),
       });
 
-
       // careplan template -------------------------------
       let carePlanTemplate = null;
 
       if (createTemplate) {
-
         const createCarePlanTemplate = await carePlanTemplateService.create({
           name: newTemplateName,
           treatment_id,
@@ -627,27 +618,23 @@ class CarePlanController extends Controller {
         );
       }
 
-
       const carePlans =
         (await carePlanService.getOnlyCarePlanByData({
           patient_id,
         })) || [];
 
-
       let carePlansResponse = [];
 
       if (carePlans.length > 0) {
-        const { care_plans } = await carePlanHelper.getCareplanDataWithImp({
+        const { care_plans } = await carePlanHelper.getCarePlanDataWithImp({
           carePlans,
           userCategory: category,
           doctorId: userCategoryId,
           userRoleId,
         });
 
-
         // Object.keys(care_plans).forEach(async (id) => {
         for (let id in care_plans) {
-
           let careplan = care_plans[id];
           let dataToAdd = {
             care_plan_id: careplan["basic_info"]["id"],
@@ -676,13 +663,11 @@ class CarePlanController extends Controller {
         "Patient care plan details fetched successfully"
       );
     } catch (error) {
-
       return raiseServerError(res);
     }
   };
 
   getPatientCarePlanDetails = async (req, res) => {
-
     const { patientId: patient_id = 1 } = req.params;
     try {
       const { userDetails, body, file, permissions = [] } = req;
@@ -736,7 +721,7 @@ class CarePlanController extends Controller {
         vital_ids,
       };
 
-      Log.debug("87937198123 careplan", carePlanApiData);
+      Log.debug("Care Plan API data: ", carePlanApiData);
 
       let templateMedications = {};
       let templateAppointments = {};
@@ -863,7 +848,6 @@ class CarePlanController extends Controller {
       };
     }
 
-
     try {
       const userRoles = await userRoleService.getAllByData(data);
       let user_role_id = "";
@@ -878,7 +862,6 @@ class CarePlanController extends Controller {
         patient_id,
         user_role_id,
       });
-
 
       let carePlanApiData = {};
 

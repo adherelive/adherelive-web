@@ -5,17 +5,18 @@ const { createReport } = require("./genrateTable");
 import FlashCardService from "../../services/flashCard/flashCard.service";
 import ReportService from "../../services/reports/report.service";
 import TxActivity from "../../services/transactionActivity/transactionActivity.service";
-import serviceSubscriptionTx from "../../services/serviceSubscribeTranaction/serviceSubscribeTranaction";
+import serviceSubscriptionTx from "../../services/serviceSubscribeTransaction/serviceSubscribeTransaction";
 import { getFilePath } from "../../helper/filePath";
 import ServiceUserMappingService from "../../services/serviceUserMapping/serviceUserMapping.service";
 import { DOCUMENT_PARENT_TYPE } from "../../../constant";
 import uploadDocumentService from "../../services/uploadDocuments/uploadDocuments.service";
 import * as ReportHelper from "../reports/reportHelper"; // wrappers
-import ReportWrapper from "../../ApiWrapper/web/reports";
+import ReportWrapper from "../../apiWrapper/web/reports";
 import ServiceSubscriptionService from "../../services/serviceSubscription/serviceSubscription.service";
 import ServiceOfferingService from "../../services/serviceOffering/serviceOffering.service";
 
 import { USER_CATEGORY } from "../../../constant";
+
 const fs = require("fs");
 const Log = new Logger("WEB > CONTROLLER > Service Offering");
 
@@ -23,6 +24,7 @@ class FlashCardController extends Controller {
   constructor() {
     super();
   }
+
   create = async (req, res) => {
     const { raiseSuccess, raiseServerError } = this;
     Log.debug("flash card controller - create - called");
@@ -52,7 +54,6 @@ class FlashCardController extends Controller {
       let data = { ...req.body, doctor_id, provider_type, provider_id };
       Log.debug("flash card controller data", data);
 
-
       const flashCardService = new FlashCardService();
       let flashCard = await flashCardService.addFlashCard(data);
       let { tx_activity_id, activity_status, is_published } = data;
@@ -69,25 +70,29 @@ class FlashCardController extends Controller {
       let tranaction_activities = await txActivity.getAllTxActivitiesByData({
         id: tx_activity_id,
       });
-      let { service_sub_tx_id, service_offering_id, service_subscription_id } = tranaction_activities[0];
+      let { service_sub_tx_id, service_offering_id, service_subscription_id } =
+        tranaction_activities[0];
       // TODO: need to discuss with client bcz below step will slowdown application.
 
       // service_offering_name
-      let flashCardName = ""
+      let flashCardName = "";
 
       if (service_offering_id) {
         const serviceOfferingService = new ServiceOfferingService();
-        const servicesDetails = await serviceOfferingService.getServiceOfferingByData(
-          { id: service_offering_id }
-        );
-        flashCardName = servicesDetails["service_offering_name"]
+        const servicesDetails =
+          await serviceOfferingService.getServiceOfferingByData({
+            id: service_offering_id,
+          });
+        flashCardName = servicesDetails["service_offering_name"];
       }
 
       if (service_subscription_id) {
         const serviceSubscriptionService = new ServiceSubscriptionService();
-        let serviceSubecription =
-          await serviceSubscriptionService.getServiceSubscriptionByData({ id: service_subscription_id });
-        flashCardName = `${serviceSubecription["notes"]} - ${flashCardName}`
+        let serviceSubscription =
+          await serviceSubscriptionService.getServiceSubscriptionByData({
+            id: service_subscription_id,
+          });
+        flashCardName = `${serviceSubscription["notes"]} - ${flashCardName}`;
       }
       ////////////////////////////
       if (service_sub_tx_id) {
@@ -135,7 +140,6 @@ class FlashCardController extends Controller {
           fileUrl = "https://www.africau.edu/images/default/sample.pdf";
         }
         try {
-
           const reportService = new ReportService();
           const addReport = await reportService.addReport(reportBody);
           const report = await ReportWrapper({ data: addReport });
@@ -146,7 +150,6 @@ class FlashCardController extends Controller {
             parent_id: report.getId(),
           });
         } catch (ex) {
-
           console.log(ex);
         }
       }
@@ -244,9 +247,7 @@ class FlashCardController extends Controller {
             id: service_sub_tx_id,
           });
 
-
         if (userservicesmapping && userservicesmapping.length > 0) {
-
           const serviceUserMappingService = new ServiceUserMappingService();
           let serviceUserMappingId = userservicesmapping[0].id;
 
@@ -255,7 +256,6 @@ class FlashCardController extends Controller {
               { patient_status: activity_status },
               serviceUserMappingId
             );
-
         }
       }
 

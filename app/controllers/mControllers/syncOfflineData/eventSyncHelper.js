@@ -8,13 +8,13 @@ import EventService from "../../../services/scheduleEvents/scheduleEvent.service
 import twilioService from "../../../services/twilio/twilio.service";
 
 // Wrapper
-import MobileMReminderWrapper from "../../../ApiWrapper/mobile/medicationReminder";
-import VitalTemplateWrapper from "../../../ApiWrapper/mobile/vitalTemplates";
-import EventWrapper from "../../../ApiWrapper/common/scheduleEvents";
-import VitalWrapper from "../../../ApiWrapper/mobile/vitals";
-import CarePlanWrapper from "../../../ApiWrapper/mobile/carePlan";
-import DoctorWrapper from "../../../ApiWrapper/mobile/doctor";
-import PatientWrapper from "../../../ApiWrapper/mobile/patient";
+import MobileMReminderWrapper from "../../../apiWrapper/mobile/medicationReminder";
+import VitalTemplateWrapper from "../../../apiWrapper/mobile/vitalTemplates";
+import EventWrapper from "../../../apiWrapper/common/scheduleEvents";
+import VitalWrapper from "../../../apiWrapper/mobile/vitals";
+import CarePlanWrapper from "../../../apiWrapper/mobile/carePlan";
+import DoctorWrapper from "../../../apiWrapper/mobile/doctor";
+import PatientWrapper from "../../../apiWrapper/mobile/patient";
 
 import { EVENT_STATUS, EVENT_TYPE, USER_CATEGORY } from "../../../../constant";
 

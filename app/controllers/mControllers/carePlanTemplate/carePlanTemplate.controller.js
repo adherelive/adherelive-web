@@ -11,8 +11,8 @@ import TemplateWorkoutService from "../../../services/templateWorkouts/templateW
 import ExerciseContentService from "../../../services/exerciseContents/exerciseContent.service";
 
 // wrapper
-import ExerciseContentWrapper from "../../../ApiWrapper/mobile/exerciseContents";
-import CarePlanTemplateWrapper from "../../../ApiWrapper/mobile/carePlanTemplate";
+import ExerciseContentWrapper from "../../../apiWrapper/mobile/exerciseContents";
+import CarePlanTemplateWrapper from "../../../apiWrapper/mobile/carePlanTemplate";
 
 import {
   TEMPLATE_DUPLICATE_TEXT,
@@ -715,7 +715,7 @@ class CarePlanTemplateController extends Controller {
             createCarePlanTemplate
           );
 
-          //------------------>>>
+          //--->
 
           const allCareplanTemplates =
             (await carePlanTemplateService.getAllTemplatesForDoctor({

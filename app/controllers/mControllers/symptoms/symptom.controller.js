@@ -6,11 +6,11 @@ import UploadDocumentService from "../../../services/uploadDocuments/uploadDocum
 import twilioService from "../../../services/twilio/twilio.service";
 
 // WRAPPERS ----------
-import SymptomWrapper from "../../../ApiWrapper/mobile/symptoms";
-import DocumentWrapper from "../../../ApiWrapper/mobile/uploadDocument";
-import CarePlanWrapper from "../../../ApiWrapper/mobile/carePlan";
-// import DoctorWrapper from "../../../ApiWrapper/mobile/doctor";
-import PatientWrapper from "../../../ApiWrapper/mobile/patient";
+import SymptomWrapper from "../../../apiWrapper/mobile/symptoms";
+import DocumentWrapper from "../../../apiWrapper/mobile/uploadDocument";
+import CarePlanWrapper from "../../../apiWrapper/mobile/carePlan";
+// import DoctorWrapper from "../../../apiWrapper/mobile/doctor";
+import PatientWrapper from "../../../apiWrapper/mobile/patient";
 
 import {
   uploadAudio,
@@ -29,9 +29,9 @@ import {
 import { getFilePath } from "../../../helper/filePath";
 import carePlanService from "../../../services/carePlan/carePlan.service";
 
-import ChatJob from "../../../JobSdk/Chat/observer";
-import SymptomsJob from "../../../JobSdk/Symptoms/observer";
-import NotificationSdk from "../../../NotificationSdk";
+import ChatJob from "../../../jobSdk/Chat/observer";
+import SymptomsJob from "../../../jobSdk/Symptoms/observer";
+import NotificationSdk from "../../../notificationSdk";
 
 const Log = new Logger("MOBILE > SYMPTOM > CONTROLLER");
 
@@ -234,7 +234,7 @@ class SymptomController extends Controller {
         //   MESSAGE_TYPES.USER_MESSAGE,
         //   eventData
         // );
-        // await NotificationSdk.execute(chatJob);
+        // await notificationSdk.execute(chatJob);
       }
 
       if (Object.keys(allUniqueDoctorsToNotifyData).length > 0) {
@@ -267,7 +267,7 @@ class SymptomController extends Controller {
           //   MESSAGE_TYPES.USER_MESSAGE,
           //   allUniqueDoctorsToNotifyData[doctorId].eventData
           // );
-          // await NotificationSdk.execute(chatJob);
+          // await notificationSdk.execute(chatJob);
 
           // twilio
           const { content } = alluniqueChatChannelData[chatChannel] || {};
@@ -295,7 +295,7 @@ class SymptomController extends Controller {
   uploadAudio = async (req, res) => {
     const { raiseSuccess, raiseServerError } = this;
     try {
-      Log.debug("req.file ----> ", req.file);
+      Log.debug("uploadAudio req.file ---> ", req.file);
 
       const { userDetails: { userId } = {} } = req;
 
@@ -319,7 +319,7 @@ class SymptomController extends Controller {
   uploadVideo = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
-      Log.debug("req.file ----> ", req.file);
+      Log.debug("uploadVideo req.file ---> ", req.file);
 
       const {
         file: videoFile,
@@ -370,7 +370,7 @@ class SymptomController extends Controller {
   uploadPhotos = async (req, res) => {
     const { raiseSuccess, raiseServerError } = this;
     try {
-      Log.debug("req.file ----> ", req.file);
+      Log.debug("uploadPhotos req.file ---> ", req.file);
 
       const { userDetails: { userId } = {} } = req;
 
@@ -396,7 +396,7 @@ class SymptomController extends Controller {
   getSymptomDetails = async (req, res) => {
     const { raiseSuccess, raiseServerError } = this;
     try {
-      Log.debug("req.body ----> ", req.body);
+      Log.debug("getSymptomDetails req.body ---> ", req.body);
       const { body: { symptom_ids = [] } = {} } = req;
 
       let documentData = {};

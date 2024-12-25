@@ -133,40 +133,40 @@ class AppointmentService {
     }
   };
 
-  getDayAppointmentForDoctor = async (doctor_id, provider_id, date) => {
-    try {
-      const startOfDay = moment(date).startOf("day").toISOString();
-      const endOfDay = moment(date).endOf("day").toISOString();
-      const appointments = await Database.getModel(TABLE_NAME).findAll({
-        where: {
-          [Op.and]: [
-            {
-              start_date: {
-                [Op.between]: [startOfDay, endOfDay],
-              },
-            },
-            {
-              [Op.or]: [
-                {
-                  participant_two_id: doctor_id,
-                  participant_two_type: USER_CATEGORY.DOCTOR,
-                  provider_id: provider_id,
-                },
-                {
-                  participant_one_id: doctor_id,
-                  participant_one_type: USER_CATEGORY.DOCTOR,
-                  provider_id: provider_id,
-                },
-              ],
-            },
-          ],
-        },
-      });
-      return appointments;
-    } catch (error) {
-      throw error;
-    }
-  };
+  // getDayAppointmentForDoctor = async (doctor_id, provider_id, date) => {
+  //   try {
+  //     const startOfDay = moment(date).startOf("day").toISOString();
+  //     const endOfDay = moment(date).endOf("day").toISOString();
+  //     const appointments = await Database.getModel(TABLE_NAME).findAll({
+  //       where: {
+  //         [Op.and]: [
+  //           {
+  //             start_date: {
+  //               [Op.between]: [startOfDay, endOfDay],
+  //             },
+  //           },
+  //           {
+  //             [Op.or]: [
+  //               {
+  //                 participant_two_id: doctor_id,
+  //                 participant_two_type: USER_CATEGORY.DOCTOR,
+  //                 provider_id: provider_id,
+  //               },
+  //               {
+  //                 participant_one_id: doctor_id,
+  //                 participant_one_type: USER_CATEGORY.DOCTOR,
+  //                 provider_id: provider_id,
+  //               },
+  //             ],
+  //           },
+  //         ],
+  //       },
+  //     });
+  //     return appointments;
+  //   } catch (error) {
+  //     throw error;
+  //   }
+  // };
 
   // getDayAppointmentByDate = async (doctor_id, provider_id, date) =>
   getAppointmentsByDate = async (date) => {
@@ -175,12 +175,12 @@ class AppointmentService {
       let endOfDay = moment().endOf("day").toISOString();
 
       if (date) {
-        console.log("in if condition")
-        startOfDay = moment(date, 'DD-MM-YYYY').startOf("day").toISOString();
-        endOfDay = moment(date, 'DD-MM-YYYY').endOf("day").toISOString();
+        console.log("in if condition");
+        startOfDay = moment(date, "DD-MM-YYYY").startOf("day").toISOString();
+        endOfDay = moment(date, "DD-MM-YYYY").endOf("day").toISOString();
       }
 
-      console.log({ date, startOfDay, endOfDay })
+      console.log({ date, startOfDay, endOfDay });
 
       const appointments = await Database.getModel(TABLE_NAME).findAll({
         where: {
@@ -189,7 +189,7 @@ class AppointmentService {
               start_date: {
                 [Op.between]: [startOfDay, endOfDay],
               },
-            }
+            },
             // {
             //   [Op.or]: [
             //     {
@@ -212,7 +212,6 @@ class AppointmentService {
       throw error;
     }
   };
-
 
   getDayAppointmentForDoctor = async (doctor_id, provider_id, date) => {
     try {

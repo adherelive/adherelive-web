@@ -4,9 +4,9 @@ import patientService from "../../services/patients/patients.service";
 import providerService from "../../services/provider/provider.service";
 
 // wrappers
-import DoctorWrapper from "../../ApiWrapper/web/doctor";
-import PatientWrapper from "../../ApiWrapper/web/patient";
-import ProviderWrapper from "../../ApiWrapper/web/provider";
+import DoctorWrapper from "../../apiWrapper/web/doctor";
+import PatientWrapper from "../../apiWrapper/web/patient";
+import ProviderWrapper from "../../apiWrapper/web/provider";
 
 import { USER_CATEGORY } from "../../../constant";
 

@@ -14,7 +14,7 @@ module.exports = () => {
       appointment_wait_time_hours: process.env.APPOINTMENT_WAIT_TIME_HOURS,
       default_currency: process.env.DEFAULT_CURRENCY,
       medicine_data: process.env.MEDICINE_INSTANCE,
-      careplan_activation_reschedule_hours:
+      carePlan_activation_reschedule_hours:
         process.env.CAREPLAN_ACTIVATION_RESCHEDULE_HOURS,
       icon_android: process.env.ANDROID_ICON_NAME,
       otp_live_minutes: process.env.OTP_LIVE_MINUTES,
@@ -22,7 +22,6 @@ module.exports = () => {
       sms_hash: process.env.SMS_HASH,
       diet_prior_time: process.env.DIET_PRIOR_NOTIFY_MINUTES,
       event_reschedule_time: process.env.EVENT_RESCHEDULE_NOTIFY_MINUTES,
-      sms_hash: process.env.SMS_HASH,
       inactivity_days_no: process.env.INACTIVITY_DAYS_NO,
       workout_prior_time: process.env.WORKOUT_PRIOR_NOTIFY_MINUTES,
       workout_start_hours: process.env.WORKOUT_START_HOURS,
@@ -63,7 +62,9 @@ module.exports = () => {
       password: process.env.DB_PASSWORD,
       dialect: process.env.DB_DIALECT,
     },
-    mongo: process.env.MONGO_DB_URI,
+    mongo: {
+      db_uri: process.env.MONGO_DB_URI,
+    },
     getstream: {
       key: process.env.GETSTREAM_API_KEY,
       secretKey: process.env.GETSTREAM_API_SECRET,
@@ -144,7 +145,6 @@ module.exports = () => {
     DEFAULT_PASSWORD: process.env.DEFAULT_PASSWORD,
     APP_ENV: process.env.APP_ENV,
     IMAGE_HOST: process.env.IMAGE_HOST,
-    DEFAULT_PASSWORD: process.env.DEFAULT_PASSWORD,
     S3_BUCKET_URL: process.env.S3_BUCKET_URL,
     UTC_OFFSET_STR: process.env.UTC_OFFSET_STR,
     DB_ENCRYPTION_KEY: process.env.DB_ENCRYPTION_KEY,

@@ -1,7 +1,7 @@
 import { Op } from "sequelize";
 import Database from "../../../libs/mysql";
 
-import { TABLE_NAME } from "../../models/careplanTemplate";
+import { TABLE_NAME } from "../../models/carePlanTemplate";
 import { TABLE_NAME as appointmentTemplateTableName } from "../../models/templateAppointments";
 import { TABLE_NAME as medicationTemplateTableName } from "../../models/templateMedications";
 import { TABLE_NAME as vitalTemplateTableName } from "../../models/templateVitals";
@@ -195,13 +195,13 @@ class CarePlanTemplateService {
   };
 
   /*
-  user_id
-  provider_id
-  doctor_id
-  user_id -> show
-  provider_id & is_public_in_provier== true -> show
-  user_id &
-  */
+    user_id
+    provider_id
+    doctor_id
+    user_id -> show
+    provider_id & is_public_in_provier== true -> show
+    user_id &
+    */
 
   getAllTemplatesForDoctor = async (data) => {
     try {

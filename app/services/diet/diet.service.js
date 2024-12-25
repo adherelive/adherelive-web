@@ -2,7 +2,7 @@ import { Op } from "sequelize";
 
 import Database from "../../../libs/mysql";
 import { TABLE_NAME } from "../../models/diet";
-import { TABLE_NAME as careplanTableName } from "../../models/carePlan";
+import { TABLE_NAME as carePlanTableName } from "../../models/carePlan";
 import { TABLE_NAME as dietFoodGroupMappingTableName } from "../../models/dietFoodGroupMapping";
 import { TABLE_NAME as similiarFoodMappingTableName } from "../../models/similarFoodMapping";
 import { TABLE_NAME as foodGroupTableName } from "../../models/foodGroups";
@@ -318,7 +318,7 @@ class DietService {
   //       where: {
   //         id,
   //       },
-  //       include: [Database.getModel(careplanTableName)],
+  //       include: [Database.getModel(carePlanTableName)],
   //       raw: true,
   //       transaction,
   //     });
@@ -352,10 +352,10 @@ class DietService {
       });
 
       /* nested raw true is not allowed by sequelize
-                    Links:
-                    https://github.com/sequelize/sequelize/issues/3897 (closed)
-                    https://github.com/sequelize/sequelize/issues/5193 (open)
-                  */
+                          Links:
+                          https://github.com/sequelize/sequelize/issues/3897 (closed)
+                          https://github.com/sequelize/sequelize/issues/5193 (open)
+                        */
       return JSON.parse(JSON.stringify(diet));
     } catch (error) {
       throw error;

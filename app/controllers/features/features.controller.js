@@ -5,8 +5,8 @@ import featuresService from "../../services/features/features.service";
 import carePlanService from "../../services/carePlan/carePlan.service";
 import doctorPatientFeatureMappingService from "../../services/doctorPatientFeatureMapping/doctorPatientFeatureMapping.service";
 
-import CarePlanWrapper from "../../ApiWrapper/web/carePlan";
-import FeatureMappingWrapper from "../../ApiWrapper/web/doctorPatientFeatureMapping";
+import CarePlanWrapper from "../../apiWrapper/web/carePlan";
+import FeatureMappingWrapper from "../../apiWrapper/web/doctorPatientFeatureMapping";
 
 import { USER_CATEGORY } from "../../../constant";
 
@@ -32,45 +32,45 @@ class FeatureController extends Controller {
 
       let featureMappings = {};
       let features = {};
-      let careplanData = [];
+      let carePlanData = [];
       let otherUserCategoryIds = [];
 
       switch (category) {
         case USER_CATEGORY.PATIENT:
-          careplanData =
+          carePlanData =
             (await carePlanService.getCarePlanByData({
               patient_id: userCategoryId,
             })) || [];
 
-          for (let index = 0; index < careplanData.length; index++) {
+          for (let index = 0; index < carePlanData.length; index++) {
             const carePlanApiWrapper = await CarePlanWrapper(
-              careplanData[index]
+              carePlanData[index]
             );
             otherUserCategoryIds.push(carePlanApiWrapper.getDoctorId());
           }
           break;
         case USER_CATEGORY.DOCTOR:
-          careplanData =
+          carePlanData =
             (await carePlanService.getCarePlanByData({
               user_role_id: userRoleId,
             })) || [];
 
-          for (let index = 0; index < careplanData.length; index++) {
+          for (let index = 0; index < carePlanData.length; index++) {
             const carePlanApiWrapper = await CarePlanWrapper(
-              careplanData[index]
+              carePlanData[index]
             );
             otherUserCategoryIds.push(carePlanApiWrapper.getPatientId());
           }
           break;
         case USER_CATEGORY.HSP:
-          careplanData =
+          carePlanData =
             (await carePlanService.getCarePlanByData({
               user_role_id: userRoleId,
             })) || [];
 
-          for (let index = 0; index < careplanData.length; index++) {
+          for (let index = 0; index < carePlanData.length; index++) {
             const carePlanApiWrapper = await CarePlanWrapper(
-              careplanData[index]
+              carePlanData[index]
             );
             otherUserCategoryIds.push(carePlanApiWrapper.getPatientId());
           }

@@ -4,15 +4,15 @@ import Controller from "../../index";
 import DietResponseService from "../../../services/dietResponses/dietResponses.service";
 
 // wrappers
-import DietResponseWrapper from "../../../ApiWrapper/mobile/dietResponse";
-import DietWrapper from "../../../ApiWrapper/mobile/diet";
-import CareplanWrapper from "../../../ApiWrapper/mobile/carePlan";
-import DoctorWrapper from "../../../ApiWrapper/mobile/doctor";
+import DietResponseWrapper from "../../../apiWrapper/mobile/dietResponse";
+import DietWrapper from "../../../apiWrapper/mobile/diet";
+import CarePlanWrapper from "../../../apiWrapper/mobile/carePlan";
+import DoctorWrapper from "../../../apiWrapper/mobile/doctor";
 
 import * as UploadHelper from "../../../helper/uploadDocuments";
 
-import DietJob from "../../../JobSdk/Diet/observer";
-import NotificationSdk from "../../../NotificationSdk";
+import DietJob from "../../../jobSdk/Diet/observer";
+import NotificationSdk from "../../../notificationSdk";
 
 import Logger from "../../../../libs/log";
 import {
@@ -117,7 +117,7 @@ class DietResponseController extends Controller {
       if (dietResponseId) {
         // get doctor for diet
         const diet = await DietWrapper({ id: diet_id });
-        const carePlan = await CareplanWrapper(null, diet.getCareplanId());
+        const carePlan = await CarePlanWrapper(null, diet.getCarePlanId());
         const doctorRoleId = carePlan.getUserRoleId();
 
         const doctor = await DoctorWrapper(null, carePlan.getDoctorId());

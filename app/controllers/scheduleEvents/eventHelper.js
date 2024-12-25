@@ -11,13 +11,13 @@ import patientService from "../../services/patients/patients.service";
 import userRoleService from "../../services/userRoles/userRoles.service";
 import doctorService from "../../services/doctor/doctor.service";
 // wrappers
-import CarePlanWrapper from "../../ApiWrapper/web/carePlan";
-import EventWrapper from "../../ApiWrapper/common/scheduleEvents";
-import PatientWrapper from "../../ApiWrapper/web/patient";
-import DoctorWrapper from "../../ApiWrapper/web/doctor";
-import UserRoleWrapper from "../../ApiWrapper/web/userRoles";
-import DietWrapper from "../../ApiWrapper/web/diet";
-import WorkoutWrppaer from "../../ApiWrapper/web/workouts";
+import CarePlanWrapper from "../../apiWrapper/web/carePlan";
+import EventWrapper from "../../apiWrapper/common/scheduleEvents";
+import PatientWrapper from "../../apiWrapper/web/patient";
+import DoctorWrapper from "../../apiWrapper/web/doctor";
+import UserRoleWrapper from "../../apiWrapper/web/userRoles";
+import DietWrapper from "../../apiWrapper/web/diet";
+import WorkoutWrppaer from "../../apiWrapper/web/workouts";
 import { getTime } from "../../helper/timer";
 
 export const doctorChart = async (req) => {
@@ -646,9 +646,9 @@ const getFormattedData = async (
 
       case EVENT_TYPE.DIET:
         const dietWrapper = await DietWrapper({ id: diet_id });
-        const careplan_id = await dietWrapper.getCareplanId();
-        const careplanWrapper = await CarePlanWrapper(null, careplan_id);
-        const patientId = await careplanWrapper.getPatientId();
+        const careplan_id = await dietWrapper.getCarePlanId();
+        const carePlanWrapper = await CarePlanWrapper(null, careplan_id);
+        const patientId = await carePlanWrapper.getPatientId();
 
         const { basic_info: { name: diet_name = "" } = {} } =
           event_diets[diet_id] || {};
@@ -688,7 +688,7 @@ const getFormattedData = async (
 
       case EVENT_TYPE.WORKOUT:
         const workoutWrapper = await WorkoutWrppaer({ id: workout_id });
-        const workout_careplan_id = await workoutWrapper.getCareplanId();
+        const workout_careplan_id = await workoutWrapper.getCarePlanId();
         const workoutCareplanWrapper = await CarePlanWrapper(
           null,
           workout_careplan_id
@@ -909,9 +909,9 @@ const getFormattedDataWithoutIds = async (
 
       case EVENT_TYPE.DIET:
         const dietWrapper = await DietWrapper({ id: diet_id });
-        const careplan_id = await dietWrapper.getCareplanId();
-        const careplanWrapper = await CarePlanWrapper(null, careplan_id);
-        const patientId = await careplanWrapper.getPatientId();
+        const careplan_id = await dietWrapper.getCarePlanId();
+        const carePlanWrapper = await CarePlanWrapper(null, careplan_id);
+        const patientId = await carePlanWrapper.getPatientId();
 
         const { basic_info: { name: diet_name = "" } = {} } =
           event_diets[diet_id] || {};
@@ -941,7 +941,7 @@ const getFormattedDataWithoutIds = async (
 
       case EVENT_TYPE.WORKOUT:
         const workoutWrapper = await WorkoutWrppaer({ id: workout_id });
-        const workout_careplan_id = await workoutWrapper.getCareplanId();
+        const workout_careplan_id = await workoutWrapper.getCarePlanId();
         const workoutCareplanWrapper = await CarePlanWrapper(
           null,
           workout_careplan_id

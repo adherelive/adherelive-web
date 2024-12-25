@@ -4,6 +4,7 @@ import ServiceSubscriptionController from "../../../app/controllers/serviceSubsc
 // import { isDoctor } from "../middleware/doctor";
 import Authenticate from "../../commonmiddlewares/auth";
 import { isDoctor } from "../../commonmiddlewares/doctor";
+
 const router = express.Router();
 
 router.post("/", Authenticate, ServiceSubscriptionController.create);

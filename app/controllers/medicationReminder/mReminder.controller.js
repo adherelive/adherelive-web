@@ -10,16 +10,16 @@ import carePlanMedicationService from "../../services/carePlanMedication/carePla
 import carePlanService from "../../services/carePlan/carePlan.service";
 import queueService from "../../services/awsQueue/queue.service";
 import ScheduleEventService from "../../services/scheduleEvents/scheduleEvent.service";
-import eventService from "../../services/scheduleEvents/scheduleEvent.service";
+import EventService from "../../services/scheduleEvents/scheduleEvent.service";
 
 // API WRAPPERS ----------------------------------------------
-import MedicationWrapper from "../../ApiWrapper/web/medicationReminder";
-import MedicineWrapper from "../../ApiWrapper/web/medicine";
-import CarePlanWrapper from "../../ApiWrapper/web/carePlan";
-import PatientWrapper from "../../ApiWrapper/web/patient";
-// import DoctorWrapper from "../../ApiWrapper/web/doctor";
-import UserPreferenceWrapper from "../../ApiWrapper/web/userPreference";
-import EventWrapper from "../../ApiWrapper/common/scheduleEvents";
+import MedicationWrapper from "../../apiWrapper/web/medicationReminder";
+import MedicineWrapper from "../../apiWrapper/web/medicine";
+import CarePlanWrapper from "../../apiWrapper/web/carePlan";
+import PatientWrapper from "../../apiWrapper/web/patient";
+// import DoctorWrapper from "../../apiWrapper/web/doctor";
+import UserPreferenceWrapper from "../../apiWrapper/web/userPreference";
+import EventWrapper from "../../apiWrapper/common/scheduleEvents";
 
 import * as medicationHelper from "./medicationHelper";
 import { getTime } from "../../helper/timer";
@@ -52,8 +52,8 @@ import {
   getCarePlanSeverityDetails,
 } from "../carePlans/carePlanHelper";
 import { RRule } from "rrule";
-import MedicationJob from "../../JobSdk/Medications/observer";
-import NotificationSdk from "../../NotificationSdk";
+import MedicationJob from "../../jobSdk/Medications/observer";
+import NotificationSdk from "../../notificationSdk";
 
 const FILE_NAME = "WEB - MEDICATION REMINDER CONTROLLER";
 const Logger = new Log(FILE_NAME);
@@ -268,7 +268,8 @@ class MReminderController extends Controller {
         start_date,
         end_date,
         details: {
-          medicine_id, description,
+          medicine_id,
+          description,
           medicine_type,
           start_time: start_time ? start_time : moment(),
           end_time: start_time ? start_time : moment(),
@@ -371,7 +372,7 @@ class MReminderController extends Controller {
         "Medication added successfully"
       );
     } catch (error) {
-      Logger.debug("Add m-reminder error ---->", error);
+      Logger.debug("Add m-reminder error ---> ", error);
       return raiseServerError(res);
     }
   };
@@ -434,7 +435,8 @@ class MReminderController extends Controller {
           when_to_take,
           when_to_take_abbr,
           medication_stage,
-          critical, description,
+          critical,
+          description,
         },
       };
 
@@ -581,7 +583,7 @@ class MReminderController extends Controller {
         "create medication basic details"
       );
     } catch (error) {
-      Logger.debug("Get m-reminder details error ----> ", error);
+      Logger.debug("Get m-reminder details error ---> ", error);
       return raiseServerError(res);
     }
   };
@@ -845,15 +847,15 @@ class MReminderController extends Controller {
   getMedicationResponseTimeline = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
-      Logger.debug("req.params medication id---->", req.params);
+      Logger.debug("req.params medication id ---> ", req.params);
       const { params: { id } = {} } = req;
-      const EventService = new eventService();
+      const eventService = new EventService();
 
       const today = moment().utc().toISOString();
 
       const medication = await MedicationWrapper(null, id);
 
-      const completeEvents = await EventService.getAllPassedByData({
+      const completeEvents = await eventService.getAllPassedByData({
         event_id: id,
         event_type: EVENT_TYPE.MEDICATION_REMINDER,
         date: medication.getStartDate(),

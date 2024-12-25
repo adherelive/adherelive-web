@@ -15,7 +15,7 @@ router.get(
   CarePlanTemplate.getAllForDoctor
 );
 
-// gaurav chnages
+// Search changes for finding Patients
 router.get(
   "/search",
   Authenticate,
@@ -27,7 +27,7 @@ router.post(
   "/",
   Authenticate,
   isAllowed(PERMISSIONS.CARE_PLAN_TEMPLATE.ADD),
-  // validator.validateCareplanTemplateData,
+  // validator.validateCarePlanTemplateData,
   CarePlanTemplate.create
 );
 
@@ -49,7 +49,7 @@ router.delete(
   "/:id",
   Authenticate,
   isAllowed(PERMISSIONS.CARE_PLAN_TEMPLATE.DELETE),
-  // todo-v: add validator IMP
+  // TODO: add validator IMP
   CarePlanTemplate.delete
 );
 

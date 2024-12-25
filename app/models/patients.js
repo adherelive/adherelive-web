@@ -3,7 +3,7 @@ import { DataTypes } from "sequelize";
 import { GENDER, BLANK_STATE } from "../../constant";
 import { TABLE_NAME as userTableName } from "./users";
 import { TABLE_NAME as reportTableName } from "./reports";
-import { TABLE_NAME as careplanTableName } from "./carePlan";
+import { TABLE_NAME as carePlanTableName } from "./carePlan";
 
 export const TABLE_NAME = "patients";
 
@@ -157,7 +157,7 @@ export const associate = (database) => {
     foreignKey: "patient_id",
   });
 
-  database.models[TABLE_NAME].belongsTo(database.models[careplanTableName], {
+  database.models[TABLE_NAME].belongsTo(database.models[carePlanTableName], {
     foreignKey: "id",
     targetKey: "patient_id",
   });

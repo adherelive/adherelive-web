@@ -2,8 +2,8 @@ import Controller from "../";
 import Logger from "../../../libs/log";
 import { getDataForNotification } from "./notification.controller.helper";
 
-import ChatJob from "../../JobSdk/Chat/observer";
-import NotificationSdk from "../../NotificationSdk";
+import ChatJob from "../../jobSdk/Chat/observer";
+import NotificationSdk from "../../notificationSdk";
 
 import {
   MESSAGE_TYPES,
@@ -17,9 +17,9 @@ import ScheduleEventService from "../../services/scheduleEvents/scheduleEvent.se
 import userService from "../../services/user/user.service";
 import careplanAppointmentService from "../../services/carePlanAppointment/carePlanAppointment.service";
 
-import UserWrapper from "../../ApiWrapper/web/user";
-import AppointmentWrapper from "../../ApiWrapper/web/appointments";
-import ScheduleEventWrapper from "../../ApiWrapper/common/scheduleEvents";
+import UserWrapper from "../../apiWrapper/web/user";
+import AppointmentWrapper from "../../apiWrapper/web/appointments";
+import ScheduleEventWrapper from "../../apiWrapper/common/scheduleEvents";
 
 const Log = new Logger("WEB > NOTIFICATION > CONTROLLER");
 

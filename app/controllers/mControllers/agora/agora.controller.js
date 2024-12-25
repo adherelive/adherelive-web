@@ -7,12 +7,13 @@ import {
   AGORA_CALL_NOTIFICATION_TYPES,
 } from "../../../../constant";
 
-import Log from "../../../../libs/log_new";
+import Log from "../../../../libs/log";
 
-import AgoraJob from "../../../JobSdk/Agora/observer";
-import NotificationSdk from "../../../NotificationSdk";
+import AgoraJob from "../../../jobSdk/Agora/observer";
+import NotificationSdk from "../../../notificationSdk";
 
-Log.fileName("MOBILE > AGORA > CONTROLLER");
+// Log.setFileName("MOBILE > AGORA > CONTROLLER");
+const log = Log("MOBILE > AGORA > CONTROLLER");
 
 class AgoraController extends Controller {
   constructor() {
@@ -48,7 +49,7 @@ class AgoraController extends Controller {
         "Created new video token with userId"
       );
     } catch (error) {
-      Log.debug("generateVideoAccessToken 500 error", error);
+      log.debug("generateVideoAccessToken 500 error", error);
       return this.raiseServerError(res, 500, {}, "Error in video calling.");
     }
   };
@@ -107,7 +108,7 @@ class AgoraController extends Controller {
         "Notification raised successfully for missed call."
       );
     } catch (error) {
-      Log.debug("missedCall 500 error", error);
+      log.debug("missedCall 500 error", error);
       return this.raiseServerError(
         res,
         500,
@@ -147,7 +148,7 @@ class AgoraController extends Controller {
         "Calling info sent to participant"
       );
     } catch (error) {
-      Log.debug("startAppointment error", error);
+      log.debug("startAppointment error", error);
       return this.raiseServerError(res);
     }
   };

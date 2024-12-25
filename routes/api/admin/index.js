@@ -63,7 +63,7 @@ router.get("/chats", Authenticate, twilioController.getAllChats);
 router.post(
   "/providers",
   Authenticate,
-  validator.validateAddProviderData,
+  // validator.validateAddProviderData,
   Provider.addProvider
 );
 

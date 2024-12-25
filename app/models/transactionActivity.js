@@ -11,10 +11,10 @@ import { TABLE_NAME as serviceUserMapping } from "./serviceUserMapping";
 import { TABLE_NAME as patientsTableName } from "./patients";
 import { TABLE_NAME as doctorsTableName } from "./doctors";
 import { TABLE_NAME as serviceOffering } from "./serviceOffering";
-import { TABLE_NAME as serviceSubscription } from "./serviceSubecriptions";
+import { TABLE_NAME as serviceSubscription } from "./serviceSubscriptions";
 import { TABLE_NAME as providersTableName } from "./providers";
 import { TABLE_NAME as appointmentTableName } from "./appointments";
-import { TABLE_NAME as serviceSubTxTableName } from "./serviceSubscribeTranaction";
+import { TABLE_NAME as serviceSubTxTableName } from "./serviceSubscribeTransaction";
 
 export const TABLE_NAME = "tranaction_activities";
 
@@ -137,6 +137,13 @@ export const db = (database) => {
         allowNull: false,
         defaultValue: false,
       },
+      is_reassigned: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+      },
+      data: {
+        type: DataTypes.JSON,
+      },
     },
     {
       underscored: true,
@@ -164,6 +171,8 @@ export const db = (database) => {
             appointment_id: this.appointment_id,
             appointment_time: this.appointment_time,
             service_sub_tx_id: this.service_sub_tx_id,
+            is_reassigned: this.is_reassigned || false,
+            data: this.data || {},
           };
         },
       },

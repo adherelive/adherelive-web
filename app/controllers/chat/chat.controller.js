@@ -1,6 +1,6 @@
 import Controller from "../index";
 import Logger from "../../../libs/log";
-import ChatJob from "../../JobSdk/Chat/observer";
+import ChatJob from "../../jobSdk/Chat/observer";
 
 const Log = new Logger("WEB > CHAT > CONTROLLER");
 

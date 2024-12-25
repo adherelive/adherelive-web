@@ -1,42 +1,100 @@
 import express from "express";
-import Database from "../libs/mysql";
-import MongoDatabase from "../libs/mongo";
 import path from "path";
 import schedule from "node-schedule";
+import cookieSession from "cookie-session";
+import cookieParser from "cookie-parser";
+import cors from "cors";
 
-import Start from "../app/Crons/start";
-import Passed from "../app/Crons/passed";
-import Prior from "../app/Crons/prior";
-import RenewSubscription from "../app/Crons/renewSubscription";
-import activePatient from "../app/Crons/activePatient";
-import RemoveDocuments from "../app/Crons/removeDocuments";
-
-import LongTerm from "../app/Crons/longTerm";
-
+import Database from "../libs/mysql";
+import initializeMongo from "../libs/mongo";
 import ApiRouter from "../routes/api";
 import mApiRouter from "../routes/m-api";
 import EventObserver from "../app/proxySdk/eventObserver";
-import Activity from "../app/activitySdk/activityObserver";
-import renewTxActivity from "../app/Crons/renewTxActivity";
+import ActivityObserver from "../app/activitySdk/activityObserver";
+import RenewSubscription from "../app/cronJobs/renewSubscription";
 
-Database.init();
-require("../libs/mongo")();
-const Events = import("../events")
-  .then((module) => {})
-  .catch((err) => {
-    console.log("event module error", err);
-  });
+import Start from "../app/cronJobs/start";
+import Passed from "../app/cronJobs/passed";
+import Prior from "../app/cronJobs/prior";
+import ActivePatient from "../app/cronJobs/activePatient";
+import RemoveDocuments from "../app/cronJobs/removeDocuments";
+import LongTerm from "../app/cronJobs/longTerm";
+import RenewTxActivity from "../app/cronJobs/renewTxActivity";
 
-const cookieSession = require("cookie-session");
-const cookieParser = require("cookie-parser");
-const cors = require("cors");
+// Initialize database connections
+(async () => {
+  try {
+    await Database.init();
+    await initializeMongo();
+    // Initialize event observers
+    EventObserver.runObservers();
+    ActivityObserver.runObservers();
+  } catch (err) {
+    console.error("Error during initialization:", err);
+  }
+})();
 
 const app = express();
 
-/****************************  CRONS  *********************************/
+// Middleware setup
+app.use(express.json({ limit: "50mb" }));
+app.use(express.urlencoded({ extended: true, limit: "50mb" }));
+app.use(cookieParser());
+app.use(cors());
 
-// CRONS RUNNING EVERY 1 MINUTE
-const cron = schedule.scheduleJob("*/1 * * * *", async () => {
+/*
+ * Add a check to handle cases where process.config.cookieKey might be undefined or not a valid JSON string
+ */
+// function generateCookieKey() {
+//   return (
+//     "key_" + Math.random().toString(36).substr(2) + Date.now().toString(36)
+//   );
+// }
+// console.log(generateCookieKey());
+let cookieKeys = [];
+
+try {
+  if (process.config && process.config.cookieKey) {
+    cookieKeys = JSON.parse(process.config.cookieKey);
+  } else {
+    console.warn("process.config.cookieKey is undefined or null");
+    // console.log("Cookie Key is undefined or null: ", process.config.cookieKey);
+    // Set a default value if cookieKey is not defined
+    cookieKeys = ["cookie938", "abc123xyz456abc789xyz012"];
+  }
+} catch (error) {
+  console.error("Error parsing cookieKey:", error);
+  // Set a default value in case of error
+  cookieKeys = ["cookie938", "abc123xyz456abc789xyz012"];
+}
+
+app.use(
+  cookieSession({
+    maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
+    keys: cookieKeys,
+  })
+);
+
+// TODO: Remove the code that serves the React frontend
+// Serve static files
+app.use(express.static(path.join(__dirname, "../public")));
+
+// Setup API routes
+app.use("/api", ApiRouter);
+app.use("/m-api", mApiRouter);
+
+// This is used for the frontend. As we have moved that to a different repository, removing from here.
+app.get("/*", (req, res) => {
+  res.sendFile(path.resolve("public/index.html"));
+});
+
+/*
+ * Schedule jobs
+ * cron jobs run at every one minute.
+ * for now, we have changed it to one hour intervals, due to performance on server
+ * Example: const cron = schedule.scheduleJob("* /1 * * * *", async () => {
+ */
+schedule.scheduleJob("0 0 */1 * * *", async () => {
   await Prior.runObserver();
   await Passed.runObserver();
   await Start.runObserver();
@@ -46,59 +104,26 @@ const perDayUtcRule = new schedule.RecurrenceRule();
 perDayUtcRule.hour = 0;
 perDayUtcRule.tz = "Etc/UTC";
 
-const removeDocumentPerDayCron = schedule.scheduleJob(
-  perDayUtcRule,
-  async () => {
-    await RemoveDocuments.runObserver();
-  }
-);
+schedule.scheduleJob(perDayUtcRule, async () => {
+  await RemoveDocuments.runObserver();
+});
 
-// CRONS RUNNING EVERY 1 HOUR
-const perHourCron = schedule.scheduleJob("0 0 */1 * * *", async () => {
-  // await LongTerm.observer();
-  await activePatient.runObserver();
-  await renewTxActivity.runObserver();
+// const perHourCron = schedule.scheduleJob("0 0 */1 * * *", async () => {
+schedule.scheduleJob("0 0 */2 * * *", async () => {
+  await ActivePatient.runObserver();
+  await RenewTxActivity.runObserver();
   await LongTerm.observer();
 });
 
-// CRONS RUNNING AT START OF EVERY MONTH
-const rule = new schedule.RecurrenceRule();
-rule.dayOfWeek = [new schedule.Range(0, 6)];
-rule.hour = 0;
-rule.minute = 0;
+// Schedule job at the start of every month
+const monthlyRule = new schedule.RecurrenceRule();
+monthlyRule.dayOfWeek = [new schedule.Range(0, 6)];
+monthlyRule.hour = 0;
+monthlyRule.minute = 0;
 
-const perDayCron = schedule.scheduleJob(rule, async () => {
-  await RenewSubscription.runObserver();
-});
-
-EventObserver.runObservers();
-Activity.runObservers();
-
-app.use(express.json({ limit: "50mb" }));
-app.use(
-  express.urlencoded({
-    extended: true,
-    limit: "50mb",
-  })
-);
-app.use(cookieParser());
-app.use(cors());
-app.use(
-  cookieSession({
-    maxAge: 30 * 24 * 60 * 60 * 1000,
-    keys: JSON.parse(process.config.cookieKey),
-  })
-);
-
-app.use(express.static(path.join(__dirname, "../public")));
-
-// --------------------  API ROUTES -----------------------
-
-app.use("/api", ApiRouter);
-app.use("/m-api", mApiRouter);
-
-app.get("/*", (req, res) => {
-  res.sendFile(path.resolve("public/index.html"));
-});
+// Example of a scheduled job at the start of every month
+// schedule.scheduleJob(monthlyRule, async () => {
+//     await RenewSubscription.runObserver();
+// });
 
 module.exports = app;

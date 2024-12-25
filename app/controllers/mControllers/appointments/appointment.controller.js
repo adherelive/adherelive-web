@@ -14,8 +14,8 @@ import {
 import moment from "moment";
 
 import Log from "../../../../libs/log";
-import AppointmentJob from "../../../JobSdk/Appointments/observer";
-import NotificationSdk from "../../../NotificationSdk";
+import AppointmentJob from "../../../jobSdk/Appointments/observer";
+import NotificationSdk from "../../../notificationSdk";
 import { uploadImageS3 } from "../user/userHelper";
 import { getFilePath } from "../../../helper/filePath";
 import { downloadFileFromS3 } from "../user/userHelper";
@@ -34,15 +34,15 @@ import ScheduleEventService from "../../../services/scheduleEvents/scheduleEvent
 import featureDetailService from "../../../services/featureDetails/featureDetails.service";
 
 // WRAPPERS...
-// import ProviderWrapper from "../../../ApiWrapper/mobile/provider";
-import UploadDocumentWrapper from "../../../ApiWrapper/mobile/uploadDocument";
-import MAppointmentWrapper from "../../../ApiWrapper/mobile/appointments";
-import DoctorWrapper from "../../../ApiWrapper/mobile/doctor";
-import PatientWrapper from "../../../ApiWrapper/mobile/patient";
-import CarePlanAppointmentWrapper from "../../../ApiWrapper/mobile/carePlanAppointment";
-import CarePlanWrapper from "../../../ApiWrapper/mobile/carePlan";
-// import EventWrapper from "../../../ApiWrapper/common/scheduleEvents";
-import FeatureDetailsWrapper from "../../../ApiWrapper/mobile/featureDetails";
+// import ProviderWrapper from "../../../apiWrapper/mobile/provider";
+import UploadDocumentWrapper from "../../../apiWrapper/mobile/uploadDocument";
+import MAppointmentWrapper from "../../../apiWrapper/mobile/appointments";
+import DoctorWrapper from "../../../apiWrapper/mobile/doctor";
+import PatientWrapper from "../../../apiWrapper/mobile/patient";
+import CarePlanAppointmentWrapper from "../../../apiWrapper/mobile/carePlanAppointment";
+import CarePlanWrapper from "../../../apiWrapper/mobile/carePlan";
+// import EventWrapper from "../../../apiWrapper/common/scheduleEvents";
+import FeatureDetailsWrapper from "../../../apiWrapper/mobile/featureDetails";
 
 import * as AppointmentHelper from "./helper";
 
@@ -471,7 +471,7 @@ class MobileAppointmentController extends Controller {
   delete = async (req, res) => {
     const { raiseSuccess, raiseServerError } = this;
     try {
-      Logger.debug("REQUEST DATA ----> ", req.params);
+      Logger.debug("APPOINTMENT REQUEST DATA ---> ", req.params);
       const {
         params: { id: appointment_id } = {},
         userDetails: { userId } = {},
@@ -615,7 +615,7 @@ class MobileAppointmentController extends Controller {
 
       const { originalname: file_name = "" } = file;
 
-      Logger.debug("file ----> ", file);
+      Logger.debug("uploadAppointmentDoc file ---> ", file);
 
       // const scheduleEventService = new ScheduleEventService();
 

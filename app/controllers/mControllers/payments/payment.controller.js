@@ -10,8 +10,8 @@ import PaymentProductService from "../../../services/paymentProducts/paymentProd
 import doctorProviderMappingService from "../../../services/doctorProviderMapping/doctorProviderMapping.service";
 
 // WRAPPERS...
-import PaymentProductWrapper from "../../../ApiWrapper/mobile/paymentProducts";
-import DoctorProviderMappingWrapper from "../../../ApiWrapper/web/doctorProviderMapping";
+import PaymentProductWrapper from "../../../apiWrapper/mobile/paymentProducts";
+import DoctorProviderMappingWrapper from "../../../apiWrapper/web/doctorProviderMapping";
 
 const Log = new Logger("MOBILE > CONTROLLER > PAYMENTS");
 

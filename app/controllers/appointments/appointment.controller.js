@@ -25,8 +25,8 @@ const path = require("path");
 import Log from "../../../libs/log";
 import { raiseClientError } from "../../../routes/api/helper";
 
-import AppointmentJob from "../../JobSdk/Appointments/observer";
-import NotificationSdk from "../../NotificationSdk";
+import AppointmentJob from "../../jobSdk/Appointments/observer";
+import NotificationSdk from "../../notificationSdk";
 
 // SERVICES...
 import queueService from "../../services/awsQueue/queue.service";
@@ -40,13 +40,13 @@ import ScheduleEventService from "../../services/scheduleEvents/scheduleEvent.se
 import documentService from "../../services/uploadDocuments/uploadDocuments.service";
 
 // WRAPPERS...
-import CarePlanWrapper from "../../ApiWrapper/web/carePlan";
-import AppointmentWrapper from "../../ApiWrapper/web/appointments";
-import FeatureDetailsWrapper from "../../ApiWrapper/web/featureDetails";
-import DoctorWrapper from "../../ApiWrapper/web/doctor";
-import PatientWrapper from "../../ApiWrapper/web/patient";
-import UploadDocumentWrapper from "../../ApiWrapper/web/uploadDocument";
-import EventWrapper from "../../ApiWrapper/common/scheduleEvents";
+import CarePlanWrapper from "../../apiWrapper/web/carePlan";
+import AppointmentWrapper from "../../apiWrapper/web/appointments";
+import FeatureDetailsWrapper from "../../apiWrapper/web/featureDetails";
+import DoctorWrapper from "../../apiWrapper/web/doctor";
+import PatientWrapper from "../../apiWrapper/web/patient";
+import UploadDocumentWrapper from "../../apiWrapper/web/uploadDocument";
+import EventWrapper from "../../apiWrapper/common/scheduleEvents";
 
 // import eventService from "../../services/scheduleEvents/scheduleEvent.service";
 
@@ -345,7 +345,8 @@ class AppointmentController extends Controller {
         details: {
           care_plan_id,
           treatment_id,
-          reason, description,
+          reason,
+          description,
           type,
           type_description,
           critical,
@@ -420,7 +421,7 @@ class AppointmentController extends Controller {
 
       Logger.debug("appointmentJob ---> ", appointmentJob.getInAppTemplate());
 
-      // NotificationSdk.execute(EVENT_TYPE.SEND_MAIL, appointmentJob);
+      // notificationSdk.execute(EVENT_TYPE.SEND_MAIL, appointmentJob);
 
       // TODO: schedule event and notifications here
       // await Proxy_Sdk.scheduleEvent({ data: eventScheduleData });
@@ -550,7 +551,8 @@ class AppointmentController extends Controller {
           care_plan_id,
           treatment_id,
           reason,
-          type, description,
+          type,
+          description,
           type_description,
           radiology_type,
           critical,
@@ -650,7 +652,7 @@ class AppointmentController extends Controller {
     const { raiseSuccess, raiseServerError } = this;
     try {
       const { params: { id } = {}, userDetails: { userId } = {} } = req;
-      const { date } = req.query
+      const { date } = req.query;
       const appointmentList = await appointmentService.getAppointmentsByDate(
         date
       );
@@ -686,7 +688,7 @@ class AppointmentController extends Controller {
       Logger.debug("getAppointmentForPatient 500 error", error);
       return raiseServerError(res);
     }
-  }
+  };
 
   getAppointmentForPatient = async (req, res) => {
     const { raiseSuccess, raiseServerError } = this;
@@ -745,7 +747,7 @@ class AppointmentController extends Controller {
   delete = async (req, res) => {
     const { raiseSuccess, raiseServerError } = this;
     try {
-      Logger.debug("REQUEST ------> ", req.params);
+      Logger.debug("APPOINTMENT CONTROLLER REQUEST ---> ", req.params);
       const { params: { appointment_id } = {}, userDetails: { userId } = {} } =
         req;
 

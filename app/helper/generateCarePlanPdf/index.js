@@ -11,6 +11,7 @@ import {
 import moment from "moment";
 import PDFDocument from "pdfkit";
 import { getConvertedTime } from "../getUserTime/index";
+
 // const PDFDocument = require("pdfkit");
 const fs = require("fs");
 // const moment = require("moment");
@@ -144,11 +145,11 @@ export default async (pdfData, signatureImage) => {
         suggestedInvestigations,
         providerPrescriptionDetails,
         follow_up_advise,
-        // testing only 
+        // testing only
         portions,
         diets_formatted_data,
         timings,
-        diet_ids
+        diet_ids,
       });
 
       // generateHr(doc, doc.y + 17);
@@ -526,7 +527,7 @@ function printDiet(
         similar && notes && similar.length === 0 && notes.length
           ? doc
               .fillColor("#212b36")
-            .font(HINDI_FONT)
+              .font(HINDI_FONT)
               .text(
                 `Instructions:${" "}`,
                 dietDetailsDataXStart,
@@ -536,7 +537,7 @@ function printDiet(
                   continued: true,
                 }
               )
-            .font(HINDI_FONT)
+              .font(HINDI_FONT)
               .text(
                 `${notes}`,
                 dietDetailsDataXStart,
@@ -822,7 +823,7 @@ function printWorkout(
                 continued: true,
               }
             )
-          .font(HINDI_FONT)
+            .font(HINDI_FONT)
             .text(
               `${notes}`,
               workoutDetailsDataXStart,
@@ -996,7 +997,9 @@ function printAppointment({
           radiology_type,
           start_date,
           organizer,
-          description, reason, provider_id
+          description,
+          reason,
+          provider_id,
         } = suggestedInvestigations[each] || {};
         // gaurav new changes - start
         if (doc.y + 3 * SHORT_FONT_SIZE > PAGE_END_LIMIT) {
@@ -1014,54 +1017,46 @@ function printAppointment({
 
         let start = `${moment(new Date(start_date)).format("DD MMM 'YY")}`;
         // if (start.isSameOrAfter(today)) {
-          // gaurav new changes - start
+        // gaurav new changes - start
         // let organizer_name = ""
         // organizer_name = provider_id == 4 ? "Subarthi Hospital" : `${organizer.name}`
-          doc
-            .fillColor("#212b36")
-            .fontSize(SHORT_FONT_SIZE)
-            .font(MEDIUM_FONT)
-            .text(
-              `${start}`,
-              dosageXStart,
-              medicationYLevel
-            )
-            // .text(`${organizer_name}`, quantityXStart, medicationYLevel)
-            .text(`${reason}`, frequencyXStart, medicationYLevel, {
-              width: timingFrequencyXStart - frequencyXStart - 25,
-            });
+        doc
+          .fillColor("#212b36")
+          .fontSize(SHORT_FONT_SIZE)
+          .font(MEDIUM_FONT)
+          .text(`${start}`, dosageXStart, medicationYLevel)
+          // .text(`${organizer_name}`, quantityXStart, medicationYLevel)
+          .text(`${reason}`, frequencyXStart, medicationYLevel, {
+            width: timingFrequencyXStart - frequencyXStart - 25,
+          });
 
-          doc
-            .fillColor("#212b36")
-            .fontSize(SHORT_FONT_SIZE)
-            .font(HINDI_FONT)
-            .text(`${srNumber}.`, serialNoXStart, medicationYLevel)
-            // gaurav new changes - end
+        doc
+          .fillColor("#212b36")
+          .fontSize(SHORT_FONT_SIZE)
+          .font(HINDI_FONT)
+          .text(`${srNumber}.`, serialNoXStart, medicationYLevel)
+          // gaurav new changes - end
 
-            // .text(`${organizer.name}`, drXStart, medicationYLevel, {
-            //   width: medicineXStart - drXStart,
-            // })
-            .text(
-              `${type_description}${radiology_type ? `-${radiology_type}` : ""
-              }(${APPOINTMENT_TYPE[type].title})`,
-              medicineXStart,
-              medicationYLevel,
-              {
-                width: dosageXStart - medicineXStart,
-              }
-            )
-            // AKSHAY NEW CODE IMPLEMENTATIONS
-            .text(
-              `Prescribed by Dr. ${organizer.name}`,
-              medicineXStart,
-              doc.y,
-              {
-                width: dosageXStart - medicineXStart,
-              }
-            )
-            .text(`Note:-${description}`, medicineXStart, doc.y, {
-              width: dosageXStart - medicineXStart - 20,
-            });
+          // .text(`${organizer.name}`, drXStart, medicationYLevel, {
+          //   width: medicineXStart - drXStart,
+          // })
+          .text(
+            `${type_description}${radiology_type ? `-${radiology_type}` : ""}(${
+              APPOINTMENT_TYPE[type].title
+            })`,
+            medicineXStart,
+            medicationYLevel,
+            {
+              width: dosageXStart - medicineXStart,
+            }
+          )
+          // AKSHAY NEW CODE IMPLEMENTATIONS
+          .text(`Prescribed by Dr. ${organizer.name}`, medicineXStart, doc.y, {
+            width: dosageXStart - medicineXStart,
+          })
+          .text(`Note:-${description}`, medicineXStart, doc.y, {
+            width: dosageXStart - medicineXStart - 20,
+          });
         // }
 
         const medicationYLevelEnd = doc.y;
@@ -1147,7 +1142,10 @@ function printConsultation({
           type_description,
           radiology_type,
           start_date,
-          organizer, description, reason, provider_id
+          organizer,
+          description,
+          reason,
+          provider_id,
         } = suggestedInvestigations[each] || {};
 
         // gaurav new changes - start
@@ -1168,47 +1166,44 @@ function printConsultation({
         // let organizer_name = ""
         // organizer_name = provider_id == 4 ? "Subarthi Hospital" : `${organizer.name}`
         // if (start.isSameOrAfter(today)) {
-          // gaurav new changes - start
-          doc
-            .fillColor("#212b36")
-            .fontSize(SHORT_FONT_SIZE)
-            .font(MEDIUM_FONT)
-            .text(
-              `${start}`,
-              dosageXStart,
-              medicationYLevel
-            )
-            // .text(`${organizer_name}`, quantityXStart, medicationYLevel)
-            .text(`${reason}`, frequencyXStart, medicationYLevel, {
-              width: timingFrequencyXStart - frequencyXStart - 25,
-            });
+        // gaurav new changes - start
+        doc
+          .fillColor("#212b36")
+          .fontSize(SHORT_FONT_SIZE)
+          .font(MEDIUM_FONT)
+          .text(`${start}`, dosageXStart, medicationYLevel)
+          // .text(`${organizer_name}`, quantityXStart, medicationYLevel)
+          .text(`${reason}`, frequencyXStart, medicationYLevel, {
+            width: timingFrequencyXStart - frequencyXStart - 25,
+          });
 
-          doc
-            .fillColor("#212b36")
-            .fontSize(SHORT_FONT_SIZE)
-            .font(HINDI_FONT)
-            .text(`${srNumber}.`, serialNoXStart, medicationYLevel)
-            // gaurav new changes - end
+        doc
+          .fillColor("#212b36")
+          .fontSize(SHORT_FONT_SIZE)
+          .font(HINDI_FONT)
+          .text(`${srNumber}.`, serialNoXStart, medicationYLevel)
+          // gaurav new changes - end
 
-            // .text(`${organizer.name}`, drXStart, medicationYLevel, {
-            //   width: medicineXStart - drXStart,
-            // })
-            .text(
-              `${type_description}${radiology_type ? `-${radiology_type}` : ""
-              }(${APPOINTMENT_TYPE[type].title})`,
-              medicineXStart,
-              medicationYLevel,
-              {
-                width: dosageXStart - medicineXStart,
-              }
-            )
-            // AKSHAY NEW CODE IMPLEMENTATIONS
-            .text(`Prescribed by Dr.${organizer.name}`, medicineXStart, doc.y, {
+          // .text(`${organizer.name}`, drXStart, medicationYLevel, {
+          //   width: medicineXStart - drXStart,
+          // })
+          .text(
+            `${type_description}${radiology_type ? `-${radiology_type}` : ""}(${
+              APPOINTMENT_TYPE[type].title
+            })`,
+            medicineXStart,
+            medicationYLevel,
+            {
               width: dosageXStart - medicineXStart,
-            })
-            .text(`Note:-${description}`, medicineXStart, doc.y, {
-              width: dosageXStart - medicineXStart - 20,
-            });
+            }
+          )
+          // AKSHAY NEW CODE IMPLEMENTATIONS
+          .text(`Prescribed by Dr.${organizer.name}`, medicineXStart, doc.y, {
+            width: dosageXStart - medicineXStart,
+          })
+          .text(`Note:-${description}`, medicineXStart, doc.y, {
+            width: dosageXStart - medicineXStart - 20,
+          });
         // }
 
         const medicationYLevelEnd = doc.y;
@@ -1375,10 +1370,9 @@ function printPatientBlockData(
       continued: true,
     })
     .font(REGULAR_FONT)
-    .text(`${patientName}`, DOC_MARGIN + 10, doctorBlockEndRowLevel + 20),
-    {
+    .text(`${patientName}`, DOC_MARGIN + 10, doctorBlockEndRowLevel + 20, {
       continued: true,
-    };
+    });
 
   doc
     .fontSize(NORMAL_FONT_SIZE)
@@ -1503,31 +1497,46 @@ function printPatientBlockData(
   return doc.y + 10;
 }
 
-function isMedicationsUpdatedInExistingMedicin(medications) {
+function isMedicationUpdatedInExistingMedicine(medications) {
   const medicationIds = Object.keys(medications);
-  let date = null;
-  let isMedicinsUpdate = false;
+  let isMedicineUpdate = false;
+  let firstCreatedAt = null; // Store the created_at of the first medication
+
   for (const medicationId of medicationIds) {
     const {
-      [medicationId]: {
-        basic_info: { updated_at, created_at } = {},
-        details: mobileDetails = null,
-      },
+      [medicationId]: { basic_info: { updated_at, created_at } = {} },
     } = medications;
-    let updated_date = `${moment(new Date(updated_at)).format("DD MMM YY")}`;
-    let created_date = `${moment(new Date(created_at)).format("DD MMM YY")}`;
+
+    if (!updated_at || !created_at) {
+      console.warn(
+        `medicationId ${medicationId} has missing created_at or updated_at`
+      );
+      continue; // Skip to the next medication
+    }
+
+    let updated_date = moment(new Date(updated_at)).format("DD MMM YY");
+    let created_date = moment(new Date(created_at)).format("DD MMM YY");
+
+    if (!firstCreatedAt) {
+      firstCreatedAt = created_date; // Store the first created_at
+    }
 
     if (created_date !== updated_date) {
-      // all medicin written in same days an there is no update on medicins
-      isMedicinsUpdate = true;
+      isMedicineUpdate = true;
+      break; // Exit the loop early if an update is found
     }
-    return isMedicinsUpdate;
   }
-  return date;
+
+  if (isMedicineUpdate) {
+    return isMedicineUpdate; // Return true if any update is found
+  } else if (medicationIds.length > 0 && firstCreatedAt) {
+    return firstCreatedAt; // Return the first created_at if no updates and medications exist
+  } else {
+    return null; // Return null if there are no medications
+  }
 }
 
-// AKSHAY NEW CODE IMPLEMETATIONS
-
+// AKSHAY NEW CODE IMPLEMENTATIONS
 function renderChiefComplaints({ symptoms }) {
   try {
     let finalSymptom = "";
@@ -1545,7 +1554,7 @@ function renderChiefComplaints({ symptoms }) {
 
     return finalSymptom;
   } catch (err) {
-    console.log("error in chief complience", err);
+    console.log("Error in chief complaints: ", err);
   }
 }
 
@@ -1565,7 +1574,7 @@ function printCarePlanData({
   portions,
   diets_formatted_data,
   timings,
-  diet_ids
+  diet_ids,
 }) {
   try {
     const { diagnosis, condition, symptoms, clinicalNotes } =
@@ -1573,7 +1582,6 @@ function printCarePlanData({
     const medicationsList = formatMedicationsData(medications, medicines);
 
     // AKSHAY NEW CODE IMPLEMENTATIONS
-
     let stringSymptomArray = [];
     let stringSymptom = "";
 
@@ -1736,7 +1744,7 @@ function printCarePlanData({
       let { date: latestUpdateDate, isPrescriptionUpdated } =
         getLatestUpdateDate(medications);
       let isMedicationsUpdate =
-        isMedicationsUpdatedInExistingMedicin(medications);
+        isMedicationUpdatedInExistingMedicine(medications);
       let wantToShow = true;
       if (isPrescriptionUpdated || isMedicationsUpdate) wantToShow = false;
       // Gaurav New Chnages - end
@@ -1933,11 +1941,13 @@ function printCarePlanData({
     //     addPageAndNumber(doc);
     //   }
     // }
-    console.log("\n\n\n\n\\n\n\n\n in printcareplan data")
-    console.log(Object.keys(suggestedInvestigations).length)
+    console.log("\n\n\n\n\\n\n\n\n in printcareplan data");
+    console.log(Object.keys(suggestedInvestigations).length);
 
     if (Object.keys(suggestedInvestigations).length) {
-      console.log("\n\n\n\n\\n\n\n\nin the if looop appointment\n\n\n\n\\n\n\n\n")
+      console.log(
+        "\n\n\n\n\\n\n\n\nin the if looop appointment\n\n\n\n\\n\n\n\n"
+      );
       const appointmentLevelEnd = printAppointment({
         doc,
         providerPrescriptionDetails,
@@ -1950,10 +1960,15 @@ function printCarePlanData({
       .fontSize(BOLD_FONT_SIZE)
       .text("Advice/Instructions: ", DOC_MARGIN, doc.y + 20);
 
-    doc.font(HINDI_FONT).fontSize(NORMAL_FONT_SIZE).text(follow_up_advise, DOC_MARGIN, doc.y + 5);
+    doc
+      .font(HINDI_FONT)
+      .fontSize(NORMAL_FONT_SIZE)
+      .text(follow_up_advise, DOC_MARGIN, doc.y + 5);
 
     if (Object.keys(suggestedInvestigations).length) {
-      console.log("\n\n\n\n\\n\n\n\nin the if looop printConsultation\n\n\n\n\\n\n\n\n")
+      console.log(
+        "\n\n\n\n\\n\n\n\nin the if looop printConsultation\n\n\n\n\\n\n\n\n"
+      );
       const consultationLevelEnd = printConsultation({
         doc,
         providerPrescriptionDetails,
@@ -1970,13 +1985,13 @@ function printCarePlanData({
 
     const dietBlockLevelEnd = Object.keys(diets_formatted_data).length
       ? printDiet(
-        doc,
-        dietStartLevel,
-        portions,
-        diets_formatted_data,
-        timings,
-        diet_ids
-      )
+          doc,
+          dietStartLevel,
+          portions,
+          diets_formatted_data,
+          timings,
+          diet_ids
+        )
       : null;
     // if (Object.keys(suggestedInvestigations).length) {
     //   const consultationLevelEnd = printConsultation({
@@ -2186,7 +2201,9 @@ function printFooter(
     }
     addPageAndNumber(doc);
   }
-
+  console.log("\n\n\n\n\n\n\n\n\n\n\n================================");
+  console.log({ imageUrl });
+  console.log("================================\n\n\n\n\n\n\n\n\n\n\n");
   try {
     doc.image(`${imageUrl}`, 400, doc.y + 10, {
       width: 120,
@@ -2461,7 +2478,7 @@ function formatMedicationsData(medications, medicines) {
       strength = "",
       unit = "",
       quantity = null,
-      description: detailDescription = ""
+      description: detailDescription = "",
     } = mainDetails || {};
 
     const {

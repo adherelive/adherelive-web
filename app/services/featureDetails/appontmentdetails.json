@@ -47,9 +47,18 @@
     }
   },
   "appointment_type": {
-    "1": { "id": "1", "title": "Medical Tests" },
-    "2": { "id": "2", "title": "Consultation" },
-    "3": { "id": "3", "title": "Radiology" }
+    "1": {
+      "id": "1",
+      "title": "Medical Tests"
+    },
+    "2": {
+      "id": "2",
+      "title": "Consultation"
+    },
+    "3": {
+      "id": "3",
+      "title": "Radiology"
+    }
   },
   "type_description": {
     "1": [
@@ -78,13 +87,34 @@
     ],
     "2": ["At Clinic", "At Home", "Telephone"],
     "3": {
-      "1": { "id": 1, "name": "CT SCAN" },
-      "2": { "id": 2, "name": "NUCLEAR MEDICINE" },
-      "3": { "id": 3, "name": "ULTRASOUND" },
-      "4": { "id": 4, "name": "X-RAY" },
-      "5": { "id": 5, "name": "MRI" },
-      "6": { "id": 6, "name": "ECHO AND DOPPLER" },
-      "7": { "id": 7, "name": "CT ANGIO" }
+      "1": {
+        "id": 1,
+        "name": "CT SCAN"
+      },
+      "2": {
+        "id": 2,
+        "name": "NUCLEAR MEDICINE"
+      },
+      "3": {
+        "id": 3,
+        "name": "ULTRASOUND"
+      },
+      "4": {
+        "id": 4,
+        "name": "X-RAY"
+      },
+      "5": {
+        "id": 5,
+        "name": "MRI"
+      },
+      "6": {
+        "id": 6,
+        "name": "ECHO AND DOPPLER"
+      },
+      "7": {
+        "id": 7,
+        "name": "CT ANGIO"
+      }
     }
   },
   "radiology_type_data": {
@@ -160,7 +190,11 @@
             "PNS - AXIAL & CORONAL - CONTRAST"
           ]
         },
-        "6": { "name": "DENTAL", "index": 6, "items": ["DENTA SCAN (PLAIN)"] },
+        "6": {
+          "name": "DENTAL",
+          "index": 6,
+          "items": ["DENTA SCAN (PLAIN)"]
+        },
         "7": {
           "name": "NECK",
           "index": 7,
