@@ -64,7 +64,8 @@ class DietController extends Controller {
       const careplan_id = dietWrapper.getCarePlanId();
       const carePlanWrapper = await CarePlanWrapper(null, careplan_id);
       const doctor_id = await carePlanWrapper.getDoctorId();
-      const patient_id = carePlanWrapper.getPatientId();
+      // TODO: Commenting this out, as it may be causing an issue with Pagination
+      //const patient_id = carePlanWrapper.getPatientId();
 
       // TODO: Why has this been commented in Web, but not in Mobile?
       //  Other doctor's diet as food item and details only visible to creator doc
@@ -93,10 +94,10 @@ class DietController extends Controller {
         food_groups = {},
         food_items = {},
         food_item_details = {},
-        portions = {},
+        // portions = {},
       } = referenceInfo || {};
 
-      const timeWise = await getTimeWiseDietFoodGroupMappings({
+      const timeWise = await DietHelper.getTimeWiseDietFoodGroupMappings({
         diet_food_group_mappings,
       });
 
@@ -226,7 +227,7 @@ class DietController extends Controller {
           },
           food_items,
           food_item_details,
-          portions,
+          // portions,
           food_groups_total_calories: dietFoodGroupsTotalCalories,
         },
         "Diet Data fetched successfully"
@@ -250,7 +251,6 @@ class DietController extends Controller {
       } = userDetails || {};
 
       const { body = {} } = req;
-      Logger.debug("create request", body);
 
       // TODO: Check why end date is null ?
       const {
@@ -263,6 +263,7 @@ class DietController extends Controller {
         repeat_days = [],
         diet_food_groups = [],
       } = body;
+      Logger.debug("Create request body: ", body);
 
       const dietService = new DietService();
       const diet =
@@ -302,7 +303,7 @@ class DietController extends Controller {
         patient_id: patient.getUserId(),
         type: EVENT_TYPE.DIET,
         event_id: dietWrapper.getId(),
-        status: EVENT_STATUS.SCHEDULED,
+        // status: EVENT_STATUS.SCHEDULED,
         start_date,
         end_date,
         participants: [userRoleId, patientRoleId],
@@ -335,7 +336,7 @@ class DietController extends Controller {
         "Diet created successfully."
       );
     } catch (error) {
-      Logger.debug("create 500 error - diet create web error: ", error);
+      Logger.debug("Create 500 error - diet create web error: ", error);
       return raiseServerError(res);
     }
   };
@@ -359,6 +360,7 @@ class DietController extends Controller {
         const options = await UserPreferenceWrapper(timingPreference);
         const { timings: userTimings = {} } = options.getAllDetails();
 
+        // TODO: Check on why this code has been commented out
         // const medicationTimings = medicationHelper.getTimings(userTimings);
 
         // medicationTimings.sort((activityA, activityB) => {
@@ -658,92 +660,93 @@ class DietController extends Controller {
     }
   };
 
-  getPatientDiets = async (req, res) => {
-    const { raiseSuccess, raiseClientError, raiseServerError } = this;
-    try {
-      const {
-        userDetails: { userData: { category } = {}, userCategoryId } = {},
-      } = req;
-
-      if (category !== USER_CATEGORY.PATIENT) {
-        return raiseClientError(res, 422, {}, "UNAUTHORIZED");
-      }
-
-      const dietService = new DietService();
-
-      let allDiets = {};
-      let allDietFoodMappings = {};
-      let allFoodGroups = {};
-      let allPortions = {};
-      let allFoodItems = {};
-      let allFoodItemDetails = {};
-
-      const allCareplansForPatient =
-        (await carePlanService.getCarePlanByData({
-          patient_id: userCategoryId,
-        })) || [];
-      if (allCareplansForPatient.length) {
-        for (let i = 0; i < allCareplansForPatient.length; i++) {
-          const { id: care_plan_id = null } = allCareplansForPatient[i] || {};
-          const { count = null, rows = [] } =
-            await dietService.getAllForCareplanId({
-              where: {
-                care_plan_id,
-              },
-              attributes: ["id"],
-            });
-          if (count > 0) {
-            for (let row of rows) {
-              const { id: dietId } = row || {};
-              const dietWrapper = await DietWrapper({ id: dietId });
-              // allDietsApiWrapper[
-              //   dietWrapper.getId()
-              // ] = await dietWrapper.getBasicInfo();
-
-              const {
-                diets,
-                diet_food_group_mappings,
-                food_groups,
-                portions,
-                food_items,
-                food_item_details,
-              } = await dietWrapper.getReferenceInfo();
-
-              allDiets = { ...allDiets, ...diets };
-              allDietFoodMappings = {
-                ...allDietFoodMappings,
-                ...diet_food_group_mappings,
-              };
-              allFoodGroups = { ...allFoodGroups, ...food_groups };
-              allFoodItems = { ...allFoodItems, ...food_items };
-              allFoodItemDetails = {
-                ...allFoodItemDetails,
-                ...food_item_details,
-              };
-              allPortions = { ...allPortions, ...portions };
-            }
-          }
-        }
-      }
-
-      return raiseSuccess(
-        res,
-        200,
-        {
-          diets: allDiets,
-          diet_food_group_mappings: allDietFoodMappings,
-          food_groups: allFoodGroups,
-          food_items: allFoodItems,
-          food_item_details: allFoodItemDetails,
-          portions: allPortions,
-        },
-        "Diet Data fetched successfully"
-      );
-    } catch (error) {
-      Logger.debug("getPatientDiets 500", error);
-      return raiseServerError(res);
-    }
-  };
+  // TODO: Check why this function is no longer being used?
+  // getPatientDiets = async (req, res) => {
+  //   const { raiseSuccess, raiseClientError, raiseServerError } = this;
+  //   try {
+  //     const {
+  //       userDetails: { userData: { category } = {}, userCategoryId } = {},
+  //     } = req;
+  //
+  //     if (category !== USER_CATEGORY.PATIENT) {
+  //       return raiseClientError(res, 422, {}, "UNAUTHORIZED");
+  //     }
+  //
+  //     const dietService = new DietService();
+  //
+  //     let allDiets = {};
+  //     let allDietFoodMappings = {};
+  //     let allFoodGroups = {};
+  //     let allPortions = {};
+  //     let allFoodItems = {};
+  //     let allFoodItemDetails = {};
+  //
+  //     const allCareplansForPatient =
+  //       (await carePlanService.getCarePlanByData({
+  //         patient_id: userCategoryId,
+  //       })) || [];
+  //     if (allCareplansForPatient.length) {
+  //       for (let i = 0; i < allCareplansForPatient.length; i++) {
+  //         const { id: care_plan_id = null } = allCareplansForPatient[i] || {};
+  //         const { count = null, rows = [] } =
+  //           await dietService.getAllForCareplanId({
+  //             where: {
+  //               care_plan_id,
+  //             },
+  //             attributes: ["id"],
+  //           });
+  //         if (count > 0) {
+  //           for (let row of rows) {
+  //             const { id: dietId } = row || {};
+  //             const dietWrapper = await DietWrapper({ id: dietId });
+  //             // allDietsApiWrapper[
+  //             //   dietWrapper.getId()
+  //             // ] = await dietWrapper.getBasicInfo();
+  //
+  //             const {
+  //               diets,
+  //               diet_food_group_mappings,
+  //               food_groups,
+  //               portions,
+  //               food_items,
+  //               food_item_details,
+  //             } = await dietWrapper.getReferenceInfo();
+  //
+  //             allDiets = { ...allDiets, ...diets };
+  //             allDietFoodMappings = {
+  //               ...allDietFoodMappings,
+  //               ...diet_food_group_mappings,
+  //             };
+  //             allFoodGroups = { ...allFoodGroups, ...food_groups };
+  //             allFoodItems = { ...allFoodItems, ...food_items };
+  //             allFoodItemDetails = {
+  //               ...allFoodItemDetails,
+  //               ...food_item_details,
+  //             };
+  //             allPortions = { ...allPortions, ...portions };
+  //           }
+  //         }
+  //       }
+  //     }
+  //
+  //     return raiseSuccess(
+  //       res,
+  //       200,
+  //       {
+  //         diets: allDiets,
+  //         diet_food_group_mappings: allDietFoodMappings,
+  //         food_groups: allFoodGroups,
+  //         food_items: allFoodItems,
+  //         food_item_details: allFoodItemDetails,
+  //         portions: allPortions,
+  //       },
+  //       "Diet Data fetched successfully"
+  //     );
+  //   } catch (error) {
+  //     Logger.debug("getPatientDiets 500", error);
+  //     return raiseServerError(res);
+  //   }
+  // };
 
   getDietResponseTimeline = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;

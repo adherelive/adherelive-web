@@ -85,7 +85,7 @@ class SmsManager {
       //   .promise();
       //return smsPublishResponse;
     } catch (err) {
-      log.info("Sending SMS has an error --->", err);
+      log.info("Sending SMS has an error ---> ", err);
       return err.data;
     }
   }

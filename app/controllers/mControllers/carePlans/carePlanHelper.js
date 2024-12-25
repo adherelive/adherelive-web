@@ -115,7 +115,7 @@ export const getCarePlanDataWithImp = async ({
       }
     }
 
-    Log.info(`8912731893 currentCarePlanId ${currentCarePlanId}`);
+    Log.info(`currentCarePlanId ${currentCarePlanId}`);
     // medications
     const allMedications =
       (await medicationReminderService.getAllMedicationByData({
@@ -251,7 +251,7 @@ export const getCarePlanData = async ({
       }
     }
 
-    Log.info(`8912731893 currentCarePlanId ${currentCarePlanId}`);
+    Log.info(`getCarePlanData currentCarePlanId ${currentCarePlanId}`);
 
     // appointments
     const allAppointments =

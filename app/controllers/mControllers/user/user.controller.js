@@ -1172,6 +1172,7 @@ class MobileUserController extends Controller {
       for (const item of registration_details) {
         const { number, council, year, expiry_date, id = 0 } = item;
 
+        // TODO: Check if changing from "0" to 0 causes issues?
         if (id && id !== 0) {
           let registration = await registrationService.updateRegistration(
             { doctor_id, number, year, council, expiry_date },

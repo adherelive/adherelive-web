@@ -1,10 +1,9 @@
-// services
 import BaseCarePlanTemplate from "../../../services/carePlanTemplate";
 import carePlanTemplateService from "../../../services/carePlanTemplate/carePlanTemplate.service";
 import medicineService from "../../../services/medicine/medicine.service";
 import vitalTemplateService from "../../../services/vitalTemplates/vitalTemplate.service";
 
-// wrapper
+// Wrapper
 import TemplateAppointmentWrapper from "../../web/templateAppointment";
 import TemplateMedicationWrapper from "../../web/templateMedication";
 import TemplateVitalWrapper from "../../web/templateVital";
