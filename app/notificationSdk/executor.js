@@ -1,56 +1,55 @@
 import EmailManager from "../communications/email/emailManger";
 import SmsManager from "../communications/sms/smsManager";
-
 import Logger from "../../libs/log";
 import fetch from "node-fetch";
 import stream from "getstream";
 import { validateMailData } from "../proxySdk/libs/validator";
+import NotificationSdk from "./index";
 
-const Log = new Logger("NOTIFICATION_SDK > EXECUTOR");
+const Log = new Logger("NOTIFICATION_SDK ---> EXECUTOR");
 
 class EventExecutor {
   async sendMail(mailData, scheduledJobId) {
     try {
-      let isValid = await validateMailData(mailData);
-      let response = await EmailManager.sendEmail(mailData);
-      Object.assign(
-        mailData,
-        response ? { status: "SENT" } : { status: "FAILED" }
-      );
-      let logger = new Logger("email", mailData);
+      const isValid = await validateMailData(mailData);
+      if (!isValid) {
+        throw new Error("Invalid mail data");
+      }
+
+      const response = await EmailManager.sendEmail(mailData);
+      mailData.status = response ? "SENT" : "FAILED";
+
+      const logger = new Logger("email", mailData);
       logger.log();
+
+      // Uncomment if you need to update the job status
       // if (scheduledJobId && response) {
-      //   let updatedJob = await Scheduler.updateScheduledJob(scheduledJobId, {
-      //     status: "completed"
-      //   });
+      //   await Scheduler.updateScheduledJob(scheduledJobId, { status: "completed" });
       // }
     } catch (err) {
-      NotificationSdk.execute(EVENTS.EMAIL_ERROR, err, "mail_error");
+      await NotificationSdk.execute(EVENTS.EMAIL_ERROR, err, "mail_error");
     }
   }
 
   async sendSms(smsData, scheduledJobId) {
     try {
-      let response = SmsManager.sendSms(smsData);
-      Object.assign(
-        smsData,
-        response ? { status: "SENT" } : { status: "FAILED" }
-      );
-      let logger = new Logger("sms", smsData);
+      const response = await SmsManager.sendSms(smsData);
+      smsData.status = response ? "SENT" : "FAILED";
+
+      const logger = new Logger("sms", smsData);
       logger.log();
+
+      // Uncomment if you need to update the job status
       // if (scheduledJobId && response) {
-      //   let updatedJob = await Scheduler.updateScheduledJob(scheduledJobId, {
-      //     status: "completed"
-      //   });
+      //   await Scheduler.updateScheduledJob(scheduledJobId, { status: "completed" });
       // }
     } catch (err) {
-      NotificationSdk.execute(EVENTS.SMS_ERROR, err);
+      await NotificationSdk.execute(EVENTS.SMS_ERROR, err);
     }
   }
 
-  sendPushNotification = async (template) => {
+  async sendPushNotification(template) {
     try {
-      // TODO: add one-signal rest api call code here
       const response = await fetch(
         "https://onesignal.com/api/v1/notifications",
         {
@@ -60,45 +59,41 @@ class EventExecutor {
             "Content-Type": "application/json; charset=utf-8",
             Authorization: "Basic " + process.config.ONE_SIGNAL_KEY,
           },
-          body: template,
+          body: JSON.stringify(template),
         }
       );
-      Log.debug("sendPushNotification Response", response);
+
+      const jsonResponse = await response.json();
+      Log.debug("sendPushNotification Response", jsonResponse);
     } catch (err) {
       Log.debug("sendPushNotification 500 error", err);
     }
-  };
+  }
 
-  sendAppNotification = async (template) => {
+  async sendAppNotification(template) {
     try {
-      // TODO: add get stream rest api call code here
-      Log.debug("sendAppNotification --> ", template.actor.toString());
+      Log.debug("sendAppNotification ---> ", template.actor.toString());
+
       const client = stream.connect(
         process.config.getstream.key,
-        process.config.getstream.secretKey
+        process.config.getstream.secretKey,
+        process.config.getstream.appId
       );
+
       const userToken = client.createUserToken(template.actor.toString());
-
-      Log.debug("userToken --> ", userToken);
-      Log.debug("client --> ", client);
-
-      let result = {};
+      Log.debug("userToken ---> ", userToken);
 
       const feed = client.feed("notification", template);
+      Log.debug("feed ---> ", feed);
 
-      Log.debug("feed --> ", feed);
-
-      const response = await feed.addActivity(template).catch((err) => {
-        Log.debug("sendAppNotification executor response err ---> ", err);
-      });
-
+      const response = await feed.addActivity(template);
       Log.debug("sendAppNotification Response", response);
 
-      return result;
+      return response;
     } catch (err) {
       Log.debug("executor sendAppNotification 500 error", err);
     }
-  };
+  }
 }
 
 export default new EventExecutor();
