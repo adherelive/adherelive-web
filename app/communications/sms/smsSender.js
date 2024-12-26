@@ -1,10 +1,10 @@
 import AWS from "aws-sdk";
-// const log = require("../../../libs/log")("communications ---> smsManger");
+import axios from "axios";
 import Log from "../../../libs/log";
-const log = Log("communications ---> smsManger");
-const axios = require("axios");
 
-class SmsManager {
+const log = Log("Communications ---> SMS Sender");
+
+class SmsSender {
   constructor(payload) {
     this.payload = payload;
     AWS.config.update({
@@ -13,29 +13,27 @@ class SmsManager {
       region: process.config.aws.region,
     });
 
-    this.TopicArn = process.config.aws.topic_arn;
-
     this.sns = new AWS.SNS();
   }
 
   async sendSms() {
     try {
       const smsPayload = this.payload;
-      //log.info("validating sms payload!!");
 
-      let isSmsDataValid = this.smsDataValidator(smsPayload);
-      if (isSmsDataValid.error && isSmsDataValid.error == 1)
-        return isSmsDataValid;
+      // Validate SMS payload
+      const validationResponse = this.smsDataValidator(smsPayload);
+      if (validationResponse.error) return validationResponse;
 
-      log.success("Sms payload is valid!!");
+      log.success("SMS payload is valid!");
 
-      log.info("transforming sms payload to aws payload!!");
-      let smsData = this.smsDataTransformer(smsPayload);
-      log.info("Sms payload successfully transformed!!");
+      log.info("Transforming SMS payload to AWS payload...");
+      const smsData = this.smsDataTransformer(smsPayload);
+      log.info("SMS payload successfully transformed!");
 
-      log.info(`Sending SMS...!!`);
+      log.info("Sending SMS...");
 
-      let options = {
+      // Setup options for axios request
+      const options = {
         method: "POST",
         url: process.config.MSG91_SMS_URL,
         headers: {
@@ -55,9 +53,11 @@ class SmsManager {
         },
       };
 
-      let response = await axios(options);
-      log.info("SMS sent to manager: ", response.data);
-      return response.data;
+      // Send SMS via axios
+      const response = await axios(options);
+      log.info("SMS sent via SMS sender: ", response.data);
+      return { success: true, data: response.data };
+
       // let smsPublishResponse = await this.sns
       //   .publish(smsData, (err, data) => {
       //     if (err) {
@@ -69,7 +69,6 @@ class SmsManager {
       //   })
       //   .promise();
       // .promise(response => {
-
       // });
 
       // let smsPublishResponse = await this.sns
@@ -84,48 +83,34 @@ class SmsManager {
       //   })
       //   .promise();
       //return smsPublishResponse;
-    } catch (err) {
-      log.info("Sending SMS has an error ---> ", err);
-      return err.data;
+    } catch (error) {
+      log.error("Error sending SMS: ", error);
+      return { success: false, error: error.message };
     }
   }
 
   smsDataTransformer(smsData) {
-    let smsTransformedData = {}; // new Object();
-    smsTransformedData.PhoneNumber = smsData.phoneNumber;
-    smsTransformedData.countryCode = smsData.countryCode;
-    smsTransformedData.Message = smsData.message;
-    smsTransformedData.MessageStructure = smsData.messageStructure || "string";
-    smsTransformedData.Subject = smsData.Subject || "EconsultingAppWaala";
-    // smsTransformedData.TopicArn = this.TopicArn;
-    return smsTransformedData;
+    return {
+      PhoneNumber: smsData.phoneNumber,
+      countryCode: smsData.countryCode,
+      Message: smsData.message,
+      MessageStructure: smsData.messageStructure || "string",
+      Subject: smsData.Subject || "AdhereLive Patient Alert",
+    };
   }
 
-  async smsDataValidator(smsData) {
-    if (!smsData.countryCode)
-      return {
-        error: 1,
-        message: "invalid or empty country code!!",
-      };
-
-    if (!smsData.phoneNumber)
-      return {
-        error: 1,
-        message: "invalid or empty phone number!!",
-      };
-
-    if (!smsData.message)
-      return {
-        error: 1,
-        message: "message can't be empty",
-      };
-    return {
-      error: 0,
-      message: "valid",
-    };
+  smsDataValidator(smsData) {
+    if (!smsData.countryCode) {
+      return { error: true, message: "Invalid or empty country code" };
+    }
+    if (!smsData.phoneNumber) {
+      return { error: true, message: "Invalid or empty phone number" };
+    }
+    if (!smsData.message) {
+      return { error: true, message: "Message can't be empty" };
+    }
+    return { error: false, message: "Valid" };
   }
 }
 
-module.exports = (payload) => {
-  return new SmsManager(payload);
-};
+export default (payload) => new SmsSender(payload);
