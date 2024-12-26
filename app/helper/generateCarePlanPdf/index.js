@@ -1941,13 +1941,11 @@ function printCarePlanData({
     //     addPageAndNumber(doc);
     //   }
     // }
-    console.log("\n\n\n\n\\n\n\n\n in printcareplan data");
+    console.log("\n\n in printCarePlanData");
     console.log(Object.keys(suggestedInvestigations).length);
 
     if (Object.keys(suggestedInvestigations).length) {
-      console.log(
-        "\n\n\n\n\\n\n\n\nin the if looop appointment\n\n\n\n\\n\n\n\n"
-      );
+      console.log("\n\n In the if loop appointment \n\n");
       const appointmentLevelEnd = printAppointment({
         doc,
         providerPrescriptionDetails,

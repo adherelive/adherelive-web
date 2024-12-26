@@ -241,7 +241,10 @@ class DoctorController extends Controller {
           doctorWrapper.getDoctorId()
         );
 
-      Logger.debug("198361283 ---====> ", doctorRegistrations);
+      Logger.debug(
+        "Get All Admin Doctors registrations ---> ",
+        doctorRegistrations
+      );
 
       await doctorRegistrations.forEach(async (doctorRegistration) => {
         const doctorRegistrationWrapper = await RegistrationWrapper(
@@ -878,7 +881,7 @@ class DoctorController extends Controller {
 
       let speciality_id = null;
 
-      Logger.debug("ererer", req.body);
+      Logger.debug("Doctor Controller Request Body: ", req.body);
 
       let doctorUserId = id;
 
@@ -2818,7 +2821,7 @@ class DoctorController extends Controller {
 
       const doctors = await doctorService.getDoctorByData({ user_id: userId });
 
-      Logger.debug("76578937476238497923847238492342", userId);
+      Logger.debug("getAllDoctorDetails User ID: ", userId);
 
       let doctorQualificationApiDetails = {};
       let doctorClinicApiDetails = {};
@@ -2895,7 +2898,10 @@ class DoctorController extends Controller {
           doctorWrapper.getDoctorId()
         );
 
-      Logger.debug("198361283 ---====> ", doctorRegistrations);
+      Logger.debug(
+        "Get all Doctor detail registrations ---> ",
+        doctorRegistrations
+      );
 
       for (const doctorRegistration of doctorRegistrations) {
         const doctorRegistrationWrapper = await RegistrationWrapper(
