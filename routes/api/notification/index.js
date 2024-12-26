@@ -7,7 +7,7 @@ const router = express.Router();
 router.post("/", Authenticate, NotificationController.getNotifications);
 
 router.post(
-  "/chat-notfication",
+  "/chat-notification",
   Authenticate,
   NotificationController.raiseChatNotification
 );
