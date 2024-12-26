@@ -203,7 +203,7 @@ class ProvidersController extends Controller {
             doctorWrapper.getDoctorId()
           );
 
-        Logger.debug("198361283 ---====> ", doctorRegistrations);
+        Logger.debug("getAll Doctor registration ---> ", doctorRegistrations);
 
         await doctorRegistrations.forEach(async (doctorRegistration) => {
           const doctorRegistrationWrapper = await RegistrationWrapper(

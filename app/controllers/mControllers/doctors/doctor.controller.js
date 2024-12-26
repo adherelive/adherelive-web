@@ -1855,7 +1855,10 @@ class MobileDoctorController extends Controller {
           doctorWrapper.getDoctorId()
         );
 
-      Logger.debug("198361283 ---====> ", doctorRegistrations);
+      Logger.debug(
+        "Get all Doctor detail registrations ---> ",
+        doctorRegistrations
+      );
 
       for (const doctorRegistration of doctorRegistrations) {
         const doctorRegistrationWrapper = await DoctorRegistrationWrapper(

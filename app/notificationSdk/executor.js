@@ -1,5 +1,5 @@
 import EmailManager from "../communications/email/emailManger";
-import SmsManager from "../communications/sms/smsManger";
+import SmsManager from "../communications/sms/smsManager";
 
 import Logger from "../../libs/log";
 import fetch from "node-fetch";

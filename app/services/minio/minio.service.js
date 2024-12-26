@@ -162,7 +162,7 @@ class MinioService {
 
       return result;
     } catch (err) {
-      console.log("minio error ---------------------------\n\n\n", err);
+      console.log("\n Minio service has an error ---> \n", err);
       // throw err;
     }
   }

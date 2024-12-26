@@ -122,9 +122,9 @@ class CarePlanService {
           },
         ],
       });
-      console.log("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+      console.log("\n\n getCarePlanById with Secondary Doctor \n");
       console.log(carePlan.careplan_secondary_doctor_mappings);
-      console.log("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+      console.log("\n\n");
       return carePlan;
     } catch (error) {
       throw error;
