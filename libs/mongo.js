@@ -7,12 +7,14 @@ export default async function InitializeMongo() {
     // ConnectOptions for the MongoDB connection
     // Removed the 'authSource', as it may be different between DEV and PROD
     const dbConfig = {
-      // useNewUrlParser: true,
+      // newUrlParser: true,
       // useUnifiedTopology: true,
-      authSource: "admin",
-      serverSelectionTimeoutMS: 5000,
-      socketTimeoutMS: 10000,
-      connectTimeoutMS: 10000,
+      // authSource: "admin",
+      serverSelectionTimeoutMS: 3000,
+      socketTimeoutMS: 5000,
+      connectTimeoutMS: 3000,
+      poolSize: 2,
+      compressors: "zlib,snappy",
     };
 
     // Note: Sample string can be used or individual values. Here I have specified the string used in the ENV file
