@@ -6,7 +6,7 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 
 import Database from "../libs/mysql";
-import initializeMongo from "../libs/mongo";
+import initMongo from "../libs/mongo";
 import ApiRouter from "../routes/api";
 import mApiRouter from "../routes/m-api";
 import EventObserver from "../app/proxySdk/eventObserver";
@@ -25,12 +25,12 @@ import RenewTxActivity from "../app/cronJobs/renewTxActivity";
 (async () => {
   try {
     await Database.init();
-    await initializeMongo();
+    await initMongo();
     // Initialize event observers
     EventObserver.runObservers();
     ActivityObserver.runObservers();
   } catch (err) {
-    console.error("Error during initialization:", err);
+    console.error("Error during initialization: ", err);
   }
 })();
 
@@ -45,12 +45,13 @@ app.use(cors());
 /*
  * Add a check to handle cases where process.config.cookieKey might be undefined or not a valid JSON string
  */
-// function generateCookieKey() {
-//   return (
-//     "key_" + Math.random().toString(36).substr(2) + Date.now().toString(36)
-//   );
-// }
-// console.log(generateCookieKey());
+function generateCookieKey() {
+  return (
+    "key_" + Math.random().toString(36).substr(2) + Date.now().toString(36)
+  );
+}
+console.log(generateCookieKey());
+
 let cookieKeys = [];
 
 try {
