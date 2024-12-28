@@ -8,6 +8,121 @@ Web Portal backend code + API for AdhereLive.
 
 # Build & Deploy
 
+## For Development Builds
+
+### Creating and working with AdhereLive using Dev Builds
+
+We have shifted to using 'docker swarm' and creating 'service' containers to execute the docker containers inside a docker network. <br />
+
+Some good steps to do before we run the build are to check the following commands return no data/output:
+
+```shell
+docker service ls
+docker volume ls
+docker ps -a
+```
+
+These ideally should not contain anything related to the AdhereLive application running:
+
+- mysql
+- mongoDB
+- adherelive-web (for nodejs backend services)
+- adherelive-fe (for react frontend services)
+
+#### Commands to initiate and setup Swarm
+
+```shell
+docker swarm init
+docker info --format '{{.Swarm.ControlAvailable}}'
+read manager_ip _ <<<$(IFS=':'; echo $(docker info --format "{{ (index .Swarm.RemoteManagers 0).Addr }}"))
+echo "${manager_ip}"
+```
+
+The above will provide the details of the swarm and where the swarm manager resides
+
+#### Build and verify the NodeJS and React docker images
+
+You will need to fetch both the `adherelive-web` & `adherelive-fe` repository codes from GitHub.
+(Check with the team for permissions and access).
+Once you have them on your local, run the following to copy the relevant files & build the docker images:
+[make sure that you check and change the version in the build tage accordingly]
+
+```shell
+cd adherelive-web
+cp env_files/.env_demo .env
+cp env_files/.node_env_demo .node_env
+cp docker/DockerfileDemo Dockerfile
+vi .node_env
+--- make changes to the URL to apply your own DNS or use `localhost`
+docker image build --no-cache -f Dockerfile -t adherelive-be:d3.1.2 .
+```
+
+Once the image has been built for the node (backend) container, build for the react (frontend) one:
+
+```shell
+cd ../adherelive-fe
+cp env_files/.env_demo .env
+cp env_files/.node_env_demo .node_env
+cp docker/DockerfileDemo Dockerfile
+docker image build --no-cache -f Dockerfile -t adherelive-fe:d3.1.2 .
+```
+
+#### Setup and build the service stack and populate the DB's
+
+##### Create Docker secrets
+
+```shell
+echo "password" | docker secret create mysql_root_password -
+echo "password" | docker secret create mysql_user_password -
+echo "password" | docker secret create mongodb_password -
+```
+
+Then you need to copy and change the `docker-stack.yml` file, which builds the services and the network for your local setup
+
+```shell
+cd ..
+cp adherelive-web/setup-server/docker-stack-demo.yml docker-stack.yml
+vi docker-stack.yml
+--- make the required changes to the image names as used above
+docker stack deploy -c docker-stack.yml ald
+```
+
+The above last command should create the required services in the swarm and start the containers for the following:
+
+- adherelive-be (node services which connect to mysql & mongodb)
+- adherelive-fe (the react based UI of the application)
+- mysql (the databse which contains all the data for the application)
+- mongodb (local DB for specific fields like Diagnosis)
+
+Once the above is setup, you need to `seed` data to the MySQL & MongoDB:
+
+```shell
+docker exec -it <mysql-container-id> mysql -u root -p
+- Enter password: [use 'password', as created above]
+> CREATE DATABASE adhere;
+> CREATE USER 'user'@'localhost' IDENTIFIED BY 'password';
+> GRANT ALL PRIVILEGES ON adhere.* TO 'user'@'localhost';
+> FLUSH PRIVILEGES;
+
+docker exec -it <mongodb-container-id> mongosh -u mongouser -p password --authenticationDatabase admin
+[OR docker exec -it 374d0cf14437 mongosh "mongodb://mongouser:password@localhost:27017/adhere?authSource=admin"]
+> use adhere;
+```
+
+##### Setup `seed` data
+
+```shell
+docker exec -it <adherelive-be-container-id> bash
+npm run migrate
+npm run seed
+```
+
+You can check the logs for any container, by running:
+
+```shell
+docker logs -f <container-id>
+```
+
 ## For Production Build
 
 ---
