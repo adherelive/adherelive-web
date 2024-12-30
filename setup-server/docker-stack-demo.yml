@@ -14,9 +14,10 @@ services:
       MYSQL_DATABASE: adhere
       MYSQL_USER: user
       MYSQL_PASSWORD_FILE: /run/secrets/mysql_user_password
-      MYSQL_HOSTNAME: 172.17.0.1
+      MYSQL_HOSTNAME: mysql
     volumes:
       - mysql_data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql # Mount the init script
     networks:
       - al_ntwrk
 
@@ -52,6 +53,7 @@ services:
     env_file:
       - .env
     environment:
+      MYSQL_HOST: mysql
       MONGO_URI: mongodb://mongouser:password@mongodb:27017/adhere?authSource=admin
     networks:
       - al_ntwrk

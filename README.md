@@ -82,6 +82,7 @@ Then you need to copy and change the `docker-stack.yml` file, which builds the s
 ```shell
 cd ..
 cp adherelive-web/setup-server/docker-stack-demo.yml docker-stack.yml
+cp adherelive-web/.node_env .env
 vi docker-stack.yml
 --- make the required changes to the image names as used above
 docker stack deploy -c docker-stack.yml ald
@@ -97,6 +98,7 @@ The above last command should create the required services in the swarm and star
 Once the above is setup, you need to `seed` data to the MySQL & MongoDB:
 
 ```shell
+docker ps -a
 docker exec -it <mysql-container-id> mysql -u root -p
 - Enter password: [use 'password', as created above]
 > CREATE DATABASE adhere;
@@ -107,6 +109,32 @@ docker exec -it <mysql-container-id> mysql -u root -p
 docker exec -it <mongodb-container-id> mongosh -u mongouser -p password --authenticationDatabase admin
 [OR docker exec -it 374d0cf14437 mongosh "mongodb://mongouser:password@localhost:27017/adhere?authSource=admin"]
 > use adhere;
+```
+
+##### For Windows Systems
+
+You might need to do the following, as the network for Docker is not same as Linux:
+Follow these steps to login and create the password & users:
+
+```shell
+
+> docker stop <mysql-container-id>
+> docker run --name temp-mysql-secure -e MYSQL_ROOT_PASSWORD=password -d mysql
+> docker exec -it temp-mysql-secure mysql -u root -p
+> docker exec -it temp-mysql-secure mysql -u root -p
+mysql> ALTER USER 'root'@'localhost' IDENTIFIED BY 'password';
+mysql> FLUSH PRIVILEGES;
+
+> docker stop temp-mysql-secure
+> docker rm temp-mysql-secure
+
+> docker start <mysql-container-id>
+
+```
+
+```shell
+> ALTER USER 'user'@'%' IDENTIFIED BY 'password';
+> GRANT ALL PRIVILEGES ON adhere.* TO 'user'@'%';
 ```
 
 ##### Setup `seed` data

@@ -3,13 +3,13 @@ APP_ENV=Development
 NODE_ENV=development
 APP_NAME="adherelive"
 
-API_URL=https://adherelivelenia.centralindia.cloudapp.azure.com
-WEB_URL=https://adherelivelenia.centralindia.cloudapp.azure.com
-APP_URL=https://adherelivelenia.centralindia.cloudapp.azure.com
+API_URL=https://localhost
+WEB_URL=https://localhost
+APP_URL=https://localhost
 
 INVITE_LINK=/validation/
 
-RESET_PASSWORD_LINK=https://adherelivelenia.centralindia.cloudapp.azure.com/reset-password/
+RESET_PASSWORD_LINK=https://localhost/reset-password/
 
 MOBILE_INVITE_LINK=verify
 

@@ -11,6 +11,7 @@ import ApiRouter from "../routes/api";
 import mApiRouter from "../routes/m-api";
 import EventObserver from "../app/proxySdk/eventObserver";
 import ActivityObserver from "../app/activitySdk/activityObserver";
+// import dbConnect from "../libs/dbConnection";
 import RenewSubscription from "../app/cronJobs/renewSubscription";
 
 import Start from "../app/cronJobs/start";
@@ -45,12 +46,12 @@ app.use(cors());
 /*
  * Add a check to handle cases where process.config.cookieKey might be undefined or not a valid JSON string
  */
-function generateCookieKey() {
-  return (
-    "key_" + Math.random().toString(36).substr(2) + Date.now().toString(36)
-  );
-}
-console.log(generateCookieKey());
+// function generateCookieKey() {
+//   return (
+//     "key_" + Math.random().toString(36).substr(2) + Date.now().toString(36)
+//   );
+// }
+// console.log(generateCookieKey());
 
 let cookieKeys = [];
 

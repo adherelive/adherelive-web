@@ -11,7 +11,7 @@ const Log = new Logger("CRON > RENEW > SUBSCRIPTION");
 
 class RenewTxActivity {
   runObserver = async () => {
-    console.log("Creating transactions inside RenewTxActivity...\n\n");
+    console.log("\n\n Creating transactions inside RenewTxActivity... \n\n");
 
     try {
       // get all the service subscriptionuser mapping that have next rechage date in next7 days
