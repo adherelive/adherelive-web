@@ -13,7 +13,7 @@ export default async function InitializeMongo() {
       serverSelectionTimeoutMS: 3000,
       socketTimeoutMS: 5000,
       connectTimeoutMS: 3000,
-      poolSize: 2,
+      // poolSize: 2,
       compressors: "zlib,snappy",
     };
 
