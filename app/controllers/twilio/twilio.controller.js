@@ -1,6 +1,7 @@
+import Controller from "../index";
+
 import faker from "faker";
 import twilioService from "../../services/twilio/twilio.service";
-import Controller from "../";
 import Log from "../../../libs/log";
 const log = Log("WEB > TWILIO > CONTROLLER");
 // Log.fileName("WEB > TWILIO > CONTROLLER");

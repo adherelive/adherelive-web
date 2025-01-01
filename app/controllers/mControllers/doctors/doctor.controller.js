@@ -17,7 +17,7 @@ import uploadDocumentService from "../../../services/uploadDocuments/uploadDocum
 import featuresService from "../../../services/features/features.service";
 import doctorPatientFeatureMappingService from "../../../services/doctorPatientFeatureMapping/doctorPatientFeatureMapping.service";
 import userRolesService from "../../../services/userRoles/userRoles.service";
-import carePlanSecondaryDoctorMappingService from "../../../services/carePlanSecondaryDoctorMappings/carePlanSecondaryDoctorMappings.service";
+import carePlanSecondaryDrMapService from "../../../services/carePlanSecondaryDoctorMappings/carePlanSecondaryDoctorMappings.service";
 import UserRoleService from "../../../services/userRoles/userRoles.service";
 // m-api wrappers
 import PatientWrapper from "../../../apiWrapper/mobile/patient";
@@ -2394,7 +2394,7 @@ class MobileDoctorController extends Controller {
       const {
         count: careplansCount = 0,
         rows: careplanAsSecondaryDoctor = [],
-      } = await carePlanSecondaryDoctorMappingService.findAndCountAll({
+      } = await carePlanSecondaryDrMapService.findAndCountAll({
         where: {
           secondary_doctor_role_id: userRoleId,
         },

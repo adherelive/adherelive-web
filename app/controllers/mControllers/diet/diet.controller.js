@@ -16,11 +16,11 @@ import UserPreferenceWrapper from "../../../apiWrapper/mobile/userPreference";
 import EventWrapper from "../../../apiWrapper/common/scheduleEvents";
 import DietResponseWrapper from "../../../apiWrapper/mobile/dietResponse";
 
-import * as DietHelper from "../../diet/dietHelper";
+import * as DietHelper from "../../diet/diet.helper";
 import DietJob from "../../../jobSdk/Diet/observer";
 import NotificationSdk from "../../../notificationSdk";
 
-import { getTimeWiseDietFoodGroupMappings } from "../../diet/dietHelper";
+import { getTimeWiseDietFoodGroupMappings } from "../../diet/diet.helper";
 // import * as medicationHelper from "../../medicationReminder/medicationHelper";
 
 import Log from "../../../../libs/log";

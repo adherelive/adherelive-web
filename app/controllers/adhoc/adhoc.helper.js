@@ -1,9 +1,12 @@
+import Controller from "../index";
+
+// Services
 import Logger from "../../../libs/log";
 import doctorService from "../../services/doctor/doctor.service";
 import patientService from "../../services/patients/patients.service";
 import providerService from "../../services/provider/provider.service";
 
-// wrappers
+// Wrappers
 import DoctorWrapper from "../../apiWrapper/web/doctor";
 import PatientWrapper from "../../apiWrapper/web/patient";
 import ProviderWrapper from "../../apiWrapper/web/provider";

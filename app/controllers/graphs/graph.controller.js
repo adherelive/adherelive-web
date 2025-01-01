@@ -1,4 +1,5 @@
 import Controller from "../index";
+
 import Log from "../../../libs/log";
 import {
   NO_MEDICATION,

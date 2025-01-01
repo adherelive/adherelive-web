@@ -14,7 +14,7 @@ import CarePlanWrapper from "../../../apiWrapper/mobile/carePlan";
 import SymptomWrapper from "../../../apiWrapper/mobile/symptoms";
 
 import { EVENT_STATUS, EVENT_TYPE, USER_CATEGORY } from "../../../../constant";
-import * as EventHelper from "../../scheduleEvents/eventHelper";
+import * as EventHelper from "../../scheduleEvents/event.helper";
 import SymptomService from "../../../services/symptom/symptom.service";
 import eventService from "../../../services/scheduleEvents/scheduleEvent.service";
 

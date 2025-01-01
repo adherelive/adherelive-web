@@ -17,7 +17,7 @@ import WorkoutService from "../../../services/workouts/workout.service";
 import RepetitionService from "../../../services/exerciseRepetitions/repetition.service";
 import PortionServiceService from "../../../services/portions/portions.service";
 import DietService from "../../../services/diet/diet.service";
-import carePlanSecondaryDoctorMappingService from "../../../services/carePlanSecondaryDoctorMappings/carePlanSecondaryDoctorMappings.service";
+import carePlanSecondaryDrMapService from "../../../services/carePlanSecondaryDoctorMappings/carePlanSecondaryDoctorMappings.service";
 // WRAPPERS ------------
 import ExerciseContentWrapper from "../../../apiWrapper/mobile/exerciseContents";
 import VitalWrapper from "../../../apiWrapper/mobile/vitals";
@@ -36,7 +36,7 @@ import PortionWrapper from "../../../apiWrapper/mobile/portions";
 import WorkoutWrapper from "../../../apiWrapper/mobile/workouts";
 import DietWrapper from "../../../apiWrapper/mobile/diet";
 
-import * as DietHelper from "../../diet/dietHelper";
+import * as DietHelper from "../../diet/diet.helper";
 
 import { randomString } from "../../../../libs/helper";
 import Log from "../../../../libs/log";
@@ -98,7 +98,7 @@ import {
   getSeparateName,
 } from "../../../helper/common";
 import { getDoctorCurrentTime } from "../../../helper/getUserTime";
-import * as carePlanHelper from "../carePlans/carePlanHelper";
+import * as carePlanHelper from "../carePlans/carePlan.helper";
 import PERMISSIONS from "../../../../config/permissions";
 
 const path = require("path");
@@ -1497,7 +1497,7 @@ class MPatientController extends Controller {
               // getsecondary careplan mapping
               const carePlan = await CarePlanWrapper(carePlanData[i]);
               let secondaryDoctorMapping =
-                await carePlanSecondaryDoctorMappingService.findAndCountAll({
+                await carePlanSecondaryDrMapService.findAndCountAll({
                   where: {
                     secondary_doctor_role_id: userRoleId,
                     care_plan_id: carePlan.getCarePlanId(),

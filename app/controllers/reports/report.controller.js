@@ -1,17 +1,18 @@
 import Controller from "../index";
+
 import Logger from "../../../libs/log";
 import moment from "moment";
 
-// services
+// Services
 import ReportService from "../../services/reports/report.service";
 import uploadDocumentService from "../../services/uploadDocuments/uploadDocuments.service";
 
-// wrappers
+// Wrappers
 import ReportWrapper from "../../apiWrapper/web/reports";
 
 import { DOCUMENT_PARENT_TYPE } from "../../../constant";
 import { getFilePath } from "../../helper/filePath";
-import * as ReportHelper from "./reportHelper";
+import * as ReportHelper from "./report.helper";
 
 const Log = new Logger("WEB > CONTROLLER > REPORTS");
 

@@ -1,10 +1,11 @@
 import Controller from "../index";
+
 import Log from "../../../libs/log";
 import moment from "moment";
 import isEmpty from "lodash/isEmpty";
 
+// Services
 import userService from "../../services/user/user.service";
-// import doctorService from "../../services/doctor/doctor.service";
 import providerService from "../../services/provider/provider.service";
 import doctorProviderMappingService from "../../services/doctorProviderMapping/doctorProviderMapping.service";
 import qualificationService from "../../services/doctorQualifications/doctorQualification.service";
@@ -14,7 +15,6 @@ import registrationService from "../../services/doctorRegistration/doctorRegistr
 import degreeService from "../../services/degree/degree.service";
 import collegeService from "../../services/college/college.service";
 import councilService from "../../services/council/council.service";
-// import PaymentProductService from "../../services/paymentProducts/paymentProduct.service";
 import appointmentService from "../../services/appointment/appointment.service";
 import carePlanService from "../../services/carePlan/carePlan.service";
 import userPreferenceService from "../../services/userPreferences/userPreference.service";
@@ -22,11 +22,14 @@ import UserRoleService from "../../services/userRoles/userRoles.service";
 import DoctorService from "../../services/doctor/doctor.service";
 import providerTermsMappingService from "../../services/providerTermsMapping/providerTermsMappings.service";
 import tacService from "../../services/termsAndConditions/termsAndConditions.service";
+import ScheduleEventService from "../../services/scheduleEvents/scheduleEvent.service";
+// import doctorService from "../../services/doctor/doctor.service";
+// import PaymentProductService from "../../services/paymentProducts/paymentProduct.service";
 
+// Wrappers
 import UserWrapper from "../../apiWrapper/web/user";
 import DoctorWrapper from "../../apiWrapper/web/doctor";
 import ProviderWrapper from "../../apiWrapper/web/provider";
-import DoctorProviderMappingWrapper from "../../apiWrapper/web/doctorProviderMapping";
 import QualificationWrapper from "../../apiWrapper/web/doctorQualification";
 import RegistrationWrapper from "../../apiWrapper/web/doctorRegistration";
 import ClinicWrapper from "../../apiWrapper/web/doctorClinic";
@@ -34,15 +37,15 @@ import DegreeWrapper from "../../apiWrapper/web/degree";
 import CollegeWrapper from "../../apiWrapper/web/college";
 import CouncilWrapper from "../../apiWrapper/web/council";
 import UploadDocumentWrapper from "../../apiWrapper/web/uploadDocument";
-// import PaymentProductWrapper from "../../apiWrapper/web/paymentProducts";
 import AppointmentWrapper from "../../apiWrapper/web/appointments";
 import PatientWrapper from "../../apiWrapper/web/patient";
 import CarePlanWrapper from "../../apiWrapper/web/carePlan";
 import UserRoleWrapper from "../../apiWrapper/web/userRoles";
+import DoctorProviderMappingWrapper from "../../apiWrapper/web/doctorProviderMapping";
+// import PaymentProductWrapper from "../../apiWrapper/web/paymentProducts";
 
 import TACWrapper from "../../apiWrapper/web/termsAndConditions";
 // import * as PaymentHelper from "../payments/helper";
-
 // import bcrypt from "bcrypt";
 
 import {
@@ -52,22 +55,18 @@ import {
   USER_CATEGORY,
   TERMS_AND_CONDITIONS_TYPES,
 } from "../../../constant";
-import ScheduleEventService from "../../services/scheduleEvents/scheduleEvent.service";
 import { Sequelize } from "sequelize";
 import bcrypt from "bcrypt";
 
 // Helper
-import * as ProviderHelper from "./helper";
+import * as ProviderHelper from "./providers.helper";
 import accountDetailsService from "../../services/accountDetails/accountDetails.service";
 import AccountsWrapper from "../../apiWrapper/web/accountsDetails";
 import { getFilePath } from "../../helper/filePath";
 
 // import { generatePassword } from "../helper/passwordGenerator";
-
 // import { USER_CATEGORY } from "../../../constant";
-
 // import { Proxy_Sdk, EVENTS } from "../../proxySdk";
-
 // import { v4 as uuidv4 } from "uuid";
 
 const Logger = new Log("WEB > PROVIDERS > CONTROLLER");

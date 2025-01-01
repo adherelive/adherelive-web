@@ -14,7 +14,7 @@ Web Portal backend code + API for AdhereLive.
 
 We have shifted to using 'docker swarm' and creating 'service' containers to execute the docker containers inside a docker network. <br />
 
-Some good steps to do before we run the build are to check the following commands return no data/output:
+Some good steps, before we run the build are to check the following commands return no data/output:
 
 ```shell
 docker service ls
@@ -40,7 +40,7 @@ echo "${manager_ip}"
 
 The above will provide the details of the swarm and where the swarm manager resides
 
-#### Build and verify the NodeJS and React docker images
+#### Build and verify the Node.js and React docker images
 
 You will need to fetch both the `adherelive-web` & `adherelive-fe` repository codes from GitHub.
 (Check with the team for permissions and access).
@@ -57,7 +57,7 @@ vi .node_env
 docker image build --no-cache -f Dockerfile -t adherelive-be:d3.1.2 .
 ```
 
-Once the image has been built for the node (backend) container, build for the react (frontend) one:
+Once the image has been built for the node (backend) container, build for the React (frontend) one:
 
 ```shell
 cd ../adherelive-fe
@@ -91,11 +91,11 @@ docker stack deploy -c docker-stack.yml ald
 The above last command should create the required services in the swarm and start the containers for the following:
 
 - adherelive-be (node services which connect to mysql & mongodb)
-- adherelive-fe (the react based UI of the application)
-- mysql (the databse which contains all the data for the application)
+- adherelive-fe (the React based UI of the application)
+- mysql (the database which contains all the data for the application)
 - mongodb (local DB for specific fields like Diagnosis)
 
-Once the above is setup, you need to `seed` data to the MySQL & MongoDB:
+Once the above is set up, you need to `seed` data to the MySQL & MongoDB:
 
 ```shell
 docker ps -a
@@ -114,7 +114,7 @@ docker exec -it <mongodb-container-id> mongosh -u mongouser -p password --authen
 ##### For Windows Systems
 
 You might need to do the following, as the network for Docker is not same as Linux:
-Follow these steps to login and create the password & users:
+Follow these steps to log in and create the password & users:
 
 ```shell
 

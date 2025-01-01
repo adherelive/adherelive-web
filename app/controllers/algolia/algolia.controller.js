@@ -1,4 +1,5 @@
 import Controller from "../index";
+
 import AlgoliaService from "../../services/algolia/algolia.service";
 import Logger from "../../../libs/log";
 

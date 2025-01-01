@@ -1,11 +1,12 @@
 import Controller from "../";
+
 import Logger from "../../../libs/log";
 
-// SERVICES
+// Services
 import SymptomService from "../../services/symptom/symptom.service";
 // import DocumentService from "../../services/uploadDocuments/uploadDocuments.service";
 
-// WRAPPERS
+// Wrappers
 import SymptomWrapper from "../../apiWrapper/web/symptoms";
 import DocumentWrapper from "../../apiWrapper/web/uploadDocument";
 

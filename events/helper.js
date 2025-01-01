@@ -53,7 +53,7 @@ import AppointmentWrapper from "../app/apiWrapper/mobile/appointments";
 import DietWrapper from "../app/apiWrapper/mobile/diet";
 import WorkoutWrapper from "../app/apiWrapper/mobile/workouts";
 
-import { getTimeWiseDietFoodGroupMappings } from "../app/controllers/diet/dietHelper";
+import { getTimeWiseDietFoodGroupMappings } from "../app/controllers/diet/diet.helper";
 import SimilarFoodMappingService from "../app/services/similarFoodMapping/similarFoodMapping.service";
 
 const Log = new Logger("EVENT > HELPER");

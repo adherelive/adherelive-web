@@ -44,7 +44,7 @@ import CarePlanWrapper from "../../../apiWrapper/mobile/carePlan";
 // import EventWrapper from "../../../apiWrapper/common/scheduleEvents";
 import FeatureDetailsWrapper from "../../../apiWrapper/mobile/featureDetails";
 
-import * as AppointmentHelper from "./helper";
+import * as AppointmentHelper from "./appointments.helper";
 
 const Logger = new Log("MOBILE APPOINTMENT CONTROLLER");
 

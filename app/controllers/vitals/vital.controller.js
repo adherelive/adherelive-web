@@ -1,8 +1,11 @@
-import Controller from "../";
-import Logger from "../../../libs/log";
-import * as vitalHelper from "./vitalHelper";
+import Controller from "../index";
 
-// SERVICES
+import Logger from "../../../libs/log";
+
+// Helpers
+import * as vitalHelper from "./vital.helper";
+
+// Services
 import VitalTemplateService from "../../services/vitalTemplates/vitalTemplate.service";
 import VitalService from "../../services/vitals/vital.service";
 import FeatureDetailService from "../../services/featureDetails/featureDetails.service";
@@ -11,7 +14,7 @@ import ScheduleEventService from "../../services/scheduleEvents/scheduleEvent.se
 import carePlanService from "../../services/carePlan/carePlan.service";
 import EventService from "../../services/scheduleEvents/scheduleEvent.service";
 
-// WRAPPERS
+// Wrappers
 import VitalTemplateWrapper from "../../apiWrapper/web/vitalTemplates";
 import VitalWrapper from "../../apiWrapper/web/vitals";
 import FeatureDetailWrapper from "../../apiWrapper/web/featureDetails";

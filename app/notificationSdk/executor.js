@@ -5,6 +5,7 @@ import fetch from "node-fetch";
 import stream from "getstream";
 import { validateMailData } from "../proxySdk/libs/validator";
 import NotificationSdk from "./index";
+import EVENTS from "../proxySdk/proxyEvents";
 
 const Log = new Logger("NOTIFICATION_SDK ---> EXECUTOR");
 
@@ -22,7 +23,7 @@ class EventExecutor {
       const logger = new Logger("email", mailData);
       logger.log();
 
-      // Uncomment if you need to update the job status
+      // TODO: Uncomment if you need to update the job status
       // if (scheduledJobId && response) {
       //   await Scheduler.updateScheduledJob(scheduledJobId, { status: "completed" });
       // }
@@ -39,7 +40,7 @@ class EventExecutor {
       const logger = new Logger("sms", smsData);
       logger.log();
 
-      // Uncomment if you need to update the job status
+      // TODO: Uncomment if you need to update the job status
       // if (scheduledJobId && response) {
       //   await Scheduler.updateScheduledJob(scheduledJobId, { status: "completed" });
       // }
@@ -64,7 +65,7 @@ class EventExecutor {
       );
 
       const jsonResponse = await response.json();
-      Log.debug("sendPushNotification Response", jsonResponse);
+      Log.debug("sendPushNotification Response: ", jsonResponse);
     } catch (err) {
       Log.debug("sendPushNotification 500 error", err);
     }
@@ -82,12 +83,13 @@ class EventExecutor {
 
       const userToken = client.createUserToken(template.actor.toString());
       Log.debug("userToken ---> ", userToken);
+      Log.debug("client ---> ", client);
 
       const feed = client.feed("notification", template);
       Log.debug("feed ---> ", feed);
 
       const response = await feed.addActivity(template);
-      Log.debug("sendAppNotification Response", response);
+      Log.debug("sendAppNotification Response: ", response);
 
       return response;
     } catch (err) {

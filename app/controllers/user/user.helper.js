@@ -1,3 +1,6 @@
+import Controller from "../index";
+
+// Services
 import doctorService from "../../services/doctors/doctors.service";
 import qualificationService from "../../services/doctorQualifications/doctorQualification.service";
 import clinicService from "../../services/doctorClinics/doctorClinics.service";

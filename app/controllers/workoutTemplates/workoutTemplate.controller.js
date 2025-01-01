@@ -1,10 +1,10 @@
-import Controller from "../";
+import Controller from "../index";
 import Logger from "../../../libs/log";
 
-// services
+// Services
 import WorkoutTemplateService from "../../services/workoutTemplates/workoutTemplate.service";
 
-// wrappers
+// Wrappers
 import WorkoutTemplateWrapper from "../../apiWrapper/mobile/workoutTemplates";
 
 const Log = new Logger("WEB > WORKOUT_TEMPLATE > CONTROLLER");

@@ -1,9 +1,13 @@
 import Controller from "../index";
+
+import moment from "moment";
+
+import Log from "../../../libs/log";
 import {
   getCarePlanAppointmentIds,
   getCarePlanMedicationIds,
   getCarePlanSeverityDetails,
-} from "../carePlans/carePlanHelper";
+} from "../carePlans/carePlan.helper";
 import { Proxy_Sdk } from "../../proxySdk";
 import {
   EVENT_STATUS,
@@ -18,17 +22,15 @@ import {
   // MEDICAL_TEST,
   APPOINTMENT_TYPE,
 } from "../../../constant";
-import moment from "moment";
 
 const path = require("path");
 
-import Log from "../../../libs/log";
 import { raiseClientError } from "../../../routes/api/helper";
 
 import AppointmentJob from "../../jobSdk/Appointments/observer";
 import NotificationSdk from "../../notificationSdk";
 
-// SERVICES...
+// Services
 import queueService from "../../services/awsQueue/queue.service";
 import doctorService from "../../services/doctor/doctor.service";
 import patientService from "../../services/patients/patients.service";
@@ -39,7 +41,7 @@ import carePlanAppointmentService from "../../services/carePlanAppointment/careP
 import ScheduleEventService from "../../services/scheduleEvents/scheduleEvent.service";
 import documentService from "../../services/uploadDocuments/uploadDocuments.service";
 
-// WRAPPERS...
+// Wrappers
 import CarePlanWrapper from "../../apiWrapper/web/carePlan";
 import AppointmentWrapper from "../../apiWrapper/web/appointments";
 import FeatureDetailsWrapper from "../../apiWrapper/web/featureDetails";
@@ -50,14 +52,14 @@ import EventWrapper from "../../apiWrapper/common/scheduleEvents";
 
 // import eventService from "../../services/scheduleEvents/scheduleEvent.service";
 
-import { uploadImageS3 } from "../user/userHelper";
+import { uploadImageS3 } from "../user/user.helper";
 import { getFilePath } from "../../helper/filePath";
 import { checkAndCreateDirectory } from "../../helper/common";
 
 import { downloadFileFromS3 } from "../mControllers/user/userHelper";
 
-// HELPERS...
-import * as AppointmentHelper from "./helper";
+// Helpers
+import * as AppointmentHelper from "./appointments.helper";
 
 const FILE_NAME = "WEB APPOINTMENT CONTROLLER";
 

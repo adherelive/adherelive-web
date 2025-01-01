@@ -1,7 +1,7 @@
 import Controller from "../../";
 import Logger from "../../../../libs/log";
 import moment from "moment";
-import * as vitalHelper from "../../vitals/vitalHelper";
+import * as vitalHelper from "../../vitals/vital.helper";
 
 // SERVICES
 import VitalService from "../../../services/vitals/vital.service";

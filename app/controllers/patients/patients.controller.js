@@ -1,15 +1,11 @@
-import Controller from "../";
+import Controller from "../index";
 
-// SERVICES --->
+// Services
 import userService from "../../../app/services/user/user.service";
 import patientService from "../../../app/services/patients/patients.service";
 import doctorService from "../../../app/services/doctor/doctor.service";
 import minioService from "../../../app/services/minio/minio.service";
 import carePlanService from "../../services/carePlan/carePlan.service";
-// import carePlanMedicationService from "../../services/carePlanMedication/carePlanMedication.service";
-// import carePlanAppointmentService from "../../services/carePlanAppointment/carePlanAppointment.service";
-// import templateMedicationService from "../../services/templateMedication/templateMedication.service";
-// import templateAppointmentService from "../../services/templateAppointment/templateAppointment.service";
 import medicineService from "../../services/medicine/medicine.service";
 import getAge from "../../helper/getAge";
 import SymptomService from "../../services/symptom/symptom.service";
@@ -30,14 +26,17 @@ import userRolesService from "../../services/userRoles/userRoles.service";
 import DietService from "../../services/diet/diet.service";
 import PortionServiceService from "../../services/portions/portions.service";
 import RepetitionService from "../../services/exerciseRepetitions/repetition.service";
-import providerService from "../../services/provider/provider.service";
-import ExerciseContentService from "../../services/exerciseContents/exerciseContent.service";
 import WorkoutService from "../../services/workouts/workout.service";
 import userPreferenceService from "../../services/userPreferences/userPreference.service";
-import carePlanSecondaryDoctorMappingService from "../../services/carePlanSecondaryDoctorMappings/carePlanSecondaryDoctorMappings.service";
+import carePlanSecondaryDrMapService from "../../services/carePlanSecondaryDoctorMappings/carePlanSecondaryDoctorMappings.service";
+import providerService from "../../services/provider/provider.service";
+import ExerciseContentService from "../../services/exerciseContents/exerciseContent.service";
+// import carePlanMedicationService from "../../services/carePlanMedication/carePlanMedication.service";
+// import carePlanAppointmentService from "../../services/carePlanAppointment/carePlanAppointment.service";
+// import templateMedicationService from "../../services/templateMedication/templateMedication.service";
+// import templateAppointmentService from "../../services/templateAppointment/templateAppointment.service";
 
-// WRAPPERS --->
-import ExerciseContentWrapper from "../../apiWrapper/web/exerciseContents";
+// Wrappers
 import UserRolesWrapper from "../../apiWrapper/web/userRoles";
 import VitalWrapper from "../../apiWrapper/web/vitals";
 import UserWrapper from "../../apiWrapper/web/user";
@@ -45,8 +44,6 @@ import CarePlanWrapper from "../../apiWrapper/web/carePlan";
 import AppointmentWrapper from "../../apiWrapper/web/appointments";
 import MReminderWrapper from "../../apiWrapper/web/medicationReminder";
 import CarePlanTemplateWrapper from "../../apiWrapper/web/carePlanTemplate";
-// import TemplateMedicationWrapper from "../../apiWrapper/web/templateMedication";
-// import TemplateAppointmentWrapper from "../../apiWrapper/web/templateAppointment";
 import MedicineApiWrapper from "../../apiWrapper/mobile/medicine";
 import SymptomWrapper from "../../apiWrapper/web/symptoms";
 import DoctorWrapper from "../../apiWrapper/web/doctor";
@@ -65,8 +62,26 @@ import ProviderWrapper from "../../apiWrapper/web/provider";
 import PortionWrapper from "../../apiWrapper/web/portions";
 import WorkoutWrapper from "../../apiWrapper/web/workouts";
 import UserPreferenceWrapper from "../../apiWrapper/web/userPreference";
-import * as DietHelper from "../diet/dietHelper";
+import ExerciseContentWrapper from "../../apiWrapper/web/exerciseContents";
+// import TemplateMedicationWrapper from "../../apiWrapper/web/templateMedication";
+// import TemplateAppointmentWrapper from "../../apiWrapper/web/templateAppointment";
+
+// Helpers
+import { getSeparateName, getRoomId } from "../../helper/common";
+import generateOTP from "../../helper/generateOtp";
+import { EVENTS, Proxy_Sdk } from "../../proxySdk";
+import generatePDF from "../../helper/generateCarePlanPdf";
+import { downloadFileFromS3 } from "../user/user.helper";
+import { getFilePath } from "../../helper/filePath";
+import { checkAndCreateDirectory } from "../../helper/common";
+import * as carePlanHelper from "../carePlans/carePlan.helper";
+import { getDoctorCurrentTime } from "../../helper/getUserTime";
+// import carePlan from "../../apiWrapper/web/carePlan";
+
+import * as DietHelper from "../diet/diet.helper";
 import Log from "../../../libs/log";
+
+import bcrypt from "bcrypt";
 import moment from "moment";
 import {
   BODY_VIEW,
@@ -81,20 +96,6 @@ import {
   SIGN_IN_CATEGORY,
   PATIENT_MEAL_TIMINGS,
 } from "../../../constant";
-
-import { getSeparateName, getRoomId } from "../../helper/common";
-import generateOTP from "../../helper/generateOtp";
-import { EVENTS, Proxy_Sdk } from "../../proxySdk";
-// import carePlan from "../../apiWrapper/web/carePlan";
-import generatePDF from "../../helper/generateCarePlanPdf";
-import { downloadFileFromS3 } from "../user/userHelper";
-import { getFilePath } from "../../helper/filePath";
-import { checkAndCreateDirectory } from "../../helper/common";
-
-// Helpers
-import bcrypt from "bcrypt";
-import * as carePlanHelper from "../carePlans/carePlanHelper";
-import { getDoctorCurrentTime } from "../../helper/getUserTime";
 
 const path = require("path");
 
@@ -163,7 +164,7 @@ class PatientController extends Controller {
             },
           },
         },
-        "patient details updated successfully"
+        "Patient details updated successfully"
       );
     } catch (error) {
       return this.raiseServerError(res, 500, error, error.getMessage());
@@ -209,7 +210,7 @@ class PatientController extends Controller {
           },
           appointment_ids,
         },
-        `appointment data for patient: ${id} fetched successfully`
+        `Appointment data for patient: ${id} fetched successfully`
       );
     } catch (error) {
       Logger.debug("getPatientAppointments 500 error: ", error);
@@ -895,7 +896,7 @@ class PatientController extends Controller {
               // getSecondary care plan mapping
               const carePlan = await CarePlanWrapper(carePlanData[i]);
               let secondaryDoctorMapping =
-                await carePlanSecondaryDoctorMappingService.findAndCountAll({
+                await carePlanSecondaryDrMapService.findAndCountAll({
                   where: {
                     secondary_doctor_role_id: userRoleId,
                     care_plan_id: carePlan.getCarePlanId(),
@@ -1182,7 +1183,7 @@ class PatientController extends Controller {
           templateName: EMAIL_TEMPLATE_NAME.OTP_VERIFICATION,
           templateData: {
             title: "Patient",
-            mainBodyText: "OTP for the AdhereLive patient consent is",
+            mainBodyText: "OTP for the AdhereLive patient consent is: ",
             subBodyText: otp,
             host: process.config.WEB_URL,
             contactTo: process.config.app.support_email,
@@ -1197,7 +1198,7 @@ class PatientController extends Controller {
             templateName: EMAIL_TEMPLATE_NAME.OTP_VERIFICATION,
             templateData: {
               title: "Patient",
-              mainBodyText: "OTP for the AdhereLive patient consent is",
+              mainBodyText: "OTP for the AdhereLive patient consent is: ",
               subBodyText: otp,
               host: process.config.WEB_URL,
               contactTo: process.config.app.support_email,
@@ -1334,7 +1335,7 @@ class PatientController extends Controller {
           res,
           400,
           {},
-          "Otp not correct. Please try again."
+          "OTP not correct. Please try again."
         );
       }
     } catch (error) {
@@ -2189,7 +2190,7 @@ class PatientController extends Controller {
       const {
         count: careplansCount = 0,
         rows: careplanAsSecondaryDoctor = [],
-      } = await carePlanSecondaryDoctorMappingService.findAndCountAll({
+      } = await carePlanSecondaryDrMapService.findAndCountAll({
         where: {
           secondary_doctor_role_id: userRoleId,
         },
@@ -2463,7 +2464,7 @@ class PatientController extends Controller {
       const {
         count: careplansCount = 0,
         rows: careplanAsSecondaryDoctor = [],
-      } = await carePlanSecondaryDoctorMappingService.findAndCountAll({
+      } = await carePlanSecondaryDrMapService.findAndCountAll({
         where: {
           secondary_doctor_role_id: userRoleId,
         },
