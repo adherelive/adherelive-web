@@ -11,8 +11,8 @@ import EventService from "../../../services/scheduleEvents/scheduleEvent.service
 import ExerciseContentService from "../../../services/exerciseContents/exerciseContent.service";
 import carePlanService from "../../../services/carePlan/carePlan.service";
 import WorkoutResponseService from "../../../services/workoutResponses/workoutResponses.service";
+import WorkoutResponsesService from "../../../services/workoutResponses/workoutResponses.service";
 // import WorkoutTemplateService from "../../../services/workoutTemplates/workoutTemplate.service";
-
 // wrappers
 import WorkoutWrapper from "../../../apiWrapper/mobile/workouts";
 import CarePlanWrapper from "../../../apiWrapper/mobile/carePlan";
@@ -21,7 +21,6 @@ import ExerciseContentWrapper from "../../../apiWrapper/mobile/exerciseContents"
 import WorkoutResponseWrapper from "../../../apiWrapper/mobile/workoutResponse";
 import EventWrapper from "../../../apiWrapper/common/scheduleEvents";
 // import WorkoutTemplateWrapper from "../../../apiWrapper/mobile/workoutTemplates";
-
 import WorkoutJob from "../../../jobSdk/Workout/observer";
 import NotificationSdk from "../../../notificationSdk";
 
@@ -31,7 +30,6 @@ import {
   EVENT_TYPE,
   USER_CATEGORY,
 } from "../../../../constant";
-import WorkoutResponsesService from "../../../services/workoutResponses/workoutResponses.service";
 
 const Log = new Logger("MOBILE > WORKOUT > CONTROLLER");
 

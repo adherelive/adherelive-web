@@ -1,14 +1,10 @@
 import Controller from "../index";
 
 import Logger from "../../../libs/log";
-
-// Services
-const { createReport } = require("./generateTable.helper");
 import FlashCardService from "../../services/flashCard/flashCard.service";
 import ReportService from "../../services/reports/report.service";
 import TxActivity from "../../services/transactionActivity/transactionActivity.service";
 import serviceSubscriptionTx from "../../services/serviceSubscribeTransaction/serviceSubscribeTransaction";
-import { getFilePath } from "../../helper/filePath";
 import ServiceUserMappingService from "../../services/serviceUserMapping/serviceUserMapping.service";
 import uploadDocumentService from "../../services/uploadDocuments/uploadDocuments.service";
 import ServiceSubscriptionService from "../../services/serviceSubscription/serviceSubscription.service";
@@ -20,8 +16,10 @@ import ReportWrapper from "../../apiWrapper/web/reports";
 // Helpers
 import * as ReportHelper from "../reports/report.helper";
 
-import { USER_CATEGORY } from "../../../constant";
-import { DOCUMENT_PARENT_TYPE } from "../../../constant";
+import { DOCUMENT_PARENT_TYPE, USER_CATEGORY } from "../../../constant";
+
+// Services
+const { createReport } = require("./generateTable.helper");
 
 const fs = require("fs");
 const Log = new Logger("WEB > CONTROLLER > Service Offering");

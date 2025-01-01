@@ -1,11 +1,11 @@
 import express from "express";
 import ServiceUserMappingController from "../../../app/controllers/serviceUserMapping/serviceUserMapping.controller";
-
-const router = express.Router();
 // import Authenticate from "../middleware/auth";
 // import { isDoctor } from "../middleware/doctor";
 import Authenticate from "../../commonmiddlewares/auth";
 import { isDoctor } from "../../commonmiddlewares/doctor";
+
+const router = express.Router();
 
 router.post("/", Authenticate, isDoctor, ServiceUserMappingController.create);
 

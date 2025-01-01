@@ -69,7 +69,6 @@ import ProviderWrapper from "../../../apiWrapper/mobile/provider";
 import ProviderTermsMappingWrapper from "../../../apiWrapper/mobile/providerTermsMappings";
 import PatientConsentMappingWrapper from "../../../apiWrapper/mobile/patientPaymentConsentMapping";
 // import DoctorProviderMappingWrapper from "../../../apiWrapper/web/doctorProviderMapping";
-
 // import templateMedicationService from "../../../services/templateMedication/templateMedication.service";
 // import templateAppointmentService from "../../../services/templateAppointment/templateAppointment.service";
 import carePlanTemplateService from "../../../services/carePlanTemplate/carePlanTemplate.service";
@@ -81,11 +80,10 @@ import {
   BODY_VIEW,
   CONSENT_TYPE,
   EMAIL_TEMPLATE_NAME,
-  USER_CATEGORY,
-  S3_DOWNLOAD_FOLDER,
   PRESCRIPTION_PDF_FOLDER,
+  S3_DOWNLOAD_FOLDER,
   S3_DOWNLOAD_FOLDER_PROVIDER,
-  CONSULTATION,
+  USER_CATEGORY,
 } from "../../../../constant";
 import generateOTP from "../../../helper/generateOtp";
 import otpVerificationService from "../../../services/otpVerification/otpVerification.service";
@@ -99,7 +97,6 @@ import {
 } from "../../../helper/common";
 import { getDoctorCurrentTime } from "../../../helper/getUserTime";
 import * as carePlanHelper from "../carePlans/carePlan.helper";
-import PERMISSIONS from "../../../../config/permissions";
 
 const path = require("path");
 
@@ -649,20 +646,20 @@ class MPatientController extends Controller {
           //
 
           /*
-                              "care_plans": {
-                                    "1": {
-                                        "basic_info": {
-                                            "id": 1,
-                                            "doctor_id": 1,
-                                            "patient_id": 1,
-                                            "care_plan_template_id": null,
-                                            "user_role_id": 1
-                                        },
-                                        "details": {
-                                            "severity_id": 1,
-                                            "condition_id": 1,
-                                            "treatment_id": 1
-                                        },*/
+                                        "care_plans": {
+                                              "1": {
+                                                  "basic_info": {
+                                                      "id": 1,
+                                                      "doctor_id": 1,
+                                                      "patient_id": 1,
+                                                      "care_plan_template_id": null,
+                                                      "user_role_id": 1
+                                                  },
+                                                  "details": {
+                                                      "severity_id": 1,
+                                                      "condition_id": 1,
+                                                      "treatment_id": 1
+                                                  },*/
 
           if (id["basic_info"]["patient_id"] === patient_id) {
             latestCarePlanId = id["basic_info"]["id"];
@@ -1065,25 +1062,25 @@ class MPatientController extends Controller {
       }
 
       /*
-        care_plans: {
-              ...carePlanApiDetails,
-            },
-            care_plan_templates: {
-              ...otherCarePlanTemplates,
-            },
-            care_plan_template_ids: [...carePlanTemplateIds],
-            current_care_plan_id: latestCarePlanId,
+              care_plans: {
+                    ...carePlanApiDetails,
+                  },
+                  care_plan_templates: {
+                    ...otherCarePlanTemplates,
+                  },
+                  care_plan_template_ids: [...carePlanTemplateIds],
+                  current_care_plan_id: latestCarePlanId,
 
-            template_appointments: {
-              ...templateAppointmentData,
-            },
-            template_medications: {
-              ...templateMedicationData,
-            },
-            vital_templates: {
-              ...vitalTemplateData,
-            },
-      */
+                  template_appointments: {
+                    ...templateAppointmentData,
+                  },
+                  template_medications: {
+                    ...templateMedicationData,
+                  },
+                  vital_templates: {
+                    ...vitalTemplateData,
+                  },
+            */
       return this.raiseSuccess(
         res,
         200,
@@ -1895,17 +1892,17 @@ class MPatientController extends Controller {
 
       const doctorUserRoleId = carePlanData.getUserRoleId();
       /*
-            if (
-              `${doctorUserRoleId}` !== `${userRoleId}` &&
-              category !== USER_CATEGORY.PATIENT
-            ) {
-              return raiseClientError(
-                res,
-                422,
-                {},
-                "You don't have the rights to access this prescription."
-              );
-            }*/
+                  if (
+                    `${doctorUserRoleId}` !== `${userRoleId}` &&
+                    category !== USER_CATEGORY.PATIENT
+                  ) {
+                    return raiseClientError(
+                      res,
+                      422,
+                      {},
+                      "You don't have the rights to access this prescription."
+                    );
+                  }*/
       const userRoles = await userRolesService.getSingleUserRoleByData({
         id: doctorUserRoleId,
       });

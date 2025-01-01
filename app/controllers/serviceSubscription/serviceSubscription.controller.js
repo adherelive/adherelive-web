@@ -5,9 +5,9 @@ import Logger from "../../../libs/log";
 // Services
 import ServiceSubscriptionService from "../../services/serviceSubscription/serviceSubscription.service";
 import ServiceSubscriptionMapping from "../../services/serviceSubscriptionMapping/serviceSubscritpionMapping.service";
+import { USER_CATEGORY } from "../../../constant";
 
 const Log = new Logger("WEB > CONTROLLER > Service Offering");
-import { USER_CATEGORY } from "../../../constant";
 
 class ServiceSubscriptionController extends Controller {
   constructor() {

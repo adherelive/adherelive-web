@@ -4,6 +4,7 @@ import * as https from "https";
 import fs from "fs";
 // const Log = require("../../../libs/log")("minioService");
 import Log from "../../../libs/log";
+
 const log = Log("minioService");
 
 const Minio = require("minio");

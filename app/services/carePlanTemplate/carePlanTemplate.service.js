@@ -195,13 +195,13 @@ class CarePlanTemplateService {
   };
 
   /*
-    user_id
-    provider_id
-    doctor_id
-    user_id -> show
-    provider_id & is_public_in_provier== true -> show
-    user_id &
-    */
+      user_id
+      provider_id
+      doctor_id
+      user_id -> show
+      provider_id & is_public_in_provier== true -> show
+      user_id &
+      */
 
   getAllTemplatesForDoctor = async (data) => {
     try {

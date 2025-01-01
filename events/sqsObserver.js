@@ -2,11 +2,11 @@ import Logger from "../libs/log";
 import { EVENT_TYPE } from "../constant";
 import {
   handleAppointments,
+  handleAppointmentsTimeAssignment,
+  handleCarePlans,
+  handleDiet,
   handleMedications,
   handleVitals,
-  handleCarePlans,
-  handleAppointmentsTimeAssignment,
-  handleDiet,
   handleWorkout,
 } from "./helper";
 

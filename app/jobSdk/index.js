@@ -1,4 +1,4 @@
-import { NOTIFICATION_STAGES, EVENT_TYPE } from "../../constant";
+import { EVENT_TYPE, NOTIFICATION_STAGES } from "../../constant";
 import Appointment from "./Appointments/observer";
 import Medication from "./Medications/observer";
 import Vital from "./Vitals/observer";

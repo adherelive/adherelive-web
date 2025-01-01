@@ -11,8 +11,8 @@ import VitalService from "../../services/vitals/vital.service";
 import FeatureDetailService from "../../services/featureDetails/featureDetails.service";
 import queueService from "../../services/awsQueue/queue.service";
 import ScheduleEventService from "../../services/scheduleEvents/scheduleEvent.service";
-import carePlanService from "../../services/carePlan/carePlan.service";
 import EventService from "../../services/scheduleEvents/scheduleEvent.service";
+import carePlanService from "../../services/carePlan/carePlan.service";
 
 // Wrappers
 import VitalTemplateWrapper from "../../apiWrapper/web/vitalTemplates";
@@ -24,10 +24,9 @@ import PatientWrapper from "../../apiWrapper/web/patient";
 
 import {
   DAYS,
-  EVENT_TYPE,
   EVENT_STATUS,
+  EVENT_TYPE,
   FEATURE_TYPE,
-  USER_CATEGORY,
   NOTIFICATION_STAGES,
 } from "../../../constant";
 import moment from "moment";

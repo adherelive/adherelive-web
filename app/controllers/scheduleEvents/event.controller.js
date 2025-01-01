@@ -18,7 +18,6 @@ import SymptomWrapper from "../../apiWrapper/web/symptoms";
 import VitalWrapper from "../../apiWrapper/web/vitals";
 
 // Timer
-import { getTime } from "../../helper/timer";
 
 const Log = new Logger("WEB > EVENT > CONTROLLER");
 

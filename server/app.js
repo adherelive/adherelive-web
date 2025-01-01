@@ -12,7 +12,6 @@ import mApiRouter from "../routes/m-api";
 import EventObserver from "../app/proxySdk/eventObserver";
 import ActivityObserver from "../app/activitySdk/activityObserver";
 // import dbConnect from "../libs/dbConnection";
-import RenewSubscription from "../app/cronJobs/renewSubscription";
 
 import Start from "../app/cronJobs/start";
 import Passed from "../app/cronJobs/passed";

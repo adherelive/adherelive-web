@@ -3,7 +3,6 @@ const { OAuth2Client } = require("google-auth-library");
 const userService = require("../../../app/services/user/user.service");
 const errMessage = require("../../../config/messages.json").errMessages;
 const Response = require("../../../app/controllers/helper/responseFormat");
-import doRequest from "../../../app/controllers/helper/doRequest";
 
 /** This is the API being used to connect to and link the data from any HIS
  *

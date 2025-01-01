@@ -16,7 +16,6 @@ import SymptomWrapper from "../../../apiWrapper/mobile/symptoms";
 import { EVENT_STATUS, EVENT_TYPE, USER_CATEGORY } from "../../../../constant";
 import * as EventHelper from "../../scheduleEvents/event.helper";
 import SymptomService from "../../../services/symptom/symptom.service";
-import eventService from "../../../services/scheduleEvents/scheduleEvent.service";
 
 const Log = new Logger("MOBILE > SCHEDULE_EVENTS > CONTROLLER");
 

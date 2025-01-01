@@ -22,8 +22,6 @@ import PatientWrapper from "../../../apiWrapper/mobile/patient";
 
 import JobSdk from "../../../jobSdk";
 import NotificationSdk from "../../../notificationSdk";
-
-import ChatJob from "../../../jobSdk/Chat/observer";
 import {
   DAYS,
   EVENT_STATUS,
@@ -31,9 +29,7 @@ import {
   FEATURE_TYPE,
   NOTIFICATION_STAGES,
   USER_CATEGORY,
-  MESSAGE_TYPES,
 } from "../../../../constant";
-import SqsQueueService from "../../../services/awsQueue/queue.service";
 
 const Log = new Logger("MOBILE > VITALS > CONTROLLER");
 

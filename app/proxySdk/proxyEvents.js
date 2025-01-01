@@ -1,5 +1,3 @@
-import Controller from "./index";
-
 let eventList = {
   SEND_EMAIL: "sendEmail",
   SEND_SMS: "sendSms",

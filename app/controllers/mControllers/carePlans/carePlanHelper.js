@@ -12,7 +12,6 @@ import DietService from "../../../services/diet/diet.service";
 import WorkoutService from "../../../services/workouts/workout.service";
 
 // services
-
 // wrappers
 import CarePlanWrapper from "../../../apiWrapper/mobile/carePlan";
 import AppointmentWrapper from "../../../apiWrapper/mobile/appointments";

@@ -5,12 +5,8 @@ import Logger from "../../../libs/log";
 // Services
 import SymptomService from "../../services/symptom/symptom.service";
 // import DocumentService from "../../services/uploadDocuments/uploadDocuments.service";
-
 // Wrappers
 import SymptomWrapper from "../../apiWrapper/web/symptoms";
-import DocumentWrapper from "../../apiWrapper/web/uploadDocument";
-
-import { DOCUMENT_PARENT_TYPE } from "../../../constant";
 
 const Log = new Logger("WEB > CONTROLLERS > SYMPTOMS");
 

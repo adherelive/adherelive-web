@@ -1,5 +1,3 @@
-import Controller from "../index";
-
 import isEmpty from "lodash/isEmpty";
 
 export const getFormattedData = (data = {}) => {

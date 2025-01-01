@@ -1,11 +1,9 @@
-import Sequelize from "sequelize";
+import Sequelize, { Op } from "sequelize";
 import Database from "../../../libs/mysql";
-import { Op } from "sequelize";
 import { TABLE_NAME } from "../../models/patients";
 import { TABLE_NAME as userTableName } from "../../models/users";
 import { TABLE_NAME as carePlanTableName } from "../../models/carePlan";
 import Log from "../../../libs/log";
-import { TABLE_NAME as doctorTableName } from "../../models/doctors";
 
 const Logger = new Log("WEB > PATIENTS > CONTROLLER");
 
@@ -79,38 +77,38 @@ class PatientsService {
   };
 
   /* TODO: Code has been removed in the recent merge-2 branch
-     *
-    getPatientByName = async (keyword) => {
-      try {
-        const patient = await Database.getModel(TABLE_NAME).findAll({
-          where: {
-            [Op.or]: [
-              {
-                first_name: {
-                  [Op.like]: `%${keyword}%`,
+       *
+      getPatientByName = async (keyword) => {
+        try {
+          const patient = await Database.getModel(TABLE_NAME).findAll({
+            where: {
+              [Op.or]: [
+                {
+                  first_name: {
+                    [Op.like]: `%${keyword}%`,
+                  },
                 },
-              },
-              {
-                middle_name: {
-                  [Op.like]: `%${keyword}%`,
+                {
+                  middle_name: {
+                    [Op.like]: `%${keyword}%`,
+                  },
                 },
-              },
-              {
-                last_name: {
-                  [Op.like]: `%${keyword}%`,
+                {
+                  last_name: {
+                    [Op.like]: `%${keyword}%`,
+                  },
                 },
-              },
-            ],
-          },
+              ],
+            },
 
-          include: [Database.getModel(userTableName)],
-        });
-        return patient;
-      } catch (error) {
-        throw error;
-      }
-    };
-    */
+            include: [Database.getModel(userTableName)],
+          });
+          return patient;
+        } catch (error) {
+          throw error;
+        }
+      };
+      */
 
   getPatientById = async (data) => {
     try {
@@ -253,7 +251,8 @@ class PatientsService {
   };
 
   getPaginatedPatients = async ({ doctor_id, order }) => {
-    const query = `SELECT cp.doctor_id, cp.patient_id FROM ${carePlanTableName} AS cp`;
+    const query = `SELECT cp.doctor_id, cp.patient_id
+                       FROM ${carePlanTableName} AS cp`;
     try {
       return await Database.getModel(TABLE_NAME).findAll({
         attributes: ["each", []],

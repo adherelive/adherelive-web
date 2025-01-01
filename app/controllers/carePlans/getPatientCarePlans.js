@@ -1,5 +1,3 @@
-import Controller from "../index";
-
 import Logger from "../../../libs/log";
 import carePlanService from "../../services/carePlan/carePlan.service";
 import * as carePlanHelper from "./carePlan.helper";

@@ -32,7 +32,6 @@ import carePlanSecondaryDrMapService from "../../services/carePlanSecondaryDocto
 // import medicineService from "../../services/medicine/medicine.service";
 // import templateMedicationService from "../../services/templateMedication/templateMedication.service";
 // import templateAppointmentService from "../../services/templateAppointment/templateAppointment.service";
-
 // Wrappers
 import AppointmentWrapper from "../../apiWrapper/web/appointments";
 import DegreeWrapper from "../../apiWrapper/mobile/degree";
@@ -60,7 +59,6 @@ import UserPreferenceWrapper from "../../apiWrapper/web/userPreference";
 // import DegreeWrapper from "../../apiWrapper/web/degree";
 // import doctor from "../../apiWrapper/web/doctor";
 // import college from "../../apiWrapper/web/college";
-
 import AuthJob from "../../jobSdk/Auth/observer";
 import NotificationSdk from "../../notificationSdk";
 import DoctorPatientWatchlistWrapper from "../../apiWrapper/web/doctorPatientWatchlist";
@@ -69,7 +67,6 @@ import {
   ALLOWED_DOC_TYPE_DOCTORS,
   DOCUMENT_PARENT_TYPE,
   EMAIL_TEMPLATE_NAME,
-  EVENT_TYPE,
   FEATURES,
   NO_ACTION,
   NO_APPOINTMENT,

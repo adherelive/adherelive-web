@@ -1,6 +1,5 @@
 import express from "express";
 import Authenticated from "../middleware/auth";
-import PatientController from "../../../app/controllers/patients/patients.controller";
 import multer from "multer";
 
 import userService from "../../../app/services/user/user.service";
@@ -18,27 +17,18 @@ import PortionServiceService from "../../../app/services/portions/portions.servi
 import RepetitionService from "../../../app/services/exerciseRepetitions/repetition.service";
 import WorkoutService from "../../../app/services/workouts/workout.service";
 import userPreferenceService from "../../../app/services/userPreferences/userPreference.service";
-
-import ExerciseContentWrapper from "../../../app/apiWrapper/web/exerciseContents";
 import UserRolesWrapper from "../../../app/apiWrapper/web/userRoles";
-import VitalWrapper from "../../../app/apiWrapper/web/vitals";
 import UserWrapper from "../../../app/apiWrapper/web/user";
 import CarePlanWrapper from "../../../app/apiWrapper/web/carePlan";
 import AppointmentWrapper from "../../../app/apiWrapper/web/appointments";
 import MReminderWrapper from "../../../app/apiWrapper/web/medicationReminder";
 import MedicineApiWrapper from "../../../app/apiWrapper/mobile/medicine";
-import SymptomWrapper from "../../../app/apiWrapper/web/symptoms";
-import DoctorWrapper from "../../../app/apiWrapper/web/doctor";
-import ConsentWrapper from "../../../app/apiWrapper/web/consent";
 import PatientWrapper from "../../../app/apiWrapper/web/patient";
-import ReportWrapper from "../../../app/apiWrapper/web/reports";
 import ConditionWrapper from "../../../app/apiWrapper/web/conditions";
 import QualificationWrapper from "../../../app/apiWrapper/web/doctorQualification";
 import RegistrationWrapper from "../../../app/apiWrapper/web/doctorRegistration";
 import DegreeWrapper from "../../../app/apiWrapper/web/degree";
 import CouncilWrapper from "../../../app/apiWrapper/web/council";
-import TreatmentWrapper from "../../../app/apiWrapper/web/treatments";
-import DoctorPatientWatchlistWrapper from "../../../app/apiWrapper/web/doctorPatientWatchlist";
 import DietWrapper from "../../../app/apiWrapper/web/diet";
 import ProviderWrapper from "../../../app/apiWrapper/web/provider";
 import PortionWrapper from "../../../app/apiWrapper/web/portions";
@@ -49,22 +39,14 @@ import * as DietHelper from "../../../app/controllers/diet/diet.helper";
 import moment from "moment";
 
 import {
-  BODY_VIEW,
-  CONSENT_TYPE,
-  EMAIL_TEMPLATE_NAME,
-  USER_CATEGORY,
-  S3_DOWNLOAD_FOLDER,
-  PRESCRIPTION_PDF_FOLDER,
-  DIAGNOSIS_TYPE,
-  S3_DOWNLOAD_FOLDER_PROVIDER,
-  ONBOARDING_STATUS,
-  SIGN_IN_CATEGORY,
-  DOSE_UNIT,
-  PATIENT_MEAL_TIMINGS,
   APPOINTMENT_TYPE,
-  MEDICATION_TIMING,
-  WHEN_TO_TAKE_ABBREVATIONS,
   categories,
+  DOSE_UNIT,
+  MEDICATION_TIMING,
+  S3_DOWNLOAD_FOLDER,
+  S3_DOWNLOAD_FOLDER_PROVIDER,
+  USER_CATEGORY,
+  WHEN_TO_TAKE_ABBREVATIONS,
 } from "../../../constant";
 
 import { downloadFileFromS3 } from "../../../app/controllers/user/user.helper";
@@ -73,7 +55,6 @@ import { getFilePath } from "../../../app/helper/filePath";
 import { checkAndCreateDirectory } from "../../../app/helper/common";
 
 import { getDoctorCurrentTime } from "../../../app/helper/getUserTime";
-import diet from "../../../app/apiWrapper/web/diet";
 
 const fs = require("fs");
 const path = require("path");
