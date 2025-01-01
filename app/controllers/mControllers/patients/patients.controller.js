@@ -3,7 +3,7 @@ import userService from "../../../services/user/user.service";
 import patientService from "../../../services/patients/patients.service";
 import minioService from "../../../services/minio/minio.service";
 
-// SERVICES ------------
+// Services
 import VitalService from "../../../services/vitals/vital.service";
 import UserPreferenceService from "../../../services/userPreferences/userPreference.service";
 import ConsentService from "../../../services/consents/consent.service";
@@ -18,7 +18,7 @@ import RepetitionService from "../../../services/exerciseRepetitions/repetition.
 import PortionServiceService from "../../../services/portions/portions.service";
 import DietService from "../../../services/diet/diet.service";
 import carePlanSecondaryDrMapService from "../../../services/carePlanSecondaryDoctorMappings/carePlanSecondaryDoctorMappings.service";
-// WRAPPERS ------------
+// Wrappers
 import ExerciseContentWrapper from "../../../apiWrapper/mobile/exerciseContents";
 import VitalWrapper from "../../../apiWrapper/mobile/vitals";
 import PatientWrapper from "../../../apiWrapper/mobile/patient";

@@ -2,10 +2,10 @@ import Logger from "../../../../libs/log";
 
 import BaseVital from "../../../services/vitals";
 
-// SERVICES
+// Services
 import VitalService from "../../../services/vitals/vital.service";
 
-// WRAPPERS
+// Wrappers
 import VitalTemplateWrapper from "../../web/vitalTemplates";
 import CarePlanWrapper from "../../web/carePlan";
 import moment from "moment";

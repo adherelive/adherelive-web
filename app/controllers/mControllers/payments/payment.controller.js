@@ -5,10 +5,10 @@ import { USER_CATEGORY } from "../../../../constant";
 // HELPERS
 import * as PaymentHelper from "./helper";
 
-// SERVICES...
+// Services
 import PaymentProductService from "../../../services/paymentProducts/paymentProduct.service";
 
-// WRAPPERS...
+// Wrappers
 import PaymentProductWrapper from "../../../apiWrapper/mobile/paymentProducts";
 
 const Log = new Logger("MOBILE > CONTROLLER > PAYMENTS");

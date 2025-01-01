@@ -2,11 +2,11 @@ import Logger from "../../../../libs/log";
 
 import BaseVital from "../../../services/vitals";
 
-// SERVICES
+// Services
 import VitalService from "../../../services/vitals/vital.service";
 import EventService from "../../../services/scheduleEvents/scheduleEvent.service";
 
-// WRAPPERS
+// Wrappers
 import VitalTemplateWrapper from "../../mobile/vitalTemplates";
 import CarePlanWrapper from "../../mobile/carePlan";
 import EventWrapper from "../../common/scheduleEvents";

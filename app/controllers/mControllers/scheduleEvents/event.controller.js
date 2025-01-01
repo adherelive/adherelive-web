@@ -2,12 +2,12 @@ import Controller from "../../index";
 import Logger from "../../../../libs/log";
 import moment from "moment";
 
-// SERVICES -------------------
+// Services
 // import VitalService from "../../../services/vitals/vital.service";
 import EventService from "../../../services/scheduleEvents/scheduleEvent.service";
 import CarePlanService from "../../../services/carePlan/carePlan.service";
 
-// WRAPPERS -------------------
+// Wrappers
 import EventWrapper from "../../../apiWrapper/common/scheduleEvents";
 import VitalWrapper from "../../../apiWrapper/mobile/vitals";
 import CarePlanWrapper from "../../../apiWrapper/mobile/carePlan";

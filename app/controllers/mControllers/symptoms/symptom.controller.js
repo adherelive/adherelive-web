@@ -1,11 +1,11 @@
 import Controller from "../../";
 
-// SERVICES ----------
+// Services
 import SymptomService from "../../../services/symptom/symptom.service";
 import UploadDocumentService from "../../../services/uploadDocuments/uploadDocuments.service";
 import twilioService from "../../../services/twilio/twilio.service";
 
-// WRAPPERS ----------
+// Wrappers
 import SymptomWrapper from "../../../apiWrapper/mobile/symptoms";
 import DocumentWrapper from "../../../apiWrapper/mobile/uploadDocument";
 import CarePlanWrapper from "../../../apiWrapper/mobile/carePlan";

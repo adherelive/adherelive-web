@@ -2,11 +2,11 @@ import BaseCarePlan from "../../../services/carePlan";
 import carePlanService from "../../../services/carePlan/carePlan.service";
 import VitalService from "../../../services/vitals/vital.service";
 import DietService from "../../../services/diet/diet.service";
-// import DoctorService from "../../../services/doctor/doctor.service";
 import WorkoutService from "../../../services/workouts/workout.service";
 import DoctorService from "../../../services/doctor/doctor.service";
+// import DoctorService from "../../../services/doctor/doctor.service";
 
-// WRAPPERS...
+// Wrappers
 import DoctorWrapper from "../doctor";
 import PatientWrapper from "../patient";
 import UserRoleWrapper from "../userRoles";

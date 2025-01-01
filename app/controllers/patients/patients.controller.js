@@ -6,6 +6,7 @@ import patientService from "../../../app/services/patients/patients.service";
 import doctorService from "../../../app/services/doctor/doctor.service";
 import minioService from "../../../app/services/minio/minio.service";
 import carePlanService from "../../services/carePlan/carePlan.service";
+import conditionService from "../../services/condition/condition.service";
 import medicineService from "../../services/medicine/medicine.service";
 import getAge from "../../helper/getAge";
 import SymptomService from "../../services/symptom/symptom.service";
@@ -16,14 +17,6 @@ import carePlanTemplateService from "../../services/carePlanTemplate/carePlanTem
 import otpVerificationService from "../../services/otpVerification/otpVerification.service";
 import ConsentService from "../../services/consents/consent.service";
 import ReportService from "../../services/reports/report.service";
-// import carePlanMedicationService from "../../services/carePlanMedication/carePlanMedication.service";
-// import carePlanAppointmentService from "../../services/carePlanAppointment/carePlanAppointment.service";
-// import templateMedicationService from "../../services/templateMedication/templateMedication.service";
-// import templateAppointmentService from "../../services/templateAppointment/templateAppointment.service";
-// Wrappers
-import UserRoleWrapper from "../../apiWrapper/web/userRoles";
-import UserRolesWrapper from "../../apiWrapper/web/userRoles";
-import conditionService from "../../services/condition/condition.service";
 import qualificationService from "../../services/doctorQualifications/doctorQualification.service";
 import doctorRegistrationService from "../../services/doctorRegistration/doctorRegistration.service";
 import treatmentService from "../../services/treatment/treatment.service";
@@ -35,6 +28,13 @@ import RepetitionService from "../../services/exerciseRepetitions/repetition.ser
 import WorkoutService from "../../services/workouts/workout.service";
 import userPreferenceService from "../../services/userPreferences/userPreference.service";
 import carePlanSecondaryDrMapService from "../../services/carePlanSecondaryDoctorMappings/carePlanSecondaryDoctorMappings.service";
+// import carePlanMedicationService from "../../services/carePlanMedication/carePlanMedication.service";
+// import carePlanAppointmentService from "../../services/carePlanAppointment/carePlanAppointment.service";
+// import templateMedicationService from "../../services/templateMedication/templateMedication.service";
+// import templateAppointmentService from "../../services/templateAppointment/templateAppointment.service";
+// Wrappers
+import UserRoleWrapper from "../../apiWrapper/web/userRoles";
+import UserRolesWrapper from "../../apiWrapper/web/userRoles";
 import VitalWrapper from "../../apiWrapper/web/vitals";
 import UserWrapper from "../../apiWrapper/web/user";
 import CarePlanWrapper from "../../apiWrapper/web/carePlan";
@@ -59,6 +59,7 @@ import ProviderWrapper from "../../apiWrapper/web/provider";
 import PortionWrapper from "../../apiWrapper/web/portions";
 import WorkoutWrapper from "../../apiWrapper/web/workouts";
 import UserPreferenceWrapper from "../../apiWrapper/web/userPreference";
+import carePlan from "../../apiWrapper/web/carePlan";
 // import TemplateMedicationWrapper from "../../apiWrapper/web/templateMedication";
 // import TemplateAppointmentWrapper from "../../apiWrapper/web/templateAppointment";
 // Helpers
@@ -74,7 +75,6 @@ import { downloadFileFromS3 } from "../user/user.helper";
 import { getFilePath } from "../../helper/filePath";
 import * as carePlanHelper from "../carePlans/carePlan.helper";
 import { getDoctorCurrentTime } from "../../helper/getUserTime";
-// import carePlan from "../../apiWrapper/web/carePlan";
 import * as DietHelper from "../diet/diet.helper";
 import Log from "../../../libs/log";
 

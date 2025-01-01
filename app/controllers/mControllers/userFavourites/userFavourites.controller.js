@@ -2,10 +2,10 @@ import Controller from "../../index";
 import Logger from "../../../../libs/log";
 
 // HELPERS
-// SERVICES...
+// Services
 import UserFavouritesService from "../../../services/userFavourites/userFavourites.service";
 
-// WRAPPERS...
+// Wrappers
 import UserFavouritesWrapper from "../../../apiWrapper/mobile/userFavourites";
 import UserWrapper from "../../../apiWrapper/mobile/user";
 

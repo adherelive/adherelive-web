@@ -8,7 +8,7 @@ import {
 } from "../../constant";
 import * as UploadHelper from "./helper";
 
-// SERVICES ---------------
+// Services
 import documentService from "../services/uploadDocuments/uploadDocuments.service";
 
 const AWS_FOLDER_NAME = {
