@@ -1,3 +1,5 @@
+import Controller from "../index";
+
 const { OAuth2Client } = require("google-auth-library");
 const moment = require("moment");
 const jwt = require("jsonwebtoken");
@@ -33,8 +35,8 @@ import DoctorPatientWatchlistWrapper from "../../apiWrapper/web/doctorPatientWat
 
 import doctorService from "../../services/doctors/doctors.service";
 import UserVerificationServices from "../../services/userVerifications/userVerifications.services";
-import Controller from "../index";
-import { uploadImageS3, createNewUser } from "./userHelper";
+
+import { uploadImageS3, createNewUser } from "./user.helper";
 import { v4 as uuidv4 } from "uuid";
 import constants from "../../../config/constants";
 import {
@@ -45,7 +47,7 @@ import {
 import { Proxy_Sdk, EVENTS } from "../../proxySdk";
 // import  EVENTS from "../../proxySdk/proxyEvents";
 const errMessage = require("../../../config/messages.json").errMessages;
-import { getCarePlanSeverityDetails } from "../carePlans/carePlanHelper";
+import { getCarePlanSeverityDetails } from "../carePlans/carePlan.helper";
 import LinkVerificationWrapper from "../../apiWrapper/mobile/userVerification";
 
 import AppNotification from "../../notificationSdk/inApp";

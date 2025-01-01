@@ -1,5 +1,6 @@
+import Controller from "../index";
+
 import agoraService from "../../services/agora/agora.service";
-import Controller from "../";
 import {
   USER_CATEGORY,
   AGORA_CALL_NOTIFICATION_TYPES,

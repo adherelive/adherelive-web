@@ -24,7 +24,7 @@ import {
   getCarePlanAppointmentIds,
   getCarePlanMedicationIds,
   getCarePlanSeverityDetails,
-} from "../../carePlans/carePlanHelper";
+} from "../../carePlans/carePlan.helper";
 import MedicationJob from "../../../jobSdk/Medications/observer";
 import NotificationSdk from "../../../notificationSdk";
 
@@ -46,7 +46,7 @@ import CarePlanWrapper from "../../../apiWrapper/mobile/carePlan";
 import MedicationWrapper from "../../../apiWrapper/mobile/medicationReminder";
 import UserPreferenceWrapper from "../../../apiWrapper/mobile/userPreference";
 
-import * as medicationHelper from "../../medicationReminder/medicationHelper";
+import * as medicationHelper from "../../medicationReminder/medication.helper";
 
 const FILE_NAME = "MOBILE - MEDICATION REMINDER CONTROLLER";
 const Logger = new Log(FILE_NAME);

@@ -1,3 +1,5 @@
+import Controller from "../index";
+
 import { isEmpty } from "lodash";
 
 export const validateAccountData = ({

@@ -11,7 +11,7 @@ import DoctorWrapper from "../../../apiWrapper/mobile/doctor";
 
 import { DOCUMENT_PARENT_TYPE, USER_CATEGORY } from "../../../../constant";
 import { getFilePath } from "../../../helper/filePath";
-import * as ReportHelper from "../../reports/reportHelper";
+import * as ReportHelper from "../../reports/report.helper";
 
 const Log = new Logger("MOBILE > CONTROLLER > REPORTS");
 

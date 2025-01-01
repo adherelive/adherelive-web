@@ -1,21 +1,27 @@
 import Controller from "../index";
+
 import Logger from "../../../libs/log";
-// services
-const { createReport } = require("./genrateTable");
+
+// Services
+const { createReport } = require("./generateTable.helper");
 import FlashCardService from "../../services/flashCard/flashCard.service";
 import ReportService from "../../services/reports/report.service";
 import TxActivity from "../../services/transactionActivity/transactionActivity.service";
 import serviceSubscriptionTx from "../../services/serviceSubscribeTransaction/serviceSubscribeTransaction";
 import { getFilePath } from "../../helper/filePath";
 import ServiceUserMappingService from "../../services/serviceUserMapping/serviceUserMapping.service";
-import { DOCUMENT_PARENT_TYPE } from "../../../constant";
 import uploadDocumentService from "../../services/uploadDocuments/uploadDocuments.service";
-import * as ReportHelper from "../reports/reportHelper"; // wrappers
-import ReportWrapper from "../../apiWrapper/web/reports";
 import ServiceSubscriptionService from "../../services/serviceSubscription/serviceSubscription.service";
 import ServiceOfferingService from "../../services/serviceOffering/serviceOffering.service";
 
+// Wrappers
+import ReportWrapper from "../../apiWrapper/web/reports";
+
+// Helpers
+import * as ReportHelper from "../reports/report.helper";
+
 import { USER_CATEGORY } from "../../../constant";
+import { DOCUMENT_PARENT_TYPE } from "../../../constant";
 
 const fs = require("fs");
 const Log = new Logger("WEB > CONTROLLER > Service Offering");

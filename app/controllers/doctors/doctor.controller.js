@@ -1,6 +1,9 @@
 import Controller from "../index";
+
 import Log from "../../../libs/log";
 import moment from "moment";
+
+// Services
 import userService from "../../services/user/user.service";
 import doctorService from "../../services/doctor/doctor.service";
 import doctorsService from "../../services/doctors/doctors.service";
@@ -17,9 +20,6 @@ import registrationService from "../../services/doctorRegistration/doctorRegistr
 import carePlanTemplateService from "../../services/carePlanTemplate/carePlanTemplate.service";
 import carePlanService from "../../services/carePlan/carePlan.service";
 import appointmentService from "../../services/appointment/appointment.service";
-// import medicineService from "../../services/medicine/medicine.service";
-// import templateMedicationService from "../../services/templateMedication/templateMedication.service";
-// import templateAppointmentService from "../../services/templateAppointment/templateAppointment.service";
 import degreeService from "../../services/degree/degree.service";
 import collegeService from "../../services/college/college.service";
 import councilService from "../../services/council/council.service";
@@ -28,9 +28,12 @@ import providerService from "../../services/provider/provider.service";
 import doctorProviderMappingService from "../../services/doctorProviderMapping/doctorProviderMapping.service";
 import featuresService from "../../services/features/features.service";
 import doctorPatientFeatureMappingService from "../../services/doctorPatientFeatureMapping/doctorPatientFeatureMapping.service";
-import carePlanSecondaryDoctorMappingService from "../../services/carePlanSecondaryDoctorMappings/carePlanSecondaryDoctorMappings.service";
-// import TemplateMedicationWrapper from "../../apiWrapper/web/templateMedication";
-// import TemplateAppointmentWrapper from "../../apiWrapper/web/templateAppointment";
+import carePlanSecondaryDrMapService from "../../services/carePlanSecondaryDoctorMappings/carePlanSecondaryDoctorMappings.service";
+// import medicineService from "../../services/medicine/medicine.service";
+// import templateMedicationService from "../../services/templateMedication/templateMedication.service";
+// import templateAppointmentService from "../../services/templateAppointment/templateAppointment.service";
+
+// Wrappers
 import AppointmentWrapper from "../../apiWrapper/web/appointments";
 import DegreeWrapper from "../../apiWrapper/mobile/degree";
 import UserWrapper from "../../apiWrapper/web/user";
@@ -42,8 +45,6 @@ import QualificationWrapper from "../../apiWrapper/web/doctorQualification";
 import RegistrationWrapper from "../../apiWrapper/web/doctorRegistration";
 import CarePlanTemplateWrapper from "../../apiWrapper/web/carePlanTemplate";
 import ClinicWrapper from "../../apiWrapper/web/doctorClinic";
-// import MedicineApiWrapper from "../../apiWrapper/web/medicine";
-// import DegreeWrapper from "../../apiWrapper/web/degree";
 import CollegeWrapper from "../../apiWrapper/web/college";
 import CouncilWrapper from "../../apiWrapper/web/council";
 import AccountDetailsWrapper from "../../apiWrapper/web/accountsDetails";
@@ -53,14 +54,17 @@ import TreatmentWrapper from "../../apiWrapper/web/treatments";
 import UserRoleWrapper from "../../apiWrapper/web/userRoles";
 import SpecialityWrapper from "../../apiWrapper/web/speciality";
 import UserPreferenceWrapper from "../../apiWrapper/web/userPreference";
+// import TemplateMedicationWrapper from "../../apiWrapper/web/templateMedication";
+// import TemplateAppointmentWrapper from "../../apiWrapper/web/templateAppointment";
+// import MedicineApiWrapper from "../../apiWrapper/web/medicine";
+// import DegreeWrapper from "../../apiWrapper/web/degree";
+// import doctor from "../../apiWrapper/web/doctor";
+// import college from "../../apiWrapper/web/college";
+
 import AuthJob from "../../jobSdk/Auth/observer";
 import NotificationSdk from "../../notificationSdk";
-// import { createNewUser } from "../user/userHelper";
-// import { generatePassword } from "../helper/passwordGenerator";
 import DoctorPatientWatchlistWrapper from "../../apiWrapper/web/doctorPatientWatchlist";
-
-import { addProviderDoctor } from "./providerHelper";
-
+import { addProviderDoctor } from "./doctors.helper";
 import {
   ALLOWED_DOC_TYPE_DOCTORS,
   DOCUMENT_PARENT_TYPE,
@@ -83,15 +87,15 @@ import getUniversalLink from "../../helper/universalLink";
 import getAge from "../../helper/getAge";
 import bcrypt from "bcrypt";
 import { v4 as uuidv4 } from "uuid";
-import { uploadImageS3 } from "../user/userHelper";
+import { uploadImageS3 } from "../user/user.helper";
 import { EVENTS, Proxy_Sdk } from "../../proxySdk";
 import UserVerificationServices from "../../services/userVerifications/userVerifications.services";
 import userPreferenceService from "../../services/userPreferences/userPreference.service";
 import doctorPatientWatchlistService from "../../services/doctorPatientWatchlist/doctorPatientWatchlist.service";
 import { getRoomId, getSeparateName } from "../../helper/common";
 import { raiseClientError } from "../../../routes/api/helper";
-// import doctor from "../../apiWrapper/web/doctor";
-// import college from "../../apiWrapper/web/college";
+// import { createNewUser } from "../user/userHelper";
+// import { generatePassword } from "../helper/passwordGenerator";
 
 const XLSX = require("xlsx");
 
@@ -3710,7 +3714,7 @@ class DoctorController extends Controller {
       const {
         count: careplansCount = 0,
         rows: careplanAsSecondaryDoctor = [],
-      } = await carePlanSecondaryDoctorMappingService.findAndCountAll({
+      } = await carePlanSecondaryDrMapService.findAndCountAll({
         where: {
           secondary_doctor_role_id: userRoleId,
         },
@@ -4196,10 +4200,10 @@ class DoctorController extends Controller {
   //         care_plan_id,
   //         secondary_doctor_role_id: user_role_id
   //       };
-  //       const existingMapping = await carePlanSecondaryDoctorMappingService.getByData(dataToAdd) || null;
+  //       const existingMapping = await carePlanSecondaryDrMapService.getByData(dataToAdd) || null;
 
   //       if(!existingMapping) {
-  //         const createdMapping = await carePlanSecondaryDoctorMappingService.create(dataToAdd) || null;
+  //         const createdMapping = await carePlanSecondaryDrMapService.create(dataToAdd) || null;
 
   //         if(createdMapping) {
   //           return raiseSuccess(res, 200, {}, "Profile added successfully");

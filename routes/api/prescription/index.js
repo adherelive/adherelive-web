@@ -44,7 +44,7 @@ import ProviderWrapper from "../../../app/apiWrapper/web/provider";
 import PortionWrapper from "../../../app/apiWrapper/web/portions";
 import WorkoutWrapper from "../../../app/apiWrapper/web/workouts";
 import UserPreferenceWrapper from "../../../app/apiWrapper/web/userPreference";
-import * as DietHelper from "../../../app/controllers/diet/dietHelper";
+import * as DietHelper from "../../../app/controllers/diet/diet.helper";
 
 import moment from "moment";
 
@@ -67,7 +67,7 @@ import {
   categories,
 } from "../../../constant";
 
-import { downloadFileFromS3 } from "../../../app/controllers/user/userHelper";
+import { downloadFileFromS3 } from "../../../app/controllers/user/user.helper";
 
 import { getFilePath } from "../../../app/helper/filePath";
 import { checkAndCreateDirectory } from "../../../app/helper/common";

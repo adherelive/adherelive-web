@@ -1,19 +1,20 @@
 import Controller from "../index";
+
 import Logger from "../../../libs/log";
 import jwt from "jsonwebtoken";
 import base64 from "js-base64";
 
-// SERVICES --------------------------------
+// Services
 import userRoleService from "../../services/userRoles/userRoles.service";
 import userService from "../../services/user/user.service";
 
-// WRAPPERS
+// Wrappers
 import UserRoleWrapper from "../../apiWrapper/web/userRoles";
 import UserWrapper from "../../apiWrapper/web/user";
 
 import { USER_CATEGORY } from "../../../constant";
 import AppNotification from "../../notificationSdk/inApp";
-import { getTime } from "../../../app/helper/timer";
+import { getTime } from "../helper/timer";
 
 const Log = new Logger("WEB > CONTROLLER > PAYMENTS");
 

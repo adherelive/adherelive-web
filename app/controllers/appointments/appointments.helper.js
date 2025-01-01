@@ -1,3 +1,5 @@
+import Controller from "../index";
+
 import Logger from "../../../libs/log";
 import { FAVOURITE_TYPE, MEDICAL_TEST } from "../../../constant";
 

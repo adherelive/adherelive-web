@@ -1,4 +1,7 @@
+import Controller from "../index";
+
 import Logger from "../../../libs/log";
+
 import {
   NOTIFICATION_VERB,
   EVENT_TYPE,

@@ -1,8 +1,9 @@
-import Controller from "../";
+import Controller from "../index";
+
 import Logger from "../../../libs/log";
 import moment from "moment";
 
-import * as EventHelper from "./eventHelper";
+import * as EventHelper from "./event.helper";
 import { EVENT_STATUS, EVENT_TYPE, USER_CATEGORY } from "../../../constant";
 
 // SERVICES

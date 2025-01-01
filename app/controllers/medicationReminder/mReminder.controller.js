@@ -1,4 +1,5 @@
 import Controller from "../index";
+
 import moment from "moment";
 
 // SERVICES --------------------------------------------------
@@ -21,7 +22,7 @@ import PatientWrapper from "../../apiWrapper/web/patient";
 import UserPreferenceWrapper from "../../apiWrapper/web/userPreference";
 import EventWrapper from "../../apiWrapper/common/scheduleEvents";
 
-import * as medicationHelper from "./medicationHelper";
+import * as medicationHelper from "./medication.helper";
 import { getTime } from "../../helper/timer";
 
 import {
@@ -50,7 +51,7 @@ import {
   getCarePlanAppointmentIds,
   getCarePlanMedicationIds,
   getCarePlanSeverityDetails,
-} from "../carePlans/carePlanHelper";
+} from "../carePlans/carePlan.helper";
 import { RRule } from "rrule";
 import MedicationJob from "../../jobSdk/Medications/observer";
 import NotificationSdk from "../../notificationSdk";

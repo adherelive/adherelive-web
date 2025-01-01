@@ -1,4 +1,5 @@
-import Controller from "../";
+import Controller from "../index";
+
 import Logger from "../../../libs/log";
 import specialityService from "../../services/speciality/speciality.service";
 

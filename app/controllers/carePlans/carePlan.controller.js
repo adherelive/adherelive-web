@@ -1,4 +1,5 @@
-import Controller from "../";
+import Controller from "../index";
+
 import patientService from "../../../app/services/patients/patients.service";
 import carePlanService from "../../services/carePlan/carePlan.service";
 import CarePlanWrapper from "../../apiWrapper/web/carePlan";
@@ -10,14 +11,14 @@ import templateMedicationService from "../../services/templateMedication/templat
 import templateAppointmentService from "../../services/templateAppointment/templateAppointment.service";
 import medicineService from "../../services/medicine/medicine.service";
 import userRoleService from "../../services/userRoles/userRoles.service";
-import carePlanSecondaryDoctorMappingService from "../../services/carePlanSecondaryDoctorMappings/carePlanSecondaryDoctorMappings.service";
+import carePlanSecondaryDrMapService from "../../services/carePlanSecondaryDoctorMappings/carePlanSecondaryDoctorMappings.service";
 //import twilioService from "../../services/twilio/twilio.service";
 
 import {
   getCarePlanAppointmentIds,
   getCarePlanMedicationIds,
   getCarePlanSeverityDetails,
-} from "./carePlanHelper";
+} from "./carePlan.helper";
 import {
   EVENT_LONG_TERM_VALUE,
   EVENT_STATUS,
@@ -37,7 +38,7 @@ import Logger from "../../../libs/log";
 import moment from "moment";
 import queueService from "../../services/awsQueue/queue.service";
 
-import * as carePlanHelper from "./carePlanHelper";
+import * as carePlanHelper from "./carePlan.helper";
 import MedicationWrapper from "../../apiWrapper/web/medicationReminder";
 import MedicationJob from "../../jobSdk/Medications/observer";
 
@@ -641,9 +642,7 @@ class CarePlanController extends Controller {
             secondary_doctor_role_id: userRoleId,
           };
           let existingMapping =
-            (await carePlanSecondaryDoctorMappingService.getByData(
-              dataToAdd
-            )) || null;
+            (await carePlanSecondaryDrMapService.getByData(dataToAdd)) || null;
           if (
             (careplan["basic_info"]["patient_id"] == patient_id &&
               careplan["basic_info"]["user_role_id"] == userRoleId) ||
@@ -901,13 +900,11 @@ class CarePlanController extends Controller {
         secondary_doctor_role_id: user_role_id,
       };
       const existingMapping =
-        (await carePlanSecondaryDoctorMappingService.getByData(dataToAdd)) ||
-        null;
+        (await carePlanSecondaryDrMapService.getByData(dataToAdd)) || null;
 
       if (!existingMapping) {
         const createdMapping =
-          (await carePlanSecondaryDoctorMappingService.create(dataToAdd)) ||
-          null;
+          (await carePlanSecondaryDrMapService.create(dataToAdd)) || null;
 
         if (createdMapping) {
           const carePlan = await CarePlanWrapper(null, care_plan_id);
@@ -955,7 +952,7 @@ class CarePlanController extends Controller {
           // if(addUserToChat) {
           //   return raiseSuccess(res, 200, {}, "Profile added successfully");
           // } else {
-          //   await carePlanSecondaryDoctorMappingService.delete(dataToAdd) || null;
+          //   await carePlanSecondaryDrMapService.delete(dataToAdd) || null;
           // }
           return raiseSuccess(
             res,

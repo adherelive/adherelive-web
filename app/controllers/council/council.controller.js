@@ -1,4 +1,5 @@
-import Controller from "../";
+import Controller from "../index";
+
 import councilService from "../../services/council/council.service";
 import CouncilWrapper from "../../apiWrapper/web/council";
 
