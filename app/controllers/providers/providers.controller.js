@@ -23,8 +23,7 @@ import DoctorService from "../../services/doctor/doctor.service";
 import providerTermsMappingService from "../../services/providerTermsMapping/providerTermsMappings.service";
 import tacService from "../../services/termsAndConditions/termsAndConditions.service";
 import ScheduleEventService from "../../services/scheduleEvents/scheduleEvent.service";
-// import doctorService from "../../services/doctor/doctor.service";
-// import PaymentProductService from "../../services/paymentProducts/paymentProduct.service";
+
 // Wrappers
 import UserWrapper from "../../apiWrapper/web/user";
 import DoctorWrapper from "../../apiWrapper/web/doctor";
@@ -40,10 +39,9 @@ import AppointmentWrapper from "../../apiWrapper/web/appointments";
 import PatientWrapper from "../../apiWrapper/web/patient";
 import CarePlanWrapper from "../../apiWrapper/web/carePlan";
 import UserRoleWrapper from "../../apiWrapper/web/userRoles";
-// import PaymentProductWrapper from "../../apiWrapper/web/paymentProducts";
+
 import TACWrapper from "../../apiWrapper/web/termsAndConditions";
-// import * as PaymentHelper from "../payments/helper";
-// import bcrypt from "bcrypt";
+
 import {
   DOCUMENT_PARENT_TYPE,
   EVENT_TYPE,
@@ -59,11 +57,6 @@ import * as ProviderHelper from "./providers.helper";
 import accountDetailsService from "../../services/accountDetails/accountDetails.service";
 import AccountsWrapper from "../../apiWrapper/web/accountsDetails";
 import { getFilePath } from "../../helper/filePath";
-
-// import { generatePassword } from "../helper/passwordGenerator";
-// import { USER_CATEGORY } from "../../../constant";
-// import { Proxy_Sdk, EVENTS } from "../../proxySdk";
-// import { v4 as uuidv4 } from "uuid";
 
 const Logger = new Log("WEB > PROVIDERS > CONTROLLER");
 

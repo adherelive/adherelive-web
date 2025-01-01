@@ -30,14 +30,14 @@ import ScheduleEventService from "../../../services/scheduleEvents/scheduleEvent
 import featureDetailService from "../../../services/featureDetails/featureDetails.service";
 
 // Wrappers
-// import ProviderWrapper from "../../../apiWrapper/mobile/provider";
+
 import UploadDocumentWrapper from "../../../apiWrapper/mobile/uploadDocument";
 import MAppointmentWrapper from "../../../apiWrapper/mobile/appointments";
 import DoctorWrapper from "../../../apiWrapper/mobile/doctor";
 import PatientWrapper from "../../../apiWrapper/mobile/patient";
 import CarePlanAppointmentWrapper from "../../../apiWrapper/mobile/carePlanAppointment";
 import CarePlanWrapper from "../../../apiWrapper/mobile/carePlan";
-// import EventWrapper from "../../../apiWrapper/common/scheduleEvents";
+
 import FeatureDetailsWrapper from "../../../apiWrapper/mobile/featureDetails";
 
 import * as AppointmentHelper from "./appointments.helper";

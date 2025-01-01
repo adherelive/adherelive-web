@@ -50,11 +50,10 @@ import MReminderWrapper from "../../../apiWrapper/mobile/medicationReminder";
 import medicineService from "../../../services/medicine/medicine.service";
 import MedicineApiWrapper from "../../../apiWrapper/mobile/medicine";
 import carePlanService from "../../../services/carePlan/carePlan.service";
-// import carePlanMedicationService from "../../../services/carePlanMedication/carePlanMedication.service";
-// import carePlanAppointmentService from "../../../services/carePlanAppointment/carePlanAppointment.service";
+
 import providerTermsMappingService from "../../../services/providerTermsMapping/providerTermsMappings.service";
 import patientPaymentConsentMappingService from "../../../services/patientPaymentConsentMapping/patientPaymentConsentMapping.service";
-// import doctorProviderMappingService from "../../../services/doctorProviderMapping/doctorProviderMapping.service";
+
 import userRolesService from "../../../services/userRoles/userRoles.service";
 
 import UserWrapper from "../../../apiWrapper/mobile/user";
@@ -62,15 +61,12 @@ import UserRolesWrapper from "../../../apiWrapper/mobile/userRoles";
 import CarePlanWrapper from "../../../apiWrapper/mobile/carePlan";
 import CarePlanTemplateWrapper from "../../../apiWrapper/web/carePlanTemplate";
 import AppointmentWrapper from "../../../apiWrapper/mobile/appointments";
-// import TemplateMedicationWrapper from "../../../apiWrapper/mobile/templateMedication";
-// import TemplateAppointmentWrapper from "../../../apiWrapper/mobile/templateAppointment";
+
 import SymptomWrapper from "../../../apiWrapper/mobile/symptoms";
 import ProviderWrapper from "../../../apiWrapper/mobile/provider";
 import ProviderTermsMappingWrapper from "../../../apiWrapper/mobile/providerTermsMappings";
 import PatientConsentMappingWrapper from "../../../apiWrapper/mobile/patientPaymentConsentMapping";
-// import DoctorProviderMappingWrapper from "../../../apiWrapper/web/doctorProviderMapping";
-// import templateMedicationService from "../../../services/templateMedication/templateMedication.service";
-// import templateAppointmentService from "../../../services/templateAppointment/templateAppointment.service";
+
 import carePlanTemplateService from "../../../services/carePlanTemplate/carePlanTemplate.service";
 import SymptomService from "../../../services/symptom/symptom.service";
 import qualificationService from "../../../services/doctorQualifications/doctorQualification.service";

@@ -7,7 +7,7 @@ import userPreferenceService from "../../services/userPreferences/userPreference
 import medicationReminderService from "../../services/medicationReminder/mReminder.service";
 import medicineService from "../../services/medicine/medicine.service";
 import carePlanMedicationService from "../../services/carePlanMedication/carePlanMedication.service";
-// import doctorService from "../../services/doctor/doctor.service";
+
 import carePlanService from "../../services/carePlan/carePlan.service";
 import queueService from "../../services/awsQueue/queue.service";
 import ScheduleEventService from "../../services/scheduleEvents/scheduleEvent.service";
@@ -18,7 +18,7 @@ import MedicationWrapper from "../../apiWrapper/web/medicationReminder";
 import MedicineWrapper from "../../apiWrapper/web/medicine";
 import CarePlanWrapper from "../../apiWrapper/web/carePlan";
 import PatientWrapper from "../../apiWrapper/web/patient";
-// import DoctorWrapper from "../../apiWrapper/web/doctor";
+
 import UserPreferenceWrapper from "../../apiWrapper/web/userPreference";
 import EventWrapper from "../../apiWrapper/common/scheduleEvents";
 

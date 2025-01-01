@@ -28,18 +28,17 @@ import doctorService from "../../services/doctor/doctor.service";
 import DoctorWrapper from "../../apiWrapper/web/doctor";
 import PatientWrapper from "../../apiWrapper/web/patient";
 import AppointmentWrapper from "../../apiWrapper/web/appointments";
-// import MedicationWrapper from "../../apiWrapper/web/medicationReminder";
+
 import carePlanTemplateService from "../../services/carePlanTemplate/carePlanTemplate.service";
 import CarePlanTemplateWrapper from "../../apiWrapper/web/carePlanTemplate";
 import Logger from "../../../libs/log";
-// import ScheduleEventService from "../../services/scheduleEvents/scheduleEvent.service";
+
 import moment from "moment";
 import queueService from "../../services/awsQueue/queue.service";
 import MedicationWrapper from "../../apiWrapper/web/medicationReminder";
 import MedicationJob from "../../jobSdk/Medications/observer";
 
 import PERMISSIONS from "../../../config/permissions";
-// import { ConfigurationServicePlaceholders } from "aws-sdk/lib/config_service_placeholders";
 
 const Log = new Logger("WEB > CAREPLAN > CONTROLLER");
 

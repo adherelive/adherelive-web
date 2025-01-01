@@ -9,7 +9,6 @@ import userRolesService from "../../services/userRoles/userRoles.service";
 
 import UserRolesWrapper from "../../apiWrapper/web/userRoles";
 
-// import  EVENTS from "../../proxySdk/proxyEvents";
 import minioService from "../../../app/services/minio/minio.service";
 import md5 from "js-md5";
 import bcrypt from "bcrypt";

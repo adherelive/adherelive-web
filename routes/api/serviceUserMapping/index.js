@@ -1,7 +1,6 @@
 import express from "express";
 import ServiceUserMappingController from "../../../app/controllers/serviceUserMapping/serviceUserMapping.controller";
-// import Authenticate from "../middleware/auth";
-// import { isDoctor } from "../middleware/doctor";
+
 import Authenticate from "../../commonmiddlewares/auth";
 import { isDoctor } from "../../commonmiddlewares/doctor";
 

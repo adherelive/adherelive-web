@@ -44,9 +44,9 @@ const moment = require("moment");
 const jwt = require("jsonwebtoken");
 const request = require("request");
 const chalk = require("chalk");
-// import fs from "fs";
+
 const Response = require("../helper/responseFormat");
-// import  EVENTS from "../../proxySdk/proxyEvents";
+
 const errMessage = require("../../../config/messages.json").errMessages;
 
 const Logger = new Log("WEB USER CONTROLLER");

@@ -3,7 +3,7 @@ import Logger from "../../../../libs/log";
 import moment from "moment";
 
 // Services
-// import VitalService from "../../../services/vitals/vital.service";
+
 import EventService from "../../../services/scheduleEvents/scheduleEvent.service";
 import CarePlanService from "../../../services/carePlan/carePlan.service";
 

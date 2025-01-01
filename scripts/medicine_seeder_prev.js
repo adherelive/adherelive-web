@@ -1,7 +1,5 @@
 // "use strict";
 
-// import {TABLE_NAME} from "../models/medicines";
-
 // module.exports = {
 //   up: (queryInterface, Sequelize) => {
 //     return queryInterface.bulkInsert(TABLE_NAME, [
