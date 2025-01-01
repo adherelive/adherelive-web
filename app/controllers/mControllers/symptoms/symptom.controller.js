@@ -9,7 +9,7 @@ import twilioService from "../../../services/twilio/twilio.service";
 import SymptomWrapper from "../../../apiWrapper/mobile/symptoms";
 import DocumentWrapper from "../../../apiWrapper/mobile/uploadDocument";
 import CarePlanWrapper from "../../../apiWrapper/mobile/carePlan";
-// import DoctorWrapper from "../../../apiWrapper/mobile/doctor";
+
 import PatientWrapper from "../../../apiWrapper/mobile/patient";
 
 import { uploadAudio, uploadImage, uploadVideo } from "./symptoms.helper";

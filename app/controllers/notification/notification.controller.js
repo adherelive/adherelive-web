@@ -7,7 +7,6 @@ import ChatJob from "../../jobSdk/Chat/observer";
 import NotificationSdk from "../../notificationSdk";
 
 import { MESSAGE_TYPES } from "../../../constant";
-// import ScheduleEventService from "../../services/scheduleEvents/scheduleEvent.service";
 
 const Log = new Logger("WEB > NOTIFICATION > CONTROLLER");
 

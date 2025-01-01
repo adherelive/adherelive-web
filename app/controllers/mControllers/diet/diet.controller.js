@@ -20,7 +20,7 @@ import * as DietHelper from "../../diet/diet.helper";
 import { getTimeWiseDietFoodGroupMappings } from "../../diet/diet.helper";
 import DietJob from "../../../jobSdk/Diet/observer";
 import NotificationSdk from "../../../notificationSdk";
-// import * as medicationHelper from "../../medicationReminder/medicationHelper";
+
 import Log from "../../../../libs/log";
 
 import {

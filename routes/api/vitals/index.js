@@ -2,7 +2,7 @@ import express from "express";
 import VitalController from "../../../app/controllers/vitals/vital.controller";
 import Authenticate from "../middleware/auth";
 import { isDoctor } from "../middleware/doctor";
-// import * as validator from "./validator";
+
 const router = express.Router();
 
 router.get("/", Authenticate, VitalController.search);

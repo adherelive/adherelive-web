@@ -45,7 +45,7 @@ import appointmentService from "../app/services/appointment/appointment.service"
 import queueService from "../app/services/awsQueue/queue.service";
 
 // Wrappers
-// import PatientWrapper from "../app/apiWrapper/mobile/patient";
+
 import MedicineWrapper from "../app/apiWrapper/mobile/medicine";
 import MedicationWrapper from "../app/apiWrapper/mobile/medicationReminder";
 import AppointmentWrapper from "../app/apiWrapper/mobile/appointments";

@@ -28,10 +28,7 @@ import RepetitionService from "../../services/exerciseRepetitions/repetition.ser
 import WorkoutService from "../../services/workouts/workout.service";
 import userPreferenceService from "../../services/userPreferences/userPreference.service";
 import carePlanSecondaryDrMapService from "../../services/carePlanSecondaryDoctorMappings/carePlanSecondaryDoctorMappings.service";
-// import carePlanMedicationService from "../../services/carePlanMedication/carePlanMedication.service";
-// import carePlanAppointmentService from "../../services/carePlanAppointment/carePlanAppointment.service";
-// import templateMedicationService from "../../services/templateMedication/templateMedication.service";
-// import templateAppointmentService from "../../services/templateAppointment/templateAppointment.service";
+
 // Wrappers
 import UserRoleWrapper from "../../apiWrapper/web/userRoles";
 import UserRolesWrapper from "../../apiWrapper/web/userRoles";
@@ -59,8 +56,7 @@ import ProviderWrapper from "../../apiWrapper/web/provider";
 import PortionWrapper from "../../apiWrapper/web/portions";
 import WorkoutWrapper from "../../apiWrapper/web/workouts";
 import UserPreferenceWrapper from "../../apiWrapper/web/userPreference";
-// import TemplateMedicationWrapper from "../../apiWrapper/web/templateMedication";
-// import TemplateAppointmentWrapper from "../../apiWrapper/web/templateAppointment";
+
 // Helpers
 import {
   checkAndCreateDirectory,
@@ -2192,18 +2188,18 @@ class PatientController extends Controller {
         },
       });
 
-      let careplanIdsAsSecondaryDoctor = [];
+      let carePlanIdsAsSecondaryDoctor = [];
 
       if (careplansCount) {
         for (let each of careplanAsSecondaryDoctor) {
           const { care_plan: { id = null, patient_id = null } = {} } =
             each || {};
-          careplanIdsAsSecondaryDoctor.push(id);
+          carePlanIdsAsSecondaryDoctor.push(id);
         }
       }
 
-      const secondary_careplan_ids = careplanIdsAsSecondaryDoctor.toString()
-        ? careplanIdsAsSecondaryDoctor.toString()
+      const secondary_careplan_ids = carePlanIdsAsSecondaryDoctor.toString()
+        ? carePlanIdsAsSecondaryDoctor.toString()
         : null;
 
       if (category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP) {
@@ -2466,18 +2462,18 @@ class PatientController extends Controller {
         },
       });
 
-      let careplanIdsAsSecondaryDoctor = [];
+      let carePlanIdsAsSecondaryDoctor = [];
 
       if (careplansCount) {
         for (let each of careplanAsSecondaryDoctor) {
           const { care_plan: { id = null, patient_id = null } = {} } =
             each || {};
-          careplanIdsAsSecondaryDoctor.push(id);
+          carePlanIdsAsSecondaryDoctor.push(id);
         }
       }
 
-      const secondary_careplan_ids = careplanIdsAsSecondaryDoctor.toString()
-        ? careplanIdsAsSecondaryDoctor.toString()
+      const secondary_careplan_ids = carePlanIdsAsSecondaryDoctor.toString()
+        ? carePlanIdsAsSecondaryDoctor.toString()
         : null;
 
       if (category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP) {

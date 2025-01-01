@@ -29,9 +29,9 @@ import PatientWrapper from "../../../apiWrapper/mobile/patient";
 import AppointmentWrapper from "../../../apiWrapper/mobile/appointments";
 import MedicationWrapper from "../../../apiWrapper/mobile/medicationReminder";
 import CarePlanTemplateWrapper from "../../../apiWrapper/mobile/carePlanTemplate";
-// import Log from "../../../../libs/log";
+
 import queueService from "../../../services/awsQueue/queue.service";
-// import SqsQueueService from "../../../services/awsQueue/queue.service";
+
 import ScheduleEventService from "../../../services/scheduleEvents/scheduleEvent.service";
 import moment from "moment";
 import PERMISSIONS from "../../../../config/permissions";

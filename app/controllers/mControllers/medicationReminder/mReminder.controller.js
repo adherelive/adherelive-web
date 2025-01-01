@@ -16,7 +16,7 @@ import {
   WHEN_TO_TAKE_ABBREVATIONS,
 } from "../../../../constant";
 import Log from "../../../../libs/log";
-// import { Proxy_Sdk } from "../../proxySdk";
+
 import medicineService from "../../../services/medicine/medicine.service";
 import {
   getCarePlanAppointmentIds,

@@ -1,4 +1,3 @@
-// import userController from "../../../app/controllers/user/user.controller";
 import Authenticate from "../middlewares/auth";
 import * as validator from "./validator";
 

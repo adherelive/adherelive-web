@@ -1,7 +1,7 @@
 import express from "express";
 import Authenticate from "../middleware/auth";
 import Authorize from "../middleware/authorize";
-// import templateRouter from "../workoutTemplates";
+
 import workoutResponseRouter from "../workoutResponses";
 
 import Workout from "../../../app/controllers/workouts/workout.controller";

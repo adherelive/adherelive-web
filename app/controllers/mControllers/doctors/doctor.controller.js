@@ -77,8 +77,6 @@ import doctorPatientWatchlistService from "../../../services/doctorPatientWatchl
 
 import specialityService from "../../../services/speciality/speciality.service";
 import SpecialityWrapper from "../../../apiWrapper/mobile/speciality";
-// import DegreeWrapper from "../../../apiWrapper/mobile/degree";
-// import degreeService from "../../../services/degree/degree.service";
 
 const Logger = new Log("M-API DOCTOR CONTROLLER");
 const APPOINTMENT_QUERY_TYPE = {
@@ -2389,28 +2387,28 @@ class MobileDoctorController extends Controller {
         },
       });
 
-      let careplanIdsAsSecondaryDoctor = [];
+      let carePlanIdsAsSecondaryDoctor = [];
 
       if (careplansCount) {
         for (let each of careplanAsSecondaryDoctor) {
           const { care_plan: { id = null } = {} } = each || {};
-          careplanIdsAsSecondaryDoctor.push(id);
+          carePlanIdsAsSecondaryDoctor.push(id);
         }
       }
 
-      const secondary_careplan_ids = careplanIdsAsSecondaryDoctor.toString(); // string
+      const secondary_careplan_ids = carePlanIdsAsSecondaryDoctor.toString(); // string
 
       // watchlisted patient ids
       if (getWatchListPatients) {
         count = await carePlanService.getWatchlistedDistinctPatientCounts(
           watchlistPatientIds,
           userRoleId,
-          careplanIdsAsSecondaryDoctor
+          carePlanIdsAsSecondaryDoctor
         );
       } else {
         count = await carePlanService.getDistinctPatientCounts(
           userRoleId,
-          careplanIdsAsSecondaryDoctor
+          carePlanIdsAsSecondaryDoctor
         );
       }
 

@@ -29,9 +29,7 @@ import doctorProviderMappingService from "../../services/doctorProviderMapping/d
 import featuresService from "../../services/features/features.service";
 import doctorPatientFeatureMappingService from "../../services/doctorPatientFeatureMapping/doctorPatientFeatureMapping.service";
 import carePlanSecondaryDrMapService from "../../services/carePlanSecondaryDoctorMappings/carePlanSecondaryDoctorMappings.service";
-// import medicineService from "../../services/medicine/medicine.service";
-// import templateMedicationService from "../../services/templateMedication/templateMedication.service";
-// import templateAppointmentService from "../../services/templateAppointment/templateAppointment.service";
+
 // Wrappers
 import AppointmentWrapper from "../../apiWrapper/web/appointments";
 import DegreeWrapper from "../../apiWrapper/mobile/degree";
@@ -53,12 +51,7 @@ import TreatmentWrapper from "../../apiWrapper/web/treatments";
 import UserRoleWrapper from "../../apiWrapper/web/userRoles";
 import SpecialityWrapper from "../../apiWrapper/web/speciality";
 import UserPreferenceWrapper from "../../apiWrapper/web/userPreference";
-// import TemplateMedicationWrapper from "../../apiWrapper/web/templateMedication";
-// import TemplateAppointmentWrapper from "../../apiWrapper/web/templateAppointment";
-// import MedicineApiWrapper from "../../apiWrapper/web/medicine";
-// import DegreeWrapper from "../../apiWrapper/web/degree";
-// import doctor from "../../apiWrapper/web/doctor";
-// import college from "../../apiWrapper/web/college";
+
 import AuthJob from "../../jobSdk/Auth/observer";
 import NotificationSdk from "../../notificationSdk";
 import DoctorPatientWatchlistWrapper from "../../apiWrapper/web/doctorPatientWatchlist";
@@ -91,8 +84,6 @@ import userPreferenceService from "../../services/userPreferences/userPreference
 import doctorPatientWatchlistService from "../../services/doctorPatientWatchlist/doctorPatientWatchlist.service";
 import { getRoomId, getSeparateName } from "../../helper/common";
 import { raiseClientError } from "../../../routes/api/helper";
-// import { createNewUser } from "../user/userHelper";
-// import { generatePassword } from "../helper/passwordGenerator";
 
 const XLSX = require("xlsx");
 
@@ -3661,7 +3652,7 @@ class DoctorController extends Controller {
         name_order = 1,
         created_at_order = 1,
         searchTreatmentText = "",
-        searchDisagnosisType = "",
+        searchDiagnosisType = "",
         seachDiagnosisText = "",
       } = query || {};
 
@@ -3717,27 +3708,27 @@ class DoctorController extends Controller {
         },
       });
 
-      let careplanIdsAsSecondaryDoctor = [];
+      let carePlanIdsAsSecondaryDoctor = [];
 
       if (careplansCount) {
         for (let each of careplanAsSecondaryDoctor) {
           const { care_plan: { id = null } = {} } = each || {};
-          careplanIdsAsSecondaryDoctor.push(id);
+          carePlanIdsAsSecondaryDoctor.push(id);
         }
       }
 
-      const secondary_careplan_ids = careplanIdsAsSecondaryDoctor.toString();
+      const secondary_careplan_ids = carePlanIdsAsSecondaryDoctor.toString();
 
       if (getWatchListPatients) {
         count = await carePlanService.getWatchlistedDistinctPatientCounts(
           watchlistPatientIds,
           userRoleId,
-          careplanIdsAsSecondaryDoctor
+          carePlanIdsAsSecondaryDoctor
         );
       } else {
         count = await carePlanService.getDistinctPatientCounts(
           userRoleId,
-          careplanIdsAsSecondaryDoctor
+          carePlanIdsAsSecondaryDoctor
         );
       }
 
@@ -3775,9 +3766,9 @@ class DoctorController extends Controller {
         let crIdsForMatchingDiagnosisDesc = [];
         let crIdsForMatchingTreatmentType = [];
 
-        if (searchDisagnosisType) {
+        if (searchDiagnosisType) {
           careplansForDiagnosisType = await carePlanService.searchDiagnosisType(
-            searchDisagnosisType
+            searchDiagnosisType
           );
         }
 
@@ -3789,7 +3780,7 @@ class DoctorController extends Controller {
         }
 
         if (treatmentIds.length > 0) {
-          careplansForTreatmentType = await carePlanService.searchtreatmentIds(
+          careplansForTreatmentType = await carePlanService.searchTreatmentIds(
             treatmentIds
           );
         }

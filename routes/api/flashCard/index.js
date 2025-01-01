@@ -1,8 +1,6 @@
 import express from "express";
 import FlashCard from "../../../app/controllers/flashCard/flashCard.controller";
 
-// import Authenticate from "../middleware/auth";
-// import { isDoctor } from "../middleware/doctor";
 import Authenticate from "../../commonmiddlewares/auth";
 
 const router = express.Router();

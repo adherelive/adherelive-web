@@ -46,7 +46,6 @@ import PatientWrapper from "../../apiWrapper/web/patient";
 import UploadDocumentWrapper from "../../apiWrapper/web/uploadDocument";
 import EventWrapper from "../../apiWrapper/common/scheduleEvents";
 
-// import eventService from "../../services/scheduleEvents/scheduleEvent.service";
 import { uploadImageS3 } from "../user/user.helper";
 import { getFilePath } from "../../helper/filePath";
 import { checkAndCreateDirectory } from "../../helper/common";

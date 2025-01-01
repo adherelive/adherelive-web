@@ -6,14 +6,20 @@ const Response = require("../helper/responseFormat");
 const Cdss = require("../../models/mongoModel/cdss");
 const Logger = new Log("Web CDSS user controller");
 
-// Add this line to handle the deprecation warning
-//mongoose.set("strictQuery", true);
-
 class CdssController extends Controller {
   constructor() {
     super();
   }
 
+  /**
+   * Add a diagnosis based on the Symptoms entered.
+   * The MongoDB structure stores 'dia' as the key and all other fields are optional,
+   * but based on those values we later list/retrieve the data
+   *
+   * @param req
+   * @param res
+   * @returns {Promise<*>}
+   */
   addDiagnosis = async (req, res) => {
     const data = req.body;
 
@@ -48,6 +54,12 @@ class CdssController extends Controller {
     return res.status(201).send(cdssResponse);
   };
 
+  /**
+   *
+   * @param req
+   * @param res
+   * @returns {Promise<*>}
+   */
   getDiagnosis = async (req, res) => {
     const data = req.body;
 
@@ -78,6 +90,12 @@ class CdssController extends Controller {
     }
   };
 
+  /**
+   *
+   * @param req
+   * @param res
+   * @returns {Promise<*>}
+   */
   listDiagnosis = async (req, res) => {
     const { dia = "" } = req.query;
 
