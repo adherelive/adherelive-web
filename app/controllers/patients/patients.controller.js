@@ -945,40 +945,40 @@ class PatientController extends Controller {
   };
 
   /* TODO: This function has been removed in the recent code for
-         * branch merge-2
-        searchPatientByName = async (req, res) => {
-          const { raiseSuccess, raiseServerError } = this;
-          try {
-            Logger.info(`searchPatient request query : ${req.query.value}`);
-            const { query: { value = "" } = {} } = req;
-            const {
-              userDetails: { userId, userRoleId, userData: { category } = {} } = {},
-            } = req;
-            let authDoctor = null;
-            if (category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP) {
-              authDoctor = await doctorService.getDoctorByData({ user_id: userId });
+           * branch merge-2
+          searchPatientByName = async (req, res) => {
+            const { raiseSuccess, raiseServerError } = this;
+            try {
+              Logger.info(`searchPatient request query : ${req.query.value}`);
+              const { query: { value = "" } = {} } = req;
+              const {
+                userDetails: { userId, userRoleId, userData: { category } = {} } = {},
+              } = req;
+              let authDoctor = null;
+              if (category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP) {
+                authDoctor = await doctorService.getDoctorByData({ user_id: userId });
+              }
+              const patients = await patientService.getPatientByName(value);
+              if (patients.length > 0)
+                return raiseSuccess(
+                  res,
+                  200,
+                  { patients },
+                  "Patients fetched successfully"
+                );
+              else
+                return raiseSuccess(
+                  res,
+                  201,
+                  {},
+                  "No patient linked with the given phone number"
+                );
+            } catch (error) {
+              Logger.debug("searchPatient 500 error", error);
+              return raiseServerError(res);
             }
-            const patients = await patientService.getPatientByName(value);
-            if (patients.length > 0)
-              return raiseSuccess(
-                res,
-                200,
-                { patients },
-                "Patients fetched successfully"
-              );
-            else
-              return raiseSuccess(
-                res,
-                201,
-                {},
-                "No patient linked with the given phone number"
-              );
-          } catch (error) {
-            Logger.debug("searchPatient 500 error", error);
-            return raiseServerError(res);
-          }
-        };
-        */
+          };
+          */
 
   searchPatientOld = async (req, res) => {
     const { raiseSuccess, raiseServerError } = this;

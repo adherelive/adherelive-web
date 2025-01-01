@@ -14,7 +14,6 @@ import TransactionWrapper from "../../../apiWrapper/mobile/transactions";
 import SubscriptionWrapper from "../../../apiWrapper/mobile/subscriptions";
 import AccountDetailsWrapper from "../../../apiWrapper/mobile/accountDetails";
 // used for web as no ui for provider on mobile
-
 // MODELS ...
 import { CHECKOUT, STATUS, UPI } from "../../../models/transactions";
 
