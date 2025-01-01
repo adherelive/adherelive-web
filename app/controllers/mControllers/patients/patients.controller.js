@@ -1,4 +1,4 @@
-import Controller from "../../";
+import Controller from "../../index";
 import userService from "../../../services/user/user.service";
 import patientService from "../../../services/patients/patients.service";
 import minioService from "../../../services/minio/minio.service";
@@ -89,7 +89,7 @@ import generateOTP from "../../../helper/generateOtp";
 import otpVerificationService from "../../../services/otpVerification/otpVerification.service";
 import { EVENTS, Proxy_Sdk } from "../../../proxySdk";
 import generatePDF from "../../../helper/generateCarePlanPdf";
-import { downloadFileFromS3 } from "../user/userHelper";
+import { downloadFileFromS3 } from "../user/user.helper";
 import { getFilePath } from "../../../helper/filePath";
 import {
   checkAndCreateDirectory,

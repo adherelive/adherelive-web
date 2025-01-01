@@ -1,4 +1,4 @@
-import Controller from "../../";
+import Controller from "../../index";
 import bcrypt from "bcrypt";
 import userService from "../../../services/user/user.service";
 import { v4 as uuidv4 } from "uuid";
@@ -55,7 +55,7 @@ import {
 } from "../../../../constant";
 
 import { completePath, getFilePath } from "../../../helper/filePath";
-import { uploadImageS3 } from "../user/userHelper";
+import { uploadImageS3 } from "../user/user.helper";
 import clinicService from "../../../services/doctorClinics/doctorClinics.service";
 import doctorClinicService from "../../../services/doctorClinics/doctorClinics.service";
 import degreeService from "../../../services/degree/degree.service";

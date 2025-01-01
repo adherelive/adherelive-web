@@ -3,7 +3,7 @@ import Logger from "../../../../libs/log";
 import { USER_CATEGORY } from "../../../../constant";
 
 // HELPERS
-import * as PaymentHelper from "./helper";
+import * as PaymentHelper from "./payments.helper";
 
 // Services
 import PaymentProductService from "../../../services/paymentProducts/paymentProduct.service";

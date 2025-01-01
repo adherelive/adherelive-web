@@ -1,4 +1,4 @@
-import Controller from "../../";
+import Controller from "../../index";
 import Logger from "../../../../libs/log";
 import moment from "moment";
 import * as vitalHelper from "../../vitals/vital.helper";

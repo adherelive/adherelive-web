@@ -1,4 +1,4 @@
-import Controller from "../../";
+import Controller from "../../index";
 import treatmentService from "../../../services/treatment/treatment.service";
 
 import TreatmentWrapper from "../../../apiWrapper/mobile/treatments";

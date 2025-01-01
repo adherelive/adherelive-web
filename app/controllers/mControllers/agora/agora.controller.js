@@ -1,6 +1,6 @@
 import agoraService from "../../../services/agora/agora.service";
 
-import Controller from "../../";
+import Controller from "../../index";
 import {
   AGORA_CALL_NOTIFICATION_TYPES,
   EVENT_STATUS,

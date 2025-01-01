@@ -1,4 +1,4 @@
-import Controller from "../../";
+import Controller from "../../index";
 import Log from "../../../../libs/log";
 import {
   CHART_DETAILS,

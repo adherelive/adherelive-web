@@ -20,7 +20,7 @@ import { CHECKOUT, STATUS, UPI } from "../../../models/transactions";
 // Helpers
 import Logger from "../../../../libs/log";
 import { generateTransactionId } from "../../../helper/payment";
-import * as TransactionHelper from "./helper";
+import * as TransactionHelper from "./transactions.helper";
 import { USER_CATEGORY } from "../../../../constant";
 import { PAYMENT_TYPE } from "../../../models/paymentProducts";
 
