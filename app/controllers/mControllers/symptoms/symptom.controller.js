@@ -1,4 +1,4 @@
-import Controller from "../../";
+import Controller from "../../index";
 
 // Services
 import SymptomService from "../../../services/symptom/symptom.service";
@@ -12,11 +12,7 @@ import CarePlanWrapper from "../../../apiWrapper/mobile/carePlan";
 // import DoctorWrapper from "../../../apiWrapper/mobile/doctor";
 import PatientWrapper from "../../../apiWrapper/mobile/patient";
 
-import {
-  uploadAudio,
-  uploadImage,
-  uploadVideo,
-} from "./symptom.controller.helper";
+import { uploadAudio, uploadImage, uploadVideo } from "./symptoms.helper";
 import Logger from "../../../../libs/log";
 import {
   ALLOWED_VIDEO_EXTENSIONS,

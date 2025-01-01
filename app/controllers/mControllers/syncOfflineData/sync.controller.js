@@ -5,7 +5,7 @@ import { EVENT_TYPE, OFFLINE_SYNC_DATA_TASKS } from "../../../../constant";
 import {
   syncMedicationReminderStatus,
   syncVitalsResponseData,
-} from "./eventSyncHelper";
+} from "./eventSync.helper";
 
 const Log = new Logger("MOBILE > SYNC > CONTROLLER");
 

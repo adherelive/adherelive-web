@@ -1,5 +1,5 @@
 import * as constants from "../../../../config/constants";
-import Controller from "../../";
+import Controller from "../../index";
 import bcrypt from "bcrypt";
 import base64 from "js-base64";
 
@@ -23,7 +23,7 @@ import userPreferenceService from "../../../services/userPreferences/userPrefere
 import DoctorPatientWatchlistWrapper from "../../../apiWrapper/mobile/doctorPatientWatchlist";
 import doctorPatientWatchlistService from "../../../services/doctorPatientWatchlist/doctorPatientWatchlist.service";
 
-import { getServerSpecificConstants } from "./userHelper";
+import { getServerSpecificConstants } from "./user.helper";
 import { v4 as uuidv4 } from "uuid";
 import {
   EMAIL_TEMPLATE_NAME,

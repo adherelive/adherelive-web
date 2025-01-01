@@ -51,7 +51,7 @@ import { uploadImageS3 } from "../user/user.helper";
 import { getFilePath } from "../../helper/filePath";
 import { checkAndCreateDirectory } from "../../helper/common";
 
-import { downloadFileFromS3 } from "../mControllers/user/userHelper";
+import { downloadFileFromS3 } from "../mControllers/user/user.helper";
 
 // Helpers
 import * as AppointmentHelper from "./appointments.helper";
