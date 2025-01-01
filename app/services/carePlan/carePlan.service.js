@@ -349,41 +349,54 @@ class CarePlanService {
     try {
       let query = "";
       if (watchlist) {
-        query = `select t1.id as care_plan_id, t1.details as care_plan_details, 
-        t1.created_at as care_plan_created_at, t1.expired_on as care_plan_expired_on, 
-        t3.* from ${TABLE_NAME} as t1 join 
-        (select MAX(created_at) as created_at,patient_id from ${TABLE_NAME}
-        where patient_id in (${watchlistPatientIds}) and ( user_role_id=${userRoleId} OR id in ( ${
+        query = `select t1.id         as care_plan_id,
+                                t1.details    as care_plan_details,
+                                t1.created_at as care_plan_created_at,
+                                t1.expired_on as care_plan_expired_on,
+                                t3.*
+                         from ${TABLE_NAME} as t1
+                                  join
+                              (select MAX(created_at) as created_at, patient_id
+                               from ${TABLE_NAME}
+                               where patient_id in (${watchlistPatientIds})
+                                 and (user_role_id = ${userRoleId} OR id in (${
           secondary_careplan_ids ? secondary_careplan_ids : null
-        } ) ) 
-         group by patient_id) as t2
-         on t1.patient_id = t2.patient_id and t1.created_at = t2.created_at
-         join ${patientTableName} as t3
-         on t1.patient_id = t3.id
-         where 
-         t1.patient_id in (${watchlistPatientIds}) and
-         (t1.user_role_id = ${userRoleId} OR t1.id in (${
+        }))
+                               group by patient_id) as t2
+                              on t1.patient_id = t2.patient_id and t1.created_at = t2.created_at
+                                  join ${patientTableName} as t3
+                                       on t1.patient_id = t3.id
+                         where t1.patient_id in (${watchlistPatientIds})
+                           and (t1.user_role_id = ${userRoleId} OR t1.id in (${
           secondary_careplan_ids ? secondary_careplan_ids : null
-        }) )
-         order by ${sortBy}
-         limit ${limit}
-         offset ${offset};`;
+        }))
+                         order by ${sortBy} limit ${limit}
+                         offset ${offset};`;
       } else {
-        query = `select t1.id as care_plan_id, t1.details as care_plan_details, 
-        t1.created_at as care_plan_created_at, t1.expired_on as care_plan_expired_on, 
-        t3.* from ${TABLE_NAME} as t1 join 
-        (select MAX(created_at) as created_at,patient_id from ${TABLE_NAME} where ( user_role_id=${userRoleId} OR id in ( ${
+        query = `select t1.id         as care_plan_id,
+                                t1.details    as care_plan_details,
+                                t1.created_at as care_plan_created_at,
+                                t1.expired_on as care_plan_expired_on,
+                                t3.*
+                         from ${TABLE_NAME} as t1
+                                  join
+                              (select MAX(created_at) as created_at, patient_id
+                               from ${TABLE_NAME}
+                               where (user_role_id = ${userRoleId} OR id in (${
           secondary_careplan_ids ? secondary_careplan_ids : null
-        } ) ) group by patient_id) as t2
-         on t1.patient_id = t2.patient_id and t1.created_at = t2.created_at
-         join ${patientTableName} as t3
-         on t1.patient_id = t3.id
-         where (t1.doctor_id = ${doctorId} and  t1.user_role_id = ${userRoleId}) OR t1.id in ( ${
-          secondary_careplan_ids ? secondary_careplan_ids : null
-        } )
-         order by ${sortBy}
-         limit ${limit}
-         offset ${offset};`;
+        }))
+                               group by patient_id) as t2
+                              on t1.patient_id = t2.patient_id and t1.created_at = t2.created_at
+                                  join ${patientTableName} as t3
+                                       on t1.patient_id = t3.id
+                         where (t1.doctor_id = ${doctorId} and t1.user_role_id = ${userRoleId})
+                            OR t1.id in (${
+                              secondary_careplan_ids
+                                ? secondary_careplan_ids
+                                : null
+                            })
+                         order by ${sortBy} limit ${limit}
+                         offset ${offset};`;
       }
 
       const [patients, metaData] = await Database.performRawQuery(query);
