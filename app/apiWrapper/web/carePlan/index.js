@@ -5,7 +5,6 @@ import DietService from "../../../services/diet/diet.service";
 import WorkoutService from "../../../services/workouts/workout.service";
 import DoctorService from "../../../services/doctor/doctor.service";
 // import DoctorService from "../../../services/doctor/doctor.service";
-
 // Wrappers
 import DoctorWrapper from "../doctor";
 import PatientWrapper from "../patient";
