@@ -1,5 +1,3 @@
-import Controller from "../index";
-
 import Logger from "../../../libs/log";
 
 const Log = new Logger("PATIENT > HELPER");

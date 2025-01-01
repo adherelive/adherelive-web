@@ -1,12 +1,6 @@
-import EventExecutor from "../executor";
 import Logger from "../../../libs/log";
-import fetch from "node-fetch";
 
-import {
-  AGORA_CALL_NOTIFICATION_TYPES,
-  USER_CATEGORY,
-  DEFAULT_PROVIDER,
-} from "../../../constant";
+import { AGORA_CALL_NOTIFICATION_TYPES } from "../../../constant";
 
 const Log = new Logger("NOTIFICATION_SDK > PUSH_APP");
 

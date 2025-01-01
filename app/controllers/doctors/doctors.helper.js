@@ -1,5 +1,3 @@
-import Controller from "../index";
-
 import userService from "../../services/user/user.service";
 import doctorService from "../../services/doctor/doctor.service";
 
@@ -11,9 +9,8 @@ import DoctorWrapper from "../../apiWrapper/web/doctor";
 import ProviderWrapper from "../../apiWrapper/web/provider";
 
 import { createNewUser } from "../user/user.helper";
-import { generatePassword } from "../helper/passwordGenerator";
 
-import { ONBOARDING_STATUS, USER_CATEGORY } from "../../../constant";
+import { USER_CATEGORY } from "../../../constant";
 import { getFilePath } from "../../helper/filePath";
 
 export const addProviderDoctor = async (

@@ -1,5 +1,3 @@
-import Controller from "../index";
-
 // Services
 import Logger from "../../../libs/log";
 import doctorService from "../../services/doctor/doctor.service";

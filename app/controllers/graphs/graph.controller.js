@@ -2,13 +2,13 @@ import Controller from "../index";
 
 import Log from "../../../libs/log";
 import {
-  NO_MEDICATION,
-  NO_APPOINTMENT,
+  CHART_DETAILS,
   NO_ACTION,
+  NO_APPOINTMENT,
   NO_DIET,
+  NO_MEDICATION,
   NO_WORKOUT,
   USER_CATEGORY,
-  CHART_DETAILS,
 } from "../../../constant";
 
 import userPreferenceService from "../../services/userPreferences/userPreference.service";

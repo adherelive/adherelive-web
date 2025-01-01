@@ -6,18 +6,14 @@ import RazorpayService from "../../../services/razorpay/razorpay.service";
 import TransactionService from "../../../services/transactions/transaction.service";
 import SubscriptionService from "../../../services/subscriptions/subscription.service";
 import accountDetailService from "../../../services/accountDetails/accountDetails.service";
-import doctorProviderMappingService from "../../../services/doctorProviderMapping/doctorProviderMapping.service";
 import userRolesService from "../../../services/userRoles/userRoles.service";
 
 // WRAPPERS ...
 import PaymentProductWrapper from "../../../apiWrapper/mobile/paymentProducts";
 import TransactionWrapper from "../../../apiWrapper/mobile/transactions";
-import DoctorWrapper from "../../../apiWrapper/mobile/doctor";
 import SubscriptionWrapper from "../../../apiWrapper/mobile/subscriptions";
 import AccountDetailsWrapper from "../../../apiWrapper/mobile/accountDetails";
-import DoctorProviderMappingWrapper from "../../../apiWrapper/web/doctorProviderMapping";
 // used for web as no ui for provider on mobile
-import ProviderWrapper from "../../../apiWrapper/web/provider";
 
 // MODELS ...
 import { CHECKOUT, STATUS, UPI } from "../../../models/transactions";

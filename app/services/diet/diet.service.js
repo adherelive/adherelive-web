@@ -1,13 +1,10 @@
-import { Op } from "sequelize";
-
 import Database from "../../../libs/mysql";
 import { TABLE_NAME } from "../../models/diet";
-import { TABLE_NAME as carePlanTableName } from "../../models/carePlan";
 import { TABLE_NAME as dietFoodGroupMappingTableName } from "../../models/dietFoodGroupMapping";
 import { TABLE_NAME as similiarFoodMappingTableName } from "../../models/similarFoodMapping";
 import { TABLE_NAME as foodGroupTableName } from "../../models/foodGroups";
 import { TABLE_NAME as scheduleEventTableName } from "../../models/scheduleEvents";
-import { DAYS_INTEGER, EVENT_TYPE } from "../../../constant";
+import { EVENT_TYPE } from "../../../constant";
 import moment from "moment";
 
 const DEFAULT_ORDER = [["created_at", "DESC"]];
@@ -352,10 +349,10 @@ class DietService {
       });
 
       /* nested raw true is not allowed by sequelize
-                          Links:
-                          https://github.com/sequelize/sequelize/issues/3897 (closed)
-                          https://github.com/sequelize/sequelize/issues/5193 (open)
-                        */
+                                Links:
+                                https://github.com/sequelize/sequelize/issues/3897 (closed)
+                                https://github.com/sequelize/sequelize/issues/5193 (open)
+                              */
       return JSON.parse(JSON.stringify(diet));
     } catch (error) {
       throw error;

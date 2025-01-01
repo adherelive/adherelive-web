@@ -1,5 +1,4 @@
 import AWS from "aws-sdk";
-import axios from "axios";
 import Log from "../../../libs/log";
 
 const log = Log("Communications ---> SMS Manager");

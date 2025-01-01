@@ -2,8 +2,6 @@ import Controller from "../../index";
 
 import accountDetailsService from "../../../services/accountDetails/accountDetails.service";
 
-import userService from "../../../services/user/user.service";
-
 import MAccountsWrapper from "../../../apiWrapper/mobile/accountDetails";
 import UserWrapper from "../../../apiWrapper/mobile/user";
 import ProviderWrapper from "../../../apiWrapper/mobile/provider";

@@ -1,6 +1,4 @@
 import Controller from "../index";
-
-import patientService from "../../../app/services/patients/patients.service";
 import carePlanService from "../../services/carePlan/carePlan.service";
 import CarePlanWrapper from "../../apiWrapper/web/carePlan";
 import appointmentService from "../../services/appointment/appointment.service";
@@ -13,7 +11,7 @@ import medicineService from "../../services/medicine/medicine.service";
 import userRoleService from "../../services/userRoles/userRoles.service";
 import carePlanSecondaryDrMapService from "../../services/carePlanSecondaryDoctorMappings/carePlanSecondaryDoctorMappings.service";
 //import twilioService from "../../services/twilio/twilio.service";
-
+import * as carePlanHelper from "./carePlan.helper";
 import {
   getCarePlanAppointmentIds,
   getCarePlanMedicationIds,
@@ -37,8 +35,6 @@ import Logger from "../../../libs/log";
 // import ScheduleEventService from "../../services/scheduleEvents/scheduleEvent.service";
 import moment from "moment";
 import queueService from "../../services/awsQueue/queue.service";
-
-import * as carePlanHelper from "./carePlan.helper";
 import MedicationWrapper from "../../apiWrapper/web/medicationReminder";
 import MedicationJob from "../../jobSdk/Medications/observer";
 

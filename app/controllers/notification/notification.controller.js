@@ -6,21 +6,8 @@ import { getDataForNotification } from "./notification.helper";
 import ChatJob from "../../jobSdk/Chat/observer";
 import NotificationSdk from "../../notificationSdk";
 
-import {
-  MESSAGE_TYPES,
-  NOTIFICATION_STAGES,
-  NOTIFICATION_VERB,
-  EVENT_TYPE,
-  AGORA_CALL_NOTIFICATION_TYPES,
-} from "../../../constant";
+import { MESSAGE_TYPES } from "../../../constant";
 // import ScheduleEventService from "../../services/scheduleEvents/scheduleEvent.service";
-import ScheduleEventService from "../../services/scheduleEvents/scheduleEvent.service";
-import userService from "../../services/user/user.service";
-import careplanAppointmentService from "../../services/carePlanAppointment/carePlanAppointment.service";
-
-import UserWrapper from "../../apiWrapper/web/user";
-import AppointmentWrapper from "../../apiWrapper/web/appointments";
-import ScheduleEventWrapper from "../../apiWrapper/common/scheduleEvents";
 
 const Log = new Logger("WEB > NOTIFICATION > CONTROLLER");
 

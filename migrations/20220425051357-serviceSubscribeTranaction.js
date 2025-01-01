@@ -6,10 +6,10 @@ import { TABLE_NAME as patientsTableName } from "../app/models/patients";
 import { TABLE_NAME as doctorsTableName } from "../app/models/doctors";
 import { TABLE_NAME as providersTableName } from "../app/models/providers";
 import {
-  USER_CATEGORY,
-  CURRENCY,
-  USER_STATUS,
   BILLING_FREQUENCY,
+  CURRENCY,
+  USER_CATEGORY,
+  USER_STATUS,
 } from "../constant";
 
 module.exports = {

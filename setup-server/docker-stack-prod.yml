@@ -6,7 +6,7 @@ services:
       replicas: 1
       restart_policy:
         condition: on-failure
-    #secrets:
+      #secrets:
       #- mysql_root_password
       #- mysql_user_password
     environment:
@@ -15,7 +15,7 @@ services:
       MYSQL_USER: adherelive
       MYSQL_PASSWORD: eK7tz4s3CBkYPjUaSBAl
       MYSQL_HOSTNAME: adherelive-prod-db.mysql.database.azure.com
-    #volumes:
+      #volumes:
       #- mysql_data:/var/lib/mysql
     networks:
       - al_ntwrk
@@ -26,12 +26,12 @@ services:
       replicas: 1
       restart_policy:
         condition: on-failure
-    #secrets:
+      #secrets:
       #- mongodb_password
     environment:
       MONGO_INITDB_ROOT_USERNAME: adherelive
       MONGO_INITDB_ROOT_PASSWORD: Q3xbZbp5f7O0AqR4
-    #volumes:
+      #volumes:
       #- mongodb_data:/data/db
     networks:
       - al_ntwrk
@@ -47,7 +47,7 @@ services:
       update_config:
         parallelism: 1
         delay: 10s
-    #secrets:
+      #secrets:
       #- mysql_user_password
     env_file:
       - .env
@@ -80,16 +80,16 @@ networks:
   al_ntwrk:
     driver: overlay
 
-#volumes:
-  #mysql_data:
+    #volumes:
+    #mysql_data:
     #driver: local
-  #mongodb_data:
+    #mongodb_data:
     #driver: local
 
-#secrets:
-  #mysql_root_password:
+    #secrets:
+    #mysql_root_password:
     #external: true
-  #mysql_user_password:
+    #mysql_user_password:
     #external: true
-  #mongodb_password:
+    #mongodb_password:
     #external: true

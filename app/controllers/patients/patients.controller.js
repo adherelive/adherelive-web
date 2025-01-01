@@ -16,7 +16,13 @@ import carePlanTemplateService from "../../services/carePlanTemplate/carePlanTem
 import otpVerificationService from "../../services/otpVerification/otpVerification.service";
 import ConsentService from "../../services/consents/consent.service";
 import ReportService from "../../services/reports/report.service";
+// import carePlanMedicationService from "../../services/carePlanMedication/carePlanMedication.service";
+// import carePlanAppointmentService from "../../services/carePlanAppointment/carePlanAppointment.service";
+// import templateMedicationService from "../../services/templateMedication/templateMedication.service";
+// import templateAppointmentService from "../../services/templateAppointment/templateAppointment.service";
+// Wrappers
 import UserRoleWrapper from "../../apiWrapper/web/userRoles";
+import UserRolesWrapper from "../../apiWrapper/web/userRoles";
 import conditionService from "../../services/condition/condition.service";
 import qualificationService from "../../services/doctorQualifications/doctorQualification.service";
 import doctorRegistrationService from "../../services/doctorRegistration/doctorRegistration.service";
@@ -29,15 +35,6 @@ import RepetitionService from "../../services/exerciseRepetitions/repetition.ser
 import WorkoutService from "../../services/workouts/workout.service";
 import userPreferenceService from "../../services/userPreferences/userPreference.service";
 import carePlanSecondaryDrMapService from "../../services/carePlanSecondaryDoctorMappings/carePlanSecondaryDoctorMappings.service";
-import providerService from "../../services/provider/provider.service";
-import ExerciseContentService from "../../services/exerciseContents/exerciseContent.service";
-// import carePlanMedicationService from "../../services/carePlanMedication/carePlanMedication.service";
-// import carePlanAppointmentService from "../../services/carePlanAppointment/carePlanAppointment.service";
-// import templateMedicationService from "../../services/templateMedication/templateMedication.service";
-// import templateAppointmentService from "../../services/templateAppointment/templateAppointment.service";
-
-// Wrappers
-import UserRolesWrapper from "../../apiWrapper/web/userRoles";
 import VitalWrapper from "../../apiWrapper/web/vitals";
 import UserWrapper from "../../apiWrapper/web/user";
 import CarePlanWrapper from "../../apiWrapper/web/carePlan";
@@ -62,22 +59,22 @@ import ProviderWrapper from "../../apiWrapper/web/provider";
 import PortionWrapper from "../../apiWrapper/web/portions";
 import WorkoutWrapper from "../../apiWrapper/web/workouts";
 import UserPreferenceWrapper from "../../apiWrapper/web/userPreference";
-import ExerciseContentWrapper from "../../apiWrapper/web/exerciseContents";
 // import TemplateMedicationWrapper from "../../apiWrapper/web/templateMedication";
 // import TemplateAppointmentWrapper from "../../apiWrapper/web/templateAppointment";
-
 // Helpers
-import { getSeparateName, getRoomId } from "../../helper/common";
+import {
+  checkAndCreateDirectory,
+  getRoomId,
+  getSeparateName,
+} from "../../helper/common";
 import generateOTP from "../../helper/generateOtp";
 import { EVENTS, Proxy_Sdk } from "../../proxySdk";
 import generatePDF from "../../helper/generateCarePlanPdf";
 import { downloadFileFromS3 } from "../user/user.helper";
 import { getFilePath } from "../../helper/filePath";
-import { checkAndCreateDirectory } from "../../helper/common";
 import * as carePlanHelper from "../carePlans/carePlan.helper";
 import { getDoctorCurrentTime } from "../../helper/getUserTime";
 // import carePlan from "../../apiWrapper/web/carePlan";
-
 import * as DietHelper from "../diet/diet.helper";
 import Log from "../../../libs/log";
 
@@ -86,15 +83,15 @@ import moment from "moment";
 import {
   BODY_VIEW,
   CONSENT_TYPE,
-  EMAIL_TEMPLATE_NAME,
-  USER_CATEGORY,
-  S3_DOWNLOAD_FOLDER,
-  PRESCRIPTION_PDF_FOLDER,
   DIAGNOSIS_TYPE,
-  S3_DOWNLOAD_FOLDER_PROVIDER,
+  EMAIL_TEMPLATE_NAME,
   ONBOARDING_STATUS,
-  SIGN_IN_CATEGORY,
   PATIENT_MEAL_TIMINGS,
+  PRESCRIPTION_PDF_FOLDER,
+  S3_DOWNLOAD_FOLDER,
+  S3_DOWNLOAD_FOLDER_PROVIDER,
+  SIGN_IN_CATEGORY,
+  USER_CATEGORY,
 } from "../../../constant";
 
 const path = require("path");
@@ -948,40 +945,40 @@ class PatientController extends Controller {
   };
 
   /* TODO: This function has been removed in the recent code for
-       * branch merge-2
-      searchPatientByName = async (req, res) => {
-        const { raiseSuccess, raiseServerError } = this;
-        try {
-          Logger.info(`searchPatient request query : ${req.query.value}`);
-          const { query: { value = "" } = {} } = req;
-          const {
-            userDetails: { userId, userRoleId, userData: { category } = {} } = {},
-          } = req;
-          let authDoctor = null;
-          if (category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP) {
-            authDoctor = await doctorService.getDoctorByData({ user_id: userId });
+         * branch merge-2
+        searchPatientByName = async (req, res) => {
+          const { raiseSuccess, raiseServerError } = this;
+          try {
+            Logger.info(`searchPatient request query : ${req.query.value}`);
+            const { query: { value = "" } = {} } = req;
+            const {
+              userDetails: { userId, userRoleId, userData: { category } = {} } = {},
+            } = req;
+            let authDoctor = null;
+            if (category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP) {
+              authDoctor = await doctorService.getDoctorByData({ user_id: userId });
+            }
+            const patients = await patientService.getPatientByName(value);
+            if (patients.length > 0)
+              return raiseSuccess(
+                res,
+                200,
+                { patients },
+                "Patients fetched successfully"
+              );
+            else
+              return raiseSuccess(
+                res,
+                201,
+                {},
+                "No patient linked with the given phone number"
+              );
+          } catch (error) {
+            Logger.debug("searchPatient 500 error", error);
+            return raiseServerError(res);
           }
-          const patients = await patientService.getPatientByName(value);
-          if (patients.length > 0)
-            return raiseSuccess(
-              res,
-              200,
-              { patients },
-              "Patients fetched successfully"
-            );
-          else
-            return raiseSuccess(
-              res,
-              201,
-              {},
-              "No patient linked with the given phone number"
-            );
-        } catch (error) {
-          Logger.debug("searchPatient 500 error", error);
-          return raiseServerError(res);
-        }
-      };
-      */
+        };
+        */
 
   searchPatientOld = async (req, res) => {
     const { raiseSuccess, raiseServerError } = this;

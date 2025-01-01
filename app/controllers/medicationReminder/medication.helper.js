@@ -1,5 +1,3 @@
-import Controller from "../index";
-
 import {
   BREAKFAST,
   DINNER,

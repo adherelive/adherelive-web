@@ -11,10 +11,7 @@ import userService from "../../services/user/user.service";
 // Wrappers
 import UserRoleWrapper from "../../apiWrapper/web/userRoles";
 import UserWrapper from "../../apiWrapper/web/user";
-
-import { USER_CATEGORY } from "../../../constant";
 import AppNotification from "../../notificationSdk/inApp";
-import { getTime } from "../helper/timer";
 
 const Log = new Logger("WEB > CONTROLLER > PAYMENTS");
 

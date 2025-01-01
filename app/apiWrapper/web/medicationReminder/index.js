@@ -5,10 +5,9 @@ import mReminderService from "../../../services/medicationReminder/mReminder.ser
 import MedicineWrapper from "../medicine";
 import EventService from "../../../services/scheduleEvents/scheduleEvent.service";
 import moment from "moment";
-import { EVENT_STATUS, EVENT_TYPE } from "../../../../constant";
+import { EVENT_STATUS } from "../../../../constant";
 import EventWrapper from "../../common/scheduleEvents";
 import doctorService from "../../../services/doctor/doctor.service";
-import { getTime } from "../../../helper/timer";
 
 class MReminderWrapper extends BaseMedicationReminder {
   constructor(data) {
@@ -27,16 +26,16 @@ class MReminderWrapper extends BaseMedicationReminder {
   };
 
   /* TODO: Check why this is commented out
-      id,
-      participant_id,
-      organizer_type,
-      organizer_id,
-      description,
-      start_date,
-      end_date,
-      details,
-      rr_rule = "",
-  */
+        id,
+        participant_id,
+        organizer_type,
+        organizer_id,
+        description,
+        start_date,
+        end_date,
+        details,
+        rr_rule = "",
+    */
 
   getBasicInfo = async () => {
     const { _data } = this;

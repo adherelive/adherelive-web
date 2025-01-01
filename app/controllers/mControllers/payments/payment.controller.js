@@ -7,11 +7,9 @@ import * as PaymentHelper from "./helper";
 
 // SERVICES...
 import PaymentProductService from "../../../services/paymentProducts/paymentProduct.service";
-import doctorProviderMappingService from "../../../services/doctorProviderMapping/doctorProviderMapping.service";
 
 // WRAPPERS...
 import PaymentProductWrapper from "../../../apiWrapper/mobile/paymentProducts";
-import DoctorProviderMappingWrapper from "../../../apiWrapper/web/doctorProviderMapping";
 
 const Log = new Logger("MOBILE > CONTROLLER > PAYMENTS");
 

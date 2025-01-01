@@ -2,7 +2,6 @@
 
 import { FEATURE_TYPE } from "../constant";
 import { TABLE_NAME } from "../app/models/featureDetails";
-import { DataTypes } from "sequelize";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {

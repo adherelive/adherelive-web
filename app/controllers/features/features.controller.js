@@ -12,6 +12,7 @@ import CarePlanWrapper from "../../apiWrapper/web/carePlan";
 import FeatureMappingWrapper from "../../apiWrapper/web/doctorPatientFeatureMapping";
 
 import { USER_CATEGORY } from "../../../constant";
+
 const FILE_NAME = "WEB FEATURE CONTROLLER";
 
 const Logger = new Log(FILE_NAME);

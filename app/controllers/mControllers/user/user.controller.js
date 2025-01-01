@@ -1,22 +1,14 @@
 import * as constants from "../../../../config/constants";
 import Controller from "../../";
-
-const moment = require("moment");
-const jwt = require("jsonwebtoken");
-const request = require("request");
 import bcrypt from "bcrypt";
 import base64 from "js-base64";
 
 import Log from "../../../../libs/log";
-
-const Response = require("../../helper/responseFormat");
-
 import MPatientWrapper from "../../../apiWrapper/mobile/patient";
 import MUserWrapper from "../../../apiWrapper/mobile/user";
 import MDoctorWrapper from "../../../apiWrapper/mobile/doctor";
 import MCarePlanWrapper from "../../../apiWrapper/mobile/carePlan";
 import LinkVerificationWrapper from "../../../apiWrapper/mobile/userVerification";
-import DoctorProviderMappingWrapper from "../../../apiWrapper/web/doctorProviderMapping";
 import ProvidersWrapper from "../../../apiWrapper/web/provider";
 
 import userService from "../../../services/user/user.service";
@@ -25,7 +17,6 @@ import carePlanService from "../../../services/carePlan/carePlan.service";
 import doctorService from "../../../services/doctors/doctors.service";
 import UserVerificationServices from "../../../services/userVerifications/userVerifications.services";
 import otpVerificationService from "../../../services/otpVerification/otpVerification.service";
-import doctorProviderMappingService from "../../../services/doctorProviderMapping/doctorProviderMapping.service";
 import userRolesService from "../../../services/userRoles/userRoles.service";
 import userPreferenceService from "../../../services/userPreferences/userPreference.service";
 
@@ -35,7 +26,6 @@ import doctorPatientWatchlistService from "../../../services/doctorPatientWatchl
 import { getServerSpecificConstants } from "./userHelper";
 import { v4 as uuidv4 } from "uuid";
 import {
-  DOCTOR_TYPE_PROFILES,
   EMAIL_TEMPLATE_NAME,
   NO_ACTION,
   NO_APPOINTMENT,
@@ -43,9 +33,7 @@ import {
   USER_CATEGORY,
   VERIFICATION_TYPE,
 } from "../../../../constant";
-import { Proxy_Sdk, EVENTS } from "../../../proxySdk";
-
-const errMessage = require("../../../../config/messages.json").errMessages;
+import { EVENTS, Proxy_Sdk } from "../../../proxySdk";
 import treatmentService from "../../../services/treatment/treatment.service";
 import MTreatmentWrapper from "../../../apiWrapper/mobile/treatments";
 import severityService from "../../../services/severity/severity.service";
@@ -54,12 +42,19 @@ import conditionService from "../../../services/condition/condition.service";
 import MConditionWrapper from "../../../apiWrapper/mobile/conditions";
 import UserWrapper from "../../../apiWrapper/web/user";
 import UserRolesWrapper from "../../../apiWrapper/mobile/userRoles";
-import DoctorWrapper from "../../../apiWrapper/mobile/doctor";
 
 import generateOTP from "../../../helper/generateOtp";
 import AppNotification from "../../../notificationSdk/inApp";
 import AdhocJob from "../../../jobSdk/Adhoc/observer";
 import { getSeparateName } from "../../../helper/common";
+
+const moment = require("moment");
+const jwt = require("jsonwebtoken");
+const request = require("request");
+
+const Response = require("../../helper/responseFormat");
+
+const errMessage = require("../../../../config/messages.json").errMessages;
 
 const Logger = new Log("MOBILE USER CONTROLLER");
 

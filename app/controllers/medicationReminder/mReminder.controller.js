@@ -23,7 +23,6 @@ import UserPreferenceWrapper from "../../apiWrapper/web/userPreference";
 import EventWrapper from "../../apiWrapper/common/scheduleEvents";
 
 import * as medicationHelper from "./medication.helper";
-import { getTime } from "../../helper/timer";
 
 import {
   CUSTOM_REPEAT_OPTIONS,
@@ -33,17 +32,9 @@ import {
   EVENT_STATUS,
   EVENT_TYPE,
   MEDICATION_TIMING,
-  REPEAT_TYPE,
-  MEDICINE_FORM_TYPE,
-  USER_CATEGORY,
-  WAKE_UP,
-  SLEEP,
-  BREAKFAST,
-  LUNCH,
-  EVENING,
-  DINNER,
-  NOTIFICATION_STAGES,
   MEDICINE_FORMULATION,
+  NOTIFICATION_STAGES,
+  REPEAT_TYPE,
   WHEN_TO_TAKE_ABBREVATIONS,
 } from "../../../constant";
 import Log from "../../../libs/log";

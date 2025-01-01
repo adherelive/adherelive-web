@@ -3,7 +3,6 @@ import Controller from "../../index";
 // services
 import WorkoutResponseService from "../../../services/workoutResponses/workoutResponses.service";
 import EventService from "../../../services/scheduleEvents/scheduleEvent.service";
-import WorkoutService from "../../../services/workouts/workout.service";
 import ExerciseContentService from "../../../services/exerciseContents/exerciseContent.service";
 import carePlanService from "../../../services/carePlan/carePlan.service";
 

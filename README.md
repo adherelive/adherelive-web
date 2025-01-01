@@ -12,7 +12,8 @@ Web Portal backend code + API for AdhereLive.
 
 ### Creating and working with AdhereLive using Dev Builds
 
-We have shifted to using 'docker swarm' and creating 'service' containers to execute the docker containers inside a docker network. <br />
+We have shifted to using 'docker swarm' and creating 'service' containers to execute the docker containers inside a
+docker network. <br />
 
 Some good steps, before we run the build are to check the following commands return no data/output:
 
@@ -77,7 +78,8 @@ echo "password" | docker secret create mysql_user_password -
 echo "password" | docker secret create mongodb_password -
 ```
 
-Then you need to copy and change the `docker-stack.yml` file, which builds the services and the network for your local setup
+Then you need to copy and change the `docker-stack.yml` file, which builds the services and the network for your local
+setup
 
 ```shell
 cd ..

@@ -5,7 +5,7 @@ import Logger from "../../../libs/log";
 // Services
 import ServiceUserMappingService from "../../services/serviceUserMapping/serviceUserMapping.service";
 import ServiceOffering from "../../services/serviceOffering/serviceOffering.service";
-import { USER_STATUS, USER_CATEGORY } from "../../../constant";
+import { USER_CATEGORY, USER_STATUS } from "../../../constant";
 import TxService from "../../services/serviceSubscribeTransaction/serviceSubscribeTransaction";
 
 const Log = new Logger("WEB > CONTROLLER > Service Offering");

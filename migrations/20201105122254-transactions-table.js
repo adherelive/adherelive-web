@@ -1,9 +1,9 @@
 "use strict";
 
 import {
+  STATUS,
   TABLE_NAME,
   TRANSACTION_MODES,
-  STATUS,
   TRANSACTION_STATUS,
 } from "../app/models/transactions";
 import { USER_CATEGORY_ARRAY } from "../app/models/users";

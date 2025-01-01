@@ -9,7 +9,6 @@ import {
 import * as UploadHelper from "./helper";
 
 // SERVICES ---------------
-
 import documentService from "../services/uploadDocuments/uploadDocuments.service";
 
 const AWS_FOLDER_NAME = {

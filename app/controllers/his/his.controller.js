@@ -6,13 +6,13 @@
  * @desc An API Controller for HIS Operations.
  */
 import Controller from "../index";
-
-const jwt = require("jsonwebtoken");
 import Log from "../../../libs/log";
-
-const Response = require("../helper/responseFormat");
 import hisService from "../../services/his/his.service";
 import bcrypt from "bcrypt";
+
+const jwt = require("jsonwebtoken");
+
+const Response = require("../helper/responseFormat");
 
 const Logger = new Log("WEB USER CONTROLLER");
 

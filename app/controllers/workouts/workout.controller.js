@@ -12,7 +12,6 @@ import carePlanService from "../../services/carePlan/carePlan.service";
 import ExerciseContentService from "../../services/exerciseContents/exerciseContent.service";
 import WorkoutResponsesService from "../../services/workoutResponses/workoutResponses.service";
 // import WorkoutTemplateService from "../../../services/workoutTemplates/workoutTemplate.service";
-
 // Wrappers
 import WorkoutWrapper from "../../apiWrapper/web/workouts";
 import CarePlanWrapper from "../../apiWrapper/web/carePlan";
@@ -21,7 +20,6 @@ import ExerciseContentWrapper from "../../apiWrapper/web/exerciseContents";
 import WorkoutResponseWrapper from "../../apiWrapper/web/workoutResponse";
 import EventWrapper from "../../apiWrapper/common/scheduleEvents";
 // import WorkoutTemplateWrapper from "../../../apiWrapper/web/workoutTemplates";
-
 import WorkoutJob from "../../jobSdk/Workout/observer";
 import NotificationSdk from "../../notificationSdk";
 

@@ -3,7 +3,6 @@ import Controller from "../index";
 import Logger from "../../../libs/log";
 
 // Helpers
-
 // Services
 import UserFavouritesService from "../../services/userFavourites/userFavourites.service";
 

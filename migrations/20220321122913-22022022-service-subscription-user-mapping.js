@@ -4,15 +4,7 @@ import { TABLE_NAME as subscribePlanTableName } from "../app/models/serviceSubsc
 import { TABLE_NAME as patientsTableName } from "../app/models/patients";
 import { TABLE_NAME as doctorsTableName } from "../app/models/doctors";
 import { TABLE_NAME as providersTableName } from "../app/models/providers";
-import {
-  DB_TABLES,
-  USER_CATEGORY,
-  PATIENT_STATUS,
-  USER_STATUS,
-  CURRENCY,
-  BILLING_CYCLE,
-  REPEAT_TYPE,
-} from "../constant";
+import { PATIENT_STATUS, USER_CATEGORY } from "../constant";
 //
 module.exports = {
   up: (queryInterface, Sequelize) => {
