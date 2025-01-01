@@ -6,7 +6,7 @@ import moment from "moment";
 import * as EventHelper from "./event.helper";
 import { EVENT_STATUS, EVENT_TYPE, USER_CATEGORY } from "../../../constant";
 
-// SERVICES
+// Services
 import CarePlanService from "../../services/carePlan/carePlan.service";
 import EventService from "../../services/scheduleEvents/scheduleEvent.service";
 import SymptomService from "../../services/symptom/symptom.service";

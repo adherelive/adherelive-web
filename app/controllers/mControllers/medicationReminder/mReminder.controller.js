@@ -26,7 +26,7 @@ import {
 import MedicationJob from "../../../jobSdk/Medications/observer";
 import NotificationSdk from "../../../notificationSdk";
 
-// SERVICES...
+// Services
 import doctorService from "../../../services/doctor/doctor.service";
 import queueService from "../../../services/awsQueue/queue.service";
 import ScheduleEventService from "../../../services/scheduleEvents/scheduleEvent.service";
@@ -35,7 +35,7 @@ import carePlanService from "../../../services/carePlan/carePlan.service";
 import carePlanMedicationService from "../../../services/carePlanMedication/carePlanMedication.service";
 import userPreferenceService from "../../../services/userPreferences/userPreference.service";
 
-// WRAPPERS...
+// Wrappers
 import DoctorWrapper from "../../../apiWrapper/mobile/doctor";
 import PatientWrapper from "../../../apiWrapper/mobile/patient";
 import MobileMReminderWrapper from "../../../apiWrapper/mobile/medicationReminder";

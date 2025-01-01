@@ -19,7 +19,7 @@ import NotificationSdk from "../../../notificationSdk";
 import { downloadFileFromS3, uploadImageS3 } from "../user/userHelper";
 import { getFilePath } from "../../../helper/filePath";
 import { checkAndCreateDirectory } from "../../../helper/common";
-// SERVICES...
+// Services
 import appointmentService from "../../../services/appointment/appointment.service";
 import queueService from "../../../services/awsQueue/queue.service";
 import documentService from "../../../services/uploadDocuments/uploadDocuments.service";
@@ -29,7 +29,7 @@ import patientService from "../../../services/patients/patients.service";
 import ScheduleEventService from "../../../services/scheduleEvents/scheduleEvent.service";
 import featureDetailService from "../../../services/featureDetails/featureDetails.service";
 
-// WRAPPERS...
+// Wrappers
 // import ProviderWrapper from "../../../apiWrapper/mobile/provider";
 import UploadDocumentWrapper from "../../../apiWrapper/mobile/uploadDocument";
 import MAppointmentWrapper from "../../../apiWrapper/mobile/appointments";

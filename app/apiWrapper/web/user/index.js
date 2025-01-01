@@ -2,7 +2,7 @@ import isEmpty from "lodash/isEmpty";
 
 import BaseUser from "../../../services/user";
 
-// SERVICES
+// Services
 import userService from "../../../services/user/user.service";
 import userPermissionService from "../../../services/userPermission/userPermission.service";
 import permissionService from "../../../services/permission/permission.service";

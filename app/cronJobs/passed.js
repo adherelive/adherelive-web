@@ -3,11 +3,11 @@ import moment from "moment";
 
 import { EVENT_STATUS, EVENT_TYPE, FEATURE_TYPE } from "../../constant";
 
-// SERVICES ---------------
+// Services
 import ScheduleEventService from "../services/scheduleEvents/scheduleEvent.service";
 import FeatureDetailService from "../services/featureDetails/featureDetails.service";
 
-// WRAPPERS ---------------
+// Wrappers
 import ScheduleEventWrapper from "../apiWrapper/common/scheduleEvents";
 import FeatureDetailWrapper from "../apiWrapper/mobile/featureDetails";
 

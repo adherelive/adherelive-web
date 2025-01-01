@@ -37,14 +37,14 @@ import { RRule } from "rrule";
 import moment from "moment";
 import Logger from "../libs/log";
 
-// SERVICES
+// Services
 import FeatureDetailService from "../app/services/featureDetails/featureDetails.service";
 import ScheduleService from "../app/services/scheduleEvents/scheduleEvent.service";
 import UserPreferenceService from "../app/services/userPreferences/userPreference.service";
 import appointmentService from "../app/services/appointment/appointment.service";
 import queueService from "../app/services/awsQueue/queue.service";
 
-// WRAPPERS
+// Wrappers
 // import PatientWrapper from "../app/apiWrapper/mobile/patient";
 import MedicineWrapper from "../app/apiWrapper/mobile/medicine";
 import MedicationWrapper from "../app/apiWrapper/mobile/medicationReminder";

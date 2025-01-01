@@ -3,7 +3,7 @@ import Logger from "../../../../libs/log";
 import moment from "moment";
 import * as vitalHelper from "../../vitals/vital.helper";
 
-// SERVICES
+// Services
 import VitalService from "../../../services/vitals/vital.service";
 import VitalTemplateService from "../../../services/vitalTemplates/vitalTemplate.service";
 import FeatureDetailService from "../../../services/featureDetails/featureDetails.service";
@@ -11,7 +11,7 @@ import EventService from "../../../services/scheduleEvents/scheduleEvent.service
 import twilioService from "../../../services/twilio/twilio.service";
 import queueService from "../../../services/awsQueue/queue.service";
 
-// WRAPPERS
+// Wrappers
 import VitalTemplateWrapper from "../../../apiWrapper/mobile/vitalTemplates";
 import VitalWrapper from "../../../apiWrapper/mobile/vitals";
 import FeatureDetailWrapper from "../../../apiWrapper/mobile/featureDetails";

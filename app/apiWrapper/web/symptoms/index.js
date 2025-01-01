@@ -1,9 +1,9 @@
 import BaseSymptom from "../../../services/symptom";
 
-// SERVICES
+// Services
 import SymptomService from "../../../services/symptom/symptom.service";
 
-// WRAPPERS
+// Wrappers
 import UserWrapper from "../user";
 import DoctorWrapper from "../doctor";
 import PatientWrapper from "../patient";

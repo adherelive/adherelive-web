@@ -13,7 +13,7 @@ import {
 // lodash
 import isEmpty from "lodash/isEmpty";
 
-// SERVICES --->
+// Services
 import userService from "../../services/user/user.service";
 import AppointmentService from "../../services/appointment/appointment.service";
 import MedicationService from "../../services/medicationReminder/mReminder.service";
@@ -23,7 +23,7 @@ import carePlanService from "../../services/carePlan/carePlan.service";
 import userRolesService from "../../services/userRoles/userRoles.service";
 import SymptomService from "../../services/symptom/symptom.service";
 
-// API WRAPPERS --->
+// Wrappers
 import AppointmentWrapper from "../../apiWrapper/web/appointments";
 import MedicationWrapper from "../../apiWrapper/web/medicationReminder";
 import EventWrapper from "../../apiWrapper/common/scheduleEvents";

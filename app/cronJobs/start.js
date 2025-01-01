@@ -3,13 +3,13 @@ import moment from "moment";
 
 import { EVENT_STATUS, EVENT_TYPE, NOTIFICATION_STAGES } from "../../constant";
 
-// SERVICES ---------------
+// Services
 import ScheduleEventService from "../services/scheduleEvents/scheduleEvent.service";
 import medicationService from "../services/medicationReminder/mReminder.service";
 import DietService from "../services/diet/diet.service";
 import WorkoutService from "../services/workouts/workout.service";
 
-// WRAPPERS ---------------
+// Wrappers
 import ScheduleEventWrapper from "../apiWrapper/common/scheduleEvents";
 
 import * as CronHelper from "./helper";

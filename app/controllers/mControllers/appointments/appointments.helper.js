@@ -1,7 +1,7 @@
 import Logger from "../../../../libs/log";
 import { FAVOURITE_TYPE, MEDICAL_TEST } from "../../../../constant";
 
-// SERVICES
+// Services
 import FavoriteService from "../../../services/userFavourites/userFavourites.service";
 
 const Log = new Logger("MOBILE > APPOINTMENT > HELPER");

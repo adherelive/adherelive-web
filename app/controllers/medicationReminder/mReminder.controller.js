@@ -2,7 +2,7 @@ import Controller from "../index";
 
 import moment from "moment";
 
-// SERVICES --------------------------------------------------
+// Services
 import userPreferenceService from "../../services/userPreferences/userPreference.service";
 import medicationReminderService from "../../services/medicationReminder/mReminder.service";
 import medicineService from "../../services/medicine/medicine.service";
@@ -13,7 +13,7 @@ import queueService from "../../services/awsQueue/queue.service";
 import ScheduleEventService from "../../services/scheduleEvents/scheduleEvent.service";
 import EventService from "../../services/scheduleEvents/scheduleEvent.service";
 
-// API WRAPPERS ----------------------------------------------
+// Wrappers
 import MedicationWrapper from "../../apiWrapper/web/medicationReminder";
 import MedicineWrapper from "../../apiWrapper/web/medicine";
 import CarePlanWrapper from "../../apiWrapper/web/carePlan";
