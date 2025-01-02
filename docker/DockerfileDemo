@@ -8,7 +8,7 @@ RUN mkdir -p /usr/src/app && mkdir -p /usr/src/app/public
 WORKDIR /usr/src/app
 COPY package.json /usr/src/app
 COPY package-lock.json /usr/src/app
-RUN npm config set registry https://registry.npmmirror.com/ --global
+RUN npm config set registry https://registry.npmjs.org/ --global
 RUN npm install && npm cache clean --force --loglevel=error
 COPY . /usr/src/app
 COPY env_files/.node_env_demo /usr/src/app/.env
