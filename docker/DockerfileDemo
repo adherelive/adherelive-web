@@ -1,7 +1,7 @@
 FROM gagneet/ubuntulibs
 # Install build-essential
 RUN apt-get update && apt-get install -y build-essential && rm -rf /var/lib/apt/lists/*
-RUN useradd -d /home/azureuser -m -s /bin/bash azureuser
+# RUN useradd -d /home/azureuser -m -s /bin/bash azureuser
 LABEL application="adherelive-backend"
 LABEL owner="AdhereLive Pvt Ltd"
 RUN mkdir -p /usr/src/app && mkdir -p /usr/src/app/public

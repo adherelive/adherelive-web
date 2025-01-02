@@ -210,7 +210,7 @@ For testing, seeders are needed to be run.
 
 Now run these command in this particular order,
 
-1. `docker exec -it <conatainerId> bash`
+1. `docker exec -it <containerId> bash`
 2. `npm run seeder`
 
 ## For Development build
@@ -523,8 +523,8 @@ $ cd ./adherelive-fe
 
 $ vi Dockerfile
 FROM node:16.10.0 as builder
-LABEL application="adhere-live-frontend"
-LABEL owner="Akshay Nagargoje"
+LABEL application="adherelive-frontend"
+LABEL owner="AdhereLive Pvt Ltd"
 RUN mkdir /code
 WORKDIR /code
 COPY package*.json ./
