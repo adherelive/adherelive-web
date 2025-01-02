@@ -45,7 +45,6 @@ import appointmentService from "../app/services/appointment/appointment.service"
 import queueService from "../app/services/awsQueue/queue.service";
 
 // Wrappers
-
 import MedicineWrapper from "../app/apiWrapper/mobile/medicine";
 import MedicationWrapper from "../app/apiWrapper/mobile/medicationReminder";
 import AppointmentWrapper from "../app/apiWrapper/mobile/appointments";
@@ -70,7 +69,7 @@ const getUserPreferences = async (user_id) => {
       return timings;
     }
   } catch (error) {
-    Log.debug("userPreferences catch error", error);
+    Log.debug("userPreferences catch error: ", error);
   }
 };
 
@@ -120,7 +119,7 @@ export const handleAppointments = async (appointment) => {
 
     return response;
   } catch (error) {
-    Log.debug("schedule events appointment 500 error", error);
+    Log.debug("schedule events appointment 500 error: ", error);
   }
 };
 
@@ -210,7 +209,7 @@ export const handleMedications = async (data) => {
 
     return response;
   } catch (error) {
-    Log.debug("schedule events medication 500 error", error);
+    Log.debug("schedule events medication 500 error: ", error);
   }
 };
 

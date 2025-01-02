@@ -1,4 +1,16 @@
 import Controller from "../index";
+
+import {
+  EVENT_LONG_TERM_VALUE,
+  EVENT_STATUS,
+  EVENT_TYPE,
+  USER_CATEGORY,
+} from "../../../constant";
+import moment from "moment";
+import MedicationJob from "../../jobSdk/Medications/observer";
+import PERMISSIONS from "../../../config/permissions";
+
+// Services
 import carePlanService from "../../services/carePlan/carePlan.service";
 import CarePlanWrapper from "../../apiWrapper/web/carePlan";
 import appointmentService from "../../services/appointment/appointment.service";
@@ -10,35 +22,28 @@ import templateAppointmentService from "../../services/templateAppointment/templ
 import medicineService from "../../services/medicine/medicine.service";
 import userRoleService from "../../services/userRoles/userRoles.service";
 import carePlanSecondaryDrMapService from "../../services/carePlanSecondaryDoctorMappings/carePlanSecondaryDoctorMappings.service";
-//import twilioService from "../../services/twilio/twilio.service";
+import doctorService from "../../services/doctor/doctor.service";
+import carePlanTemplateService from "../../services/carePlanTemplate/carePlanTemplate.service";
+import queueService from "../../services/awsQueue/queue.service";
+
+// Helpers
 import * as carePlanHelper from "./carePlan.helper";
 import {
   getCarePlanAppointmentIds,
   getCarePlanMedicationIds,
   getCarePlanSeverityDetails,
 } from "./carePlan.helper";
-import {
-  EVENT_LONG_TERM_VALUE,
-  EVENT_STATUS,
-  EVENT_TYPE,
-  USER_CATEGORY,
-} from "../../../constant";
+import { raiseClientError } from "../../../routes/helper";
+
+// Wrappers
 import UserRoleWrapper from "../../apiWrapper/web/userRoles";
-import doctorService from "../../services/doctor/doctor.service";
 import DoctorWrapper from "../../apiWrapper/web/doctor";
 import PatientWrapper from "../../apiWrapper/web/patient";
 import AppointmentWrapper from "../../apiWrapper/web/appointments";
-
-import carePlanTemplateService from "../../services/carePlanTemplate/carePlanTemplate.service";
 import CarePlanTemplateWrapper from "../../apiWrapper/web/carePlanTemplate";
-import Logger from "../../../libs/log";
-
-import moment from "moment";
-import queueService from "../../services/awsQueue/queue.service";
 import MedicationWrapper from "../../apiWrapper/web/medicationReminder";
-import MedicationJob from "../../jobSdk/Medications/observer";
 
-import PERMISSIONS from "../../../config/permissions";
+import Logger from "../../../libs/log";
 
 const Log = new Logger("WEB > CAREPLAN > CONTROLLER");
 
@@ -474,13 +479,13 @@ class CarePlanController extends Controller {
       // update care plan clinical notes.
 
       const initialCarePlanData = await CarePlanWrapper(null, care_plan_id);
-      const previousCareplanDetails =
+      const previousCarePlanDetails =
         (await initialCarePlanData.getCarePlanDetails()) || {};
-      //================================
+      //
       const {
         follow_up_advise: previousFollowUpAdvise,
         clinical_notes: previousClinicalNotes,
-      } = previousCareplanDetails;
+      } = previousCarePlanDetails;
       let new_follow_up_advise = "";
       if (
         previousFollowUpAdvise !== undefined &&
@@ -521,13 +526,13 @@ class CarePlanController extends Controller {
       const carePlanUpdateData = {
         ...prevCareplanBasicInfo,
         details: {
-          ...previousCareplanDetails,
+          ...previousCarePlanDetails,
           clinical_notes: new_clinical_notes,
           follow_up_advise: new_follow_up_advise,
         },
       };
 
-      const updatedCareplanId = await carePlanService.updateCarePlan(
+      const updatedCarePlanId = await carePlanService.updateCarePlan(
         carePlanUpdateData,
         care_plan_id
       );
