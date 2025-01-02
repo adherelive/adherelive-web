@@ -29,10 +29,7 @@ export default async function InitializeMongo() {
       .then(() => console.log("Connected to MongoDB! \n", dbConfig))
       .catch((err) => console.error("Error connecting to MongoDB: \n", err));
 
-    console.log(
-      "Successfully Connected with the Mongo Database: ",
-      connectionString
-    );
+    console.log("MongoDB Database string used is: ", connectionString);
   } catch (err) {
     console.log("Error connecting to MongoDB: ", err);
   }

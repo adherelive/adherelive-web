@@ -52,6 +52,9 @@ services:
       - mysql_user_password
     env_file:
       - .env
+    depends_on:
+      - mongodb
+      - mysql
     environment:
       MYSQL_HOST: mysql
       MONGO_URI: mongodb://mongouser:password@mongodb:27017/adhere?authSource=admin
