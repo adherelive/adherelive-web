@@ -3454,7 +3454,7 @@ class DoctorController extends Controller {
       const updatedpatientDetails = await PatientWrapper(null, patient_id);
 
       const initialCarePlanData = await CarePlanWrapper(null, careplan_id);
-      const previousCareplanDetails =
+      const previousCarePlanDetails =
         (await initialCarePlanData.getCarePlanDetails()) || {};
       const { basic_info: prevCareplanBasicInfo } =
         initialCarePlanData.getBasicInfo() || {};
@@ -3462,7 +3462,7 @@ class DoctorController extends Controller {
       const carePlanUpdateData = {
         ...prevCareplanBasicInfo,
         details: {
-          ...previousCareplanDetails,
+          ...previousCarePlanDetails,
           clinical_notes,
           follow_up_advise,
           treatment_id,
@@ -3476,7 +3476,7 @@ class DoctorController extends Controller {
         },
       };
 
-      const updatedCareplanId = await carePlanService.updateCarePlan(
+      const updatedCarePlanId = await carePlanService.updateCarePlan(
         carePlanUpdateData,
         careplan_id
       );

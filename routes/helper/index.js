@@ -1,6 +1,7 @@
 import Response from "../../app/helper/responseFormat";
 import errMessage from "../../config/messages.json";
-// todo: to delete this file
+
+// TODO: Will need to delete this file
 
 export const validationError = (res, message) => {
   const response = new Response(false, 422);
