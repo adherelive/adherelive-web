@@ -1,11 +1,10 @@
-//common functionality of all Activity
+// Common functionality of all Activity
 
 import { ACTIVITY_LOG_STATUS, DEFAULT } from "../../../constant";
-// const log = require("../../../libs/log")("ACTIVITY_SDK");
-import Log from "../../../libs/log";
+import { NotificationSdk } from "../../notificationSdk";
+import Logger from "../../../libs/log";
 
-const log = Log("ACTIVITY_SDK");
-const { NotificationSdk } = require("../../notificationSdk");
+const log = Logger("ACTIVITY_SDK");
 
 const notify = (participants, payload) => {
   // prepare notification data according to event category

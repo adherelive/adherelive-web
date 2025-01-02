@@ -3,13 +3,13 @@ APP_ENV=Development
 NODE_ENV=development
 APP_NAME="adherelive"
 
-API_URL=https://localhost
-WEB_URL=https://localhost
-APP_URL=https://localhost
+API_URL=https://adherelivelenia.centralindia.cloudapp.azure.com
+WEB_URL=https://adherelivelenia.centralindia.cloudapp.azure.com
+APP_URL=https://adherelivelenia.centralindia.cloudapp.azure.com
 
 INVITE_LINK=/validation/
 
-RESET_PASSWORD_LINK=https://localhost/reset-password/
+RESET_PASSWORD_LINK=https://adherelivelenia.centralindia.cloudapp.azure.com/reset-password/
 
 MOBILE_INVITE_LINK=verify
 
@@ -38,7 +38,7 @@ DB_PASSWORD=password
 DB_DIALECT=mysql
 
 # MongoDB parameters
-MONGO_DB_URI=mongodb://mongouser:password@localhost:27017/adhere?authSource=admin
+MONGO_DB_URI=mongodb://mongouser:password@mongodb:27017/adhere?authSource=admin
 
 SALT_ROUNDS=5
 
