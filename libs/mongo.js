@@ -6,15 +6,17 @@ export default async function InitializeMongo() {
 
     // ConnectOptions for the MongoDB connection
     // Removed the 'authSource', as it may be different between DEV and PROD
+    // 'newUrlParser', 'useUnifiedTopology' are deprecated in mongo 4.4
+    // 'poolSize' will need to revisit and see where it is used
     const dbConfig = {
+      serverSelectionTimeoutMS: 10000,
+      socketTimeoutMS: 10000,
+      connectTimeoutMS: 5000,
+      compressors: "zlib,snappy",
       // newUrlParser: true,
       // useUnifiedTopology: true,
       // authSource: "admin",
-      serverSelectionTimeoutMS: 3000,
-      socketTimeoutMS: 5000,
-      connectTimeoutMS: 3000,
       // poolSize: 2,
-      compressors: "zlib,snappy",
     };
 
     // Note: Sample string can be used or individual values. Here I have specified the string used in the ENV file
@@ -24,14 +26,14 @@ export default async function InitializeMongo() {
 
     await mongoose
       .connect(connectionString, dbConfig)
-      .then(() => console.log("Connected to MongoDB!", dbConfig))
-      .catch((err) => console.error("Error connecting to MongoDB:", err));
+      .then(() => console.log("Connected to MongoDB! \n", dbConfig))
+      .catch((err) => console.error("Error connecting to MongoDB: \n", err));
 
     console.log(
-      "Successfully Connected with the Mongo Database",
+      "Successfully Connected with the Mongo Database: ",
       connectionString
     );
   } catch (err) {
-    console.log("Error connecting to MongoDB:", err);
+    console.log("Error connecting to MongoDB: ", err);
   }
 }

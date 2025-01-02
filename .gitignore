@@ -11,7 +11,6 @@ node_modules
 
 # misc
 .DS_store
-/public
 .idea
 dump
 
