@@ -3,7 +3,8 @@ import Controller from "../../";
 
 const moment = require("moment");
 const jwt = require("jsonwebtoken");
-const request = require("request");
+
+import axios from "axios";
 import bcrypt from "bcrypt";
 import base64 from "js-base64";
 
@@ -238,14 +239,14 @@ class MobileUserController extends Controller {
         const userRoleId = userRoleWrapper.getId();
         const expiresIn = process.config.TOKEN_EXPIRE_TIME; // expires in 30 day
         const secret = process.config.TOKEN_SECRET_KEY;
-        const accessToken = await jwt.sign(
-          {
-            userRoleId,
-          },
-          secret,
-          {
-            expiresIn,
-          }
+        const accessToken = jwt.sign(
+            {
+              userRoleId,
+            },
+            secret,
+            {
+              expiresIn,
+            }
         );
 
         const appNotification = new AppNotification();
@@ -342,14 +343,14 @@ class MobileUserController extends Controller {
         const expiresIn = process.config.TOKEN_EXPIRE_TIME; // expires in 30 day
 
         const secret = process.config.TOKEN_SECRET_KEY;
-        const accessToken = await jwt.sign(
-          {
-            userRoleId,
-          },
-          secret,
-          {
-            expiresIn,
-          }
+        const accessToken = jwt.sign(
+            {
+              userRoleId,
+            },
+            secret,
+            {
+              expiresIn,
+            }
         );
 
         const appNotification = new AppNotification();
@@ -499,14 +500,14 @@ class MobileUserController extends Controller {
 
       const expiresIn = process.config.TOKEN_EXPIRE_TIME; // expires in 30 day
       const secret = process.config.TOKEN_SECRET_KEY;
-      const accessToken = await jwt.sign(
-        {
-          userRoleId,
-        },
-        secret,
-        {
-          expiresIn,
-        }
+      const accessToken = jwt.sign(
+          {
+            userRoleId,
+          },
+          secret,
+          {
+            expiresIn,
+          }
       );
 
       const appNotification = new AppNotification();
@@ -550,15 +551,14 @@ class MobileUserController extends Controller {
     const { accessToken } = req.body;
 
     try {
-      request(
-        `https://graph.facebook.com/v2.3/oauth/access_token?grant_type=fb_exchange_token&client_id=3007643415948147&client_secret=60d7c3e6dc4aae01cd9096c2749fc5c1&fb_exchange_token=${accessToken}`,
-        { json: true },
-        (err, res, body) => {
-          if (err) {
-            return console.log(err);
-          }
-        }
-      );
+      await axios.post(
+          `https://graph.facebook.com/v2.3/oauth/access_token?grant_type=fb_exchange_token&client_id=3007643415948147&client_secret=60d7c3e6dc4aae01cd9096c2749fc5c1&fb_exchange_token=${accessToken}`,
+          {json: true}
+      ).then(response => {
+        console.log(response.data);
+      }).catch(error => {
+        console.error(error);
+      })
       let response = new Response(true, 200);
       response.setMessage("Sign in successful!");
       response.setData({

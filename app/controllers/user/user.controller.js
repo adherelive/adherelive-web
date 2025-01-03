@@ -1,12 +1,12 @@
 const { OAuth2Client } = require("google-auth-library");
 const moment = require("moment");
 const jwt = require("jsonwebtoken");
-const request = require("request");
+const axios = require('axios');
 const chalk = require("chalk");
 import base64 from "js-base64";
 import bcrypt from "bcrypt";
 import Log from "../../../libs/log";
-// import fs from "fs";
+import fs from "fs";
 const Response = require("../helper/responseFormat");
 import userService from "../../services/user/user.service";
 import patientService from "../../services/patients/patients.service";
@@ -104,7 +104,7 @@ class UserController extends Controller {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       const { params: { link } = {} } = req;
-      Logger.info(`(request)(param) LINK :: ${link}`);
+      Logger.info(`(axios.post)(param) LINK :: ${link}`);
       const verifications = await UserVerificationServices.getRequestByLink(
         link
       );
@@ -480,7 +480,7 @@ class UserController extends Controller {
     const { accessToken } = req.body;
 
     try {
-      request(
+      axios.post(
         `https://graph.facebook.com/v2.3/oauth/access_token?grant_type=fb_exchange_token&client_id=${process.config.FACEBOOK_KEYS.APP_TOKEN}&client_secret=${process.config.FACEBOOK_KEYS.SECRET_TOKEN}&fb_exchange_token=${accessToken}`,
         { json: true },
         async (err, response, body) => {
