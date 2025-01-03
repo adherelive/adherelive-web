@@ -26,7 +26,6 @@
     "client": "npm run start --prefix client",
     "server": "node --max-old-space-size=4096 --exec ./node_modules/.bin/babel-node ./server/bin/www",
     "postinstall": "",
-    "test": "jest",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "migrate": "./node_modules/.bin/babel-node ./node_modules/.bin/sequelize db:migrate",
     "seed": "./node_modules/.bin/babel-node ./node_modules/.bin/sequelize db:seed:all",
@@ -35,8 +34,7 @@
     "medicineDb": "./node_modules/.bin/babel-node ./scripts/use_pillbox.js",
     "degreeDb": "./node_modules/.bin/babel-node ./scripts/degreeDb",
     "rollback": "./node_modules/.bin/babel-node ./scripts/dropTables.js",
-    "sqsCheck": "./node_modules/.bin/babel-node ./events/index.js",
-    "prepare": "husky"
+    "sqsCheck": "./node_modules/.bin/babel-node ./events/index.js"
   },
   "nodemonConfig": {
     "watch": [
@@ -59,6 +57,10 @@
       "prettier --write",
       "git add"
     ]
+  },
+  "engines": {
+    "node": ">=16.10.0",
+    "npm": ">=6.9.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.26.4",

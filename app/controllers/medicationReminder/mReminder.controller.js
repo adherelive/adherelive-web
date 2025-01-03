@@ -1,28 +1,28 @@
 import Controller from "../index";
+
 import moment from "moment";
 
-// SERVICES --------------------------------------------------
+// Services
 import userPreferenceService from "../../services/userPreferences/userPreference.service";
 import medicationReminderService from "../../services/medicationReminder/mReminder.service";
 import medicineService from "../../services/medicine/medicine.service";
 import carePlanMedicationService from "../../services/carePlanMedication/carePlanMedication.service";
-// import doctorService from "../../services/doctor/doctor.service";
+
 import carePlanService from "../../services/carePlan/carePlan.service";
 import queueService from "../../services/awsQueue/queue.service";
 import ScheduleEventService from "../../services/scheduleEvents/scheduleEvent.service";
 import EventService from "../../services/scheduleEvents/scheduleEvent.service";
 
-// API WRAPPERS ----------------------------------------------
+// Wrappers
 import MedicationWrapper from "../../apiWrapper/web/medicationReminder";
 import MedicineWrapper from "../../apiWrapper/web/medicine";
 import CarePlanWrapper from "../../apiWrapper/web/carePlan";
 import PatientWrapper from "../../apiWrapper/web/patient";
-// import DoctorWrapper from "../../apiWrapper/web/doctor";
+
 import UserPreferenceWrapper from "../../apiWrapper/web/userPreference";
 import EventWrapper from "../../apiWrapper/common/scheduleEvents";
 
-import * as medicationHelper from "./medicationHelper";
-import { getTime } from "../../helper/timer";
+import * as medicationHelper from "./medication.helper";
 
 import {
   CUSTOM_REPEAT_OPTIONS,
@@ -32,17 +32,9 @@ import {
   EVENT_STATUS,
   EVENT_TYPE,
   MEDICATION_TIMING,
-  REPEAT_TYPE,
-  MEDICINE_FORM_TYPE,
-  USER_CATEGORY,
-  WAKE_UP,
-  SLEEP,
-  BREAKFAST,
-  LUNCH,
-  EVENING,
-  DINNER,
-  NOTIFICATION_STAGES,
   MEDICINE_FORMULATION,
+  NOTIFICATION_STAGES,
+  REPEAT_TYPE,
   WHEN_TO_TAKE_ABBREVATIONS,
 } from "../../../constant";
 import Log from "../../../libs/log";
@@ -50,7 +42,7 @@ import {
   getCarePlanAppointmentIds,
   getCarePlanMedicationIds,
   getCarePlanSeverityDetails,
-} from "../carePlans/carePlanHelper";
+} from "../carePlans/carePlan.helper";
 import { RRule } from "rrule";
 import MedicationJob from "../../jobSdk/Medications/observer";
 import NotificationSdk from "../../notificationSdk";

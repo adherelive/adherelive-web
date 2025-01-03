@@ -6,12 +6,11 @@ import UserDeviceService from "../../../services/userDevices/userDevice.service"
 import UserDeviceWrapper from "../../../apiWrapper/mobile/userDevice";
 import {
   AGORA_CALL_NOTIFICATION_TYPES,
-  USER_CATEGORY,
   DEFAULT_PROVIDER,
+  USER_CATEGORY,
 } from "../../../../constant";
 
 import moment from "moment";
-// import CarePlanSecondaryDoctorMappingsService from "../../../services/carePlanSecondaryDoctorMappings/carePlanSecondaryDoctorMappings.service";
 
 class StartJob extends AgoraJob {
   constructor(data) {

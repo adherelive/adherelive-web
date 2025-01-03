@@ -1,4 +1,3 @@
-// const express = require("express");
 import express from "express";
 import { isProvider } from "../middlewares/provider";
 import Authenticate from "../middlewares/auth";
@@ -6,7 +5,8 @@ import MobileProvidersController from "../../../app/controllers/mControllers/pro
 
 const router = express.Router();
 
-//  http://localhost:3000/api/providers/day-appointments?value=2021-12-23T07:24:37.315Z&type=m
+// Example API call:
+// http://localhost:3000/api/providers/day-appointments?value=2021-12-23T07:24:37.315Z&type=m
 
 router.get(
   "/day-appointments",

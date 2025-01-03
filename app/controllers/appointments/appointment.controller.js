@@ -1,34 +1,32 @@
 import Controller from "../index";
+
+import moment from "moment";
+
+import Log from "../../../libs/log";
 import {
   getCarePlanAppointmentIds,
   getCarePlanMedicationIds,
   getCarePlanSeverityDetails,
-} from "../carePlans/carePlanHelper";
+} from "../carePlans/carePlan.helper";
 import { Proxy_Sdk } from "../../proxySdk";
 import {
+  APPOINTMENT_TYPE,
+  DOCUMENT_PARENT_TYPE,
   EVENT_STATUS,
   EVENT_TYPE,
+  FAVOURITE_TYPE,
   FEATURE_TYPE,
-  USER_CATEGORY,
-  DOCUMENT_PARENT_TYPE,
-  S3_DOWNLOAD_FOLDER,
   NOTIFICATION_STAGES,
   RADIOLOGY,
-  FAVOURITE_TYPE,
-  // MEDICAL_TEST,
-  APPOINTMENT_TYPE,
+  S3_DOWNLOAD_FOLDER,
+  USER_CATEGORY,
 } from "../../../constant";
-import moment from "moment";
-
-const path = require("path");
-
-import Log from "../../../libs/log";
 import { raiseClientError } from "../../../routes/api/helper";
 
 import AppointmentJob from "../../jobSdk/Appointments/observer";
 import NotificationSdk from "../../notificationSdk";
 
-// SERVICES...
+// Services
 import queueService from "../../services/awsQueue/queue.service";
 import doctorService from "../../services/doctor/doctor.service";
 import patientService from "../../services/patients/patients.service";
@@ -39,7 +37,7 @@ import carePlanAppointmentService from "../../services/carePlanAppointment/careP
 import ScheduleEventService from "../../services/scheduleEvents/scheduleEvent.service";
 import documentService from "../../services/uploadDocuments/uploadDocuments.service";
 
-// WRAPPERS...
+// Wrappers
 import CarePlanWrapper from "../../apiWrapper/web/carePlan";
 import AppointmentWrapper from "../../apiWrapper/web/appointments";
 import FeatureDetailsWrapper from "../../apiWrapper/web/featureDetails";
@@ -48,16 +46,16 @@ import PatientWrapper from "../../apiWrapper/web/patient";
 import UploadDocumentWrapper from "../../apiWrapper/web/uploadDocument";
 import EventWrapper from "../../apiWrapper/common/scheduleEvents";
 
-// import eventService from "../../services/scheduleEvents/scheduleEvent.service";
-
-import { uploadImageS3 } from "../user/userHelper";
+import { uploadImageS3 } from "../user/user.helper";
 import { getFilePath } from "../../helper/filePath";
 import { checkAndCreateDirectory } from "../../helper/common";
 
-import { downloadFileFromS3 } from "../mControllers/user/userHelper";
+import { downloadFileFromS3 } from "../mControllers/user/user.helper";
 
-// HELPERS...
-import * as AppointmentHelper from "./helper";
+// Helpers
+import * as AppointmentHelper from "./appointments.helper";
+
+const path = require("path");
 
 const FILE_NAME = "WEB APPOINTMENT CONTROLLER";
 

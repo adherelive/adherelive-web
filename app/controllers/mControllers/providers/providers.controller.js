@@ -1,4 +1,4 @@
-import Controller from "../..";
+import Controller from "../../index";
 import moment from "moment";
 import Log from "../../../../libs/log";
 import providerService from "../../../services/provider/provider.service";

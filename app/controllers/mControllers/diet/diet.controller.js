@@ -16,22 +16,19 @@ import UserPreferenceWrapper from "../../../apiWrapper/mobile/userPreference";
 import EventWrapper from "../../../apiWrapper/common/scheduleEvents";
 import DietResponseWrapper from "../../../apiWrapper/mobile/dietResponse";
 
-import * as DietHelper from "../../diet/dietHelper";
+import * as DietHelper from "../../diet/diet.helper";
+import { getTimeWiseDietFoodGroupMappings } from "../../diet/diet.helper";
 import DietJob from "../../../jobSdk/Diet/observer";
 import NotificationSdk from "../../../notificationSdk";
-
-import { getTimeWiseDietFoodGroupMappings } from "../../diet/dietHelper";
-// import * as medicationHelper from "../../medicationReminder/medicationHelper";
 
 import Log from "../../../../libs/log";
 
 import {
-  EVENT_TYPE,
-  EVENT_STATUS,
   DAYS,
-  USER_CATEGORY,
-  MEDICATION_TIMING,
+  EVENT_STATUS,
+  EVENT_TYPE,
   PATIENT_MEAL_TIMINGS,
+  USER_CATEGORY,
 } from "../../../../constant";
 import carePlanService from "../../../services/carePlan/carePlan.service";
 

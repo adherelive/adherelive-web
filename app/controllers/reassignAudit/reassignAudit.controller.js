@@ -1,11 +1,12 @@
 import Controller from "../index";
+
 import Logger from "../../../libs/log";
-// services
+
+// Services
 import reassignAuditService from "../../services/reassignAudit/reassignAudit.service";
 import DoctorService from "../../services/doctor/doctor.service";
 
 const Log = new Logger("WEB > CONTROLLER > Service Offering");
-import { USER_CATEGORY } from "../../../constant";
 
 class reassignAuditController extends Controller {
   constructor() {

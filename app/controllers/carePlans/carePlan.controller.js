@@ -1,5 +1,16 @@
-import Controller from "../";
-import patientService from "../../../app/services/patients/patients.service";
+import Controller from "../index";
+
+import {
+  EVENT_LONG_TERM_VALUE,
+  EVENT_STATUS,
+  EVENT_TYPE,
+  USER_CATEGORY,
+} from "../../../constant";
+import moment from "moment";
+import MedicationJob from "../../jobSdk/Medications/observer";
+import PERMISSIONS from "../../../config/permissions";
+
+// Services
 import carePlanService from "../../services/carePlan/carePlan.service";
 import CarePlanWrapper from "../../apiWrapper/web/carePlan";
 import appointmentService from "../../services/appointment/appointment.service";
@@ -10,39 +21,29 @@ import templateMedicationService from "../../services/templateMedication/templat
 import templateAppointmentService from "../../services/templateAppointment/templateAppointment.service";
 import medicineService from "../../services/medicine/medicine.service";
 import userRoleService from "../../services/userRoles/userRoles.service";
-import carePlanSecondaryDoctorMappingService from "../../services/carePlanSecondaryDoctorMappings/carePlanSecondaryDoctorMappings.service";
-//import twilioService from "../../services/twilio/twilio.service";
+import carePlanSecondaryDrMapService from "../../services/carePlanSecondaryDoctorMappings/carePlanSecondaryDoctorMappings.service";
+import doctorService from "../../services/doctor/doctor.service";
+import carePlanTemplateService from "../../services/carePlanTemplate/carePlanTemplate.service";
+import queueService from "../../services/awsQueue/queue.service";
 
+// Helpers
+import * as carePlanHelper from "./carePlan.helper";
 import {
   getCarePlanAppointmentIds,
   getCarePlanMedicationIds,
   getCarePlanSeverityDetails,
-} from "./carePlanHelper";
-import {
-  EVENT_LONG_TERM_VALUE,
-  EVENT_STATUS,
-  EVENT_TYPE,
-  USER_CATEGORY,
-} from "../../../constant";
+} from "./carePlan.helper";
+import { raiseClientError } from "../../../routes/helper";
+
+// Wrappers
 import UserRoleWrapper from "../../apiWrapper/web/userRoles";
-import doctorService from "../../services/doctor/doctor.service";
 import DoctorWrapper from "../../apiWrapper/web/doctor";
 import PatientWrapper from "../../apiWrapper/web/patient";
 import AppointmentWrapper from "../../apiWrapper/web/appointments";
-// import MedicationWrapper from "../../apiWrapper/web/medicationReminder";
-import carePlanTemplateService from "../../services/carePlanTemplate/carePlanTemplate.service";
 import CarePlanTemplateWrapper from "../../apiWrapper/web/carePlanTemplate";
-import Logger from "../../../libs/log";
-// import ScheduleEventService from "../../services/scheduleEvents/scheduleEvent.service";
-import moment from "moment";
-import queueService from "../../services/awsQueue/queue.service";
-
-import * as carePlanHelper from "./carePlanHelper";
 import MedicationWrapper from "../../apiWrapper/web/medicationReminder";
-import MedicationJob from "../../jobSdk/Medications/observer";
 
-import PERMISSIONS from "../../../config/permissions";
-// import { ConfigurationServicePlaceholders } from "aws-sdk/lib/config_service_placeholders";
+import Logger from "../../../libs/log";
 
 const Log = new Logger("WEB > CAREPLAN > CONTROLLER");
 
@@ -478,13 +479,13 @@ class CarePlanController extends Controller {
       // update care plan clinical notes.
 
       const initialCarePlanData = await CarePlanWrapper(null, care_plan_id);
-      const previousCareplanDetails =
+      const previousCarePlanDetails =
         (await initialCarePlanData.getCarePlanDetails()) || {};
-      //================================
+      //
       const {
         follow_up_advise: previousFollowUpAdvise,
         clinical_notes: previousClinicalNotes,
-      } = previousCareplanDetails;
+      } = previousCarePlanDetails;
       let new_follow_up_advise = "";
       if (
         previousFollowUpAdvise !== undefined &&
@@ -525,13 +526,13 @@ class CarePlanController extends Controller {
       const carePlanUpdateData = {
         ...prevCareplanBasicInfo,
         details: {
-          ...previousCareplanDetails,
+          ...previousCarePlanDetails,
           clinical_notes: new_clinical_notes,
           follow_up_advise: new_follow_up_advise,
         },
       };
 
-      const updatedCareplanId = await carePlanService.updateCarePlan(
+      const updatedCarePlanId = await carePlanService.updateCarePlan(
         carePlanUpdateData,
         care_plan_id
       );
@@ -641,9 +642,7 @@ class CarePlanController extends Controller {
             secondary_doctor_role_id: userRoleId,
           };
           let existingMapping =
-            (await carePlanSecondaryDoctorMappingService.getByData(
-              dataToAdd
-            )) || null;
+            (await carePlanSecondaryDrMapService.getByData(dataToAdd)) || null;
           if (
             (careplan["basic_info"]["patient_id"] == patient_id &&
               careplan["basic_info"]["user_role_id"] == userRoleId) ||
@@ -901,13 +900,11 @@ class CarePlanController extends Controller {
         secondary_doctor_role_id: user_role_id,
       };
       const existingMapping =
-        (await carePlanSecondaryDoctorMappingService.getByData(dataToAdd)) ||
-        null;
+        (await carePlanSecondaryDrMapService.getByData(dataToAdd)) || null;
 
       if (!existingMapping) {
         const createdMapping =
-          (await carePlanSecondaryDoctorMappingService.create(dataToAdd)) ||
-          null;
+          (await carePlanSecondaryDrMapService.create(dataToAdd)) || null;
 
         if (createdMapping) {
           const carePlan = await CarePlanWrapper(null, care_plan_id);
@@ -955,7 +952,7 @@ class CarePlanController extends Controller {
           // if(addUserToChat) {
           //   return raiseSuccess(res, 200, {}, "Profile added successfully");
           // } else {
-          //   await carePlanSecondaryDoctorMappingService.delete(dataToAdd) || null;
+          //   await carePlanSecondaryDrMapService.delete(dataToAdd) || null;
           // }
           return raiseSuccess(
             res,

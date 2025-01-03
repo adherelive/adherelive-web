@@ -1,14 +1,13 @@
 import BaseSymptom from "../../../services/symptom";
 
-// SERVICES
+// Services
 import SymptomService from "../../../services/symptom/symptom.service";
 import DocumentService from "../../../services/uploadDocuments/uploadDocuments.service";
 
-// WRAPPERS
+// Wrappers
 import UserWrapper from "../user";
 import DoctorWrapper from "../doctor";
 import PatientWrapper from "../patient";
-import CarePlanWrapper from "../carePlan";
 import DocumentWrapper from "../uploadDocument";
 
 import { ACTIVITY_TYPE, DOCUMENT_PARENT_TYPE } from "../../../../constant";

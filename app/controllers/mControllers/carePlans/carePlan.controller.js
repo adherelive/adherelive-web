@@ -1,5 +1,4 @@
 import Controller from "../../index";
-import patientService from "../../../../app/services/patients/patients.service";
 import carePlanService from "../../../services/carePlan/carePlan.service";
 import carePlanTemplateService from "../../../services/carePlanTemplate/carePlanTemplate.service";
 import CarePlanWrapper from "../../../apiWrapper/mobile/carePlan";
@@ -10,15 +9,15 @@ import carePlanAppointmentService from "../../../services/carePlanAppointment/ca
 import templateMedicationService from "../../../services/templateMedication/templateMedication.service";
 import templateAppointmentService from "../../../services/templateAppointment/templateAppointment.service";
 import medicineService from "../../../services/medicine/medicine.service";
-import carePlanSecondaryDoctorMappingService from "../../../services/carePlanSecondaryDoctorMappings/carePlanSecondaryDoctorMappings.service";
+import carePlanSecondaryDrMapService from "../../../services/carePlanSecondaryDoctorMappings/carePlanSecondaryDoctorMappings.service";
 import twilioService from "../../../services/twilio/twilio.service";
-import UserRoleWrapper from "../../../apiWrapper/mobile/userRoles";
 
+import * as carePlanHelper from "./carePlan.helper";
 import {
   getCarePlanAppointmentIds,
   getCarePlanMedicationIds,
   getCarePlanSeverityDetails,
-} from "./carePlanHelper";
+} from "./carePlan.helper";
 import {
   EVENT_LONG_TERM_VALUE,
   EVENT_STATUS,
@@ -26,18 +25,15 @@ import {
   USER_CATEGORY,
   WHEN_TO_TAKE_ABBREVATIONS,
 } from "../../../../constant";
-import doctorService from "../../../services/doctor/doctor.service";
-import DoctorWrapper from "../../../apiWrapper/mobile/doctor";
 import PatientWrapper from "../../../apiWrapper/mobile/patient";
 import AppointmentWrapper from "../../../apiWrapper/mobile/appointments";
 import MedicationWrapper from "../../../apiWrapper/mobile/medicationReminder";
 import CarePlanTemplateWrapper from "../../../apiWrapper/mobile/carePlanTemplate";
-// import Log from "../../../../libs/log";
+
 import queueService from "../../../services/awsQueue/queue.service";
-// import SqsQueueService from "../../../services/awsQueue/queue.service";
+
 import ScheduleEventService from "../../../services/scheduleEvents/scheduleEvent.service";
 import moment from "moment";
-import * as carePlanHelper from "./carePlanHelper";
 import PERMISSIONS from "../../../../config/permissions";
 
 import Logger from "../../../../libs/log";
@@ -887,13 +883,11 @@ class CarePlanController extends Controller {
         secondary_doctor_role_id: user_role_id,
       };
       const existingMapping =
-        (await carePlanSecondaryDoctorMappingService.getByData(dataToAdd)) ||
-        null;
+        (await carePlanSecondaryDrMapService.getByData(dataToAdd)) || null;
 
       if (!existingMapping) {
         const createdMapping =
-          (await carePlanSecondaryDoctorMappingService.create(dataToAdd)) ||
-          null;
+          (await carePlanSecondaryDrMapService.create(dataToAdd)) || null;
 
         if (createdMapping) {
           const carePlan = await CarePlanWrapper(null, care_plan_id);
@@ -941,7 +935,7 @@ class CarePlanController extends Controller {
           // if(addUserToChat) {
           //   return raiseSuccess(res, 200, {}, "Profile added successfully");
           // } else {
-          //   await carePlanSecondaryDoctorMappingService.delete(dataToAdd) || null;
+          //   await carePlanSecondaryDrMapService.delete(dataToAdd) || null;
           // }
           return raiseSuccess(
             res,

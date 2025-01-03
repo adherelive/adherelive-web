@@ -3,6 +3,7 @@ import moment from "moment";
 import { EVENT_TYPE } from "../../constant";
 // const log = require("../../libs/log")("PROXY_SDK");
 import Log from "../../libs/log";
+
 const log = Log("PROXY_SDK");
 
 const getAllOccurrence = require("./scheduler/helper");

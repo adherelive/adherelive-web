@@ -1,15 +1,16 @@
 import Controller from "../index";
+
 import Logger from "../../../libs/log";
 
-// HELPERS
-import * as PaymentHelper from "./helper";
+// Helpers
+import * as PaymentHelper from "./payments.helper";
 
-// SERVICES...
+// Services
 import PaymentProductService from "../../services/paymentProducts/paymentProduct.service";
 import userRolesService from "../../services/userRoles/userRoles.service";
 import doctorService from "../../services/doctor/doctor.service";
 
-// WRAPPERS...
+// Wrappers
 import PaymentProductWrapper from "../../apiWrapper/web/paymentProducts";
 import { USER_CATEGORY } from "../../../constant";
 

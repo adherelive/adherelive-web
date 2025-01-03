@@ -1,12 +1,12 @@
 import Controller from "../index";
+
 import Logger from "../../../libs/log";
 
-// HELPERS
-
-// SERVICES...
+// Helpers
+// Services
 import UserFavouritesService from "../../services/userFavourites/userFavourites.service";
 
-// WRAPPERS...
+// Wrappers
 import UserFavouritesWrapper from "../../apiWrapper/web/userFavourites";
 import UserWrapper from "../../apiWrapper/web/user";
 import { FAVOURITE_TYPE } from "../../../constant";

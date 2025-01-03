@@ -2,6 +2,7 @@
 // const Log = require("../../../libs/log")("communications --> pnManger");
 import AWS from "aws-sdk";
 import Log from "../../../libs/log";
+
 const log = Log("communications --> pnManger");
 
 const PNpayloadBuilder = require("./PNpayloadBuilder");

@@ -1,7 +1,5 @@
 import Joi from "@hapi/joi";
-import moment from "moment";
-import { USER_CATEGORY, WHEN_TO_TAKE_ABBREVATIONS } from "../../../constant";
-import { raiseClientError } from "../../helper";
+import { WHEN_TO_TAKE_ABBREVATIONS } from "../../../constant";
 import Response from "../../../app/helper/responseFormat";
 
 const medicationReminderFormSchema = Joi.object().keys({

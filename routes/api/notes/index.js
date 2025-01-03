@@ -1,11 +1,7 @@
 import express from "express";
 import NotesController from "../../../app/controllers/notes/notes.controller";
-import isAllowed from "../../middlewares/permissions";
-import PERMISSIONS from "../../../config/permissions";
 
 import Authenticate from "../middleware/auth";
-
-import { isDoctor } from "../middleware/doctor";
 
 const router = express.Router();
 

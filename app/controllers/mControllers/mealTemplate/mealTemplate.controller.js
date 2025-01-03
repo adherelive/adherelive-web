@@ -1,4 +1,4 @@
-import Controller from "../../";
+import Controller from "../../index";
 
 // Services
 import MealTemplateService from "../../../services/mealTemplate/mealTemplate.service";

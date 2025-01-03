@@ -7,10 +7,10 @@ import { TABLE_NAME as providersTableName } from "../app/models/providers";
 import { TABLE_NAME as appointmentsTableName } from "../app/models/appointments";
 import { TABLE_NAME as serviceSubTxTableName } from "../app/models/serviceSubscribeTransaction";
 import {
-  USER_CATEGORY,
-  CURRENCY,
-  USER_STATUS,
   BILLING_FREQUENCY,
+  CURRENCY,
+  USER_CATEGORY,
+  USER_STATUS,
 } from "../constant";
 
 module.exports = {

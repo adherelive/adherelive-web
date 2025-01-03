@@ -1,14 +1,8 @@
-import Controller from "../../index";
-import Logger from "../../../../libs/log";
-import moment from "moment";
-
 // Services
-import medicationReminderService from "../../../services/medicationReminder/mReminder.service";
 import EventService from "../../../services/scheduleEvents/scheduleEvent.service";
 import twilioService from "../../../services/twilio/twilio.service";
 
 // Wrapper
-import MobileMReminderWrapper from "../../../apiWrapper/mobile/medicationReminder";
 import VitalTemplateWrapper from "../../../apiWrapper/mobile/vitalTemplates";
 import EventWrapper from "../../../apiWrapper/common/scheduleEvents";
 import VitalWrapper from "../../../apiWrapper/mobile/vitals";
@@ -16,7 +10,7 @@ import CarePlanWrapper from "../../../apiWrapper/mobile/carePlan";
 import DoctorWrapper from "../../../apiWrapper/mobile/doctor";
 import PatientWrapper from "../../../apiWrapper/mobile/patient";
 
-import { EVENT_STATUS, EVENT_TYPE, USER_CATEGORY } from "../../../../constant";
+import { EVENT_STATUS } from "../../../../constant";
 
 export const syncMedicationReminderStatus = async (
   event_data,

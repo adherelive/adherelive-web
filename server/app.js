@@ -6,12 +6,11 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 
 import Database from "../libs/mysql";
-import initializeMongo from "../libs/mongo";
+import initMongo from "../libs/mongo";
 import ApiRouter from "../routes/api";
 import mApiRouter from "../routes/m-api";
 import EventObserver from "../app/proxySdk/eventObserver";
 import ActivityObserver from "../app/activitySdk/activityObserver";
-import RenewSubscription from "../app/cronJobs/renewSubscription";
 
 import Start from "../app/cronJobs/start";
 import Passed from "../app/cronJobs/passed";
@@ -25,12 +24,12 @@ import RenewTxActivity from "../app/cronJobs/renewTxActivity";
 (async () => {
   try {
     await Database.init();
-    await initializeMongo();
+    await initMongo();
     // Initialize event observers
     EventObserver.runObservers();
     ActivityObserver.runObservers();
   } catch (err) {
-    console.error("Error during initialization:", err);
+    console.error("Error during initialization: ", err);
   }
 })();
 
@@ -51,6 +50,7 @@ app.use(cors());
 //   );
 // }
 // console.log(generateCookieKey());
+
 let cookieKeys = [];
 
 try {

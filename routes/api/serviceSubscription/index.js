@@ -1,7 +1,6 @@
 import express from "express";
 import ServiceSubscriptionController from "../../../app/controllers/serviceSubscription/serviceSubscription.controller";
-// import Authenticate from "../middleware/auth";
-// import { isDoctor } from "../middleware/doctor";
+
 import Authenticate from "../../commonmiddlewares/auth";
 import { isDoctor } from "../../commonmiddlewares/doctor";
 

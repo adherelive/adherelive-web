@@ -1,7 +1,7 @@
 version: '3.8'
 services:
   mysql:
-    image: mysql:latest
+    image: mysql:8.0
     deploy:
       replicas: 1
       restart_policy:
@@ -14,9 +14,10 @@ services:
       MYSQL_DATABASE: adhere
       MYSQL_USER: user
       MYSQL_PASSWORD_FILE: /run/secrets/mysql_user_password
-      MYSQL_HOSTNAME: 172.17.0.1
+      MYSQL_HOSTNAME: mysql
     volumes:
       - mysql_data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql # Mount the init script
     networks:
       - al_ntwrk
 
@@ -39,7 +40,7 @@ services:
       - "27017:27017"
 
   backend:
-    image: adherelive-be:latest
+    image: adherelive-be:dev
     deploy:
       replicas: 1
       restart_policy:
@@ -51,7 +52,11 @@ services:
       - mysql_user_password
     env_file:
       - .env
+    depends_on:
+      - mongodb
+      - mysql
     environment:
+      MYSQL_HOST: mysql
       MONGO_URI: mongodb://mongouser:password@mongodb:27017/adhere?authSource=admin
     networks:
       - al_ntwrk
@@ -61,7 +66,7 @@ services:
       - "5000:5000"
 
   frontend:
-    image: adherelive-fe:latest
+    image: adherelive-fe:dev
     deploy:
       replicas: 1
       restart_policy:

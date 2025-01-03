@@ -1,36 +1,35 @@
 import {
-  EVENT_TYPE,
-  FEATURE_TYPE,
-  REPEAT_INTERVAL,
-  WAKE_UP,
-  SLEEP,
-  BREAKFAST,
-  LUNCH,
-  EVENING,
-  DINNER,
+  AFTER_BREAKFAST,
+  AFTER_DINNER,
+  AFTER_EVENING_SNACK,
+  AFTER_LUNCH,
   AFTER_WAKEUP,
   BEFORE_BREAKFAST,
-  AFTER_BREAKFAST,
-  BEFORE_LUNCH,
-  AFTER_LUNCH,
-  BEFORE_EVENING_SNACK,
-  AFTER_EVENING_SNACK,
   BEFORE_DINNER,
-  AFTER_DINNER,
+  BEFORE_EVENING_SNACK,
+  BEFORE_LUNCH,
   BEFORE_SLEEP,
-  MONDAY,
-  TUESDAY,
-  WEDNESDAY,
-  THURSDAY,
+  BREAKFAST,
+  DINNER,
+  EVENING,
+  EVENT_TYPE,
+  FEATURE_TYPE,
   FRIDAY,
-  SATURDAY,
-  SUNDAY,
+  LUNCH,
   MEDICATION_TIMING,
-  WITH_LUNCH,
-  WITH_DINNER,
-  WITH_BREAKFAST,
-  PATIENT_MEAL_TIMINGS,
   MID_MORNING,
+  MONDAY,
+  PATIENT_MEAL_TIMINGS,
+  REPEAT_INTERVAL,
+  SATURDAY,
+  SLEEP,
+  SUNDAY,
+  THURSDAY,
+  TUESDAY,
+  WAKE_UP,
+  WEDNESDAY,
+  WITH_DINNER,
+  WITH_LUNCH,
 } from "../constant";
 
 import FeatureDetailWrapper from "../app/apiWrapper/web/featureDetails";
@@ -38,22 +37,21 @@ import { RRule } from "rrule";
 import moment from "moment";
 import Logger from "../libs/log";
 
-// SERVICES
+// Services
 import FeatureDetailService from "../app/services/featureDetails/featureDetails.service";
 import ScheduleService from "../app/services/scheduleEvents/scheduleEvent.service";
 import UserPreferenceService from "../app/services/userPreferences/userPreference.service";
 import appointmentService from "../app/services/appointment/appointment.service";
 import queueService from "../app/services/awsQueue/queue.service";
 
-// WRAPPERS
-// import PatientWrapper from "../app/apiWrapper/mobile/patient";
+// Wrappers
 import MedicineWrapper from "../app/apiWrapper/mobile/medicine";
 import MedicationWrapper from "../app/apiWrapper/mobile/medicationReminder";
 import AppointmentWrapper from "../app/apiWrapper/mobile/appointments";
 import DietWrapper from "../app/apiWrapper/mobile/diet";
 import WorkoutWrapper from "../app/apiWrapper/mobile/workouts";
 
-import { getTimeWiseDietFoodGroupMappings } from "../app/controllers/diet/dietHelper";
+import { getTimeWiseDietFoodGroupMappings } from "../app/controllers/diet/diet.helper";
 import SimilarFoodMappingService from "../app/services/similarFoodMapping/similarFoodMapping.service";
 
 const Log = new Logger("EVENT > HELPER");
@@ -71,7 +69,7 @@ const getUserPreferences = async (user_id) => {
       return timings;
     }
   } catch (error) {
-    Log.debug("userPreferences catch error", error);
+    Log.debug("userPreferences catch error: ", error);
   }
 };
 
@@ -121,7 +119,7 @@ export const handleAppointments = async (appointment) => {
 
     return response;
   } catch (error) {
-    Log.debug("schedule events appointment 500 error", error);
+    Log.debug("schedule events appointment 500 error: ", error);
   }
 };
 
@@ -211,7 +209,7 @@ export const handleMedications = async (data) => {
 
     return response;
   } catch (error) {
-    Log.debug("schedule events medication 500 error", error);
+    Log.debug("schedule events medication 500 error: ", error);
   }
 };
 

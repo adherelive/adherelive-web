@@ -1,7 +1,6 @@
 import BasePatient from "../../../services/patients";
 import patientService from "../../../services/patients/patients.service";
 import carePlanService from "../../../services/carePlan/carePlan.service";
-import symptomService from "../../../services/symptom/symptom.service";
 import userRolesService from "../../../services/userRoles/userRoles.service";
 
 import UserWrapper from "../../web/user";

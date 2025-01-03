@@ -1,10 +1,11 @@
 import Controller from "../index";
+
 import Logger from "../../../libs/log";
-// services
+
+// Services
 import TxActivities from "../../services/transactionActivity/transactionActivity.service";
 import ServiceSubscription from "../../services/serviceSubscription/serviceSubscription.service";
 import ServiceSubscriptionUserMappingService from "../../services/serviceSubscriptionUserMapping/serviceSubscriptionUserMapping.service";
-import ServiceUserMapping from "../../services/serviceUserMapping/serviceUserMapping.service";
 import ServiceOffering from "../../services/serviceOffering/serviceOffering.service";
 import DoctorService from "../../services/doctor/doctor.service";
 import PatientService from "../../services/patients/patients.service";

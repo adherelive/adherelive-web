@@ -1,4 +1,4 @@
-import Controller from "../../";
+import Controller from "../../index";
 import degreeService from "../../../services/degree/degree.service";
 import DegreeWrapper from "../../../apiWrapper/mobile/degree";
 

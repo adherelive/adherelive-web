@@ -5,14 +5,14 @@
  * @modify date 2023-03-10 16:15:39
  * @desc An API Controller for HIS Operations.
  */
+import Controller from "../index";
+import Log from "../../../libs/log";
+import hisService from "../../services/his/his.service";
+import bcrypt from "bcrypt";
 
 const jwt = require("jsonwebtoken");
-import Log from "../../../libs/log";
 
 const Response = require("../helper/responseFormat");
-import hisService from "../../services/his/his.service";
-import Controller from "../index";
-import bcrypt from "bcrypt";
 
 const Logger = new Log("WEB USER CONTROLLER");
 

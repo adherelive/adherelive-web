@@ -1,6 +1,6 @@
 import Logger from "../../../libs/log";
 import carePlanService from "../../services/carePlan/carePlan.service";
-import * as carePlanHelper from "./carePlanHelper";
+import * as carePlanHelper from "./carePlan.helper";
 
 const Log = new Logger("CARE_PLAN > Back FIle");
 

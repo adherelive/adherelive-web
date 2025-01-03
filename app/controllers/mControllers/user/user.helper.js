@@ -1,17 +1,10 @@
 import doctorService from "../../../services/doctors/doctors.service";
 import qualificationService from "../../../services/doctorQualifications/doctorQualification.service";
-import clinicService from "../../../services/doctorClinics/doctorClinics.service";
 import documentService from "../../../services/uploadDocuments/uploadDocuments.service";
 
 import minioService from "../../../../app/services/minio/minio.service";
 import md5 from "js-md5";
-import UserVerifications from "../../../models/userVerifications";
-import {
-  EMAIL_TEMPLATE_NAME,
-  USER_CATEGORY,
-  DOCUMENT_PARENT_TYPE,
-  ONBOARDING_STATUS,
-} from "../../../../constant";
+import { DOCUMENT_PARENT_TYPE } from "../../../../constant";
 import { completePath } from "../../../helper/filePath";
 
 export const doctorQualificationData = async (userId) => {

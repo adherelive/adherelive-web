@@ -3,25 +3,22 @@ import Controller from "../index";
 import Logger from "../../../libs/log";
 import moment from "moment";
 
-// services
+// Services
 import WorkoutService from "../../services/workouts/workout.service";
 import RepetitionService from "../../services/exerciseRepetitions/repetition.service";
 import QueueService from "../../services/awsQueue/queue.service";
 import EventService from "../../services/scheduleEvents/scheduleEvent.service";
 import carePlanService from "../../services/carePlan/carePlan.service";
 import ExerciseContentService from "../../services/exerciseContents/exerciseContent.service";
-import WorkoutResponseService from "../../services/workoutResponses/workoutResponses.service";
+import WorkoutResponsesService from "../../services/workoutResponses/workoutResponses.service";
 
-// import WorkoutTemplateService from "../../../services/workoutTemplates/workoutTemplate.service";
-
-// wrappers
+// Wrappers
 import WorkoutWrapper from "../../apiWrapper/web/workouts";
 import CarePlanWrapper from "../../apiWrapper/web/carePlan";
 import PatientWrapper from "../../apiWrapper/web/patient";
 import ExerciseContentWrapper from "../../apiWrapper/web/exerciseContents";
 import WorkoutResponseWrapper from "../../apiWrapper/web/workoutResponse";
 import EventWrapper from "../../apiWrapper/common/scheduleEvents";
-// import WorkoutTemplateWrapper from "../../../apiWrapper/mobile/workoutTemplates";
 
 import WorkoutJob from "../../jobSdk/Workout/observer";
 import NotificationSdk from "../../notificationSdk";
@@ -32,8 +29,6 @@ import {
   EVENT_TYPE,
   USER_CATEGORY,
 } from "../../../constant";
-
-import WorkoutResponsesService from "../../services/workoutResponses/workoutResponses.service";
 
 const Log = new Logger("WEB > WORKOUT > CONTROLLER");
 
@@ -779,7 +774,7 @@ class WorkoutController extends Controller {
       const workoutService = new WorkoutService();
       const eventService = new EventService();
 
-      const workoutResponseService = new WorkoutResponseService();
+      const workoutResponseService = new WorkoutResponsesService();
       // get workout and details
       const workoutExists = await workoutService.findOne({ id });
 

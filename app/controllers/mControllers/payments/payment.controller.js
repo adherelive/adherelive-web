@@ -3,15 +3,13 @@ import Logger from "../../../../libs/log";
 import { USER_CATEGORY } from "../../../../constant";
 
 // HELPERS
-import * as PaymentHelper from "./helper";
+import * as PaymentHelper from "./payments.helper";
 
-// SERVICES...
+// Services
 import PaymentProductService from "../../../services/paymentProducts/paymentProduct.service";
-import doctorProviderMappingService from "../../../services/doctorProviderMapping/doctorProviderMapping.service";
 
-// WRAPPERS...
+// Wrappers
 import PaymentProductWrapper from "../../../apiWrapper/mobile/paymentProducts";
-import DoctorProviderMappingWrapper from "../../../apiWrapper/web/doctorProviderMapping";
 
 const Log = new Logger("MOBILE > CONTROLLER > PAYMENTS");
 

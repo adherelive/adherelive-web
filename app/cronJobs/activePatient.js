@@ -4,7 +4,7 @@ import moment from "moment";
 // services
 import ProviderService from "../services/provider/provider.service";
 import DoctorProviderMappingService from "../services/doctorProviderMapping/doctorProviderMapping.service";
-// import DoctorService from "../services/doctor/doctor.service";
+
 import CarePlanService from "../services/carePlan/carePlan.service";
 import ScheduleEventService from "../services/scheduleEvents/scheduleEvent.service";
 

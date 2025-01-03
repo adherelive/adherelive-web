@@ -1,4 +1,5 @@
-import Controller from "../";
+import Controller from "../index";
+
 import severityService from "../../services/severity/severity.service";
 import SeverityWrapper from "../../apiWrapper/web/severity";
 
