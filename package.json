@@ -26,6 +26,7 @@
     "client": "npm run start --prefix client",
     "server": "node --max-old-space-size=4096 --exec ./node_modules/.bin/babel-node ./server/bin/www",
     "postinstall": "",
+    "test": "jest",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "migrate": "./node_modules/.bin/babel-node ./node_modules/.bin/sequelize db:migrate",
     "seed": "./node_modules/.bin/babel-node ./node_modules/.bin/sequelize db:seed:all",
@@ -99,6 +100,7 @@
     "debug": "^4.4.0",
     "dotenv": "^16.4.7",
     "ejs": "^3.1.10",
+    "exceljs": "^4.4.0",
     "express": "^4.21.2",
     "express-validator": "^7.2.1",
     "getstream": "^8.4.1",
@@ -131,7 +133,6 @@
     "sequelize": "^6.37.5",
     "sequelize-cli": "^6.6.2",
     "twilio": "^5.4.0",
-    "uuid": "^11.0.3",
-    "exceljs": "^4.4.0"
+    "uuid": "^11.0.3"
   }
 }
