@@ -27,7 +27,7 @@ class EventObserver {
         eventType: type,
         errorData: err,
       });
-      logger.log();
+      await logger.log();
     } catch (err) {
       throw err;
     }

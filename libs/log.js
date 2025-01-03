@@ -2,7 +2,7 @@ import chalk from "chalk";
 import moment from "moment";
 import os from "os";
 
-class Log {
+export class Log {
   constructor(filename) {
     this.source = filename;
     this._dashString = "-".repeat(106);
