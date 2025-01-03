@@ -1,4 +1,4 @@
-import faker from "faker";
+import { faker } from '@faker-js/faker';
 import twilioService from "../../../services/twilio/twilio.service";
 import Controller from "../../index";
 

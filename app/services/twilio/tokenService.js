@@ -1,5 +1,5 @@
 const twilio = require("twilio");
-const faker = require("faker");
+const { faker } = require('@faker-js/faker');
 //const chatAccessToken = client.jwt.AccessToken;
 const AccessToken = twilio.jwt.AccessToken;
 const IpMessagingGrant = AccessToken.ChatGrant;
