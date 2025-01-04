@@ -9,9 +9,9 @@ import {
   onStart,
   onUpdate,
 } from "../helper";
+import ActivitySdk from "../index";
 import { ACTIVITIES } from "../activityType";
 
-const { ActivitySdk } = require("../");
 const { FOLLOW_UP } = ACTIVITIES;
 
 class FollowUpActivity {

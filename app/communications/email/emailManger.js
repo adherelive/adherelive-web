@@ -1,5 +1,5 @@
-// const AWS = require("aws-sdk");
-// const Log = require("../../../libs/log")("communications --> emailManger");
+const AWS = require("aws-sdk");
+const Log = require("../../../libs/log")("communications --> emailManger");
 import Log from "../../../libs/log";
 
 const path = require("path");

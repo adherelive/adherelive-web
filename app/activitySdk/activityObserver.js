@@ -5,8 +5,6 @@ import Logger from "../../libs/log";
 
 const log = new Logger("activitySdk:ActivityObserver");
 
-//const Log = require("../../libs/log")("activitySdk:ActivityObserver");
-
 class ActivityObserver {
   constructor() {}
 

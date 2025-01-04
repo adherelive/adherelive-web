@@ -21,7 +21,7 @@
   },
   "homepage": "https://github.com/adherelive/adherelive-web#readme",
   "scripts": {
-    "start": "node --max-old-space-size=4096 ./node_modules/.bin/babel-node ./server/bin/www",
+    "start": "node --max-old-space-size=4096 ./node_modules/.bin/babel-node --experimental-modules ./server/bin/www",
     "build": "npm run build --prefix client",
     "client": "npm run start --prefix client",
     "server": "node --max-old-space-size=4096 --exec ./node_modules/.bin/babel-node ./server/bin/www",
@@ -71,7 +71,6 @@
     "@babel/preset-env": "^7.26.0",
     "css-loader": "^7.1.2",
     "husky": "^9.1.7",
-    "jest": "^29.7.0",
     "less": "^4.2.1",
     "less-loader": "^12.2.0",
     "lint-staged": "^15.3.0",

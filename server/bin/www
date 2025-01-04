@@ -3,19 +3,12 @@
 /**
  * Load configuration
  */
-const config = require("../../config/config");
-config();
+const Config = require("../../config/config");
+Config();
 
 /**
  * Module dependencies.
  */
-
-
-
-
-
-
-
 const http = require("http");
 const app = require("../app");
 const createDebug = require("debug");

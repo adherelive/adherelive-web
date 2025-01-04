@@ -1,3 +1,5 @@
+"use strict";
+
 import chalk from "chalk";
 import moment from "moment";
 import os from "os";

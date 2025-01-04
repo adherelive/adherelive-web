@@ -122,8 +122,6 @@ import * as FlashCard from "../app/models/flashCard";
 import * as Notes from "../app/models/notes";
 
 const log = new Logger("SEQUELIZE QUERY");
-// const Config = require("../config/config");
-// Config();
 
 // Create a Models List to be used with the DB connection
 const models = [

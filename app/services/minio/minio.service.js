@@ -1,13 +1,11 @@
 import AWS from "aws-sdk";
 import * as https from "https";
-// const fs = require("fs");
-import fs from "fs";
-// const Log = require("../../../libs/log")("minioService");
+import * as fs from "fs";
 import Log from "../../../libs/log";
+import * as Minio from "minio";
 
 const log = Log("minioService");
 
-const Minio = require("minio");
 
 class MinioService {
   constructor() {

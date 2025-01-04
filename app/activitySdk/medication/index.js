@@ -10,9 +10,9 @@ import {
   onUpdate,
 } from "../helper";
 import { ACTIVITIES } from "../activityType";
+import ActivitySdk from "../index";
 
 const { MEDICATION } = ACTIVITIES;
-const { ActivitySdk } = require("../");
 
 class MedicationActivity {
   constructor({}) {

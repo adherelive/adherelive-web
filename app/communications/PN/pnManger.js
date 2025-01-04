@@ -1,5 +1,3 @@
-// const AWS = require("aws-sdk");
-// const Log = require("../../../libs/log")("communications --> pnManger");
 import AWS from "aws-sdk";
 import Log from "../../../libs/log";
 
