@@ -298,22 +298,62 @@
         border-collapse: collapse;
       }
 
+    
       /* MEDICINE TABLE CSS */
-      .medicine_table > table,
-      th,
-      td {
-        border: 1px solid black;
+      .medicine_table {
+        width: 100%;
+        margin: auto;
         border-collapse: collapse;
-        padding-left: 5px;
-        padding-right: 5px;
-        border-top: 0px;
-        border-left: 0px;
-        /* border-right: 0px; */
+        text-align: center;
+        table-layout: fixed;
+        border: 1px solid black;
       }
 
-      .medicine_table {
-        border-collapse: collapse;
-        border-left: 1px solid black;
+      .medicine_table th,
+      .medicine_table td {
+        border: 1px solid black;
+        padding: 5px;
+        text-align: center;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .medicine_table th:nth-child(1),
+      .medicine_table td:nth-child(1) {
+        width: 5%; /* S.No */
+      }
+
+      .medicine_table th:nth-child(2),
+      .medicine_table td:nth-child(2) {
+        width: 15%; /* Medicine Type */
+      }
+
+      .medicine_table th:nth-child(3),
+      .medicine_table td:nth-child(3) {
+        width: 25%; /* Medicine Name */
+      }
+
+      .medicine_table th:nth-child(4),
+      .medicine_table td:nth-child(4),
+      .medicine_table th:nth-child(5),
+      .medicine_table td:nth-child(5) {
+        width: 5%; /* Dose and Qty */
+      }
+
+      .medicine_table th:nth-child(6),
+      .medicine_table td:nth-child(6) {
+        width: 30%; /* Schedule Medicine */
+      }
+
+      .medicine_table th:nth-child(7),
+      .medicine_table td:nth-child(7) {
+        width: 15%; /* Start Date / Duration */
+      }
+
+      .medicine_table td p {
+        font-size: 10px; /* Smaller font size for cell content */
+        margin: 0;
       }
 
       /* INVESTIGATION TABLE CSS */
@@ -623,39 +663,37 @@
 
     <!-- MEDICINE  SECTION -->
     <div class="medicine_section">
-      <table class="medicine_table" style="width: 100%; text-align: center">
+      <table class="medicine_table">
         <tr>
-          <th style="width: 5%"><!--Ananjay added width 5% -->
+          <th style="width: 5%;">
             <h3>S.No</h3>
           </th>
-          <th style="width: 35%" colspan="2"><!--Ananjay changed width from 25 to 35 % -->
-            <h3>Name of medicine</h3>
+          <th style="width: 30%;" colspan="2">
+            <h3>Name of Medicine</h3>
           </th>
-          <th style="width: 3%"><!--Ananjay added width 3% -->
+          <th style="width: 5%;">
             <h3>Dose</h3>
           </th>
-          <th style="width: 2%"><!--Ananjay added width 2% -->
+          <th style="width: 5%;">
             <h3>Qty</h3>
           </th>
-
-          <th style="width: 25%" colspan="3">
-            <div style="margin-top: 10px">
+          <th style="width: 40%;" colspan="3">
+            <div>
               <h3>Schedule Medicine</h3>
             </div>
-
-            <div class="shedule_medicine_wrapper">
-              <div class="one">
+            <div class="shedule_medicine_wrapper" style="display: flex; justify-content: space-around;">
+              <div>
                 <h4>Morning</h4>
               </div>
-              <div class="two">
+              <div>
                 <h4>Afternoon</h4>
               </div>
-              <div class="three">
+              <div>
                 <h4>Night</h4>
               </div>
             </div>
           </th>
-          <th style="width: 20%">
+          <th style="width: 10%;">
             <h3>Start Date / Duration</h3>
           </th>
         </tr>
@@ -667,18 +705,12 @@
           <td>
             <p>{{ medicineType }}</p>
           </td>
-          <td style="text-align: left">
-            <p>
-             <strong> {{ medicineName }}</strong> <br>
-              {{ genericName }} {{ strength }} <!--Ananjay added medicine strength and bold medicineName-->
-              <br /><span style="font-size: 8px"
-                >by Dr. {{ organizer.name }}</span
-              >
-              <br />
-              Note: -
-              <span style="font-family: TiroDevanagariHindi-Regular"
-                >{{ description }}</span
-              >
+          <td>
+            <p style="text-align: justify;">
+              <strong>{{ medicineName }}</strong><br>
+              {{ genericName }} {{ strength }}<br>
+              <span style="font-size: 8px;">by Dr. {{ organizer.name }}</span><br>
+              Note: - <span style="font-family: TiroDevanagariHindi-Regular;">{{ description }}</span>
             </p>
           </td>
           <td>
@@ -687,22 +719,21 @@
           <td>
             <p>{{ quantity }}</p>
           </td>
-
           <td>
             <div class="right_tick_div">
               <div class="tick_image">
                 {{#each timings_new.morning}}
                 <img
                   src="https://res.cloudinary.com/myrltech/image/upload/v1685103497/download.png"
-                  alt="adhere tick"
+                  alt="tick"
                   width="15px"
                   height="15px"
                 />
-                {{/each }}
+                {{/each}}
               </div>
               {{#each timings_new.morning}}
-              <p style="font-size: 8px">{{ this }}</p>
-              {{/each }}
+              <p style="font-size: 8px;">{{ this }}</p>
+              {{/each}}
             </div>
           </td>
           <td>
@@ -711,15 +742,15 @@
                 {{#each timings_new.afternoon}}
                 <img
                   src="https://res.cloudinary.com/myrltech/image/upload/v1685103497/download.png"
-                  alt="adhere tick"
+                  alt="tick"
                   width="15px"
                   height="15px"
                 />
-                {{/each }}
+                {{/each}}
               </div>
               {{#each timings_new.afternoon}}
-              <p style="font-size: 8px">{{ this }}</p>
-              {{/each }}
+              <p style="font-size: 8px;">{{ this }}</p>
+              {{/each}}
             </div>
           </td>
           <td>
@@ -728,32 +759,28 @@
                 {{#each timings_new.night}}
                 <img
                   src="https://res.cloudinary.com/myrltech/image/upload/v1685103497/download.png"
-                  alt="adhere tick"
+                  alt="tick"
                   width="15px"
                   height="15px"
                 />
-                {{/each }}
+                {{/each}}
               </div>
               {{#each timings_new.night}}
-              <p style="font-size: 8px">{{ this }}</p>
-              {{/each }}
+              <p style="font-size: 8px;">{{ this }}</p>
+              {{/each}}
             </div>
           </td>
-          <td style="text-align: left">
+          <td>
             {{#if isSOS}}
-            <p>take whenever required</p>
+            <p>Take whenever required</p>
             {{else}}
-            <p>
-              <!-- {{#each repeat_days }}
-                    {{ this }},
-                    {{/each}} -->
-              from {{ startDate }} for {{ duration }} day(s)
-            </p>
+            <p>From {{ startDate }} for {{ duration }} day(s)</p>
             {{/if}}
           </td>
         </tr>
         {{/each}}
       </table>
+      
     </div>
 
     <!-- INVESTIGATION SECTION -->
