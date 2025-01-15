@@ -2060,7 +2060,7 @@ class MPatientController extends Controller {
                 primary = ele;
               }
 
-              let currentfodmattedData = {};
+              let currentFormattedData = {};
 
               // const related_diet_food_group_mapping_ids = mappingIds.slice(1);
               let similarFoodGroups = [],
@@ -2125,7 +2125,7 @@ class MPatientController extends Controller {
                 }
               }
 
-              currentfodmattedData = {
+              currentFormattedData = {
                 serving,
                 portion_id,
                 food_group_id,
@@ -2135,7 +2135,7 @@ class MPatientController extends Controller {
               };
 
               const currentDietDataForTime = dietFoodGroupsApidata[time] || [];
-              currentDietDataForTime.push(currentfodmattedData);
+              currentDietDataForTime.push(currentFormattedData);
 
               dietFoodGroupsApidata[`${time}`] = [...currentDietDataForTime];
             }

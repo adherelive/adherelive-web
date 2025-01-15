@@ -1642,7 +1642,7 @@ class PatientController extends Controller {
             };
           }
 
-          let mediactionNewData = await medicationWrapper.getBasicInfo();
+          let medicationNewData = await medicationWrapper.getBasicInfo();
 
           medications = {
             ...medications,
@@ -1753,7 +1753,7 @@ class PatientController extends Controller {
                 primary = ele;
               }
 
-              let currentfodmattedData = {};
+              let currentFormattedData = {};
 
               // const related_diet_food_group_mapping_ids = mappingIds.slice(1);
               let similarFoodGroups = [],
@@ -1818,7 +1818,7 @@ class PatientController extends Controller {
                 }
               }
 
-              currentfodmattedData = {
+              currentFormattedData = {
                 serving,
                 portion_id,
                 food_group_id,
@@ -1828,7 +1828,7 @@ class PatientController extends Controller {
               };
 
               const currentDietDataForTime = dietFoodGroupsApidata[time] || [];
-              currentDietDataForTime.push(currentfodmattedData);
+              currentDietDataForTime.push(currentFormattedData);
 
               dietFoodGroupsApidata[`${time}`] = [...currentDietDataForTime];
             }
