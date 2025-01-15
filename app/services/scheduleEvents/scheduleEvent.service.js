@@ -6,9 +6,11 @@ import Database from "../../../libs/mysql";
 import moment from "moment";
 import { getTime } from "../../helper/timer";
 
+
 class ScheduleEventService {
   create = async (data) => {
     try {
+      console.log("logsForMonintorByAhere - Schedule EventService Create Called",getTime())
       const scheduleEvents = await Database.getModel(TABLE_NAME).create(data);
       return scheduleEvents;
     } catch (error) {
@@ -18,6 +20,7 @@ class ScheduleEventService {
 
   bulkCreate = async (data) => {
     try {
+      console.log("logsForMonintorByAhere - Schedule EventService bulkCreate Called",getTime())
       const scheduleEvents = await Database.getModel(TABLE_NAME).bulkCreate(
         data
       );
@@ -28,6 +31,7 @@ class ScheduleEventService {
   };
 
   update = async (data, id) => {
+    console.log("logsForMonintorByAhere - Schedule EventService update Called",getTime())
     const transaction = await Database.initTransaction();
     try {
       const scheduleEvents = await Database.getModel(TABLE_NAME).update(data, {
@@ -48,6 +52,7 @@ class ScheduleEventService {
   };
 
   getEventByData = async ({ paranoid = true, ...data }) => {
+    console.log("logsForMonintorByAhere - Schedule EventService getEventByData Called",getTime())
     try {
       const scheduleEvent = await Database.getModel(TABLE_NAME).findOne({
         where: data,
@@ -60,6 +65,7 @@ class ScheduleEventService {
   };
 
   getAllEventByData = async (data) => {
+    console.log("logsForMonintorByAhere - Schedule EventService getAllEventByData Called",getTime())
     try {
       const scheduleEvent = await Database.getModel(TABLE_NAME).findAll({
         where: data,
@@ -71,6 +77,7 @@ class ScheduleEventService {
   };
 
   getAllPreviousByData = async (data = {}) => {
+    console.log("logsForMonintorByAhere - Schedule EventService getAllPreviousByData Called",getTime())
     try {
       const { event_id, date, event_type = "" } = data;
       const scheduleEvent = await Database.getModel(TABLE_NAME).findAll({
@@ -90,6 +97,7 @@ class ScheduleEventService {
   };
 
   getAllPreviousByDataNew = async (data = {}) => {
+    console.log("logsForMonintorByAhere - Schedule EventService getAllPreviousByDataNew Called",getTime())
     try {
       console.log("getAllPreviousByDataNew called - 1");
       const { event_id = [], date, event_type = "" } = data;
@@ -115,6 +123,7 @@ class ScheduleEventService {
   };
 
   getLastVisitData = async (data = {}) => {
+    console.log("logsForMonintorByAhere - Schedule EventService getLastVisitData Called",getTime())
     try {
       const { event_id, event_type, date, sort = "ASC" } = data;
       const scheduleEvent = await Database.getModel(TABLE_NAME).findAll({
@@ -141,6 +150,7 @@ class ScheduleEventService {
   };
 
   getAllPassedByData = async (data = {}) => {
+    console.log("logsForMonintorByAhere - Schedule EventService getAllPassedByData Called",getTime())
     try {
       const {
         event_id,
@@ -177,6 +187,7 @@ class ScheduleEventService {
   };
 
   getAllPassedAndCompletedEventsData = async (data = {}) => {
+    console.log("logsForMonintorByAhere - Schedule EventService getAllPassedAndCompletedEventsData Called",getTime())
     try {
       const { event_id, event_type = "", date, sort = "ASC" } = data;
       const scheduleEvent = await Database.getModel(TABLE_NAME).findAll({
@@ -214,6 +225,7 @@ class ScheduleEventService {
   };
 
   getPriorEventByData = async (time, event_type = null) => {
+    console.log("logsForMonintorByAhere - Schedule EventService getPriorEventByData Called",getTime())
     try {
       const scheduleEvent = await Database.getModel(TABLE_NAME).findAll({
         where: {
@@ -231,6 +243,7 @@ class ScheduleEventService {
   };
 
   getStartEventByData = async (time) => {
+    console.log("logsForMonintorByAhere - Schedule EventService getStartEventByData Called",getTime())
     try {
       const scheduleEvent = await Database.getModel(TABLE_NAME).findAll({
         where: {
@@ -247,6 +260,7 @@ class ScheduleEventService {
   };
 
   getPassedEventData = async (time) => {
+    console.log("logsForMonintorByAhere - Schedule EventService getPassedEventData Called",getTime())
     try {
       const scheduleEvent = await Database.getModel(TABLE_NAME).findAll({
         where: {
@@ -267,6 +281,7 @@ class ScheduleEventService {
   };
 
   deleteBatch = async (data) => {
+    console.log("logsForMonintorByAhere - Schedule EventService deleteBatch Called",getTime())
     try {
       const scheduleEvent = await Database.getModel(TABLE_NAME).destroy({
         where: data,
@@ -278,6 +293,7 @@ class ScheduleEventService {
   };
 
   getAllPastData = async (data) => {
+    console.log("logsForMonintorByAhere - Schedule EventService getAllPastData Called",getTime())
     try {
       const { event_id, startDate, date } = data;
       const scheduleEvent = await Database.getModel(TABLE_NAME).findAll({
@@ -295,6 +311,7 @@ class ScheduleEventService {
   };
 
   getUpcomingByData = async (data) => {
+    console.log("logsForMonintorByAhere - Schedule EventService getUpcomingByData Called",getTime())
     try {
       const {
         vital_ids = [],
@@ -344,6 +361,7 @@ class ScheduleEventService {
   };
 
   getMissedByDataEventType = async (data) => {
+    console.log("logsForMonintorByAhere - Schedule EventService getMissedByDataEventType Called",getTime())
     try {
       console.log("getMissedByData Start - ", getTime());
       const {
@@ -383,6 +401,7 @@ class ScheduleEventService {
   };
 
   getMissedByDataNew = async (data) => {
+    console.log("logsForMonintorByAhere - Schedule EventService getMissedByDataNew Called",getTime())
     try {
       console.log("getMissedByData Start - ", getTime());
       const {
@@ -426,6 +445,7 @@ class ScheduleEventService {
   };
 
   getMissedByData = async (data) => {
+    console.log("logsForMonintorByAhere - Schedule EventService getMissedByData Called",getTime())
     try {
       const {
         vital_ids,
@@ -474,6 +494,7 @@ class ScheduleEventService {
   };
 
   getPageEventByData = async (data) => {
+    console.log("logsForMonintorByAhere - Schedule EventService getPageEventByData Called",getTime())
     try {
       const { eventIds, startLimit, endLimit, event_type } = data;
       const scheduleEvent = await Database.getModel(TABLE_NAME).findAll({
@@ -498,6 +519,7 @@ class ScheduleEventService {
     diets,
     workouts,
   }) => {
+    console.log("logsForMonintorByAhere - Schedule EventService getPendingEventsData Called",getTime())
     try {
       const scheduleEvent = await Database.getModel(TABLE_NAME).findAll({
         where: {
@@ -540,6 +562,7 @@ class ScheduleEventService {
     diet,
     workout,
   }) => {
+    console.log("logsForMonintorByAhere - Schedule EventService getAllEventStatusByData Called",getTime())
     try {
       return await Database.getModel(TABLE_NAME).findAll({
         where: {
@@ -565,6 +588,7 @@ class ScheduleEventService {
     }
   };
   getCount = async (data) => {
+    console.log("logsForMonintorByAhere - Schedule EventService getCount Called",getTime())
     try {
       return await Database.getModel(TABLE_NAME).count({
         where: data,
