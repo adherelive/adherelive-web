@@ -1,35 +1,28 @@
-import Controller from "../../";
+import Controller from "../../index";
 
-// SERVICES ----------
+// Services
 import SymptomService from "../../../services/symptom/symptom.service";
 import UploadDocumentService from "../../../services/uploadDocuments/uploadDocuments.service";
 import twilioService from "../../../services/twilio/twilio.service";
 
-// WRAPPERS ----------
+// Wrappers
 import SymptomWrapper from "../../../apiWrapper/mobile/symptoms";
 import DocumentWrapper from "../../../apiWrapper/mobile/uploadDocument";
 import CarePlanWrapper from "../../../apiWrapper/mobile/carePlan";
-// import DoctorWrapper from "../../../apiWrapper/mobile/doctor";
+
 import PatientWrapper from "../../../apiWrapper/mobile/patient";
 
-import {
-  uploadAudio,
-  uploadImage,
-  uploadVideo,
-} from "./symptom.controller.helper";
+import { uploadAudio, uploadImage, uploadVideo } from "./symptoms.helper";
 import Logger from "../../../../libs/log";
 import {
-  DOCUMENT_PARENT_TYPE,
-  USER_CATEGORY,
   ALLOWED_VIDEO_EXTENSIONS,
-  EVENT_TYPE,
+  DOCUMENT_PARENT_TYPE,
   EVENT_STATUS,
-  // MESSAGE_TYPES,
+  EVENT_TYPE,
+  USER_CATEGORY,
 } from "../../../../constant";
 import { getFilePath } from "../../../helper/filePath";
 import carePlanService from "../../../services/carePlan/carePlan.service";
-
-import ChatJob from "../../../jobSdk/Chat/observer";
 import SymptomsJob from "../../../jobSdk/Symptoms/observer";
 import NotificationSdk from "../../../notificationSdk";
 

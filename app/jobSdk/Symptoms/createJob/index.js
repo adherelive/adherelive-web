@@ -1,14 +1,9 @@
 import SymptomsJob from "../";
 import moment from "moment";
-import {
-  DEFAULT_PROVIDER,
-  EVENT_TYPE,
-  USER_CATEGORY,
-} from "../../../../constant";
+import { EVENT_TYPE } from "../../../../constant";
 
 import UserRoleService from "../../../services/userRoles/userRoles.service";
 import UserDeviceService from "../../../services/userDevices/userDevice.service";
-// import ProviderService from "../../../services/provider/provider.service";
 
 import UserDeviceWrapper from "../../../apiWrapper/mobile/userDevice";
 

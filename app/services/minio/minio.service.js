@@ -4,6 +4,7 @@ import * as https from "https";
 import fs from "fs";
 // const Log = require("../../../libs/log")("minioService");
 import Log from "../../../libs/log";
+
 const log = Log("minioService");
 
 const Minio = require("minio");
@@ -162,7 +163,7 @@ class MinioService {
 
       return result;
     } catch (err) {
-      console.log("minio error ---------------------------\n\n\n", err);
+      console.log("\n Minio service has an error ---> \n", err);
       // throw err;
     }
   }

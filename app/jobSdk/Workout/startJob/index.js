@@ -1,9 +1,9 @@
 import WorkoutJob from "../";
 import moment from "moment";
 import {
+  DEFAULT_PROVIDER,
   EVENT_TYPE,
   NOTIFICATION_VERB,
-  DEFAULT_PROVIDER,
 } from "../../../../constant";
 
 import UserRoleService from "../../../services/userRoles/userRoles.service";

@@ -1,12 +1,11 @@
 import {
-  MEDICATION_TIMING,
-  PRESCRIPTION_PDF_FOLDER,
-  DOSE_UNIT,
-  WHEN_TO_TAKE_ABBREVATIONS,
   APPOINTMENT_TYPE,
-  PATIENT_MEAL_TIMINGS,
-  // CATEGORY_ONE,
   categories,
+  DOSE_UNIT,
+  MEDICATION_TIMING,
+  PATIENT_MEAL_TIMINGS,
+  PRESCRIPTION_PDF_FOLDER,
+  WHEN_TO_TAKE_ABBREVATIONS,
 } from "../../../constant";
 import moment from "moment";
 import PDFDocument from "pdfkit";
@@ -1941,13 +1940,11 @@ function printCarePlanData({
     //     addPageAndNumber(doc);
     //   }
     // }
-    console.log("\n\n\n\n\\n\n\n\n in printcareplan data");
+    console.log("\n\n in printCarePlanData");
     console.log(Object.keys(suggestedInvestigations).length);
 
     if (Object.keys(suggestedInvestigations).length) {
-      console.log(
-        "\n\n\n\n\\n\n\n\nin the if looop appointment\n\n\n\n\\n\n\n\n"
-      );
+      console.log("\n\n In the if loop appointment \n\n");
       const appointmentLevelEnd = printAppointment({
         doc,
         providerPrescriptionDetails,

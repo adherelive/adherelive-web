@@ -1,11 +1,11 @@
 import Controller from "../index";
 
-// services
+// Services
 import WorkoutResponseService from "../../services/workoutResponses/workoutResponses.service";
 import ExerciseContentService from "../../services/exerciseContents/exerciseContent.service";
 import EventService from "../../services/scheduleEvents/scheduleEvent.service";
 
-// wrappers
+// Wrappers
 import WorkoutResponseWrapper from "../../apiWrapper/web/workoutResponse";
 import WorkoutWrapper from "../../apiWrapper/web/workouts";
 import EventWrapper from "../../apiWrapper/common/scheduleEvents";

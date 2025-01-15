@@ -2,7 +2,7 @@ import express from "express";
 import Authenticated from "../middlewares/auth";
 import Authorize from "../middlewares/authorize";
 import CarePlanController from "../../../app/controllers/mControllers/carePlans/carePlan.controller";
-// import multer from "multer";
+
 // var storage = multer.memoryStorage();
 // var upload = multer({ dest: "../app/public/", storage: storage });
 import * as validator from "./validator";

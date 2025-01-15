@@ -1,20 +1,10 @@
-//common functionality of all Activity
-// import activityService from "../../services/activityLog/activityLog.service";
-import { STAGES } from "../activityType";
-import schedulerService from "../../services/scheduleEvents/scheduleEvent.service";
-// import calendarService from "../../services/calendarService/calendar.service";
-import userService from "../../services/user/user.service";
-// import programService from "../../services/program/program.service";
-import {
-  ACTIVITY_LOG_STATUS,
-  DEFAULT,
-  EVENT_IS,
-  USER_CATEGORY,
-} from "../../../constant";
-// const log = require("../../../libs/log")("ACTIVITY_SDK");
-import Log from "../../../libs/log";
-const log = Log("ACTIVITY_SDK");
-const { NotificationSdk } = require("../../notificationSdk");
+// Common functionality of all Activity
+
+import { ACTIVITY_LOG_STATUS, DEFAULT } from "../../../constant";
+import { NotificationSdk } from "../../notificationSdk";
+import Logger from "../../../libs/log";
+
+const log = Logger("ACTIVITY_SDK");
 
 const notify = (participants, payload) => {
   // prepare notification data according to event category

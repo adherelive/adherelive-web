@@ -1,5 +1,5 @@
 const EmailManager = require("../communications/email/emailManger");
-const SmsManager = require("../communications/sms/smsManger");
+const SmsManager = require("../communications/sms/smsManager");
 const Logger = require("./libs/logger");
 const assert = require("assert");
 const { validateMailData, validateSmsData } = require("./libs/validator");

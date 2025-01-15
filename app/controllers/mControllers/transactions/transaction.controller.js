@@ -1,31 +1,26 @@
 import Controller from "../../index";
 import moment from "moment";
 
-// SERVICES ...
+// Services
 import RazorpayService from "../../../services/razorpay/razorpay.service";
 import TransactionService from "../../../services/transactions/transaction.service";
 import SubscriptionService from "../../../services/subscriptions/subscription.service";
 import accountDetailService from "../../../services/accountDetails/accountDetails.service";
-import doctorProviderMappingService from "../../../services/doctorProviderMapping/doctorProviderMapping.service";
 import userRolesService from "../../../services/userRoles/userRoles.service";
 
-// WRAPPERS ...
+// Wrappers
 import PaymentProductWrapper from "../../../apiWrapper/mobile/paymentProducts";
 import TransactionWrapper from "../../../apiWrapper/mobile/transactions";
-import DoctorWrapper from "../../../apiWrapper/mobile/doctor";
 import SubscriptionWrapper from "../../../apiWrapper/mobile/subscriptions";
 import AccountDetailsWrapper from "../../../apiWrapper/mobile/accountDetails";
-import DoctorProviderMappingWrapper from "../../../apiWrapper/web/doctorProviderMapping";
 // used for web as no ui for provider on mobile
-import ProviderWrapper from "../../../apiWrapper/web/provider";
-
-// MODELS ...
+// Models
 import { CHECKOUT, STATUS, UPI } from "../../../models/transactions";
 
-// HELPERS ...
+// Helpers
 import Logger from "../../../../libs/log";
 import { generateTransactionId } from "../../../helper/payment";
-import * as TransactionHelper from "./helper";
+import * as TransactionHelper from "./transactions.helper";
 import { USER_CATEGORY } from "../../../../constant";
 import { PAYMENT_TYPE } from "../../../models/paymentProducts";
 

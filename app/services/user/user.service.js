@@ -4,7 +4,7 @@ import { Op } from "sequelize";
 
 // TABLES
 import { TABLE_NAME } from "../../models/users";
-// import { TABLE_NAME as permissionTableName } from "../../models/permissions";
+
 import { TABLE_NAME as doctorTableName } from "../../models/doctors";
 import { TABLE_NAME as patientTableName } from "../../models/patients";
 import { TABLE_NAME as userDeviceTableName } from "../../models/userDevices";

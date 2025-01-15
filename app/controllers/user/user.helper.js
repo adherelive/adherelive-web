@@ -1,6 +1,6 @@
+// Services
 import doctorService from "../../services/doctors/doctors.service";
 import qualificationService from "../../services/doctorQualifications/doctorQualification.service";
-import clinicService from "../../services/doctorClinics/doctorClinics.service";
 import documentService from "../../services/uploadDocuments/uploadDocuments.service";
 import userService from "../../services/user/user.service";
 import userPreferenceService from "../../services/userPreferences/userPreference.service";
@@ -9,27 +9,23 @@ import userRolesService from "../../services/userRoles/userRoles.service";
 
 import UserRolesWrapper from "../../apiWrapper/web/userRoles";
 
-// import  EVENTS from "../../proxySdk/proxyEvents";
 import minioService from "../../../app/services/minio/minio.service";
 import md5 from "js-md5";
-
-const chalk = require("chalk");
-import base64 from "js-base64";
 import bcrypt from "bcrypt";
 import { v4 as uuidv4 } from "uuid";
-import UserVerifications from "../../models/userVerifications";
-import { Proxy_Sdk, EVENTS } from "../../proxySdk";
+import { EVENTS, Proxy_Sdk } from "../../proxySdk";
 import {
-  EMAIL_TEMPLATE_NAME,
-  USER_CATEGORY,
   DOCUMENT_PARENT_TYPE,
-  ONBOARDING_STATUS,
-  VERIFICATION_TYPE,
-  NO_MEDICATION,
-  NO_APPOINTMENT,
+  EMAIL_TEMPLATE_NAME,
   NO_ACTION,
+  NO_APPOINTMENT,
+  NO_MEDICATION,
+  USER_CATEGORY,
+  VERIFICATION_TYPE,
 } from "../../../constant";
 import { completePath } from "../../helper/filePath";
+
+const chalk = require("chalk");
 
 export const doctorQualificationData = async (userId) => {
   try {

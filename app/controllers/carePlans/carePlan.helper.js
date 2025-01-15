@@ -1,3 +1,4 @@
+// Fetch details from Services
 import carePlanService from "../../services/carePlan/carePlan.service";
 import carePlanTemplateService from "../../services/carePlanTemplate/carePlanTemplate.service";
 import appointmentService from "../../services/appointment/appointment.service";
@@ -7,10 +8,6 @@ import carePlanAppointmentService from "../../services/carePlanAppointment/careP
 import vitalService from "../../services/vitals/vital.service";
 import DietService from "../../services/diet/diet.service";
 import WorkoutService from "../../services/workouts/workout.service";
-import doctorService from "../../services/doctor/doctor.service";
-// import medicineService from "../../services/medicine/medicine.service";
-// import templateMedicationService from "../../services/templateMedication/templateMedication.service";
-// import templateAppointmentService from "../../services/templateAppointment/templateAppointment.service";
 
 // Fetch details from Wrappers
 import CarePlanWrapper from "../../apiWrapper/web/carePlan";
@@ -24,10 +21,10 @@ import UserRoleWrapper from "../../apiWrapper/web/userRoles";
 
 import Logger from "../../../libs/log";
 import {
-  EVENT_TYPE,
-  USER_CATEGORY,
   EVENT_LONG_TERM_VALUE,
   EVENT_STATUS,
+  EVENT_TYPE,
+  USER_CATEGORY,
 } from "../../../constant";
 import moment from "moment";
 

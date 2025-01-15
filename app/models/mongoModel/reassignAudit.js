@@ -8,9 +8,6 @@
 
 const mongoose = require("mongoose");
 
-// Add this line to handle the deprecation warning
-//mongoose.set("strictQuery", true);
-
 const reassignAudit = mongoose.Schema(
   {
     assignedBy: {

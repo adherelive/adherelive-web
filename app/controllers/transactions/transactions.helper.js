@@ -1,20 +1,20 @@
 import Logger from "../../../libs/log";
 
-// services
+// Services
 import TransactionService from "../../services/transactions/transaction.service";
 import PaymentProductService from "../../services/paymentProducts/paymentProduct.service";
 import doctorService from "../../services/doctor/doctor.service";
 import patientService from "../../services/patients/patients.service";
 import userRolesService from "../../services/userRoles/userRoles.service";
 
-// wrappers
+// Wrappers
 import TransactionWrapper from "../../apiWrapper/web/transactions";
 import PaymentProductWrapper from "../../apiWrapper/web/paymentProducts";
 import DoctorWrapper from "../../apiWrapper/web/doctor";
 import PatientWrapper from "../../apiWrapper/web/patient";
 import UserRolesWrapper from "../../apiWrapper/web/userRoles";
 
-// helpers
+// Helpers
 import { USER_CATEGORY } from "../../../constant";
 
 const Log = new Logger("TRANSACTION > HELPER");

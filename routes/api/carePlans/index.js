@@ -6,7 +6,6 @@ import * as validator from "./validator";
 import isAllowed from "../../middlewares/permissions";
 import PERMISSIONS from "../../../config/permissions";
 
-// import multer from "multer";
 // var storage = multer.memoryStorage();
 // var upload = multer({ dest: "../app/public/", storage: storage });
 

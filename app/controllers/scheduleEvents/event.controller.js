@@ -1,11 +1,12 @@
-import Controller from "../";
+import Controller from "../index";
+
 import Logger from "../../../libs/log";
 import moment from "moment";
 
-import * as EventHelper from "./eventHelper";
+import * as EventHelper from "./event.helper";
 import { EVENT_STATUS, EVENT_TYPE, USER_CATEGORY } from "../../../constant";
 
-// SERVICES
+// Services
 import CarePlanService from "../../services/carePlan/carePlan.service";
 import EventService from "../../services/scheduleEvents/scheduleEvent.service";
 import SymptomService from "../../services/symptom/symptom.service";
@@ -17,7 +18,6 @@ import SymptomWrapper from "../../apiWrapper/web/symptoms";
 import VitalWrapper from "../../apiWrapper/web/vitals";
 
 // Timer
-import { getTime } from "../../helper/timer";
 
 const Log = new Logger("WEB > EVENT > CONTROLLER");
 

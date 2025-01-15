@@ -1,8 +1,8 @@
 import AppointmentJob from "../";
 import moment from "moment";
 import {
-  DEFAULT_PROVIDER,
   APPOINTMENT_TYPE,
+  DEFAULT_PROVIDER,
   EVENT_TYPE,
 } from "../../../../constant";
 

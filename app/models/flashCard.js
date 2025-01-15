@@ -1,12 +1,12 @@
 "use strict";
 import { DataTypes } from "sequelize";
 import { USER_CATEGORY } from "../../constant";
-
-export const TABLE_NAME = "flash_cards";
 import { TABLE_NAME as patientsTableName } from "./patients";
 import { TABLE_NAME as doctorsTableName } from "./doctors";
 import { TABLE_NAME as providersTableName } from "./providers";
 import { TABLE_NAME as transactionActivityTableName } from "./transactionActivity";
+
+export const TABLE_NAME = "flash_cards";
 
 export const db = (database) => {
   database.define(

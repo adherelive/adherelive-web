@@ -1,12 +1,13 @@
-import Controller from "../";
+import Controller from "../index";
+
 import Logger from "../../../libs/log";
 
-// services
+// Services
 import ExerciseService from "../../services/exercises/exercise.service";
 import ExerciseDetailService from "../../services/exerciseDetails/exerciseDetail.service";
 import ExerciseContentService from "../../services/exerciseContents/exerciseContent.service";
 
-// wrappers
+// Wrappers
 import ExerciseWrapper from "../../apiWrapper/web/exercises";
 import ExerciseContentWrapper from "../../apiWrapper/web/exerciseContents";
 

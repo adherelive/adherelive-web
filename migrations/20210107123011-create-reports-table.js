@@ -23,7 +23,7 @@ module.exports = {
           key: "id",
         },
       },
-      // flas_card_id: {
+      // flash_card_id: {
       //   type: DataTypes.INTEGER,
       //   allowNull: true,
       // },

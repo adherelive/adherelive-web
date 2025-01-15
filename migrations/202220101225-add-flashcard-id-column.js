@@ -5,7 +5,7 @@ import { TABLE_NAME } from "../app/models/reports";
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return Promise.all([
-      queryInterface.addColumn(TABLE_NAME, "flas_card_id", {
+      queryInterface.addColumn(TABLE_NAME, "flash_card_id", {
         type: Sequelize.INTEGER,
         allowNull: true,
       }),
@@ -14,7 +14,7 @@ module.exports = {
 
   down: (queryInterface, Sequelize) => {
     return Promise.all([
-      queryInterface.removeColumn(TABLE_NAME, "flas_card_id"),
+      queryInterface.removeColumn(TABLE_NAME, "flash_card_id"),
     ]);
   },
 };

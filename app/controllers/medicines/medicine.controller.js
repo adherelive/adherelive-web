@@ -1,4 +1,4 @@
-import Controller from "../";
+import Controller from "../index";
 
 import medicineService from "../../services/medicine/medicine.service";
 import AlgoliaService from "../../services/algolia/algolia.service";
@@ -6,7 +6,7 @@ import doctorService from "../../services/doctor/doctor.service";
 
 import TemplateMedicationService from "../../services/templateMedication/templateMedication.service";
 import MedicationService from "../../services/medicationReminder/mReminder.service";
-import CareplanMedicationService from "../../services/carePlanMedication/carePlanMedication.service";
+import CarePlanMedicationService from "../../services/carePlanMedication/carePlanMedication.service";
 import ScheduleEventService from "../../services/scheduleEvents/scheduleEvent.service";
 
 import MedicineWrapper from "../../apiWrapper/web/medicine";
@@ -28,17 +28,16 @@ class MedicineController extends Controller {
       const { query } = req;
       const { value } = query || {};
 
-      // Logger.debug("value in req", value);
-
+      // Logger.debug("value in req: ", value);
       const medicineDetails = await medicineService.search(value);
 
       if (medicineDetails.length > 0) {
         let medicineApiData = {};
-        await medicineDetails.forEach(async (medicine) => {
+        for (const medicine of medicineDetails) {
           const medicineWrapper = await new MedicineWrapper(medicine);
           medicineApiData[medicineWrapper.getMedicineId()] =
             medicineWrapper.getBasicInfo();
-        });
+        }
 
         return raiseSuccess(
           res,
@@ -48,18 +47,18 @@ class MedicineController extends Controller {
               ...medicineApiData,
             },
           },
-          "medicine data fetched successfully"
+          "Medicine data fetched successfully"
         );
       } else {
         return raiseClientError(
           res,
           422,
           {},
-          `no medicine found with name including ${value}`
+          `No medicine found with name including ${value}`
         );
       }
     } catch (error) {
-      // Logger.debug("500 error", error);
+      // Logger.debug("getAll 500 error: ", error);
       return raiseServerError(res);
     }
   };
@@ -82,7 +81,6 @@ class MedicineController extends Controller {
         creator_id: categoryId,
         created_at: new Date(),
         type,
-        details: { generic_name },
         public_medicine: false,
         details: { generic_name },
       };
@@ -108,7 +106,7 @@ class MedicineController extends Controller {
         "New medicine added successfully."
       );
     } catch (error) {
-      Logger.debug("500 addMedicine error", error);
+      Logger.debug("500 addMedicine error: ", error);
       return raiseServerError(res);
     }
   };
@@ -151,7 +149,7 @@ class MedicineController extends Controller {
         "New medicine added successfully."
       );
     } catch (error) {
-      Logger.debug("500 addMedicine error", error);
+      Logger.debug("500 addMedicine error: ", error);
       return raiseServerError(res);
     }
   };
@@ -194,7 +192,7 @@ class MedicineController extends Controller {
         "Medicine is made public to all doctors successfully."
       );
     } catch (error) {
-      Logger.debug("500 makeMedicinePublic error", error);
+      Logger.debug("500 makeMedicinePublic error: ", error);
       return raiseServerError(res);
     }
   };
@@ -210,16 +208,15 @@ class MedicineController extends Controller {
       const doctorDetails = await doctorService.search(value);
 
       if (doctorDetails && doctorDetails.length > 0) {
-        await doctorDetails.forEach(async (doctor) => {
+        for (const doctor of doctorDetails) {
           const doctorWrapper = await DoctorWrapper(doctor);
           doctorIds.push(doctorWrapper.getDoctorId());
-        });
+        }
       }
 
       const limit = process.config.ADMIN_MEDICINE_ONE_PAGE_LIMIT;
 
       const offsetLimit = parseInt(limit, 10) * parseInt(offset, 10);
-      // const endLimit = offsetLimit + parseInt(limit, 10);
       const endLimit = parseInt(limit, 10);
 
       const publicMedicine = parseInt(public_medicine, 10) === 0 ? 0 : 1;
@@ -236,7 +233,7 @@ class MedicineController extends Controller {
         publicMedicine,
         doctorIds
       );
-      Logger.debug("329847562389462364872384122", {
+      Logger.debug("Get Medicines for Admin: ", {
         total_count,
         l: medicineDetails.length,
         medicineDetails,
@@ -250,7 +247,7 @@ class MedicineController extends Controller {
       const creatorIds = [];
       if (medicineDetails.length > 0) {
         let medicineApiData = {};
-        await medicineDetails.forEach(async (medicine) => {
+        for (const medicine of medicineDetails) {
           const medicineWrapper = await new MedicineWrapper(medicine);
           medicineApiData[medicineWrapper.getMedicineId()] =
             medicineWrapper.getAllInfo();
@@ -260,7 +257,7 @@ class MedicineController extends Controller {
           if (creator_id) {
             creatorIds.push(creator_id);
           }
-        });
+        }
 
         for (const id of creatorIds) {
           const doctorApiWrapper = await DoctorWrapper(null, id);
@@ -336,8 +333,8 @@ class MedicineController extends Controller {
         event_id: medicationIds,
       });
 
-      const deleteCareplanMedications =
-        await CareplanMedicationService.deleteCarePlanMedicationByMedicationId(
+      const deleteCarePlanMedications =
+        await CarePlanMedicationService.deleteCarePlanMedicationByMedicationId(
           medicationIds
         );
       const deleteMedications = await MedicationService.deleteMedication(

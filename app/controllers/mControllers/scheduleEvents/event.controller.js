@@ -2,21 +2,20 @@ import Controller from "../../index";
 import Logger from "../../../../libs/log";
 import moment from "moment";
 
-// SERVICES -------------------
-// import VitalService from "../../../services/vitals/vital.service";
+// Services
+
 import EventService from "../../../services/scheduleEvents/scheduleEvent.service";
 import CarePlanService from "../../../services/carePlan/carePlan.service";
 
-// WRAPPERS -------------------
+// Wrappers
 import EventWrapper from "../../../apiWrapper/common/scheduleEvents";
 import VitalWrapper from "../../../apiWrapper/mobile/vitals";
 import CarePlanWrapper from "../../../apiWrapper/mobile/carePlan";
 import SymptomWrapper from "../../../apiWrapper/mobile/symptoms";
 
 import { EVENT_STATUS, EVENT_TYPE, USER_CATEGORY } from "../../../../constant";
-import * as EventHelper from "../../scheduleEvents/eventHelper";
+import * as EventHelper from "../../scheduleEvents/event.helper";
 import SymptomService from "../../../services/symptom/symptom.service";
-import eventService from "../../../services/scheduleEvents/scheduleEvent.service";
 
 const Log = new Logger("MOBILE > SCHEDULE_EVENTS > CONTROLLER");
 

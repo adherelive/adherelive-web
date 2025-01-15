@@ -1,5 +1,5 @@
 "use strict";
-import { DB_TABLES, USER_CATEGORY, CURRENCY } from "../constant";
+import { CURRENCY, DB_TABLES, USER_CATEGORY } from "../constant";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {

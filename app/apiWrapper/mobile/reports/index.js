@@ -23,7 +23,7 @@ class ReportWrapper extends BaseReport {
       uploader_type,
       name,
       test_date,
-      flas_card_id,
+      flash_card_id,
     } = _data || {};
 
     return {
@@ -33,7 +33,7 @@ class ReportWrapper extends BaseReport {
         name,
       },
       test_date,
-      flas_card_id,
+      flash_card_id,
       uploader: {
         id: uploader_id,
         category: uploader_type,
@@ -86,10 +86,10 @@ class ReportWrapper extends BaseReport {
 
       const ref = await getAllInfo();
       let isAdd = false;
-      if (ref["flas_card_id"]) {
+      if (ref["flash_card_id"]) {
         const flasCardService = new FlashCardService();
         const flascards = await flasCardService.getAllFlashCardByData({
-          id: ref["flas_card_id"],
+          id: ref["flash_card_id"],
           is_published: true,
         });
         if (flascards.length > 0) {

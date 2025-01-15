@@ -1,9 +1,8 @@
 "use strict";
 import { DataTypes } from "sequelize";
 import { TABLE_NAME as portionTableName } from "./portions";
-// import { TABLE_NAME as foodItemTableName } from "./foodItems";
+
 import { TABLE_NAME as foodItemDetailsTableName } from "./foodItemDetails";
-// import {TABLE_NAME as dietFoodGroupMappingTableName} from "./dietFoodGroupMapping";
 
 export const TABLE_NAME = "food_groups";
 

@@ -1,4 +1,4 @@
-import Controller from "../../";
+import Controller from "../../index";
 import collegeService from "../../../services/college/college.service";
 import CollegeWrapper from "../../../apiWrapper/mobile/college";
 

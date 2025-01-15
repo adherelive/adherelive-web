@@ -5,11 +5,11 @@ import base64 from "js-base64";
 
 import AppNotification from "../../../notificationSdk/inApp";
 
-// SERVICES --------------------------------
+// Services
 import userRoleService from "../../../services/userRoles/userRoles.service";
 import userService from "../../../services/user/user.service";
 
-//WRAPPERS
+// Wrappers
 import UserRoleWrapper from "../../../apiWrapper/mobile/userRoles";
 import UserWrapper from "../../../apiWrapper/mobile/user";
 

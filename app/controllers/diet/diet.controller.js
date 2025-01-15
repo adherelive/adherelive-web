@@ -1,4 +1,5 @@
 import Controller from "../index";
+
 import moment from "moment";
 
 // Services
@@ -16,21 +17,16 @@ import UserPreferenceWrapper from "../../apiWrapper/web/userPreference";
 import EventWrapper from "../../apiWrapper/common/scheduleEvents";
 import DietResponseWrapper from "../../apiWrapper/web/dietResponse";
 
-import * as DietHelper from "./dietHelper";
+import * as DietHelper from "./diet.helper";
 import DietJob from "../../jobSdk/Diet/observer";
 import NotificationSdk from "../../notificationSdk";
-
-import { getTimeWiseDietFoodGroupMappings } from "./dietHelper";
-import * as medicationHelper from "../medicationReminder/medicationHelper";
 
 import Log from "../../../libs/log";
 
 import {
-  EVENT_TYPE,
-  EVENT_STATUS,
   DAYS,
-  USER_CATEGORY,
-  MEDICATION_TIMING,
+  EVENT_STATUS,
+  EVENT_TYPE,
   PATIENT_MEAL_TIMINGS,
 } from "../../../constant";
 import carePlanService from "../../services/carePlan/carePlan.service";
@@ -119,7 +115,7 @@ class DietController extends Controller {
             primary = ele;
           }
 
-          let currentfodmattedData = {};
+          let currentFormattedData = {};
 
           // const related_diet_food_group_mapping_ids = mappingIds.slice(1);
           let similarFoodGroups = [],
@@ -199,7 +195,7 @@ class DietController extends Controller {
             }
           }
 
-          currentfodmattedData = {
+          currentFormattedData = {
             serving,
             portion_id,
             food_group_id,
@@ -209,7 +205,7 @@ class DietController extends Controller {
           };
 
           const currentDietDataForTime = dietApidata[time] || [];
-          currentDietDataForTime.push(currentfodmattedData);
+          currentDietDataForTime.push(currentFormattedData);
 
           dietApidata[`${time}`] = [...currentDietDataForTime];
         }

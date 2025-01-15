@@ -1,4 +1,4 @@
-import Controller from "../../";
+import Controller from "../../index";
 import PortionService from "../../../services/portions/portions.service";
 import PortionWrapper from "../../../apiWrapper/mobile/portions";
 

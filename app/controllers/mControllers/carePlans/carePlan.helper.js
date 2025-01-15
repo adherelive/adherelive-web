@@ -5,14 +5,11 @@ import appointmentService from "../../../services/appointment/appointment.servic
 import medicationReminderService from "../../../services/medicationReminder/mReminder.service";
 import carePlanMedicationService from "../../../services/carePlanMedication/carePlanMedication.service";
 import carePlanAppointmentService from "../../../services/carePlanAppointment/carePlanAppointment.service";
-// import templateMedicationService from "../../../services/templateMedication/templateMedication.service";
-// import templateAppointmentService from "../../../services/templateAppointment/templateAppointment.service";
-// import medicineService from "../../../services/medicine/medicine.service";
+
 import DietService from "../../../services/diet/diet.service";
 import WorkoutService from "../../../services/workouts/workout.service";
 
 // services
-
 // wrappers
 import CarePlanWrapper from "../../../apiWrapper/mobile/carePlan";
 import AppointmentWrapper from "../../../apiWrapper/mobile/appointments";

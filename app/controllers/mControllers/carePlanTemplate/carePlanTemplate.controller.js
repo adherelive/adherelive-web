@@ -1,4 +1,4 @@
-import Controller from "../../";
+import Controller from "../../index";
 import Logger from "../../../../libs/log";
 
 // services
@@ -14,11 +14,7 @@ import ExerciseContentService from "../../../services/exerciseContents/exerciseC
 import ExerciseContentWrapper from "../../../apiWrapper/mobile/exerciseContents";
 import CarePlanTemplateWrapper from "../../../apiWrapper/mobile/carePlanTemplate";
 
-import {
-  TEMPLATE_DUPLICATE_TEXT,
-  USER_CATEGORY,
-  EVENT_LONG_TERM_VALUE,
-} from "../../../../constant";
+import { TEMPLATE_DUPLICATE_TEXT } from "../../../../constant";
 
 import PERMISSIONS from "../../../../config/permissions";
 

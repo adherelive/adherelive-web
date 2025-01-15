@@ -1,4 +1,4 @@
-import Controller from "../../";
+import Controller from "../../index";
 import bcrypt from "bcrypt";
 import userService from "../../../services/user/user.service";
 import { v4 as uuidv4 } from "uuid";
@@ -6,19 +6,23 @@ import moment from "moment";
 
 // services
 import patientService from "../../../services/patients/patients.service";
-import userPreferenceService from "../../../services/userPreferences/userPreference.service";
 import patientsService from "../../../services/patients/patients.service";
+import userPreferenceService from "../../../services/userPreferences/userPreference.service";
+import UserPreferenceService from "../../../services/userPreferences/userPreference.service";
 import doctorService from "../../../services/doctor/doctor.service";
 import carePlanTemplateService from "../../../services/carePlanTemplate/carePlanTemplate.service";
 import carePlanService from "../../../services/carePlan/carePlan.service";
 import doctorQualificationService from "../../../services/doctorQualifications/doctorQualification.service";
+import qualificationService from "../../../services/doctorQualifications/doctorQualification.service";
 import doctorRegistrationService from "../../../services/doctorRegistration/doctorRegistration.service";
+import registrationService from "../../../services/doctorRegistration/doctorRegistration.service";
 import uploadDocumentService from "../../../services/uploadDocuments/uploadDocuments.service";
+import documentService from "../../../services/uploadDocuments/uploadDocuments.service";
 import featuresService from "../../../services/features/features.service";
 import doctorPatientFeatureMappingService from "../../../services/doctorPatientFeatureMapping/doctorPatientFeatureMapping.service";
 import userRolesService from "../../../services/userRoles/userRoles.service";
-import carePlanSecondaryDoctorMappingService from "../../../services/carePlanSecondaryDoctorMappings/carePlanSecondaryDoctorMappings.service";
 import UserRoleService from "../../../services/userRoles/userRoles.service";
+import carePlanSecondaryDrMapService from "../../../services/carePlanSecondaryDoctorMappings/carePlanSecondaryDoctorMappings.service";
 // m-api wrappers
 import PatientWrapper from "../../../apiWrapper/mobile/patient";
 import CarePlanTemplateWrapper from "../../../apiWrapper/mobile/carePlanTemplate";
@@ -26,8 +30,11 @@ import CarePlanWrapper from "../../../apiWrapper/mobile/carePlan";
 import UserWrapper from "../../../apiWrapper/mobile/user";
 import DoctorWrapper from "../../../apiWrapper/mobile/doctor";
 import ClinicWrapper from "../../../apiWrapper/mobile/doctorClinic";
+import DoctorClinicWrapper from "../../../apiWrapper/mobile/doctorClinic";
 import QualificationWrapper from "../../../apiWrapper/mobile/doctorQualification";
+import DoctorQualificationWrapper from "../../../apiWrapper/mobile/doctorQualification";
 import RegistrationWrapper from "../../../apiWrapper/mobile/doctorRegistration";
+import DoctorRegistrationWrapper from "../../../apiWrapper/mobile/doctorRegistration";
 import UploadDocumentWrapper from "../../../apiWrapper/mobile/uploadDocument";
 import FeatureMappingWrapper from "../../../apiWrapper/mobile/doctorPatientFeatureMapping";
 import UserRoleWrapper from "../../../apiWrapper/mobile/userRoles";
@@ -39,31 +46,20 @@ import {
   ALLOWED_DOC_TYPE_DOCTORS,
   DOCUMENT_PARENT_TYPE,
   EMAIL_TEMPLATE_NAME,
+  FEATURES,
   ONBOARDING_STATUS,
   PATIENT_MEAL_TIMINGS,
   SIGN_IN_CATEGORY,
   USER_CATEGORY,
   VERIFICATION_TYPE,
-  FEATURES,
-  NO_MEDICATION,
-  NO_APPOINTMENT,
-  NO_ACTION,
 } from "../../../../constant";
 
-import { getFilePath, completePath } from "../../../helper/filePath";
-import qualificationService from "../../../services/doctorQualifications/doctorQualification.service";
-import documentService from "../../../services/uploadDocuments/uploadDocuments.service";
-import registrationService from "../../../services/doctorRegistration/doctorRegistration.service";
-import { uploadImageS3 } from "../user/userHelper";
+import { completePath, getFilePath } from "../../../helper/filePath";
+import { uploadImageS3 } from "../user/user.helper";
 import clinicService from "../../../services/doctorClinics/doctorClinics.service";
-import DoctorQualificationWrapper from "../../../apiWrapper/mobile/doctorQualification";
-import DoctorRegistrationWrapper from "../../../apiWrapper/mobile/doctorRegistration";
 import doctorClinicService from "../../../services/doctorClinics/doctorClinics.service";
-import DoctorClinicWrapper from "../../../apiWrapper/mobile/doctorClinic";
 import degreeService from "../../../services/degree/degree.service";
 import DegreeWrapper from "../../../apiWrapper/mobile/degree";
-import courseService from "../../../services/course/course.service";
-import CourseWrapper from "../../../apiWrapper/mobile/course";
 import getReferenceId from "../../../helper/referenceIdGenerator";
 import collegeService from "../../../services/college/college.service";
 import CollegeWrapper from "../../../apiWrapper/mobile/college";
@@ -71,25 +67,16 @@ import councilService from "../../../services/council/council.service";
 import CouncilWrapper from "../../../apiWrapper/mobile/council";
 import DoctorPatientWatchlistWrapper from "../../../apiWrapper/mobile/doctorPatientWatchlist";
 import appointmentService from "../../../services/appointment/appointment.service";
-import templateMedicationService from "../../../services/templateMedication/templateMedication.service";
-import TemplateMedicationWrapper from "../../../apiWrapper/mobile/templateMedication";
-import templateAppointmentService from "../../../services/templateAppointment/templateAppointment.service";
-import TemplateAppointmentWrapper from "../../../apiWrapper/mobile/templateAppointment";
-import medicineService from "../../../services/medicine/medicine.service";
-import MedicineApiWrapper from "../../../apiWrapper/mobile/medicine";
 import UserVerificationServices from "../../../services/userVerifications/userVerifications.services";
 import getUniversalLink from "../../../helper/universalLink";
 import getAge from "../../../helper/getAge";
 import { getRoomId, getSeparateName } from "../../../helper/common";
 import { EVENTS, Proxy_Sdk } from "../../../proxySdk";
-import UserPreferenceService from "../../../services/userPreferences/userPreference.service";
 import doctorsService from "../../../services/doctors/doctors.service";
 import doctorPatientWatchlistService from "../../../services/doctorPatientWatchlist/doctorPatientWatchlist.service";
 
 import specialityService from "../../../services/speciality/speciality.service";
 import SpecialityWrapper from "../../../apiWrapper/mobile/speciality";
-// import DegreeWrapper from "../../../apiWrapper/mobile/degree";
-// import degreeService from "../../../services/degree/degree.service";
 
 const Logger = new Log("M-API DOCTOR CONTROLLER");
 const APPOINTMENT_QUERY_TYPE = {
@@ -1855,7 +1842,10 @@ class MobileDoctorController extends Controller {
           doctorWrapper.getDoctorId()
         );
 
-      Logger.debug("198361283 ---====> ", doctorRegistrations);
+      Logger.debug(
+        "Get all Doctor detail registrations ---> ",
+        doctorRegistrations
+      );
 
       for (const doctorRegistration of doctorRegistrations) {
         const doctorRegistrationWrapper = await DoctorRegistrationWrapper(
@@ -2152,7 +2142,7 @@ class MobileDoctorController extends Controller {
       const updatedpatientDetails = await PatientWrapper(null, patient_id);
 
       const initialCarePlanData = await CarePlanWrapper(null, careplan_id);
-      const previousCareplanDetails =
+      const previousCarePlanDetails =
         (await initialCarePlanData.getCarePlanDetails()) || {};
       const { basic_info: prevCareplanBasicInfo } =
         initialCarePlanData.getBasicInfo() || {};
@@ -2160,7 +2150,7 @@ class MobileDoctorController extends Controller {
       const carePlanUpdateData = {
         ...prevCareplanBasicInfo,
         details: {
-          ...previousCareplanDetails,
+          ...previousCarePlanDetails,
           clinical_notes,
           treatment_id,
           severity_id,
@@ -2173,7 +2163,7 @@ class MobileDoctorController extends Controller {
         },
       };
 
-      const updatedCareplanId = await carePlanService.updateCarePlan(
+      const updatedCarePlanId = await carePlanService.updateCarePlan(
         carePlanUpdateData,
         careplan_id
       );
@@ -2391,34 +2381,34 @@ class MobileDoctorController extends Controller {
       const {
         count: careplansCount = 0,
         rows: careplanAsSecondaryDoctor = [],
-      } = await carePlanSecondaryDoctorMappingService.findAndCountAll({
+      } = await carePlanSecondaryDrMapService.findAndCountAll({
         where: {
           secondary_doctor_role_id: userRoleId,
         },
       });
 
-      let careplanIdsAsSecondaryDoctor = [];
+      let carePlanIdsAsSecondaryDoctor = [];
 
       if (careplansCount) {
         for (let each of careplanAsSecondaryDoctor) {
           const { care_plan: { id = null } = {} } = each || {};
-          careplanIdsAsSecondaryDoctor.push(id);
+          carePlanIdsAsSecondaryDoctor.push(id);
         }
       }
 
-      const secondary_careplan_ids = careplanIdsAsSecondaryDoctor.toString(); // string
+      const secondary_careplan_ids = carePlanIdsAsSecondaryDoctor.toString(); // string
 
       // watchlisted patient ids
       if (getWatchListPatients) {
         count = await carePlanService.getWatchlistedDistinctPatientCounts(
           watchlistPatientIds,
           userRoleId,
-          careplanIdsAsSecondaryDoctor
+          carePlanIdsAsSecondaryDoctor
         );
       } else {
         count = await carePlanService.getDistinctPatientCounts(
           userRoleId,
-          careplanIdsAsSecondaryDoctor
+          carePlanIdsAsSecondaryDoctor
         );
       }
 

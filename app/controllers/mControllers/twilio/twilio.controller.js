@@ -1,6 +1,6 @@
 import faker from "faker";
 import twilioService from "../../../services/twilio/twilio.service";
-import Controller from "../../";
+import Controller from "../../index";
 
 import Log from "../../../../libs/log";
 

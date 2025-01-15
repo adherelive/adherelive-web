@@ -1,0 +1,36 @@
+> npm outdated
+Package              Current  Wanted       Latest  Location                          Depended by
+algoliasearch         4.24.0  4.24.0       5.18.0  node_modules/algoliasearch        adherelive-web
+chalk                  4.1.2   4.1.2        5.4.1  node_modules/chalk                adherelive-web
+concurrently           5.3.0   5.3.0        9.1.1  node_modules/concurrently         adherelive-web
+cookie-session         1.4.0   1.4.0        2.1.0  node_modules/cookie-session       adherelive-web
+css-loader             3.6.0   3.6.0        7.1.2  node_modules/css-loader           adherelive-web
+date-fns              2.30.0  2.30.0        4.1.0  node_modules/date-fns             adherelive-web
+db-migrate-mysql       2.3.2   2.3.2        3.0.0  node_modules/db-migrate-mysql     adherelive-web
+dotenv                 8.6.0   8.6.0       16.4.7  node_modules/dotenv               adherelive-web
+express-validator     6.15.0  6.15.0        7.2.0  node_modules/express-validator    adherelive-web
+faker                  5.5.3   5.5.3        6.6.6  node_modules/faker                adherelive-web
+getstream              5.0.5   5.0.5        8.4.1  node_modules/getstream            adherelive-web
+google-auth-library   7.14.1  7.14.1       9.15.0  node_modules/google-auth-library  adherelive-web
+husky                  4.3.8   4.3.8        9.1.7  node_modules/husky                adherelive-web
+jest                  27.5.1  27.5.1       29.7.0  node_modules/jest                 adherelive-web
+js-md5                 0.7.3   0.7.3        0.8.3  node_modules/js-md5               adherelive-web
+less                  3.13.1  3.13.1        4.2.1  node_modules/less                 adherelive-web
+less-loader            5.0.0   5.0.0       12.2.0  node_modules/less-loader          adherelive-web
+lint-staged           10.5.4  10.5.4       15.3.0  node_modules/lint-staged          adherelive-web
+minio                  7.1.3   7.1.3        8.0.3  node_modules/minio                adherelive-web
+multer                 1.4.4   1.4.4  1.4.5-lts.1  node_modules/multer               adherelive-web
+mysql2                3.11.5  3.12.0       3.12.0  node_modules/mysql2               adherelive-web
+node-fetch             2.7.0   2.7.0        3.3.2  node_modules/node-fetch           adherelive-web
+node-schedule          1.3.3   1.3.3        2.1.1  node_modules/node-schedule        adherelive-web
+node-xlsx             0.15.1  0.15.1       0.24.0  node_modules/node-xlsx            adherelive-web
+nodemon               2.0.22  2.0.22        3.1.9  node_modules/nodemon              adherelive-web
+pdfkit                0.13.0  0.13.0       0.15.2  node_modules/pdfkit               adherelive-web
+prettier               2.8.8   2.8.8        3.4.2  node_modules/prettier             adherelive-web
+puppeteer             14.4.1  14.4.1      23.11.1  node_modules/puppeteer            adherelive-web
+react-chartjs-2       2.11.2  2.11.2        5.2.0  node_modules/react-chartjs-2      adherelive-web
+react-markdown         5.0.3   5.0.3        9.0.1  node_modules/react-markdown       adherelive-web
+rrule                  2.6.8   2.6.8        2.8.1  node_modules/rrule                adherelive-web
+style-loader           1.3.0   1.3.0        4.0.0  node_modules/style-loader         adherelive-web
+twilio                3.68.0  3.68.0        5.4.0  node_modules/twilio               adherelive-web
+uuid                   8.3.2   8.3.2       11.0.3  node_modules/uuid                 adherelive-web

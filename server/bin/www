@@ -9,13 +9,6 @@ config();
 /**
  * Module dependencies.
  */
-// import http from "http";
-// import debug from "debug";
-// import app from "../app.js";
-// import { init as initializeDatabase } from "../libs/mysql";
-// import { initializeMongo } from "../libs/mongo";
-// import Log from "../../libs/log";
-
 const http = require("http");
 const app = require("../app");
 const createDebug = require("debug");

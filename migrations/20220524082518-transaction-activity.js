@@ -1,15 +1,16 @@
 "use strict";
-import { TABLE_NAME } from "../app/models/serviceSubscribeTransaction";
-import { TABLE_NAME as subscribePlanTableName } from "../app/models/serviceSubscriptionUserMapping";
-import { TABLE_NAME as servicePlanTableName } from "../app/models/serviceUserMapping";
+import { TABLE_NAME } from "../app/models/transactionActivity";
+import { TABLE_NAME as serviceOfferingTableName } from "../app/models/serviceOffering";
 import { TABLE_NAME as patientsTableName } from "../app/models/patients";
 import { TABLE_NAME as doctorsTableName } from "../app/models/doctors";
 import { TABLE_NAME as providersTableName } from "../app/models/providers";
+import { TABLE_NAME as appointmentsTableName } from "../app/models/appointments";
+import { TABLE_NAME as serviceSubTxTableName } from "../app/models/serviceSubscribeTransaction";
 import {
-  USER_CATEGORY,
-  CURRENCY,
-  USER_STATUS,
   BILLING_FREQUENCY,
+  CURRENCY,
+  USER_CATEGORY,
+  USER_STATUS,
 } from "../constant";
 
 module.exports = {
@@ -57,32 +58,57 @@ module.exports = {
           key: "id",
         },
       },
-      description: {
-        type: Sequelize.STRING(1000),
+      service_sub_tx_id: {
+        type: Sequelize.INTEGER,
         allowNull: true,
+        references: {
+          model: {
+            tableName: serviceSubTxTableName,
+          },
+          key: "id",
+        },
       },
+      due_date: {
+        type: Sequelize.DATE,
+      },
+      status: {
+        type: Sequelize.ENUM,
+        values: ["pending", "scheduled"],
+      },
+      service_offering_id: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: {
+            tableName: serviceOfferingTableName,
+          },
+          key: "id",
+        },
+      },
+      appointment_id: {
+        type: Sequelize.INTEGER,
+        allowNull: true,
+        references: {
+          model: {
+            tableName: appointmentsTableName,
+          },
+          key: "id",
+        },
+      },
+      service_subscription_id: {
+        type: Sequelize.INTEGER,
+        allowNull: true,
+        references: {
+          model: {
+            tableName: serviceOfferingTableName,
+          },
+          key: "id",
+        },
+      },
+
       currency: {
         type: Sequelize.ENUM,
         values: [CURRENCY.INR, CURRENCY.AUD, CURRENCY.USD],
         allowNull: true,
-      },
-      subscription_user_plan_id: {
-        type: Sequelize.INTEGER,
-        references: {
-          model: {
-            tableName: subscribePlanTableName,
-          },
-          key: "id",
-        },
-      },
-      service_user_plan_id: {
-        type: Sequelize.INTEGER,
-        references: {
-          model: {
-            tableName: servicePlanTableName,
-          },
-          key: "id",
-        },
       },
       patient_status: {
         type: Sequelize.ENUM,
@@ -90,7 +116,12 @@ module.exports = {
       },
       status: {
         type: Sequelize.ENUM,
-        values: ["pending", "submitted"],
+        values: ["pending", "scheduled"],
+      },
+      activity_status: {
+        type: Sequelize.ENUM,
+        values: ["inprogress", "notstarted", "completed"],
+        defaultValue: "notstarted",
       },
       amount: {
         type: Sequelize.INTEGER,
@@ -103,12 +134,14 @@ module.exports = {
         type: Sequelize.ENUM,
         values: [BILLING_FREQUENCY.ONCES, BILLING_FREQUENCY.MONTHLY],
       },
-      due_date: {
-        type: Sequelize.DATE,
-      },
+
       is_next_tx_create: {
         type: Sequelize.BOOLEAN,
         allowNull: false,
+      },
+      appointment_time: {
+        allowNull: true,
+        type: Sequelize.DATE,
       },
       created_at: {
         allowNull: false,
@@ -125,7 +158,5 @@ module.exports = {
     });
   },
 
-  down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable(TABLE_NAME);
-  },
+  down: (queryInterface, Sequelize) => {},
 };

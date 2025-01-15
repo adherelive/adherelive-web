@@ -1,4 +1,4 @@
-import Controller from "../../";
+import Controller from "../../index";
 import conditionService from "../../../services/condition/condition.service";
 import ConditionWrapper from "../../../apiWrapper/mobile/conditions";
 

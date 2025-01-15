@@ -1,12 +1,11 @@
 import {
-  MEDICATION_TIMING,
-  PRESCRIPTION_PDF_FOLDER,
-  DOSE_UNIT,
-  WHEN_TO_TAKE_ABBREVATIONS,
   APPOINTMENT_TYPE,
-  PATIENT_MEAL_TIMINGS,
-  // CATEGORY_ONE,
   categories,
+  DOSE_UNIT,
+  MEDICATION_TIMING,
+  PATIENT_MEAL_TIMINGS,
+  PRESCRIPTION_PDF_FOLDER,
+  WHEN_TO_TAKE_ABBREVATIONS,
 } from "../../../constant";
 import moment from "moment";
 import PDFDocument from "pdfkit";
@@ -1533,7 +1532,7 @@ function renderChiefComplaints({ symptoms }) {
 
     return finalSymptom;
   } catch (err) {
-    console.log("error in chief complience", err);
+    console.log("error in chief Compliance", err);
   }
 }
 

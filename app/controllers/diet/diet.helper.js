@@ -1,11 +1,11 @@
 import {
   BREAKFAST,
-  LUNCH,
-  WAKE_UP,
-  EVENING,
   DINNER,
-  SLEEP,
+  EVENING,
+  LUNCH,
   MID_MORNING,
+  SLEEP,
+  WAKE_UP,
 } from "../../../constant";
 import Logger from "../../../libs/log";
 

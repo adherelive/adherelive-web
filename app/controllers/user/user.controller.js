@@ -1,13 +1,7 @@
-const { OAuth2Client } = require("google-auth-library");
-const moment = require("moment");
-const jwt = require("jsonwebtoken");
-const request = require("request");
-const chalk = require("chalk");
+import Controller from "../index";
 import base64 from "js-base64";
 import bcrypt from "bcrypt";
 import Log from "../../../libs/log";
-// import fs from "fs";
-const Response = require("../helper/responseFormat");
 import userService from "../../services/user/user.service";
 import patientService from "../../services/patients/patients.service";
 import carePlanService from "../../services/carePlan/carePlan.service";
@@ -15,26 +9,22 @@ import treatmentService from "../../services/treatment/treatment.service";
 import severityService from "../../services/severity/severity.service";
 import conditionService from "../../services/condition/condition.service";
 import providerService from "../../services/provider/provider.service";
-import doctorProviderMappingService from "../../services/doctorProviderMapping/doctorProviderMapping.service";
 import userRolesService from "../../services/userRoles/userRoles.service";
 import doctorPatientWatchlistService from "../../services/doctorPatientWatchlist/doctorPatientWatchlist.service";
 
 import UserWrapper from "../../apiWrapper/web/user";
 import DoctorWrapper from "../../apiWrapper/web/doctor";
-import PatientWrapper from "../../apiWrapper/web/patient";
-import CarePlanWrapper from "../../apiWrapper/web/carePlan";
 import TreatmentWrapper from "../../apiWrapper/web/treatments";
 import SeverityWrapper from "../../apiWrapper/web/severity";
 import ConditionWrapper from "../../apiWrapper/web/conditions";
 import ProvidersWrapper from "../../apiWrapper/web/provider";
-import DoctorProviderMappingWrapper from "../../apiWrapper/web/doctorProviderMapping";
 import UserRolesWrapper from "../../apiWrapper/web/userRoles";
 import DoctorPatientWatchlistWrapper from "../../apiWrapper/web/doctorPatientWatchlist";
 
 import doctorService from "../../services/doctors/doctors.service";
 import UserVerificationServices from "../../services/userVerifications/userVerifications.services";
-import Controller from "../index";
-import { uploadImageS3, createNewUser } from "./userHelper";
+
+import { createNewUser, uploadImageS3 } from "./user.helper";
 import { v4 as uuidv4 } from "uuid";
 import constants from "../../../config/constants";
 import {
@@ -42,15 +32,22 @@ import {
   USER_CATEGORY,
   VERIFICATION_TYPE,
 } from "../../../constant";
-import { Proxy_Sdk, EVENTS } from "../../proxySdk";
-// import  EVENTS from "../../proxySdk/proxyEvents";
-const errMessage = require("../../../config/messages.json").errMessages;
-import { getCarePlanSeverityDetails } from "../carePlans/carePlanHelper";
+import { EVENTS, Proxy_Sdk } from "../../proxySdk";
 import LinkVerificationWrapper from "../../apiWrapper/mobile/userVerification";
 
 import AppNotification from "../../notificationSdk/inApp";
 import AdhocJob from "../../jobSdk/Adhoc/observer";
 import { getSeparateName } from "../../helper/common";
+
+const { OAuth2Client } = require("google-auth-library");
+const moment = require("moment");
+const jwt = require("jsonwebtoken");
+const request = require("request");
+const chalk = require("chalk");
+
+const Response = require("../helper/responseFormat");
+
+const errMessage = require("../../../config/messages.json").errMessages;
 
 const Logger = new Log("WEB USER CONTROLLER");
 

@@ -2,8 +2,6 @@ import Controller from "../../index";
 
 import accountDetailsService from "../../../services/accountDetails/accountDetails.service";
 
-import userService from "../../../services/user/user.service";
-
 import MAccountsWrapper from "../../../apiWrapper/mobile/accountDetails";
 import UserWrapper from "../../../apiWrapper/mobile/user";
 import ProviderWrapper from "../../../apiWrapper/mobile/provider";
@@ -86,7 +84,7 @@ class MobileAccountsController extends Controller {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       const { userDetails: { userId } = {} } = req;
-      Logger.debug("6564546787654678787678965678", req.query);
+      Logger.debug("Query for getUserAccountDetails User details: ", req.query);
 
       const { query: { all_accounts = 0, provider_id = null } = {} } = req;
       const get_all_accounts = all_accounts == 0 ? false : true;

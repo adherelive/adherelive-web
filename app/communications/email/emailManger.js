@@ -1,11 +1,12 @@
 // const AWS = require("aws-sdk");
-import AWS from "aws-sdk";
+// const Log = require("../../../libs/log")("communications --> emailManger");
+import Log from "../../../libs/log";
+
 const path = require("path");
 const { existsSync } = require("fs");
 const ejs = require("ejs");
 const emailPayloadBuilder = require("./emailPayloadBuilder");
-// const Log = require("../../../libs/log")("communications --> emailManger");
-import Log from "../../../libs/log";
+
 const log = Log("communications --> emailManger");
 
 const nodemailer = require("nodemailer");

@@ -3,7 +3,7 @@ import Controller from "../index";
 import Logger from "../../../libs/log";
 import { USER_CATEGORY } from "../../../constant";
 
-import * as TransactionHelper from "./helper";
+import * as TransactionHelper from "./transactions.helper";
 
 const Log = new Logger("WEB > TRANSACTIONS > CONTROLLER");
 

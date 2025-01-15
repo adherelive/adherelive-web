@@ -1,7 +1,8 @@
-import Controller from "../";
+import Controller from "../index";
+
 import Log from "../../../libs/log";
 
-// services
+// Services
 import carePlanTemplateService from "../../services/carePlanTemplate/carePlanTemplate.service";
 import templateAppointmentService from "../../services/templateAppointment/templateAppointment.service";
 import templateMedicationService from "../../services/templateMedication/templateMedication.service";
@@ -10,16 +11,11 @@ import TemplateDietService from "../../services/templateDiet/templateDiet.servic
 import TemplateWorkoutService from "../../services/templateWorkouts/templateWorkout.service";
 import ExerciseContentService from "../../services/exerciseContents/exerciseContent.service";
 
-// wrapper
+// Wrapper
 import ExerciseContentWrapper from "../../apiWrapper/web/exerciseContents";
 import CarePlanTemplateWrapper from "../../apiWrapper/web/carePlanTemplate";
 
-import {
-  TEMPLATE_DUPLICATE_TEXT,
-  USER_CATEGORY,
-  EVENT_LONG_TERM_VALUE,
-} from "../../../constant";
-import moment from "moment";
+import { TEMPLATE_DUPLICATE_TEXT } from "../../../constant";
 
 import PERMISSIONS from "../../../config/permissions";
 
