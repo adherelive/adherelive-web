@@ -14,8 +14,7 @@ module.exports = () => {
       appointment_wait_time_hours: process.env.APPOINTMENT_WAIT_TIME_HOURS,
       default_currency: process.env.DEFAULT_CURRENCY,
       medicine_data: process.env.MEDICINE_INSTANCE,
-      carePlan_activation_reschedule_hours:
-        process.env.CAREPLAN_ACTIVATION_RESCHEDULE_HOURS,
+      carePlan_activation_reschedule_hours: process.env.CAREPLAN_ACTIVATION_RESCHEDULE_HOURS,
       icon_android: process.env.ANDROID_ICON_NAME,
       otp_live_minutes: process.env.OTP_LIVE_MINUTES,
       appointment_prior_time: process.env.APPOINTMENT_PRIOR_NOTIFY_MINUTES,
@@ -49,7 +48,7 @@ module.exports = () => {
     },
     sqs: {
       domain_url: process.env.SQS_DOMAIN_URL,
-      account_id: process.env.AWS_ACCCOUNT_ID,
+      account_id: process.env.AWS_ACCOUNT_ID,
       queue_name: process.env.SQS_QUEUE_NAME,
     },
     db: {
@@ -156,8 +155,7 @@ module.exports = () => {
     MSG91_SENDER: process.env.MSG91_SENDER,
     ADMIN_MEDICINE_ONE_PAGE_LIMIT: process.env.ADMIN_MEDICINE_ONE_PAGE_LIMIT,
     PATIENT_LIST_SIZE_LIMIT: process.env.PATIENT_LIST_SIZE_LIMIT,
-    DOCTOR_NAME_SEARCH_LIST_SIZE_LIMIT:
-      process.env.DOCTOR_NAME_SEARCH_LIST_SIZE_LIMIT,
+    DOCTOR_NAME_SEARCH_LIST_SIZE_LIMIT: process.env.DOCTOR_NAME_SEARCH_LIST_SIZE_LIMIT,
   };
 };
 

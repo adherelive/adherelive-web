@@ -1,6 +1,6 @@
 {
   "name": "adherelive-be",
-  "version": "3.1.4",
+  "version": "3.1.5",
   "description": "All packages for the adhere.live node backend application",
   "main": "constant.js",
   "repository": {

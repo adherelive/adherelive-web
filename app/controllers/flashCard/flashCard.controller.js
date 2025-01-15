@@ -122,7 +122,7 @@ class FlashCardController extends Controller {
         name: flashCardName,
         test_date: new Date(),
         patient_id: data.patient_id,
-        flas_card_id: flashCard.id,
+        flash_card_id: flashCard.id,
       };
 
       if (req.body.data.flashCardData.length > 0) {
