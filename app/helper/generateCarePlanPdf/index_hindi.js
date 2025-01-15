@@ -1532,7 +1532,7 @@ function renderChiefComplaints({ symptoms }) {
 
     return finalSymptom;
   } catch (err) {
-    console.log("error in chief complience", err);
+    console.log("error in chief Compliance", err);
   }
 }
 
