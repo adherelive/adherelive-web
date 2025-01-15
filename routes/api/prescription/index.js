@@ -110,7 +110,10 @@ async function html_to_pdf({templateHtml, dataBinding, options}) {
         waitUntil: "networkidle0",
     });
 
-    let pdfBuffer = await page.pdf(options); // based on = pdf(options?: PDFOptions): Promise<Buffer>; from https://pptr.dev/api/puppeteer.page.pdf pdfBuffer will stored the PDF file Buffer content when "path is not provoded"
+    // based on = pdf(options?: PDFOptions): Promise<Buffer>;
+    // from https://pptr.dev/api/puppeteer.page.pdf
+    // pdfBuffer will store the PDF file Buffer content when "path is not provided"
+    let pdfBuffer = await page.pdf(options);
     await browser.close();
     return pdfBuffer; // Returning the value when page.pdf promise gets resolved
 }
@@ -318,8 +321,7 @@ function formatPatientData(patients, users) {
     };
 }
 
-// formate care plan data
-
+// formated care plan data
 function formatCarePlanData(carePlans, conditions) {
     let condition = "",
         diagnosis = "",
@@ -372,7 +374,7 @@ function renderChiefComplaints({symptoms}) {
 
         return finalSymptom;
     } catch (err) {
-        console.log("error in chief complience", err);
+        console.log("error in chief Compliance", err);
     }
 }
 
@@ -433,9 +435,10 @@ function formatMedicationsData(medications, medicines) {
 
         if (end_date) {
             const endDateObj = moment(end_date);
-            // Gaurav New Changes - start
+            // New Changes - adding an end date in the prescription
             endDate = end_date;
-            // Gaurav New Changes - End
+
+            // Removed the option to generate the end date
             // endDate = `${endDateObj.get("year")}/${endDateObj.get(
             //   "month"
             // )}/${endDateObj.get("date")}`;
@@ -624,7 +627,7 @@ router.get("/details/:care_plan_id", Authenticated, async (req, res) => {
                     };
                 }
 
-                let mediactionNewData = await medicationWrapper.getBasicInfo();
+                let medicationNewData = await medicationWrapper.getBasicInfo();
 
                 medications = {
                     ...medications,
@@ -738,7 +741,7 @@ router.get("/details/:care_plan_id", Authenticated, async (req, res) => {
                             primary = ele;
                         }
 
-                        let currentfodmattedData = {};
+                        let currentFormattedData = {};
 
                         // const related_diet_food_group_mapping_ids = mappingIds.slice(1);
                         let similarFoodGroups = [],
@@ -802,7 +805,7 @@ router.get("/details/:care_plan_id", Authenticated, async (req, res) => {
                             }
                         }
 
-                        currentfodmattedData = {
+                        currentFormattedData = {
                             serving,
                             portion_id,
                             food_group_id,
@@ -812,17 +815,17 @@ router.get("/details/:care_plan_id", Authenticated, async (req, res) => {
                         };
 
                         const currentDietDataForTime = dietFoodGroupsApidata[time] || [];
-                        currentDietDataForTime.push(currentfodmattedData);
+                        currentDietDataForTime.push(currentFormattedData);
 
                         dietFoodGroupsApidata[`${time}`] = [...currentDietDataForTime];
-                        // dietFoodGroupsApidata["food_details_gaurav"] = food_item_details[dietFoodGroupsApidata["food_item_detail_id"]]
+                        // dietFoodGroupsApidata["food_details"] = food_item_details[dietFoodGroupsApidata["food_item_detail_id"]]
                     }
                 }
                 let diet_food_groups = {
                     ...dietFoodGroupsApidata,
                 };
 
-                let this_dite_data = {
+                let this_diet_data = {
                     diets: {
                         ...dietBasicInfo,
                     },
@@ -831,8 +834,8 @@ router.get("/details/:care_plan_id", Authenticated, async (req, res) => {
                     food_item_details,
                 };
 
-                dietList.push(this_dite_data);
-                dietApiData[id] = this_dite_data;
+                dietList.push(this_diet_data);
+                dietApiData[id] = this_diet_data;
                 dietIds.push(id);
             }
         }
