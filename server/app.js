@@ -34,20 +34,6 @@ const Events = import("../events")
 // Create the App as an Express() app
 const app = express();
 
-// Initialize database connections
-(async () => {
-    try {
-        await Database.init();
-        await initMongo();
-
-        // Initialize event observers
-        EventObserver.runObservers();
-        ActivityObserver.runObservers();
-    } catch (err) {
-        console.error("Error during initialization: ", err);
-    }
-})();
-
 /*
  * Schedule jobs
  * cron jobs run at every one minute.
@@ -64,15 +50,18 @@ monthlyRule.minute = 0;
 perDayUtcRule.hour = 0;
 perDayUtcRule.tz = "Etc/UTC";
 
-schedule.scheduleJob("0 0 */1 * * *", async () => {
+const cron = schedule.scheduleJob("0 0 */1 * * *", async () => {
     await Prior.runObserver();
     await Passed.runObserver();
     await Start.runObserver();
 });
 
-schedule.scheduleJob(perDayUtcRule, async () => {
-    await RemoveDocuments.runObserver();
-});
+const removeDocumentPerDayCron = schedule.scheduleJob(
+    perDayUtcRule,
+    async () => {
+      await RemoveDocuments.runObserver();
+    }
+);
 
 // const perHourCron = schedule.scheduleJob("0 0 */1 * * *", async () => {
 schedule.scheduleJob("0 0 */2 * * *", async () => {
@@ -85,6 +74,32 @@ schedule.scheduleJob("0 0 */2 * * *", async () => {
 // schedule.scheduleJob(monthlyRule, async () => {
 //     await RenewSubscription.runObserver();
 // });
+
+
+// Initialize database connections & event observers
+(async () => {
+    try {
+        await Database.init();
+        await initMongo();
+
+        // Initialize event observers
+        EventObserver.runObservers();
+        ActivityObserver.runObservers();
+    } catch (err) {
+        console.error("Error during initialization: ", err);
+    }
+})();
+
+// Middleware setup
+app.use(express.json({limit: "50mb"}));
+app.use(
+  express.urlencoded({
+    extended: true,
+    limit: "50mb",
+  })
+);
+app.use(cookieParser());
+app.use(cors());
 
 
 /*
@@ -109,7 +124,7 @@ try {
         cookieKeys = ["cookie938", "abc123xyz456abc789xyz012"];
     }
 } catch (error) {
-    console.error("Error parsing cookieKey:", error);
+    console.error("Error parsing cookieKey: ", error);
     // Set a default value in case of error
     cookieKeys = ["cookie938", "abc123xyz456abc789xyz012"];
 }
@@ -128,12 +143,6 @@ app.use(express.static(path.join(__dirname, "../public")));
 // Setup API routes
 app.use("/api", ApiRouter);
 app.use("/m-api", mApiRouter);
-
-// Middleware setup
-app.use(express.json({limit: "50mb"}));
-app.use(express.urlencoded({extended: true, limit: "50mb"}));
-app.use(cookieParser());
-app.use(cors());
 
 // TODO: This is used for the frontend. As we have moved that to a different repository, removing from here.
 app.get("/*", (req, res) => {
