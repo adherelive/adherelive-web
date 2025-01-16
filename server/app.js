@@ -7,7 +7,7 @@ import cors from "cors";
 
 import Database from "../libs/mysql";
 import initMongo from "../libs/mongo";
-import connection from "../libs/dbConnection";
+// import connection from "../libs/dbConnection";
 
 import ApiRouter from "../routes/api";
 import mApiRouter from "../routes/m-api";
@@ -19,7 +19,7 @@ import Passed from "../app/cronJobs/passed";
 import Prior from "../app/cronJobs/prior";
 import ActivePatient from "../app/cronJobs/activePatient";
 import RemoveDocuments from "../app/cronJobs/removeDocuments";
-import RenewSubscription from "../app/cronJobs/renewSubscription";
+// import RenewSubscription from "../app/cronJobs/renewSubscription";
 import LongTerm from "../app/cronJobs/longTerm";
 import RenewTxActivity from "../app/cronJobs/renewTxActivity";
 
@@ -85,6 +85,7 @@ schedule.scheduleJob("0 0 */2 * * *", async () => {
 // schedule.scheduleJob(monthlyRule, async () => {
 //     await RenewSubscription.runObserver();
 // });
+
 
 /*
  * Add a check to handle cases where process.config.cookieKey might be undefined or not a valid JSON string
