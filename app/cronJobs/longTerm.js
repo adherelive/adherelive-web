@@ -18,7 +18,7 @@ import VitalWrapper from "../apiWrapper/mobile/vitals";
 const Log = new Logger("LONG_TERM > CRON-JOBS");
 
 class LongTerm {
-  getuserFromRole = async (roleId) => {
+  getUserFromRole = async (roleId) => {
     try {
       const userRoles = await userRoleService.findOne({
         where: { id: roleId },
@@ -149,7 +149,7 @@ class LongTerm {
         }
       }
 
-      const patientUserId = await this.getuserFromRole(patientUserRoleId);
+      const patientUserId = await this.getUserFromRole(patientUserRoleId);
       if (!patientUserId) return;
       // const patientData = await patientsService.getPatientByUserId(patientUserId);
       // const patient = await PatientWrapper(patientData);
@@ -210,7 +210,7 @@ class LongTerm {
         }
       }
 
-      const patientUserId = await this.getuserFromRole(patientUserRoleId);
+      const patientUserId = await this.getUserFromRole(patientUserRoleId);
       console.log("patientUserId in LongTerm: ", patientUserId);
 
       if (!patientUserId) return;
@@ -272,7 +272,7 @@ class LongTerm {
         }
       }
 
-      const patientUserId = await this.getuserFromRole(patientUserRoleId);
+      const patientUserId = await this.getUserFromRole(patientUserRoleId);
       if (!patientUserId) return;
       const eventScheduleData = {
         patient_id: patientUserId,
@@ -319,7 +319,7 @@ class LongTerm {
         }
       }
 
-      const patientUserId = await this.getuserFromRole(patientUserRoleId);
+      const patientUserId = await this.getUserFromRole(patientUserRoleId);
       if (!patientUserId) return;
       const eventScheduleData = {
         patient_id: patientUserId,
@@ -343,7 +343,7 @@ class LongTerm {
     }
   };
 
-  observer = async () => {
+  runObserver = async () => {
     try {
       const eventService = new EventService();
 
@@ -463,7 +463,7 @@ class LongTerm {
         }
       }
     } catch (error) {
-      Log.debug("observer error in LongTerm: ", error);
+      Log.debug("Error running observer in LongTerm: ", error);
       throw error;
     }
   };

@@ -1,4 +1,4 @@
-const mysql = require("mysql2");
+const mysql = require('mysql2');
 
 const connection = mysql.createConnection({
   host: process.env.DB_HOST,
@@ -9,10 +9,10 @@ const connection = mysql.createConnection({
 
 connection.connect((err) => {
   if (err) {
-    console.error("Error connecting to MySQL:", err.stack);
+    console.error('Error connecting to MySQL: ', err.stack);
     return;
   }
-  console.log("Connected to MySQL database as id " + connection.threadId);
+  console.log('Connected to MySQL database as ID: ' + connection.threadId);
 });
 
 module.exports = connection;
