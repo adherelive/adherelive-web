@@ -1,4 +1,4 @@
-import { validationError } from "../../api/helper";
+import { validationError } from "../helper";
 import Joi from "@hapi/joi";
 
 const carePlanTemplateForm = Joi.object().keys({});
