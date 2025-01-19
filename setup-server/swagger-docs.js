@@ -60,7 +60,7 @@ const doc = {
 };
 
 // Define output file and endpoints files
-const outputFile = './swagger-api.json';
+const outputFile = './adherelive-api-swagger.json';
 const endpointsFiles = [
     '../server/app.js'   // Your main application file
     // './routes/**/*.js', // This will include all JS files in routes and its subfolders

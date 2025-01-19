@@ -37,7 +37,7 @@ const app = express();
 // Swagger setup
 const swaggerJsDoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
-const swaggerFile = require('../setup-server/swagger-api.json');
+const swaggerFile = require('../setup-server/adherelive-api-swagger.json');
 
 /*
  * Schedule jobs
