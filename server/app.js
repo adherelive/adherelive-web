@@ -162,6 +162,11 @@ const swaggerOptions = {
 const swaggerSpec = swaggerJsDoc(swaggerOptions);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
+// For generating the swagger.json file when the server is run
+if (process.env.NODE_ENV === 'development') {
+    require('../setup-server/swagger-docs.js');
+}
+
 // TODO: This is used for the frontend. As we have moved that to a different repository, removing from here.
 app.get("/*", (req, res) => {
     res.sendFile(path.resolve("public/index.html"));
