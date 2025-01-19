@@ -1,12 +1,12 @@
 {
   "swagger": "2.0",
   "info": {
-    "version": "1.0.0",
+    "version": "3.1.5",
     "title": "AdhereLive API Documentation",
     "description": "This is the API documentation for the React & Node server AdhereLive application"
   },
-  "host": "localhost:3000",
-  "basePath": "/api",
+  "host": "adherelivelenia.centralindia.cloudapp.azure.com",
+  "basePath": "/",
   "tags": [
     {
       "name": "Patients",
@@ -41,7 +41,7 @@
     "bearerAuth": {
       "type": "apiKey",
       "name": "Authorization",
-      "scheme": "bearer",
+      "flow": "implicit",
       "in": "header"
     }
   },
