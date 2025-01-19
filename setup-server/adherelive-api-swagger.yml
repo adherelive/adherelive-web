@@ -1,12 +1,38 @@
 swagger: '2.0'
 info:
-  title: AdhereLive API Documentation
-  description: This is the API documentation for the React & Node server AdhereLive application
   version: 1.0.0
+  title: AdhereLive API Documentation
+  description: >-
+    This is the API documentation for the React & Node server AdhereLive
+    application
 host: localhost:3000
-basePath: /
+basePath: /api
+tags:
+  - name: Patients
+    description: Patient related endpoints
+  - name: Auth
+    description: Authentication endpoints
+  - name: Admin
+    description: Administration related endpoints
+  - name: Common
+    description: Common for the application endpoints
+  - name: Doctors
+    description: Patient related endpoints
+  - name: Provider
+    description: Provider related endpoints
 schemes:
   - http
+  - https
+securityDefinitions:
+  bearerAuth:
+    type: apiKey
+    name: Authorization
+    scheme: bearer
+    in: header
+consumes:
+  - application/json
+produces:
+  - application/json
 paths:
   /*:
     get:
@@ -6675,3 +6701,20 @@ paths:
           description: Bad Request
         '401':
           description: Unauthorized
+definitions:
+  Patient:
+    type: object
+    properties:
+      name:
+        type: string
+        example: John Doe
+      age:
+        type: number
+        example: 30
+      medical_history:
+        type: array
+        example: []
+        items: {}
+    required:
+      - name
+      - age

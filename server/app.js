@@ -33,8 +33,11 @@ const Events = import("../events")
 
 // Create the App as an Express() app
 const app = express();
+
+// Swagger setup
 const swaggerJsDoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
+const swaggerFile = require('../setup-server/swagger-api.json');
 
 /*
  * Schedule jobs
@@ -145,22 +148,30 @@ app.use(express.static(path.join(__dirname, "../public")));
 app.use("/api", ApiRouter);
 app.use("/m-api", mApiRouter);
 
-const swaggerDefinition = {
-    openapi: '3.0.0',
-    info: {
-        title: 'AdhereLive API Documentation',
-        version: '1.0.0',
-        description: 'This is the API documentation for the React & Node server AdhereLive application',
-    },
-};
-
+// Section to enable auto generation of the Swagger documentation for the APIs
 const swaggerOptions = {
-    swaggerDefinition,
-    apis: [{path: '../routes/**/*.js'}], // Path to your API files
+    definition: {
+        openapi: '3.0.0',
+        info: {
+            title: 'AdhereLive API Documentation',
+            version: '1.0.0',
+            description: 'This is the API documentation for the React & Node server AdhereLive application',
+        },
+    },
+    apis: ["../routes/**/*.js"], // Path to your API files
 };
 
-const swaggerSpec = swaggerJsDoc(swaggerOptions);
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+// Serve Swagger documentation on /api-docs endpoint
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerFile, {
+    swaggerOptions: {
+        persistAuthorization: true,
+    },
+    customCss: '.swagger-ui .topbar { display: none }',
+    customSiteTitle: "AdhereLive API Documentation"
+}));
+// TODO: Use the below, if you want to create and serve it from the locally created JSDoc comments
+// const swaggerSpec = swaggerJsDoc(swaggerOptions);
+// app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // For generating the swagger.json file when the server is run
 if (process.env.NODE_ENV === 'development') {
