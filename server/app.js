@@ -24,7 +24,7 @@ import LongTerm from "../app/cronJobs/longTerm";
 import RenewTxActivity from "../app/cronJobs/renewTxActivity";
 
 
-// Setup the required variables and CORS sessions + cookies
+// Set up the required variables and CORS sessions + cookies
 const Events = import("../events")
     .then((module) => {})
     .catch((err) => {
@@ -121,7 +121,6 @@ try {
         cookieKeys = JSON.parse(process.config.cookieKey);
     } else {
         console.warn("process.config.cookieKey is undefined or null");
-        // console.log("Cookie Key is undefined or null: ", process.config.cookieKey);
         // Set a default value if cookieKey is not defined
         cookieKeys = ["cookie938", "abc123xyz456abc789xyz012"];
     }
@@ -146,24 +145,26 @@ app.use(express.static(path.join(__dirname, "../public")));
 app.use("/api", ApiRouter);
 app.use("/m-api", mApiRouter);
 
+const swaggerDefinition = {
+    openapi: '3.0.0',
+    info: {
+        title: 'AdhereLive API Documentation',
+        version: '1.0.0',
+        description: 'This is the API documentation for the React & Node server AdhereLive application',
+    },
+};
+
+const swaggerOptions = {
+    swaggerDefinition,
+    apis: ['../routes/**/*.js'], // Path to your API files
+};
+
+const swaggerSpec = swaggerJsDoc(swaggerOptions);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
 // TODO: This is used for the frontend. As we have moved that to a different repository, removing from here.
 app.get("/*", (req, res) => {
     res.sendFile(path.resolve("public/index.html"));
 });
-
-const swaggerOptions = {
-    swaggerDefinition: {
-        openapi: '3.0.0',
-        info: {
-            title: 'My API',
-            version: '1.0.0',
-            description: 'API documentation',
-        },
-    },
-    apis: ['./routes/**/*.js'], // Path to the API docs
-};
-
-const swaggerDocs = swaggerJsDoc(swaggerOptions);
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 module.exports = app;
