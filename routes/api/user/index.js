@@ -27,7 +27,7 @@ router.post(
  *    summary: Retrieve all the information related to a Client
  *    responses:
  *      200:
- *          description: A JSON response with all the information related to a Client
+ *        description: A JSON response with all the information related to a Client
  */
 router.get("/get-basic-info", Authenticate, userController.onAppStart);
 

@@ -10,12 +10,12 @@ router.post("/", Authenticate, FlashCard.create);
 
 /**
  * @swagger
- * /flashCard:
+ * /flashCard/{patient_id}:
  *  get:
  *    summary: Retrieve a list of flashCard for a patient
  *    responses:
  *      200:
- *          description: A list of flashCard
+ *        description: A list of flashCard
  */
 router.get(
   "/:patient_id",

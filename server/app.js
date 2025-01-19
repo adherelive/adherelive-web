@@ -156,7 +156,7 @@ const swaggerDefinition = {
 
 const swaggerOptions = {
     swaggerDefinition,
-    apis: ['../routes/**/*.js'], // Path to your API files
+    apis: [{path: '../routes/**/*.js'}], // Path to your API files
 };
 
 const swaggerSpec = swaggerJsDoc(swaggerOptions);
