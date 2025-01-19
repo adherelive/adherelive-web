@@ -3,8 +3,7 @@ import axios from "axios";
 export default async function createLink(data = {}) {
   try {
     // return data.$desktop_url;
-    // TO DO:
-    // WRITE DEFAULT ANDROID AND IOS REDIRECT
+    // TODO: Write default Android and iOS redirects
     const res = await axios.post(process.config.branch_io.base_url, {
       branch_key: process.config.branch_io.key,
       data,

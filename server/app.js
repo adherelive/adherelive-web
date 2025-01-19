@@ -33,6 +33,8 @@ const Events = import("../events")
 
 // Create the App as an Express() app
 const app = express();
+const swaggerJsDoc = require('swagger-jsdoc');
+const swaggerUi = require('swagger-ui-express');
 
 /*
  * Schedule jobs
@@ -148,5 +150,20 @@ app.use("/m-api", mApiRouter);
 app.get("/*", (req, res) => {
     res.sendFile(path.resolve("public/index.html"));
 });
+
+const swaggerOptions = {
+    swaggerDefinition: {
+        openapi: '3.0.0',
+        info: {
+            title: 'My API',
+            version: '1.0.0',
+            description: 'API documentation',
+        },
+    },
+    apis: ['./routes/**/*.js'], // Path to the API docs
+};
+
+const swaggerDocs = swaggerJsDoc(swaggerOptions);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 module.exports = app;
