@@ -1487,10 +1487,12 @@ class PatientController extends Controller {
       }
       // web controller
       const reportService = new ReportService();
-      const allReports =
-        (await reportService.getAllReportByData({
-          patient_id,
-        })) || [];
+      const allReports = (await reportService.getAllReportByData({ patient_id })) || [];
+
+      if (!allReports.length) {
+        // Handle no reports case
+        return raiseSuccess(res, 200, { reports: {}, doctors: {}, upload_documents: {}, report_ids: [] }, "No reports found for this patient");
+      }
 
       let reportData = {};
       let documentData = {};
@@ -1516,7 +1518,7 @@ class PatientController extends Controller {
       }
 
       // get other doctor basic details
-      // TODO: check with others if this data is already present for multi careplan
+      // TODO: check with others if this data is already present for multi care plan
       let doctorData = {};
       if (doctorIds.length > 0) {
         const allDoctors =
@@ -1549,7 +1551,7 @@ class PatientController extends Controller {
         "Reports for patient fetched successfully"
       );
     } catch (error) {
-      Logger.debug("getPatientReports 500 error", error);
+      Logger.debug("getPatientReports 500 error: ", error);
       return raiseServerError(res);
     }
   };
