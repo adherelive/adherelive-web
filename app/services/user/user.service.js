@@ -13,7 +13,7 @@ import { TABLE_NAME as providerTableName } from "../../models/providers";
 
 import Log from "../../../libs/log";
 
-const Logger = new Log("WEB > PATIENTS > CONTROLLER");
+const Logger = new Log("WEB > USERS > SERVICE");
 
 class UserService {
   constructor() {}
