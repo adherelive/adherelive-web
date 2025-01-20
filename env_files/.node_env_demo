@@ -64,6 +64,7 @@ AWS_TOPIC_ARN=
 AWS_PRESCRIPTION_BUCKET=
 
 # S3 Details
+S3_BUCKET_NAME=adherelive-demo
 S3_BUCKET_URL=
 S3_HOST=amazonaws.com
 S3_ACCESS_KEY=lwzlJgSubYjdbGhYL87jgbwxhXSEAxdA

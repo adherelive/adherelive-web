@@ -106,6 +106,7 @@ module.exports = () => {
     },
     s3: {
       EXPIRY_TIME: process.env.EXPIRY_TIME,
+      BUCKET_NAME: process.env.S3_BUCKET_NAME,
     },
     GOOGLE_KEYS: {
       CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
