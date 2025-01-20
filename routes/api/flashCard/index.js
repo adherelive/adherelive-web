@@ -8,6 +8,15 @@ const router = express.Router();
 // router.post("/", Authenticate, isDoctor, ServiceOffering.create);
 router.post("/", Authenticate, FlashCard.create);
 
+/**
+ * @swagger
+ * /flashCard/{patient_id}:
+ *  get:
+ *    summary: Retrieve a list of flashCard for a patient
+ *    responses:
+ *      200:
+ *        description: A list of flashCard
+ */
 router.get(
   "/:patient_id",
   Authenticate,
