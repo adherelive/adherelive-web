@@ -3,7 +3,7 @@ import * as https from "https";
 import fs from "fs";
 import Log from "../../../libs/log";
 
-const logoImage = require("../../../other/logo.png");
+//const logoImage = require("../../../other/logo.png");
 const log = Log("AWS S3 Service");
 
 const Minio = require("minio");
@@ -82,7 +82,7 @@ class MinioService {
           if (!err) {
             const emailLogo = this.saveBufferObject(data, "logo.png");
             console.log("Image name for emailLogo: ", emailLogo);
-            console.log("Email logo has been uploaded successfully: ", logoImage);
+            //console.log("Email logo has been uploaded successfully: ", logoImage);
           } else {
             console.log("Error in getting the logo image", err);
           }
