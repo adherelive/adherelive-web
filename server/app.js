@@ -24,7 +24,7 @@ import LongTerm from "../app/cronJobs/longTerm";
 import RenewTxActivity from "../app/cronJobs/renewTxActivity";
 
 
-// Setup the required variables and CORS sessions + cookies
+// Set up the required variables and CORS sessions + cookies
 const Events = import("../events")
     .then((module) => {})
     .catch((err) => {
@@ -33,6 +33,11 @@ const Events = import("../events")
 
 // Create the App as an Express() app
 const app = express();
+
+// Swagger setup
+const swaggerJsDoc = require('swagger-jsdoc');
+const swaggerUi = require('swagger-ui-express');
+const swaggerFile = require('../setup-server/adherelive-api-swagger.json');
 
 /*
  * Schedule jobs
@@ -119,7 +124,6 @@ try {
         cookieKeys = JSON.parse(process.config.cookieKey);
     } else {
         console.warn("process.config.cookieKey is undefined or null");
-        // console.log("Cookie Key is undefined or null: ", process.config.cookieKey);
         // Set a default value if cookieKey is not defined
         cookieKeys = ["cookie938", "abc123xyz456abc789xyz012"];
     }
@@ -143,6 +147,36 @@ app.use(express.static(path.join(__dirname, "../public")));
 // Setup API routes
 app.use("/api", ApiRouter);
 app.use("/m-api", mApiRouter);
+
+// Section to enable auto generation of the Swagger documentation for the APIs
+const swaggerOptions = {
+    definition: {
+        openapi: '3.0.0',
+        info: {
+            title: 'AdhereLive API Documentation',
+            version: '1.0.0',
+            description: 'This is the API documentation for the React & Node server AdhereLive application',
+        },
+    },
+    apis: ["../routes/**/*.js"], // Path to your API files
+};
+
+// Serve Swagger documentation on /api-docs endpoint
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerFile, {
+    swaggerOptions: {
+        persistAuthorization: true,
+    },
+    customCss: '.swagger-ui .topbar { display: none }',
+    customSiteTitle: "AdhereLive API Documentation"
+}));
+// TODO: Use the below, if you want to create and serve it from the locally created JSDoc comments
+// const swaggerSpec = swaggerJsDoc(swaggerOptions);
+// app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+// For generating the swagger.json file when the server is run
+if (process.env.NODE_ENV === 'development') {
+    require('../setup-server/swagger-docs.js');
+}
 
 // TODO: This is used for the frontend. As we have moved that to a different repository, removing from here.
 app.get("/*", (req, res) => {
