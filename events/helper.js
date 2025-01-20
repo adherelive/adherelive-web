@@ -886,7 +886,7 @@ const getDietTimings = (date, timing, patientPreference) => {
 };
 
 const updateMedicationTiming = (date, timing, patientPreference) => {
-  console.log("139812832739871 date, timing, patientPreference", {
+  console.log("updateMedicationTiming -> date, timing, patientPreference: ", {
     date,
     timing,
     patientPreference,

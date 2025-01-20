@@ -9,7 +9,7 @@ import { TABLE_NAME as providersTableName } from "./providers";
 import { TABLE_NAME as appointmentTableName } from "./appointments";
 import { TABLE_NAME as serviceSubTxTableName } from "./serviceSubscribeTransaction";
 
-export const TABLE_NAME = "tranaction_activities";
+export const TABLE_NAME = "transaction_activities";
 
 export const db = (database) => {
   database.define(
