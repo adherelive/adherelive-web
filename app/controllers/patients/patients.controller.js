@@ -643,7 +643,7 @@ class PatientController extends Controller {
   getPatientVitals = async (req, res) => {
     const { raiseSuccess, raiseServerError, raiseClientError } = this;
     try {
-      Logger.debug("34554321345324", req.params);
+      Logger.debug("Get Patient Vitals req.params: ", req.params);
       const { params: { careplan_id } = {} } = req;
 
       const { userDetails: { userRoleId = null } = {} } = req;
