@@ -191,7 +191,7 @@ class MinioService {
         });
       });
     } catch (err) {
-      console.log("Error got in the download file object: ", err);
+      console.log("Error in the download file object: ", err);
       throw err;
     }
   }
@@ -201,6 +201,7 @@ class MinioService {
       let result = await this.s3Client.removeObject(this.bucket, file);
       return result;
     } catch (err) {
+      console.log("Error in the remove file object: ", err);
       throw err;
     }
   }
@@ -224,7 +225,7 @@ class MinioService {
 
       return result;
     } catch (err) {
-      console.log("saveAudioObject error: ", err);
+      console.log("Error in the saveAudioObject function: ", err);
       // throw err;
     }
   };
@@ -235,7 +236,7 @@ class MinioService {
         metaData = { "Content-Type": "video/mp4" };
       }
 
-      console.log("091381293 video buffer", file);
+      console.log("Save video object file: ", file);
       let result = await this.s3Client.putObject(
         {
           Bucket: this.bucket,
@@ -255,7 +256,7 @@ class MinioService {
 
       return result;
     } catch (err) {
-      Log.debug("saveVideoObject error", err);
+      console.log("Error in the saveVideoObject function: ", err);
       // throw err;
     }
   };
