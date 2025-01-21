@@ -2710,7 +2710,7 @@ class PatientController extends Controller {
     } = req;
 
     // Log the raw value for debugging
-    Logger.info(`getPatientById raw params:`, { patient_id });
+    Logger.info(`getPatientById raw params: `, { patient_id });
 
     // TODO: Add type checking if needed
     // if (typeof patient_id !== 'string' && typeof patient_id !== 'number') {
@@ -2719,7 +2719,7 @@ class PatientController extends Controller {
 
     // Comprehensive check for invalid patient_id
     if (!patient_id || patient_id === 'null' || patient_id === 'undefined') {
-      Logger.warn('Invalid patient_id received:', { patient_id });
+      Logger.warn('Invalid patient_id received: ', { patient_id });
       return raiseClientError(res, 422, {}, "Please select correct patient");
     }
 
