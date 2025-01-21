@@ -1,48 +1,55 @@
 import AWS from "aws-sdk";
 import * as https from "https";
-// const fs = require("fs");
 import fs from "fs";
-// const Log = require("../../../libs/log")("minioService");
 import Log from "../../../libs/log";
 
-const log = Log("minioService");
+//const logoImage = require("../../../other/logo.png");
+const log = Log("AWS S3 Service");
 
 const Minio = require("minio");
 
 class MinioService {
   constructor() {
-    // this.minioClient = new Minio.Client({
-    //   endPoint: process.config.minio.MINIO_ENDPOINT,
-    //   port: 9000,
-    //   useSSL: false,
-    //   accessKey: process.config.minio.MINIO_ACCESS_KEY,
-    //   secretKey: process.config.minio.MINIO_SECRET_KEY
-    // });
+      /**
+       * Minio is not used in the project. It is commented out.
+       * TODO: Maybe uncomment this for local runs and for Test/Dev servers?
+      this.minioClient = new Minio.Client({
+      endPoint: process.config.minio.MINIO_ENDPOINT,
+      port: 9000,
+      useSSL: false,
+      accessKey: process.config.minio.MINIO_ACCESS_KEY,
+      secretKey: process.config.minio.MINIO_SECRET_KEY
+    });
+       */
     AWS.config.update({
       accessKeyId: process.config.aws.access_key_id,
       secretAccessKey: process.config.aws.access_key,
       region: process.config.aws.region,
     });
     this.s3Client = new AWS.S3();
-    this.bucket = process.config.minio.MINIO_BUCKET_NAME;
+    this.bucket = process.config.s3.BUCKET_NAME;
   }
 
   callback = (error, data) => {
     if (error) {
       // throw error;
-      console.log("error", error);
+      console.log("Callback error in Minio services: ", error);
     } else {
-      console.log("response data", data);
+      console.log("Minio has sent response data: ", data);
     }
   };
 
+  /**
+   * Create a bucket in the S3, if it does not exist
+   * @returns {Promise<*>}
+   */
   async createBucket() {
     try {
       let result;
 
       let doesBucketExists = true;
-      Log.debug("doesBucketExists", doesBucketExists);
-      const bucket_name = process.config.minio.MINIO_BUCKET_NAME;
+      console.log("Check if the S3 Bucket exists: ", doesBucketExists);
+      const bucket_name = process.config.s3.BUCKET_NAME;
       if (!doesBucketExists) {
         const policy = {
           Version: "2012-10-17",
@@ -54,18 +61,18 @@ class MinioService {
               Principal: {
                 AWS: ["*"],
               },
-              Resource: [`arn:aws:s3:::${bucket_name}/*`], //${bucket_name}
+              Resource: [`arn:aws:s3:::${bucket_name}/*`],
             },
           ],
         };
 
         result = await this.s3Client.makeBucket(
-          process.config.minio.MINIO_BUCKET_NAME,
-          process.config.minio.MINIO_REGION
+          process.config.s3.BUCKET_NAME,
+          process.config.aws.region
         );
 
         await this.s3Client.setBucketPolicy(
-          process.config.minio.MINIO_BUCKET_NAME,
+          process.config.s3.BUCKET_NAME,
           JSON.stringify(policy)
         );
 
@@ -74,15 +81,16 @@ class MinioService {
         fs.readFile(`${__dirname}/../../../other/logo.png`, (err, data) => {
           if (!err) {
             const emailLogo = this.saveBufferObject(data, "logo.png");
-            Log.debug("emailLogo", emailLogo);
+            console.log("Image name for emailLogo: ", emailLogo);
+            //console.log("Email logo has been uploaded successfully: ", logoImage);
           } else {
-            Log.debug("err", err);
+            console.log("Error in getting the logo image", err);
           }
           if (!err) {
             const emailLogo = this.saveBufferObject(data, "logo.png");
-            Log.debug("emailLogo", emailLogo);
+            console.log("Image for emailLogo: ", emailLogo);
           } else {
-            Log.debug("err", err);
+            console.log("Error in getting the email logo image: ", err);
           }
         });
 
@@ -96,9 +104,9 @@ class MinioService {
                 data,
                 "push_notification_sound.wav"
               );
-              Log.debug("audioObject", audioObject);
+              console.log("File for wave sound audioObject: ", audioObject);
             } else {
-              Log.debug("err", err);
+              console.log("Error in getting the wave sound file: ", err);
             }
           }
         );
@@ -142,7 +150,7 @@ class MinioService {
         metaData = { "Content-Type": "application/octet-stream" };
       }
 
-      console.log("091381293 buffer", file);
+      console.log("Save Buffer Object file: ", file);
       let result = await this.s3Client.putObject(
         {
           Bucket: this.bucket,
@@ -159,11 +167,11 @@ class MinioService {
       //   Expires: 60
       // });
       //
-      // console.log("81238712 url", url);
+      // console.log("AWS S3 URL: ", url);
 
       return result;
     } catch (err) {
-      console.log("\n Minio service has an error ---> \n", err);
+      console.log("AWS S3 service has an error ---> \n", err);
       // throw err;
     }
   }
@@ -183,7 +191,7 @@ class MinioService {
         });
       });
     } catch (err) {
-      console.log("Error got in the download file object: ", err);
+      console.log("Error in the download file object: ", err);
       throw err;
     }
   }
@@ -193,6 +201,7 @@ class MinioService {
       let result = await this.s3Client.removeObject(this.bucket, file);
       return result;
     } catch (err) {
+      console.log("Error in the remove file object: ", err);
       throw err;
     }
   }
@@ -203,7 +212,7 @@ class MinioService {
         metaData = { "Content-Type": "audio/mpeg" };
       }
 
-      console.log("091381293 audio buffer", file);
+      console.log("Save Audio Object in S3 audio file: ", file);
       let result = await this.s3Client.putObject(
         {
           Bucket: this.bucket,
@@ -214,16 +223,9 @@ class MinioService {
         this.callback
       );
 
-      // let result = await this.s3Client.putObject(
-      //   this.bucket,
-      //   file,
-      //   buffer,
-      //   metaData
-      // );
-
       return result;
     } catch (err) {
-      Log.debug("saveAudioObject error", err);
+      console.log("Error in the saveAudioObject function: ", err);
       // throw err;
     }
   };
@@ -234,7 +236,7 @@ class MinioService {
         metaData = { "Content-Type": "video/mp4" };
       }
 
-      console.log("091381293 video buffer", file);
+      console.log("Save video object file: ", file);
       let result = await this.s3Client.putObject(
         {
           Bucket: this.bucket,
@@ -254,7 +256,7 @@ class MinioService {
 
       return result;
     } catch (err) {
-      Log.debug("saveVideoObject error", err);
+      console.log("Error in the saveVideoObject function: ", err);
       // throw err;
     }
   };
