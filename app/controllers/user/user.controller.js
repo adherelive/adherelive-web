@@ -2153,7 +2153,7 @@ class UserController extends Controller {
           templateName: EMAIL_TEMPLATE_NAME.FORGOT_PASSWORD,
         };
 
-        await Proxy_Sdk.execute(
+        const emailResponse = await Proxy_Sdk.execute(
           EVENTS.SEND_EMAIL,
           emailPayload
         );
@@ -2162,7 +2162,7 @@ class UserController extends Controller {
           res,
           422,
           {},
-          "User does not exists for the e-mail"
+          "User does not exist for the provided e-mail"
         );
       }
 

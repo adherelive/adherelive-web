@@ -2708,18 +2708,40 @@ class PatientController extends Controller {
       params: { patient_id } = {},
       userDetails: { userCategoryId } = {},
     } = req;
-    Logger.info(`getPatientById params: patient_id = ${patient_id}`);
 
-    if (!patient_id) {
+    // Log the raw value for debugging
+    Logger.info(`getPatientById raw params:`, { patient_id });
+
+    // TODO: Add type checking if needed
+    // if (typeof patient_id !== 'string' && typeof patient_id !== 'number') {
+    //   return raiseClientError(res, 422, {}, "Invalid patient ID type");
+    // }
+
+    // Comprehensive check for invalid patient_id
+    if (!patient_id || patient_id === 'null' || patient_id === 'undefined') {
+      Logger.warn('Invalid patient_id received:', { patient_id });
       return raiseClientError(res, 422, {}, "Please select correct patient");
     }
 
+    // TODO: Optional: Validate format if patient_id should match specific pattern
+    // For example, if it should be a valid MongoDB ObjectId
+    // if (!mongoose.Types.ObjectId.isValid(patient_id)) {
+    //   return raiseClientError(res, 422, {}, "Invalid patient ID format");
+    // }
+
     try {
       let patient = await patientService.getPatientById({ id: patient_id });
+
+      // Check if patient exists
+      if (!patient) {
+        Logger.warn(`Patient not found for ID: ${patient_id}`);
+        return raiseClientError(res, 404, {}, "Patient not found");
+      }
+
       let patientApiDetails = {};
       const patientWrapper = await PatientWrapper(patient);
       patientApiDetails[patientWrapper.getPatientId()] =
-        await patientWrapper.getAllInfo();
+          await patientWrapper.getAllInfo();
       let userApiData = {};
       let apiUserDetails = {};
 
@@ -2727,16 +2749,16 @@ class PatientController extends Controller {
         id: patientWrapper.getUserId(),
       });
 
-      await allUserData.forEach(async (user) => {
+      await Promise.all(allUserData.map(async (user) => {
         apiUserDetails = await UserWrapper(user.get());
         userApiData[apiUserDetails.getId()] = apiUserDetails.getBasicInfo();
-      });
+      }));
 
       return this.raiseSuccess(
-        res,
-        200,
-        { patients: { ...patientApiDetails }, users: { ...userApiData } },
-        "Success."
+          res,
+          200,
+          { patients: { ...patientApiDetails }, users: { ...userApiData } },
+          "Success."
       );
     } catch (error) {
       Logger.debug("getPatientReports get patient by ID 500 error: ", error);
