@@ -1529,6 +1529,7 @@ class PatientController extends Controller {
         for (let index = 0; index < allDoctors.length; index++) {
           const doctor = await DoctorWrapper(allDoctors[index]);
           // const doctorId = doctor.getDoctorId();
+          // console.log("Doctor ID: ", doctorId);
           doctorData[doctor.getDoctorId()] = await doctor.getAllInfo();
         }
       }
