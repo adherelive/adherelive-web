@@ -830,7 +830,7 @@ class EventController extends Controller {
         "Patient missed events fetched successfully"
       );
     } catch (error) {
-      Log.debug("getPatientMissedEvents 500 error", error);
+      Log.debug("getPatientMissedEvents 500 error: ", error);
       return raiseServerError(res);
     }
   };

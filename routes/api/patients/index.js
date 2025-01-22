@@ -70,6 +70,27 @@ router.get(
   ServiceSubscriptionUserMapping.getServiceSubscriptionUserMappingAndServiceUserByPatientIdAndDoctorId
 );
 
+// routes/patient/index.js
+/**
+ * @swagger
+ * /api/patient/{id}:
+ *   get:
+ *     tags: [Patient]
+ *     summary: Get patient by ID
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Patient details
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/definitions/Patient'
+ */
 router.get("/:patient_id", Authenticated, PatientController.getPatientById);
 
 router.get(

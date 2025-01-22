@@ -1,6 +1,6 @@
 SET NAMES utf8mb4;
 
-INSERT INTO `tranaction_activities` (`id`, `patient_id`, `provider_type`, `doctor_id`, `provider_id`,
+INSERT INTO `transaction_activities` (`id`, `patient_id`, `provider_type`, `doctor_id`, `provider_id`,
                                      `service_sub_tx_id`, `due_date`, `status`, `service_offering_id`, `appointment_id`,
                                      `service_subscription_id`, `currency`, `patient_status`, `activity_status`,
                                      `amount`, `refound_amount`, `billing_frequency`, `is_next_tx_create`,

@@ -21,6 +21,7 @@ dietResponses
 disease
 doctorClinics
 doctorPatientFeatureMapping
+doctorPatientWatchlist
 doctorProviderMapping
 doctorQualifications
 doctorRegistrations
@@ -96,7 +97,6 @@ users
 userVerifications
 vitals
 vitalTemplates
-doctor_patient_watchlist
 workoutExerciseGroupMapping
 workoutResponses
 workout

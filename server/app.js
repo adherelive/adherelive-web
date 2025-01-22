@@ -7,6 +7,8 @@ import cors from "cors";
 
 import Database from "../libs/mysql";
 import initMongo from "../libs/mongo";
+// import connection from "../libs/dbConnection";
+
 import ApiRouter from "../routes/api";
 import mApiRouter from "../routes/m-api";
 import EventObserver from "../app/proxySdk/eventObserver";
@@ -17,29 +19,93 @@ import Passed from "../app/cronJobs/passed";
 import Prior from "../app/cronJobs/prior";
 import ActivePatient from "../app/cronJobs/activePatient";
 import RemoveDocuments from "../app/cronJobs/removeDocuments";
+// import RenewSubscription from "../app/cronJobs/renewSubscription";
 import LongTerm from "../app/cronJobs/longTerm";
 import RenewTxActivity from "../app/cronJobs/renewTxActivity";
 
-// Initialize database connections
-(async () => {
-  try {
-    await Database.init();
-    await initMongo();
-    // Initialize event observers
-    EventObserver.runObservers();
-    ActivityObserver.runObservers();
-  } catch (err) {
-    console.error("Error during initialization: ", err);
-  }
-})();
 
+// Set up the required variables and CORS sessions + cookies
+const Events = import("../events")
+    .then((module) => {})
+    .catch((err) => {
+        console.log("Event module error: ", err);
+    });
+
+// Create the App as an Express() app
 const app = express();
 
+// Swagger setup
+const swaggerJsDoc = require('swagger-jsdoc');
+const swaggerUi = require('swagger-ui-express');
+const swaggerFile = require('../setup-server/adherelive-api-swagger.json');
+
+/*
+ * Schedule jobs
+ * cron jobs run at every one minute.
+ * for now, we have changed it to one hour intervals, due to performance on server
+ * Example: const cron = schedule.scheduleJob("* /1 * * * *", async () => {
+ */
+// Schedule job at the start of every month
+const monthlyRule = new schedule.RecurrenceRule();
+const perDayUtcRule = new schedule.RecurrenceRule();
+
+monthlyRule.dayOfWeek = [new schedule.Range(0, 6)];
+monthlyRule.hour = 0;
+monthlyRule.minute = 0;
+perDayUtcRule.hour = 0;
+perDayUtcRule.tz = "Etc/UTC";
+
+const cron = schedule.scheduleJob("0 0 */1 * * *", async () => {
+    await Prior.runObserver();
+    await Passed.runObserver();
+    await Start.runObserver();
+});
+
+const removeDocumentPerDayCron = schedule.scheduleJob(
+    perDayUtcRule,
+    async () => {
+      await RemoveDocuments.runObserver();
+    }
+);
+
+// const perHourCron = schedule.scheduleJob("0 0 */1 * * *", async () => {
+schedule.scheduleJob("0 0 */2 * * *", async () => {
+    await ActivePatient.runObserver();
+    await RenewTxActivity.runObserver();
+    await LongTerm.runObserver();
+});
+
+// Scheduled job at the start of every month, for the subscriptions
+// schedule.scheduleJob(monthlyRule, async () => {
+//     await RenewSubscription.runObserver();
+// });
+
+
+// Initialize database connections & event observers
+(async () => {
+    try {
+        await Database.init();
+        await initMongo();
+
+        // Initialize event observers
+        EventObserver.runObservers();
+        ActivityObserver.runObservers();
+    } catch (err) {
+        console.error("Error during initialization: ", err);
+    }
+})();
+
 // Middleware setup
-app.use(express.json({ limit: "50mb" }));
-app.use(express.urlencoded({ extended: true, limit: "50mb" }));
+app.use(express.json({limit: "50mb"}));
+app.use(
+  express.urlencoded({
+    extended: true,
+    limit: "50mb",
+  })
+);
 app.use(cookieParser());
 app.use(cors());
+
 
 /*
  * Add a check to handle cases where process.config.cookieKey might be undefined or not a valid JSON string
@@ -54,25 +120,24 @@ app.use(cors());
 let cookieKeys = [];
 
 try {
-  if (process.config && process.config.cookieKey) {
-    cookieKeys = JSON.parse(process.config.cookieKey);
-  } else {
-    console.warn("process.config.cookieKey is undefined or null");
-    // console.log("Cookie Key is undefined or null: ", process.config.cookieKey);
-    // Set a default value if cookieKey is not defined
-    cookieKeys = ["cookie938", "abc123xyz456abc789xyz012"];
-  }
+    if (process.config && process.config.cookieKey) {
+        cookieKeys = JSON.parse(process.config.cookieKey);
+    } else {
+        console.warn("process.config.cookieKey is undefined or null");
+        // Set a default value if cookieKey is not defined
+        cookieKeys = ["cookie938", "abc123xyz456abc789xyz012"];
+    }
 } catch (error) {
-  console.error("Error parsing cookieKey:", error);
-  // Set a default value in case of error
-  cookieKeys = ["cookie938", "abc123xyz456abc789xyz012"];
+    console.error("Error parsing cookieKey: ", error);
+    // Set a default value in case of error
+    cookieKeys = ["cookie938", "abc123xyz456abc789xyz012"];
 }
 
 app.use(
-  cookieSession({
-    maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
-    keys: cookieKeys,
-  })
+    cookieSession({
+        maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
+        keys: cookieKeys,
+    })
 );
 
 // TODO: Remove the code that serves the React frontend
@@ -83,47 +148,39 @@ app.use(express.static(path.join(__dirname, "../public")));
 app.use("/api", ApiRouter);
 app.use("/m-api", mApiRouter);
 
-// This is used for the frontend. As we have moved that to a different repository, removing from here.
+// Section to enable auto generation of the Swagger documentation for the APIs
+const swaggerOptions = {
+    definition: {
+        openapi: '3.0.0',
+        info: {
+            title: 'AdhereLive API Documentation',
+            version: '1.0.0',
+            description: 'This is the API documentation for the React & Node server AdhereLive application',
+        },
+    },
+    apis: ["../routes/**/*.js"], // Path to your API files
+};
+
+// Serve Swagger documentation on /api-docs endpoint
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerFile, {
+    swaggerOptions: {
+        persistAuthorization: true,
+    },
+    customCss: '.swagger-ui .topbar { display: none }',
+    customSiteTitle: "AdhereLive API Documentation"
+}));
+// TODO: Use the below, if you want to create and serve it from the locally created JSDoc comments
+// const swaggerSpec = swaggerJsDoc(swaggerOptions);
+// app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+// For generating the swagger.json file when the server is run
+if (process.env.NODE_ENV === 'development') {
+    require('../setup-server/swagger-docs.js');
+}
+
+// TODO: This is used for the frontend. As we have moved that to a different repository, removing from here.
 app.get("/*", (req, res) => {
-  res.sendFile(path.resolve("public/index.html"));
+    res.sendFile(path.resolve("public/index.html"));
 });
-
-/*
- * Schedule jobs
- * cron jobs run at every one minute.
- * for now, we have changed it to one hour intervals, due to performance on server
- * Example: const cron = schedule.scheduleJob("* /1 * * * *", async () => {
- */
-schedule.scheduleJob("0 0 */1 * * *", async () => {
-  await Prior.runObserver();
-  await Passed.runObserver();
-  await Start.runObserver();
-});
-
-const perDayUtcRule = new schedule.RecurrenceRule();
-perDayUtcRule.hour = 0;
-perDayUtcRule.tz = "Etc/UTC";
-
-schedule.scheduleJob(perDayUtcRule, async () => {
-  await RemoveDocuments.runObserver();
-});
-
-// const perHourCron = schedule.scheduleJob("0 0 */1 * * *", async () => {
-schedule.scheduleJob("0 0 */2 * * *", async () => {
-  await ActivePatient.runObserver();
-  await RenewTxActivity.runObserver();
-  await LongTerm.observer();
-});
-
-// Schedule job at the start of every month
-const monthlyRule = new schedule.RecurrenceRule();
-monthlyRule.dayOfWeek = [new schedule.Range(0, 6)];
-monthlyRule.hour = 0;
-monthlyRule.minute = 0;
-
-// Example of a scheduled job at the start of every month
-// schedule.scheduleJob(monthlyRule, async () => {
-//     await RenewSubscription.runObserver();
-// });
 
 module.exports = app;

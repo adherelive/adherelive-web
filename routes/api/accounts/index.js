@@ -5,6 +5,15 @@ import * as validator from "./validator";
 
 import AccountsController from "../../../app/controllers/accounts/accounts.controller";
 
+/**
+ * @swagger
+ * /accounts:
+ *  post:
+ *    summary: Retrieve a list of accounts for a application
+ *    responses:
+ *      200:
+ *        description: A list of accounts
+ */
 router.post(
   "/",
   Authenticate,

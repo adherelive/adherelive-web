@@ -20,6 +20,15 @@ router.post(
   userController.signUp
 );
 
+/**
+ * @swagger
+ * /user/get-basic-info:
+ *  get:
+ *    summary: Retrieve all the information related to a Client
+ *    responses:
+ *      200:
+ *        description: A JSON response with all the information related to a Client
+ */
 router.get("/get-basic-info", Authenticate, userController.onAppStart);
 
 // future requirement -------------------------

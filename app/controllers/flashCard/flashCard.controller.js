@@ -71,11 +71,11 @@ class FlashCardController extends Controller {
       let txActivity = new TxActivity();
       await txActivity.updateTxActivities({ activity_status }, tx_activity_id);
 
-      let tranaction_activities = await txActivity.getAllTxActivitiesByData({
+      let transaction_activities = await txActivity.getAllTxActivitiesByData({
         id: tx_activity_id,
       });
       let { service_sub_tx_id, service_offering_id, service_subscription_id } =
-        tranaction_activities[0];
+        transaction_activities[0];
       // TODO: need to discuss with client bcz below step will slowdown application.
 
       // service_offering_name
@@ -240,11 +240,11 @@ class FlashCardController extends Controller {
       await txActivity.updateTxActivities({ activity_status }, tx_activity_id);
       //
       // get tx from activity tx table
-      let tranaction_activities = await txActivity.getAllTxActivitiesByData({
+      let transaction_activities = await txActivity.getAllTxActivitiesByData({
         id: tx_activity_id,
       });
 
-      let { service_sub_tx_id } = tranaction_activities[0];
+      let { service_sub_tx_id } = transaction_activities[0];
       if (service_sub_tx_id) {
         let userservicesmapping =
           await serviceSubscriptionTx.getAllServiceSubscriptionTx({
