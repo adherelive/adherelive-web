@@ -106,7 +106,7 @@
     "express": "^4.17.3",
     "express-validator": "^6.6.0",
     "faker": "^5.5.3",
-    "getstream": "5.0.5",
+    "getstream": "8.4.1",
     "google-auth-library": "^7.10.0",
     "got": "^14.4.5",
     "handlebars": "^4.7.7",
