@@ -127,12 +127,15 @@ export const uploadImageS3 = async (userId, file, folder = "other") => {
       "Content-Type": file.mimetype,
     });
 
-    // console.log("file urlll: ", process.config.minio.MINI);
-    // const file_link =
-    //   process.config.minio.MINIO_S3_HOST +
-    //   "/" +
-    //   process.config.minio.MINIO_BUCKET_NAME +
-    //   fileUrl;
+    /**
+     * TODO: Need to check if we need to return the file url or not.
+    console.log("file URL: ", process.config.minio.MINI);
+    const file_link =
+      process.config.minio.MINIO_S3_HOST +
+      "/" +
+      process.config.minio.MINIO_BUCKET_NAME +
+      fileUrl;
+     */
     let files = [completePath(fileUrl)];
 
     return files;
