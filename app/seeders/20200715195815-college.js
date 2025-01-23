@@ -2231,7 +2231,7 @@ module.exports = {
         updated_at: new Date(),
       },
       {
-        name: "AME’s Dental College & Hospital, Raichur",
+        name: "AM's Dental College & Hospital, Raichur",
         created_at: new Date(),
         updated_at: new Date(),
       },
@@ -2316,7 +2316,7 @@ module.exports = {
         updated_at: new Date(),
       },
       {
-        name: "KLE Society’s Institute of Dental Sciences,Bangalore",
+        name: "KLE Society's Institute of Dental Sciences,Bangalore",
         created_at: new Date(),
         updated_at: new Date(),
       },
@@ -2356,7 +2356,7 @@ module.exports = {
         updated_at: new Date(),
       },
       {
-        name: "Maratha Mandal’s Dental College & Research Centre, Belgaum",
+        name: "Maratha Mandal's Dental College & Research Centre, Belgaum",
         created_at: new Date(),
         updated_at: new Date(),
       },
@@ -2626,7 +2626,7 @@ module.exports = {
         updated_at: new Date(),
       },
       {
-        name: "People’s Dental Academy, Bhopal",
+        name: "People's Dental Academy, Bhopal",
         created_at: new Date(),
         updated_at: new Date(),
       },
@@ -2676,7 +2676,7 @@ module.exports = {
         updated_at: new Date(),
       },
       {
-        name: "Chatrapati Shahu Maharaj Shikshan Sanstha’s Dental College & Hospital, Aurangabad",
+        name: "Chatrapati Shahu Maharaj Shikshan Sanstha's Dental College & Hospital, Aurangabad",
         created_at: new Date(),
         updated_at: new Date(),
       },
@@ -2736,7 +2736,7 @@ module.exports = {
         updated_at: new Date(),
       },
       {
-        name: "Mahatma Gandhi Vidya Mandir’s Dental College & Hospital, Nashik",
+        name: "Mahatma Gandhi Vidya Mandir's Dental College & Hospital, Nashik",
         created_at: new Date(),
         updated_at: new Date(),
       },
@@ -2816,17 +2816,17 @@ module.exports = {
         updated_at: new Date(),
       },
       {
-        name: "Vidarbha Youth Welfare Society’s Dental College & Hospital, Amravati",
+        name: "Vidarbha Youth Welfare Society's Dental College & Hospital, Amravati",
         created_at: new Date(),
         updated_at: new Date(),
       },
       {
-        name: "VSPM’s Dental College & Research Centre, Nagpur",
+        name: "VSPM's Dental College & Research Centre, Nagpur",
         created_at: new Date(),
         updated_at: new Date(),
       },
       {
-        name: "Yerala Medical Trust & Research Centre’s Dental College & Hospital, Navi Mumbai",
+        name: "Yerala Medical Trust & Research Centre's Dental College & Hospital, Navi Mumbai",
         created_at: new Date(),
         updated_at: new Date(),
       },
@@ -3176,7 +3176,7 @@ module.exports = {
         updated_at: new Date(),
       },
       {
-        name: "Vinayaka Mission’s Sankarachariyar Dental College, Salem",
+        name: "Vinayaka Mission�s Sankarachariyar Dental College, Salem",
         created_at: new Date(),
         updated_at: new Date(),
       },

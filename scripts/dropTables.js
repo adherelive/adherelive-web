@@ -1,10 +1,9 @@
 // FOR TEST
-
-const Config = require("./config/config");
-Config();
-
 import map from "lodash/map";
-import { models } from "./libs/mysql";
+import { models } from "../libs/mysql";
+
+const Config = require("../config/config");
+Config();
 
 const rollback = async () => {
   return await Promise.all(

@@ -8,8 +8,8 @@ import {
   onUpdate,
 } from "../helper";
 import { ACTIVITIES } from "../activityType";
+import ActivitySdk from "../index";
 
-const { ActivitySdk } = require("../");
 const { REMINDER } = ACTIVITIES;
 
 class ReminderActivity {
