@@ -611,7 +611,7 @@ export const handleAppointmentsTimeAssignment = async (appointment) => {
       console.log("Participant One ---> ID exists: ", participant_one);
     } else {
       // Handle the case where participant_one is missing or has no ID
-      console.error("Participant One ID is undefined or missing.");
+      console.error("Participant One ID is undefined or missing: ", participant_one);
       // You can throw an error, log a warning, or handle the situation differently
       // depending on your application's requirements.
       return;
@@ -713,6 +713,7 @@ export const handleAppointmentsTimeAssignment = async (appointment) => {
       start_date: appointment_start_time,
       end_date: appointment_end_time,
     };
+
     const updatedAppointment = await appointmentService.updateAppointment(
       appointmentData.getAppointmentId(),
       updatedAppointmentData
@@ -735,10 +736,10 @@ export const handleAppointmentsTimeAssignment = async (appointment) => {
 
     const sqsResponse = await QueueService.sendMessage(eventScheduleData);
 
-    Log.debug("SQS Response in handleAppointmentsTimeAssignment ---> ", sqsResponse);
+    Log.debug("SQS Response helper in handleAppointmentsTimeAssignment ---> ", sqsResponse);
     return true;
   } catch (error) {
-    Log.debug("Appointment time assignment in handleAppointmentsTimeAssignment has 500 error: ", error);
+    Log.debug("Appointment time assignment helper in handleAppointmentsTimeAssignment has 500 error: ", error);
   }
 };
 
