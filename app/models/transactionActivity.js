@@ -1,6 +1,13 @@
 "use strict";
 import { DataTypes } from "sequelize";
-import { BILLING_FREQUENCY, USER_CATEGORY, USER_STATUS } from "../../constant";
+import {
+  CURRENCY,
+  REPEAT_TYPE,
+  USER_CATEGORY,
+  USER_STATUS,
+  BILLING_FREQUENCY,
+} from "../../constant";
+import { TABLE_NAME as serviceUserMapping } from "./serviceUserMapping";
 import { TABLE_NAME as patientsTableName } from "./patients";
 import { TABLE_NAME as doctorsTableName } from "./doctors";
 import { TABLE_NAME as serviceOffering } from "./serviceOffering";

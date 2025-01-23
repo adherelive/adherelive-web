@@ -14,22 +14,23 @@ import {
   EVENING,
   EVENT_TYPE,
   FEATURE_TYPE,
-  FRIDAY,
   LUNCH,
   MEDICATION_TIMING,
   MID_MORNING,
-  MONDAY,
   PATIENT_MEAL_TIMINGS,
   REPEAT_INTERVAL,
-  SATURDAY,
   SLEEP,
-  SUNDAY,
-  THURSDAY,
-  TUESDAY,
   WAKE_UP,
-  WEDNESDAY,
+  WITH_BREAKFAST,
   WITH_DINNER,
   WITH_LUNCH,
+  MONDAY,
+  TUESDAY,
+  WEDNESDAY,
+  THURSDAY,
+  FRIDAY,
+  SATURDAY,
+  SUNDAY,
 } from "../constant";
 
 import FeatureDetailWrapper from "../app/apiWrapper/web/featureDetails";
@@ -45,6 +46,7 @@ import appointmentService from "../app/services/appointment/appointment.service"
 import queueService from "../app/services/awsQueue/queue.service";
 
 // Wrappers
+import PatientWrapper from "../app/apiWrapper/mobile/patient";
 import MedicineWrapper from "../app/apiWrapper/mobile/medicine";
 import MedicationWrapper from "../app/apiWrapper/mobile/medicationReminder";
 import AppointmentWrapper from "../app/apiWrapper/mobile/appointments";
@@ -546,23 +548,27 @@ export const handleVitals = async (vital) => {
               patient_id,
             },
           });
-          // const scheduleData = {
-          //     event_id,
-          //     critical,
-          //     date: moment(allDays[i])
-          //         .utc()
-          //         .toISOString(),
-          //     start_time: moment(allDays[i]).set("hours", hours).set("minutes", minutes).toISOString(),
-          //     end_time: moment(allDays[i]).set("hours", hours).set("minutes", minutes).toISOString(),
-          //     event_type: EVENT_TYPE.VITALS,
-          //     details: {
-          //         ...details,
-          //         participants,
-          //         actor,
-          //         vital_templates,
-          //         eventId: event_id
-          //     }
-          // };
+
+          /**
+           * TODO: Need to check if we need to create multiple vital events for the same day
+          const scheduleData = {
+              event_id,
+              critical,
+              date: moment(allDays[i])
+                  .utc()
+                  .toISOString(),
+              start_time: moment(allDays[i]).set("hours", hours).set("minutes", minutes).toISOString(),
+              end_time: moment(allDays[i]).set("hours", hours).set("minutes", minutes).toISOString(),
+              event_type: EVENT_TYPE.VITALS,
+              details: {
+                  ...details,
+                  participants,
+                  actor,
+                  vital_templates,
+                  eventId: event_id
+              }
+          };
+           */
 
           ongoingTime = moment(ongoingTime).add(value, "hours");
         }
@@ -599,6 +605,17 @@ export const handleAppointmentsTimeAssignment = async (appointment) => {
 
     const { id: participant_two_id, category: participant_two_type } =
       participant_two || {};
+
+    // Check if participant_one exists and has an id
+    if (participant_one && participant_one.id) {
+      console.log("Participant One ---> ID exists: ", participant_one);
+    } else {
+      // Handle the case where participant_one is missing or has no ID
+      console.error("Participant One ID is undefined or missing.");
+      // You can throw an error, log a warning, or handle the situation differently
+      // depending on your application's requirements.
+      return;
+    }
 
     const { id: participant_one_id, category: participant_one_type } =
       participant_one || {};
@@ -718,10 +735,10 @@ export const handleAppointmentsTimeAssignment = async (appointment) => {
 
     const sqsResponse = await QueueService.sendMessage(eventScheduleData);
 
-    Log.debug("sqsResponse ---> ", sqsResponse);
+    Log.debug("SQS Response in handleAppointmentsTimeAssignment ---> ", sqsResponse);
     return true;
   } catch (error) {
-    Log.debug("appointment time assignment 500 error", error);
+    Log.debug("Appointment time assignment in handleAppointmentsTimeAssignment has 500 error: ", error);
   }
 };
 

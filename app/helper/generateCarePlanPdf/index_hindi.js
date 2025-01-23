@@ -1,6 +1,7 @@
 import {
   APPOINTMENT_TYPE,
   categories,
+  // CATEGORY_ONE,
   DOSE_UNIT,
   MEDICATION_TIMING,
   PATIENT_MEAL_TIMINGS,
@@ -143,6 +144,11 @@ export default async (pdfData, signatureImage) => {
         suggestedInvestigations,
         providerPrescriptionDetails,
         follow_up_advise,
+        // testing only
+        portions,
+        diets_formatted_data,
+        timings,
+        diet_ids,
       });
 
       // generateHr(doc, doc.y + 17);

@@ -9,8 +9,12 @@ import {
   onStart,
   onUpdate,
 } from "../helper";
-import ActivitySdk from "../index";
+
 import { ACTIVITIES } from "../activityType";
+
+// TODO: Going back to require, as the module export is used
+// import ActivitySdk from "../index";
+const { ActivitySdk } = require("../");
 
 const { FOLLOW_UP } = ACTIVITIES;
 

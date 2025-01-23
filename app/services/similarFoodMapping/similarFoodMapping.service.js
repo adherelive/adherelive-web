@@ -1,4 +1,5 @@
 import Database from "../../../libs/mysql";
+import { Op } from "sequelize";
 import { TABLE_NAME } from "../../models/similarFoodMapping";
 
 const DEFAULT_ORDER = [["created_at", "DESC"]];
