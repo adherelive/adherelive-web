@@ -1,6 +1,7 @@
 "use strict";
 
 import { TABLE_NAME } from "../app/models/medicines";
+import { MEDICINE_TYPE } from "../constant";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {

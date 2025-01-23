@@ -25,11 +25,14 @@ import userRolesService from "../../services/userRoles/userRoles.service";
 import DietService from "../../services/diet/diet.service";
 import PortionServiceService from "../../services/portions/portions.service";
 import RepetitionService from "../../services/exerciseRepetitions/repetition.service";
+import providerService from "../../services/provider/provider.service";
+import ExerciseContentService from "../../services/exerciseContents/exerciseContent.service";
 import WorkoutService from "../../services/workouts/workout.service";
 import userPreferenceService from "../../services/userPreferences/userPreference.service";
 import carePlanSecondaryDrMapService from "../../services/carePlanSecondaryDoctorMappings/carePlanSecondaryDoctorMappings.service";
 
 // Wrappers
+import ExerciseContentWrapper from "../../apiWrapper/web/exerciseContents";
 import UserRoleWrapper from "../../apiWrapper/web/userRoles";
 import UserRolesWrapper from "../../apiWrapper/web/userRoles";
 import VitalWrapper from "../../apiWrapper/web/vitals";
@@ -1553,7 +1556,7 @@ class PatientController extends Controller {
       );
     } catch (error) {
       Logger.debug("getPatientReports has a 500 error: ", error);
-      console.log("getPatientReports has a 500 error: ", error);
+      console.log("Console getPatientReports has a 500 error: ", error);
       return raiseServerError(res);
     }
   };
@@ -2749,10 +2752,10 @@ class PatientController extends Controller {
         id: patientWrapper.getUserId(),
       });
 
-      await Promise.all(allUserData.map(async (user) => {
+      await allUserData.forEach(async (user) => {
         apiUserDetails = await UserWrapper(user.get());
         userApiData[apiUserDetails.getId()] = apiUserDetails.getBasicInfo();
-      }));
+      });
 
       return this.raiseSuccess(
           res,
@@ -2837,6 +2840,7 @@ class PatientController extends Controller {
         userData = await UserWrapper(null, user_id);
       }
 
+      // TODO: Check if we need this here, commented it for now
       // if (userData) {
       if (userExists.length > 0 || patientExistByHisId.length > 0) {
         const { patient_id } = await userData.getReferenceInfo();

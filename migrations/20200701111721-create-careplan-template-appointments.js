@@ -1,5 +1,6 @@
 "use strict";
 
+import { DB_TABLES } from "../constant";
 import { TABLE_NAME } from "../app/models/templateAppointments";
 import { TABLE_NAME as carePlanTemplateTableName } from "../app/models/carePlanTemplate";
 

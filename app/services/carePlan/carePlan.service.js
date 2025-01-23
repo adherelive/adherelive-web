@@ -6,6 +6,8 @@ import { TABLE_NAME as patientTableName } from "../../models/patients";
 import { TABLE_NAME as doctorTableName } from "../../models/doctors";
 import { TABLE_NAME as carePlanAppointmentTableName } from "../../models/carePlanAppointments";
 import { TABLE_NAME as carePlanMedicationTableName } from "../../models/carePlanMedications";
+// import { TABLE_NAME as userRoleTableName } from "../../models/userRoles";
+// import {TABLE_NAME as carePlanVitalTableName} from "../../models/carePlanVitals";
 import { TABLE_NAME as medicationTableName } from "../../models/medicationReminders";
 import { TABLE_NAME as medicineTableName } from "../../models/medicines";
 import { TABLE_NAME as userRolesTableName } from "../../models/userRoles";
@@ -133,9 +135,7 @@ class CarePlanService {
           },
         ],
       });
-      console.log(
-        "getCarePlanById with CarePlan of Secondary Doctor Mapping: \n"
-      );
+      console.log("getCarePlanById with CarePlan of Secondary Doctor Mapping: \n");
       console.log(carePlan.careplan_secondary_doctor_mappings);
       return carePlan;
     } catch (error) {

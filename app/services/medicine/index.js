@@ -1,3 +1,5 @@
+import medicineService from "./medicine.service";
+
 export default class Medicine {
   constructor(data) {
     // this._arrData = arrData.length > 0 ? arrData : [];
