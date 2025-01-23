@@ -548,23 +548,27 @@ export const handleVitals = async (vital) => {
               patient_id,
             },
           });
-          // const scheduleData = {
-          //     event_id,
-          //     critical,
-          //     date: moment(allDays[i])
-          //         .utc()
-          //         .toISOString(),
-          //     start_time: moment(allDays[i]).set("hours", hours).set("minutes", minutes).toISOString(),
-          //     end_time: moment(allDays[i]).set("hours", hours).set("minutes", minutes).toISOString(),
-          //     event_type: EVENT_TYPE.VITALS,
-          //     details: {
-          //         ...details,
-          //         participants,
-          //         actor,
-          //         vital_templates,
-          //         eventId: event_id
-          //     }
-          // };
+
+          /**
+           * TODO: Need to check if we need to create multiple vital events for the same day
+          const scheduleData = {
+              event_id,
+              critical,
+              date: moment(allDays[i])
+                  .utc()
+                  .toISOString(),
+              start_time: moment(allDays[i]).set("hours", hours).set("minutes", minutes).toISOString(),
+              end_time: moment(allDays[i]).set("hours", hours).set("minutes", minutes).toISOString(),
+              event_type: EVENT_TYPE.VITALS,
+              details: {
+                  ...details,
+                  participants,
+                  actor,
+                  vital_templates,
+                  eventId: event_id
+              }
+          };
+           */
 
           ongoingTime = moment(ongoingTime).add(value, "hours");
         }
