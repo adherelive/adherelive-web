@@ -1,7 +1,7 @@
 import { onAdverseEventCreate } from "../helper";
 import { ACTIVITIES } from "../activityType";
+import ActivitySdk from "../index";
 
-const { ActivitySdk } = require("../");
 const { ADVERSE_EVENT } = ACTIVITIES;
 
 class AdverseEventActivity {

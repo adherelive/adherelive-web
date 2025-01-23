@@ -11,9 +11,7 @@ import moment from "moment";
 import PDFDocument from "pdfkit";
 import { getConvertedTime } from "../getUserTime/index";
 
-// const PDFDocument = require("pdfkit");
-const fs = require("fs");
-// const moment = require("moment");
+import * as fs from 'fs';
 
 const DOC_MARGIN = 30;
 const DOC_WIDTH_MARGIN = 550;

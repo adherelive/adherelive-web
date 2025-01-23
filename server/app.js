@@ -37,7 +37,7 @@ const app = express();
 // Swagger setup
 const swaggerJsDoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
-const swaggerFile = require('../setup-server/adherelive-api-swagger.json');
+const swaggerFile = require('../api-defn/adherelive-api-swagger.json');
 
 /*
  * Schedule jobs
@@ -175,7 +175,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerFile, {
 
 // For generating the swagger.json file when the server is run
 if (process.env.NODE_ENV === 'development') {
-    require('../setup-server/swagger-docs.js');
+    require('../api-defn/swagger-docs.js');
 }
 
 // TODO: This is used for the frontend. As we have moved that to a different repository, removing from here.
