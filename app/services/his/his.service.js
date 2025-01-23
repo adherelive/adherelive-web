@@ -9,7 +9,7 @@ import Database from "../../../libs/mysql";
 import { TABLE_NAME } from "../../models/his";
 import Log from "../../../libs/log";
 
-const Logger = new Log("WEB > PATIENTS > CONTROLLER");
+const Logger = new Log("WEB > HIS > SERVICE");
 
 class HisService {
   constructor() {}

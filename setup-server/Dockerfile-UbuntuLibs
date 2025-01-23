@@ -1,8 +1,8 @@
 # Download base image ubuntu 24.04
-FROM ubuntu:24.04
-# LABEL about the custom image
+FROM ubuntu:focal-slim
+# LABEL About the custom image, using ubuntu:focal-slim
 LABEL maintainer="AdhereLive Pvt Ltd"
-LABEL version="1.0"
+LABEL version="1.1"
 LABEL description="This is a custom Docker Image installing Ubuntu Utils"
 # Disable Prompt During Packages Installation
 ARG DEBIAN_FRONTEND=noninteractive

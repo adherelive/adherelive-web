@@ -2157,7 +2157,7 @@ class UserController extends Controller {
                     res,
                     422,
                     {},
-                    "User does not exists for the email"
+                    "User does not exist for the provided e-mail"
                 );
             }
 
@@ -2165,10 +2165,10 @@ class UserController extends Controller {
                 res,
                 200,
                 {},
-                "Thanks! If there is an account associated with the email, we will send the password reset link to it"
+        "Thank You! If there is an account associated with the given e-mail, we will send the password reset link to it"
             );
         } catch (error) {
-            Logger.debug("Forgot Password - 500 Error", error);
+            Logger.debug("Forgot Password - 500 Error: ", error);
             return raiseServerError(res);
         }
     };

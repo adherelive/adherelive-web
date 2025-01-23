@@ -49,7 +49,7 @@ import {
     WHEN_TO_TAKE_ABBREVATIONS,
 } from "../../../constant";
 
-import {downloadFileFromS3} from "../../../app/controllers/user/userHelper";
+import {downloadFileFromS3} from "../../../app/controllers/user/user.helper";
 
 import {getFilePath} from "../../../app/helper/filePath";
 import {checkAndCreateDirectory} from "../../../app/helper/common";

@@ -307,7 +307,7 @@ class PatientController extends Controller {
     try {
       const { id } = req.params;
 
-      Logger.info(`params: patient_id = ${id}`);
+      Logger.info(`getPatientCarePlanSecondaryDocDetails params: patient_id = ${id}`);
       const {
         userDetails: {
           userRoleId = null,
@@ -360,7 +360,7 @@ class PatientController extends Controller {
     try {
       const { id: patient_id = 1 } = req.params;
 
-      Logger.info(`params: patient_id = ${patient_id}`);
+      Logger.info(`getPatientCarePlanDetails params: patient_id = ${patient_id}`);
       const {
         userDetails: {
           userRoleId = null,
@@ -643,7 +643,7 @@ class PatientController extends Controller {
   getPatientVitals = async (req, res) => {
     const { raiseSuccess, raiseServerError, raiseClientError } = this;
     try {
-      Logger.debug("34554321345324", req.params);
+      Logger.debug("Get Patient Vitals req.params: ", req.params);
       const { params: { careplan_id } = {} } = req;
 
       const { userDetails: { userRoleId = null } = {} } = req;
@@ -1474,7 +1474,7 @@ class PatientController extends Controller {
         params: { patient_id } = {},
         userDetails: { userCategoryId } = {},
       } = req;
-      Logger.info(`params: patient_id = ${patient_id}`);
+      Logger.info(`getPatientReports params: patient_id = ${patient_id}`);
       console.log(
         `getPatientReports in PatientController has PatientID as: ${patient_id}`
       );
@@ -1487,10 +1487,12 @@ class PatientController extends Controller {
       }
       // web controller
       const reportService = new ReportService();
-      const allReports =
-        (await reportService.getAllReportByData({
-          patient_id,
-        })) || [];
+      const allReports = (await reportService.getAllReportByData({ patient_id })) || [];
+
+      if (!allReports.length) {
+        // Handle no reports case
+        return raiseSuccess(res, 200, { reports: {}, doctors: {}, upload_documents: {}, report_ids: [] }, "No reports found for this patient");
+      }
 
       let reportData = {};
       let documentData = {};
@@ -1549,7 +1551,8 @@ class PatientController extends Controller {
         "Reports for patient fetched successfully"
       );
     } catch (error) {
-      Logger.debug("getPatientReports 500 error", error);
+      Logger.debug("getPatientReports has a 500 error: ", error);
+      console.log("getPatientReports has a 500 error: ", error);
       return raiseServerError(res);
     }
   };
@@ -2704,18 +2707,40 @@ class PatientController extends Controller {
       params: { patient_id } = {},
       userDetails: { userCategoryId } = {},
     } = req;
-    Logger.info(`params: patient_id = ${patient_id}`);
 
-    if (!patient_id) {
+    // Log the raw value for debugging
+    Logger.info(`getPatientById raw params: `, { patient_id });
+
+    // TODO: Add type checking if needed
+    // if (typeof patient_id !== 'string' && typeof patient_id !== 'number') {
+    //   return raiseClientError(res, 422, {}, "Invalid patient ID type");
+    // }
+
+    // Comprehensive check for invalid patient_id
+    if (!patient_id || patient_id === 'null' || patient_id === 'undefined') {
+      Logger.warn('Invalid patient_id received: ', { patient_id });
       return raiseClientError(res, 422, {}, "Please select correct patient");
     }
 
+    // TODO: Optional: Validate format if patient_id should match specific pattern
+    // For example, if it should be a valid MongoDB ObjectId
+    // if (!mongoose.Types.ObjectId.isValid(patient_id)) {
+    //   return raiseClientError(res, 422, {}, "Invalid patient ID format");
+    // }
+
     try {
       let patient = await patientService.getPatientById({ id: patient_id });
+
+      // Check if patient exists
+      if (!patient) {
+        Logger.warn(`Patient not found for ID: ${patient_id}`);
+        return raiseClientError(res, 404, {}, "Patient not found");
+      }
+
       let patientApiDetails = {};
       const patientWrapper = await PatientWrapper(patient);
       patientApiDetails[patientWrapper.getPatientId()] =
-        await patientWrapper.getAllInfo();
+          await patientWrapper.getAllInfo();
       let userApiData = {};
       let apiUserDetails = {};
 
@@ -2723,20 +2748,19 @@ class PatientController extends Controller {
         id: patientWrapper.getUserId(),
       });
 
-      await allUserData.forEach(async (user) => {
+      await Promise.all(allUserData.map(async (user) => {
         apiUserDetails = await UserWrapper(user.get());
-
         userApiData[apiUserDetails.getId()] = apiUserDetails.getBasicInfo();
-      });
+      }));
 
       return this.raiseSuccess(
-        res,
-        200,
-        { patients: { ...patientApiDetails }, users: { ...userApiData } },
-        "Success."
+          res,
+          200,
+          { patients: { ...patientApiDetails }, users: { ...userApiData } },
+          "Success."
       );
     } catch (error) {
-      Logger.debug("getPatientReports 500 error", error);
+      Logger.debug("getPatientReports get patient by ID 500 error: ", error);
       return raiseServerError(res);
     }
   };

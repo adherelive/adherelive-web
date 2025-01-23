@@ -4255,7 +4255,7 @@ class DoctorController extends Controller {
 
             return medicineModificationDocs;
           } catch (error) {
-            console.error("Error reading Excel file:", error);
+            console.error("Error reading Excel file: ", error);
             return [];
           }
         }

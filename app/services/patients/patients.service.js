@@ -5,7 +5,7 @@ import { TABLE_NAME as userTableName } from "../../models/users";
 import { TABLE_NAME as carePlanTableName } from "../../models/carePlan";
 import Log from "../../../libs/log";
 
-const Logger = new Log("WEB > PATIENTS > CONTROLLER");
+const Logger = new Log("WEB > PATIENTS > SERVICE");
 
 class PatientsService {
   constructor() {}
