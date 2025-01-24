@@ -22,7 +22,7 @@ import RemoveDocuments from "../app/cronJobs/removeDocuments";
 // import RenewSubscription from "../app/cronJobs/renewSubscription";
 import LongTerm from "../app/cronJobs/longTerm";
 import RenewTxActivity from "../app/cronJobs/renewTxActivity";
-
+import ErrorBoundary from './ErrorBoundary';
 
 // Set up the required variables and CORS sessions + cookies
 const Events = import("../events")
