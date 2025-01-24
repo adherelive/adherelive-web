@@ -185,37 +185,40 @@ class EventController extends Controller {
             break;
         }
 
-        // scheduleEvents = [...scheduleEvents, ...carePlanScheduleEvents];
+        /**
+         * TODO: Need to check the below code
+        scheduleEvents = [...scheduleEvents, ...carePlanScheduleEvents];
+        Log.debug("21237193721 events --> ", scheduleEvents.length);
 
-        // Log.debug("21237193721 events --> ", scheduleEvents.length);
+        const vitalEvents = await eventService.getPageEventByData({
+          startLimit,
+          endLimit,
+          event_type: EVENT_TYPE.VITALS,
+          eventIds: vital_ids
+        });
 
-        // const vitalEvents = await eventService.getPageEventByData({
-        //   startLimit,
-        //   endLimit,
-        //   event_type: EVENT_TYPE.VITALS,
-        //   eventIds: vital_ids
-        // });
-        //
-        // const appointmentEvents = await eventService.getPageEventByData({
-        //   startLimit,
-        //   endLimit,
-        //   event_type: EVENT_TYPE.APPOINTMENT,
-        //   eventIds: appointment_ids
-        // });
-        //
-        // const medicationEvents = await eventService.getPageEventByData({
-        //   startLimit,
-        //   endLimit,
-        //   event_type: EVENT_TYPE.MEDICATION_REMINDER,
-        //   eventIds: medication_ids
-        // });
-        //
-        // scheduleEvents = [
-        //     ...scheduleEvents,
-        //   ...vitalEvents,
-        //   ...appointmentEvents,
-        //   ...medicationEvents
-        // ];
+        const appointmentEvents = await eventService.getPageEventByData({
+          startLimit,
+          endLimit,
+          event_type: EVENT_TYPE.APPOINTMENT,
+          eventIds: appointment_ids
+        });
+
+        const medicationEvents = await eventService.getPageEventByData({
+          startLimit,
+          endLimit,
+          event_type: EVENT_TYPE.MEDICATION_REMINDER,
+          eventIds: medication_ids
+        });
+
+        scheduleEvents = [
+            ...scheduleEvents,
+          ...vitalEvents,
+          ...appointmentEvents,
+          ...medicationEvents
+        ];
+         */
+
       } else {
         scheduleEvents = await eventService.getPendingEventsData({
           appointments: {
@@ -759,7 +762,6 @@ class EventController extends Controller {
       }
 
       // TODO: need to rethink logic for latest events from last visit to include all types
-
       const vitalEvents = await eventService.getLastVisitData({
         event_id: vital_ids,
         event_type: EVENT_TYPE.VITALS,

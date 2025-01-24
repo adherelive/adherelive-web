@@ -29,7 +29,7 @@ class EventController extends Controller {
   getAllEvents = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
-      Log.debug("req.params", req.params);
+      Log.debug("getAllEvents req.params ---> ", req.params);
 
       const {
         params: { patient_id } = {},
@@ -94,56 +94,61 @@ class EventController extends Controller {
       const vitalEvents = await eventService.getLastVisitData({
         event_id: [
           ...vital_ids,
-          ...medication_ids,
-          ...diet_ids,
-          ...workout_ids,
-          ...appointment_ids,
+          //...medication_ids,
+          //...diet_ids,
+          //...workout_ids,
+          //...appointment_ids,
         ],
         event_type: [
           EVENT_TYPE.VITALS,
-          EVENT_TYPE.APPOINTMENT,
-          EVENT_TYPE.MEDICATION_REMINDER,
-          EVENT_TYPE.DIET,
-          EVENT_TYPE.WORKOUT,
+          //EVENT_TYPE.APPOINTMENT,
+          //EVENT_TYPE.MEDICATION_REMINDER,
+          //EVENT_TYPE.DIET,
+          //EVENT_TYPE.WORKOUT,
         ],
         date: moment().subtract(7, "days").utc().toISOString(),
         sort: "DESC",
       });
 
-      // const appointmentEvents = await eventService.getLastVisitData({
-      //   event_id: appointment_ids,
-      //   event_type: EVENT_TYPE.APPOINTMENT,
-      //   date: moment().subtract(7, "days").utc().toISOString(),
-      //   sort: "DESC",
-      // });
+      /**
+       * TODO: Check if the below code is required or not
+       *       As it has been commented and used in a single function above
+       */
+      const appointmentEvents = await eventService.getLastVisitData({
+        event_id: [...appointment_ids,],
+        event_type: EVENT_TYPE.APPOINTMENT,
+        date: moment().subtract(7, "days").utc().toISOString(),
+        sort: "DESC",
+      });
 
-      // const medicationEvents = await eventService.getLastVisitData({
-      //   event_id: medication_ids,
-      //   event_type: EVENT_TYPE.MEDICATION_REMINDER,
-      //   date: moment().subtract(7, "days").utc().toISOString(),
-      //   sort: "DESC",
-      // });
+      const medicationEvents = await eventService.getLastVisitData({
+        event_id: [...medication_ids,],
+        event_type: EVENT_TYPE.MEDICATION_REMINDER,
+        date: moment().subtract(7, "days").utc().toISOString(),
+        sort: "DESC",
+      });
 
-      // const dietEvents = await eventService.getLastVisitData({
-      //   event_id: diet_ids,
-      //   event_type: EVENT_TYPE.DIET,
-      //   date: moment().subtract(7, "days").utc().toISOString(),
-      //   sort: "DESC",
-      // });
+      const dietEvents = await eventService.getLastVisitData({
+        event_id: [...diet_ids,],
+        event_type: EVENT_TYPE.DIET,
+        date: moment().subtract(7, "days").utc().toISOString(),
+        sort: "DESC",
+      });
 
-      // const workoutEvents = await eventService.getLastVisitData({
-      //   event_id: workout_ids,
-      //   event_type: EVENT_TYPE.WORKOUT,
-      //   date: moment().subtract(7, "days").utc().toISOString(),
-      //   sort: "DESC",
-      // });
+      const workoutEvents = await eventService.getLastVisitData({
+        event_id: [...workout_ids,],
+        event_type: EVENT_TYPE.WORKOUT,
+        date: moment().subtract(7, "days").utc().toISOString(),
+        sort: "DESC",
+      });
+
 
       let scheduleEvents = [
         ...vitalEvents,
-        // ...appointmentEvents,
-        // ...medicationEvents,
-        // ...dietEvents,
-        // ...workoutEvents,
+        ...appointmentEvents,
+        ...medicationEvents,
+        ...dietEvents,
+        ...workoutEvents,
       ];
 
       if (scheduleEvents.length > 0) {
@@ -158,11 +163,14 @@ class EventController extends Controller {
         const allIds = [];
 
         let scheduleEventData = {};
-        // for (const scheduleEvent of scheduleEvents) {
-        //   const event = await EventWrapper(scheduleEvent);
-        //   scheduleEventData[event.getScheduleEventId()] = event.getAllInfo();
-        //   allIds.push(event.getScheduleEventId());
-        // }
+        /**
+         * TODO: Check if the below code is required or not
+        for (const scheduleEvent of scheduleEvents) {
+          const event = await EventWrapper(scheduleEvent);
+          scheduleEventData[event.getScheduleEventId()] = event.getAllInfo();
+          allIds.push(event.getScheduleEventId());
+        }
+         */
         for (const [key, event] of [
           ...latestSymptom,
           ...scheduleEvents,
@@ -215,7 +223,7 @@ class EventController extends Controller {
         return raiseSuccess(res, 200, {}, "No event updated yet");
       }
     } catch (error) {
-      Log.debug("getAllEvents 500 error", error);
+      Log.debug("getAllEvents 500 error: ", error);
       return raiseServerError(res);
     }
   };
@@ -223,7 +231,7 @@ class EventController extends Controller {
   getAllEventsBackup = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
-      Log.debug("req.params", req.params);
+      Log.debug("getAllEventsBackup req.params ---> ", req.params);
 
       const {
         params: { patient_id } = {},
@@ -398,7 +406,7 @@ class EventController extends Controller {
         return raiseSuccess(res, 200, {}, "No event updated yet");
       }
     } catch (error) {
-      Log.debug("getAllEvents 500 error", error);
+      Log.debug("getAllEventsBackup 500 error: ", error);
       return raiseServerError(res);
     }
   };
@@ -429,106 +437,110 @@ class EventController extends Controller {
         "Event completed successfully"
       );
     } catch (error) {
-      Log.debug("markEventComplete 500 error", error);
+      Log.debug("markEventComplete 500 error: ", error);
       return raiseServerError(res);
     }
   };
 
-  // getAllEventsTimeline = async (req, res) => {
-  //     const {raiseSuccess, raiseClientError, raiseServerError} = this;
-  //     try {
-  //         Log.debug("req.params", req.params);
-  //         const {params: {patient_id} = {}} = req;
-  //
-  //         const carePlanData = await CarePlanService.getSingleCarePlanByData({patient_id});
-  //         const carePlan = await CarePlanWrapper(carePlanData);
-  //         const {vital_ids = [], appointment_ids = [], medication_ids = []} = await carePlan.getAllInfo() || {};
-  //
-  //         let symptomData = {};
-  //         let documentData = {};
-  //         const lastVisitData = [];
-  //
-  //         Log.debug("medication_ids", medication_ids);
-  //         Log.debug("appointment_ids", appointment_ids);
-  //         Log.debug("vital_ids", vital_ids);
-  //
-  //         const latestSymptom = await SymptomService.getLastUpdatedData({patient_id});
-  //         if(latestSymptom.length > 0) {
-  //             for(const symptoms of latestSymptom) {
-  //                 const symptom = await SymptomWrapper({data: symptoms});
-  //                 const {symptoms: latestSymptom} = await symptom.getAllInfo();
-  //                 symptomData = {...symptomData, ...latestSymptom}
-  //                 const {upload_documents} = await symptom.getReferenceInfo();
-  //                 documentData = {...documentData, ...upload_documents};
-  //             }
-  //         }
-  //
-  //         // const scheduleEvents = await eventService.getAllPassedByData({
-  //         //     event_id: [...vital_ids, ...appointment_ids, ...medication_ids],
-  //         //     date: moment().subtract(7,'days').utc().toISOString(),
-  //         //     sort:"DESC"
-  //         // });
-  //
-  //         if(scheduleEvents.length > 0) {
-  //             const allIds = [];
-  //
-  //             let scheduleEventData = {};
-  //             for(const scheduleEvent of scheduleEvents) {
-  //                 const event = await EventWrapper(scheduleEvent);
-  //                 scheduleEventData[event.getScheduleEventId()] = event.getAllInfo();
-  //                 allIds.push(event.getScheduleEventId());
-  //             }
-  //
-  //             Log.debug("event_ids", allIds);
-  //
-  //             for(const event of [...scheduleEvents, ...latestSymptom]) {
-  //                 Log.info(`event.get("updated_at") : ${event.get("updated_at")}`);
-  //                 lastVisitData.push({
-  //                     event_type: event.get("event_type") ? "schedule_events" : "symptoms",
-  //                     id: event.get("id"),
-  //                     updatedAt: event.get("start_time")
-  //                 });
-  //             }
-  //
-  //             lastVisitData.sort((activityA, activityB) => {
-  //                 const {updatedAt: a} = activityA || {};
-  //                 const {updatedAt: b} = activityB || {};
-  //                 if (moment(a).isBefore(moment(b))) return 1;
-  //                 if (moment(a).isAfter(moment(b))) return -1;
-  //                 return 0;
-  //             });
-  //
-  //
-  //             return raiseSuccess(res, 200, {
-  //                 schedule_events: {
-  //                     ...scheduleEventData
-  //                 },
-  //                 symptoms: {
-  //                     ...symptomData,
-  //                 },
-  //                 upload_documents: {
-  //                     ...documentData,
-  //                 },
-  //                 last_visit: lastVisitData
-  //             }, "Events fetched successfully");
-  //         } else {
-  //             return raiseSuccess(res, 200, {}, "No event updated yet");
-  //         }
-  //
-  //
-  //     } catch(error) {
-  //         Log.debug("getAllEvents 500 error", error);
-  //         return raiseServerError(res);
-  //     }
-  // };
+  /**
+   * TODO: This method is not used anywhere in the codebase. It should be removed.
+  getAllEventsTimeline = async (req, res) => {
+      const {raiseSuccess, raiseClientError, raiseServerError} = this;
+      try {
+          Log.debug("req.params", req.params);
+          const {params: {patient_id} = {}} = req;
 
-  /***********  MISSED EVENT CHARTS  ***********/
+          const carePlanData = await CarePlanService.getSingleCarePlanByData({patient_id});
+          const carePlan = await CarePlanWrapper(carePlanData);
+          const {vital_ids = [], appointment_ids = [], medication_ids = []} = await carePlan.getAllInfo() || {};
 
+          let symptomData = {};
+          let documentData = {};
+          const lastVisitData = [];
+
+          Log.debug("medication_ids", medication_ids);
+          Log.debug("appointment_ids", appointment_ids);
+          Log.debug("vital_ids", vital_ids);
+
+          const latestSymptom = await SymptomService.getLastUpdatedData({patient_id});
+          if(latestSymptom.length > 0) {
+              for(const symptoms of latestSymptom) {
+                  const symptom = await SymptomWrapper({data: symptoms});
+                  const {symptoms: latestSymptom} = await symptom.getAllInfo();
+                  symptomData = {...symptomData, ...latestSymptom}
+                  const {upload_documents} = await symptom.getReferenceInfo();
+                  documentData = {...documentData, ...upload_documents};
+              }
+          }
+
+          // const scheduleEvents = await eventService.getAllPassedByData({
+          //     event_id: [...vital_ids, ...appointment_ids, ...medication_ids],
+          //     date: moment().subtract(7,'days').utc().toISOString(),
+          //     sort:"DESC"
+          // });
+
+          if(scheduleEvents.length > 0) {
+              const allIds = [];
+
+              let scheduleEventData = {};
+              for(const scheduleEvent of scheduleEvents) {
+                  const event = await EventWrapper(scheduleEvent);
+                  scheduleEventData[event.getScheduleEventId()] = event.getAllInfo();
+                  allIds.push(event.getScheduleEventId());
+              }
+
+              Log.debug("event_ids", allIds);
+
+              for(const event of [...scheduleEvents, ...latestSymptom]) {
+                  Log.info(`event.get("updated_at") : ${event.get("updated_at")}`);
+                  lastVisitData.push({
+                      event_type: event.get("event_type") ? "schedule_events" : "symptoms",
+                      id: event.get("id"),
+                      updatedAt: event.get("start_time")
+                  });
+              }
+
+              lastVisitData.sort((activityA, activityB) => {
+                  const {updatedAt: a} = activityA || {};
+                  const {updatedAt: b} = activityB || {};
+                  if (moment(a).isBefore(moment(b))) return 1;
+                  if (moment(a).isAfter(moment(b))) return -1;
+                  return 0;
+              });
+
+
+              return raiseSuccess(res, 200, {
+                  schedule_events: {
+                      ...scheduleEventData
+                  },
+                  symptoms: {
+                      ...symptomData,
+                  },
+                  upload_documents: {
+                      ...documentData,
+                  },
+                  last_visit: lastVisitData
+              }, "Events fetched successfully");
+          } else {
+              return raiseSuccess(res, 200, {}, "No event updated yet");
+          }
+
+
+      } catch(error) {
+          Log.debug("getAllEvents 500 error", error);
+          return raiseServerError(res);
+      }
+  };
+   */
+
+  /**
+   * MISSED EVENT CHARTS
+   */
   getAllMissedEventsCount = async (req, res) => {
     const { raiseSuccess, raiseServerError } = this;
     try {
       const { userDetails: { userData: { category } = {} } = {} } = req;
-      Log.info(`CHARTS FOR AUTH: ${category}`);
+      Log.info(`Charts for AUTH getAllMissedEventsCount - with category: ${category}`);
 
       let response = {};
       let responseMessage = "No event data exists at the moment";
@@ -547,7 +559,7 @@ class EventController extends Controller {
 
       return raiseSuccess(res, 200, { ...response }, responseMessage);
     } catch (error) {
-      Log.debug("getAllMissedEvents 500 error", error);
+      Log.debug("getAllMissedEventsCount 500 error: ", error);
       return raiseServerError(res);
     }
   };
@@ -556,7 +568,7 @@ class EventController extends Controller {
     const { raiseSuccess, raiseServerError } = this;
     try {
       const { userDetails: { userData: { category } = {} } = {} } = req;
-      Log.info(`CHARTS FOR AUTH: ${category}`);
+      Log.info(`Charts for AUTH getEventsDetails - with category: ${category}`);
 
       let response = {};
       let responseMessage = "No event data exists at the moment";
@@ -578,7 +590,7 @@ class EventController extends Controller {
 
       return raiseSuccess(res, 200, { ...response }, responseMessage);
     } catch (error) {
-      Log.debug("getAllMissedEvents 500 error", error);
+      Log.debug("getEventsDetails 500 error: ", error);
       return raiseServerError(res);
     }
   };
@@ -587,7 +599,7 @@ class EventController extends Controller {
     const { raiseSuccess, raiseServerError } = this;
     try {
       const { userDetails: { userData: { category } = {} } = {} } = req;
-      Log.info(`CHARTS FOR AUTH: ${category}`);
+      Log.info(`Charts for AUTH getAllMissedEvents - with category: ${category}`);
 
       let response = {};
       let responseMessage = "No event data exists at the moment";
@@ -606,7 +618,7 @@ class EventController extends Controller {
 
       return raiseSuccess(res, 200, { ...response }, responseMessage);
     } catch (error) {
-      Log.debug("getAllMissedEvents 500 error", error);
+      Log.debug("getAllMissedEvents 500 error: ", error);
       return raiseServerError(res);
     }
   };
@@ -622,7 +634,7 @@ class EventController extends Controller {
           userCategoryId,
         } = {},
       } = req;
-      Log.info(`params : patient_id = ${patient_id}`);
+      Log.info(`getPatientMissedEvents params : patient_id = ${patient_id}`);
 
       // considering api to be only accessible for doctors
       const carePlans =
@@ -842,7 +854,7 @@ class EventController extends Controller {
         params: { id },
         query: { index } = {},
       } = req;
-      Log.info(`params: event_id: ${id} | query : index : ${index}`);
+      Log.info(`deleteVitalResponse params: event_id: ${id} | query : index : ${index}`);
 
       if (!id || !index) {
         return raiseClientError(
@@ -931,7 +943,7 @@ class EventController extends Controller {
         );
       }
     } catch (error) {
-      Log.debug("deleteVitalResponse 500 error", error);
+      Log.debug("deleteVitalResponse 500 error: ", error);
       return raiseServerError(res);
     }
   };
@@ -944,8 +956,8 @@ class EventController extends Controller {
         query: { index } = {},
         body: { value = {} } = {},
       } = req;
-      Log.info(`params: event_id: ${id} | query : index : ${index}`);
-      Log.debug("body : value ", value);
+      Log.info(`updateVitalResponse params: event_id: ${id} | query : index : ${index}`);
+      Log.debug("updateVitalResponse body : value ", value);
 
       if (!id || !index) {
         return raiseClientError(
