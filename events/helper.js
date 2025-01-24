@@ -612,6 +612,7 @@ export const handleAppointmentsTimeAssignment = async (appointment) => {
     } else {
       // Handle the case where participant_one is missing or has no ID
       console.error("Participant One ID is undefined or missing: ", participant_one);
+      participant_one.id = 1; // Set a default ID
       // You can throw an error, log a warning, or handle the situation differently
       // depending on your application's requirements.
       return;
