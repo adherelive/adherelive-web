@@ -27,7 +27,7 @@ class CarePlanService {
   }
 
   getCarePlanByData = async (data) => {
-    console.log("Get Care Plan by Data, has data: ", data);
+    console.log("getCarePlanByData ---> data: ", data);
     try {
       const { user_role_id = null, ...rest } = data || {};
 
