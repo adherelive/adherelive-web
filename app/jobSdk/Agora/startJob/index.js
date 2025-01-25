@@ -32,10 +32,10 @@ class StartJob extends AgoraJob {
     const participants = roomId.split(
       `-${process.config.twilio.CHANNEL_SERVER}-`
     );
-    console.log("Inside getPush App Template");
+    console.log("Inside getPush App Template: \n");
     console.log(JSON.stringify(getAgoraData()));
-    console.log(participants);
-    console.log(roomId);
+    console.log("getPushTemplate ---> participants: ", participants);
+    console.log("getPushTemplate ---> roomId: ", roomId);
 
     const templateData = [];
     const playerIds = [];
@@ -54,17 +54,17 @@ class StartJob extends AgoraJob {
     console.log(userRoles);
     for (const userRole of userRoles) {
       const { id, user_identity, linked_id } = userRole || {};
-      console.log({ userRole });
-      console.log({ id, user_role_id, linked_id, user_identity });
+      console.log("User Role ---> getPushTemplate: ", { userRole });
+      console.log("ID, User Role ID, Linked ID, User ID ---> getPushTemplate: ", { id, user_role_id, linked_id, user_identity });
       if (id === user_role_id) {
-        console.log("in if - 1 ");
+        console.log("getPushTemplate ---> in if - 1: ", id);
         // userIds.push(user_identity)
         if (linked_id) {
           providerId = linked_id;
-          console.log("in if - 2 ");
+          console.log("getPushTemplate ---> in if - 2: ", providerId);
         }
       } else {
-        console.log("in else");
+        console.log("getPushTemplate ---> in else: ", user_identity);
         userIds.push(user_identity);
       }
     }
@@ -78,17 +78,17 @@ class StartJob extends AgoraJob {
       providerName = name;
     }
 
-    console.log({ userIds });
+    console.log("getPushTemplate ---> userIds: ", { userIds });
 
     const userDevices =
       (await UserDeviceService.getAllDeviceByData({
         user_id: userIds,
       })) || [];
-    console.log({ userDevices });
+    console.log("getPushTemplate ---> userDevices: ", { userDevices });
     if (userDevices.length > 0) {
       for (const device of userDevices) {
         const userDevice = await UserDeviceWrapper({ data: device });
-        console.log({ userDevice });
+        console.log("getPushTemplate ---> userDevice: ", { userDevice });
         playerIds.push(userDevice.getOneSignalDeviceId());
       }
     }

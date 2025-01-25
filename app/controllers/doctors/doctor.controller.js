@@ -4028,7 +4028,7 @@ class DoctorController extends Controller {
             user_roles: userRoles,
             providers,
           },
-          "Matching Doctors found  successfully."
+          "Matching Doctors found successfully."
         );
       } else {
         return raiseClientError(
@@ -4039,7 +4039,7 @@ class DoctorController extends Controller {
         );
       }
     } catch (error) {
-      Logger.debug("searchDoctorName 500 ERROR", error);
+      Logger.debug("searchDoctorName 500 error ---> ", error);
       return raiseServerError(res);
     }
   };
