@@ -73,7 +73,7 @@ class PatientWrapper extends BasePatient {
     // const carePlans = await carePlanService.getMultipleCarePlanByData({patient_id: getPatientId()});
     const order = [["created_at", "DESC"]];
     const data = { patient_id: getPatientId() };
-    console.log("getAllInfo in PatientWrapper has data patient_id as: ", data);
+    // console.log("getAllInfo in PatientWrapper has data patient_id as: ", data);
     let carePlan = await carePlanService.getSingleCarePlanByData(data, order);
 
     let carePlanId = "";
