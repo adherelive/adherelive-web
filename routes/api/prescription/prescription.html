@@ -168,7 +168,7 @@
       }
 
       .complaints_section_two {
-        width: 100%;
+        width: 75%;
       }
 
       .complaints_subsection {
@@ -324,8 +324,8 @@
       }
 
       .medicine_name_wrapper div {
-        border: 1px solid #00000091; /* Optional styling for clarity */
         padding: 25px 5px;
+        align-content: center;
       }
       .medicine_table th:nth-child(1),
       .medicine_table td:nth-child(1) {
@@ -504,10 +504,10 @@
     <!-- Chief Complaints:  -->
 
     <div class="chef-complaints-section">
-      <div style="display: flex; align-items: center">
+      <!-- <div style="display: flex; align-items: center">
         <h3>Relevent History :</h3>
         <br />
-      </div>
+      </div> -->
       <div style="display: flex; align-items: center">
         <h3>Allergies:</h3>
         <p>{{ patient_data.allergies }}</p>
@@ -573,7 +573,7 @@
                   <p>{{patient_data.height}} cm</p>
                 </td>
               </tr>
-              <tr>
+              <!-- <tr>
                 <th style="width: 50%; height: 30px" rowspan="2">
                   <h3>Weight</h3>
                 </th>
@@ -592,7 +592,7 @@
                 <td style="width: 50%; height: 30px">
                   <p>___</p>
                 </td>
-              </tr>
+              </tr> -->
             </table>
           </div>
 
@@ -601,7 +601,17 @@
               class="complaint_table"
               style="width: 100%; height: 100%; text-align: center"
             >
+            <tr>
+                <th style="width: 50%; height: 30px" rowspan="2">
+                  <h3>Weight</h3>
+                </th>
+              </tr>
               <tr>
+                <td style="width: 50%; height: 30px">
+                  <p>{{patient_data.weight}} kg</p>
+                </td>
+              </tr>
+              <!-- <tr>
                 <th style="width: 50%; height: 30px">
                   <h3>BP</h3>
                 </th>
@@ -628,11 +638,11 @@
                 <td style="width: 50%; height: 30px">
                   <p>___</p>
                 </td>
-              </tr>
+              </tr> -->
             </table>
           </div>
 
-          <div class="complaints_subsection_one">
+          <!-- <div class="complaints_subsection_one">
             <table
               class="complaint_table"
               style="width: 100%; height: 100%; text-align: center"
@@ -662,7 +672,7 @@
                 <td style="width: 50%; height: 30px"></td>
               </tr>
             </table>
-          </div>
+          </div> -->
         </div>
       </div>
     </div>
@@ -710,7 +720,7 @@
           </td>
           <td colspan="2" style="padding: 0px" >
             <div class="medicine_name_wrapper">
-              <div>
+              <div style="border-right: 1px solid;">
                 <p>{{ medicineType }}</p>
               </div>
               <div style=" text-align: justify;">
