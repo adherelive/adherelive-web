@@ -8,7 +8,8 @@ class MedicineWrapper extends BaseMedicine {
 
   getBasicInfo = () => {
     const { _data } = this;
-    // if (!_data) return { basic_info: {} }; // Handle null _data upfront
+    // TODO: Check condition of no data return
+    if (!_data) return { basic_info: {} }; // Handle null _data upfront
     const {
       id,
       name,
@@ -34,7 +35,8 @@ class MedicineWrapper extends BaseMedicine {
 
   getBasicInfoBulk = () => {
     const { _arrData, getExistingData, setCurrentData, _objectName } = this;
-    // if (!_arrData || _arrData.length === 0) return { [_objectName]: {} };
+    // TODO: Check condition of no data return
+    if (!_arrData || _arrData.length === 0) return { [_objectName]: {} };
 
     let cumulativeData = {};
     _arrData.forEach((data) => {
@@ -63,7 +65,8 @@ class MedicineWrapper extends BaseMedicine {
 
   getAllInfo = () => {
     const { _data } = this;
-    // if (!_data) return {}; // Handle null _data upfront
+    // TODO: Check condition of no data return
+    if (!_data) return {}; // Handle null _data upfront
     const {
       id,
       name,

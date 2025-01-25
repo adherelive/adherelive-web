@@ -1371,7 +1371,7 @@ class MPatientController extends Controller {
   getPatientVitals = async (req, res) => {
     const { raiseSuccess, raiseServerError, raiseClientError } = this;
     try {
-      Logger.debug("34554321345324", req.params);
+      Logger.debug("Get Pateint Vitals -> req.params: ", req.params);
       const { params: { patient_id } = {} } = req;
 
       const carePlans = await carePlanService.getMultipleCarePlanByData({

@@ -1,0 +1,51 @@
+npm warn deprecated inflight@1.0.6: This module is not supported, and leaks memory. Do not use it. Check out lru-cache if you want a good and tested way to coalesce async requests by a key value, which is much more comprehensive and powerful.
+npm warn deprecated npmlog@5.0.1: This package is no longer supported.
+npm warn deprecated @babel/plugin-proposal-class-properties@7.18.6: This proposal has been merged to the ECMAScript standard and thus this plugin is no longer maintained. Please use @babel/plugin-transform-class-properties instead.
+npm warn deprecated har-validator@5.1.5: this library is no longer supported
+npm warn deprecated rimraf@3.0.2: Rimraf versions prior to v4 are no longer supported
+npm warn deprecated @hapi/formula@2.0.0: Moved to 'npm install @sideway/formula'
+npm warn deprecated glob@7.2.3: Glob versions prior to v9 are no longer supported
+npm warn deprecated abab@1.0.4: Use your platform's native atob() and btoa() methods instead
+npm warn deprecated are-we-there-yet@2.0.0: This package is no longer supported.
+npm warn deprecated @hapi/address@4.1.0: Moved to 'npm install @sideway/address'
+npm warn deprecated querystring@0.2.0: The querystring API is considered Legacy. new code should use the URLSearchParams API instead.
+npm warn deprecated gauge@3.0.2: This package is no longer supported.
+npm warn deprecated uuid@3.4.0: Please upgrade  to version 7 or higher.  Older versions may use Math.random() in certain circumstances, which is known to be problematic.  See https://v8.dev/blog/math-random for details.
+npm warn deprecated request@2.88.2: request has been deprecated, see https://github.com/request/request/issues/3142
+npm warn deprecated agora-access-token@2.0.4: The package has been deprecated. Please use 'agora-token' instead, sorry for the inconvenience caused.
+npm warn deprecated sendgrid@1.9.2: Please see v6.X+ at https://www.npmjs.com/org/sendgrid
+npm warn deprecated @hapi/joi@17.1.1: Switch to 'npm install joi'
+npm warn deprecated core-js@2.6.12: core-js@<3.23.3 is no longer maintained and not recommended for usage due to the number of issues. Because of the V8 engine whims, feature detection in old core-js versions could cause a slowdown up to 100x even if nothing is polyfilled. Some versions have web compatibility issues. Please, upgrade your dependencies to the actual version of core-js.
+
+
+
+The output you provided contains warnings from npm about deprecated packages in your project's dependencies. These warnings indicate that the packages you are using are either no longer supported, have security vulnerabilities, or have recommended replacements.
+
+Here's a breakdown of the warnings and some suggestions:
+
+1. **Deprecated packages:**
+   - `inflight@1.0.6`
+   - `npmlog@5.0.1`
+   - `@babel/plugin-proposal-class-properties@7.18.6`
+   - `har-validator@5.1.5`
+   - `rimraf@3.0.2`
+   - `@hapi/formula@2.0.0`
+   - `glob@7.2.3`
+   - `abab@1.0.4`
+   - `are-we-there-yet@2.0.0`
+   - `@hapi/address@4.1.0`
+   - `querystring@0.2.0`
+   - `gauge@3.0.2`
+   - `uuid@3.4.0`
+   - `request@2.88.2`
+   - `agora-access-token@2.0.4`
+   - `sendgrid@1.9.2`
+   - `@hapi/joi@17.1.1`
+   - `core-js@2.6.12`
+
+2. **Recommendations:**
+   - The warnings often suggest replacements for the deprecated packages. For example, you can replace `inflight` with `lru-cache`, `@babel/plugin-proposal-class-properties` with `@babel/plugin-transform-class-properties`, and `@hapi/formula` with `@sideway/formula`.
+   - Consider upgrading to the latest versions of the packages whenever possible. Newer versions often have bug fixes, security improvements, and performance enhancements.
+   - If a replacement is not suggested, search online for alternatives or reach out to the package maintainers to understand the deprecation reason and recommended course of action.
+
+Upgrading deprecated packages is generally a good practice to improve the security and stability of your project. It's recommended to carefully review the warnings and take appropriate actions to address them.

@@ -4,7 +4,7 @@ import Database from "../../../libs/mysql";
 import { USER_CATEGORY } from "../../../constant";
 
 import { TABLE_NAME } from "../../models/exercise";
-
+// import { TABLE_NAME as exerciseUserCreatedMappingTableName } from "../../models/exerciseUserCreatedMapping";
 import { TABLE_NAME as exerciseDetailsTableName } from "../../models/exerciseDetails";
 import {
   TABLE_NAME as exerciseContentTableName,

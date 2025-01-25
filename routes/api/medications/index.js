@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+import { isDoctor } from "../middleware/doctor";
 import isAllowed from "../../middlewares/permissions";
 import PERMISSIONS from "../../../config/permissions";
 

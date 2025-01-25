@@ -14,6 +14,7 @@ import WorkoutService from "../services/workouts/workout.service";
 
 // wrappers
 import VitalWrapper from "../apiWrapper/mobile/vitals";
+import PatientWrapper from "../apiWrapper/mobile/patient";
 
 const Log = new Logger("LONG_TERM > CRON-JOBS");
 

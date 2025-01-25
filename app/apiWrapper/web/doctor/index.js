@@ -234,7 +234,7 @@ class DoctorWrapper extends BaseDoctor {
     } = _data || {};
 
     const consentService = new ConsentService();
-
+    console.log("getDoctorId data in getAllInfo ---> ", _data);
     const watchlistPatients = await doctorService.getAllWatchlist({
       doctor_id: getDoctorId(),
     });
@@ -327,56 +327,59 @@ class DoctorWrapper extends BaseDoctor {
       // End - 28 - Sept - 2023 comment
     }
 
-    // const carePlansDoctor =
-    //   (await carePlanService.getMultipleCarePlanByData({
-    //     user_role_id:userRoleId
-    //   })) || [];
-    // const carePlansPatient =
-    // await carePlanService.findAndCountAll({
-    //   where: {
-    //     patient_id: patientIds,
-    //   },
-    //   attributes: ["id"]
-    // }) || [];
+    /**
+     * TODO: Check if the below code is required or not
+    const carePlansDoctor =
+      (await carePlanService.getMultipleCarePlanByData({
+        user_role_id:userRoleId
+      })) || [];
+    const carePlansPatient =
+    await carePlanService.findAndCountAll({
+      where: {
+        patient_id: patientIds,
+      },
+      attributes: ["id"]
+    }) || [];
 
-    // careplanPatientIds = carePlansPatient.map(careplan => careplan.id);
+    careplanPatientIds = carePlansPatient.map(careplan => careplan.id);
 
-    // const carePlanIds = [];
+    const carePlanIds = [];
 
-    // Object.keys(carePlanIds).forEach(roleId => {
-    //   const temp = carePlanIds[roleId] || [];
-    //   carePlanIds[roleId] = [...new Set([...temp, ...careplanPatientIds])];
-    // });
+    Object.keys(carePlanIds).forEach(roleId => {
+      const temp = carePlanIds[roleId] || [];
+      carePlanIds[roleId] = [...new Set([...temp, ...careplanPatientIds])];
+    });
 
-    // let carePlans = [...carePlansDoctor, ...carePlansPatient];
+    let carePlans = [...carePlansDoctor, ...carePlansPatient];
 
-    // if (carePlans.length > 0) {
-    //   carePlans.sort((carePlanA, carePlanB) => {
-    //     if (carePlanA.get("expired_on")) {
-    //       return -1;
-    //     } else {
-    //       return 1;
-    //     }
-    //   });
+    if (carePlans.length > 0) {
+      carePlans.sort((carePlanA, carePlanB) => {
+        if (carePlanA.get("expired_on")) {
+          return -1;
+        } else {
+          return 1;
+        }
+      });
 
-    //   for (const carePlanData of carePlans) {
-    //     const carePlan = await CarePlanWrapper(carePlanData);
-    //     if (!carePlanIds.includes(carePlan.getCarePlanId()))
-    //       carePlanIds.push(carePlan.getCarePlanId());
-    //   }
-    // }
+      for (const carePlanData of carePlans) {
+        const carePlan = await CarePlanWrapper(carePlanData);
+        if (!carePlanIds.includes(carePlan.getCarePlanId()))
+          carePlanIds.push(carePlan.getCarePlanId());
+      }
+    }
 
-    // const doctorProvider = await doctorProviderMappingService.getProviderForDoctor(
-    //   getDoctorId()
-    // );
+    const doctorProvider = await doctorProviderMappingService.getProviderForDoctor(
+      getDoctorId()
+    );
 
-    // let providerId = null;
-    // if (doctorProvider) {
-    //   const doctorProviderWrapper = await DoctorProviderMappingWrapper(
-    //     doctorProvider
-    //   );
-    //   providerId = doctorProviderWrapper.getProviderId();
-    // }
+    let providerId = null;
+    if (doctorProvider) {
+      const doctorProviderWrapper = await DoctorProviderMappingWrapper(
+        doctorProvider
+      );
+      providerId = doctorProviderWrapper.getProviderId();
+    }
+     */
 
     return {
       basic_info: {
@@ -401,6 +404,7 @@ class DoctorWrapper extends BaseDoctor {
       // provider_id: providerId
     };
   };
+
   // Gaurav New Changes
   getAllInfoNew = async () => {
     const { _data } = this;

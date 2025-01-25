@@ -6,6 +6,7 @@ import { EVENT_TYPE } from "../../constant";
 
 import CarePlanWrapper from "../apiWrapper/web/carePlan";
 import PatientWrapper from "../apiWrapper/web/patient";
+import DietWrapper from "../apiWrapper/web/diet";
 import VitalWrapper from "../apiWrapper/web/vitals";
 
 import carePlanAppointmentService from "../services/carePlanAppointment/carePlanAppointment.service";

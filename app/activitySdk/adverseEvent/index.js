@@ -1,7 +1,17 @@
-import { onAdverseEventCreate } from "../helper";
+import {
+  onCreate,
+  onAdverseEventCreate,
+  onComplete,
+  onCancel,
+  onReschedule,
+  onStart,
+} from "../helper";
 import { ACTIVITIES } from "../activityType";
 
+// TODO: Going back to require, as the module export is used
+// import ActivitySdk from "../index";
 const { ActivitySdk } = require("../");
+
 const { ADVERSE_EVENT } = ACTIVITIES;
 
 class AdverseEventActivity {

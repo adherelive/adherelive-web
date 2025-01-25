@@ -11,8 +11,11 @@ import {
 } from "../helper";
 import { ACTIVITIES } from "../activityType";
 
-const { MATERIAL_DELIVERY } = ACTIVITIES;
+// TODO: Going back to require, as the module export is used
+// import ActivitySdk from "../index";
 const { ActivitySdk } = require("../");
+
+const { MATERIAL_DELIVERY } = ACTIVITIES;
 
 class MaterialDeliveryActivity {
   constructor({}) {

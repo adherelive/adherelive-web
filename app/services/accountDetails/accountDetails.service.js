@@ -3,23 +3,6 @@ import { TABLE_NAME } from "../../models/accountDetails";
 import { Op } from "sequelize";
 
 class AccountDetailsService {
-  // update = async (data, id) => {
-  //   const transaction = await Database.initTransaction();
-  //   try {
-  //     const accountDetails = await Database.getModel(TABLE_NAME).update(data, {
-  //       where: {
-  //         id,
-  //       },
-  //       transaction,
-  //     });
-  //     await transaction.commit();
-  //     return accountDetails;
-  //   } catch (error) {
-  //     await transaction.rollback();
-  //     throw error;
-  //   }
-  // };
-
   addAccountDetails = async (data) => {
     const transaction = await Database.initTransaction();
     try {

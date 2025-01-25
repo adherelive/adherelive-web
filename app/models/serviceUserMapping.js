@@ -4,7 +4,12 @@ import { TABLE_NAME as patientsTableName } from "./patients";
 import { TABLE_NAME as doctorsTableName } from "./doctors";
 import { TABLE_NAME as providersTableName } from "./providers";
 import { TABLE_NAME as serviceOfferingTableName } from "./serviceOffering";
-import { PATIENT_STATUS, USER_CATEGORY } from "../../constant";
+import {
+  CURRENCY,
+  USER_CATEGORY,
+  USER_STATUS,
+  PATIENT_STATUS,
+} from "../../constant";
 
 export const TABLE_NAME = "service_user_mappings";
 

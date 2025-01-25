@@ -33,11 +33,11 @@ class MedicineController extends Controller {
 
       if (medicineDetails.length > 0) {
         let medicineApiData = {};
-        for (const medicine of medicineDetails) {
+        await medicineDetails.forEach(async (medicine) => {
           const medicineWrapper = await new MedicineWrapper(medicine);
           medicineApiData[medicineWrapper.getMedicineId()] =
             medicineWrapper.getBasicInfo();
-        }
+        });
 
         return raiseSuccess(
           res,
@@ -208,10 +208,10 @@ class MedicineController extends Controller {
       const doctorDetails = await doctorService.search(value);
 
       if (doctorDetails && doctorDetails.length > 0) {
-        for (const doctor of doctorDetails) {
+        await doctorDetails.forEach(async (doctor) => {
           const doctorWrapper = await DoctorWrapper(doctor);
           doctorIds.push(doctorWrapper.getDoctorId());
-        }
+        });
       }
 
       const limit = process.config.ADMIN_MEDICINE_ONE_PAGE_LIMIT;
@@ -247,7 +247,7 @@ class MedicineController extends Controller {
       const creatorIds = [];
       if (medicineDetails.length > 0) {
         let medicineApiData = {};
-        for (const medicine of medicineDetails) {
+        await medicineDetails.forEach(async (medicine) => {
           const medicineWrapper = await new MedicineWrapper(medicine);
           medicineApiData[medicineWrapper.getMedicineId()] =
             medicineWrapper.getAllInfo();
@@ -257,7 +257,7 @@ class MedicineController extends Controller {
           if (creator_id) {
             creatorIds.push(creator_id);
           }
-        }
+        });
 
         for (const id of creatorIds) {
           const doctorApiWrapper = await DoctorWrapper(null, id);

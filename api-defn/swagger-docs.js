@@ -3,13 +3,13 @@ const swaggerAutogen = require('swagger-autogen')();
 
 const doc = {
     info: {
-        version: '1.0.0',
+        version: '3.1.5',
         title: 'AdhereLive API Documentation',
         description: 'This is the API documentation for the React & Node server AdhereLive application',
     },
     host: process.env.API_URL || 'localhost:3000', // Will be replaced by actual host in production
-    basePath: '/api',
-    schemes: ['http', 'https'],
+    basePath: '/',
+    schemes: ['https', 'http'],
     consumes: ['application/json'],
     produces: ['application/json'],
     tags: [
@@ -42,10 +42,12 @@ const doc = {
     ],
     securityDefinitions: {
         bearerAuth: {
-            type: 'apiKey',
+            type: 'https',
             name: 'Authorization',
+            flow: 'implicit',
             scheme: 'bearer',
-            in: 'header',
+            in: 'body',
+            bearerFormat: "JWT",
         },
     },
     definitions: {
@@ -62,7 +64,7 @@ const doc = {
 // Define output file and endpoints files
 const outputFile = './adherelive-api-swagger.json';
 const endpointsFiles = [
-    '../server/app.js'   // Your main application file
+    '../server/app.js'     // Your main application file
     // './routes/**/*.js', // This will include all JS files in routes and its subfolders
 ];
 

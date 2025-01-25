@@ -11,8 +11,11 @@ import {
 } from "../helper";
 import { ACTIVITIES } from "../activityType";
 
-const { MEDICATION } = ACTIVITIES;
+// TODO: Going back to require, as the module export is used
+// import ActivitySdk from "../index";
 const { ActivitySdk } = require("../");
+
+const { MEDICATION } = ACTIVITIES;
 
 class MedicationActivity {
   constructor({}) {

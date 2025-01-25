@@ -60,6 +60,7 @@ import {
   ALLOWED_DOC_TYPE_DOCTORS,
   DOCUMENT_PARENT_TYPE,
   EMAIL_TEMPLATE_NAME,
+  EVENT_TYPE,
   FEATURES,
   NO_ACTION,
   NO_APPOINTMENT,
@@ -85,7 +86,7 @@ import doctorPatientWatchlistService from "../../services/doctorPatientWatchlist
 import { getRoomId, getSeparateName } from "../../helper/common";
 import { raiseClientError } from "../../../routes/api/helper";
 
-const XLSX = require("xlsx");
+const { Workbook } = require('exceljs');
 
 var fs = require("fs");
 
@@ -233,10 +234,7 @@ class DoctorController extends Controller {
           doctorWrapper.getDoctorId()
         );
 
-      Logger.debug(
-        "Get All Admin Doctors registrations ---> ",
-        doctorRegistrations
-      );
+      Logger.debug("Get All Admin Doctor details ---> ", doctorRegistrations);
 
       await doctorRegistrations.forEach(async (doctorRegistration) => {
         const doctorRegistrationWrapper = await RegistrationWrapper(
@@ -4240,11 +4238,33 @@ class DoctorController extends Controller {
       fs.writeFile("file.xlsx", file.buffer, async function (err, result) {
         if (err) console.log("error", err);
 
-        let workbook = XLSX.readFile("file.xlsx");
-        let sheet_name_list = workbook.SheetNames;
-        const medicineModificationDocs = XLSX.utils.sheet_to_json(
-          workbook.Sheets[sheet_name_list[0]]
-        );
+        // let workbook = XLSX.readFile("file.xlsx");
+        // let sheet_name_list = workbook.SheetNames;
+        // const medicineModificationDocs = XLSX.utils.sheet_to_json(
+        //   workbook.Sheets[sheet_name_list[0]]
+        // );
+        async function readExcelData(filePath) {
+          try {
+            const workbook = new Workbook();
+            await workbook.xlsx.readFile(filePath);
+
+            const sheetName = workbook.worksheets[0].name;
+            const medicineModificationDocs = workbook.worksheets[0].getRows().map(row => {
+              return row.values.slice(1); // Assuming the first column is an index
+            });
+
+            return medicineModificationDocs;
+          } catch (error) {
+            console.error("Error reading Excel file: ", error);
+            return [];
+          }
+        }
+
+        // Usage:
+        readExcelData("file.xlsx")
+            .then(data => {
+              console.log(data);
+            });
 
         let error = [];
         let success = [];

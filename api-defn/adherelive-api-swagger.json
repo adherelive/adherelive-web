@@ -34,15 +34,17 @@
     }
   ],
   "schemes": [
-    "http",
-    "https"
+    "https",
+    "http"
   ],
   "securityDefinitions": {
     "bearerAuth": {
-      "type": "apiKey",
+      "type": "https",
       "name": "Authorization",
       "flow": "implicit",
-      "in": "header"
+      "scheme": "bearer",
+      "in": "body",
+      "bearerFormat": "JWT"
     }
   },
   "consumes": [

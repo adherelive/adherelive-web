@@ -1,7 +1,10 @@
 import Controller from "../index";
+
 import base64 from "js-base64";
 import bcrypt from "bcrypt";
 import Log from "../../../libs/log";
+
+// Services
 import userService from "../../services/user/user.service";
 import patientService from "../../services/patients/patients.service";
 import carePlanService from "../../services/carePlan/carePlan.service";
@@ -11,7 +14,10 @@ import conditionService from "../../services/condition/condition.service";
 import providerService from "../../services/provider/provider.service";
 import userRolesService from "../../services/userRoles/userRoles.service";
 import doctorPatientWatchlistService from "../../services/doctorPatientWatchlist/doctorPatientWatchlist.service";
+import doctorService from "../../services/doctors/doctors.service";
+import UserVerificationServices from "../../services/userVerifications/userVerifications.services";
 
+// Wrappers
 import UserWrapper from "../../apiWrapper/web/user";
 import DoctorWrapper from "../../apiWrapper/web/doctor";
 import TreatmentWrapper from "../../apiWrapper/web/treatments";
@@ -20,29 +26,22 @@ import ConditionWrapper from "../../apiWrapper/web/conditions";
 import ProvidersWrapper from "../../apiWrapper/web/provider";
 import UserRolesWrapper from "../../apiWrapper/web/userRoles";
 import DoctorPatientWatchlistWrapper from "../../apiWrapper/web/doctorPatientWatchlist";
-
-import doctorService from "../../services/doctors/doctors.service";
-import UserVerificationServices from "../../services/userVerifications/userVerifications.services";
-
-import { createNewUser, uploadImageS3 } from "./user.helper";
-import { v4 as uuidv4 } from "uuid";
-import constants from "../../../config/constants";
-import {
-  EMAIL_TEMPLATE_NAME,
-  USER_CATEGORY,
-  VERIFICATION_TYPE,
-} from "../../../constant";
-import { EVENTS, Proxy_Sdk } from "../../proxySdk";
 import LinkVerificationWrapper from "../../apiWrapper/mobile/userVerification";
+
+import {createNewUser, uploadImageS3} from "./user.helper";
+import {v4 as uuidv4} from "uuid";
+import constants from "../../../config/constants";
+import {EMAIL_TEMPLATE_NAME, USER_CATEGORY, VERIFICATION_TYPE,} from "../../../constant";
+import {EVENTS, Proxy_Sdk} from "../../proxySdk";
 
 import AppNotification from "../../notificationSdk/inApp";
 import AdhocJob from "../../jobSdk/Adhoc/observer";
-import { getSeparateName } from "../../helper/common";
+import {getSeparateName} from "../../helper/common";
 
-const { OAuth2Client } = require("google-auth-library");
+const {OAuth2Client} = require("google-auth-library");
 const moment = require("moment");
-const jwt = require("jsonwebtoken");
-const request = require("request");
+const axios = require('axios');
+const jwt = require('jsonwebtoken'); // Assuming you already have jwt installed
 const chalk = require("chalk");
 
 const Response = require("../helper/responseFormat");
@@ -101,7 +100,7 @@ class UserController extends Controller {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       const { params: { link } = {} } = req;
-      Logger.info(`(request)(param) LINK :: ${link}`);
+      Logger.info(`(axios.post)(param) LINK :: ${link}`);
       const verifications = await UserVerificationServices.getRequestByLink(
         link
       );
@@ -476,58 +475,54 @@ class UserController extends Controller {
   async signInFacebook(req, res) {
     const { accessToken } = req.body;
 
-    try {
-      request(
-        `https://graph.facebook.com/v2.3/oauth/access_token?grant_type=fb_exchange_token&client_id=${process.config.FACEBOOK_KEYS.APP_TOKEN}&client_secret=${process.config.FACEBOOK_KEYS.SECRET_TOKEN}&fb_exchange_token=${accessToken}`,
-        { json: true },
-        async (err, response, body) => {
-          if (err) {
-            return console.log(err);
-          }
-          const { access_token = "", expires_in } = body || {};
+        try {
+            const clientId = process.config.FACEBOOK_KEYS.APP_TOKEN;
+            const clientSecret = process.config.FACEBOOK_KEYS.SECRET_TOKEN;
+            const expiresIn = process.config.TOKEN_EXPIRE_TIME;
+            const secret = process.config.TOKEN_SECRET_KEY;
+            const userId = "4"; // TODO: seeder for FB sign-in, replace with logic to get user ID from Facebook
 
-          const expiresIn = process.config.TOKEN_EXPIRE_TIME; // expires in 1 day
-          const secret = process.config.TOKEN_SECRET_KEY;
-          const userId = "4"; // todo: seeder for facebook sign-in doctor
-
-          if (access_token) {
-            const accessTokenCombined = await jwt.sign(
-              {
-                userId: userId,
-                accessToken: accessToken,
-              },
-              secret,
-              {
-                expiresIn,
-              }
+            const response = await axios.get(
+                `https://graph.facebook.com/v2.3/oauth/access_token?grant_type=fb_exchange_token&client_id=${clientId}&client_secret=${clientSecret}&fb_exchange_token=${accessToken}`,
+                {
+                    // No need to set json: true as axios automatically parses JSON responses
+                }
             );
 
-            res.cookie("accessToken", accessTokenCombined, {
-              // expires: new Date(
-              //     Date.now() + process.config.INVITE_EXPIRE_TIME * 86400000
-              // ),
-              httpOnly: true,
-            });
+            if (response.data.access_token) {
+                const accessTokenCombined = jwt.sign(
+                    {
+                        userId,
+                        accessToken: response.data.access_token,
+                    },
+                    secret,
+                    {
+                        expiresIn,
+                    }
+                );
 
-            let resp = new Response(true, 200);
-            resp.setData({
-              users: {},
-            });
-            resp.setMessage("Sign in successful!");
-            return res.status(resp.getStatusCode()).send(resp.getResponse());
-          }
+                const cookieOptions = {
+                    httpOnly: true,
+                };
+
+                res.cookie("accessToken", accessTokenCombined, cookieOptions);
+
+                return res.status(200).send({
+                    message: "Sign in successful!",
+                    users: {}, // Assuming users object is empty for now
+                });
+            } else {
+                console.error("Failed to get access token from Facebook:", response.data);
+                // Handle error appropriately, e.g., send error response to client
+                return res.status(401).send({message: "Facebook sign-in failed"});
+            }
+        } catch (error) {
+            console.error("Error during Facebook login:", error);
+            // Handle error appropriately, e.g., send error response to client
+            return res.status(500).send({message: "Internal server error"});
         }
-      );
-
-      // let response = new Response(true, 200);
-      // response.setMessage("Sign in successful!");
-      // return res
-      //     .status(response.getStatusCode())
-      //     .send(response.getResponse());
-    } catch (err) {
-      throw err;
     }
-  }
+
 
   getTime() {
     let date_ob = new Date();
@@ -2153,7 +2148,7 @@ class UserController extends Controller {
           templateName: EMAIL_TEMPLATE_NAME.FORGOT_PASSWORD,
         };
 
-        await Proxy_Sdk.execute(
+        const emailResponse = await Proxy_Sdk.execute(
           EVENTS.SEND_EMAIL,
           emailPayload
         );
@@ -2162,7 +2157,7 @@ class UserController extends Controller {
           res,
           422,
           {},
-          "User does not exists for the e-mail"
+          "User does not exist for the provided e-mail"
         );
       }
 

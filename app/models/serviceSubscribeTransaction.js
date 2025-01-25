@@ -3,6 +3,7 @@ import { DataTypes } from "sequelize";
 import {
   BILLING_FREQUENCY,
   CURRENCY,
+  REPEAT_TYPE,
   USER_CATEGORY,
   USER_STATUS,
 } from "../../constant";

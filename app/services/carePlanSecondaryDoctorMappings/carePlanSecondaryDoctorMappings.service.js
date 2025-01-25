@@ -1,3 +1,4 @@
+import { Op } from "sequelize";
 import Database from "../../../libs/mysql";
 import { TABLE_NAME } from "../../models/carePlanSecondaryDoctorMappings";
 import { TABLE_NAME as carePlanTableName } from "../../models/carePlan";

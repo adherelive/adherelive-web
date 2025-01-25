@@ -9,7 +9,10 @@ import {
 } from "../helper";
 import { ACTIVITIES } from "../activityType";
 
+// TODO: Going back to require, as the module export is used
+// import ActivitySdk from "../index";
 const { ActivitySdk } = require("../");
+
 const { REMINDER } = ACTIVITIES;
 
 class ReminderActivity {

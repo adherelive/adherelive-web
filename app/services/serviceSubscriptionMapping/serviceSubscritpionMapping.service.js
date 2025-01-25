@@ -1,5 +1,6 @@
 import Database from "../../../libs/mysql";
 import { TABLE_NAME } from "../../models/serviceSubscriptionMapping";
+import { TABLE_NAME as ServiceOfferingTableName } from "../../models/serviceOffering";
 import ServiceOfferingService from "../serviceOffering/serviceOffering.service";
 
 export default class ServiceSubscriptionMapping {
