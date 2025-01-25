@@ -228,6 +228,9 @@ class EventController extends Controller {
     }
   };
 
+
+  /**
+   * TODO: This method is not used anywhere in the codebase. It should be removed.
   getAllEventsBackup = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
@@ -410,6 +413,7 @@ class EventController extends Controller {
       return raiseServerError(res);
     }
   };
+   */
 
   markEventComplete = async (req, res) => {
     const { raiseSuccess, raiseServerError } = this;
@@ -421,7 +425,7 @@ class EventController extends Controller {
         id
       );
 
-      Log.debug("markEventComplete ---> ", markEventComplete);
+      Log.debug("markEventComplete in event.controller ---> ", markEventComplete);
 
       const event = await EventWrapper(null, id);
       const { appointments = {}, schedule_events = {} } =
@@ -437,7 +441,7 @@ class EventController extends Controller {
         "Event completed successfully"
       );
     } catch (error) {
-      Log.debug("markEventComplete 500 error: ", error);
+      Log.debug("markEventComplete in event.controller 500 error: ", error);
       return raiseServerError(res);
     }
   };
@@ -556,7 +560,6 @@ class EventController extends Controller {
           [response, responseMessage] = await EventHelper.providerChart(req);
           break;
       }
-
       return raiseSuccess(res, 200, { ...response }, responseMessage);
     } catch (error) {
       Log.debug("getAllMissedEventsCount 500 error: ", error);
