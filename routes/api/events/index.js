@@ -14,9 +14,40 @@ import * as validator from "./validator";
 //     MedicationReminder.getMedicationDetails
 // );
 
+/**
+ * @swagger
+ * /api/events/missed:
+ *  get:
+ *     tags:
+ *       - Events
+ *     description: Returns all missed events, for the logged-in user
+ *                  Details of missing appointments, medication reminders, vitals, etc.
+ *     security:
+ *       - Bearer: []
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       200:
+ *         description: An array of missed events
+ */
 router.get("/missed", Authenticate, EventController.getAllMissedEvents);
 
-// will sending the query like missed apppointment and all...
+/**
+ * @swagger
+ * /api/events/details:
+ *   get:
+ *     tags:
+ *       - Events
+ *     description: Returns all missed events details, for the logged-in user
+ *                  Details of missing appointments, medication reminders, vitals, etc.
+ *     security:
+ *       - Bearer: []
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       200:
+ *         description: An array of missed events details
+ */
 router.get("/details", Authenticate, EventController.getEventsDetails);
 
 router.get("/count", Authenticate, EventController.getAllMissedEventsCount);

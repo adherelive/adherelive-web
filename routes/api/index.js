@@ -66,24 +66,29 @@ import prescriptionRouter from "./prescription";
 const Log = new Logger("API > INDEX");
 
 router.use(async function (req, res, next) {
-  console.log("api-index-1" + getTime() + getTime());
+  console.log("api-index-1 ---> router getTime: " + getTime() + getTime());
   try {
     let accessToken,
       userId = null,
       userRoleId,
       userRoleData;
     const { cookies = {} } = req;
-    console.log("api-index-2" + getTime());
-    // Commenting out the below, as it is not required here currently
-    // if (cookies.accessToken) {
-    //   accessToken = cookies.accessToken;
-    // }
-    // console.log("api-index-3" + getTime());
-    // const { accessToken: aT = "" } = req.headers || {};
-    // if (aT) {
-    //   accessToken = aT;
-    // }
+    // console.log("api-index-2" + getTime());
+
+    /**
+     * TODO: Commenting out the below, as it is not required here currently
+    if (cookies.accessToken) {
+      accessToken = cookies.accessToken;
+    }
+    console.log("api-index-3" + getTime());
+    const { accessToken: aT = "" } = req.headers || {};
+    if (aT) {
+      accessToken = aT;
+    }
+     */
     let { m } = req.query;
+
+    // If the 'm' is a parameter in the query, then it is a mobile request
     if (m) {
       const { authorization = "" } = req.headers || {};
       const bearer = authorization.split(" ");
@@ -98,9 +103,9 @@ router.use(async function (req, res, next) {
     }
 
     const secret = process.config.TOKEN_SECRET_KEY;
-    console.log("api-index-4" + getTime());
+    // console.log("api-index-4" + getTime());
     if (accessToken) {
-      console.log("api-index-5" + getTime());
+      // console.log("api-index-5" + getTime());
       const decodedAccessToken = await jwt.verify(accessToken, secret);
       const {
         userRoleId: decodedUserRoleId = null,
@@ -110,7 +115,8 @@ router.use(async function (req, res, next) {
       const userRoleDetails = await userRolesService.getSingleUserRoleByData({
         id: decodedUserRoleId,
       });
-      console.log("api-index-6" + getTime());
+
+      // console.log("api-index-6" + getTime());
       if (userRoleDetails) {
         const userRole = await UserRoleWrapper(userRoleDetails);
         userId = userRole.getUserId();
@@ -124,27 +130,27 @@ router.use(async function (req, res, next) {
         next();
         return;
       }
-      console.log("api-index-7" + getTime());
+      // console.log("api-index-7" + getTime());
     } else {
-      console.log("api-index-8" + getTime());
+      // console.log("api-index-8" + getTime());
       req.userDetails = {
         exists: false,
       };
       next();
-      console.log("api-index-9" + getTime());
+      // console.log("api-index-9" + getTime());
       return;
     }
-    console.log("api-index-10" + getTime());
+    // console.log("api-index-10" + getTime());
     const userData = await userService.getUser(userId);
-    console.log("api-index-11" + getTime());
+    // console.log("api-index-11" + getTime());
     if (userData) {
-      console.log("api-index-12" + getTime());
-      console.log("api-index-12-1" + getTime());
+      // console.log("api-index-12" + getTime());
+      // console.log("api-index-12-1" + getTime());
       const user = await UserWrapper(userData);
-      console.log("api-index-12-2" + getTime());
-      const { userCategoryData, userCategoryId } =
-        (await user.getCategoryInfo()) || {};
-      console.log("api-index-12-3" + getTime());
+      // console.log("api-index-12-2" + getTime());
+      const { userCategoryData, userCategoryId } = (await user.getCategoryInfo()) || {};
+      // console.log("api-index-12-3" + getTime());
+
       req.userDetails = {
         exists: true,
         userRoleId,
@@ -155,11 +161,11 @@ router.use(async function (req, res, next) {
         userCategoryId,
       };
 
-      console.log("api-index-12-4" + getTime());
+      // console.log("api-index-12-4" + getTime());
       req.permissions = await user.getPermissions();
-      console.log("api-index-12-5" + getTime());
-      console.log("api-index-13" + getTime());
-      console.log("api-index-14" + getTime());
+      // console.log("api-index-12-5" + getTime());
+      // console.log("api-index-13" + getTime());
+      // console.log("api-index-14" + getTime());
     } else {
       req.userDetails = {
         exists: false,
@@ -167,7 +173,7 @@ router.use(async function (req, res, next) {
     }
     next();
   } catch (err) {
-    Log.debug("API INDEX CATCH ERROR ", err);
+    Log.debug("API index catch Error ---> ", err);
     req.userDetails = {
       exists: false,
     };
@@ -175,57 +181,60 @@ router.use(async function (req, res, next) {
   }
 });
 
+// API Routes for the basic functions
+router.use("/admin", adminRouter);
+router.use("/appointments", appointmentRouter);
 router.use("/auth", userRouter);
 router.use("/auth-his", hisRouter);
-router.use("/appointments", appointmentRouter);
-router.use("/medications", medicationRouter);
-router.use("/events", eventRouter);
-router.use("/twilio", twilioRouter);
-router.use("/patients", patientRouter);
-router.use("/medicines", medicineRouter);
 router.use("/carePlans", carePlanRouter);
-router.use("/admin", adminRouter);
 router.use("/charts", chartRouter);
 router.use("/doctors", doctorRouter);
+router.use("/events", eventRouter);
+router.use("/medications", medicationRouter);
+router.use("/medicines", medicineRouter);
+router.use("/patients", patientRouter);
+router.use("/twilio", twilioRouter);
 
-router.use("/colleges", collegeRouter);
-router.use("/degrees", degreeRouter);
-router.use("/councils", councilRouter);
-router.use("/conditions", conditionRouter);
-router.use("/severity", severityRouter);
-router.use("/treatments", treatmentRouter);
-router.use("/specialities", specialityRouter);
+// API Routes for the master data
 router.use("/care-plan-templates", carePlanTemplateRouter);
+router.use("/colleges", collegeRouter);
+router.use("/conditions", conditionRouter);
+router.use("/councils", councilRouter);
+router.use("/degrees", degreeRouter);
+router.use("/severity", severityRouter);
+router.use("/specialities", specialityRouter);
+router.use("/treatments", treatmentRouter);
 
-router.use("/notifications", notificationRouter);
-router.use("/symptoms", symptomRouter);
-router.use("/vitals", vitalRouter);
+// API Routes for the other and 3rd party functions
 router.use("/accounts", accountsRouter);
-router.use("/providers", providersRouter);
-router.use("/features", featuresRouter);
-router.use("/reports", reportRouter);
-router.use("/transactions", transactionRouter);
-router.use("/favourites", userFavourites);
-router.use("/agora", agoraRouter);
 router.use("/adhoc", adhocRouter);
-router.use("/user-roles", userRoles);
-router.use("/food-items", foodItemsRouter);
-router.use("/meal/templates", mealTemplateRouter);
+router.use("/agora", agoraRouter);
+router.use("/cdss", cdssRouter);
 router.use("/diet", dietRouter);
-router.use("/portions", portionRouter);
 router.use("/exercises", exerciseRouter);
-router.use("/workout", workoutRouter);
+router.use("/favourites", userFavourites);
+router.use("/features", featuresRouter);
+router.use("/flashcard", FlashCardRouter);
+router.use("/food-items", foodItemsRouter);
+router.use("/his", hisOperationRouter);
+router.use("/meal/templates", mealTemplateRouter);
+router.use("/notes", NotesRouter);
+router.use("/notifications", notificationRouter);
+router.use("/portions", portionRouter);
+router.use("/prescription", prescriptionRouter);
+router.use("/providers", providersRouter);
+router.use("/reassignaudit", reassignAudit);
+router.use("/reports", reportRouter);
 router.use("/serviceoffering", serviceOfferingRouter);
 router.use("/servicesubscription", serviceSubscriptionRouter);
-router.use("/serviceusermapping", serviceUserMappingRouter);
 router.use("/servicesubscriptionusermapping", serviceSubscriptionUserMapping);
 router.use("/servicesubtx", serviceSubscribeTxRouter);
+router.use("/serviceusermapping", serviceUserMappingRouter);
+router.use("/symptoms", symptomRouter);
+router.use("/transactions", transactionRouter);
 router.use("/txactivities", TxActivitiesRouter);
-router.use("/flashcard", FlashCardRouter);
-router.use("/notes", NotesRouter);
-router.use("/cdss", cdssRouter);
-router.use("/his", hisOperationRouter);
-router.use("/prescription", prescriptionRouter);
-router.use("/reassignaudit", reassignAudit);
+router.use("/user-roles", userRoles);
+router.use("/vitals", vitalRouter);
+router.use("/workout", workoutRouter);
 
 module.exports = router;

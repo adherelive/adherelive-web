@@ -18,13 +18,13 @@ export default class SqsObserver {
   observe = async (service) => {
     try {
       const eventMessage = await service.receiveMessage();
-      Log.debug("eventMessage", eventMessage);
+      Log.debug("eventMessage observe event message: ", eventMessage);
 
       if (eventMessage) {
         for (const message of eventMessage) {
           const data = JSON.parse(message.Body) || null;
 
-          Log.debug("observer message --> ", data);
+          Log.debug("SQS Observer observe data --> ", data);
 
           if (Array.isArray(data)) {
             for (let index = 0; index < data.length; index++) {
@@ -36,7 +36,7 @@ export default class SqsObserver {
         }
       }
     } catch (error) {
-      Log.debug("observe catch error", error);
+      Log.debug("SQS Observer observe catch error: ", error);
     }
   };
 
@@ -73,18 +73,18 @@ export default class SqsObserver {
           break;
       }
 
-      Log.info(`response ${response}`);
-      Log.info(`message.ReceiptHandle ${message.ReceiptHandle}`);
+      Log.info(`SQS Observe response: ${response}`);
+      Log.info(`SQS Observe message.ReceiptHandle: ${message.ReceiptHandle}`);
 
       if (response === true) {
         const deleteMessage = await service.deleteMessage(
           message.ReceiptHandle
         );
 
-        Log.debug("deleteMessage 81723912 ", deleteMessage);
+        Log.debug("SQS Observer deleteMessage: ", deleteMessage);
       }
     } catch (error) {
-      Log.debug("execute catch error", error);
+      Log.debug("SQS Observe execute catch error: ", error);
     }
   };
 }

@@ -50,15 +50,18 @@ class MAppointmentWrapper extends BaseAppointment {
       provider_name,
       rr_rule = "",
     } = _data || {};
+
     const updatedDetails = {
       ...details,
       start_time,
       end_time,
     };
+
     let organizerDetails = await this.getOrganizerDetailsFromId(
       organizer_id,
       organizer_type
     );
+
     return {
       basic_info: {
         id,
