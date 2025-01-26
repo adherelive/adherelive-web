@@ -1,7 +1,7 @@
 import Controller from "../../index";
 import userService from "../../../services/user/user.service";
 import patientService from "../../../services/patients/patients.service";
-import minioService from "../../../services/minio/minio.service";
+import awsS3Service from "../../../services/awsS3/awsS3.service";
 
 // Services
 import VitalService from "../../../services/vitals/vital.service";
@@ -86,7 +86,7 @@ import otpVerificationService from "../../../services/otpVerification/otpVerific
 import { EVENTS, Proxy_Sdk } from "../../../proxySdk";
 import generatePDF from "../../../helper/generateCarePlanPdf";
 import { downloadFileFromS3 } from "../user/user.helper";
-import { getFilePath } from "../../../helper/filePath";
+import { getFilePath } from "../../../helper/s3FilePath";
 import {
   checkAndCreateDirectory,
   getSeparateName,
@@ -175,7 +175,7 @@ class MPatientController extends Controller {
 
         if (userId) {
           if (profile_pic) {
-            await minioService.createBucket();
+            await awsS3Service.createBucket();
 
             let hash = md5.create();
 
@@ -189,7 +189,7 @@ class MPatientController extends Controller {
               hash.substring(4) + "/" + imageName + "." + extension;
             // const fileUrl = "/" + file_name;
 
-            await minioService.saveBufferObject(file, file_name);
+            await awsS3Service.saveBufferObject(file, file_name);
             profilePic = file_name;
           }
         } else {

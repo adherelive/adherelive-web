@@ -21,7 +21,7 @@ import {
   EVENT_TYPE,
   USER_CATEGORY,
 } from "../../../../constant";
-import { getFilePath } from "../../../helper/filePath";
+import { getFilePath } from "../../../helper/s3FilePath";
 import carePlanService from "../../../services/carePlan/carePlan.service";
 import SymptomsJob from "../../../jobSdk/Symptoms/observer";
 import NotificationSdk from "../../../notificationSdk";

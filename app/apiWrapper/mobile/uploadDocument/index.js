@@ -1,6 +1,6 @@
 import BaseUploadDocument from "../../../services/uploadDocuments";
 import uploadDocumentService from "../../../services/uploadDocuments/uploadDocuments.service";
-import { completePath } from "../../../helper/filePath";
+import { completePath } from "../../../helper/s3FilePath";
 
 class MobileUploadDocumentWrapper extends BaseUploadDocument {
   constructor(data) {

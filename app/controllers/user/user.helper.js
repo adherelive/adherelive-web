@@ -9,7 +9,7 @@ import userRolesService from "../../services/userRoles/userRoles.service";
 
 import UserRolesWrapper from "../../apiWrapper/web/userRoles";
 
-import minioService from "../../../app/services/minio/minio.service";
+import awsS3Service from "../../services/awsS3/awsS3.service";
 import md5 from "js-md5";
 import bcrypt from "bcrypt";
 import { v4 as uuidv4 } from "uuid";
@@ -23,7 +23,7 @@ import {
   USER_CATEGORY,
   VERIFICATION_TYPE,
 } from "../../../constant";
-import { completePath } from "../../helper/filePath";
+import { completePath } from "../../helper/s3FilePath";
 
 const chalk = require("chalk");
 
@@ -100,7 +100,7 @@ export const doctorQualificationData = async (userId) => {
 export const uploadImageS3 = async (userId, file, folder = "other") => {
   try {
     const fileExt = file.originalname.replace(/\s+/g, "");
-    await minioService.createBucket();
+    await awsS3Service.createBucket();
     // const fileStream = fs.createReadStream(req.file);
 
     const imageName = md5(`${file.originalname}-${userId}`);
@@ -123,7 +123,7 @@ export const uploadImageS3 = async (userId, file, folder = "other") => {
     //         "application/	application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     // };
     const fileUrl = "/" + file_name;
-    await minioService.saveBufferObject(file.buffer, file_name, {
+    await awsS3Service.saveBufferObject(file.buffer, file_name, {
       "Content-Type": file.mimetype,
     });
 
@@ -131,7 +131,7 @@ export const uploadImageS3 = async (userId, file, folder = "other") => {
      * TODO: Need to check if we need to return the file url or not.
     console.log("file URL: ", process.config.minio.MINI);
     const file_link =
-      process.config.minio.MINIO_S3_HOST +
+      process.config.s3.AWS_S3_HOST +
       "/" +
       process.config.minio.MINIO_BUCKET_NAME +
       fileUrl;
@@ -288,8 +288,8 @@ export const createNewUser = async (
 
 export const downloadFileFromS3 = async (objectName, filePath) => {
   try {
-    await minioService.createBucket();
-    const response = await minioService.downloadFileObject(
+    await awsS3Service.createBucket();
+    const response = await awsS3Service.downloadFileObject(
       objectName,
       filePath
     );

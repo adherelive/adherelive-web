@@ -1,7 +1,7 @@
 import Logger from "../../../libs/log";
-import minioService from "../../services/minio/minio.service";
+import awsS3Service from "../../services/awsS3/awsS3.service";
 import md5 from "js-md5";
-import { completePath } from "../../helper/filePath";
+import { completePath } from "../../helper/s3FilePath";
 
 const Log = new Logger("WEB > CONTROLLER > REPORTS > HELPER");
 
@@ -10,7 +10,7 @@ export const uploadReport = async ({ file, id }) => {
     const { mimetype } = file || {};
     const fileName = file.originalname.replace(/\s+/g, "");
     Log.info(`fileName : ${fileName}`);
-    await minioService.createBucket();
+    await awsS3Service.createBucket();
 
     let hash = md5.create();
     hash.update(id);
@@ -34,10 +34,10 @@ export const uploadReport = async ({ file, id }) => {
     const filePath = `${folder}/${encodedFileName}`;
     Log.info(`filePath :: ${filePath}`);
 
-    await minioService.saveBufferObject(file.buffer, filePath, metaData);
+    await awsS3Service.saveBufferObject(file.buffer, filePath, metaData);
     return completePath(`/${filePath}`);
   } catch (error) {
-    Log.debug("uploadReport catch error", error);
+    Log.debug("uploadReport has an error: ", error);
     throw error;
   }
 };

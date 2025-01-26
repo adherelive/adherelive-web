@@ -1,6 +1,6 @@
 import BasePatient from "../../../services/patients";
 import patientService from "../../../services/patients/patients.service";
-import { completePath } from "../../../helper/filePath";
+import { completePath } from "../../../helper/s3FilePath";
 
 import UserWrapper from "../user";
 import userRoleWrapper from "../userRoles";

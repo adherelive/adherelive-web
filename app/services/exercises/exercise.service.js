@@ -11,7 +11,7 @@ import {
   VIDEO_TYPES,
 } from "../../models/exerciseContents";
 import { TABLE_NAME as repetitionTableName } from "../../models/exerciseRepetition";
-import { getFilePath } from "../../helper/filePath";
+import { getFilePath } from "../../helper/s3FilePath";
 
 export default class ExerciseService {
   create = async ({

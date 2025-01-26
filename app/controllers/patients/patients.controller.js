@@ -4,7 +4,7 @@ import Controller from "../index";
 import userService from "../../../app/services/user/user.service";
 import patientService from "../../../app/services/patients/patients.service";
 import doctorService from "../../../app/services/doctor/doctor.service";
-import minioService from "../../../app/services/minio/minio.service";
+import awsS3Service from "../../services/awsS3/awsS3.service";
 import carePlanService from "../../services/carePlan/carePlan.service";
 import conditionService from "../../services/condition/condition.service";
 import medicineService from "../../services/medicine/medicine.service";
@@ -70,7 +70,7 @@ import generateOTP from "../../helper/generateOtp";
 import { EVENTS, Proxy_Sdk } from "../../proxySdk";
 import generatePDF from "../../helper/generateCarePlanPdf";
 import { downloadFileFromS3 } from "../user/user.helper";
-import { getFilePath } from "../../helper/filePath";
+import { getFilePath } from "../../helper/s3FilePath";
 import * as carePlanHelper from "../carePlans/carePlan.helper";
 import { getDoctorCurrentTime } from "../../helper/getUserTime";
 import * as DietHelper from "../diet/diet.helper";
@@ -115,7 +115,7 @@ class PatientController extends Controller {
       const splitName = name.split(" ");
       // TODO: minio details to be configured here
       if (profile_pic) {
-        await minioService.createBucket();
+        await awsS3Service.createBucket();
         // var file = path.join(__dirname, "../../../report.xlsx");
         const fileStream = fs.createReadStream(profile_pic);
 
@@ -131,7 +131,7 @@ class PatientController extends Controller {
             "application/	application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         };
         const fileUrl = folder + "/" + file_name;
-        await minioService.saveBufferObject(fileStream, fileUrl, metaData);
+        await awsS3Service.saveBufferObject(fileStream, fileUrl, metaData);
       }
 
       const { first_name, middle_name, last_name } = getSeparateName(name);

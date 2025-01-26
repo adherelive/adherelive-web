@@ -72,7 +72,7 @@ import {
   WHEN_TO_TAKE_ABBREVATIONS,
 } from "../../../constant";
 
-import {getFilePath} from "../../../app/helper/filePath";
+import {getFilePath} from "../../../app/helper/s3FilePath";
 import {checkAndCreateDirectory} from "../../../app/helper/common";
 
 import {getDoctorCurrentTime} from "../../../app/helper/getUserTime";
