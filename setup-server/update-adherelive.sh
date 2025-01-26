@@ -113,6 +113,10 @@ if [ "$MODE" = "dev" ]; then
   # Display logs from container named 'ald_backend'
   display_docker_logs "ald_backend"
 
+  # Clean up Docker system
+  sleep 15
+  docker system prune -af --volumes
+
 # Handle docker service for 'prod' mode
 elif [ "$MODE" = "prod" ]; then
   # Update docker service for both built images
@@ -124,12 +128,13 @@ elif [ "$MODE" = "prod" ]; then
 
   # Display logs from container named 'sweet_ramanujan'
   display_docker_logs "sweet_ramanujan"
+
+  # Clean up Docker system, but not the images
+  sleep 15
+  docker system prune -f --volumes
+
   echo "Deployment completed successfully! Remember to restart the server to apply changes."
 fi
-
-# Clean up Docker system
-sleep 15
-docker system prune -af --volumes
 
 # Display all Docker containers
 docker ps -a || { echo "Failed to list Docker containers!"; exit 1; }
