@@ -259,6 +259,9 @@ class AwsS3Service {
 
   // Improved download method
   async downloadFileObject(objectName, localFilePath) {
+    console.log("Download file object: ", objectName);
+    console.log("Local file path: ", localFilePath);
+
     try {
       // Ensure the directory exists
       // path.dirname helps extract the directory path from the full file path
