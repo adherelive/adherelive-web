@@ -18,6 +18,9 @@ import Log from "../../../libs/log";
 const log = Log("AWS S3 Service");
 
 class AwsS3Service {
+  s3Client: S3Client;
+  bucketName: string;
+
   constructor() {
       /**
        * Minio is not used in the project. It is commented out.
@@ -33,7 +36,6 @@ class AwsS3Service {
     // JS SDK v3 does not support global configuration.
     // Codemod has attempted to pass values to each service client in this file.
     // You may need to update clients outside of this file, if they use global config.
-    const s3Client = new S3Client({});
     this.s3Client = new S3({
       credentials: {
         accessKeyId: process.config.aws.access_key_id,
@@ -225,18 +227,13 @@ class AwsS3Service {
     }
   }
 
-  async saveBufferObject(buffer, file, metaData) {
+  async saveBufferObject(buffer: Buffer, file: string, metaData?: Record<string, string>) {
     try {
-      // If no metadata is provided, use a default content type
-      if (!metaData) {
-        metaData = { "Content-Type": "application/octet-stream" };
-      }
-
-      // Ensure we have a Content-Type, defaulting if not specified
-      const contentType = metaData["Content-Type"] || "application/octet-stream";
+      // Default to octet-stream if no metadata provided
+      const contentType = metaData?.['Content-Type'] || 'application/octet-stream';
 
       // Prepare upload parameters
-      const params = {
+      const params: PutObjectCommandInput = {
         Bucket: this.bucketName,
         Key: file,
         Body: buffer,
@@ -249,7 +246,7 @@ class AwsS3Service {
       // Send the command to S3
       const result = await this.s3Client.send(command);
 
-      console.log("File uploaded successfully: ", file);
+      console.log("File uploaded successfully ---> saveBufferObject: ", file);
       return result;
     } catch (err) {
       console.error("AWS S3 upload error: ", err);
@@ -264,45 +261,31 @@ class AwsS3Service {
 
     try {
       // Ensure the directory exists
-      // path.dirname helps extract the directory path from the full file path
       const directory = path.dirname(localFilePath);
-
-      // Create directory recursively if it doesn't exist
-      // The { recursive: true } option ensures nested directories are created
       fs.mkdirSync(directory, { recursive: true });
 
       // Prepare the download parameters
-      // Simple object without type annotations
-      const params = {
+      const params: GetObjectCommandInput = {
         Bucket: this.bucketName,
         Key: objectName
       };
 
-      // Create a GetObject command using the AWS SDK v3 approach
+      // Create a GetObject command
       const command = new GetObjectCommand(params);
 
       // Download the file directly using SDK
       const response = await this.s3Client.send(command);
 
-      // Create a write stream to save the file
+      // Write the file using streams for better memory management
       const writeStream = fs.createWriteStream(localFilePath);
 
-      // Return a Promise that resolves when file download is complete
       return new Promise((resolve, reject) => {
-        // Optional chaining replaced with null check
-        if (response.Body) {
-          response.Body.pipe(writeStream)
-              .on('finish', () => resolve(true))
-              .on('error', (err) => reject(err));
-        } else {
-          reject(new Error('No file body found'));
-        }
+        response.Body?.pipe(writeStream)
+            .on('finish', () => resolve(true))
+            .on('error', (err) => reject(err));
       });
     } catch (err) {
-      // Comprehensive error logging
       console.error("Error downloading file: ", err);
-
-      // Re-throw to allow caller to handle the error
       throw err;
     }
   }
