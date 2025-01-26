@@ -1,8 +1,8 @@
 import md5 from "js-md5";
 
-import minioService from "../../services/minio/minio.service";
+import awsS3Service from "../../services/awsS3/awsS3.service";
 import Logger from "../../../libs/log";
-import { completePath } from "../filePath";
+import { completePath } from "../s3FilePath";
 
 const Log = new Logger("UPLOAD > HELPER");
 
@@ -11,7 +11,7 @@ export const upload = async ({ file, id, folder }) => {
     const { mimetype } = file || {};
     const fileName = file.originalname.replace(/\s+/g, "");
     Log.info(`fileName : ${fileName}`);
-    await minioService.createBucket();
+    await awsS3Service.createBucket();
 
     let hash = md5.create();
     hash.update(`${id}`);
@@ -34,7 +34,7 @@ export const upload = async ({ file, id, folder }) => {
     const filePath = `${folder}/${encodedFileName}`;
     Log.info(`filePath :: ${filePath}`);
 
-    await minioService.saveBufferObject(file.buffer, filePath, metaData);
+    await awsS3Service.saveBufferObject(file.buffer, filePath, metaData);
     return completePath(`/${filePath}`);
   } catch (error) {
     throw error;

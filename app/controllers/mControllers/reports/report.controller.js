@@ -10,7 +10,7 @@ import ReportWrapper from "../../../apiWrapper/mobile/reports";
 import DoctorWrapper from "../../../apiWrapper/mobile/doctor";
 
 import { DOCUMENT_PARENT_TYPE, USER_CATEGORY } from "../../../../constant";
-import { getFilePath } from "../../../helper/filePath";
+import { getFilePath } from "../../../helper/s3FilePath";
 import * as ReportHelper from "../../reports/report.helper";
 
 const Log = new Logger("MOBILE > CONTROLLER > REPORTS");

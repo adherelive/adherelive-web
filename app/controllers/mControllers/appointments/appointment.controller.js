@@ -17,7 +17,7 @@ import Log from "../../../../libs/log";
 import AppointmentJob from "../../../jobSdk/Appointments/observer";
 import NotificationSdk from "../../../notificationSdk";
 import { downloadFileFromS3, uploadImageS3 } from "../user/user.helper";
-import { getFilePath } from "../../../helper/filePath";
+import { getFilePath } from "../../../helper/s3FilePath";
 import { checkAndCreateDirectory } from "../../../helper/common";
 // Services
 import appointmentService from "../../../services/appointment/appointment.service";

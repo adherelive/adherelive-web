@@ -4,7 +4,7 @@ import BaseDoctor from "../../../services/doctor";
 import doctorService from "../../../services/doctor/doctor.service";
 import carePlanService from "../../../services/carePlan/carePlan.service";
 import ConsentService from "../../../services/consents/consent.service";
-import { completePath } from "../../../helper/filePath";
+import { completePath } from "../../../helper/s3FilePath";
 import SpecialityWrapper from "../../web/speciality";
 import ConsentWrapper from "../../web/consent";
 import UserWrapper from "../../web/user";

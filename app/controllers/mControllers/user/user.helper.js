@@ -2,10 +2,10 @@ import doctorService from "../../../services/doctors/doctors.service";
 import qualificationService from "../../../services/doctorQualifications/doctorQualification.service";
 import documentService from "../../../services/uploadDocuments/uploadDocuments.service";
 
-import minioService from "../../../../app/services/minio/minio.service";
+import awsS3Service from "../../../services/awsS3/awsS3.service";
 import md5 from "js-md5";
 import { DOCUMENT_PARENT_TYPE } from "../../../../constant";
-import { completePath } from "../../../helper/filePath";
+import { completePath } from "../../../helper/s3FilePath";
 
 export const doctorQualificationData = async (userId) => {
   try {
@@ -55,7 +55,7 @@ export const doctorQualificationData = async (userId) => {
 
         for (let document of documents) {
           photos.push(
-            `${process.config.minio.MINIO_S3_HOST}/${
+            `${process.config.s3.AWS_S3_HOST}/${
               process.config.minio.MINIO_BUCKET_NAME
             }${document.get("document")}`
           );
@@ -84,7 +84,7 @@ export const doctorQualificationData = async (userId) => {
 export const uploadImageS3 = async (userId, file) => {
   try {
     const fileExt = file.originalname.replace(/\s+/g, "");
-    await minioService.createBucket();
+    await awsS3Service.createBucket();
     // const fileStream = fs.createReadStream(req.file);
 
     const imageName = md5(`${userId}-qualification-pics`);
@@ -107,7 +107,7 @@ export const uploadImageS3 = async (userId, file) => {
     };
 
     // const file_link =
-    //   process.config.minio.MINIO_S3_HOST +
+    //   process.config.s3.AWS_S3_HOST +
     //   "/" +
     //   process.config.minio.MINIO_BUCKET_NAME +
     //   "/" +
@@ -115,7 +115,7 @@ export const uploadImageS3 = async (userId, file) => {
 
     // const fileUrl = `${folder}/${file_name}`;
     const fileUrl = "/" + file_name;
-    await minioService.saveBufferObject(file.buffer, file_name, metaData);
+    await awsS3Service.saveBufferObject(file.buffer, file_name, metaData);
 
     let files = [completePath(fileUrl)];
     return files;
@@ -126,14 +126,14 @@ export const uploadImageS3 = async (userId, file) => {
 
 export const downloadFileFromS3 = async (objectName, filePath) => {
   try {
-    await minioService.createBucket();
-    const response = await minioService.downloadFileObject(
+    await awsS3Service.createBucket();
+    const response = await awsS3Service.downloadFileObject(
       objectName,
       filePath
     );
-
     return true;
   } catch (err) {
+    console.error("Error in downloadFileFromS3: ", err);
     return false;
   }
 };

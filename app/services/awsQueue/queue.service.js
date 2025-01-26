@@ -111,7 +111,7 @@ export default class QueueService {
 
   receiveMessage = async () => {
     try {
-      Log.info(`receiveMessage queue url : ${this.getQueueUrl()}`);
+      Log.info(`Receive Message queue URI: ${this.getQueueUrl()}`);
 
       const params = {
         AttributeNames: ["SentTimestamp"],

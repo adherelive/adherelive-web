@@ -1,4 +1,4 @@
-import { completePath } from "../../../helper/filePath";
+import { completePath } from "../../../helper/s3FilePath";
 import BaseProvider from "../../../services/provider";
 import providerService from "../../../services/provider/provider.service";
 import doctorProviderMappingService from "../../../services/doctorProviderMapping/doctorProviderMapping.service";

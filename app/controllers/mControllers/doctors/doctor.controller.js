@@ -54,7 +54,7 @@ import {
   VERIFICATION_TYPE,
 } from "../../../../constant";
 
-import { completePath, getFilePath } from "../../../helper/filePath";
+import { completePath, getFilePath } from "../../../helper/s3FilePath";
 import { uploadImageS3 } from "../user/user.helper";
 import clinicService from "../../../services/doctorClinics/doctorClinics.service";
 import doctorClinicService from "../../../services/doctorClinics/doctorClinics.service";
