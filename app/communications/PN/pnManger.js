@@ -1,4 +1,4 @@
-import { SNS } from "@aws-sdk/client-sns";
+import AWS from "aws-sdk";
 import Log from "../../../libs/log";
 
 const log = Log("communications --> pnManger");
@@ -7,31 +7,24 @@ const PNpayloadBuilder = require("./PNpayloadBuilder");
 
 class pnManger {
   constructor() {
-    // JS SDK v3 does not support global configuration.
-    // Codemod has attempted to pass values to each service client in this file.
-    // You may need to update clients outside of this file, if they use global config.
-    // AWS.config.update({
-    //   accessKeyId: process.config.aws.access_key_id,
-    //   secretAccessKey: process.config.aws.access_key,
-    //   region: process.config.aws.region,
-    // });
-    this.sns = new SNS({
-      credentials: {
-        accessKeyId: process.config.aws.access_key_id,
-        secretAccessKey: process.config.aws.access_key,
-      },
+    AWS.config.update({
+      accessKeyId: process.config.aws.access_key_id,
+      secretAccessKey: process.config.aws.access_key,
       region: process.config.aws.region,
     });
+    this.sns = new AWS.SNS();
   }
 
   async sendPN(payload, token) {
     try {
+      //
+      //
       let isValidData = this.validatePayload(payload);
       Log.info("validating payload");
       if (isValidData.error && isValidData.error == 1) return isValidData;
       Log.success("payload valid!!");
       Log.info("creating endpointArn...!!");
-
+      //
       let PNendpointData =
         payload.type == "android"
           ? await this.sns
@@ -39,9 +32,10 @@ class pnManger {
                 PlatformApplicationArn: process.config.aws.platform_arn,
                 Token: token,
               })
+              .promise()
           : payload.targetArn;
 
-      Log.success("endpointArn creation successful!!");
+      Log.success("endpointArn creation successfull!!");
       let PNendpointArn =
         payload.type == "android" ? PNendpointData.EndpointArn : PNendpointData;
       Log.info("transforming payload to aws payload");
@@ -56,7 +50,8 @@ class pnManger {
           Message: tranformedPayload,
           MessageStructure: "json",
           TargetArn: PNendpointArn,
-        });
+        })
+        .promise();
       return PNpublishResponse;
     } catch (err) {}
   }

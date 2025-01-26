@@ -1594,14 +1594,14 @@ class UserController extends Controller {
     try {
       const { registrationId = 0 } = req.params;
       const { document = "" } = req.body;
-      // const documentToCheck = document.includes(process.config.minio.MINIO_BUCKET_NAME) ? document.split(process.config.minio.MINIO_BUCKET_NAME)[1] : document;
+      // const documentToCheck = document.includes(process.config.s3.BUCKET_NAME) ? document.split(process.config.s3.BUCKET_NAME)[1] : document;
       let parent_type = DOCUMENT_PARENT_TYPE.DOCTOR_REGISTRATION;
       let parent_id = registrationId;
 
       let documentToDelete = await documentService.getDocumentByData(
         parent_type,
         parent_id,
-        document.includes(process.config.minio.MINIO_BUCKET_NAME)
+        document.includes(process.config.s3.BUCKET_NAME)
           ? getFilePath(document)
           : document
       );
@@ -1630,7 +1630,7 @@ class UserController extends Controller {
       let documentToDelete = await documentService.getDocumentByData(
         parent_type,
         parent_id,
-        document.includes(process.config.minio.MINIO_BUCKET_NAME)
+        document.includes(process.config.s3.BUCKET_NAME)
           ? getFilePath(document)
           : document
       );
@@ -1746,7 +1746,7 @@ class UserController extends Controller {
           let docExist = await documentService.getDocumentByData(
             parent_type,
             parent_id,
-            photo.includes(process.config.minio.MINIO_BUCKET_NAME)
+            photo.includes(process.config.s3.BUCKET_NAME)
               ? getFilePath(photo)
               : photo
           );
@@ -1756,7 +1756,7 @@ class UserController extends Controller {
               doctor_id,
               parent_type: DOCUMENT_PARENT_TYPE.DOCTOR_REGISTRATION,
               parent_id: docRegistration.get("id"),
-              document: photo.includes(process.config.minio.MINIO_BUCKET_NAME)
+              document: photo.includes(process.config.s3.BUCKET_NAME)
                 ? getFilePath(photo)
                 : photo,
             });
@@ -1775,7 +1775,7 @@ class UserController extends Controller {
           let docExist = await documentService.getDocumentByData(
             parent_type,
             parent_id,
-            photo.includes(process.config.minio.MINIO_BUCKET_NAME)
+            photo.includes(process.config.s3.BUCKET_NAME)
               ? getFilePath(photo)
               : photo
           );
@@ -1806,10 +1806,10 @@ class UserController extends Controller {
             doctor_id,
             parent_type: DOCUMENT_PARENT_TYPE.DOCTOR_REGISTRATION,
             parent_id: registration_id,
-            document: photo.includes(process.config.minio.MINIO_BUCKET_NAME)
+            document: photo.includes(process.config.s3.BUCKET_NAME)
               ? getFilePath(photo)
               : photo,
-            // .includes(process.config.minio.MINIO_BUCKET_NAME) ? photo.split(process.config.minio.MINIO_BUCKET_NAME)[1] : photo,
+            // .includes(process.config.s3.BUCKET_NAME) ? photo.split(process.config.s3.BUCKET_NAME)[1] : photo,
           });
         }
       }
@@ -1870,7 +1870,7 @@ class UserController extends Controller {
         qualification_id = docQualification.get("id");
 
         for (let photo of photos) {
-          let document = photo.includes(process.config.minio.MINIO_BUCKET_NAME)
+          let document = photo.includes(process.config.s3.BUCKET_NAME)
             ? getFilePath(photo)
             : photo;
           let docExist = await documentService.getDocumentByData(
@@ -1884,7 +1884,7 @@ class UserController extends Controller {
               doctor_id,
               parent_type: DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION,
               parent_id: qualification_id,
-              document: photo.includes(process.config.minio.MINIO_BUCKET_NAME)
+              document: photo.includes(process.config.s3.BUCKET_NAME)
                 ? getFilePath(photo)
                 : photo,
             });
@@ -1902,7 +1902,7 @@ class UserController extends Controller {
           let docExist = await documentService.getDocumentByData(
             parent_type,
             parent_id,
-            photo.includes(process.config.minio.MINIO_BUCKET_NAME)
+            photo.includes(process.config.s3.BUCKET_NAME)
               ? getFilePath(photo)
               : photo
           );
@@ -1931,7 +1931,7 @@ class UserController extends Controller {
             doctor_id,
             parent_type: DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION,
             parent_id: qualification_id,
-            document: photo.includes(process.config.minio.MINIO_BUCKET_NAME)
+            document: photo.includes(process.config.s3.BUCKET_NAME)
               ? getFilePath(photo)
               : photo,
           });

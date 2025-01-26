@@ -1,4 +1,4 @@
-import { SNS } from "@aws-sdk/client-sns";
+import AWS from "aws-sdk";
 import axios from "axios";
 import Log from "../../../libs/log";
 
@@ -7,22 +7,13 @@ const log = Log("Communications ---> SMS Sender");
 class SmsSender {
   constructor(payload) {
     this.payload = payload;
-    // JS SDK v3 does not support global configuration.
-    // Codemod has attempted to pass values to each service client in this file.
-    // You may need to update clients outside of this file, if they use global config.
-    // AWS.config.update({
-    //   accessKeyId: process.config.aws.access_key_id,
-    //   secretAccessKey: process.config.aws.access_key,
-    //   region: process.config.aws.region,
-    // });
-
-    this.sns = new SNS({
-      credentials: {
-        accessKeyId: process.config.aws.access_key_id,
-        secretAccessKey: process.config.aws.access_key,
-      },
+    AWS.config.update({
+      accessKeyId: process.config.aws.access_key_id,
+      secretAccessKey: process.config.aws.access_key,
       region: process.config.aws.region,
     });
+
+    this.sns = new AWS.SNS();
   }
 
   async sendSms() {

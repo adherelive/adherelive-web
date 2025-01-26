@@ -6,7 +6,7 @@ import awsS3Service from "../../services/awsS3/awsS3.service";
 
 export const completePath = (path) => {
   // return path
-  //   ? `${process.config.s3.AWS_S3_HOST}/${process.config.minio.MINIO_BUCKET_NAME}${path}`
+  //   ? `${process.config.s3.AWS_S3_HOST}/${process.config.s3.BUCKET_NAME}${path}`
   //   : null;
   if (path) {
     return awsS3Service.getSignedUrl(path);
@@ -15,8 +15,8 @@ export const completePath = (path) => {
 };
 
 export const getFilePath = (url) => {
-  // return url && url.split(process.config.minio.MINIO_BUCKET_NAME).length > 1
-  //   ? url.split(process.config.minio.MINIO_BUCKET_NAME)[1]
+  // return url && url.split(process.config.s3.BUCKET_NAME).length > 1
+  //   ? url.split(process.config.s3.BUCKET_NAME)[1]
   //   : null;
   if (url) {
     // for S3

@@ -133,7 +133,7 @@ export const uploadImageS3 = async (userId, file, folder = "other") => {
     const file_link =
       process.config.s3.AWS_S3_HOST +
       "/" +
-      process.config.minio.MINIO_BUCKET_NAME +
+      process.config.s3.BUCKET_NAME +
       fileUrl;
      */
     let files = [completePath(fileUrl)];

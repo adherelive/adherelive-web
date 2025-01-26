@@ -1,20 +1,10 @@
-import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import {
-  S3,
-  S3Client,
-  GetObjectCommand,
-  GetObjectCommandInput,
-  HeadBucketCommand,
-  CreateBucketCommand,
-  PutBucketPolicyCommand,
-  PutObjectCommand,
-  PutObjectCommandInput
-} from "@aws-sdk/client-s3";
+import AWS from "aws-sdk";
 import * as https from "https";
-import * as path from 'path';
 import fs from "fs";
 import Log from "../../../libs/log";
 
+//const Minio = require("minio");
+//const logoImage = require("../../../other/logo.png");
 const log = Log("AWS S3 Service");
 
 class AwsS3Service {
@@ -30,18 +20,13 @@ class AwsS3Service {
       secretKey: process.config.minio.MINIO_SECRET_KEY
     });
        */
-    // JS SDK v3 does not support global configuration.
-    // Codemod has attempted to pass values to each service client in this file.
-    // You may need to update clients outside of this file, if they use global config.
-    const s3Client = new S3Client({});
-    this.s3Client = new S3({
-      credentials: {
-        accessKeyId: process.config.aws.access_key_id,
-        secretAccessKey: process.config.aws.access_key,
-      },
+    AWS.config.update({
+      accessKeyId: process.config.aws.access_key_id,
+      secretAccessKey: process.config.aws.access_key,
       region: process.config.aws.region,
     });
-    this.bucketName = process.config.s3.BUCKET_NAME;
+    this.s3Client = new AWS.S3();
+    this.bucket = process.config.s3.BUCKET_NAME;
   }
 
   callback = (error, data) => {
@@ -59,37 +44,12 @@ class AwsS3Service {
    */
   async createBucket() {
     try {
+      let result;
+
+      let doesBucketExists = true;
+      console.log("Check if the S3 Bucket exists: ", doesBucketExists);
       const bucket_name = process.config.s3.BUCKET_NAME;
-
-      // Check if bucket exists
-      let doesBucketExists = false;
-      try {
-        await this.s3Client.send(new HeadBucketCommand({ Bucket: bucket_name }));
-        doesBucketExists = true;
-        console.log(`Bucket ${bucket_name} already exists`);
-      } catch (error) {
-        // If HeadBucketCommand throws an error, the bucket likely doesn't exist
-        if (error.$metadata && error.$metadata.httpStatusCode === 404) {
-          console.log(`Bucket ${bucket_name} does not exist, will create it`);
-        } else {
-          // If it's a different error, re-throw
-          throw error;
-        }
-      }
-
-      // If bucket doesn't exist, create it
       if (!doesBucketExists) {
-        // import { CreateBucketCommand, PutBucketPolicyCommand } from "@aws-sdk/client-s3";
-        // Create bucket
-        const createBucketCommand = new CreateBucketCommand({
-          Bucket: bucket_name,
-          CreateBucketConfiguration: {
-            LocationConstraint: process.config.aws.region
-          }
-        });
-        await this.s3Client.send(createBucketCommand);
-
-        // Set bucket policy
         const policy = {
           Version: "2012-10-17",
           Id: "adherepolicy",
@@ -105,108 +65,66 @@ class AwsS3Service {
           ],
         };
 
-        const putBucketPolicyCommand = new PutBucketPolicyCommand({
-          Bucket: bucket_name,
-          Policy: JSON.stringify(policy)
-        });
-        await this.s3Client.send(putBucketPolicyCommand);
-      }
-
-      // Upload logo
-      await new Promise((resolve, reject) => {
-        fs.readFile(`${__dirname}/../../../other/logo.png`, async (err, data) => {
-          if (err) {
-            console.log("Error reading logo image:", err);
-            reject(err);
-            return;
-          }
-
-          try {
-            const { PutObjectCommand } = await import("@aws-sdk/client-s3");
-            const uploadCommand = new PutObjectCommand({
-              Bucket: bucket_name,
-              Key: "logo.png",
-              Body: data,
-              ContentType: "image/png"
-            });
-
-            const uploadResult = await this.s3Client.send(uploadCommand);
-            console.log("Logo uploaded successfully:", uploadResult);
-            resolve();
-          } catch (uploadErr) {
-            console.log("Error uploading logo: ", uploadErr);
-            reject(uploadErr);
-          }
-        });
-      });
-
-      // Upload wave sound
-      await new Promise((resolve, reject) => {
-        fs.readFile(
-            `${__dirname}/../../../other/push_notification_sound.wav`,
-            async (err, data) => {
-              if (err) {
-                console.log("Error reading wave sound file: ", err);
-                reject(err);
-                return;
-              }
-
-              try {
-                const { PutObjectCommand } = await import("@aws-sdk/client-s3");
-                const uploadCommand = new PutObjectCommand({
-                  Bucket: bucket_name,
-                  Key: "push_notification_sound.wav",
-                  Body: data,
-                  ContentType: "audio/wav"
-                });
-
-                const uploadResult = await this.s3Client.send(uploadCommand);
-                console.log("Wave sound uploaded successfully:", uploadResult);
-                resolve();
-              } catch (uploadErr) {
-                console.log("Error uploading wave sound:", uploadErr);
-                reject(uploadErr);
-              }
-            }
+        result = await this.s3Client.makeBucket(
+          process.config.s3.BUCKET_NAME,
+          process.config.aws.region
         );
-      });
 
-      return true;
+        await this.s3Client.setBucketPolicy(
+          process.config.s3.BUCKET_NAME,
+          JSON.stringify(policy)
+        );
+
+        // AdhereLive logo for email
+        // after upload (to access) : https://{DOMAIN}/{BUCKET_NAME}/logo.png
+        fs.readFile(`${__dirname}/../../../other/logo.png`, (err, data) => {
+          if (!err) {
+            const emailLogo = this.saveBufferObject(data, "logo.png");
+            console.log("Image name for emailLogo: ", emailLogo);
+            //console.log("Email logo has been uploaded successfully: ", logoImage);
+          } else {
+            console.log("Error in getting the logo image", err);
+          }
+          if (!err) {
+            const emailLogo = this.saveBufferObject(data, "logo.png");
+            console.log("Image for emailLogo: ", emailLogo);
+          } else {
+            console.log("Error in getting the email logo image: ", err);
+          }
+        });
+
+        // Push Notification audio for android
+        // after upload (to access) : https://{DOMAIN}/{BUCKET_NAME}/push_notification_sound.wav
+        fs.readFile(
+          `${__dirname}/../../../other/push_notification_sound.wav`,
+          (err, data) => {
+            if (!err) {
+              const audioObject = this.saveAudioObject(
+                data,
+                "push_notification_sound.wav"
+              );
+              console.log("File for wave sound audioObject: ", audioObject);
+            } else {
+              console.log("Error in getting the wave sound file: ", err);
+            }
+          }
+        );
+      }
+      return result;
     } catch (err) {
-      console.error("Error in createBucket:", err);
+      // console.log("u19281011 err --> ", err);
       throw err;
     }
   }
 
-  getSignedUrl = async (path) => {
-    console.log({path});
-    return await getSignedUrl(this.s3Client, new GetObjectCommand({
-      Bucket: this.bucketName,
+  getSignedUrl = (path) => {
+    console.log({ path });
+    return this.s3Client.getSignedUrl("getObject", {
+      Bucket: this.bucket,
       Key: path.substring(1, path.length),
-    }), {
-      expiresIn: 60 * parseInt(process.config.s3.EXPIRY_TIME),
+      Expires: 60 * parseInt(process.config.s3.EXPIRY_TIME),
     });
   };
-
-  // Optional: Add a method to generate a signed URL
-  // async getSignedUrl(file: string, expiresIn = 60) {
-  //   try {
-  //     const command = new GetObjectCommand({
-  //       Bucket: this.bucketName,
-  //       Key: file
-  //     });
-  //
-  //     // Generate signed URL using @aws-sdk/s3-request-presigner
-  //     const signedUrl = await getSignedUrl(this.s3Client, command, {
-  //       expiresIn
-  //     });
-  //
-  //     return signedUrl;
-  //   } catch (err) {
-  //     console.error("Error generating signed URL: ", err);
-  //     throw err;
-  //   }
-  // }
 
   async saveFileObject(filepath, file, metaData) {
     try {
@@ -214,7 +132,7 @@ class AwsS3Service {
         metaData = { "Content-Type": "application/octet-stream" };
       }
       let result = await this.s3Client.fPutObject(
-        this.bucketName,
+        this.bucket,
         file,
         filepath,
         metaData
@@ -227,86 +145,59 @@ class AwsS3Service {
 
   async saveBufferObject(buffer, file, metaData) {
     try {
-      // If no metadata is provided, use a default content type
-      if (!metaData) {
+      if (metaData == null || metaData == undefined) {
         metaData = { "Content-Type": "application/octet-stream" };
       }
 
-      // Ensure we have a Content-Type, defaulting if not specified
-      const contentType = metaData["Content-Type"] || "application/octet-stream";
+      console.log("Save Buffer Object file: ", file);
+      let result = await this.s3Client.putObject(
+        {
+          Bucket: this.bucket,
+          Key: file,
+          Body: buffer,
+          ContentType: metaData["Content-Type"],
+        },
+        this.callback
+      );
 
-      // Prepare upload parameters
-      const params = {
-        Bucket: this.bucketName,
-        Key: file,
-        Body: buffer,
-        ContentType: contentType
-      };
+      // let url = this.s3Client.getSignedUrl("getObject", {
+      //   Bucket: this.bucket,
+      //   Key: file,
+      //   Expires: 60
+      // });
+      //
+      // console.log("AWS S3 URL: ", url);
 
-      // Create a PutObject command
-      const command = new PutObjectCommand(params);
-
-      // Send the command to S3
-      const result = await this.s3Client.send(command);
-
-      console.log("File uploaded successfully: ", file);
       return result;
     } catch (err) {
-      console.error("AWS S3 upload error: ", err);
-      throw err; // Re-throw to allow caller to handle the error
+      console.log("AWS S3 service has an error ---> \n", err);
+      // throw err;
     }
   }
 
-  // Improved download method
-  async downloadFileObject(objectName, localFilePath) {
+  async downloadFileObject(objectName, filePath) {
     try {
-      // Ensure the directory exists
-      // path.dirname helps extract the directory path from the full file path
-      const directory = path.dirname(localFilePath);
+      const file = fs.createWriteStream(filePath);
 
-      // Create directory recursively if it doesn't exist
-      // The { recursive: true } option ensures nested directories are created
-      fs.mkdirSync(directory, { recursive: true });
+      const test = await this.getSignedUrl(objectName);
 
-      // Prepare the download parameters
-      // Simple object without type annotations
-      const params = {
-        Bucket: this.bucketName,
-        Key: objectName
-      };
-
-      // Create a GetObject command using the AWS SDK v3 approach
-      const command = new GetObjectCommand(params);
-
-      // Download the file directly using SDK
-      const response = await this.s3Client.send(command);
-
-      // Create a write stream to save the file
-      const writeStream = fs.createWriteStream(localFilePath);
-
-      // Return a Promise that resolves when file download is complete
       return new Promise((resolve, reject) => {
-        // Optional chaining replaced with null check
-        if (response.Body) {
-          response.Body.pipe(writeStream)
-              .on('finish', () => resolve(true))
-              .on('error', (err) => reject(err));
-        } else {
-          reject(new Error('No file body found'));
-        }
+        https.get(test, (response) => {
+          const stream = response.pipe(file);
+          stream.on("finish", (res) => {
+            resolve(true);
+          });
+        });
       });
     } catch (err) {
-      // Comprehensive error logging
-      console.error("Error downloading file: ", err);
-
-      // Re-throw to allow caller to handle the error
+      console.log("Error in the download file object: ", err);
       throw err;
     }
   }
 
   async removeObject(file) {
     try {
-      let result = await this.s3Client.removeObject(this.bucketName, file);
+      let result = await this.s3Client.removeObject(this.bucket, file);
       return result;
     } catch (err) {
       console.log("Error in the remove file object: ", err);
@@ -323,7 +214,7 @@ class AwsS3Service {
       console.log("Save Audio Object in S3 audio file: ", file);
       let result = await this.s3Client.putObject(
         {
-          Bucket: this.bucketName,
+          Bucket: this.bucket,
           Key: file,
           Body: buffer,
           ContentType: metaData["Content-Type"],
@@ -347,7 +238,7 @@ class AwsS3Service {
       console.log("Save video object file: ", file);
       let result = await this.s3Client.putObject(
         {
-          Bucket: this.bucketName,
+          Bucket: this.bucket,
           Key: file,
           Body: buffer,
           ContentType: metaData["Content-Type"],
@@ -356,7 +247,7 @@ class AwsS3Service {
       );
 
       // let result = await this.s3Client.putObject(
-      //   this.bucketName,
+      //   this.bucket,
       //   file,
       //   buffer,
       //   metaData
@@ -370,4 +261,4 @@ class AwsS3Service {
   };
 }
 
-module.exports = new AwsS3Service();
+export default new AwsS3Service();
