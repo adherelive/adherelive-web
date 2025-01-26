@@ -1,4 +1,5 @@
-import AWS from "aws-sdk";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import { GetObjectCommand, S3 } from "@aws-sdk/client-s3";
 import * as https from "https";
 import fs from "fs";
 import Log from "../../../libs/log";
@@ -21,12 +22,21 @@ class MinioService {
       secretKey: process.config.minio.MINIO_SECRET_KEY
     });
        */
-    AWS.config.update({
-      accessKeyId: process.config.aws.access_key_id,
-      secretAccessKey: process.config.aws.access_key,
+    // JS SDK v3 does not support global configuration.
+    // Codemod has attempted to pass values to each service client in this file.
+    // You may need to update clients outside of this file, if they use global config.
+    // AWS.config.update({
+    //   accessKeyId: process.config.aws.access_key_id,
+    //   secretAccessKey: process.config.aws.access_key,
+    //   region: process.config.aws.region,
+    // });
+    this.s3Client = new S3({
+      credentials: {
+        accessKeyId: process.config.aws.access_key_id,
+        secretAccessKey: process.config.aws.access_key,
+      },
       region: process.config.aws.region,
     });
-    this.s3Client = new AWS.S3();
     this.bucket = process.config.s3.BUCKET_NAME;
   }
 
@@ -118,12 +128,13 @@ class MinioService {
     }
   }
 
-  getSignedUrl = (path) => {
-    console.log({ path });
-    return this.s3Client.getSignedUrl("getObject", {
+  getSignedUrl = async (path) => {
+    console.log({path});
+    return await getSignedUrl(this.s3Client, new GetObjectCommand({
       Bucket: this.bucket,
       Key: path.substring(1, path.length),
-      Expires: 60 * parseInt(process.config.s3.EXPIRY_TIME),
+    }), {
+      expiresIn: 60 * parseInt(process.config.s3.EXPIRY_TIME),
     });
   };
 

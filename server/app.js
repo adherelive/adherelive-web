@@ -174,9 +174,11 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerFile, {
 // app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // For generating the swagger.json file when the server is run
-if (process.env.NODE_ENV === 'development') {
-    require('../api-defn/swagger-docs.js');
-}
+// TODO: This is giving issues currently due to the file path of the app.js file
+//       Re-instate, when that issue is rectified
+// if (process.env.NODE_ENV === 'development') {
+//     require('../api-defn/swagger-docs.js');
+// }
 
 // TODO: This is used for the frontend. As we have moved that to a different repository, removing from here.
 app.get("/*", (req, res) => {

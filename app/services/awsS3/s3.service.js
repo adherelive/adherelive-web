@@ -1,4 +1,6 @@
-import AWS from "aws-sdk";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import { Upload } from "@aws-sdk/lib-storage";
+import { GetObjectCommand, S3 } from "@aws-sdk/client-s3";
 import * as https from "https";
 import fs from "fs";
 import Log from "../../../libs/log";
@@ -7,12 +9,22 @@ const log = Log("AWS S3 Service");
 
 class S3Service {
     constructor() {
-        AWS.config.update({
-            accessKeyId: process.config.aws.access_key_id,
-            secretAccessKey: process.config.aws.access_key,
+        // JS SDK v3 does not support global configuration.
+        // Codemod has attempted to pass values to each service client in this file.
+        // You may need to update clients outside of this file, if they use global config.
+        // AWS.config.update({
+        //     accessKeyId: process.config.aws.access_key_id,
+        //     secretAccessKey: process.config.aws.access_key,
+        //     region: process.config.aws.region,
+        // });
+        this.s3Client = new S3({
+            credentials: {
+                accessKeyId: process.config.aws.access_key_id,
+                secretAccessKey: process.config.aws.access_key,
+            },
+
             region: process.config.aws.region,
         });
-        this.s3Client = new AWS.S3();
         this.bucket = process.config.s3.BUCKET_NAME;
     }
 
@@ -28,7 +40,6 @@ class S3Service {
         try {
             const bucketExists = await this.s3Client
                 .headBucket({ Bucket: this.bucket })
-                .promise()
                 .then(() => true)
                 .catch((err) => {
                     if (err.statusCode === 404) return false;
@@ -52,12 +63,10 @@ class S3Service {
                 };
 
                 await this.s3Client
-                    .createBucket({ Bucket: this.bucket })
-                    .promise();
+                    .createBucket({ Bucket: this.bucket });
 
                 await this.s3Client
-                    .putBucketPolicy({ Bucket: this.bucket, Policy: JSON.stringify(policy) })
-                    .promise();
+                    .putBucketPolicy({ Bucket: this.bucket, Policy: JSON.stringify(policy) });
 
                 await this.uploadFile(`${__dirname}/../../../other/logo.png`, "logo.png", "image/png");
                 await this.uploadFile(`${__dirname}/../../../other/push_notification_sound.wav`, "push_notification_sound.wav", "audio/mpeg");
@@ -68,11 +77,12 @@ class S3Service {
         }
     }
 
-    getSignedUrl(path) {
-        return this.s3Client.getSignedUrl("getObject", {
+    async getSignedUrl(path) {
+        return await getSignedUrl(this.s3Client, new GetObjectCommand({
             Bucket: this.bucket,
             Key: path,
-            Expires: 60 * parseInt(process.config.s3.EXPIRY_TIME),
+        }), {
+            expiresIn: 60 * parseInt(process.config.s3.EXPIRY_TIME),
         });
     }
 
@@ -85,7 +95,10 @@ class S3Service {
                 Body: data,
                 ContentType: contentType,
             };
-            await this.s3Client.upload(params).promise();
+            await new Upload({
+                client: this.s3Client,
+                params,
+            }).done();
             console.log(`${key} uploaded successfully.`);
         } catch (err) {
             console.log(`Error uploading ${key}: `, err);
@@ -101,7 +114,10 @@ class S3Service {
                 Body: buffer,
                 ContentType: contentType,
             };
-            await this.s3Client.upload(params).promise();
+            await new Upload({
+                client: this.s3Client,
+                params,
+            }).done();
             console.log(`Buffer saved as ${key}.`);
         } catch (err) {
             console.log("Error saving buffer: ", err);
@@ -132,7 +148,7 @@ class S3Service {
             await this.s3Client.deleteObject({
                 Bucket: this.bucket,
                 Key: key,
-            }).promise();
+            });
             console.log(`${key} removed successfully.`);
         } catch (err) {
             console.log("Error removing object: ", err);
