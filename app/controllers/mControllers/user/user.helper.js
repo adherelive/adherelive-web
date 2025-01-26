@@ -56,7 +56,7 @@ export const doctorQualificationData = async (userId) => {
         for (let document of documents) {
           photos.push(
             `${process.config.s3.AWS_S3_HOST}/${
-              process.config.minio.MINIO_BUCKET_NAME
+              process.config.s3.BUCKET_NAME
             }${document.get("document")}`
           );
         }
@@ -109,7 +109,7 @@ export const uploadImageS3 = async (userId, file) => {
     // const file_link =
     //   process.config.s3.AWS_S3_HOST +
     //   "/" +
-    //   process.config.minio.MINIO_BUCKET_NAME +
+    //   process.config.s3.BUCKET_NAME +
     //   "/" +
     //   file_name;
 

@@ -1,6 +1,6 @@
 import { Op } from "sequelize";
 import { TABLE_NAME } from "../../models/scheduleEvents";
-import {TABLE_NAME as eventHistoryTableName} from "../../models/eventHistory";
+// import {TABLE_NAME as eventHistoryTableName} from "../../models/eventHistory";
 
 import { EVENT_STATUS, EVENT_TYPE } from "../../../constant";
 import Database from "../../../libs/mysql";
@@ -78,9 +78,33 @@ class ScheduleEventService {
   };
 
   getAllPreviousByData = async (data = {}) => {
-    // console.log("logsForMonintorByAhere - Schedule EventService getAllPreviousByData Called: ",getTime())
+    console.log("logsForMonintorByAhere - Schedule EventService getAllPreviousByData Called: ",getTime())
     try {
+      const { event_id, date, event_type = "" } = data;
+      const scheduleEvent = await Database.getModel(TABLE_NAME).findAll({
+        where: {
+          event_id,
+          date: {
+            [Op.lte]: date,
+          },
+          event_type,
+        },
+        order: [["date", "ASC"]],
+      });
+      return scheduleEvent;
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  getAllPreviousByDataM = async (data = {}) => {
+    // console.log("logsForMonintorByAhere - Schedule EventService getAllPreviousByDataM Called: ",getTime())
+    try {
+      console.log("getAllPreviousByDataNew called - 1");
       const { event_id = [], date, event_type = "" } = data;
+      console.log({ event_id });
+      console.log(typeof event_id);
+
       const scheduleEvent = await Database.getModel(TABLE_NAME).findAll({
         where: {
           event_id: {
@@ -95,7 +119,7 @@ class ScheduleEventService {
       });
       return scheduleEvent;
     } catch (error) {
-      throw ("Error for getAllPreviousByData: " + error);
+      throw error;
     }
   };
 

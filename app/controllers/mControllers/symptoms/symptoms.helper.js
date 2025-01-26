@@ -22,7 +22,7 @@ export const uploadImage = async ({ userId, file }) => {
     Log.info(`FILE_NAME: ${file_name}`);
     await awsS3Service.saveBufferObject(file.buffer, file_name);
 
-    // const file_link = process.config.s3.AWS_S3_HOST +"/" + process.config.minio.MINIO_BUCKET_NAME + fileUrl;
+    // const file_link = process.config.s3.AWS_S3_HOST +"/" + process.config.s3.BUCKET_NAME + fileUrl;
 
     Log.info(`FILE_LINK: ${fileUrl}`);
 
@@ -50,7 +50,7 @@ export const uploadAudio = async ({ userId, file }) => {
     Log.info(`FILE_NAME: ${file_name}`);
     await awsS3Service.saveAudioObject(file.buffer, file_name);
 
-    // const file_link = process.config.s3.AWS_S3_HOST +"/" + process.config.minio.MINIO_BUCKET_NAME + fileUrl;
+    // const file_link = process.config.s3.AWS_S3_HOST +"/" + process.config.s3.BUCKET_NAME + fileUrl;
     Log.info(`FILE_LINK: ${fileUrl}`);
 
     return { file: completePath(fileUrl), name: file.originalname };
@@ -77,7 +77,7 @@ export const uploadVideo = async ({ userId, file }) => {
     Log.info(`FILE_NAME: ${file_name}`);
     await awsS3Service.saveVideoObject(file.buffer, file_name);
 
-    // const file_link = process.config.s3.AWS_S3_HOST +"/" + process.config.minio.MINIO_BUCKET_NAME + fileUrl;
+    // const file_link = process.config.s3.AWS_S3_HOST +"/" + process.config.s3.BUCKET_NAME + fileUrl;
     Log.info(`FILE_LINK: ${fileUrl}`);
 
     return { file: completePath(fileUrl), name: file.originalname };
