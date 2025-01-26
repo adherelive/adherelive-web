@@ -1,4 +1,4 @@
-import { SQS } from "@aws-sdk/client-sqs";
+import AWS from "aws-sdk";
 import moment from "moment";
 import Logger from "../../../libs/log";
 
@@ -6,21 +6,12 @@ const Log = new Logger("QUEUE > SERVICE");
 
 export default class QueueService {
   constructor() {
-    // JS SDK v3 does not support global configuration.
-    // Codemod has attempted to pass values to each service client in this file.
-    // You may need to update clients outside of this file, if they use global config.
-    // AWS.config.update({
-    //   accessKeyId: process.config.aws.access_key_id,
-    //   secretAccessKey: process.config.aws.access_key,
-    //   region: process.config.aws.region,
-    // });
-    this.sqs = new SQS({
-      credentials: {
-        accessKeyId: process.config.aws.access_key_id,
-        secretAccessKey: process.config.aws.access_key,
-      },
+    AWS.config.update({
+      accessKeyId: process.config.aws.access_key_id,
+      secretAccessKey: process.config.aws.access_key,
       region: process.config.aws.region,
     });
+    this.sqs = new AWS.SQS();
   }
 
   createQueue = (name = "test_queue") => {
@@ -34,9 +25,9 @@ export default class QueueService {
 
     this.sqs.createQueue(params, (err, data) => {
       if (err) {
-        Log.debug("createQueue error: ", err);
+        Log.debug("createQueue err", err);
       } else {
-        Log.debug("Success, data URL: ", data.QueueUrl);
+        Log.debug("Success", data.QueueUrl);
       }
     });
   };
@@ -71,11 +62,11 @@ export default class QueueService {
         QueueUrl: this.getQueueUrl(),
       };
 
-      const response = await this.sqs.sendMessage(params);
-      Log.debug("sendMessage response: ", response);
+      const response = await this.sqs.sendMessage(params).promise();
+      Log.debug("sendMessage response", response);
       return response;
     } catch (error) {
-      Log.debug("sendMessage catch error: ", error);
+      Log.debug("sendMessage catch error", error);
     }
   };
 
@@ -83,7 +74,7 @@ export default class QueueService {
     try {
       const formattedData = [];
 
-      console.log("sendBatchMessage dataArr --> ", dataArr);
+      console.log("18231873 data --> ", dataArr);
       dataArr.forEach((data, index) => {
         const stringData = JSON.stringify(data);
         const params = {
@@ -101,17 +92,17 @@ export default class QueueService {
         QueueUrl: this.getQueueUrl(),
       };
 
-      const response = await this.sqs.sendMessageBatch(params);
-      Log.debug("sendMessage batch response: ", response);
+      const response = await this.sqs.sendMessageBatch(params).promise();
+      Log.debug("sendMessage batch response", response);
       return response;
     } catch (error) {
-      Log.debug("sendMessage batch catch error: ", error);
+      Log.debug("sendMessage batch catch error", error);
     }
   };
 
   receiveMessage = async () => {
     try {
-      Log.info(`Receive Message queue URI: ${this.getQueueUrl()}`);
+      Log.info(`queue url : ${this.getQueueUrl()}`);
 
       const params = {
         AttributeNames: ["SentTimestamp"],
@@ -121,12 +112,12 @@ export default class QueueService {
         QueueUrl: this.getQueueUrl(),
       };
 
-      const response = await this.sqs.receiveMessage(params);
+      const response = await this.sqs.receiveMessage(params).promise();
       // Log.debug("receiveMessage response", response.Messages.length);
 
       return response.Messages || [];
     } catch (error) {
-      console.log("receiveMessage 500 error: ", error);
+      console.log("receiveMessage 500 error", error);
     }
   };
 
@@ -137,11 +128,11 @@ export default class QueueService {
         ReceiptHandle,
       };
 
-      const response = await this.sqs.deleteMessage(params);
+      const response = await this.sqs.deleteMessage(params).promise();
 
       return response;
     } catch (error) {
-      console.log("deleteMessage 500 error: ", error);
+      console.log("receiveMessage 500 error", error);
     }
   };
 
@@ -152,13 +143,13 @@ export default class QueueService {
       };
 
       if (process.config.sqs.queue_name === queueName) {
-        const response = await this.sqs.purgeQueue(params);
+        const response = await this.sqs.purgeQueue(params).promise();
         return response;
       } else {
         return null;
       }
     } catch (error) {
-      console.log("purgeQueue 500 error: ", error);
+      console.log("purgeQueue 500 error", error);
     }
   };
 }
