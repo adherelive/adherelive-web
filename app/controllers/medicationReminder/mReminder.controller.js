@@ -605,7 +605,7 @@ class MReminderController extends Controller {
 
       let eventScheduleservice = new ScheduleEventService();
 
-      let scheduleEvents = await eventScheduleservice.getAllPreviousByDataNew({
+      let scheduleEvents = await eventScheduleservice.getAllPreviousByData({
         event_id: event_ids,
         date: currentDate,
         event_type: EVENT_TYPE.MEDICATION_REMINDER,

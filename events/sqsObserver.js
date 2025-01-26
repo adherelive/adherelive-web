@@ -18,7 +18,7 @@ export default class SqsObserver {
   observe = async (service) => {
     try {
       const eventMessage = await service.receiveMessage();
-      Log.debug("eventMessage observe event message: ", eventMessage);
+      Log.debug("SqsObserver observe event message: ", eventMessage);
 
       if (eventMessage) {
         for (const message of eventMessage) {
@@ -73,15 +73,15 @@ export default class SqsObserver {
           break;
       }
 
-      Log.info(`SQS Observe response: ${response}`);
-      Log.info(`SQS Observe message.ReceiptHandle: ${message.ReceiptHandle}`);
+      Log.info(`SQS Observe execute response: ${response}`);
+      Log.info(`SQS Observe execute message ReceiptHandle: ${message.ReceiptHandle}`);
 
       if (response === true) {
         const deleteMessage = await service.deleteMessage(
           message.ReceiptHandle
         );
 
-        Log.debug("SQS Observer deleteMessage: ", deleteMessage);
+        Log.debug("SQS Observer execute deleteMessage: ", deleteMessage);
       }
     } catch (error) {
       Log.debug("SQS Observe execute catch error: ", error);

@@ -108,7 +108,7 @@ class CarePlanService {
    * @returns {Promise<*>}
    */
   getCarePlanById = async (id) => {
-    console.log("Get CarePlan by ID, for ID: ", id);
+    console.log("getCarePlanById ---> ID: ", id);
     try {
       const carePlan = await Database.getModel(TABLE_NAME).findOne({
         where: { id },
@@ -135,11 +135,11 @@ class CarePlanService {
           },
         ],
       });
-      console.log("getCarePlanById with CarePlan of Secondary Doctor Mapping: \n");
+      console.log("getCarePlanById for Doctor Mapping: \n");
       console.log(carePlan.careplan_secondary_doctor_mappings);
       return carePlan;
     } catch (error) {
-      throw "Get Care Plan by ID for Secondary Doctor: " + error;
+      throw "Error in getCarePlanByID for Doctor: " + error;
     }
   };
 
