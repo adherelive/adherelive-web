@@ -36,7 +36,7 @@ export default class QueueService {
       if (err) {
         Log.debug("createQueue error: ", err);
       } else {
-        Log.debug("Success, data URL: ", data.QueueUrl);
+        Log.debug("Success ---> data queue URL: ", data.QueueUrl);
       }
     });
   };
@@ -102,10 +102,10 @@ export default class QueueService {
       };
 
       const response = await this.sqs.sendMessageBatch(params);
-      Log.debug("sendMessage batch response: ", response);
+      Log.debug("sendBatchMessage response: ", response);
       return response;
     } catch (error) {
-      Log.debug("sendMessage batch catch error: ", error);
+      Log.debug("sendBatchMessage catch error: ", error);
     }
   };
 

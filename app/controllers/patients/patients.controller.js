@@ -2178,13 +2178,13 @@ class PatientController extends Controller {
       let count = 0;
       let treatments = {};
 
-      console.log(
-        "Do I reach this place, Pagination with ID's: ",
-        limit,
-        offsetLimit,
-        getWatchListPatients
-      );
-      console.log("Patients for the Doctors: ", patientsForDoctor);
+      // console.log(
+      //   "Do I reach this place, Pagination with ID's: ",
+      //   limit,
+      //   offsetLimit,
+      //   getWatchListPatients
+      // );
+      // console.log("Patients for the Doctors: ", patientsForDoctor);
       // care plan ids as secondary doctor
       const {
         count: careplansCount = 0,
@@ -2215,7 +2215,7 @@ class PatientController extends Controller {
           user_id: userId,
         });
 
-        console.log("Get the Doctor for this page: ", doctor);
+        // console.log("Get the Doctor for this page: ", doctor);
         if (doctor && getWatchListPatients) {
           const doctorData = await DoctorWrapper(doctor);
 
