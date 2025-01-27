@@ -36,6 +36,10 @@ class AwsS3Service {
     }
   };
 
+  raiseServerError(res) {
+    res.status(500).json({ error: 'Internal Server Error in AWS S3 Module' });
+  }
+
   /**
    * Create a bucket in the S3, if it does not exist
    * @returns {Promise<*>}
@@ -179,6 +183,10 @@ class AwsS3Service {
 
   async downloadFileObject(objectName, filePath) {
     try {
+      if (!objectName) {
+        console.error("Invalid objectName provided. Cannot download file.");
+        return { success: false, message: "Invalid objectName" };
+      }
       const signedUrl = await this.getSignedUrl(objectName);
 
       return new Promise((resolve, reject) => {
@@ -203,7 +211,7 @@ class AwsS3Service {
       });
     } catch (err) {
       console.error("Error in the download file object: ", err);
-      throw err;
+      return { success: false, message: err.message };
     }
   }
 
