@@ -135,8 +135,7 @@ class CarePlanService {
           },
         ],
       });
-      console.log("getCarePlanById for Doctor Mapping: \n");
-      console.log(carePlan.careplan_secondary_doctor_mappings);
+      console.log("getCarePlanById for Doctor Mapping: \n", carePlan.careplan_secondary_doctor_mappings);
       return carePlan;
     } catch (error) {
       throw "Error in getCarePlanByID for Doctor: " + error;

@@ -105,7 +105,7 @@ module.exports = () => {
       project_id: process.env.FIREBASE_PROJECT_ID,
     },
     s3: {
-      AWS_S3_HOST:  process.env.S3_HOST,
+      AWS_S3_HOST: process.env.S3_HOST,
       EXPIRY_TIME: process.env.EXPIRY_TIME,
       BUCKET_NAME: process.env.S3_BUCKET_NAME,
     },
