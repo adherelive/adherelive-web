@@ -3,8 +3,6 @@ import * as https from "https";
 import fs from "fs";
 import Log from "../../../libs/log";
 
-//const Minio = require("minio");
-//const logoImage = require("../../../other/logo.png");
 const log = Log("AWS S3 Service");
 
 class AwsS3Service {
@@ -60,7 +58,7 @@ class AwsS3Service {
               Principal: {
                 AWS: ["*"],
               },
-              Resource: [`arn:aws:s3:::${bucket_name}/*`],
+              Resource: [`arn:aws:s3:::${bucket_name}/`],
             },
           ],
         };
@@ -118,10 +116,14 @@ class AwsS3Service {
   }
 
   getSignedUrl = (path) => {
-    console.log({ path });
+    console.log("getSignedUrl path needs to be defined: ", { path });
+    if (!path) {
+      throw new Error("Invalid path provided. Path cannot be null or undefined.");
+    }
+
     return this.s3Client.getSignedUrl("getObject", {
       Bucket: this.bucket,
-      Key: path.substring(1, path.length),
+      Key: path?.substring(1, path.length),
       Expires: 60 * parseInt(process.config.s3.EXPIRY_TIME),
     });
   };
@@ -177,20 +179,30 @@ class AwsS3Service {
 
   async downloadFileObject(objectName, filePath) {
     try {
-      const file = fs.createWriteStream(filePath);
-
-      const test = await this.getSignedUrl(objectName);
+      const signedUrl = await this.getSignedUrl(objectName);
 
       return new Promise((resolve, reject) => {
-        https.get(test, (response) => {
+        https.get(signedUrl, (response) => {
+          if (response.statusCode !== 200) {
+            reject(new Error(`Failed to download file. Status code: ${response.statusCode}`));
+          }
+
+          const file = fs.createWriteStream(filePath);
           const stream = response.pipe(file);
-          stream.on("finish", (res) => {
+
+          stream.on("finish", () => {
             resolve(true);
           });
+
+          stream.on("error", (err) => {
+            reject(err);
+          });
+        }).on("error", (err) => {
+          reject(err);
         });
       });
     } catch (err) {
-      console.log("Error in the download file object: ", err);
+      console.error("Error in the download file object: ", err);
       throw err;
     }
   }
@@ -261,4 +273,4 @@ class AwsS3Service {
   };
 }
 
-export default new AwsS3Service();
+module.exports = new AwsS3Service();

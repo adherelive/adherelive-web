@@ -107,15 +107,15 @@ if [ "$MODE" = "dev" ]; then
   # Create docker stack
   docker stack deploy -c docker-stack.yml "$DOCKER_STACK_NAME" --detach=false || { echo "Failed to deploy Docker stack!"; exit 1; }
 
+  # Clean up Docker system
+  sleep 15
+  docker system prune -af --volumes
+
   # Wait for 20 seconds
   sleep 20
 
   # Display logs from container named 'ald_backend'
   display_docker_logs "ald_backend"
-
-  # Clean up Docker system
-  sleep 15
-  docker system prune -af --volumes
 
 # Handle docker service for 'prod' mode
 elif [ "$MODE" = "prod" ]; then
@@ -123,15 +123,15 @@ elif [ "$MODE" = "prod" ]; then
   docker service update --image adherelive-be:prod "$DOCKER_SERVICE_BE"
   docker service update --image adherelive-fe:prod "$DOCKER_SERVICE_FE"
 
+  # Clean up Docker system, but not the images
+  sleep 15
+  docker system prune -f --volumes
+
   # Wait for 5 seconds
   sleep 5
 
   # Display logs from container named 'sweet_ramanujan'
   display_docker_logs "sweet_ramanujan"
-
-  # Clean up Docker system, but not the images
-  sleep 15
-  docker system prune -f --volumes
 
   echo "Deployment completed successfully! Remember to restart the server to apply changes."
 fi
