@@ -29,7 +29,7 @@ const Logger = new Log("EVENT SCHEDULE CREATOR");
  * Uses the schedule.scheduleJob() method to schedule a task to run every 30 seconds (* /30 * * * * * in cron format).
  * Within the scheduled task, calls the sqs.observe() method, presumably to process messages from an SQS queue.
  */
-const SqsObserver = importModule("../events/sqsObserver")
+const SqsObserver = import("./sqsObserver")
     .then((module) => {
         const sqs = new module.default();
         const QueueService = new queueService();
