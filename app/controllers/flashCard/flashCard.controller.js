@@ -127,17 +127,17 @@ class FlashCardController extends Controller {
 
       if (req.body.data.flashCardData.length > 0) {
         try {
-          await createReport(req.body.data.flashCardData, "myfashcord.pdf");
+          await createReport(req.body.data.flashCardData, "myFlashCard.pdf");
         } catch (ex) {
           console.log(ex);
         }
-        let file = fs.readFileSync("myfashcord.pdf");
+        let file = fs.readFileSync("myFlashCard.pdf");
         const { originalname } = file || {};
 
         let fileUrl = "";
         try {
           fileUrl = await ReportHelper.uploadToS3({
-            filepath: "myfashcord.pdf",
+            filepath: "myFlashCard.pdf",
             id: data.patient_id,
           });
         } catch (ex) {
@@ -148,7 +148,7 @@ class FlashCardController extends Controller {
           const addReport = await reportService.addReport(reportBody);
           const report = await ReportWrapper({ data: addReport });
           await uploadDocumentService.addDocument({
-            name: "myfashcord.pdf",
+            name: "myFlashCard.pdf",
             document: fileUrl,
             parent_type: DOCUMENT_PARENT_TYPE.REPORT,
             parent_id: report.getId(),

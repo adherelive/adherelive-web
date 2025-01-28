@@ -16,7 +16,7 @@ class PushNotification {
 
   notify = (templates = []) => {
     for (const template of templates) {
-      Log.debug("templates push app ---> ", template);
+      Log.debug("templates one signal app: ", template);
       this.sendPushNotification(template);
     }
   };
@@ -45,7 +45,7 @@ class PushNotification {
         template.existing_android_channel_id = "sound_channel";
       }
 
-      console.log(template);
+      console.log("sendPushNotification template: ", template);
 
       const options = {
         // host: '104.18.226.52',
@@ -60,7 +60,7 @@ class PushNotification {
       const req = https.request(options, function (res) {
         res.on("data", function (data) {
           console.log("sendPushNotification response template: ", template);
-          console.log("sendPushNotification Data:", data);
+          console.log("sendPushNotification Data: ", data);
         });
 
         res.on("error", function (err) {
@@ -72,7 +72,7 @@ class PushNotification {
         console.log("Error in sending push notification: ", e);
         console.log(e);
       });
-      console.log(JSON.stringify(template));
+      console.log("sendPushNotification JSON -> template: ", JSON.stringify(template));
       req.write(JSON.stringify(template));
       req.end();
     } catch (err) {
