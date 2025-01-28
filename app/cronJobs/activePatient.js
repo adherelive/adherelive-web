@@ -53,32 +53,32 @@ class ActivePatient {
     }
   };
 
-  getAllCareplans = async () => {
+  getAllCarePlans = async () => {
     try {
       const doctorIds = await this.getAllDoctors();
-      const careplans =
+      const carePlans =
         (await CarePlanService.getMultipleCarePlanByData({
           doctor_id: doctorIds,
         })) || [];
 
       let carePlanData = {};
       let carePlanIds = [];
-      for (let i = 0; i < careplans.length; i++) {
+      for (let i = 0; i < carePlans.length; i++) {
         const carePlan = await CarePlanWrapper(careplans[i]);
         carePlanData[carePlan.getCarePlanId()] = await carePlan.getAllInfo();
         carePlanIds.push(carePlan.getCarePlanId());
       }
-      // Log.debug("careplan IDS", carePlanIds);
+      Log.debug("Care Plan IDs: ", carePlanIds);
       return { carePlanData, carePlanIds };
     } catch (error) {
-      Log.debug("getAllCareplans catch error", error);
+      Log.debug("getAllCarePlans catch error: ", error);
       throw error;
     }
   };
 
   getEvents = async () => {
     try {
-      const { carePlanData, carePlanIds } = await this.getAllCareplans();
+      const { carePlanData, carePlanIds } = await this.getAllCarePlans();
 
       const eventService = new ScheduleEventService();
 
@@ -115,9 +115,9 @@ class ActivePatient {
             },
           })) || [];
         Log.info(
-          `Total events :: ${events.length} :: for careplan id :: ${id}`
+          `Total events :: ${events.length} :: for Care Plan ID :: ${id}`
         );
-        Log.debug("events", events);
+        Log.debug("Status of the events: ", events);
 
         let passedEventCount = 0;
 
@@ -125,12 +125,10 @@ class ActivePatient {
 
         events.forEach((event) => {
           const { status } = event || {};
-          /*
-           *
+          /**
            * checking if any event is either completed or expired to count as passed.
-           * in the future, might have to include cancelled status
-           *
-           * */
+           * TODO: In the future, might have to include cancelled status
+           */
           if (
             status === EVENT_STATUS.COMPLETED ||
             status === EVENT_STATUS.EXPIRED ||
@@ -162,16 +160,20 @@ class ActivePatient {
         }
       }
     } catch (error) {
-      Log.debug("getEvents catch error", error);
+      Log.debug("getEvents catch error: ", error);
       throw error;
     }
   };
 
+  /**
+   * This is the function which runs the
+   * @returns {Promise<void>}
+   */
   runObserver = async () => {
     try {
       await this.getEvents();
     } catch (error) {
-      Log.debug("runObserver catch error", error);
+      Log.debug("runObserver catch error: ", error);
       throw error;
     }
   };
