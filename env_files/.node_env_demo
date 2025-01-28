@@ -93,12 +93,12 @@ MINIO_ENDPOINT=minio1
 MINIO_BUCKET_NAME=adherelive-demo
 
 # GetStream API Keys
-#GETSTREAM_APP_NAME=adherelive-demo
+GETSTREAM_APP_NAME=adherelive-demo
 GETSTREAM_API_KEY=fjakqnrvnsq7
 GETSTREAM_API_SECRET=9bqv9h5w6jxqdx5hdf3qg7wrd7vrxpnaprra8yyxeccarp4c8kgs2srhqk8upqmy
 GETSTREAM_REGION=us-east
 GETSTREAM_APP_ID=1143860
-GETSTREAM_FEED_GROUP=adhere_demo
+GETSTREAM_FEED_GROUP=notification
 
 # Google API Keys
 GOOGLE_CLIENT_ID=398277517704-eqh1lvm3872s2a5t916kua18gp60steu.apps.googleusercontent.com

@@ -351,7 +351,7 @@ class LongTerm {
       // medications
       const medicationIds = await this.getMedications();
 
-      Log.debug("observer medicationIds in LongTerm: ", medicationIds);
+      Log.debug("runObserver in LongTerm ---> medicationIds: ", medicationIds);
 
       if (medicationIds.length > 0) {
         for (const medicationId of medicationIds) {
@@ -379,7 +379,7 @@ class LongTerm {
       // vitals
       const vitalIds = await this.getVitals();
 
-      Log.debug("observer vitalIds in LongTerm: ", vitalIds);
+      Log.debug("runObserver in LongTerm ---> vitalIds: ", vitalIds);
 
       if (vitalIds.length > 0) {
         for (const vitalId of vitalIds) {
