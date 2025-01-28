@@ -18,6 +18,7 @@ import SymptomWrapper from "../../apiWrapper/web/symptoms";
 import VitalWrapper from "../../apiWrapper/web/vitals";
 
 // Timer
+import { getTime } from "../../helper/timer";
 
 const Log = new Logger("WEB > EVENT > CONTROLLER");
 
@@ -29,7 +30,7 @@ class EventController extends Controller {
   getAllEvents = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
-      Log.debug("getAllEvents req.params ---> ", req.params);
+      Log.debug("getAllEvents req.params: ", req.params);
 
       const {
         params: { patient_id } = {},
@@ -94,17 +95,17 @@ class EventController extends Controller {
       const vitalEvents = await eventService.getLastVisitData({
         event_id: [
           ...vital_ids,
-          //...medication_ids,
-          //...diet_ids,
-          //...workout_ids,
-          //...appointment_ids,
+          ...medication_ids,
+          ...diet_ids,
+          ...workout_ids,
+          ...appointment_ids,
         ],
         event_type: [
           EVENT_TYPE.VITALS,
-          //EVENT_TYPE.APPOINTMENT,
-          //EVENT_TYPE.MEDICATION_REMINDER,
-          //EVENT_TYPE.DIET,
-          //EVENT_TYPE.WORKOUT,
+          EVENT_TYPE.APPOINTMENT,
+          EVENT_TYPE.MEDICATION_REMINDER,
+          EVENT_TYPE.DIET,
+          EVENT_TYPE.WORKOUT,
         ],
         date: moment().subtract(7, "days").utc().toISOString(),
         sort: "DESC",
@@ -114,41 +115,41 @@ class EventController extends Controller {
        * TODO: Check if the below code is required or not
        *       As it has been commented and used in a single function above
        */
-      const appointmentEvents = await eventService.getLastVisitData({
-        event_id: [...appointment_ids,],
-        event_type: EVENT_TYPE.APPOINTMENT,
-        date: moment().subtract(7, "days").utc().toISOString(),
-        sort: "DESC",
-      });
+      // const appointmentEvents = await eventService.getLastVisitData({
+      //   event_id: appointment_ids,
+      //   event_type: EVENT_TYPE.APPOINTMENT,
+      //   date: moment().subtract(7, "days").utc().toISOString(),
+      //   sort: "DESC",
+      // });
 
-      const medicationEvents = await eventService.getLastVisitData({
-        event_id: [...medication_ids,],
-        event_type: EVENT_TYPE.MEDICATION_REMINDER,
-        date: moment().subtract(7, "days").utc().toISOString(),
-        sort: "DESC",
-      });
+      // const medicationEvents = await eventService.getLastVisitData({
+      //   event_id: medication_ids,
+      //   event_type: EVENT_TYPE.MEDICATION_REMINDER,
+      //   date: moment().subtract(7, "days").utc().toISOString(),
+      //   sort: "DESC",
+      // });
 
-      const dietEvents = await eventService.getLastVisitData({
-        event_id: [...diet_ids,],
-        event_type: EVENT_TYPE.DIET,
-        date: moment().subtract(7, "days").utc().toISOString(),
-        sort: "DESC",
-      });
+      // const dietEvents = await eventService.getLastVisitData({
+      //   event_id: diet_ids,
+      //   event_type: EVENT_TYPE.DIET,
+      //   date: moment().subtract(7, "days").utc().toISOString(),
+      //   sort: "DESC",
+      // });
 
-      const workoutEvents = await eventService.getLastVisitData({
-        event_id: [...workout_ids,],
-        event_type: EVENT_TYPE.WORKOUT,
-        date: moment().subtract(7, "days").utc().toISOString(),
-        sort: "DESC",
-      });
+      // const workoutEvents = await eventService.getLastVisitData({
+      //   event_id: workout_ids,
+      //   event_type: EVENT_TYPE.WORKOUT,
+      //   date: moment().subtract(7, "days").utc().toISOString(),
+      //   sort: "DESC",
+      // });
 
 
       let scheduleEvents = [
         ...vitalEvents,
-        ...appointmentEvents,
-        ...medicationEvents,
-        ...dietEvents,
-        ...workoutEvents,
+        // ...appointmentEvents,
+        // ...medicationEvents,
+        // ...dietEvents,
+        // ...workoutEvents,
       ];
 
       if (scheduleEvents.length > 0) {
