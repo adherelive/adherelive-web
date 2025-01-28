@@ -22,6 +22,16 @@ export function isURL(str) {
   return pattern.test(str);
 }
 
+/**
+ * This importModule helper function handles the dynamic import and provides basic error handling.
+ * You can further enhance it based on your specific needs.
+ *
+ * By using a helper function for dynamic imports, you can improve the structure, maintainability,
+ * and potentially the performance of your code.
+ *
+ * @param path
+ * @returns {Promise<*>}
+ */
 export const importModule = async (path) => {
   try {
     const module = await import(path);
