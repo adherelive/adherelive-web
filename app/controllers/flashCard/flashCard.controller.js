@@ -22,7 +22,7 @@ import { DOCUMENT_PARENT_TYPE, USER_CATEGORY } from "../../../constant";
 const { createReport } = require("./generateTable.helper");
 
 const fs = require("fs");
-const Log = new Logger("WEB > CONTROLLER > Service Offering");
+const Log = new Logger("WEB > CONTROLLER > FLASH CARD");
 
 class FlashCardController extends Controller {
   constructor() {
@@ -53,7 +53,6 @@ class FlashCardController extends Controller {
       provider_type = req.userDetails.userRoleData.basic_info.linked_with;
     }
 
-    Log.debug("flash card controller - create - called");
     try {
       let data = { ...req.body, doctor_id, provider_type, provider_id };
       Log.debug("flash card controller data", data);
@@ -74,10 +73,8 @@ class FlashCardController extends Controller {
       let transaction_activities = await txActivity.getAllTxActivitiesByData({
         id: tx_activity_id,
       });
-      let { service_sub_tx_id, service_offering_id, service_subscription_id } =
-        transaction_activities[0];
+      let { service_sub_tx_id, service_offering_id, service_subscription_id } = transaction_activities[0];
       // TODO: need to discuss with client bcz below step will slowdown application.
-
       // service_offering_name
       let flashCardName = "";
 
@@ -98,7 +95,7 @@ class FlashCardController extends Controller {
           });
         flashCardName = `${serviceSubscription["notes"]} - ${flashCardName}`;
       }
-      ////////////////////////////
+
       if (service_sub_tx_id) {
         let userservicesmapping =
           await serviceSubscriptionTx.getAllServiceSubscriptionTx({
@@ -127,17 +124,17 @@ class FlashCardController extends Controller {
 
       if (req.body.data.flashCardData.length > 0) {
         try {
-          await createReport(req.body.data.flashCardData, "myfashcord.pdf");
+          await createReport(req.body.data.flashCardData, "myFlashCard.pdf");
         } catch (ex) {
           console.log(ex);
         }
-        let file = fs.readFileSync("myfashcord.pdf");
+        let file = fs.readFileSync("myFlashCard.pdf");
         const { originalname } = file || {};
 
         let fileUrl = "";
         try {
           fileUrl = await ReportHelper.uploadToS3({
-            filepath: "myfashcord.pdf",
+            filepath: "myFlashCard.pdf",
             id: data.patient_id,
           });
         } catch (ex) {
@@ -148,7 +145,7 @@ class FlashCardController extends Controller {
           const addReport = await reportService.addReport(reportBody);
           const report = await ReportWrapper({ data: addReport });
           await uploadDocumentService.addDocument({
-            name: "myfashcord.pdf",
+            name: "myFlashCard.pdf",
             document: fileUrl,
             parent_type: DOCUMENT_PARENT_TYPE.REPORT,
             parent_id: report.getId(),
@@ -162,10 +159,10 @@ class FlashCardController extends Controller {
         res,
         200,
         { flashCard },
-        "FlashCard added successfully"
+        "FlashCard added successfully!"
       );
     } catch (error) {
-      Log.debug("addService 500 error", error);
+      Log.debug("FlashCard 500 error: ", error);
       return raiseServerError(res);
     }
   };
@@ -185,9 +182,9 @@ class FlashCardController extends Controller {
       let data = { patient_id };
       const flashCardService = new FlashCardService();
       let flashCard = await flashCardService.getAllFlashCardByData(data);
-      return raiseSuccess(res, 200, { flashCard }, "success");
+      return raiseSuccess(res, 200, { flashCard }, "Success!");
     } catch (error) {
-      Log.debug("updateService 500 error", error);
+      Log.debug("Flash Card 500 error: ", error);
       return raiseServerError(res);
     }
   };
@@ -209,7 +206,7 @@ class FlashCardController extends Controller {
       let flashCard = await flashCardService.getAllFlashCardByData(data);
       return raiseSuccess(res, 200, { flashCard }, "success");
     } catch (error) {
-      Log.debug("updateService 500 error", error);
+      Log.debug("getFlashCardDetailsByActivityId 500 error: ", error);
       return raiseServerError(res);
     }
   };
@@ -218,7 +215,7 @@ class FlashCardController extends Controller {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       let { params: { id } = {}, body } = req;
-      Log.info(`Report : id = ${id}`);
+      Log.info(`Report id = ${id}`);
       if (!id) {
         return raiseClientError(
           res,
@@ -272,7 +269,7 @@ class FlashCardController extends Controller {
         "FlashCard updated successfully"
       );
     } catch (error) {
-      Log.debug("updateFlashCard 500 error", error);
+      Log.debug("updateFlashCard 500 error: ", error);
       return raiseServerError(res);
     }
   };

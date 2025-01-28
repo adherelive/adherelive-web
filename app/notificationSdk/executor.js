@@ -49,7 +49,10 @@ class EventExecutor {
     }
   }
 
-  async sendPushNotification(template) {
+  /**
+   * The same function is available in (app/notificationSdk/pushApp/index.js)
+   *
+   async sendPushNotification(template) {
     try {
       const response = await fetch(
         "https://onesignal.com/api/v1/notifications",
@@ -67,35 +70,41 @@ class EventExecutor {
       const jsonResponse = await response.json();
       Log.debug("sendPushNotification Response: ", jsonResponse);
     } catch (err) {
-      Log.debug("sendPushNotification 500 error", err);
+      Log.debug("sendPushNotification 500 error: ", err);
     }
   }
+   */
 
-  async sendAppNotification(template) {
+  /**
+   * The same function is available in (app/notificationSdk/inApp/index.js)
+   *
+  sendAppNotification = async (template) => {
     try {
-      Log.debug("sendAppNotification ---> ", template.actor.toString());
-
+      // TODO: Add get-stream rest api call code here
+      Log.debug("Template Actor: ", template.actor.toString());
       const client = stream.connect(
-        process.config.getstream.key,
-        process.config.getstream.secretKey,
-        process.config.getstream.appId
+          process.config.getstream.key,
+          process.config.getstream.secretKey,
+          process.config.getstream.appId
       );
-
       const userToken = client.createUserToken(template.actor.toString());
-      Log.debug("userToken ---> ", userToken);
-      Log.debug("client ---> ", client);
+      Log.debug("Generated get-stream userToken in use: ", userToken);
+      Log.debug("Get-Stream client --> ", client);
 
-      const feed = client.feed("notification", template);
-      Log.debug("feed ---> ", feed);
-
-      const response = await feed.addActivity(template);
-      Log.debug("sendAppNotification Response: ", response);
+      const feed = client.feed("notification", template.object);
+      Log.debug("Feed Initialized: ", feed);
+      const response = await feed.addActivity(template).catch((err) => {
+        Log.debug("Get-Stream response error: ", err);
+      });
+      Log.debug("Activity Added: ", response);
 
       return response;
     } catch (err) {
-      Log.debug("executor sendAppNotification 500 error", err);
+      Log.error("Error in sendAppNotification: ", err);
+      throw err; // Re-throw the error for further handling
     }
-  }
+  };
+   */
 }
 
 export default new EventExecutor();

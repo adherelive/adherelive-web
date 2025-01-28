@@ -71,7 +71,7 @@ class ServiceSubscriptionController extends Controller {
         "Subscription added successfully"
       );
     } catch (error) {
-      Log.debug("addService 500 error", error);
+      Log.debug("Service Subscription 500 error: ", error);
       return raiseServerError(res);
     }
   };
@@ -101,7 +101,7 @@ class ServiceSubscriptionController extends Controller {
         "Service updated successfully"
       );
     } catch (error) {
-      Log.debug("updateService 500 error", error);
+      Log.debug("updateServiceSubscription 500 error: ", error);
       return raiseServerError(res);
     }
   };
@@ -142,7 +142,7 @@ class ServiceSubscriptionController extends Controller {
         "success"
       );
     } catch (error) {
-      Log.debug("updateService 500 error", error);
+      Log.debug("getServiceOfferingById 500 error: ", error);
       return raiseServerError(res);
     }
   };
@@ -178,7 +178,7 @@ class ServiceSubscriptionController extends Controller {
         "Service updated successfully"
       );
     } catch (ex) {
-      Log.debug("getServiceByData 500 error", ex);
+      Log.debug("getServiceOfferingByData 500 error: ", ex);
       return raiseServerError(res);
     }
   };
@@ -247,7 +247,7 @@ class ServiceSubscriptionController extends Controller {
         "Service updated successfully"
       );
     } catch (ex) {
-      Log.debug("getServiceByData 500 error", ex);
+      Log.debug("getServiceSubscriptionForAdmin 500 error: ", ex);
       return raiseServerError(res);
     }
   };
@@ -297,7 +297,7 @@ class ServiceSubscriptionController extends Controller {
         "Service updated successfully"
       );
     } catch (ex) {
-      Log.debug("getServiceByData 500 error", ex);
+      Log.debug("getServiceSubscriptionForPatient 500 error: ", ex);
       return raiseServerError(res);
     }
   };
@@ -357,7 +357,7 @@ class ServiceSubscriptionController extends Controller {
         "Service updated successfully"
       );
     } catch (ex) {
-      Log.debug("getServiceByData 500 error", ex);
+      Log.debug("getServiceOfferingForUser 500 error: ", ex);
       return raiseServerError(res);
     }
   };

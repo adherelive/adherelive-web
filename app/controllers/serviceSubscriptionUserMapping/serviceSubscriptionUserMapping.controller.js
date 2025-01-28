@@ -130,7 +130,7 @@ class ServiceSubscriptionUserMappingController extends Controller {
         "Service added successfully"
       );
     } catch (error) {
-      Log.debug("addService 500 error", error);
+      Log.debug("Subscribe create user mapping 500 error: ", error);
       return raiseServerError(res);
     }
   };
@@ -189,7 +189,7 @@ class ServiceSubscriptionUserMappingController extends Controller {
         "success"
       );
     } catch (error) {
-      Log.debug("updateService 500 error", error);
+      Log.debug("getServiceSubscriptionUserMappingByPatientId 500 error: ", error);
       return raiseServerError(res);
     }
   };
@@ -210,7 +210,7 @@ class ServiceSubscriptionUserMappingController extends Controller {
           "Please select correct ServiceOffer to update"
         );
     } catch (error) {
-      Log.debug("updateService 500 error", error);
+      Log.debug("getServiceSubscriptionUserMappingAndServiceUserByPatientId 500 error: ", error);
       return raiseServerError(res);
     }
 
@@ -353,7 +353,7 @@ class ServiceSubscriptionUserMappingController extends Controller {
           "Please select correct ServiceOffer to update"
         );
     } catch (error) {
-      Log.debug("updateService 500 error", error);
+      Log.debug("getServiceSubscriptionDoctorByPatientId 500 error; ", error);
       return raiseServerError(res);
     }
 
@@ -473,7 +473,7 @@ class ServiceSubscriptionUserMappingController extends Controller {
             "Please select correct ServiceOffer to update"
           );
       } catch (error) {
-        Log.debug("updateService 500 error", error);
+        Log.debug("getServiceSubscriptionUserMappingAndServiceUserByPatientIdAndDoctorId 500 error: ", error);
         return raiseServerError(res);
       }
 
@@ -599,7 +599,7 @@ class ServiceSubscriptionUserMappingController extends Controller {
         "Service updated successfully"
       );
     } catch (error) {
-      Log.debug("updateService 500 error", error);
+      Log.debug("updateServiceSubscriptionUserMapping 500 error: ", error);
       return raiseServerError(res);
     }
   };
