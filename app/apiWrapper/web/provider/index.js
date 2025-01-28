@@ -4,7 +4,7 @@ import doctorProviderMappingService from "../../../services/doctorProviderMappin
 
 import DoctorProviderMappingWrapper from "../../web/doctorProviderMapping";
 import UserWrapper from "../../web/user";
-import { completePath } from "../../../helper/filePath";
+import { completePath } from "../../../helper/s3FilePath";
 
 class ProviderWrapper extends BaseProvider {
   constructor(data) {

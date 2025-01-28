@@ -3,12 +3,9 @@ import * as https from "https";
 import fs from "fs";
 import Log from "../../../libs/log";
 
-//const logoImage = require("../../../other/logo.png");
 const log = Log("AWS S3 Service");
 
-const Minio = require("minio");
-
-class MinioService {
+class AwsS3Service {
   constructor() {
       /**
        * Minio is not used in the project. It is commented out.
@@ -33,11 +30,15 @@ class MinioService {
   callback = (error, data) => {
     if (error) {
       // throw error;
-      console.log("Callback error in Minio services: ", error);
+      console.log("Callback error in AWS S3 services: ", error);
     } else {
-      console.log("Minio has sent response data: ", data);
+      console.log("AWS S3 has sent response data: ", data);
     }
   };
+
+  raiseServerError(res) {
+    res.status(500).json({ error: 'Internal Server Error in AWS S3 Module' });
+  }
 
   /**
    * Create a bucket in the S3, if it does not exist
@@ -61,7 +62,7 @@ class MinioService {
               Principal: {
                 AWS: ["*"],
               },
-              Resource: [`arn:aws:s3:::${bucket_name}/*`],
+              Resource: [`arn:aws:s3:::${bucket_name}/`],
             },
           ],
         };
@@ -119,10 +120,14 @@ class MinioService {
   }
 
   getSignedUrl = (path) => {
-    console.log({ path });
+    console.log("getSignedUrl path needs to be defined: ", { path });
+    if (!path) {
+      throw new Error("Invalid path provided. Path cannot be null or undefined.");
+    }
+
     return this.s3Client.getSignedUrl("getObject", {
       Bucket: this.bucket,
-      Key: path.substring(1, path.length),
+      Key: path?.substring(1, path.length),
       Expires: 60 * parseInt(process.config.s3.EXPIRY_TIME),
     });
   };
@@ -178,21 +183,35 @@ class MinioService {
 
   async downloadFileObject(objectName, filePath) {
     try {
-      const file = fs.createWriteStream(filePath);
-
-      const test = await this.getSignedUrl(objectName);
+      if (!objectName) {
+        console.error("Invalid objectName provided. Cannot download file.");
+        return { success: false, message: "Invalid objectName" };
+      }
+      const signedUrl = await this.getSignedUrl(objectName);
 
       return new Promise((resolve, reject) => {
-        https.get(test, (response) => {
+        https.get(signedUrl, (response) => {
+          if (response.statusCode !== 200) {
+            reject(new Error(`Failed to download file. Status code: ${response.statusCode}`));
+          }
+
+          const file = fs.createWriteStream(filePath);
           const stream = response.pipe(file);
-          stream.on("finish", (res) => {
+
+          stream.on("finish", () => {
             resolve(true);
           });
+
+          stream.on("error", (err) => {
+            reject(err);
+          });
+        }).on("error", (err) => {
+          reject(err);
         });
       });
     } catch (err) {
-      console.log("Error in the download file object: ", err);
-      throw err;
+      console.error("Error in the download file object: ", err);
+      return { success: false, message: err.message };
     }
   }
 
@@ -262,4 +281,4 @@ class MinioService {
   };
 }
 
-module.exports = new MinioService();
+module.exports = new AwsS3Service();

@@ -72,7 +72,7 @@ import {
   USER_CATEGORY,
   VERIFICATION_TYPE,
 } from "../../../constant";
-import { completePath, getFilePath } from "../../helper/filePath";
+import { completePath, getFilePath } from "../../helper/s3FilePath";
 import getReferenceId from "../../helper/referenceIdGenerator";
 import getUniversalLink from "../../helper/universalLink";
 import getAge from "../../helper/getAge";

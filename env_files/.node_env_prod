@@ -98,7 +98,7 @@ GETSTREAM_API_KEY=kmvug7bs2v52
 GETSTREAM_API_SECRET=mqdvv7jv26sfxmt8wahqv7p9vx77p7r3u9au5qzv6v9f9utk67v4vzf4tbv35u49
 GETSTREAM_REGION=us-east
 GETSTREAM_APP_ID=95904
-GETSTREAM_FEED_GROUP=adhere_live
+GETSTREAM_FEED_GROUP=notification
 
 # Google API Keys
 GOOGLE_CLIENT_ID=398277517704-eqh1lvm3872s2a5t916kua18gp60steu.apps.googleusercontent.com

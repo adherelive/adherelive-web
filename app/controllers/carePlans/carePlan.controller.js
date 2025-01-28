@@ -672,7 +672,7 @@ class CarePlanController extends Controller {
       const { userDetails, body, file, permissions = [] } = req;
       const { pid, profile_pic, name, email } = body || {};
       const {
-        userId = "3",
+        userId = "2",
         userRoleId = null,
         userData: { category } = {},
       } = userDetails || {};
@@ -687,7 +687,6 @@ class CarePlanController extends Controller {
 
       if (carePlan == null)
         return this.raiseServerError(res, 500, {}, "No Care Plan Found");
-      // return this.raiseServerError(res, 500, "No Care Plan Found");
 
       let cPdetails = carePlan.get("details") ? carePlan.get("details") : {};
 

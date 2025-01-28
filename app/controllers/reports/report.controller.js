@@ -11,7 +11,7 @@ import uploadDocumentService from "../../services/uploadDocuments/uploadDocument
 import ReportWrapper from "../../apiWrapper/web/reports";
 
 import { DOCUMENT_PARENT_TYPE } from "../../../constant";
-import { getFilePath } from "../../helper/filePath";
+import { getFilePath } from "../../helper/s3FilePath";
 import * as ReportHelper from "./report.helper";
 
 const Log = new Logger("WEB > CONTROLLER > REPORTS");

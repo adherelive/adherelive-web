@@ -47,7 +47,7 @@ import UploadDocumentWrapper from "../../apiWrapper/web/uploadDocument";
 import EventWrapper from "../../apiWrapper/common/scheduleEvents";
 
 import { uploadImageS3 } from "../user/user.helper";
-import { getFilePath } from "../../helper/filePath";
+import { getFilePath } from "../../helper/s3FilePath";
 import { checkAndCreateDirectory } from "../../helper/common";
 
 import { downloadFileFromS3 } from "../mControllers/user/user.helper";

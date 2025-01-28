@@ -88,7 +88,7 @@ class ServiceUserMappingController extends Controller {
         "Service added successfully"
       );
     } catch (error) {
-      Log.debug("addService 500 error", error);
+      Log.debug("Service User Mapping 500 error: ", error);
       return raiseServerError(res);
     }
   };
@@ -131,7 +131,7 @@ class ServiceUserMappingController extends Controller {
         "success"
       );
     } catch (error) {
-      Log.debug("updateService 500 error", error);
+      Log.debug("getServiceUserMappingByData 500 error: ", error);
       return raiseServerError(res);
     }
   };
@@ -140,7 +140,7 @@ class ServiceUserMappingController extends Controller {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       let { params: { id } = {}, body } = req;
-      Log.info(`Report : id = ${id}`);
+      Log.info(`Report id = ${id}`);
       if (!id) {
         return raiseClientError(
           res,
@@ -162,7 +162,7 @@ class ServiceUserMappingController extends Controller {
         "Service updated successfully"
       );
     } catch (error) {
-      Log.debug("updateService 500 error", error);
+      Log.debug("updateServiceUserMapping 500 error: ", error);
       return raiseServerError(res);
     }
   };

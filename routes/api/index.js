@@ -66,7 +66,7 @@ import prescriptionRouter from "./prescription";
 const Log = new Logger("API > INDEX");
 
 router.use(async function (req, res, next) {
-  console.log("api-index-1 ---> router getTime: " + getTime() + getTime());
+  // console.log("api-index-1 ---> router getTime: " + getTime() + " " + getTime());
   try {
     let accessToken,
       userId = null,

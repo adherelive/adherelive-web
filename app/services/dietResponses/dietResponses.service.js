@@ -1,5 +1,5 @@
 import Database from "../../../libs/mysql";
-import { getFilePath } from "../../helper/filePath";
+import { getFilePath } from "../../helper/s3FilePath";
 
 import { TABLE_NAME } from "../../models/dietResponses";
 import { TABLE_NAME as uploadDocumentTableName } from "../../models/uploadDocuments";

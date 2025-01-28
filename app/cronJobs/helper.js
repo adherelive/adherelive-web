@@ -1,7 +1,7 @@
 import Logger from "../../libs/log";
-import minioService from "../services/minio/minio.service";
+import awsS3Service from "../services/awsS3/awsS3.service";
 import md5 from "js-md5";
-import { completePath } from "../helper/filePath";
+import { completePath } from "../helper/s3FilePath";
 import { EVENT_TYPE } from "../../constant";
 
 import CarePlanWrapper from "../apiWrapper/web/carePlan";
@@ -22,7 +22,7 @@ export const uploadDocument = async ({
 }) => {
   try {
     Log.info(`fileName : ${fileName}`);
-    await minioService.createBucket();
+    await awsS3Service.createBucket();
 
     let hash = md5.create();
     hash.update(id);
@@ -38,7 +38,7 @@ export const uploadDocument = async ({
     const filePath = `${folder}/${encodedFileName}`;
     Log.info(`filePath :: ${filePath}`);
 
-    await minioService.saveBufferObject(buffer, filePath, null);
+    await awsS3Service.saveBufferObject(buffer, filePath, null);
     return completePath(`/${filePath}`);
   } catch (error) {
     Log.debug("uploadDocument catch error", error);

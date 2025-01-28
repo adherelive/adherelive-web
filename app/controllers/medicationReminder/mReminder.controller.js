@@ -603,9 +603,9 @@ class MReminderController extends Controller {
       }
       const currentDate = moment().endOf("day").utc().toDate();
 
-      let eventScheduleservice = new ScheduleEventService();
+      let eventScheduleService = new ScheduleEventService();
 
-      let scheduleEvents = await eventScheduleservice.getAllPreviousByDataNew({
+      let scheduleEvents = await eventScheduleService.getAllPreviousByDataM({
         event_id: event_ids,
         date: currentDate,
         event_type: EVENT_TYPE.MEDICATION_REMINDER,

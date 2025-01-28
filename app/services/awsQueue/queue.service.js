@@ -25,9 +25,9 @@ export default class QueueService {
 
     this.sqs.createQueue(params, (err, data) => {
       if (err) {
-        Log.debug("createQueue err", err);
+        Log.debug("createQueue error: ", err);
       } else {
-        Log.debug("Success", data.QueueUrl);
+        Log.debug("Success ---> data queue URL: ", data.QueueUrl);
       }
     });
   };
@@ -63,10 +63,10 @@ export default class QueueService {
       };
 
       const response = await this.sqs.sendMessage(params).promise();
-      Log.debug("sendMessage response", response);
+      Log.debug("sendMessage response: ", response);
       return response;
     } catch (error) {
-      Log.debug("sendMessage catch error", error);
+      Log.debug("sendMessage catch error: ", error);
     }
   };
 
@@ -74,7 +74,7 @@ export default class QueueService {
     try {
       const formattedData = [];
 
-      console.log("18231873 data --> ", dataArr);
+      console.log("sendBatchMessage dataArr --> ", dataArr);
       dataArr.forEach((data, index) => {
         const stringData = JSON.stringify(data);
         const params = {
@@ -93,16 +93,16 @@ export default class QueueService {
       };
 
       const response = await this.sqs.sendMessageBatch(params).promise();
-      Log.debug("sendMessage batch response", response);
+      Log.debug("sendBatchMessage response: ", response);
       return response;
     } catch (error) {
-      Log.debug("sendMessage batch catch error", error);
+      Log.debug("sendBatchMessage catch error: ", error);
     }
   };
 
   receiveMessage = async () => {
     try {
-      Log.info(`queue url : ${this.getQueueUrl()}`);
+      Log.info(`Receive Message queue URI: ${this.getQueueUrl()}`);
 
       const params = {
         AttributeNames: ["SentTimestamp"],
@@ -117,7 +117,7 @@ export default class QueueService {
 
       return response.Messages || [];
     } catch (error) {
-      console.log("receiveMessage 500 error", error);
+      console.log("receiveMessage 500 error: ", error);
     }
   };
 
@@ -132,7 +132,7 @@ export default class QueueService {
 
       return response;
     } catch (error) {
-      console.log("receiveMessage 500 error", error);
+      console.log("deleteMessage 500 error: ", error);
     }
   };
 
@@ -149,7 +149,7 @@ export default class QueueService {
         return null;
       }
     } catch (error) {
-      console.log("purgeQueue 500 error", error);
+      console.log("purgeQueue 500 error: ", error);
     }
   };
 }

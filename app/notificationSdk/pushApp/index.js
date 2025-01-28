@@ -1,12 +1,11 @@
-import EventExecutor from "../executor";
-import Logger from "../../../libs/log";
-import fetch from "node-fetch";
-
 import {
   AGORA_CALL_NOTIFICATION_TYPES,
   USER_CATEGORY,
   DEFAULT_PROVIDER,
 } from "../../../constant";
+import Logger from "../../../libs/log";
+import EventExecutor from "../executor";
+import fetch from "node-fetch";
 
 const Log = new Logger("NOTIFICATION_SDK > PUSH_APP");
 
@@ -17,11 +16,15 @@ class PushNotification {
 
   notify = (templates = []) => {
     for (const template of templates) {
-      Log.debug("templates push app--> ", template);
+      Log.debug("templates one signal app: ", template);
       this.sendPushNotification(template);
     }
   };
 
+  /**
+   * OneSignal push notifications
+   * @param template
+   */
   sendPushNotification = (template) => {
     try {
       const headers = {
@@ -35,15 +38,14 @@ class PushNotification {
       }
 
       if (
-        template.data.params.event_type ==
-        AGORA_CALL_NOTIFICATION_TYPES.START_CALL
+        template.data.params.event_type == AGORA_CALL_NOTIFICATION_TYPES.START_CALL
       ) {
         // template.android_channel_id = "sound_channel"
         template.android_sound = "tone_loop";
         template.existing_android_channel_id = "sound_channel";
       }
 
-      console.log(template);
+      console.log("sendPushNotification template: ", template);
 
       const options = {
         // host: '104.18.226.52',
@@ -57,25 +59,24 @@ class PushNotification {
       const https = require("https");
       const req = https.request(options, function (res) {
         res.on("data", function (data) {
-          console.log("Response:", template);
-          console.log("Data:", data);
+          console.log("sendPushNotification response template: ", template);
+          console.log("sendPushNotification Data: ", data);
         });
 
         res.on("error", function (err) {
-          console.log("ERROR: in listening in push notification");
-          console.log("err:", err);
+          console.log("Error in listening in push notification: ", err);
         });
       });
 
       req.on("error", function (e) {
-        console.log("ERROR in sending push notification:");
+        console.log("Error in sending push notification: ", e);
         console.log(e);
       });
-      console.log(JSON.stringify(template));
+      console.log("sendPushNotification JSON -> template: ", JSON.stringify(template));
       req.write(JSON.stringify(template));
       req.end();
     } catch (err) {
-      Log.debug("sendPushNotification 500 error", err);
+      Log.debug("sendPushNotification 500 error: ", err);
     }
   };
 }

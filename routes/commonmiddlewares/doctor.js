@@ -3,10 +3,8 @@ import { isDoctor as isMDoctor } from "../m-api/middlewares/doctor";
 
 export const isDoctor = (req, res, next) => {
   let { m } = req.query;
-  console.log("=======================");
-  console.log({ m });
-  console.log("in doctor middle ware.");
-  console.log("=======================");
+  console.log("In the Doctor middle ware ---> request query (m): ", { m });
+
   try {
     if (m) isMDoctor(req, res, next);
     else isWebDoctor(req, res, next);

@@ -6,7 +6,7 @@ import userRolesService from "../../../services/userRoles/userRoles.service";
 import UserWrapper from "../../web/user";
 import userRoleWrapper from "../../web/userRoles";
 
-import { completePath } from "../../../helper/filePath";
+import { completePath } from "../../../helper/s3FilePath";
 
 class PatientWrapper extends BasePatient {
   constructor(data) {

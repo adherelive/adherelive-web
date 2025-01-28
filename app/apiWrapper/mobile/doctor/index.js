@@ -12,7 +12,7 @@ import ConsentWrapper from "../../mobile/consent";
 import UserRoleWrapper from "../../mobile/userRoles";
 import DoctorPatientWatchlistWrapper from "../../mobile/doctorPatientWatchlist";
 
-import { completePath } from "../../../helper/filePath";
+import { completePath } from "../../../helper/s3FilePath";
 
 class MDoctorWrapper extends BaseDoctor {
   constructor(data) {

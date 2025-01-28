@@ -15,7 +15,7 @@ import ServiceSubscriptionMapping from "../../services/serviceSubscriptionMappin
 import TransactionActivate from "../../services/transactionActivity/transactionActivity.service";
 import { USER_CATEGORY } from "../../../constant";
 
-const Log = new Logger("WEB > CONTROLLER > Service Offering");
+const Log = new Logger("WEB > CONTROLLER > Service Subscribe Transaction");
 
 class ServiceSubscriptionTxController extends Controller {
   constructor() {
@@ -73,7 +73,7 @@ class ServiceSubscriptionTxController extends Controller {
         "Service added successfully"
       );
     } catch (error) {
-      Log.debug("addService 500 error", error);
+      Log.debug("Service Subscribe 500 error: ", error);
       return raiseServerError(res);
     }
   };
@@ -283,7 +283,7 @@ class ServiceSubscriptionTxController extends Controller {
       });
       return raiseSuccess(res, 200, { response }, "Success");
     } catch (error) {
-      Log.debug("addService 500 error", error);
+      Log.debug("Subscribe create activity 500 error: ", error);
       return raiseServerError(res);
     }
   };
@@ -294,7 +294,7 @@ class ServiceSubscriptionTxController extends Controller {
       let { params: { id } = {}, body } = req;
       let { servicesUserMapping, subscriptionUserMapping, ...txBody } =
         req.body;
-      Log.info(`Report : id = ${id}`);
+      Log.info(`Report id = ${id}`);
       if (!id) {
         return raiseClientError(res, 422, {}, "Please provide tx id.");
       }
@@ -340,7 +340,7 @@ class ServiceSubscriptionTxController extends Controller {
         "Service updated successfully"
       );
     } catch (error) {
-      Log.debug("updateService 500 error", error);
+      Log.debug("updateServiceTx 500 error: ", error);
       return raiseServerError(res);
     }
   };

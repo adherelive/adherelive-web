@@ -1,4 +1,4 @@
-import { completePath } from "../../../helper/filePath";
+import { completePath } from "../../../helper/s3FilePath";
 import { VIDEO_TYPES } from "../../../models/exerciseContents";
 import BaseExerciseContent from "../../../services/exerciseContents";
 

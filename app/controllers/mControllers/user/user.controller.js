@@ -1325,7 +1325,7 @@ class MobileUserController extends Controller {
       let parent_type = DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION;
       let parent_id = qualificationId;
       const documentToCheck = document.includes(
-        process.config.minio.MINIO_BUCKET_NAME
+        process.config.s3.BUCKET_NAME
       )
         ? getFilePath(document)
         : document;
@@ -1395,7 +1395,7 @@ class MobileUserController extends Controller {
               doctor_id,
               parent_type: DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION,
               parent_id: qualification_id,
-              document: photo.includes(process.config.minio.MINIO_BUCKET_NAME)
+              document: photo.includes(process.config.s3.BUCKET_NAME)
                 ? getFilePath(photo)
                 : photo,
             });
@@ -1414,7 +1414,7 @@ class MobileUserController extends Controller {
               doctor_id,
               parent_type: DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION,
               parent_id: qualification_id,
-              document: photo.includes(process.config.minio.MINIO_BUCKET_NAME)
+              document: photo.includes(process.config.s3.BUCKET_NAME)
                 ? getFilePath(photo)
                 : photo,
             });
@@ -1666,7 +1666,7 @@ class MobileUserController extends Controller {
                   parent_type: DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION,
                   parent_id: qualification_id,
                   document: photo.includes(
-                    process.config.minio.MINIO_BUCKET_NAME
+                    process.config.s3.BUCKET_NAME
                   )
                     ? getFilePath(photo)
                     : photo,
@@ -1687,7 +1687,7 @@ class MobileUserController extends Controller {
                   parent_type: DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION,
                   parent_id: qualification_id,
                   document: photo.includes(
-                    process.config.minio.MINIO_BUCKET_NAME
+                    process.config.s3.BUCKET_NAME
                   )
                     ? getFilePath(photo)
                     : photo,
@@ -1735,7 +1735,7 @@ class MobileUserController extends Controller {
               doctor_id,
               parent_type: DOCUMENT_PARENT_TYPE.DOCTOR_REGISTRATION,
               parent_id: docRegistration.get("id"),
-              document: photo.includes(process.config.minio.MINIO_BUCKET_NAME)
+              document: photo.includes(process.config.s3.BUCKET_NAME)
                 ? getFilePath(photo)
                 : photo,
             });
@@ -1766,7 +1766,7 @@ class MobileUserController extends Controller {
               doctor_id,
               parent_type: DOCUMENT_PARENT_TYPE.DOCTOR_REGISTRATION,
               parent_id: registration_id,
-              document: photo.includes(process.config.minio.MINIO_BUCKET_NAME)
+              document: photo.includes(process.config.s3.BUCKET_NAME)
                 ? getFilePath(photo)
                 : photo,
             });
@@ -1795,7 +1795,7 @@ class MobileUserController extends Controller {
       const { registrationId = 0 } = req.params;
       const { document = "" } = req.body;
       const documentToCheck = document.includes(
-        process.config.minio.MINIO_BUCKET_NAME
+        process.config.s3.BUCKET_NAME
       )
         ? getFilePath(document)
         : document;

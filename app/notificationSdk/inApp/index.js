@@ -1,62 +1,72 @@
-import EventExecutor from "../executor";
-import Logger from "../../../libs/log";
 import stream from "getstream";
+import Logger from "../../../libs/log";
+import EventExecutor from "../executor";
 
-const Log = new Logger("NOTIFICATION_SDK > IN_APP");
+const Log = new Logger("NOTIFICATION_SDK > IN_APP > STREAM");
 
 class AppNotification {
   constructor() {
-    Log.info(`key : ${process.config.getstream.key}`);
-    Log.info(`secretKey : ${process.config.getstream.secretKey}`);
-    Log.info(`appId : ${process.config.getstream.appId}`);
+    Log.info("Connecting to Get-Stream for notification information");
+
+    // Log credentials for debugging
+    // Log.info(`API Key: ${process.config.getstream.key}`);
+    // Log.info(`Secret Key: ${process.config.getstream.secretKey}`);
+    // Log.info(`App ID: ${process.config.getstream.appId}`);
 
     this.client = stream.connect(
-      process.config.getstream.key,
-      process.config.getstream.secretKey,
-      process.config.getstream.appId
+        process.config.getstream.key,
+        process.config.getstream.secretKey,
+        process.config.getstream.appId,
+        {
+          location: 'us-east', // or 'eu-central', depending on your app's region
+        }
     );
+    Log.info("GetStream client initialized in constructor");
   }
 
   notify = (templates = []) => {
     for (const template of templates) {
-      Log.debug("template data -->", template);
+      Log.debug("Template data: ", template);
       this.sendAppNotification(template).then((res) => {
-        Log.debug("AppNotification notify response", res);
+        Log.debug("AppNotification notify response: ", res);
       });
     }
   };
 
   getUserToken = (id) => {
     const userToken = this.client.createUserToken(`${id}`);
+    Log.debug("Generated get-stream userToken: ", userToken);
     return userToken;
   };
 
   sendAppNotification = async (template) => {
     try {
-      // TODO: add get stream rest api call code here
-      Log.debug("sendAppNotification --> ", template.actor.toString());
+      // TODO: Add get-stream rest api call code here
+      Log.debug("Template Actor: ", template.actor.toString());
       const client = stream.connect(
-        process.config.getstream.key,
-        process.config.getstream.secretKey,
-        process.config.getstream.appId
+          process.config.getstream.key,
+          process.config.getstream.secretKey,
+          process.config.getstream.appId,
+          {
+            location: 'us-east', // or 'eu-central', depending on your app's region
+          }
       );
+      Log.info("GetStream client initialized in sendAppNotification");
       const userToken = client.createUserToken(template.actor.toString());
+      Log.debug("Generated get-stream userToken in use: ", userToken);
+      Log.debug("Get-Stream client --> ", client);
 
-      Log.debug("sendAppNotification client --> ", client);
-
-      let result = {};
       const feed = client.feed("notification", template.object);
-
-      Log.debug("feed --> ", template);
+      Log.debug("Feed Initialized: ", feed);
       const response = await feed.addActivity(template).catch((err) => {
-        Log.debug("InApp sendAppNotification response err ---> ", err);
+        Log.debug("Get-Stream response error: ", err);
       });
+      Log.debug("Activity Added: ", response);
 
-      Log.debug("sendAppNotification Response", response);
-
-      return result;
+      return response;
     } catch (err) {
-      Log.debug("inapp sendAppNotification 500 error", err);
+      Log.error("Error in sendAppNotification: ", err);
+      throw err; // Re-throw the error for further handling
     }
   };
 }

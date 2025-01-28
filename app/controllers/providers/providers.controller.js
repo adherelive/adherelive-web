@@ -56,7 +56,7 @@ import bcrypt from "bcrypt";
 import * as ProviderHelper from "./providers.helper";
 import accountDetailsService from "../../services/accountDetails/accountDetails.service";
 import AccountsWrapper from "../../apiWrapper/web/accountsDetails";
-import { getFilePath } from "../../helper/filePath";
+import { getFilePath } from "../../helper/s3FilePath";
 
 const Logger = new Log("WEB > PROVIDERS > CONTROLLER");
 
