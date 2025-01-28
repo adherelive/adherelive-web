@@ -6,7 +6,7 @@ import Logger from "../../../libs/log";
 import NotesService from "../../services/notes/notes.service";
 import { USER_CATEGORY } from "../../../constant";
 
-const Log = new Logger("WEB > CONTROLLER > Service Offering");
+const Log = new Logger("WEB > CONTROLLER > NOTES");
 
 class NotesController extends Controller {
   constructor() {
@@ -15,7 +15,7 @@ class NotesController extends Controller {
 
   create = async (req, res) => {
     const { raiseSuccess, raiseServerError } = this;
-    Log.debug("flash card controller - create - called");
+    Log.debug("notes controller - create - called");
 
     const {
       userDetails: { userId, userData: { category } = {}, userCategoryId } = {},
@@ -37,15 +37,14 @@ class NotesController extends Controller {
       provider_type = req.userDetails.userRoleData.basic_info.linked_with;
     }
 
-    Log.debug("flash card controller - create - called");
     try {
       let data = { ...req.body, doctor_id, provider_type, provider_id };
-      Log.debug("flash card controller data", data);
+      Log.debug("notes controller data: ", data);
       const notesService = new NotesService();
       let notes = await notesService.addNotes(data);
-      return raiseSuccess(res, 200, { notes }, "FlashCard added successfully");
+      return raiseSuccess(res, 200, { notes }, "FlashCard Notes added successfully");
     } catch (error) {
-      Log.debug("addService 500 error", error);
+      Log.debug("Notes 500 error: ", error);
       return raiseServerError(res);
     }
   };
@@ -67,7 +66,7 @@ class NotesController extends Controller {
       let notes = await notesService.getAllNotesByData(data);
       return raiseSuccess(res, 200, { notes }, "success");
     } catch (error) {
-      Log.debug("updateService 500 error", error);
+      Log.debug("getNotesByPatientId 500 error: ", error);
       return raiseServerError(res);
     }
   };

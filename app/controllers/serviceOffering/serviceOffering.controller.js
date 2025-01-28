@@ -109,7 +109,7 @@ class ReportController extends Controller {
         "Service added successfully"
       );
     } catch (error) {
-      Log.debug("addService 500 error", error);
+      Log.debug("Service Offering 500 error: ", error);
       return raiseServerError(res);
     }
   };
