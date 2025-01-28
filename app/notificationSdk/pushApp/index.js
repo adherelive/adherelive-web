@@ -21,6 +21,10 @@ class PushNotification {
     }
   };
 
+  /**
+   * OneSignal push notifications
+   * @param template
+   */
   sendPushNotification = (template) => {
     try {
       const headers = {

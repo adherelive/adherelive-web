@@ -16,8 +16,12 @@ class AppNotification {
     this.client = stream.connect(
         process.config.getstream.key,
         process.config.getstream.secretKey,
-        process.config.getstream.appId
+        process.config.getstream.appId,
+        {
+          location: 'us-east', // or 'eu-central', depending on your app's region
+        }
     );
+    Log.info("GetStream client initialized in constructor");
   }
 
   notify = (templates = []) => {
@@ -42,8 +46,12 @@ class AppNotification {
       const client = stream.connect(
           process.config.getstream.key,
           process.config.getstream.secretKey,
-          process.config.getstream.appId
+          process.config.getstream.appId,
+          {
+            location: 'us-east', // or 'eu-central', depending on your app's region
+          }
       );
+      Log.info("GetStream client initialized in sendAppNotification");
       const userToken = client.createUserToken(template.actor.toString());
       Log.debug("Generated get-stream userToken in use: ", userToken);
       Log.debug("Get-Stream client --> ", client);
