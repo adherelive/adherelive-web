@@ -56,6 +56,11 @@ build_common_steps() {
 
   # Display the value of the variable
   echo "Current git revision: $COMMIT_HASH"
+  
+  # Change value in package.json if mode is 'prod'
+  if [ "$MODE" = "prod" ] && [ "$folder" = "be" ]; then
+    sed -i 's/4096/8192/' package.json
+  fi
 }
 
 # Define a function to handle common deploy steps
