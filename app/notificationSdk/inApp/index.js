@@ -2,13 +2,13 @@ import EventExecutor from "../executor";
 import Logger from "../../../libs/log";
 import stream from "getstream";
 
-const Log = new Logger("NOTIFICATION_SDK > IN_APP");
+const Log = new Logger("NOTIFICATION_SDK > IN_APP > STREAM");
 
 class AppNotification {
   constructor() {
-    Log.info(`key : ${process.config.getstream.key}`);
-    Log.info(`secretKey : ${process.config.getstream.secretKey}`);
-    Log.info(`appId : ${process.config.getstream.appId}`);
+    Log.info(`AppNotification get-stream key : ${process.config.getstream.key}`);
+    Log.info(`AppNotification get-stream secretKey : ${process.config.getstream.secretKey}`);
+    Log.info(`AppNotification get-stream appId : ${process.config.getstream.appId}`);
 
     this.client = stream.connect(
       process.config.getstream.key,
@@ -28,13 +28,14 @@ class AppNotification {
 
   getUserToken = (id) => {
     const userToken = this.client.createUserToken(`${id}`);
+    console.log("", userToken);
     return userToken;
   };
 
   sendAppNotification = async (template) => {
     try {
-      // TODO: add get stream rest api call code here
-      Log.debug("sendAppNotification --> ", template.actor.toString());
+      // TODO: Add get-stream rest api call code here
+      Log.debug("sendAppNotification inApp get-stream --> template.actor: ", template.actor.toString());
       const client = stream.connect(
         process.config.getstream.key,
         process.config.getstream.secretKey,
@@ -49,14 +50,14 @@ class AppNotification {
 
       Log.debug("feed --> ", template);
       const response = await feed.addActivity(template).catch((err) => {
-        Log.debug("InApp sendAppNotification response err ---> ", err);
+        Log.debug("inApp get-stream sendAppNotification response err ---> ", err);
       });
 
-      Log.debug("sendAppNotification Response", response);
+      Log.debug("sendAppNotification get-stream response: ", response);
 
       return result;
     } catch (err) {
-      Log.debug("inapp sendAppNotification 500 error", err);
+      Log.debug("inApp get-stream sendAppNotification 500 error: ", err);
     }
   };
 }

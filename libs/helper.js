@@ -21,3 +21,13 @@ export function isURL(str) {
   ); // fragment locator
   return pattern.test(str);
 }
+
+export const importModule = async (path) => {
+  try {
+    const module = await import(path);
+    return module.default; // Assuming the module exports a default export
+  } catch (error) {
+    console.error(`Error importing module ${path}: `, error);
+    throw error;
+  }
+};

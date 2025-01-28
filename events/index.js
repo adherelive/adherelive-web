@@ -2,6 +2,7 @@ import schedule from "node-schedule";
 import Log from "../libs/log";
 
 import queueService from "../app/services/awsQueue/queue.service";
+import { importModule } from '../libs/helper.js'; // A helper function for dynamic imports
 
 const Logger = new Log("EVENT SCHEDULE CREATOR");
 
@@ -16,32 +17,61 @@ const Logger = new Log("EVENT SCHEDULE CREATOR");
 // });
 
 // Added more error handling and made the function simpler
-const SqsObserver = import("./sqsObserver")
+const SqsObserver = importModule("./sqsObserver")
     .then((module) => {
         const sqs = new module.default();
         const QueueService = new queueService();
-        let isProcessing = false; // Flag to track if a process is already running
+
+        const circuitBreaker = createCircuitBreaker({
+            failureThreshold: 5, // Number of consecutive failures before opening the circuit
+            timeoutMs: 5 * 60 * 1000, // Time in milliseconds before trying again (5 minutes)
+        });
 
         // TODO: Check if changing the SQS timing to 10 mins from 30 seconds helps in the performance
         const cron = schedule.scheduleJob("0 */10 * * * *", async () => {
-            if (isProcessing) {
-                console.warn("Previous SQS processing still in progress. Skipping this run.");
-                return;
-            }
-
-            isProcessing = true;
             try {
-                await sqs.observe(QueueService);
+                await circuitBreaker.execute(async () => {
+                    await sqs.observe(QueueService);
+                });
             } catch (error) {
-                console.error("Error processing SQS messages:", error);
-                // Implement exponential backoff or other retry strategies here
-                // For example:
-                // await new Promise(resolve => setTimeout(resolve, 1000 * 2)); // Retry after 2 seconds
-            } finally {
-                isProcessing = false;
+                console.error("Error processing SQS messages: ", error);
+                // You can implement more sophisticated error handling here,
+                // such as sending alerts or triggering a monitoring system.
             }
         });
     })
     .catch((err) => {
         console.error("Dynamic import error in Events: ", err);
     });
+
+// Basic Circuit Breaker Implementation
+function createCircuitBreaker({ failureThreshold, timeoutMs }) {
+    let failureCount = 0;
+    let lastFailureTime = 0;
+    let isOpen = false;
+
+    return {
+        execute: async (fn) => {
+            if (isOpen) {
+                const now = Date.now();
+                if (now - lastFailureTime < timeoutMs) {
+                    throw new Error('Circuit is open!');
+                }
+                isOpen = false; // Reset circuit breaker after timeout
+            }
+
+            try {
+                const result = await fn();
+                failureCount = 0; // Reset failure count on success
+                return result;
+            } catch (error) {
+                failureCount++;
+                if (failureCount >= failureThreshold) {
+                    isOpen = true;
+                    lastFailureTime = Date.now();
+                }
+                throw error;
+            }
+        },
+    };
+}
