@@ -107,60 +107,64 @@ class NotificationController extends Controller {
           workout_responses = null,
         } = details || {};
 
-        // for (let each in appointments){
-        //   const appt = appointments[each];
-        //   const {basic_info : {id : appointmentId = null } ={} } = appt;
-        //   const apptData = await AppointmentWrapper(null,appointmentId);
-        //   if(apptData){
 
-        //     const {care_plan_id = null } = await careplanAppointmentService.getCareplanByAppointment({
-        //       appointment_id:appointmentId
-        //     }) || {};
+        /**
+         * TODO: Check why this has been commented out?
+        for (let each in appointments){
+          const appt = appointments[each];
+          const {basic_info : {id : appointmentId = null } ={} } = appt;
+          const apptData = await AppointmentWrapper(null,appointmentId);
+          if(apptData){
 
-        //     appointments[each] = { ...appt , care_plan_id }
+            const {care_plan_id = null } = await careplanAppointmentService.getCareplanByAppointment({
+              appointment_id:appointmentId
+            }) || {};
 
-        //   }
-        // }
+            appointments[each] = { ...appt , care_plan_id }
 
-        // for(let each in notifications){
-        //   const noti = notifications[each] ;
-        //   const {stage = '',foreign_id=null , type = '' , actor = null } = noti ;
+          }
+        }
 
-        //   let actor_category_id = null;
-        //   let actor_category_type = '' ;
+        for(let each in notifications){
+          const noti = notifications[each] ;
+          const {stage = '',foreign_id=null , type = '' , actor = null } = noti ;
 
-        //   if( ( type === MESSAGE_TYPES.USER_MESSAGE ||
-        //       type === EVENT_TYPE.SYMPTOMS ||
-        //       type === AGORA_CALL_NOTIFICATION_TYPES.MISSED_CALL ) && actor ){
+          let actor_category_id = null;
+          let actor_category_type = '' ;
 
-        //     const user = await userService.getUser(actor);
+          if( ( type === MESSAGE_TYPES.USER_MESSAGE ||
+              type === EVENT_TYPE.SYMPTOMS ||
+              type === AGORA_CALL_NOTIFICATION_TYPES.MISSED_CALL ) && actor ){
 
-        //     // if(user){
-        //     //   const userData= await UserWrapper(user);
-        //     //   const {userCategoryId} = await userData.getCategoryInfo();
-        //     //   const category = await userData.getCategory();
-        //     //   actor_category_type = category;
-        //     //   actor_category_id = userCategoryId;
+            const user = await userService.getUser(actor);
 
-        //     //   notifications[each] = { ...noti, actor_category_type, actor_category_id };
+            // if(user){
+            //   const userData= await UserWrapper(user);
+            //   const {userCategoryId} = await userData.getCategoryInfo();
+            //   const category = await userData.getCategory();
+            //   actor_category_type = category;
+            //   actor_category_id = userCategoryId;
 
-        //     // }
-        //   }
+            //   notifications[each] = { ...noti, actor_category_type, actor_category_id };
 
-        //   if(stage === NOTIFICATION_STAGES.START || stage === NOTIFICATION_STAGES.PRIOR ) {
+            // }
+          }
 
-        //     const scheduleEventData = await scheduleEventService.getEventByData({
-        //       id: parseInt(foreign_id, 10)
-        //     });
+          if(stage === NOTIFICATION_STAGES.START || stage === NOTIFICATION_STAGES.PRIOR ) {
 
-        //     if(scheduleEventData){
-        //       const scheduleEventDetails = await ScheduleEventWrapper(scheduleEventData);
-        //       scheduleEventsData[scheduleEventDetails.getScheduleEventId()] =
-        //         scheduleEventDetails.getAllInfo();
-        //     }
-        //   }
+            const scheduleEventData = await scheduleEventService.getEventByData({
+              id: parseInt(foreign_id, 10)
+            });
 
-        // }
+            if(scheduleEventData){
+              const scheduleEventDetails = await ScheduleEventWrapper(scheduleEventData);
+              scheduleEventsData[scheduleEventDetails.getScheduleEventId()] =
+                scheduleEventDetails.getAllInfo();
+            }
+          }
+
+        }
+         */
 
         notificationData = { ...notificationData, ...notifications };
         userData = { ...userData, ...users };
@@ -294,7 +298,7 @@ class NotificationController extends Controller {
         "Notification data fetched successfully"
       );
     } catch (error) {
-      Log.debug("getNotifications 500 error", error);
+      Log.debug("getNotifications 500 error: ", error);
       return raiseServerError(res);
     }
   };
