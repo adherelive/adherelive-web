@@ -23,7 +23,7 @@ export const doctorChart = async (req) => {
 
     return await getAllDataForDoctors({ doctor_id, user_role_id: userRoleId });
   } catch (error) {
-    Log.debug("doctorChart catch error", error);
+    Log.debug("doctorChart catch error: ", error);
     throw error;
   }
 };
@@ -38,7 +38,7 @@ export const doctorChartCount = async (req) => {
       user_role_id: userRoleId,
     });
   } catch (error) {
-    Log.debug("doctorChart catch error", error);
+    Log.debug("doctorChartCount catch error: ", error);
     throw error;
   }
 };
@@ -325,7 +325,7 @@ const getAllDataForDoctorsByEventType = async ({
 
     return response;
   } catch (error) {
-    Log.debug("getAllDataForDoctors catch error", error);
+    Log.debug("getAllDataForDoctors catch error: ", error);
     throw error;
   }
 };

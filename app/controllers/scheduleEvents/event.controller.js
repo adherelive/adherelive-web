@@ -591,7 +591,6 @@ class EventController extends Controller {
           [response, responseMessage] = await EventHelper.providerChart(req);
           break;
       }
-
       return raiseSuccess(res, 200, { ...response }, responseMessage);
     } catch (error) {
       Log.debug("getEventsDetails 500 error: ", error);

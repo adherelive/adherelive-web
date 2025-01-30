@@ -1,6 +1,3 @@
-const express = require("express");
-const router = express.Router();
-
 import Authenticate from "../middleware/auth";
 import EventController from "../../../app/controllers/scheduleEvents/event.controller";
 
@@ -8,11 +5,17 @@ import Appointment from "../../../app/controllers/appointments/appointment.contr
 import MedicationReminder from "../../../app/controllers/medicationReminder/mReminder.controller";
 import * as validator from "./validator";
 
-// router.get(
-//     "/medication/:patient_id/details",
-//     Authenticate,
-//     MedicationReminder.getMedicationDetails
-// );
+const express = require("express");
+const router = express.Router();
+
+/**
+ * TODO: Why has this been commented out?
+router.get(
+    "/medication/:patient_id/details",
+    Authenticate,
+    MedicationReminder.getMedicationDetails
+);
+*/
 
 /**
  * @swagger

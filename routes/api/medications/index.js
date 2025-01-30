@@ -8,12 +8,15 @@ import Authenticate from "../middleware/auth";
 import Medication from "../../../app/controllers/medicationReminder/mReminder.controller";
 import * as validator from "./validator";
 
-// router.get(
-//     "/missed",
-//     Authenticate,
-//     isDoctor,
-//     Medication.getAllMissedMedications
-// );
+/**
+ * TODO: Why is missed not enabled for medications?
+router.get(
+    "/missed",
+    Authenticate,
+    isDoctor,
+    Medication.getAllMissedMedications
+);
+*/
 
 router.get(
   "/:id",
