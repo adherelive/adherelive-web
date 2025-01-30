@@ -15,7 +15,7 @@ import PatientWrapper from "../../apiWrapper/web/patient";
 import DoctorWrapper from "../../apiWrapper/web/doctor";
 import UserRoleWrapper from "../../apiWrapper/web/userRoles";
 import DietWrapper from "../../apiWrapper/web/diet";
-import WorkoutWrppaer from "../../apiWrapper/web/workouts";
+import WorkoutWrappaer from "../../apiWrapper/web/workouts";
 import { getTime } from "../../helper/timer";
 
 const Log = new Logger("EVENT HELPER");
@@ -441,8 +441,16 @@ const getAllDataForDoctors = async ({
  * Formats Data: Calls getFormattedDataNew to format the retrieved events.
  * Returns Response: Returns the formatted data along with a success message.
  * Count Information:
- *    Event Counts: The function does not directly return the count of each event type.  It passes the scheduleEvents array to getFormattedDataNew, which likely processes and organizes the events but doesn't inherently calculate counts.  The returned data structure from getFormattedDataNew (which you'd need to examine) might contain count information after the formatting is done, but getAllDataForDoctorsCount itself doesn't calculate or return these counts.
- *    Patient Count: The function does not return the total patient count directly. It collects patientIds within the loop, but it's unclear if this patientIds array represents unique patients or just all patient IDs encountered across care plans.  Whether or not getFormattedDataNew uses and returns patient counts depends on its implementation.
+ *    Event Counts: The function does not directly return the count of each event type.  
+ *          It passes the scheduleEvents array to getFormattedDataNew, which likely processes and organizes 
+ *          the events but doesn't inherently calculate counts.  
+ *          The returned data structure from getFormattedDataNew (which you'd need to examine) might contain 
+ *          count information after the formatting is done, but getAllDataForDoctorsCount itself doesn't calculate 
+ *          or return these counts.
+ *    Patient Count: The function does not return the total patient count directly. 
+ *          It collects patientIds within the loop, but it's unclear if this patientIds array represents unique 
+ *          patients or just all patient IDs encountered across care plans.  
+ *          Whether (or not) getFormattedDataNew uses and returns patient counts depends on its implementation.
  *
  * @param doctor_id
  * @param category
@@ -659,8 +667,8 @@ const getFormattedData = async (
 
         case EVENT_TYPE.DIET:
           const dietWrapper = await DietWrapper({ id: diet_id });
-          const careplan_id = await dietWrapper.getCarePlanId();
-          const carePlanWrapper = await CarePlanWrapper(null, careplan_id);
+          const care_plan_id = await dietWrapper.getCarePlanId();
+          const carePlanWrapper = await CarePlanWrapper(null, care_plan_id);
           const patientId = await carePlanWrapper.getPatientId();
 
           const { basic_info: { name: diet_name = "" } = {} } = event_diets[diet_id] || {};
@@ -684,9 +692,9 @@ const getFormattedData = async (
 
         case EVENT_TYPE.WORKOUT:
           const workoutWrapper = await WorkoutWrapper({ id: workout_id });
-          const workout_careplan_id = await workoutWrapper.getCarePlanId();
-          const workoutCareplanWrapper = await CarePlanWrapper(null, workout_careplan_id);
-          const workoutPatientId = await workoutCareplanWrapper.getPatientId();
+          const workout_care_plan_id = await workoutWrapper.getCarePlanId();
+          const workoutCarePlanWrapper = await CarePlanWrapper(null, workout_care_plan_id);
+          const workoutPatientId = await workoutCarePlanWrapper.getPatientId();
 
           const { basic_info: { name: workout_name = "" } = {} } = event_workouts[workout_id] || {};
           if (category === USER_CATEGORY.PROVIDER) {
@@ -903,8 +911,8 @@ const getFormattedDataWithoutIds = async (
 
       case EVENT_TYPE.DIET:
         const dietWrapper = await DietWrapper({ id: diet_id });
-        const careplan_id = await dietWrapper.getCarePlanId();
-        const carePlanWrapper = await CarePlanWrapper(null, careplan_id);
+        const care_plan_id = await dietWrapper.getCarePlanId();
+        const carePlanWrapper = await CarePlanWrapper(null, care_plan_id);
         const patientId = await carePlanWrapper.getPatientId();
 
         const { basic_info: { name: diet_name = "" } = {} } =
@@ -934,13 +942,13 @@ const getFormattedDataWithoutIds = async (
         break;
 
       case EVENT_TYPE.WORKOUT:
-        const workoutWrapper = await WorkoutWrppaer({ id: workout_id });
-        const workout_careplan_id = await workoutWrapper.getCarePlanId();
-        const workoutCareplanWrapper = await CarePlanWrapper(
+        const workoutWrapper = await WorkoutWrappaer({ id: workout_id });
+        const workout_care_plan_id = await workoutWrapper.getCarePlanId();
+        const workoutCarePlanWrapper = await CarePlanWrapper(
           null,
-          workout_careplan_id
+          workout_care_plan_id
         );
-        const workoutPatientId = await workoutCareplanWrapper.getPatientId();
+        const workoutPatientId = await workoutCarePlanWrapper.getPatientId();
 
         const { basic_info: { name: workout_name = "" } = {} } =
           event_workouts[workout_id] || {};
