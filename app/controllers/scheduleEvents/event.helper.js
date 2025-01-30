@@ -58,7 +58,7 @@ export const doctorChartEventDetails = async (req) => {
       user_role_id: userRoleId,
     });
   } catch (error) {
-    Log.debug("doctorChart catch error", error);
+    Log.debug("doctorChartEventDetails catch error", error);
     throw error;
   }
 };
@@ -74,7 +74,7 @@ export const hspChart = async (req) => {
       category: USER_CATEGORY.HSP,
     });
   } catch (error) {
-    Log.debug("doctorChart catch error", error);
+    Log.debug("hspChart catch error", error);
     throw error;
   }
 };
@@ -94,7 +94,7 @@ export const hspChartEventDetails = async (req) => {
       category: USER_CATEGORY.HSP,
     });
   } catch (error) {
-    Log.debug("doctorChart catch error", error);
+    Log.debug("hspChartEventDetails catch error", error);
     throw error;
   }
 };
@@ -110,7 +110,7 @@ export const hspChartCount = async (req) => {
       category: USER_CATEGORY.HSP,
     });
   } catch (error) {
-    Log.debug("doctorChart catch error", error);
+    Log.debug("hspChartCount catch error", error);
     throw error;
   }
 };
@@ -120,13 +120,14 @@ export const providerChart = async (req) => {
     const { userDetails: { userRoleId, userCategoryId: provider_id } = {} } =
       req;
     Log.info(`PROVIDER ID (provider_id) : ${provider_id}`);
-    // get all doctors attached to provider
-    // const doctorData = await doctorProviderMappingService.getAllDoctorIds(provider_id) || [];
-
-    // Log.debug("doctorData", doctorData);
-    // const doctorIds = doctorData.map(data => data.doctor_id);
-
-    // Log.debug("doctorIds", doctorData);
+    /**
+     * TODO: Check why this has been commented out?
+    get all doctors attached to provider
+    const doctorData = await doctorProviderMappingService.getAllDoctorIds(provider_id) || [];
+    Log.debug("doctorData", doctorData);
+    const doctorIds = doctorData.map(data => data.doctor_id);
+    Log.debug("doctorIds", doctorData);
+     */
     let allDoctorsData = {};
 
     const { count = 0, rows = [] } = await userRoleService.findAndCountAll({
@@ -264,7 +265,7 @@ export const providerChart = async (req) => {
 
     return [{ ...allDoctorsData }, "Missed events fetched successfully"];
   } catch (error) {
-    Log.debug("8234872364862 providerChart catch error", error);
+    Log.debug("providerChart catch error", error);
     throw error;
   }
 };
@@ -325,7 +326,7 @@ const getAllDataForDoctorsByEventType = async ({
 
     return response;
   } catch (error) {
-    Log.debug("getAllDataForDoctors catch error: ", error);
+    Log.debug("getAllDataForDoctorsByEventType catch error: ", error);
     throw error;
   }
 };
@@ -418,7 +419,7 @@ const getAllDataForDoctors = async ({
     return [{ ...formattedData }, "Missed events fetched successfully"]; // Spread formattedData
 
   } catch (error) {
-    Log.error("Error in getAllDataForDoctors: ", error); // Use Log.error for errors
+    Log.debug("Error in getAllDataForDoctors: ", error); // Use Log.err for errors
     throw error; // Re-throw the error for higher-level handling
   }
 };
@@ -626,6 +627,7 @@ const getFormattedData = async (events = [], category = USER_CATEGORY.DOCTOR) =>
     }
   }
 
+  console.log("The final output data to be sent back after formatting: ", formattedData);
   return formattedData; // Corrected: Added the return statement
 };
 

@@ -100,7 +100,7 @@ class EventExecutor {
 
       return response;
     } catch (err) {
-      Log.error("Error in sendAppNotification: ", err);
+      Log.debug("Error in sendAppNotification: ", err);
       throw err; // Re-throw the error for further handling
     }
   };
