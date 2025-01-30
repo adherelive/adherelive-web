@@ -11,7 +11,7 @@ import CarePlanService from "../../services/carePlan/carePlan.service";
 import EventService from "../../services/scheduleEvents/scheduleEvent.service";
 import SymptomService from "../../services/symptom/symptom.service";
 
-// WRAPPER
+// Wrappers
 import CarePlanWrapper from "../../apiWrapper/web/carePlan";
 import EventWrapper from "../../apiWrapper/common/scheduleEvents";
 import SymptomWrapper from "../../apiWrapper/web/symptoms";
