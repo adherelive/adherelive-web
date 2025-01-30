@@ -15,7 +15,7 @@ import PatientWrapper from "../../apiWrapper/web/patient";
 import DoctorWrapper from "../../apiWrapper/web/doctor";
 import UserRoleWrapper from "../../apiWrapper/web/userRoles";
 import DietWrapper from "../../apiWrapper/web/diet";
-import WorkoutWrappaer from "../../apiWrapper/web/workouts";
+import WorkoutWrapper from "../../apiWrapper/web/workouts";
 import { getTime } from "../../helper/timer";
 
 const Log = new Logger("EVENT HELPER");
@@ -942,7 +942,7 @@ const getFormattedDataWithoutIds = async (
         break;
 
       case EVENT_TYPE.WORKOUT:
-        const workoutWrapper = await WorkoutWrappaer({ id: workout_id });
+        const workoutWrapper = await WorkoutWrapper({ id: workout_id });
         const workout_care_plan_id = await workoutWrapper.getCarePlanId();
         const workoutCarePlanWrapper = await CarePlanWrapper(
           null,
