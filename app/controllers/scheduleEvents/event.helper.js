@@ -330,19 +330,41 @@ const getAllDataForDoctorsByEventType = async ({
   }
 };
 
+/**
+ * Functionality:
+ * Retrieves Care Plans: Fetches care plans associated with a user_role_id using "CarePlanService.getCarePlanByData"
+ * Extracts IDs: Iterates through the care plans, using "CarePlanWrapper" and "getAllInfo" to extract IDs for
+ *              appointments, medications, vitals, diet, and workouts.
+ * Retrieves Scheduled Events: Fetches scheduled events based on the extracted IDs using
+ *              "eventService.getMissedByData".
+ * Formats Data: Formats the retrieved events using getFormattedData and combines them with a success message in an array.
+ * Returns Response: Returns the formatted data and success message.
+ * Error Handling: Includes a try...catch block to log and re-throw any errors.
+ *
+ * @param doctor_id
+ * @param category
+ * @param user_role_id
+ * @returns {Promise<[{missed_medications: {}, medication_ids: {critical: [], non_critical: []},
+ *           missed_appointments: {}, appointment_ids: {critical: [], non_critical: []}, missed_vitals: {},
+ *           vital_ids: {critical: [], non_critical: []}, missed_diets: {}, diet_ids: {critical: [], non_critical: []},
+ *           missed_workouts: {}, workout_ids: {critical: [], non_critical: []}, patients: {}},string]>}
+ */
 const getAllDataForDoctors = async ({
-  doctor_id,
-  category = USER_CATEGORY.PROVIDER,
-  user_role_id,
-}) => {
+                                      doctor_id, // Not used in the current implementation
+                                      category = USER_CATEGORY.PROVIDER,
+                                      user_role_id,
+                                    }) => {
   try {
-    Log.debug("user_role_id", user_role_id);
+    Log.debug("Starting getAllDataForDoctors for user_role_id:", user_role_id); // More descriptive log
+
     const eventService = new EventService();
 
-    const carePlans =
-      (await CarePlanService.getCarePlanByData({
-        user_role_id,
-      })) || [];
+    const carePlans = await CarePlanService.getCarePlanByData({ user_role_id }); // No need for || [] here
+
+    if (!carePlans || carePlans.length === 0) {
+      Log.debug("No care plans found for user_role_id:", user_role_id);
+      return [[], "No care plans found"]; // Return empty data and a message
+    }
 
     let appointmentIds = [];
     let medicationIds = [];
@@ -350,41 +372,54 @@ const getAllDataForDoctors = async ({
     let dietIds = [];
     let workoutIds = [];
 
-    for (let i = 0; i < carePlans.length; i++) {
-      const carePlan = await CarePlanWrapper(carePlans[i]);
-      const {
-        appointment_ids = [],
-        medication_ids = [],
-        vital_ids = [],
-        diet_ids = [],
-        workout_ids = [],
-      } = await carePlan.getAllInfo();
+    // Optimized ID extraction using Promise.all
+    const carePlanPromises = carePlans.map(async (carePlanData) => {
+      const carePlan = await CarePlanWrapper(carePlanData);
+      return carePlan.getAllInfo();
+    });
 
-      appointmentIds = [...appointmentIds, ...appointment_ids];
-      medicationIds = [...medicationIds, ...medication_ids];
-      vitalIds = [...vitalIds, ...vital_ids];
-      dietIds = [...dietIds, ...diet_ids];
-      workoutIds = [...workoutIds, ...workout_ids];
+    const carePlanInfos = await Promise.all(carePlanPromises);
+
+    carePlanInfos.forEach(({ appointment_ids, medication_ids, vital_ids, diet_ids, workout_ids }) => {
+      appointmentIds.push(...appointment_ids);
+      medicationIds.push(...medication_ids);
+      vitalIds.push(...vital_ids);
+      dietIds.push(...diet_ids);
+      workoutIds.push(...workout_ids);
+    });
+
+    Log.debug("Extracted IDs: ", {
+      appointmentIds,
+      medicationIds,
+      vitalIds,
+      dietIds,
+      workoutIds,
+    });
+
+    const scheduleEvents = await eventService.getMissedByData({
+      appointment_ids: appointmentIds,
+      medication_ids: medicationIds,
+      vital_ids: vitalIds,
+      diet_ids: dietIds,
+      workout_ids: workoutIds,
+    });
+
+    if (!scheduleEvents) {
+      Log.debug("No schedule events found for the provided IDs.");
+      return [[], "No schedule events found"];
     }
 
-    const scheduleEvents =
-      (await eventService.getMissedByDataNew({
-        appointment_ids: appointmentIds,
-        medication_ids: medicationIds,
-        vital_ids: vitalIds,
-        diet_ids: dietIds,
-        workout_ids: workoutIds,
-      })) || [];
+    Log.debug("Retrieved schedule events: ", scheduleEvents);
 
-    let response = [
-      { ...(await getFormattedData(scheduleEvents, category)) },
-      "Missed events fetched successfully",
-    ];
+    const formattedData = await getFormattedData(scheduleEvents, category);
 
-    return response;
+    Log.debug("Formatted data: ", formattedData);
+
+    return [{ ...formattedData }, "Missed events fetched successfully"]; // Spread formattedData
+
   } catch (error) {
-    Log.debug("getAllDataForDoctors catch error", error);
-    throw error;
+    Log.error("Error in getAllDataForDoctors: ", error); // Use Log.error for errors
+    throw error; // Re-throw the error for higher-level handling
   }
 };
 
@@ -427,7 +462,7 @@ const getAllDataForDoctorsCount = async ({
     }
 
     const scheduleEvents =
-      (await eventService.getMissedByDataNew({
+      (await eventService.getMissedByData({
         appointment_ids: appointmentIds,
         medication_ids: medicationIds,
         vital_ids: vitalIds,

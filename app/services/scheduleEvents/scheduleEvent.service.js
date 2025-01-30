@@ -401,50 +401,100 @@ class ScheduleEventService {
     }
   };
 
-  getMissedByDataNew = async (data) => {
-    // console.log("logsForMonintorByAhere - Schedule EventService getMissedByDataNew Called: ",getTime())
+  /**
+   * Optimization and Enhancements:
+   * Indexing: Ensure you have indexes on both event_id and event_type columns in your database table.
+   *      This is the most crucial step for optimizing these queries.
+   *      A composite index on (event_id, event_type) would be even better.
+   * Parameter Validation: Add checks at the beginning of the function to ensure that the input data object
+   *      contains the necessary arrays (vital_ids, appointment_ids, etc.) and that they are not null or undefined.
+   *      This will prevent unexpected errors.
+   * Empty Array Handling: If any of the input arrays are empty, you can skip adding the corresponding
+   *      conditions to the WHERE clause. This can further optimize the query by avoiding unnecessary comparisons.
+   * Date Filtering: The date filtering using moment and Op.between is already efficient.
+   *      However, ensure that the date column in your database table is indexed.
+   * Logging/Debugging: Add logging statements to track the execution time of the query and the number of results
+   *      returned. This can help you identify any performance bottlenecks.
+   *
+   * getMissedByData Optimization:
+   * Combine event_id and event_type in a single array (if possible): If your database schema and application logic
+   *       allow it, consider storing the event information in a way that you can query it more directly
+   *       (for example, a single field that combines the ID and type). This could simplify the query and
+   *       potentially improve performance.
+   * Consider a View (if applicable): If this query is used frequently, you could create a database view that
+   *      pre-filters the data based on the status and date conditions.
+   *      This can speed up retrieval by offloading some of the filtering to the database.
+   *
+   * @param data
+   * @returns {Promise<Model[]>}
+   */
+  getMissedByData = async (data) => {
     try {
-      // console.log("getMissedByData Start - ", getTime());
       const {
-        vital_ids,
-        appointment_ids,
-        medication_ids,
-        diet_ids,
-        workout_ids,
-      } = data;
+        vital_ids = [], // Provide default empty arrays
+        appointment_ids = [],
+        medication_ids = [],
+        diet_ids = [],
+        workout_ids = [],
+      } = data || {}; // Handle cases where data is null or undefined
 
-      return await Database.getModel(TABLE_NAME).findAll({
-        where: {
-          status: EVENT_STATUS.EXPIRED,
-          event_id: [
-            ...vital_ids,
-            ...appointment_ids,
-            ...medication_ids,
-            ...diet_ids,
-            ...workout_ids,
-          ],
-          event_type: [
-            EVENT_TYPE.APPOINTMENT,
-            EVENT_TYPE.WORKOUT,
-            EVENT_TYPE.MEDICATION_REMINDER,
-            EVENT_TYPE.DIET,
-            EVENT_TYPE.VITALS,
-          ],
+      const eventIds = [
+        ...vital_ids,
+        ...appointment_ids,
+        ...medication_ids,
+        ...diet_ids,
+        ...workout_ids,
+      ];
 
-          date: {
-            [Op.between]: [
-              moment().utc().subtract(7, "days").toDate(),
-              moment().utc().toDate(),
-            ],
-          },
+      const eventTypes = [
+        EVENT_TYPE.APPOINTMENT,
+        EVENT_TYPE.WORKOUT,
+        EVENT_TYPE.MEDICATION_REMINDER,
+        EVENT_TYPE.DIET,
+        EVENT_TYPE.VITALS,
+      ];
+
+      const whereClause = {
+        status: EVENT_STATUS.EXPIRED,
+        date: {
+          [Op.between]: [
+            moment().utc().subtract(7, "days").toDate(),
+            moment().utc().toDate(),
+          ],
         },
+      };
+
+      if (eventIds.length > 0) {
+        whereClause.event_id = eventIds;
+      }
+
+      if (eventTypes.length > 0) {
+        whereClause.event_type = eventTypes;
+      }
+
+
+      const startTime = Date.now();
+      const result = await Database.getModel(TABLE_NAME).findAll({
+        where: whereClause,
         order: [["start_time", "DESC"]],
       });
+      const endTime = Date.now();
+
+      console.log(`Query executed in ${endTime - startTime}ms and returned ${result.length} rows.`);
+
+      return result;
     } catch (error) {
+      console.error("Error in getMissedByData: ", error);
       throw error;
     }
   };
 
+  /**
+   * Redundant function, as it uses [Op.or] to combine multiple WHERE clauses based on event_id and event_type.
+   * This approach can be less efficient if you have many event types, as it might lead to a full table scan
+   * or inefficient index usage.
+   * getMissedByData: Uses separate arrays for event_id and event_type within the WHERE clause. 
+   * This allows the database to potentially use indexes on both event_id and event_type more effectively.
   getMissedByData = async (data) => {
     // console.log("logsForMonintorByAhere - Schedule EventService getMissedByData Called: ",getTime())
     try {
@@ -493,6 +543,7 @@ class ScheduleEventService {
       throw error;
     }
   };
+   */
 
   getPageEventByData = async (data) => {
     // console.log("logsForMonintorByAhere - Schedule EventService getPageEventByData Called: ",getTime())
