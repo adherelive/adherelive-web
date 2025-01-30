@@ -54,6 +54,7 @@ import { downloadFileFromS3 } from "../mControllers/user/user.helper";
 
 // Helpers
 import * as AppointmentHelper from "./appointments.helper";
+import notificationSdk from "../../notificationSdk";
 
 const path = require("path");
 
@@ -69,7 +70,7 @@ class AppointmentController extends Controller {
   create = async (req, res) => {
     const { raiseClientError } = this;
     try {
-      Logger.debug("REQUEST DATA ---> ", req.body);
+      Logger.debug("Request data for Appointments: ", req.body);
       const { body, userDetails } = req;
       const {
         participant_two,
@@ -86,30 +87,23 @@ class AppointmentController extends Controller {
         provider_id = null,
         provider_name = null,
         critical = false,
-        // participant_one_type = "",
-        // participant_one_id = "",
+        participant_one = "",
       } = body;
       const {
         userId,
         userRoleId,
         userData: { category } = {},
       } = userDetails || {};
-      const { id: participant_two_id, category: participant_two_type } =
-        participant_two || {};
+      const { id: participant_one_id, category: participant_one_type } = participant_one || {};
+      const { id: participant_two_id, category: participant_two_type } = participant_two || {};
 
-      /*
-       * check previous time slot for appointment based on
-       * date,
-       * start_time,
-       * end_time,
-       *
-       * participant_one_id,
-       * participant_one_type,
-       * participant_two_id,
-       * participant_two_type
-       * */
+      console.log("Request data for Appointments: ", req.body)
+
+      // check previous time slot for appointment based on
+      // date, start_time, end_time, participant_one_id, participant_one_type, participant_two_id, participant_two_type
 
       let userCategoryId = null;
+      let participantOneId = null;
       let participantTwoId = null;
 
       switch (category) {
@@ -119,6 +113,7 @@ class AppointmentController extends Controller {
           });
           const doctorData = await DoctorWrapper(doctor);
           userCategoryId = doctorData.getDoctorId();
+          participantOneId = doctorData.getUserId();
           participantTwoId = doctorData.getUserId();
           break;
         case USER_CATEGORY.HSP:
@@ -127,12 +122,14 @@ class AppointmentController extends Controller {
           });
           const hspDoctorData = await DoctorWrapper(hspDoctor);
           userCategoryId = hspDoctorData.getDoctorId();
+          participantOneId = hspDoctorData.getUserId();
           participantTwoId = hspDoctorData.getUserId();
           break;
         case USER_CATEGORY.PATIENT:
           const patient = await patientService.getPatientByUserId(userId);
           const patientData = await PatientWrapper(patient);
           userCategoryId = patientData.getPatientId();
+          participantOneId = patientData.getUserId();
           participantTwoId = patientData.getUserId();
           break;
         default:
@@ -204,7 +201,7 @@ class AppointmentController extends Controller {
         start_time,
         end_time,
         details: appointmentApiData.getBasicInfo(),
-        participants: [userRoleId, participantTwoId],
+        participants: [userRoleId, participantOneId],
         actor: {
           id: userId,
           user_role_id: userRoleId,
@@ -233,13 +230,13 @@ class AppointmentController extends Controller {
         200,
         {
           ...(await appointmentApiData.getAllInfo()),
-          // appointments: {
-          //   [appointmentApiData.getAppointmentId()]: {
-          //     ...appointmentApiData.getBasicInfo()
-          //   }
-          // }
+          appointments: {
+            [appointmentApiData.getAppointmentId()]: {
+              ...appointmentApiData.getBasicInfo()
+            }
+          }
         },
-        "appointment created successfully"
+        "Appointment created successfully!"
       );
     } catch (error) {
       return this.raiseServerError(res);
@@ -322,7 +319,7 @@ class AppointmentController extends Controller {
           {
             error_type: "slot_present",
           },
-          `Appointment Slot already present between`
+          `Appointment Slot already present for the selected slot`
         );
       }
 
@@ -409,20 +406,19 @@ class AppointmentController extends Controller {
 
       const sqsResponse = await QueueService.sendMessage(eventScheduleData);
 
-      Logger.debug("sqsResponse ---> ", sqsResponse);
+      Logger.debug("createCarePlanAppointment sqsResponse: ", sqsResponse);
 
       const appointmentJob = AppointmentJob.execute(
         EVENT_STATUS.SCHEDULED,
         eventScheduleData
       );
       await NotificationSdk.execute(appointmentJob);
+      // TODO: if we need to send a mail also for the appointment
+      // await NotificationSdk.execute(EVENT_TYPE.SEND_MAIL, appointmentJob);
 
-      Logger.debug("appointmentJob ---> ", appointmentJob.getInAppTemplate());
-
-      // notificationSdk.execute(EVENT_TYPE.SEND_MAIL, appointmentJob);
-
+      Logger.debug("createCarePlanAppointment appointmentJob: ", appointmentJob.getInAppTemplate());
       // TODO: schedule event and notifications here
-      // await Proxy_Sdk.scheduleEvent({ data: eventScheduleData });
+      await Proxy_Sdk.scheduleEvent({ data: eventScheduleData });
 
       // response
       return this.raiseSuccess(
@@ -431,13 +427,13 @@ class AppointmentController extends Controller {
         {
           care_plans: { ...carePlanApiData },
           ...(await appointmentApiData.getAllInfo()),
-          // appointments: {
-          //   [appointmentApiData.getAppointmentId()]: {
-          //     ...appointmentApiData.getBasicInfo()
-          //   }
-          // }
+          appointments: {
+            [appointmentApiData.getAppointmentId()]: {
+              ...appointmentApiData.getBasicInfo()
+            }
+          }
         },
-        "appointment created successfully"
+        "Appointment created successfully!"
       );
     } catch (error) {
       return this.raiseServerError(res);
@@ -526,7 +522,7 @@ class AppointmentController extends Controller {
             {
               error_type: "slot_present",
             },
-            `Appointment Slot already present between`
+            `Appointment Slot already present for the selected slot`
           );
         }
       }
@@ -641,7 +637,7 @@ class AppointmentController extends Controller {
         "Appointment updated successfully"
       );
     } catch (error) {
-      Logger.debug("updateAppointment 500 error", error);
+      Logger.debug("updateAppointment 500 error: ", error);
       return raiseServerError(res);
     }
   };
@@ -680,10 +676,10 @@ class AppointmentController extends Controller {
             ...uploadDocumentData,
           },
         },
-        `appointment data for patient: ${id} fetched successfully`
+        `Appointment data for patient: ${id} fetched successfully`
       );
     } catch (error) {
-      Logger.debug("getAppointmentForPatient 500 error", error);
+      Logger.debug("getDayAppointmentByDate 500 error: ", error);
       return raiseServerError(res);
     }
   };
@@ -737,7 +733,7 @@ class AppointmentController extends Controller {
       // } else {
       // }
     } catch (error) {
-      Logger.debug("getAppointmentForPatient 500 error", error);
+      Logger.debug("getAppointmentForPatient 500 error: ", error);
       return raiseServerError(res);
     }
   };
@@ -745,7 +741,7 @@ class AppointmentController extends Controller {
   delete = async (req, res) => {
     const { raiseSuccess, raiseServerError } = this;
     try {
-      Logger.debug("APPOINTMENT CONTROLLER REQUEST ---> ", req.params);
+      Logger.debug("Appointment controller request: ", req.params);
       const { params: { appointment_id } = {}, userDetails: { userId } = {} } =
         req;
 
@@ -766,7 +762,7 @@ class AppointmentController extends Controller {
 
       return raiseSuccess(res, 200, {}, `Appointment deleted successfully`);
     } catch (error) {
-      Logger.debug("delete 500 error", error);
+      Logger.debug("deleteAppointment 500 error: ", error);
       return raiseServerError(res);
     }
   };
@@ -838,107 +834,108 @@ class AppointmentController extends Controller {
         "Appointment details fetched successfully"
       );
     } catch (error) {
-      Logger.debug("getAppointmentDetails 500 error ", error);
+      Logger.debug("getAppointmentDetails 500 error: ", error);
       return raiseServerError(res);
     }
   };
 
+  /**
+   *
+   * @param req
+   * @param res
+   * @returns {Promise<*>}
+   */
   getAllMissedAppointments = async (req, res) => {
     const { raiseSuccess, raiseServerError } = this;
     try {
-      const { body, userDetails } = req;
+      const { userDetails } = req;
 
       const {
         userRoleId = null,
-        userId,
-        userData: { category } = {},
-        userCategoryData: { basic_info: { id: doctorId } = {} } = {},
       } = userDetails || {};
 
-      let docAllCareplanData = [];
-      let appointmentApiData = {};
-      let flag = true;
-      let criticalAppointmentEventIds = [];
-      let nonCriticalAppointmentEventIds = [];
-      const scheduleEventService = new ScheduleEventService();
-
-      docAllCareplanData = await carePlanService.getCarePlanByData({
+      // Fetch all care plans for the user
+      const docAllCareplanData = await carePlanService.getCarePlanByData({
         user_role_id: userRoleId,
       });
 
-      // Logger.debug("786756465789",docAllCareplanData);
+      const appointmentApiData = {};
+      const criticalAppointmentEventIds = [];
+      const nonCriticalAppointmentEventIds = [];
+      const scheduleEventService = new ScheduleEventService();
 
-      for (let carePlan of docAllCareplanData) {
+      // Process each care plan
+      for (const carePlan of docAllCareplanData) {
         const carePlanApiWrapper = await CarePlanWrapper(carePlan);
         const { appointment_ids } = await carePlanApiWrapper.getAllInfo();
 
-        for (let aId of appointment_ids) {
-          // Logger.debug("87657898763545",appointment_ids);
+        // Process each appointment ID
+        for (const aId of appointment_ids) {
+          // Fetch expired appointments for the current appointment ID
+          const expiredAppointmentsList = await scheduleEventService.getAllEventByData({
+            event_type: EVENT_TYPE.APPOINTMENT,
+            status: EVENT_STATUS.EXPIRED,
+            event_id: aId,
+          });
 
-          let expiredAppointmentsList =
-            await scheduleEventService.getAllEventByData({
-              event_type: EVENT_TYPE.APPOINTMENT,
-              status: EVENT_STATUS.EXPIRED,
-              event_id: aId,
-            });
-
-          for (let appointment of expiredAppointmentsList) {
+          // Process each expired appointment
+          for (const appointment of expiredAppointmentsList) {
             const appointmentEventWrapper = await EventWrapper(appointment);
-            // Logger.debug("8976756576890",appointmentEventWrapper);
+            const eventId = appointmentEventWrapper.getEventId();
+            const isCritical = appointmentEventWrapper.getCriticalValue();
 
-            if (appointmentEventWrapper.getCriticalValue()) {
-              if (
-                !criticalAppointmentEventIds.includes(
-                  appointmentEventWrapper.getEventId()
-                )
-              ) {
-                criticalAppointmentEventIds.push(
-                  appointmentEventWrapper.getEventId()
-                );
+            // Add to critical or non-critical list
+            if (isCritical) {
+              if (!criticalAppointmentEventIds.includes(eventId)) {
+                criticalAppointmentEventIds.push(eventId);
               }
             } else {
-              if (
-                !nonCriticalAppointmentEventIds.includes(
-                  appointmentEventWrapper.getEventId()
-                )
-              ) {
-                nonCriticalAppointmentEventIds.push(
-                  appointmentEventWrapper.getEventId()
-                );
+              if (!nonCriticalAppointmentEventIds.includes(eventId)) {
+                nonCriticalAppointmentEventIds.push(eventId);
               }
             }
 
-            appointmentApiData[appointmentEventWrapper.getEventId()] =
-              appointmentEventWrapper.getDetails();
+            // Get appointment details
+            const appointmentDetails = appointmentEventWrapper.getDetails();
+
+            // Fetch patient ID from the care plan
+            const patientId = await carePlanApiWrapper.getPatientId();
+
+            // Add patient ID and other necessary fields to the appointment data
+            appointmentApiData[eventId] = {
+              ...appointmentDetails,
+              patient_id: patientId, // Include patient ID
+              participant_one: {
+                id: patientId,
+                category: USER_CATEGORY.PATIENT,
+              },
+              participant_two: {
+                id: userRoleId, // Assuming the doctor's ID is the userRoleId
+                category: USER_CATEGORY.DOCTOR,
+              },
+            };
           }
         }
       }
 
-      if (
-        Object.keys(appointmentApiData).length === 0 &&
-        appointmentApiData.constructor === Object
-      ) {
-        flag = false;
+      // Check if any appointments were found
+      if (Object.keys(appointmentApiData).length === 0) {
+        return raiseSuccess(res, 201, {}, "No Missed Appointments");
       }
 
-      if (flag === true) {
-        return raiseSuccess(
+      // Return the response with the formatted data
+      return raiseSuccess(
           res,
           200,
           {
-            missed_appointment_events: {
-              ...appointmentApiData,
-            },
+            missed_appointment_events: appointmentApiData,
             critical_appointment_event_ids: criticalAppointmentEventIds,
             non_critical_appointment_event_ids: nonCriticalAppointmentEventIds,
           },
-          `Missed appointment fetched successfully`
-        );
-      } else {
-        return raiseSuccess(res, 201, {}, "No Missed Appointment");
-      }
+          "Missed appointments fetched successfully"
+      );
     } catch (error) {
-      Logger.debug("getappointmentDetails 500 error ", error);
+      Logger.debug("getAllMissedAppointments 500 error ", error);
       return raiseServerError(res);
     }
   };

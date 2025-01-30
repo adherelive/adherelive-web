@@ -431,20 +431,20 @@ class VitalController extends Controller {
         userCategoryData: { basic_info: { id: doctorId } = {} } = {},
       } = userDetails || {};
 
-      let docAllCareplanData = [];
+      let docAllCarePlanData = [];
       let vitalApiData = {};
       let flag = true;
       let criticalVitalEventIds = [];
       let nonCriticalVitalEventIds = [];
       const scheduleEventService = new ScheduleEventService();
 
-      docAllCareplanData = await carePlanService.getCarePlanByData({
+      docAllCarePlanData = await carePlanService.getCarePlanByData({
         user_role_id: userRoleId,
       });
 
-      // Logger.debug("786756465789",docAllCareplanData);
+      // Logger.debug("786756465789",docAllCarePlanData);
 
-      for (let carePlan of docAllCareplanData) {
+      for (let carePlan of docAllCarePlanData) {
         const carePlanApiWrapper = await CarePlanWrapper(carePlan);
         const { vital_ids } = await carePlanApiWrapper.getAllInfo();
 

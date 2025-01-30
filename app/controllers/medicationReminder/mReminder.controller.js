@@ -746,20 +746,20 @@ class MReminderController extends Controller {
   //       userCategoryData: { basic_info: { id: doctorId } = {} } = {}
   //     } = userDetails || {};
 
-  //     let docAllCareplanData = [];
+  //     let docAllCarePlanData = [];
   //     let medicationApiData = {};
   //     let flag = true;
   //     let criticalMedicationEventIds = [];
   //     let nonCriticalMedicationEventIds = [];
   //     const scheduleEventService = new ScheduleEventService();
 
-  //     docAllCareplanData = await carePlanService.getCarePlanByData({
+  //     docAllCarePlanData = await carePlanService.getCarePlanByData({
   //       user_role_id : userRoleId
   //     });
 
-  //     // Logger.debug("786756465789",docAllCareplanData);
+  //     // Logger.debug("786756465789",docAllCarePlanData);
 
-  //     for (let carePlan of docAllCareplanData) {
+  //     for (let carePlan of docAllCarePlanData) {
   //       const carePlanApiWrapper = await CarePlanWrapper(carePlan);
   //       const { medication_ids } = await carePlanApiWrapper.getAllInfo();
 
