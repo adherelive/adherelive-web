@@ -477,7 +477,7 @@ class AppointmentController extends Controller {
         appointment_id
       );
 
-      // careplan id for appointment
+      // care plan id for appointment
       const { care_plan_id = null } =
         (await carePlanAppointmentService.getSingleCarePlanAppointmentByData({
           appointment_id,
@@ -840,6 +840,7 @@ class AppointmentController extends Controller {
   };
 
   /**
+   * This is the function which fetches and creates the data for the Missed Appointments
    *
    * @param req
    * @param res
@@ -855,7 +856,7 @@ class AppointmentController extends Controller {
       } = userDetails || {};
 
       // Fetch all care plans for the user
-      const docAllCareplanData = await carePlanService.getCarePlanByData({
+      const docAllCarePlanData = await carePlanService.getCarePlanByData({
         user_role_id: userRoleId,
       });
 
@@ -865,7 +866,7 @@ class AppointmentController extends Controller {
       const scheduleEventService = new ScheduleEventService();
 
       // Process each care plan
-      for (const carePlan of docAllCareplanData) {
+      for (const carePlan of docAllCarePlanData) {
         const carePlanApiWrapper = await CarePlanWrapper(carePlan);
         const { appointment_ids } = await carePlanApiWrapper.getAllInfo();
 
