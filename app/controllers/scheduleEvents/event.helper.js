@@ -23,7 +23,7 @@ const Log = new Logger("EVENT HELPER");
 export const doctorChart = async (req) => {
   try {
     const { userDetails: { userRoleId, userCategoryId: doctor_id } = {} } = req;
-    Log.info(`DOCTOR ID (doctor_id) : ${doctor_id}`);
+    Log.info(`Doctor ID (doctor_id): ${doctor_id}`);
 
     return await getAllDataForDoctors({ doctor_id, user_role_id: userRoleId });
   } catch (error) {
@@ -35,7 +35,7 @@ export const doctorChart = async (req) => {
 export const doctorChartCount = async (req) => {
   try {
     const { userDetails: { userRoleId, userCategoryId: doctor_id } = {} } = req;
-    Log.info(`DOCTOR ID (doctor_id) : ${doctor_id}`);
+    Log.info(`Doctor ID (doctor_id): ${doctor_id}`);
 
     return await getAllDataForDoctorsCount({
       doctor_id,
@@ -54,7 +54,7 @@ export const doctorChartEventDetails = async (req) => {
       userDetails: { userRoleId, userCategoryId: doctor_id } = {},
     } = req;
 
-    Log.info(`DOCTOR ID (doctor_id) : ${doctor_id}`);
+    Log.info(`Doctor ID (doctor_id): ${doctor_id}`);
 
     return await getAllDataForDoctorsByEventType({
       event_type,
@@ -70,7 +70,7 @@ export const doctorChartEventDetails = async (req) => {
 export const hspChart = async (req) => {
   try {
     const { userDetails: { userRoleId, userCategoryId: doctor_id } = {} } = req;
-    Log.info(`DOCTOR ID (doctor_id) : ${doctor_id}`);
+    Log.info(`Doctor ID (doctor_id): ${doctor_id}`);
 
     return await getAllDataForDoctorsCount({
       doctor_id,
@@ -78,7 +78,7 @@ export const hspChart = async (req) => {
       category: USER_CATEGORY.HSP,
     });
   } catch (error) {
-    Log.debug("hspChart catch error", error);
+    Log.debug("hspChart catch error: ", error);
     throw error;
   }
 };
@@ -89,7 +89,7 @@ export const hspChartEventDetails = async (req) => {
       query: { event_type: event_type = null } = {},
       userDetails: { userRoleId, userCategoryId: doctor_id } = {},
     } = req;
-    Log.info(`DOCTOR ID (doctor_id) : ${doctor_id}`);
+    Log.info(`Doctor ID (doctor_id): ${doctor_id}`);
 
     return await getAllDataForDoctorsByEventType({
       event_type,
@@ -98,7 +98,7 @@ export const hspChartEventDetails = async (req) => {
       category: USER_CATEGORY.HSP,
     });
   } catch (error) {
-    Log.debug("hspChartEventDetails catch error", error);
+    Log.debug("hspChartEventDetails catch error: ", error);
     throw error;
   }
 };
@@ -106,7 +106,7 @@ export const hspChartEventDetails = async (req) => {
 export const hspChartCount = async (req) => {
   try {
     const { userDetails: { userRoleId, userCategoryId: doctor_id } = {} } = req;
-    Log.info(`DOCTOR ID (doctor_id) : ${doctor_id}`);
+    Log.info(`Doctor ID (doctor_id): ${doctor_id}`);
 
     return await getAllDataForDoctorsCount({
       doctor_id,
@@ -114,7 +114,7 @@ export const hspChartCount = async (req) => {
       category: USER_CATEGORY.HSP,
     });
   } catch (error) {
-    Log.debug("hspChartCount catch error", error);
+    Log.debug("hspChartCount catch error: ", error);
     throw error;
   }
 };
@@ -123,10 +123,10 @@ export const providerChart = async (req) => {
   try {
     const { userDetails: { userRoleId, userCategoryId: provider_id } = {} } =
       req;
-    Log.info(`PROVIDER ID (provider_id) : ${provider_id}`);
+    Log.info(`Provider ID (provider_id): ${provider_id}`);
     /**
      * TODO: Check why this has been commented out?
-    get all doctors attached to provider
+    // get all doctors attached to provider
     const doctorData = await doctorProviderMappingService.getAllDoctorIds(provider_id) || [];
     Log.debug("doctorData", doctorData);
     const doctorIds = doctorData.map(data => data.doctor_id);
@@ -269,7 +269,7 @@ export const providerChart = async (req) => {
 
     return [{ ...allDoctorsData }, "Missed events fetched successfully"];
   } catch (error) {
-    Log.debug("providerChart catch error", error);
+    Log.debug("providerChart catch error: ", error);
     throw error;
   }
 };
@@ -282,7 +282,7 @@ const getAllDataForDoctorsByEventType = async ({
   user_role_id,
 }) => {
   try {
-    Log.debug("user_role_id", user_role_id);
+    Log.debug("getAllDataForDoctorsByEventType user_role_id: ", user_role_id);
     const eventService = new EventService();
 
     const carePlans =
@@ -511,14 +511,16 @@ const getAllDataForDoctorsCount = async ({
       })) || [];
 
     // Format the data
-    const formattedData = await getFormattedDataNew(scheduleEvents, category);
+    const formattedData = await getFormattedData(scheduleEvents, category);
     const patientCount = patientIds.size; // Get the number of unique patients
+    console.log("Unique Patient count in getAllDataForDoctorCount: ", patientCount);
 
     // Prepare the response
     const response = [
       { ...formattedData, patientCount }, // Add patientCount to the response
       "Missed events fetched successfully",
     ];
+    console.log("getAllDataForDoctorCount response for the Doctor/Patient: ", response);
 
     return response;
   } catch (error) {
@@ -1019,6 +1021,14 @@ const getFormattedDataWithoutIds = async (
   };
 };
 
+/**
+ * This is a duplicate with lesser data for the 'getFormattedData' function.
+ * TODO: Check why it is being used in the 'getAllDataForDoctorsCount' function and not the original one?
+ *
+ * @param events
+ * @param category
+ * @returns {Promise<{medication_ids: {critical: *[], non_critical: *[]}, appointment_ids: {critical: *[], non_critical: *[]}, vital_ids: {critical: *[], non_critical: *[]}, diet_ids: {critical: *[], non_critical: *[]}, workout_ids: {critical: *[], non_critical: *[]}}>}
+ */
 const getFormattedDataNew = async (
   events = [],
   category = USER_CATEGORY.DOCTOR

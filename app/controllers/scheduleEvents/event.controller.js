@@ -114,34 +114,33 @@ class EventController extends Controller {
       /**
        * TODO: Check if the below code is required or not
        *       As it has been commented and used in a single function above
-       */
-      // const appointmentEvents = await eventService.getLastVisitData({
-      //   event_id: appointment_ids,
-      //   event_type: EVENT_TYPE.APPOINTMENT,
-      //   date: moment().subtract(7, "days").utc().toISOString(),
-      //   sort: "DESC",
-      // });
+      const appointmentEvents = await eventService.getLastVisitData({
+        event_id: appointment_ids,
+        event_type: EVENT_TYPE.APPOINTMENT,
+        date: moment().subtract(7, "days").utc().toISOString(),
+        sort: "DESC",
+      });
 
-      // const medicationEvents = await eventService.getLastVisitData({
-      //   event_id: medication_ids,
-      //   event_type: EVENT_TYPE.MEDICATION_REMINDER,
-      //   date: moment().subtract(7, "days").utc().toISOString(),
-      //   sort: "DESC",
-      // });
+      const medicationEvents = await eventService.getLastVisitData({
+        event_id: medication_ids,
+        event_type: EVENT_TYPE.MEDICATION_REMINDER,
+        date: moment().subtract(7, "days").utc().toISOString(),
+        sort: "DESC",
+      });
 
-      // const dietEvents = await eventService.getLastVisitData({
-      //   event_id: diet_ids,
-      //   event_type: EVENT_TYPE.DIET,
-      //   date: moment().subtract(7, "days").utc().toISOString(),
-      //   sort: "DESC",
-      // });
+      const dietEvents = await eventService.getLastVisitData({
+        event_id: diet_ids,
+        event_type: EVENT_TYPE.DIET,
+        date: moment().subtract(7, "days").utc().toISOString(),
+        sort: "DESC",
+      });
 
-      // const workoutEvents = await eventService.getLastVisitData({
-      //   event_id: workout_ids,
-      //   event_type: EVENT_TYPE.WORKOUT,
-      //   date: moment().subtract(7, "days").utc().toISOString(),
-      //   sort: "DESC",
-      // });
+      const workoutEvents = await eventService.getLastVisitData({
+        event_id: workout_ids,
+        event_type: EVENT_TYPE.WORKOUT,
+        date: moment().subtract(7, "days").utc().toISOString(),
+        sort: "DESC",
+      });*/
 
 
       let scheduleEvents = [
@@ -448,7 +447,7 @@ class EventController extends Controller {
   };
 
   /**
-   * TODO: This method is not used anywhere in the codebase. It should be removed.
+   * TODO: This method is not used anywhere in the codebase. Validate the requirement is implemented elsewhere.
   getAllEventsTimeline = async (req, res) => {
       const {raiseSuccess, raiseClientError, raiseServerError} = this;
       try {
