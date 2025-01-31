@@ -1,27 +1,35 @@
-# Download base image ubuntu 24.04
-FROM ubuntu:focal-slim
-# LABEL About the custom image, using ubuntu:focal-slim
+# Download base image ubuntu 20.04 (focal)
+FROM ubuntu:22.04
+
+# LABEL About the custom image
 LABEL maintainer="AdhereLive Pvt Ltd"
 LABEL version="1.1"
 LABEL description="This is a custom Docker Image installing Ubuntu Utils"
+
 # Disable Prompt During Packages Installation
 ARG DEBIAN_FRONTEND=noninteractive
-# Update Ubuntu Software repository
-RUN apt update && apt upgrade -y
-RUN apt -y install build-essential
-# RUN apt libbz2-dev libssl-dev libncursesw5-dev zlib1g-dev libreadline-dev libffi-dev libncurses5-dev libgdbm-dev libsqlite3-dev
-RUN apt -y install nodejs npm
-# Install Node.js using nvm to ensure the latest version is used 
-RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.4/install.sh | bash && . ~/.nvm/nvm.sh && nvm install 18 && nvm use 18 && nvm alias default 18 && npm install -g npm
-# Ensure Node.js and npm are in PATH 
+
+# Update Ubuntu Software repository and install dependencies
+RUN apt update && apt upgrade -y && \
+    apt install -y curl build-essential gcc g++ make libglib2.0-0 libnss3 libatk1.0-0 libatk-bridge2.0-0 libcups2 libdrm2 libxkbcommon-x11-0 libxcomposite1 libxdamage1 libxrandr2 libgbm-dev dconf-service libasound2 libc6 libcairo2 libdbus-1-3 libexpat1 libfontconfig1 libgcc1 libgdk-pixbuf2.0-0 libglib2.0-0 libgtk-3-0 libnspr4 libpango-1.0-0 libpangocairo-1.0-0 libstdc++6 libx11-6 libx11-xcb1 libxcb1 libxcursor1 libxext6 libxfixes3 libxi6 libxrender1 libxss1 libxtst6 ca-certificates fonts-liberation lsb-release xdg-utils wget libxshmfence-dev
+
+# Install Node.js using nvm
+RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.4/install.sh | bash
+ENV NVM_DIR=/root/.nvm
+RUN echo 'export NVM_DIR="$HOME/.nvm"' >> /root/.bashrc && \
+    echo '[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"' >> /root/.bashrc && \
+    echo '[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"' >> /root/.bashrc
+
+# Source nvm and install Node.js
+SHELL ["/bin/bash", "--login", "-c"]
+RUN source /root/.nvm/nvm.sh && \
+    nvm install 18 && \
+    nvm use 18 && \
+    nvm alias default 18 && \
+    npm install -g npm
+
+# Ensure Node.js and npm are in PATH
 ENV PATH="/root/.nvm/versions/node/v18.19.1/bin/:${PATH}"
-# Install GCC & make
-RUN apt -y install gcc g++ make
-RUN apt -y install libglib2.0-0
-# RUN apt install ia32-libs-gtk ia32-lib
-# RUN apt install libglib2.0-dev
-RUN apt install -y libnss3 libatk1.0-0 libatk-bridge2.0-0 libcups2 libdrm2 libxkbcommon-x11-0 libxcomposite1 libxdamage1 libxrandr2 libgbm-dev
-# RUN apt install -y gconf-service libasound2 libc6 libcairo2 libdbus-1-3 libexpat1 libfontconfig1 libgcc1 libgdk-pixbuf2.0-0 libglib2.0-0 libgtk-3-0 libnspr4 libpango-1.0-0 libpangocairo-1.0-0 libstdc++6 libx11-6 libx11-xcb1 libxcb1 libxcursor1 libxext6 libxfixes3 libxi6 libxrender1 libxss1 libxtst6 ca-certificates fonts-liberation lsb-release xdg-utils wget libxshmfence-dev
-RUN apt-get install -y dconf-service libasound2-dev libc6 libcairo2 libdbus-1-3 libexpat1 libfontconfig1 libgcc1 libgdk-pixbuf2.0-0 libglib2.0-0 libgtk-3-0 libnspr4 libpango-1.0-0 libpangocairo-1.0-0 libstdc++6 libx11-6 libx11-xcb1 libxcb1 libxcursor1 libxext6 libxfixes3 libxi6 libxrender1 libxss1 libxtst6 ca-certificates fonts-liberation lsb-release xdg-utils wget libxshmfence-dev
-RUN rm -rf /var/lib/apt/lists/*
-RUN apt clean
+
+# Clean up
+RUN rm -rf /var/lib/apt/lists/* && apt clean

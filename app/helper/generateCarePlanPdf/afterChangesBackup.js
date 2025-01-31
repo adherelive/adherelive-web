@@ -1336,7 +1336,7 @@
 //         medicationYLevel = doc.y + 10;
 //         let srNumber = 1;
 
-//         // Gaurav New Chnages - start
+//         // code implementation after phase 1 - start
 //         let { date: latestUpdateDate, isPrescriptionUpdated } =
 //           getLatestUpdateDate(medications);
 //         let isMedicationsUpdate =
@@ -1344,7 +1344,7 @@
 //         let wantToShow = true;
 
 //         if (isPrescriptionUpdated || isMedicationsUpdate) wantToShow = false;
-//         // Gaurav New Chnages - end
+//         // code implementation after phase 1 - end
 
 //         for (const [index, medicationData] of medicationsList.entries()) {
 //           const {
@@ -1370,13 +1370,13 @@
 //           const medicineData = `(${medi_type}) ${medicineName} `;
 
 //           let medicationStatus = endDateobj > today; // 30>29
-//           // gaurav new changes - start
+//           // code implementation after phase 1 - start
 //
 //           // if (medicationStatus && !showInactive ) continue;
 
 //           if (!wantToShow && !medicationStatus) continue;
 
-//           // gaurav new changes - start
+//           // code implementation after phase 1 - start
 //           if (doc.y + 3 * SHORT_FONT_SIZE > PAGE_END_LIMIT) {
 //             if (pageCount === 1) {
 //               addPageFooter(doc, providerPrescriptionDetails);
@@ -1384,13 +1384,13 @@
 //             addPageAndNumber(doc);
 //             medicationYLevel = DOC_MARGIN;
 //           }
-//           // gaurav new changes - start
+//           // code implementation after phase 1 - start
 //           doc
 //             .fillColor("#212b36")
 //             .fontSize(SHORT_FONT_SIZE)
 //             .font(MEDIUM_FONT)
 //             .text(`${srNumber}.`, serialNoXStart, medicationYLevel)
-//             // gaurav new changes - end
+//             // code implementation after phase 1 - end
 
 //             // .text(`${organizer.name}`, drXStart, medicationYLevel, {
 //             //   width: medicineXStart - drXStart,
@@ -1916,9 +1916,9 @@
 
 //       if (end_date) {
 //         const endDateObj = moment(end_date);
-//         // Gaurav New Changes - start
+//         // code implementation after phase 1 - start
 //         endDate = end_date;
-//         // Gaurav New Changes - End
+//         // code implementation after phase 1 - End
 //         // endDate = `${endDateObj.get("year")}/${endDateObj.get(
 //         //   "month"
 //         // )}/${endDateObj.get("date")}`;

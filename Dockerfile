@@ -1,4 +1,4 @@
-FROM gagneet/ubuntulibs
+FROM adherelive/ubuntulibs
 # Install build-essential
 RUN apt-get update && apt-get install -y build-essential && rm -rf /var/lib/apt/lists/*
 # RUN useradd -d /home/azureuser -m -s /bin/bash azureuser

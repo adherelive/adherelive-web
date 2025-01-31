@@ -603,7 +603,7 @@ class UserController extends Controller {
 
               let watchlist_patient_ids = [];
 
-              // gaurav new changes
+              // code implementation after phase 1
               // const watchlistRecords =
               //   await doctorPatientWatchlistService.getAllByData({
               //     user_role_id: userRoleId,
@@ -622,7 +622,7 @@ class UserController extends Controller {
               let allInfo = {};
 
               allInfo = await userCategoryApiWrapper.getAllInfo();
-              // gaurav new changes
+              // code implementation after phase 1
               // delete allInfo.watchlist_patient_ids;
               // allInfo["watchlist_patient_ids"] = watchlist_patient_ids;
 
@@ -654,7 +654,7 @@ class UserController extends Controller {
 
             if (userCategoryData) {
               userCategoryApiWrapper = await DoctorWrapper(userCategoryData);
-              // Gaurav new Changes
+              // code implementation after phase 1
               // let watchlist_patient_ids = [];
               // const watchlistRecords =
               //   await doctorPatientWatchlistService.getAllByData({
@@ -674,7 +674,7 @@ class UserController extends Controller {
 
               allInfo = await userCategoryApiWrapper.getAllInfoNew();
 
-              // Gaurav new Changes
+              // code implementation after phase 1
               // delete allInfo.watchlist_patient_ids;
               // allInfo["watchlist_patient_ids"] = watchlist_patient_ids;
 

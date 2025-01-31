@@ -28,13 +28,13 @@ class PriorCron {
   async getScheduleData(priorDuration, type) {
     // const scheduleEventService = new ScheduleEventService();
     const priorTime = moment().add(priorDuration, "minutes").utc().toDate();
-    Log.debug("priorTime ---> ", priorTime);
-    Log.debug("currentTime ---> ", moment().utc().toDate());
+    Log.debug("cron getScheduleData priorTime ---> ", priorTime);
+    Log.debug("getScheduleData currentTime ---> ", moment().utc().toDate());
 
     const scheduleEvents =
       (await this.scheduleEventService.getPriorEventByData(priorTime, type)) ||
       [];
-    Log.debug("scheduleEvents ---> ", scheduleEvents);
+    Log.debug("getScheduleData scheduleEvents ---> ", scheduleEvents);
     return scheduleEvents || [];
   }
 

@@ -4,26 +4,30 @@ import { EVENT_TYPE, USER_CATEGORY } from "../../../constant";
 // Services
 import CarePlanService from "../../services/carePlan/carePlan.service";
 import EventService from "../../services/scheduleEvents/scheduleEvent.service";
+import doctorProviderMappingService from "../../services/doctorProviderMapping/doctorProviderMapping.service";
 import patientService from "../../services/patients/patients.service";
 import userRoleService from "../../services/userRoles/userRoles.service";
-
-// Wrappers
+import doctorService from "../../services/doctor/doctor.service";
+// wrappers
 import CarePlanWrapper from "../../apiWrapper/web/carePlan";
 import EventWrapper from "../../apiWrapper/common/scheduleEvents";
 import PatientWrapper from "../../apiWrapper/web/patient";
+import DoctorWrapper from "../../apiWrapper/web/doctor";
+import UserRoleWrapper from "../../apiWrapper/web/userRoles";
 import DietWrapper from "../../apiWrapper/web/diet";
-import WorkoutWrppaer from "../../apiWrapper/web/workouts";
+import WorkoutWrapper from "../../apiWrapper/web/workouts";
+import { getTime } from "../../helper/timer";
 
 const Log = new Logger("EVENT HELPER");
 
 export const doctorChart = async (req) => {
   try {
     const { userDetails: { userRoleId, userCategoryId: doctor_id } = {} } = req;
-    Log.info(`DOCTOR ID (doctor_id) : ${doctor_id}`);
+    Log.info(`Doctor ID (doctor_id): ${doctor_id}`);
 
     return await getAllDataForDoctors({ doctor_id, user_role_id: userRoleId });
   } catch (error) {
-    Log.debug("doctorChart catch error", error);
+    Log.debug("doctorChart catch error: ", error);
     throw error;
   }
 };
@@ -31,14 +35,14 @@ export const doctorChart = async (req) => {
 export const doctorChartCount = async (req) => {
   try {
     const { userDetails: { userRoleId, userCategoryId: doctor_id } = {} } = req;
-    Log.info(`DOCTOR ID (doctor_id) : ${doctor_id}`);
+    Log.info(`Doctor ID (doctor_id): ${doctor_id}`);
 
     return await getAllDataForDoctorsCount({
       doctor_id,
       user_role_id: userRoleId,
     });
   } catch (error) {
-    Log.debug("doctorChart catch error", error);
+    Log.debug("doctorChartCount catch error: ", error);
     throw error;
   }
 };
@@ -50,7 +54,7 @@ export const doctorChartEventDetails = async (req) => {
       userDetails: { userRoleId, userCategoryId: doctor_id } = {},
     } = req;
 
-    Log.info(`DOCTOR ID (doctor_id) : ${doctor_id}`);
+    Log.info(`Doctor ID (doctor_id): ${doctor_id}`);
 
     return await getAllDataForDoctorsByEventType({
       event_type,
@@ -58,7 +62,7 @@ export const doctorChartEventDetails = async (req) => {
       user_role_id: userRoleId,
     });
   } catch (error) {
-    Log.debug("doctorChart catch error", error);
+    Log.debug("doctorChartEventDetails catch error", error);
     throw error;
   }
 };
@@ -66,7 +70,7 @@ export const doctorChartEventDetails = async (req) => {
 export const hspChart = async (req) => {
   try {
     const { userDetails: { userRoleId, userCategoryId: doctor_id } = {} } = req;
-    Log.info(`DOCTOR ID (doctor_id) : ${doctor_id}`);
+    Log.info(`Doctor ID (doctor_id): ${doctor_id}`);
 
     return await getAllDataForDoctorsCount({
       doctor_id,
@@ -74,7 +78,7 @@ export const hspChart = async (req) => {
       category: USER_CATEGORY.HSP,
     });
   } catch (error) {
-    Log.debug("doctorChart catch error", error);
+    Log.debug("hspChart catch error: ", error);
     throw error;
   }
 };
@@ -85,7 +89,7 @@ export const hspChartEventDetails = async (req) => {
       query: { event_type: event_type = null } = {},
       userDetails: { userRoleId, userCategoryId: doctor_id } = {},
     } = req;
-    Log.info(`DOCTOR ID (doctor_id) : ${doctor_id}`);
+    Log.info(`Doctor ID (doctor_id): ${doctor_id}`);
 
     return await getAllDataForDoctorsByEventType({
       event_type,
@@ -94,7 +98,7 @@ export const hspChartEventDetails = async (req) => {
       category: USER_CATEGORY.HSP,
     });
   } catch (error) {
-    Log.debug("doctorChart catch error", error);
+    Log.debug("hspChartEventDetails catch error: ", error);
     throw error;
   }
 };
@@ -102,7 +106,7 @@ export const hspChartEventDetails = async (req) => {
 export const hspChartCount = async (req) => {
   try {
     const { userDetails: { userRoleId, userCategoryId: doctor_id } = {} } = req;
-    Log.info(`DOCTOR ID (doctor_id) : ${doctor_id}`);
+    Log.info(`Doctor ID (doctor_id): ${doctor_id}`);
 
     return await getAllDataForDoctorsCount({
       doctor_id,
@@ -110,7 +114,7 @@ export const hspChartCount = async (req) => {
       category: USER_CATEGORY.HSP,
     });
   } catch (error) {
-    Log.debug("doctorChart catch error", error);
+    Log.debug("hspChartCount catch error: ", error);
     throw error;
   }
 };
@@ -119,14 +123,15 @@ export const providerChart = async (req) => {
   try {
     const { userDetails: { userRoleId, userCategoryId: provider_id } = {} } =
       req;
-    Log.info(`PROVIDER ID (provider_id) : ${provider_id}`);
+    Log.info(`Provider ID (provider_id): ${provider_id}`);
+    /**
+     * TODO: Check why this has been commented out?
     // get all doctors attached to provider
-    // const doctorData = await doctorProviderMappingService.getAllDoctorIds(provider_id) || [];
-
-    // Log.debug("doctorData", doctorData);
-    // const doctorIds = doctorData.map(data => data.doctor_id);
-
-    // Log.debug("doctorIds", doctorData);
+    const doctorData = await doctorProviderMappingService.getAllDoctorIds(provider_id) || [];
+    Log.debug("doctorData", doctorData);
+    const doctorIds = doctorData.map(data => data.doctor_id);
+    Log.debug("doctorIds", doctorData);
+     */
     let allDoctorsData = {};
 
     const { count = 0, rows = [] } = await userRoleService.findAndCountAll({
@@ -264,7 +269,7 @@ export const providerChart = async (req) => {
 
     return [{ ...allDoctorsData }, "Missed events fetched successfully"];
   } catch (error) {
-    Log.debug("8234872364862 providerChart catch error", error);
+    Log.debug("providerChart catch error: ", error);
     throw error;
   }
 };
@@ -277,7 +282,7 @@ const getAllDataForDoctorsByEventType = async ({
   user_role_id,
 }) => {
   try {
-    Log.debug("user_role_id", user_role_id);
+    Log.debug("getAllDataForDoctorsByEventType user_role_id: ", user_role_id);
     const eventService = new EventService();
 
     const carePlans =
@@ -325,70 +330,133 @@ const getAllDataForDoctorsByEventType = async ({
 
     return response;
   } catch (error) {
-    Log.debug("getAllDataForDoctors catch error", error);
+    Log.debug("getAllDataForDoctorsByEventType catch error: ", error);
     throw error;
   }
 };
 
+/**
+ * Functionality:
+ * Retrieves Care Plans: Fetches care plans associated with a user_role_id using "CarePlanService.getCarePlanByData"
+ * Extracts IDs: Iterates through the care plans, using "CarePlanWrapper" and "getAllInfo" to extract IDs for
+ *              appointments, medications, vitals, diet, and workouts.
+ * Retrieves Scheduled Events: Fetches scheduled events based on the extracted IDs using
+ *              "eventService.getMissedByData".
+ * Formats Data: Formats the retrieved events using getFormattedData and combines them with a success message in an array.
+ * Returns Response: Returns the formatted data and success message.
+ * Error Handling: Includes a try...catch block to log and re-throw any errors.
+ *
+ * @param doctor_id
+ * @param category
+ * @param user_role_id
+ * @returns {Promise<[{missed_medications: {}, medication_ids: {critical: [], non_critical: []},
+ *           missed_appointments: {}, appointment_ids: {critical: [], non_critical: []}, missed_vitals: {},
+ *           vital_ids: {critical: [], non_critical: []}, missed_diets: {}, diet_ids: {critical: [], non_critical: []},
+ *           missed_workouts: {}, workout_ids: {critical: [], non_critical: []}, patients: {}},string]>}
+ */
 const getAllDataForDoctors = async ({
-  doctor_id,
+  doctor_id, // Not used in the current implementation
   category = USER_CATEGORY.PROVIDER,
   user_role_id,
 }) => {
   try {
-    Log.debug("user_role_id", user_role_id);
+    Log.debug("Starting getAllDataForDoctors for user_role_id:", user_role_id);
     const eventService = new EventService();
+    const carePlans = await CarePlanService.getCarePlanByData({ user_role_id });
 
-    const carePlans =
-      (await CarePlanService.getCarePlanByData({
-        user_role_id,
-      })) || [];
+    if (!carePlans || carePlans.length === 0) {
+      Log.debug("No care plans found for user_role_id: ", user_role_id);
+      return [[], "No care plans found"];
+    }
 
     let appointmentIds = [];
     let medicationIds = [];
     let vitalIds = [];
     let dietIds = [];
     let workoutIds = [];
+    const patientIds = new Set(); // Declare patientIds
 
-    for (let i = 0; i < carePlans.length; i++) {
-      const carePlan = await CarePlanWrapper(carePlans[i]);
-      const {
-        appointment_ids = [],
-        medication_ids = [],
-        vital_ids = [],
-        diet_ids = [],
-        workout_ids = [],
-      } = await carePlan.getAllInfo();
+    const carePlanPromises = carePlans.map(async (carePlanData) => {
+      const carePlan = await CarePlanWrapper(carePlanData);
+      const carePlanInfo = await carePlan.getAllInfo();
 
-      appointmentIds = [...appointmentIds, ...appointment_ids];
-      medicationIds = [...medicationIds, ...medication_ids];
-      vitalIds = [...vitalIds, ...vital_ids];
-      dietIds = [...dietIds, ...diet_ids];
-      workoutIds = [...workoutIds, ...workout_ids];
+      // Add patient IDs to the Set
+      if (carePlanInfo.patient_ids) {
+        carePlanInfo.patient_ids.forEach(patientId => patientIds.add(patientId));
+      }
+
+      return carePlanInfo;
+    });
+
+    const carePlanInfos = await Promise.all(carePlanPromises);
+
+    carePlanInfos.forEach(({ appointment_ids, medication_ids, vital_ids, diet_ids, workout_ids }) => {
+      appointmentIds.push(...appointment_ids);
+      medicationIds.push(...medication_ids);
+      vitalIds.push(...vital_ids);
+      dietIds.push(...diet_ids);
+      workoutIds.push(...workout_ids);
+    });
+
+    Log.debug("Extracted IDs: ", {
+      appointmentIds,
+      medicationIds,
+      vitalIds,
+      dietIds,
+      workoutIds,
+    });
+
+    const scheduleEvents = await eventService.getMissedByData({
+      appointment_ids: appointmentIds,
+      medication_ids: medicationIds,
+      vital_ids: vitalIds,
+      diet_ids: dietIds,
+      workout_ids: workoutIds,
+    });
+
+    if (!scheduleEvents) {
+      Log.debug("No schedule events found for the provided IDs.");
+      return [[], "No schedule events found"];
     }
 
-    const scheduleEvents =
-      (await eventService.getMissedByDataNew({
-        appointment_ids: appointmentIds,
-        medication_ids: medicationIds,
-        vital_ids: vitalIds,
-        diet_ids: dietIds,
-        workout_ids: workoutIds,
-      })) || [];
+    Log.debug("Retrieved schedule events: ", scheduleEvents);
+    const formattedData = await getFormattedData(scheduleEvents, category);
+    Log.debug("Formatted data: ", formattedData);
 
-    let response = [
-      { ...(await getFormattedData(scheduleEvents, category)) },
+    return [
+      { ...formattedData, patientCount: patientIds.size }, // Include patientCount
       "Missed events fetched successfully",
     ];
-
-    return response;
   } catch (error) {
-    Log.debug("getAllDataForDoctors catch error", error);
+    Log.debug("Error in getAllDataForDoctors: ", error);
     throw error;
   }
 };
 
-// HELPERS
+/**
+ * Current Functionality:
+ * Retrieves Care Plans: Fetches care plans based on user_role_id.
+ * Extracts IDs: Extracts event IDs (appointments, medications, vitals, etc.) from the care plans.
+ * Retrieves Missed Events: Fetches missed events using eventService.getMissedByData based on the extracted IDs.
+ * Formats Data: Calls getFormattedDataNew to format the retrieved events.
+ * Returns Response: Returns the formatted data along with a success message.
+ * Count Information:
+ *    Event Counts: The function does not directly return the count of each event type.  
+ *          It passes the scheduleEvents array to getFormattedDataNew, which likely processes and organizes 
+ *          the events but doesn't inherently calculate counts.  
+ *          The returned data structure from getFormattedDataNew (which you'd need to examine) might contain 
+ *          count information after the formatting is done, but getAllDataForDoctorsCount itself doesn't calculate 
+ *          or return these counts.
+ *    Patient Count: The function does not return the total patient count directly. 
+ *          It collects patientIds within the loop, but it's unclear if this patientIds array represents unique 
+ *          patients or just all patient IDs encountered across care plans.  
+ *          Whether (or not) getFormattedDataNew uses and returns patient counts depends on its implementation.
+ *
+ * @param doctor_id
+ * @param category
+ * @param user_role_id
+ * @returns {Promise<[{medication_ids: {critical: [], non_critical: []}, appointment_ids: {critical: [], non_critical: []}, vital_ids: {critical: [], non_critical: []}, diet_ids: {critical: [], non_critical: []}, workout_ids: {critical: [], non_critical: []}, patientCount: number},string]>}
+ */
 const getAllDataForDoctorsCount = async ({
   doctor_id,
   category = USER_CATEGORY.PROVIDER,
@@ -398,36 +466,43 @@ const getAllDataForDoctorsCount = async ({
     Log.debug("user_role_id", user_role_id);
     const eventService = new EventService();
 
-    const carePlans =
-      (await CarePlanService.getCarePlanByData({
-        user_role_id,
-      })) || [];
+    const carePlans = (await CarePlanService.getCarePlanByData({ user_role_id })) || [];
 
     let appointmentIds = [];
     let medicationIds = [];
     let vitalIds = [];
     let dietIds = [];
     let workoutIds = [];
+    const patientIds = new Set(); // Use a Set to store unique patient IDs
 
-    for (let i = 0; i < carePlans.length; i++) {
-      const carePlan = await CarePlanWrapper(carePlans[i]);
+    // Process each care plan
+    for (const carePlanData of carePlans) {
+      const carePlan = await CarePlanWrapper(carePlanData);
       const {
         appointment_ids = [],
         medication_ids = [],
         vital_ids = [],
         diet_ids = [],
         workout_ids = [],
+        patient_ids = [], // Ensure patient_ids is extracted
       } = await carePlan.getAllInfo();
 
-      appointmentIds = [...appointmentIds, ...appointment_ids];
-      medicationIds = [...medicationIds, ...medication_ids];
-      vitalIds = [...vitalIds, ...vital_ids];
-      dietIds = [...dietIds, ...diet_ids];
-      workoutIds = [...workoutIds, ...workout_ids];
+      // Append IDs to their respective arrays
+      appointmentIds.push(...appointment_ids);
+      medicationIds.push(...medication_ids);
+      vitalIds.push(...vital_ids);
+      dietIds.push(...diet_ids);
+      workoutIds.push(...workout_ids);
+
+      // Add patient IDs to the Set
+      if (patient_ids && patient_ids.length > 0) {
+        patient_ids.forEach(patientId => patientIds.add(patientId));
+      }
     }
 
+    // Fetch missed events
     const scheduleEvents =
-      (await eventService.getMissedByDataNew({
+      (await eventService.getMissedByData({
         appointment_ids: appointmentIds,
         medication_ids: medicationIds,
         vital_ids: vitalIds,
@@ -435,10 +510,17 @@ const getAllDataForDoctorsCount = async ({
         workout_ids: workoutIds,
       })) || [];
 
-    let response = [
-      { ...(await getFormattedDataNew(scheduleEvents, category)) },
+    // Format the data
+    const formattedData = await getFormattedData(scheduleEvents, category);
+    const patientCount = patientIds.size; // Get the number of unique patients
+    console.log("Unique Patient count in getAllDataForDoctorCount: ", patientCount);
+
+    // Prepare the response
+    const response = [
+      { ...formattedData, patientCount }, // Add patientCount to the response
       "Missed events fetched successfully",
     ];
+    console.log("getAllDataForDoctorCount response for the Doctor/Patient: ", response);
 
     return response;
   } catch (error) {
@@ -447,34 +529,28 @@ const getAllDataForDoctorsCount = async ({
   }
 };
 
+
+/**
+ * This function getFormattedData processes an array of event objects, organizing them by type (medications, appointments, vitals, diets, workouts), criticality (critical/non-critical), and date. It also fetches patient data if the category is USER_CATEGORY.PROVIDER. Let's analyze it for optimization and clarity.
+ *
+ * Functionality:
+ * Initialization: Initializes empty objects and arrays to store processed data.
+ * Event Processing: Iterates through the events array, using EventWrapper and getAllInfo to extract relevant information. A switch statement handles different EVENT_TYPEs.
+ * Data Organization: Organizes the extracted data into nested objects based on event ID and date. Also, populates critical_ids and non_critical_ids arrays for each event type.
+ * Patient Data Retrieval: If the category is USER_CATEGORY.PROVIDER, it fetches patient data using patientService.getPatientByData and stores it in the patientData object.
+ * Returns Formatted Data: Returns an object containing the organized event data and patient data.
+ *
+ * @param events
+ * @param category
+ * @returns {Promise<{missed_medications: {}, medication_ids: {critical: *[], non_critical: *[]},
+ *        missed_appointments: {}, appointment_ids: {critical: *[], non_critical: *[]}, missed_vitals: {},
+ *        vital_ids: {critical: *[], non_critical: *[]}, missed_diets: {}, diet_ids: {critical: *[], non_critical: *[]},
+ *        missed_workouts: {}, workout_ids: {critical: *[], non_critical: *[]}, patients: {}}>}
+ */
 const getFormattedData = async (
   events = [],
   category = USER_CATEGORY.DOCTOR
 ) => {
-  /*
-   *
-   * separate schedule_event data into :: appointments | medications | vitals
-   * further separate it into :: critical | non-critical
-   *
-   * ex., for medications....
-   * missed_medications: {
-   *   [event_id]: {
-   *       [date]: [
-   *          {schedule_event_data_1},
-   *          {schedule_event_data_2},
-   *       ]
-   *       ...
-   *   },
-   *   ...
-   * },
-   * medication_ids: {
-   *   critical: [...],
-   *   non_critical: [...]
-   * },
-   * .... // for appointments & vitals
-   *
-   * */
-
   let medications = {};
   let medication_critical_ids = [];
   let medication_non_critical_ids = [];
@@ -495,257 +571,169 @@ const getFormattedData = async (
   let workout_critical_ids = [];
   let workout_non_critical_ids = [];
 
-  let patientIds = [];
+  const patientIds = new Set(); // Use a Set to avoid duplicates
 
-  for (let i = 0; i < events.length; i++) {
-    const event = await EventWrapper(events[i]);
-    const {
-      start_time,
-      end_time,
-      details,
-      details: {
-        medicines,
-        patient_id,
-        medications: { participant_id } = {},
-        vital_templates: { basic_info: { name: vital_name } = {} } = {},
-        participant_one = {},
-        participant_two = {},
-        diets: event_diets = {},
-        workouts: event_workouts = {},
-        workout_id = null,
-        diet_id = null,
-      } = {},
-      critical,
-    } = event.getAllInfo();
+  // Helper function to add event timings
+  const addEventTimings = (eventMap, eventId, date, start_time, end_time) => {
+    if (!eventMap[eventId]) {
+      eventMap[eventId] = { timings: {} };
+    }
+    if (!eventMap[eventId].timings[date]) {
+      eventMap[eventId].timings[date] = [];
+    }
+    eventMap[eventId].timings[date].push({ start_time, end_time });
+  };
 
-    switch (event.getEventType()) {
-      case EVENT_TYPE.MEDICATION_REMINDER:
-        if (category === USER_CATEGORY.HSP) {
-          continue;
-        }
+  // Process events
+  for (const eventData of events) {
+    try {
+      const event = await EventWrapper(eventData);
+      const {
+        start_time,
+        end_time,
+        details: {
+          medicines,
+          patient_id,
+          medications: { participant_id } = {},
+          vital_templates: { basic_info: { name: vital_name } = {} } = {},
+          participant_one = {},
+          participant_two = {},
+          diets: event_diets = {},
+          workouts: event_workouts = {},
+          workout_id = null,
+          diet_id = null,
+        } = {},
+        critical,
+      } = event.getAllInfo();
 
-        if (!(event.getEventId() in medications)) {
+      const eventType = event.getEventType();
+      const eventId = event.getEventId();
+      const eventDate = event.getDate();
+
+      switch (eventType) {
+        case EVENT_TYPE.MEDICATION_REMINDER:
+          if (category !== USER_CATEGORY.HSP) {
+            if (category === USER_CATEGORY.PROVIDER) {
+              patientIds.add(participant_id);
+            }
+            addEventTimings(medications, eventId, eventDate, start_time, end_time);
+            medications[eventId] = {
+              ...medications[eventId],
+              medicines,
+              critical,
+              participant_id,
+            };
+
+            if (critical) {
+              medication_critical_ids.push(eventId);
+            } else {
+              medication_non_critical_ids.push(eventId);
+            }
+          }
+          break;
+
+        case EVENT_TYPE.APPOINTMENT:
           if (category === USER_CATEGORY.PROVIDER) {
-            patientIds.push(participant_id);
+            patientIds.add(participant_one.category === USER_CATEGORY.PATIENT ? participant_one.id : participant_two.id);
           }
-          const timings = {};
-          timings[event.getDate()] = [];
-          timings[event.getDate()].push({ start_time, end_time });
-          medications[event.getEventId()] = {
-            medicines,
-            critical,
-            participant_id,
-            timings,
-          };
-        } else {
-          const { timings } = medications[event.getEventId()] || {};
-          if (!Object.keys(timings).includes(event.getDate())) {
-            timings[event.getDate()] = [];
+          if (!appointments[eventId]) {
+            appointments[eventId] = [];
           }
-          timings[event.getDate()].push({ start_time, end_time });
-          medications[event.getEventId()] = {
-            ...medications[event.getEventId()],
-            timings,
-          };
-        }
+          appointments[eventId].push(event.getAllInfo());
 
-        // critical | non_critical
-        if (event.getCriticalValue()) {
-          /*
-           * to avoid duplicate entry. can also use if condition
-           * if(medication_critical_ids.indexOf(event.getEventId()) === -1) {
-           *     medication_critical_ids.push(event.getEventId());
-           * }
-           * ...
-           * */
-          medication_critical_ids.indexOf(event.getEventId()) === -1
-            ? medication_critical_ids.push(event.getEventId())
-            : null;
-        } else {
-          medication_non_critical_ids.indexOf(event.getEventId()) === -1
-            ? medication_non_critical_ids.push(event.getEventId())
-            : null;
-        }
-        break;
-
-      case EVENT_TYPE.APPOINTMENT:
-        if (category === USER_CATEGORY.PROVIDER) {
-          if (participant_one.category === USER_CATEGORY.PATIENT) {
-            patientIds.push(participant_one.id);
+          if (critical) {
+            appointment_critical_ids.push(eventId);
           } else {
-            patientIds.push(participant_two.id);
+            appointment_non_critical_ids.push(eventId);
           }
-        }
-        if (!(event.getEventId() in appointments)) {
-          appointments[event.getEventId()] = [];
-          appointments[event.getEventId()].push(event.getAllInfo());
-        } else {
-          appointments[event.getEventId()].push(event.getAllInfo());
-        }
+          break;
 
-        // critical | non_critical
-        if (event.getCriticalValue()) {
-          appointment_critical_ids.indexOf(event.getEventId()) === -1
-            ? appointment_critical_ids.push(event.getEventId())
-            : null;
-        } else {
-          appointment_non_critical_ids.indexOf(event.getEventId()) === -1
-            ? appointment_non_critical_ids.push(event.getEventId())
-            : null;
-        }
-        break;
-      case EVENT_TYPE.VITALS:
-        if (category === USER_CATEGORY.PROVIDER) {
-          patientIds.push(patient_id);
-        }
-
-        if (!(event.getEventId() in vitals)) {
-          const timings = {};
-          timings[event.getDate()] = [];
-          timings[event.getDate()].push({ start_time, end_time });
-          vitals[event.getEventId()] = {
+        case EVENT_TYPE.VITALS:
+          if (category === USER_CATEGORY.PROVIDER) {
+            patientIds.add(patient_id);
+          }
+          addEventTimings(vitals, eventId, eventDate, start_time, end_time);
+          vitals[eventId] = {
+            ...vitals[eventId],
             patient_id,
             critical,
             vital_name,
-            timings,
           };
-        } else {
-          const { timings = {} } = vitals[event.getEventId()] || {};
-          if (!Object.keys(timings).includes(event.getDate())) {
-            timings[event.getDate()] = [];
+
+          if (critical) {
+            vital_critical_ids.push(eventId);
+          } else {
+            vital_non_critical_ids.push(eventId);
           }
-          timings[event.getDate()].push({ start_time, end_time });
-          vitals[event.getEventId()] = {
-            ...vitals[event.getEventId()],
-            timings,
-          };
-        }
+          break;
 
-        // if (!(event.getEventId() in vitals)) {
-        //     vitals[event.getEventId()] = [];
-        //     vitals[event.getEventId()].push(event.getAllInfo());
-        // } else {
-        //     vitals[event.getEventId()].push(event.getAllInfo());
-        // }
+        case EVENT_TYPE.DIET:
+          const dietWrapper = await DietWrapper({ id: diet_id });
+          const care_plan_id = await dietWrapper.getCarePlanId();
+          const carePlanWrapper = await CarePlanWrapper(null, care_plan_id);
+          const patientId = await carePlanWrapper.getPatientId();
 
-        // critical | non_critical
-        if (event.getCriticalValue()) {
-          vital_critical_ids.indexOf(event.getEventId()) === -1
-            ? vital_critical_ids.push(event.getEventId())
-            : null;
-        } else {
-          vital_non_critical_ids.indexOf(event.getEventId()) === -1
-            ? vital_non_critical_ids.push(event.getEventId())
-            : null;
-        }
-        break;
-
-      case EVENT_TYPE.DIET:
-        const dietWrapper = await DietWrapper({ id: diet_id });
-        const careplan_id = await dietWrapper.getCarePlanId();
-        const carePlanWrapper = await CarePlanWrapper(null, careplan_id);
-        const patientId = await carePlanWrapper.getPatientId();
-
-        const { basic_info: { name: diet_name = "" } = {} } =
-          event_diets[diet_id] || {};
-        if (!(event.getEventId() in diets)) {
+          const { basic_info: { name: diet_name = "" } = {} } = event_diets[diet_id] || {};
           if (category === USER_CATEGORY.PROVIDER) {
-            patientIds.push(patientId);
+            patientIds.add(patientId);
           }
-          const timings = {};
-          timings[event.getDate()] = [];
-          timings[event.getDate()].push({ start_time, end_time });
-          diets[event.getEventId()] = {
+          addEventTimings(diets, eventId, eventDate, start_time, end_time);
+          diets[eventId] = {
+            ...diets[eventId],
             diet_name,
             participant_id: patientId,
-            timings,
             critical,
           };
-        } else {
-          const { timings } = diets[event.getEventId()] || {};
-          if (!Object.keys(timings).includes(event.getDate())) {
-            timings[event.getDate()] = [];
+
+          if (critical) {
+            diet_critical_ids.push(eventId);
+          } else {
+            diet_non_critical_ids.push(eventId);
           }
-          timings[event.getDate()].push({ start_time, end_time });
-          diets[event.getEventId()] = { ...diets[event.getEventId()], timings };
-        }
+          break;
 
-        // critical | non_critical
-        if (event.getCriticalValue()) {
-          diet_critical_ids.indexOf(event.getEventId()) === -1
-            ? diet_critical_ids.push(event.getEventId())
-            : null;
-        } else {
-          diet_non_critical_ids.indexOf(event.getEventId()) === -1
-            ? diet_non_critical_ids.push(event.getEventId())
-            : null;
-        }
-        break;
+        case EVENT_TYPE.WORKOUT:
+          const workoutWrapper = await WorkoutWrapper({ id: workout_id });
+          const workout_care_plan_id = await workoutWrapper.getCarePlanId();
+          const workoutCarePlanWrapper = await CarePlanWrapper(null, workout_care_plan_id);
+          const workoutPatientId = await workoutCarePlanWrapper.getPatientId();
 
-      case EVENT_TYPE.WORKOUT:
-        const workoutWrapper = await WorkoutWrppaer({ id: workout_id });
-        const workout_careplan_id = await workoutWrapper.getCarePlanId();
-        const workoutCareplanWrapper = await CarePlanWrapper(
-          null,
-          workout_careplan_id
-        );
-        const workoutPatientId = await workoutCareplanWrapper.getPatientId();
-
-        const { basic_info: { name: workout_name = "" } = {} } =
-          event_workouts[workout_id] || {};
-        if (!(event.getEventId() in workouts)) {
+          const { basic_info: { name: workout_name = "" } = {} } = event_workouts[workout_id] || {};
           if (category === USER_CATEGORY.PROVIDER) {
-            patientIds.push(workoutPatientId);
+            patientIds.add(workoutPatientId);
           }
-          const timings = {};
-          timings[event.getDate()] = [];
-          timings[event.getDate()].push({ start_time, end_time });
-          workouts[event.getEventId()] = {
+          addEventTimings(workouts, eventId, eventDate, start_time, end_time);
+          workouts[eventId] = {
+            ...workouts[eventId],
             workout_name,
             participant_id: workoutPatientId,
-            timings,
             critical,
           };
-        } else {
-          const { timings } = workouts[event.getEventId()] || {};
-          if (!Object.keys(timings).includes(event.getDate())) {
-            timings[event.getDate()] = [];
-          }
-          timings[event.getDate()].push({ start_time, end_time });
-          workouts[event.getEventId()] = {
-            ...workouts[event.getEventId()],
-            timings,
-          };
-        }
 
-        // critical | non_critical
-        if (event.getCriticalValue()) {
-          workout_critical_ids.indexOf(event.getEventId()) === -1
-            ? workout_critical_ids.push(event.getEventId())
-            : null;
-        } else {
-          workout_non_critical_ids.indexOf(event.getEventId()) === -1
-            ? workout_non_critical_ids.push(event.getEventId())
-            : null;
-        }
-        break;
+          if (critical) {
+            workout_critical_ids.push(eventId);
+          } else {
+            workout_non_critical_ids.push(eventId);
+          }
+          break;
+      }
+    } catch (error) {
+      console.error(`Error processing event: ${error.message}`);
     }
   }
 
+  // Fetch patient data
   let patientData = {};
+  if (patientIds.size > 0) {
+    const allPatients = await patientService.getPatientByData({
+      id: Array.from(patientIds),
+    });
 
-  if (patientIds.length > 0) {
-    const allPatients =
-      (await patientService.getPatientByData({
-        id: patientIds,
-      })) || [];
-
-    for (let index = 0; index < allPatients.length; index++) {
-      const patient = await PatientWrapper(allPatients[index]);
-      const { user_role_id = null, care_plan_id = null } =
-        await patient.getAllInfo();
-      patientData[patient.getPatientId()] = {
-        ...patient.getBasicInfo(),
+    for (const patient of allPatients) {
+      const patientWrapper = await PatientWrapper(patient);
+      const { user_role_id = null, care_plan_id = null } = await patientWrapper.getAllInfo();
+      patientData[patientWrapper.getPatientId()] = {
+        ...patientWrapper.getBasicInfo(),
         user_role_id,
         care_plan_id,
       };
@@ -753,47 +741,67 @@ const getFormattedData = async (
   }
 
   return {
-    // medications
     missed_medications: medications,
     medication_ids: {
       critical: medication_critical_ids,
       non_critical: medication_non_critical_ids,
     },
-
-    // appointments
     missed_appointments: appointments,
     appointment_ids: {
       critical: appointment_critical_ids,
       non_critical: appointment_non_critical_ids,
     },
-
-    // actions (vitals)
     missed_vitals: vitals,
     vital_ids: {
       critical: vital_critical_ids,
       non_critical: vital_non_critical_ids,
     },
-
-    // diets
     missed_diets: diets,
     diet_ids: {
       critical: diet_critical_ids,
       non_critical: diet_non_critical_ids,
     },
-
-    // actions (vitals)
     missed_workouts: workouts,
     workout_ids: {
       critical: workout_critical_ids,
       non_critical: workout_non_critical_ids,
     },
-
-    // for provider related api call
-    patients: {
-      ...patientData,
-    },
+    patients: patientData,
   };
 };
+
+
+/**
+ *
+ * @param events
+ * @param criticalIds
+ * @param nonCriticalIds
+ * @param eventId
+ * @param eventData
+ * @param date
+ */
+const processEvent = (events, criticalIds, nonCriticalIds, eventId, eventData, date) => {
+  if (!(eventId in events)) {
+    const timings = {};
+    timings[date] = []; // Use the passed date here
+    timings[date].push({ start_time: eventData.start_time, end_time: eventData.end_time });
+    events[eventId] = { ...eventData, timings };
+  } else {
+    const { timings } = events[eventId];
+    if (!Object.keys(timings).includes(date)) { // Use passed-in date
+      timings[date] = []; // Use passed-in date
+    }
+    timings[date].push({ start_time: eventData.start_time, end_time: eventData.end_time });
+    events[eventId] = { ...events[eventId], timings };
+  }
+
+  if (eventData.critical) {
+    criticalIds.indexOf(eventId) === -1 ? criticalIds.push(eventId) : null;
+  } else {
+    nonCriticalIds.indexOf(eventId) === -1 ? nonCriticalIds.push(eventId) : null;
+  }
+};
+
 
 const getFormattedDataWithoutIds = async (
   events = [],
@@ -905,8 +913,8 @@ const getFormattedDataWithoutIds = async (
 
       case EVENT_TYPE.DIET:
         const dietWrapper = await DietWrapper({ id: diet_id });
-        const careplan_id = await dietWrapper.getCarePlanId();
-        const carePlanWrapper = await CarePlanWrapper(null, careplan_id);
+        const care_plan_id = await dietWrapper.getCarePlanId();
+        const carePlanWrapper = await CarePlanWrapper(null, care_plan_id);
         const patientId = await carePlanWrapper.getPatientId();
 
         const { basic_info: { name: diet_name = "" } = {} } =
@@ -936,13 +944,13 @@ const getFormattedDataWithoutIds = async (
         break;
 
       case EVENT_TYPE.WORKOUT:
-        const workoutWrapper = await WorkoutWrppaer({ id: workout_id });
-        const workout_careplan_id = await workoutWrapper.getCarePlanId();
-        const workoutCareplanWrapper = await CarePlanWrapper(
+        const workoutWrapper = await WorkoutWrapper({ id: workout_id });
+        const workout_care_plan_id = await workoutWrapper.getCarePlanId();
+        const workoutCarePlanWrapper = await CarePlanWrapper(
           null,
-          workout_careplan_id
+          workout_care_plan_id
         );
-        const workoutPatientId = await workoutCareplanWrapper.getPatientId();
+        const workoutPatientId = await workoutCarePlanWrapper.getPatientId();
 
         const { basic_info: { name: workout_name = "" } = {} } =
           event_workouts[workout_id] || {};
@@ -1013,6 +1021,14 @@ const getFormattedDataWithoutIds = async (
   };
 };
 
+/**
+ * This is a duplicate with lesser data for the 'getFormattedData' function.
+ * TODO: Check why it is being used in the 'getAllDataForDoctorsCount' function and not the original one?
+ *
+ * @param events
+ * @param category
+ * @returns {Promise<{medication_ids: {critical: *[], non_critical: *[]}, appointment_ids: {critical: *[], non_critical: *[]}, vital_ids: {critical: *[], non_critical: *[]}, diet_ids: {critical: *[], non_critical: *[]}, workout_ids: {critical: *[], non_critical: *[]}}>}
+ */
 const getFormattedDataNew = async (
   events = [],
   category = USER_CATEGORY.DOCTOR

@@ -355,7 +355,7 @@ class CarePlanTemplateController extends Controller {
     }
   };
 
-  // gaurav changes
+  // code implementation after phase 1
 
   searchAllTemplatesForDoctor = async (req, res) => {
     const { raiseSuccess, raiseServerError } = this;
