@@ -734,14 +734,14 @@ class MPatientController extends Controller {
         res,
         200,
         {
-          // added by gaurav start
+          // code implementation after phase 1 start
           //care plan - > care_plans
           care_plans: {
             ...carePlanApiDetails,
           },
           // vital_templates
 
-          // added by gaurav end
+          // code implementation after phase 1 end
           current_care_plan_id: latestCarePlanId,
           care_plan_ids: carePlanIds,
           care_plan_template_ids: [...carePlanTemplateIds],

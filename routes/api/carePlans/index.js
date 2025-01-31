@@ -29,7 +29,7 @@ router.post(
   CarePlanController.createFromTemplate
 );
 
-// GAURAV NEW CHANGES
+// code implementation after phase 1
 router.get(
   "/patient-care-plan-name",
   Authenticated,

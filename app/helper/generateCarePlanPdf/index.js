@@ -999,7 +999,7 @@ function printAppointment({
           reason,
           provider_id,
         } = suggestedInvestigations[each] || {};
-        // gaurav new changes - start
+        // code implementation after phase 1 - start
         if (doc.y + 3 * SHORT_FONT_SIZE > PAGE_END_LIMIT) {
           if (pageCount === 1) {
             // addPageFooter(doc, providerPrescriptionDetails);
@@ -1015,7 +1015,7 @@ function printAppointment({
 
         let start = `${moment(new Date(start_date)).format("DD MMM 'YY")}`;
         // if (start.isSameOrAfter(today)) {
-        // gaurav new changes - start
+        // code implementation after phase 1 - start
         // let organizer_name = ""
         // organizer_name = provider_id == 4 ? "Subarthi Hospital" : `${organizer.name}`
         doc
@@ -1033,7 +1033,7 @@ function printAppointment({
           .fontSize(SHORT_FONT_SIZE)
           .font(HINDI_FONT)
           .text(`${srNumber}.`, serialNoXStart, medicationYLevel)
-          // gaurav new changes - end
+          // code implementation after phase 1 - end
 
           // .text(`${organizer.name}`, drXStart, medicationYLevel, {
           //   width: medicineXStart - drXStart,
@@ -1146,7 +1146,7 @@ function printConsultation({
           provider_id,
         } = suggestedInvestigations[each] || {};
 
-        // gaurav new changes - start
+        // code implementation after phase 1 - start
         if (doc.y + 3 * SHORT_FONT_SIZE > PAGE_END_LIMIT) {
           if (pageCount === 1) {
             addPageFooter(doc, providerPrescriptionDetails);
@@ -1164,7 +1164,7 @@ function printConsultation({
         // let organizer_name = ""
         // organizer_name = provider_id == 4 ? "Subarthi Hospital" : `${organizer.name}`
         // if (start.isSameOrAfter(today)) {
-        // gaurav new changes - start
+        // code implementation after phase 1 - start
         doc
           .fillColor("#212b36")
           .fontSize(SHORT_FONT_SIZE)
@@ -1180,7 +1180,7 @@ function printConsultation({
           .fontSize(SHORT_FONT_SIZE)
           .font(HINDI_FONT)
           .text(`${srNumber}.`, serialNoXStart, medicationYLevel)
-          // gaurav new changes - end
+          // code implementation after phase 1 - end
 
           // .text(`${organizer.name}`, drXStart, medicationYLevel, {
           //   width: medicineXStart - drXStart,
@@ -1738,14 +1738,14 @@ function printCarePlanData({
       medicationYLevel = doc.y + 10;
       let srNumber = 1;
 
-      // Gaurav New Chnages - start
+      // code implementation after phase 1 - start
       let { date: latestUpdateDate, isPrescriptionUpdated } =
         getLatestUpdateDate(medications);
       let isMedicationsUpdate =
         isMedicationUpdatedInExistingMedicine(medications);
       let wantToShow = true;
       if (isPrescriptionUpdated || isMedicationsUpdate) wantToShow = false;
-      // Gaurav New Chnages - end
+      // code implementation after phase 1 - end
 
       for (const [index, medicationData] of medicationsList.entries()) {
         const {
@@ -1776,7 +1776,7 @@ function printCarePlanData({
 
         if (!wantToShow && !medicationStatus) continue;
 
-        // gaurav new changes - start
+        // code implementation after phase 1 - start
         if (doc.y + 3 * SHORT_FONT_SIZE > PAGE_END_LIMIT) {
           if (pageCount === 1) {
             addPageFooter(doc, providerPrescriptionDetails);
@@ -1784,7 +1784,7 @@ function printCarePlanData({
           addPageAndNumber(doc);
           medicationYLevel = DOC_MARGIN;
         }
-        // gaurav new changes - start
+        // code implementation after phase 1 - start
         doc
           .fillColor("#212b36")
           .fontSize(SHORT_FONT_SIZE)
@@ -1821,7 +1821,7 @@ function printCarePlanData({
           .fontSize(SHORT_FONT_SIZE)
           .font(HINDI_FONT)
           .text(`${srNumber}.`, serialNoXStart, medicationYLevel)
-          // gaurav new changes - end
+          // code implementation after phase 1 - end
 
           // .text(`${organizer.name}`, drXStart, medicationYLevel, {
           //   width: medicineXStart - drXStart,
@@ -1912,7 +1912,7 @@ function printCarePlanData({
     // for (let index = 0; index < suggestedInvestigations.length; index++) {
     //   const { type, type_description, radiology_type, start_date, organizer } =
     //     suggestedInvestigations[index] || {};
-    //   // GAURAV NEW CHNAGES
+    //   // code implementation after phase 1
     //   if (APPOINTMENT_TYPE[type].title === "Consultation") continue;
     //   // IF STARTDATE LESSTHAN TODAY THEN WE WILL NOT PRINT THIS
     //   // let today = moment().add(25, "days");
@@ -2033,7 +2033,7 @@ function printConsultationAppointment({
       const { type, type_description, radiology_type, start_date, organizer } =
         suggestedInvestigations[index] || {};
 
-      // GAURAV NEW CHNAGES
+      // code implementation after phase 1
       if (APPOINTMENT_TYPE[type].title !== "Consultation") continue;
       let today = new moment();
       let start = moment(start_date);
@@ -2494,9 +2494,9 @@ function formatMedicationsData(medications, medicines) {
 
     if (end_date) {
       const endDateObj = moment(end_date);
-      // Gaurav New Changes - start
+      // code implementation after phase 1 - start
       endDate = end_date;
-      // Gaurav New Changes - End
+      // code implementation after phase 1 - End
       // endDate = `${endDateObj.get("year")}/${endDateObj.get(
       //   "month"
       // )}/${endDateObj.get("date")}`;

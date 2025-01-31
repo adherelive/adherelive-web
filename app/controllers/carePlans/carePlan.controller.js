@@ -335,7 +335,7 @@ class CarePlanController extends Controller {
               data_to_create
             );
 
-          // TODO: testing gaurav
+          // TODO: testing if the below works
           const eventScheduleDataNew = {
             patient_id: patient_id,
             type: EVENT_TYPE.MEDICATION_REMINDER,
@@ -981,7 +981,7 @@ class CarePlanController extends Controller {
     }
   };
 
-  // GAURAV NEW CHNAGES
+  // code implementation after phase 1
 
   getCarePlanDetails = async (req, res) => {
     const { carePlanId: care_plan_id } = req.params;

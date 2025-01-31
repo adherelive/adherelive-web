@@ -405,7 +405,7 @@ class DoctorWrapper extends BaseDoctor {
     };
   };
 
-  // Gaurav New Changes
+  // code implementation after phase 1
   getAllInfoNew = async () => {
     const { _data } = this;
     const {

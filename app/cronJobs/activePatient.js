@@ -64,7 +64,7 @@ class ActivePatient {
       let carePlanData = {};
       let carePlanIds = [];
       for (let i = 0; i < carePlans.length; i++) {
-        const carePlan = await CarePlanWrapper(careplans[i]);
+        const carePlan = await CarePlanWrapper(carePlans[i]);
         carePlanData[carePlan.getCarePlanId()] = await carePlan.getAllInfo();
         carePlanIds.push(carePlan.getCarePlanId());
       }
@@ -146,7 +146,7 @@ class ActivePatient {
           }
         });
 
-        // if all events are done, then marking the existing careplan as expired or inactive patient
+        // if all events are done, then marking the existing care plan as expired or inactive patient
         if (events.length > 0 && events.length === passedEventCount) {
           await CarePlanService.updateCarePlan(
             {
