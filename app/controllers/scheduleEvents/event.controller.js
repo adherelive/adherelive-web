@@ -602,6 +602,8 @@ class EventController extends Controller {
     try {
       const { userDetails: { userData: { category } = {} } = {} } = req;
       Log.info(`Charts for AUTH getAllMissedEvents - with category: ${category}`);
+      console.log("Request for all events: \n", req);
+      console.log("Response for all events: \n", res);
 
       let response = {};
       let responseMessage = "No event data exists at the moment";
@@ -620,7 +622,7 @@ class EventController extends Controller {
 
       return raiseSuccess(res, 200, { ...response }, responseMessage);
     } catch (error) {
-      Log.debug("getAllMissedEvents 500 error: ", error);
+      Log.debug("Not able to get all the Missed Events (getAllMissedEvents 500 error): ", error);
       return raiseServerError(res);
     }
   };

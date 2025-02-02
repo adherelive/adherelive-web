@@ -313,7 +313,7 @@ class EventController extends Controller {
         );
       }
     } catch (error) {
-      Log.debug("getVitalEvent 500 error", error);
+      Log.debug("getVitalEvent 500 error: ", error);
       return raiseServerError(res);
     }
   };
@@ -403,7 +403,7 @@ class EventController extends Controller {
         "Event completed successfully"
       );
     } catch (error) {
-      Log.debug("markEventComplete 500 error", error);
+      Log.debug("markEventComplete 500 error: ", error);
       return raiseServerError(res);
     }
   };
@@ -423,7 +423,7 @@ class EventController extends Controller {
         id
       );
 
-      Log.debug("1982732178 markEventComplete ---> ", markEventCancelled);
+      Log.debug("markEventComplete ---> markEventCancelled: ", markEventCancelled);
 
       const event = await EventWrapper(null, id);
       const {
@@ -445,7 +445,7 @@ class EventController extends Controller {
         "Event completed successfully"
       );
     } catch (error) {
-      Log.debug("markEventComplete 500 error", error);
+      Log.debug("markEventComplete 500 error: ", error);
       return raiseServerError(res);
     }
   };
@@ -475,7 +475,7 @@ class EventController extends Controller {
 
       return raiseSuccess(res, 200, { ...response }, responseMessage);
     } catch (error) {
-      Log.debug("getAllMissedEvents 500 error", error);
+      Log.debug("getAllMissedEvents 500 error: ", error);
       return raiseServerError(res);
     }
   };
@@ -502,7 +502,7 @@ class EventController extends Controller {
             category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP
               ? userRoleId
               : null,
-          // doctor_id: category === USER_CATEGORY.DOCTOR ? userCategoryId : "", (revious before conflict resolve)
+          // doctor_id: category === USER_CATEGORY.DOCTOR ? userCategoryId : "", (previous before conflict resolve)
         })) || [];
 
       const eventService = new EventService();

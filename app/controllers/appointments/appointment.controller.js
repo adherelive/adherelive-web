@@ -1207,9 +1207,7 @@ class AppointmentController extends Controller {
 
         userIsParticipant =
           participant_one_id === userCategoryId ||
-          participant_two_id === userCategoryId
-            ? true
-            : false;
+          participant_two_id === userCategoryId ? true : false;
       }
 
       if (!appointmentDetails || !userIsParticipant) {
