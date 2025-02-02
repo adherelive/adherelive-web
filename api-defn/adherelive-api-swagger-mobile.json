@@ -39,12 +39,9 @@
   ],
   "securityDefinitions": {
     "bearerAuth": {
-      "type": "https",
+      "type": "apiKey",
       "name": "Authorization",
-      "flow": "implicit",
-      "scheme": "bearer",
-      "in": "body",
-      "bearerFormat": "JWT"
+      "in": "header"
     }
   },
   "consumes": [

@@ -49,6 +49,6 @@ router.post(
   MobileAppointment.update
 );
 
-router.delete("/:id", Authenticate, MobileAppointment.delete);
+router.delete("/:id/delete", Authenticate, MobileAppointment.delete);
 
 module.exports = router;

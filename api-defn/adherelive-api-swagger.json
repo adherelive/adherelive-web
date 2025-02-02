@@ -39,7 +39,7 @@
   ],
   "securityDefinitions": {
     "bearerAuth": {
-      "type": "https",
+      "type": "apiKey",
       "name": "Authorization",
       "in": "header"
     }
@@ -4205,7 +4205,7 @@
             "type": "string"
           },
           {
-            "name": "Access-Control-Allow-Origin",
+            "name": "Acess-Control-Allow-Origin",
             "in": "header",
             "type": "string"
           }
