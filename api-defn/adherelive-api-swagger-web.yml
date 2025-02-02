@@ -1,0 +1,4280 @@
+swagger: '2.0'
+info:
+  version: 3.1.6
+  title: AdhereLive API Documentation
+  description: This is the API documentation for the React & Node server AdhereLive application
+host: adherelivelenia.centralindia.cloudapp.azure.com
+basePath: /
+tags:
+  - name: Patients
+    description: Patient related endpoints
+  - name: Auth
+    description: Authentication endpoints
+  - name: Admin
+    description: Administration related endpoints
+  - name: Common
+    description: Common for the application endpoints
+  - name: Doctors
+    description: Patient related endpoints
+  - name: Provider
+    description: Provider related endpoints
+schemes:
+  - https
+  - http
+securityDefinitions:
+  bearerAuth:
+    type: apiKey
+    name: Authorization
+    in: header
+consumes:
+  - application/json
+produces:
+  - application/json
+paths:
+  /*:
+    get:
+      description: ''
+      responses:
+        '200':
+          description: OK
+  /api/admin/details/{type}:
+    get:
+      description: ''
+      parameters:
+        - name: type
+          in: path
+          required: true
+          type: string
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/admin/terms_and_conditions/{id}:
+    get:
+      description: ''
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/admin/doctors:
+    get:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/admin/doctors/{id}:
+    get:
+      description: ''
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+    post:
+      description: ''
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/admin/providers:
+    get:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+    post:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/admin/doctors/{id}/account:
+    get:
+      description: ''
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+    post:
+      description: ''
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/admin/medicines:
+    get:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+        - name: value
+          in: query
+          type: string
+        - name: offset
+          in: query
+          type: string
+        - name: public_medicine
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+    post:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+        - name: body
+          in: body
+          schema:
+            type: object
+            properties:
+              name:
+                example: any
+              type:
+                example: any
+              generic_name:
+                example: any
+      responses:
+        default:
+          description: ''
+  /api/admin/chats:
+    get:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/admin/providers/graphs:
+    post:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/admin/providers/{id}:
+    post:
+      description: ''
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/admin/details:
+    post:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/admin/algolia/medicine:
+    post:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/admin/medicines/{id}/public:
+    post:
+      description: ''
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/admin/enable-all-features:
+    post:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/admin/medicines/{id}:
+    delete:
+      description: ''
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/admin/chats/delete:
+    delete:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/admin/update/provider-terms:
+    post:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/appointments/details:
+    get:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/appointments/download-doc:
+    post:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        '200':
+          description: OK
+  /api/appointments/{appointment_id}/upload-doc:
+    post:
+      description: ''
+      parameters:
+        - name: appointment_id
+          in: path
+          required: true
+          type: string
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/appointments/{document_id}/delete-doc:
+    delete:
+      description: ''
+      parameters:
+        - name: document_id
+          in: path
+          required: true
+          type: string
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/appointments/missed:
+    get:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/appointments/date:
+    get:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/appointments/{id}:
+    get:
+      description: ''
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/appointments/:
+    post:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+        - name: body
+          in: body
+          schema:
+            type: object
+            properties:
+              start_time:
+                example: any
+              end_time:
+                example: any
+              treatment_id:
+                example: any
+              reason:
+                example: any
+              type:
+                example: any
+              type_description:
+                example: any
+              radiology_type:
+                example: any
+              provider_id:
+                example: any
+              provider_name:
+                example: any
+              critical:
+                example: any
+              participant_one:
+                example: any
+      responses:
+        '422':
+          description: Unprocessable Entity
+  /api/appointments/{carePlanId}/appointments:
+    post:
+      description: ''
+      parameters:
+        - name: carePlanId
+          in: path
+          required: true
+          type: string
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+        - name: body
+          in: body
+          schema:
+            type: object
+            properties:
+              start_time:
+                example: any
+              end_time:
+                example: any
+              treatment_id:
+                example: any
+              reason:
+                example: any
+              type:
+                example: any
+              type_description:
+                example: any
+              provider_id:
+                example: any
+              provider_name:
+                example: any
+              critical:
+                example: any
+              radiology_type:
+                example: any
+      responses:
+        '422':
+          description: Unprocessable Entity
+  /api/appointments/update/{appointment_id}:
+    post:
+      description: ''
+      parameters:
+        - name: appointment_id
+          in: path
+          required: true
+          type: string
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        '422':
+          description: Unprocessable Entity
+  /api/appointments/{appointment_id}/delete:
+    delete:
+      description: ''
+      parameters:
+        - name: appointment_id
+          in: path
+          required: true
+          type: string
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/auth/register/{link}:
+    get:
+      description: ''
+      parameters:
+        - name: link
+          in: path
+          required: true
+          type: string
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/auth/sign-in:
+    post:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+        - name: body
+          in: body
+          schema:
+            type: object
+            properties:
+              email:
+                example: any
+              password:
+                example: any
+      responses:
+        default:
+          description: ''
+  /api/auth/consent:
+    post:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/auth/sign-up:
+    post:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        '422':
+          description: Unprocessable Entity
+  /api/auth/get-basic-info:
+    get:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/auth/upload:
+    post:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+        - name: body
+          in: body
+          schema:
+            type: object
+            properties:
+              type:
+                example: any
+      responses:
+        default:
+          description: ''
+  /api/auth/sign-out:
+    post:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/auth/forgot-password:
+    post:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+        - name: body
+          in: body
+          schema:
+            type: object
+            properties:
+              email:
+                example: any
+      responses:
+        default:
+          description: ''
+  /api/auth/verify/{link}:
+    post:
+      description: ''
+      parameters:
+        - name: link
+          in: path
+          required: true
+          type: string
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/auth/password-reset:
+    post:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/auth-his/sign-in:
+    post:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+        - name: body
+          in: body
+          schema:
+            type: object
+            properties:
+              his_username:
+                example: any
+              his_password:
+                example: any
+      responses:
+        default:
+          description: ''
+  /api/carePlans/profile:
+    post:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        '401':
+          description: Unauthorized
+  /api/carePlans/{carePlanId}:
+    post:
+      description: ''
+      parameters:
+        - name: carePlanId
+          in: path
+          required: true
+          type: string
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+        - name: body
+          in: body
+          schema:
+            type: object
+            properties:
+              medicationsData:
+                example: any
+              appointmentsData:
+                example: any
+              vitalData:
+                example: any
+              dietData:
+                example: any
+              workoutData:
+                example: any
+              treatment_id:
+                example: any
+              condition_id:
+                example: any
+              severity_id:
+                example: any
+              name:
+                example: any
+              createTemplate:
+                example: any
+              clinical_notes:
+                example: any
+              follow_up_advise:
+                example: any
+      responses:
+        '401':
+          description: Unauthorized
+    get:
+      description: ''
+      parameters:
+        - name: carePlanId
+          in: path
+          required: true
+          type: string
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        '401':
+          description: Unauthorized
+  /api/carePlans/patient-care-plan-name:
+    get:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+        - name: patient_id
+          in: query
+          type: string
+        - name: doctor_user_id
+          in: query
+          type: string
+        - name: provider_id
+          in: query
+          type: string
+        - name: provider_type
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/carePlans/patient-care-plan-details/{patientId}:
+    get:
+      description: ''
+      parameters:
+        - name: patientId
+          in: path
+          required: true
+          type: string
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/carePlans/patient-care-plan-details-sec/{patient_id}:
+    get:
+      description: ''
+      parameters:
+        - name: patient_id
+          in: path
+          required: true
+          type: string
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/charts/:
+    get:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+    post:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/doctors/:
+    post:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/doctors/search-mail:
+    get:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/doctors/search-name:
+    get:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/doctors/day-appointments:
+    get:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/doctors/upload:
+    post:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/doctors/details:
+    post:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+        - name: body
+          in: body
+          schema:
+            type: object
+            properties:
+              speciality_id:
+                example: any
+              gender:
+                example: any
+              qualification_details:
+                example: any
+              registration_details:
+                example: any
+              doctor_id:
+                example: any
+      responses:
+        default:
+          description: ''
+  /api/doctors/qualifications:
+    post:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+        - name: body
+          in: body
+          schema:
+            type: object
+            properties:
+              doctor_id:
+                example: any
+      responses:
+        default:
+          description: ''
+  /api/doctors/qualifications/docs:
+    post:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/doctors/medicineModification:
+    post:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/doctors/registrations:
+    post:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/doctors/registrations/docs:
+    post:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/doctors/clinics:
+    post:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+        - name: body
+          in: body
+          schema:
+            type: object
+            properties:
+              clinics:
+                example: any
+              doctor_id:
+                example: any
+      responses:
+        default:
+          description: ''
+  /api/doctors/qualification-documents/{id}:
+    delete:
+      description: ''
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+        - name: body
+          in: body
+          schema:
+            type: object
+            properties:
+              document:
+                example: any
+      responses:
+        default:
+          description: ''
+  /api/doctors/registration-documents/{id}:
+    delete:
+      description: ''
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+        - name: body
+          in: body
+          schema:
+            type: object
+            properties:
+              document:
+                example: any
+      responses:
+        default:
+          description: ''
+  /api/doctors/patients:
+    post:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+        - name: body
+          in: body
+          schema:
+            type: object
+            properties:
+              mobile_number:
+                example: any
+              name:
+                example: any
+              patient_uid:
+                example: any
+              gender:
+                example: any
+              date_of_birth:
+                example: any
+              prefix:
+                example: any
+              comorbidities:
+                example: any
+              allergies:
+                example: any
+              clinical_notes:
+                example: any
+              diagnosis_type:
+                example: any
+              diagnosis_description:
+                example: any
+              treatment_id:
+                example: any
+              severity_id:
+                example: any
+              condition_id:
+                example: any
+              height:
+                example: any
+              weight:
+                example: any
+              symptoms:
+                example: any
+              address:
+                example: any
+      responses:
+        '422':
+          description: Unprocessable Entity
+    get:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/doctors/watchlist/{patient_id}:
+    post:
+      description: ''
+      parameters:
+        - name: patient_id
+          in: path
+          required: true
+          type: string
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+    delete:
+      description: ''
+      parameters:
+        - name: patient_id
+          in: path
+          required: true
+          type: string
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/doctors/consultations:
+    post:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+    delete:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+        - name: body
+          in: body
+          schema:
+            type: object
+            properties:
+              id:
+                example: any
+      responses:
+        default:
+          description: ''
+    get:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/doctors/updatePatient_careplan/{careplan_id}:
+    post:
+      description: ''
+      parameters:
+        - name: careplan_id
+          in: path
+          required: true
+          type: string
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+        - name: body
+          in: body
+          schema:
+            type: object
+            properties:
+              name:
+                example: any
+              patient_uid:
+                example: any
+              gender:
+                example: any
+              date_of_birth:
+                example: any
+              comorbidities:
+                example: any
+              allergies:
+                example: any
+              clinical_notes:
+                example: any
+              follow_up_advise:
+                example: any
+              diagnosis_type:
+                example: any
+              diagnosis_description:
+                example: any
+              treatment_id:
+                example: any
+              severity_id:
+                example: any
+              condition_id:
+                example: any
+              height:
+                example: any
+              weight:
+                example: any
+              symptoms:
+                example: any
+              address:
+                example: any
+      responses:
+        '422':
+          description: Unprocessable Entity
+  /api/doctors/{id}/update:
+    post:
+      description: ''
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/doctors/consultations/default:
+    get:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/doctors/treatment/templates:
+    get:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+        - name: keyword
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/doctors/{doctor_id}:
+    get:
+      description: ''
+      parameters:
+        - name: doctor_id
+          in: path
+          required: true
+          type: string
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/doctors/{doctor_id}/deactivate:
+    delete:
+      description: ''
+      parameters:
+        - name: doctor_id
+          in: path
+          required: true
+          type: string
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/doctors/activate/{user_id}:
+    post:
+      description: ''
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          type: string
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/events/missed:
+    get:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/events/details:
+    get:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/events/count:
+    get:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/events/missed/{patient_id}:
+    get:
+      description: ''
+      parameters:
+        - name: patient_id
+          in: path
+          required: true
+          type: string
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/events/{patient_id}:
+    get:
+      description: ''
+      parameters:
+        - name: patient_id
+          in: path
+          required: true
+          type: string
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/events/{id}/complete:
+    post:
+      description: ''
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/events/{id}/vitals/response:
+    post:
+      description: ''
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+    delete:
+      description: ''
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/medications/{id}:
+    get:
+      description: ''
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        '401':
+          description: Unauthorized
+    post:
+      description: ''
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        '401':
+          description: Unauthorized
+    delete:
+      description: ''
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        '401':
+          description: Unauthorized
+  /api/medications/{patient_id}/details:
+    get:
+      description: ''
+      parameters:
+        - name: patient_id
+          in: path
+          required: true
+          type: string
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/medications/treatment/{patient_id}/{carePlanId}:
+    post:
+      description: ''
+      parameters:
+        - name: patient_id
+          in: path
+          required: true
+          type: string
+        - name: carePlanId
+          in: path
+          required: true
+          type: string
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        '401':
+          description: Unauthorized
+  /api/medications/{id}/timeline:
+    get:
+      description: ''
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        '401':
+          description: Unauthorized
+  /api/medicines/:
+    get:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+        - name: value
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+    post:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+        - name: body
+          in: body
+          schema:
+            type: object
+            properties:
+              name:
+                example: any
+              type:
+                example: any
+              generic_name:
+                example: any
+      responses:
+        default:
+          description: ''
+  /api/patients/:
+    post:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+        - name: body
+          in: body
+          schema:
+            type: object
+            properties:
+              mobile_number:
+                example: any
+              name:
+                example: any
+              patient_uid:
+                example: any
+              gender:
+                example: any
+              date_of_birth:
+                example: any
+              prefix:
+                example: any
+              comorbidities:
+                example: any
+              allergies:
+                example: any
+              clinical_notes:
+                example: any
+              height:
+                example: any
+              weight:
+                example: any
+              symptoms:
+                example: any
+              address:
+                example: any
+      responses:
+        default:
+          description: ''
+    get:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/patients/create-patient:
+    post:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+        - name: body
+          in: body
+          schema:
+            type: object
+            properties:
+              pid:
+                example: any
+              profile_pic:
+                example: any
+              name:
+                example: any
+              email:
+                example: any
+      responses:
+        default:
+          description: ''
+  /api/patients/{id}/consents/request:
+    post:
+      description: ''
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/patients/consents/payments:
+    post:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/patients/consents/verify:
+    post:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/patients/pagination:
+    get:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/patients/searchpatient:
+    get:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/patients/servicesubplan:
+    get:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+        - name: provider_id
+          in: query
+          type: string
+        - name: patient_id
+          in: query
+          type: string
+        - name: provider_type
+          in: query
+          type: string
+        - name: doctor_id
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/patients/{patient_id}:
+    get:
+      description: ''
+      parameters:
+        - name: patient_id
+          in: path
+          required: true
+          type: string
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/patients/{id}/appointments:
+    get:
+      description: ''
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/patients/{id}/medications:
+    get:
+      description: ''
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/patients/{id}/careplan-details:
+    get:
+      description: ''
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/patients/{id}/careplan-details-sec-doc:
+    get:
+      description: ''
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/patients/{patient_id}/symptoms:
+    get:
+      description: ''
+      parameters:
+        - name: patient_id
+          in: path
+          required: true
+          type: string
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/patients/{careplan_id}/vitals:
+    get:
+      description: ''
+      parameters:
+        - name: careplan_id
+          in: path
+          required: true
+          type: string
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/patients/{patient_id}/reports:
+    get:
+      description: ''
+      parameters:
+        - name: patient_id
+          in: path
+          required: true
+          type: string
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/patients/{patient_id}/parts/symptoms:
+    get:
+      description: ''
+      parameters:
+        - name: patient_id
+          in: path
+          required: true
+          type: string
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/patients/add-careplan-for-patient/{patient_id}:
+    post:
+      description: ''
+      parameters:
+        - name: patient_id
+          in: path
+          required: true
+          type: string
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+        - name: body
+          in: body
+          schema:
+            type: object
+            properties:
+              clinical_notes:
+                example: any
+              follow_up_advise:
+                example: any
+              diagnosis_type:
+                example: any
+              diagnosis_description:
+                example: any
+              treatment_id:
+                example: any
+              severity_id:
+                example: any
+              condition_id:
+                example: any
+              symptoms:
+                example: any
+      responses:
+        default:
+          description: ''
+  /api/patients/generate_prescription/{care_plan_id}:
+    get:
+      description: ''
+      parameters:
+        - name: care_plan_id
+          in: path
+          required: true
+          type: string
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        '200':
+          description: OK
+  /api/patients/servicesubplan/{patient_id}:
+    get:
+      description: ''
+      parameters:
+        - name: patient_id
+          in: path
+          required: true
+          type: string
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/patients/servicesubplan/doctor/{patient_id}:
+    get:
+      description: ''
+      parameters:
+        - name: patient_id
+          in: path
+          required: true
+          type: string
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/twilio/getTwilioVideoAccessToken:
+    get:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/twilio/getTwilioChatAccessToken:
+    get:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+        - name: device
+          in: query
+          type: string
+        - name: identity
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/twilio/getConnectedParticipants/{roomId}:
+    get:
+      description: ''
+      parameters:
+        - name: roomId
+          in: path
+          required: true
+          type: string
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/care-plan-templates/:
+    get:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+        - name: keyword
+          in: query
+          type: string
+      responses:
+        '401':
+          description: Unauthorized
+    post:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        '401':
+          description: Unauthorized
+  /api/care-plan-templates/search:
+    get:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+        - name: keyword
+          in: query
+          type: string
+      responses:
+        '401':
+          description: Unauthorized
+  /api/care-plan-templates/duplicate/{id}:
+    post:
+      description: ''
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        '401':
+          description: Unauthorized
+  /api/care-plan-templates/{id}:
+    post:
+      description: ''
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        '401':
+          description: Unauthorized
+    delete:
+      description: ''
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        '401':
+          description: Unauthorized
+  /api/colleges/:
+    get:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+        - name: value
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/conditions/:
+    get:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+        - name: value
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/councils/:
+    get:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+        - name: value
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/degrees/:
+    get:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+        - name: value
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/severity/:
+    get:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+        - name: value
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/specialities/:
+    get:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/treatments/:
+    get:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+        - name: condition_id
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/accounts/:
+    post:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+    get:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/accounts/{id}:
+    post:
+      description: ''
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+    delete:
+      description: ''
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/adhoc/purge/sqs:
+    post:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/adhoc/populate-user-roles:
+    post:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/adhoc/test-api:
+    post:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/adhoc/patient/update-timings:
+    post:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/adhoc/permissions:
+    post:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/adhoc/careplan/channels:
+    post:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/agora/video/token/{id}:
+    get:
+      description: ''
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+        - name: Acess-Control-Allow-Origin
+          in: header
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/agora/missed:
+    post:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/agora/start:
+    post:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/cdss/:
+    post:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+        - name: body
+          in: body
+          schema:
+            type: object
+            properties:
+              dia:
+                example: any
+      responses:
+        '201':
+          description: Created
+        '400':
+          description: Bad Request
+    get:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+        - name: dia
+          in: query
+          type: string
+      responses:
+        '200':
+          description: OK
+        '500':
+          description: Internal Server Error
+  /api/cdss/get:
+    post:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+        - name: body
+          in: body
+          schema:
+            type: object
+            properties:
+              length:
+                example: any
+              map((symptom:
+                example: any
+      responses:
+        '200':
+          description: OK
+        '500':
+          description: Internal Server Error
+  /api/diet/:
+    get:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+    post:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/diet/all-diets:
+    get:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/diet/{id}/timeline:
+    get:
+      description: ''
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/diet/details/patients/{patient_id}:
+    get:
+      description: ''
+      parameters:
+        - name: patient_id
+          in: path
+          required: true
+          type: string
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/diet/{id}:
+    get:
+      description: ''
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+    post:
+      description: ''
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+    delete:
+      description: ''
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/diet/update-calories:
+    post:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/exercises/:
+    get:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+        - name: name
+          in: query
+          type: string
+      responses:
+        '401':
+          description: Unauthorized
+    post:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        '401':
+          description: Unauthorized
+  /api/exercises/upload:
+    post:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        '401':
+          description: Unauthorized
+  /api/exercises/{id}:
+    post:
+      description: ''
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        '401':
+          description: Unauthorized
+  /api/favourites/:
+    post:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+    get:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+    delete:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/favourites/{id}:
+    delete:
+      description: ''
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/features/toggleChatMessagePermission/{patient_id}:
+    post:
+      description: ''
+      parameters:
+        - name: patient_id
+          in: path
+          required: true
+          type: string
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/features/toggleVideoCallPermission/{patient_id}:
+    post:
+      description: ''
+      parameters:
+        - name: patient_id
+          in: path
+          required: true
+          type: string
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/features/:
+    get:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/flashcard/:
+    post:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+        - name: body
+          in: body
+          schema:
+            type: object
+            properties:
+              data:
+                example: any
+      responses:
+        default:
+          description: ''
+  /api/flashcard/{patient_id}:
+    get:
+      description: ''
+      parameters:
+        - name: patient_id
+          in: path
+          required: true
+          type: string
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/flashcard/activity/{tx_activity_id}:
+    get:
+      description: ''
+      parameters:
+        - name: tx_activity_id
+          in: path
+          required: true
+          type: string
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/flashcard/{id}/update:
+    put:
+      description: ''
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/food-items/:
+    post:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+    get:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/food-items/{id}:
+    post:
+      description: ''
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/his/:
+    post:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+        - name: body
+          in: body
+          schema:
+            type: object
+            properties:
+              his_password:
+                example: any
+              his_client_secret:
+                example: any
+      responses:
+        default:
+          description: ''
+    get:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/his/sign-in:
+    post:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+        - name: body
+          in: body
+          schema:
+            type: object
+            properties:
+              his_username:
+                example: any
+              his_password:
+                example: any
+      responses:
+        default:
+          description: ''
+  /api/his/{id}:
+    get:
+      description: ''
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+    put:
+      description: ''
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+        - name: body
+          in: body
+          schema:
+            type: object
+            properties:
+              his_password:
+                example: any
+      responses:
+        default:
+          description: ''
+    delete:
+      description: ''
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/meal/templates/:
+    post:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/meal/templates/{id}:
+    post:
+      description: ''
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+    delete:
+      description: ''
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/notes/:
+    post:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/notes/{patient_id}:
+    get:
+      description: ''
+      parameters:
+        - name: patient_id
+          in: path
+          required: true
+          type: string
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/notifications/:
+    post:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/notifications/chat-notification:
+    post:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/portions/:
+    get:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/prescription/{care_plan_id}:
+    get:
+      description: ''
+      parameters:
+        - name: care_plan_id
+          in: path
+          required: true
+          type: string
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        '200':
+          description: OK
+  /api/prescription/details/{care_plan_id}:
+    get:
+      description: ''
+      parameters:
+        - name: care_plan_id
+          in: path
+          required: true
+          type: string
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        '200':
+          description: OK
+  /api/providers/doctors:
+    get:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/providers/:
+    get:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/providers/appointments-count:
+    get:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/providers/day-appointments:
+    get:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/providers/patients:
+    get:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/providers/mail-password:
+    post:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/reassignaudit/:
+    get:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/reports/:
+    post:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/reports/upload/{patient_id}:
+    post:
+      description: ''
+      parameters:
+        - name: patient_id
+          in: path
+          required: true
+          type: string
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/reports/{id}:
+    post:
+      description: ''
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/reports/{document_id}/delete:
+    delete:
+      description: ''
+      parameters:
+        - name: document_id
+          in: path
+          required: true
+          type: string
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/serviceoffering/:
+    post:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+        - name: body
+          in: body
+          schema:
+            type: object
+            properties:
+              doctor_id:
+                example: any
+      responses:
+        default:
+          description: ''
+    get:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/serviceoffering/{id}:
+    put:
+      description: ''
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+    get:
+      description: ''
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/serviceoffering/user:
+    get:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/serviceoffering/provider/{doctor_id}:
+    get:
+      description: ''
+      parameters:
+        - name: doctor_id
+          in: path
+          required: true
+          type: string
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/serviceoffering/doctor:
+    get:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+        - name: provider_id
+          in: query
+          type: string
+        - name: provider_type
+          in: query
+          type: string
+        - name: doctor_id
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/servicesubscription/:
+    post:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+        - name: body
+          in: body
+          schema:
+            type: object
+            properties:
+              doctor_id:
+                example: any
+      responses:
+        default:
+          description: ''
+    get:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/servicesubscription/{id}:
+    put:
+      description: ''
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+    get:
+      description: ''
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/servicesubscription/user:
+    get:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/servicesubscription/provider/{doctor_id}:
+    get:
+      description: ''
+      parameters:
+        - name: doctor_id
+          in: path
+          required: true
+          type: string
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/servicesubscription/doctor:
+    get:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+        - name: provider_id
+          in: query
+          type: string
+        - name: provider_type
+          in: query
+          type: string
+        - name: doctor_id
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/servicesubscriptionusermapping/:
+    post:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+        - name: body
+          in: body
+          schema:
+            type: object
+            properties:
+              patient_id:
+                example: any
+              service_subscription_plan_id:
+                example: any
+              durations:
+                example: any
+              service_charge:
+                example: any
+      responses:
+        default:
+          description: ''
+  /api/servicesubscriptionusermapping/{id}/update:
+    put:
+      description: ''
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+        - name: body
+          in: body
+          schema:
+            type: object
+            properties:
+              startDate:
+                example: any
+              durations:
+                example: any
+      responses:
+        default:
+          description: ''
+  /api/servicesubscriptionusermapping/{patient_id}:
+    get:
+      description: ''
+      parameters:
+        - name: patient_id
+          in: path
+          required: true
+          type: string
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/servicesubscriptionusermapping/all/{patient_id}:
+    get:
+      description: ''
+      parameters:
+        - name: patient_id
+          in: path
+          required: true
+          type: string
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/servicesubtx/:
+    post:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+        - name: body
+          in: body
+          schema:
+            type: object
+            properties:
+              doctor_id:
+                example: any
+      responses:
+        default:
+          description: ''
+    get:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/servicesubtx/activity:
+    post:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+        - name: body
+          in: body
+          schema:
+            type: object
+            properties:
+              id:
+                example: any
+              service_subscription_id:
+                example: any
+              service_plan_id:
+                example: any
+      responses:
+        default:
+          description: ''
+  /api/servicesubtx/{id}:
+    put:
+      description: ''
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/serviceusermapping/:
+    post:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+        - name: body
+          in: body
+          schema:
+            type: object
+            properties:
+              durations:
+                example: any
+              patient_id:
+                example: any
+              service_charge:
+                example: any
+      responses:
+        default:
+          description: ''
+  /api/serviceusermapping/{id}/update:
+    put:
+      description: ''
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/serviceusermapping/{patient_id}:
+    get:
+      description: ''
+      parameters:
+        - name: patient_id
+          in: path
+          required: true
+          type: string
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/symptoms/:
+    post:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/transactions/:
+    get:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/txactivities/:
+    get:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/txactivities/tasks:
+    get:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/txactivities/{id}:
+    put:
+      description: ''
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/txactivities/reassign/{id}:
+    put:
+      description: ''
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/user-roles/switch-role-id:
+    post:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/user-roles/:
+    get:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/vitals/:
+    get:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+    post:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/vitals/details:
+    get:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/vitals/missed:
+    get:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/vitals/{id}/timeline:
+    get:
+      description: ''
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/vitals/{id}:
+    post:
+      description: ''
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+    delete:
+      description: ''
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        default:
+          description: ''
+  /api/workout/patients:
+    get:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+        - name: patient_id
+          in: query
+          type: string
+      responses:
+        '401':
+          description: Unauthorized
+  /api/workout/details:
+    get:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        '401':
+          description: Unauthorized
+  /api/workout/{id}/timeline:
+    get:
+      description: ''
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        '401':
+          description: Unauthorized
+  /api/workout/{id}:
+    get:
+      description: ''
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        '401':
+          description: Unauthorized
+    post:
+      description: ''
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        '401':
+          description: Unauthorized
+    delete:
+      description: ''
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        '401':
+          description: Unauthorized
+  /api/workout/update-calories:
+    post:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+        - name: id
+          in: query
+          type: string
+        - name: total_calories
+          in: query
+          type: string
+      responses:
+        '401':
+          description: Unauthorized
+  /api/workout/:
+    post:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        '401':
+          description: Unauthorized
+  /api/workout/response/:
+    get:
+      description: ''
+      parameters:
+        - name: authorization
+          in: header
+          type: string
+        - name: m
+          in: query
+          type: string
+      responses:
+        '401':
+          description: Unauthorized
+definitions:
+  Patient:
+    type: object
+    properties:
+      name:
+        type: string
+        example: John Doe
+      age:
+        type: number
+        example: 30
+      medical_history:
+        type: array
+        example: []
+        items: {}
+    required:
+      - name
+      - age

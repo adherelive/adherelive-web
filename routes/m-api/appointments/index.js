@@ -43,7 +43,7 @@ router.post(
 );
 
 router.post(
-  "/:id",
+  "/:id/update",
   Authenticate,
   validator.validateAppointmentFormData,
   MobileAppointment.update

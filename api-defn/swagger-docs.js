@@ -3,7 +3,7 @@ const swaggerAutogen = require('swagger-autogen')();
 
 const doc = {
     info: {
-        version: '3.1.5',
+        version: '3.1.6',
         title: 'AdhereLive API Documentation',
         description: 'This is the API documentation for the React & Node server AdhereLive application',
     },
@@ -44,10 +44,7 @@ const doc = {
         bearerAuth: {
             type: 'https',
             name: 'Authorization',
-            flow: 'implicit',
-            scheme: 'bearer',
-            in: 'body',
-            bearerFormat: "JWT",
+            in: 'header',
         },
     },
     definitions: {

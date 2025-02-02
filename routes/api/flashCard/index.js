@@ -32,7 +32,7 @@ router.get(
   FlashCard.getFlashCardDetailsByActivityId
 );
 
-router.put("/:id", Authenticate, FlashCard.update);
+router.put("/:id/update", Authenticate, FlashCard.update);
 
 // router.get(
 //     "/user",

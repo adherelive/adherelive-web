@@ -22,7 +22,7 @@ router.post(
 router.get("/", Authenticate, AccountsController.getUserAccountDetails);
 
 router.get(
-  "/:user_id",
+  "/:user_id/payments",
   Authenticate,
   AccountsController.getUserAvailablePaymentMethods
 );
