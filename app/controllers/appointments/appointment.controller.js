@@ -62,11 +62,23 @@ const FILE_NAME = "WEB APPOINTMENT CONTROLLER";
 
 const Logger = new Log(FILE_NAME);
 
+/**
+ *
+ *
+ * @class AppointmentController
+ */
 class AppointmentController extends Controller {
   constructor() {
     super();
   }
 
+  /**
+   *
+   *
+   * @param req
+   * @param res
+   * @returns {Promise<*>}
+   */
   create = async (req, res) => {
     const { raiseClientError } = this;
     try {
@@ -243,6 +255,13 @@ class AppointmentController extends Controller {
     }
   };
 
+  /**
+   *
+   *
+   * @param req
+   * @param res
+   * @returns {Promise<*>}
+   */
   createCarePlanAppointment = async (req, res) => {
     const { raiseClientError } = this;
     try {
@@ -440,6 +459,13 @@ class AppointmentController extends Controller {
     }
   };
 
+  /**
+   *
+   *
+   * @param req
+   * @param res
+   * @returns {Promise<*>}
+   */
   update = async (req, res) => {
     const { raiseSuccess, raiseServerError } = this;
     try {
@@ -642,6 +668,13 @@ class AppointmentController extends Controller {
     }
   };
 
+  /**
+   *
+   *
+   * @param req
+   * @param res
+   * @returns {Promise<*>}
+   */
   getDayAppointmentByDate = async (req, res) => {
     const { raiseSuccess, raiseServerError } = this;
     try {
@@ -684,6 +717,13 @@ class AppointmentController extends Controller {
     }
   };
 
+  /**
+   *
+   *
+   * @param req
+   * @param res
+   * @returns {Promise<*>}
+   */
   getAppointmentForPatient = async (req, res) => {
     const { raiseSuccess, raiseServerError } = this;
     try {
@@ -738,6 +778,13 @@ class AppointmentController extends Controller {
     }
   };
 
+  /**
+   *
+   *
+   * @param req
+   * @param res
+   * @returns {Promise<*>}
+   */
   delete = async (req, res) => {
     const { raiseSuccess, raiseServerError } = this;
     try {
@@ -767,6 +814,13 @@ class AppointmentController extends Controller {
     }
   };
 
+  /**
+   *
+   *
+   * @param req
+   * @param res
+   * @returns {Promise<*>}
+   */
   getAppointmentDetails = async (req, res) => {
     const { raiseSuccess, raiseServerError } = this;
     try {

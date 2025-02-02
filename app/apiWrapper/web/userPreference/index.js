@@ -1,6 +1,11 @@
 import BaseUserPreference from "../../../services/userPreferences";
 import userPreferenceService from "../../../services/userPreferences/userPreference.service";
 
+/**
+ *
+ *
+ * @class UserPreferenceWrapper
+ */
 class UserPreferenceWrapper extends BaseUserPreference {
   constructor(data) {
     super(data);
@@ -37,6 +42,13 @@ class UserPreferenceWrapper extends BaseUserPreference {
   };
 }
 
+/**
+ *
+ *
+ * @param data
+ * @param user_id
+ * @returns {Promise<UserPreferenceWrapper>}
+ */
 export default async (data = null, user_id = null) => {
   if (data) {
     return new UserPreferenceWrapper(data);
