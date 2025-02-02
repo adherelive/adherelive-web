@@ -45,13 +45,20 @@ import MedicationWrapper from "../../apiWrapper/web/medicationReminder";
 
 import Logger from "../../../libs/log";
 
-const Log = new Logger("WEB > CAREPLAN > CONTROLLER");
+const Log = new Logger("WEB > CARE PLAN > CONTROLLER");
 
 class CarePlanController extends Controller {
   constructor() {
     super();
   }
 
+  /**
+   * This is the function that creates the Care Plan from the templates provided for the Doctors
+   *
+   * @param req
+   * @param res
+   * @returns {Promise<*>}
+   */
   createFromTemplate = async (req, res) => {
     try {
       const { carePlanId: care_plan_id } = req.params;
@@ -884,6 +891,13 @@ class CarePlanController extends Controller {
     }
   };
 
+  /**
+   * This function adds a secondary Doctor profile to an existing Patient care plan
+   *
+   * @param req
+   * @param res
+   * @returns {Promise<*>}
+   */
   addProfile = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
@@ -907,15 +921,19 @@ class CarePlanController extends Controller {
 
         if (createdMapping) {
           const carePlan = await CarePlanWrapper(null, care_plan_id);
-          // const addUserToChat = await twilioService.addMember(
-          //   carePlan.getChannelId(),
-          //   user_role_id
-          // );
+          /*const addUserToChat = await twilioService.addMember(
+            carePlan.getChannelId(),
+            user_role_id
+          );*/
 
-          if (!carePlan.getChannelId().includes("group"))
+          // Issue: Adding a newly created additional Doctor carePlan.getChannelId() is returning null or undefined.
+          // To resolve this issue, ensuring that carePlan.getChannelId() is not null or undefined
+          // before calling includes on it. Added a null check before this line.
+          const channelId = carePlan.getChannelId();
+          if (channelId && !channelId.includes("group"))
             await carePlanService.updateCarePlan(
-              { channel_id: carePlan.getChannelId() + care_plan_id + "_group" },
-              carePlanId
+                { channel_id: channelId + care_plan_id + "_group" },
+                carePlanId
             );
 
           let carePlanAppointmentIds = await getCarePlanAppointmentIds(
@@ -976,7 +994,7 @@ class CarePlanController extends Controller {
         );
       }
     } catch (error) {
-      Log.debug("addProfile 500 ERROR", error);
+      Log.debug("Unable to add the Doctor's profile to this Patient: ", error);
       return raiseServerError(res);
     }
   };
