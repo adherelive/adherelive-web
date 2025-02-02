@@ -25,6 +25,13 @@ class GraphController extends Controller {
     super();
   }
 
+  /**
+   * Generates and sends the data required to create the Charts on the main Dashboard of the Doctor.
+   *
+   * @param req
+   * @param res
+   * @returns {Promise<*>}
+   */
   getAllGraphs = async (req, res) => {
     const { raiseServerError, raiseClientError, raiseSuccess } = this;
     try {
@@ -72,39 +79,50 @@ class GraphController extends Controller {
         );
       }
 
-      // const userPreferenceData = await userPreferenceService.getPreferenceByData({user_id: userId});
-      // Logger.debug("9182391283 userPreferenceData ---> ", userPreferenceData);
-      // // const userPreference = await UserPreferenceWrapper(userPreferenceData);
+      /**
+       * TODO: Check why the following has been commented out?
+      const userPreferenceData = await userPreferenceService.getPreferenceByData({user_id: userId});
+      Logger.debug("userPreferenceData in getAllGraphs: ", userPreferenceData);
+      // const userPreference = await UserPreferenceWrapper(userPreferenceData);
 
-      // // const charts = userPreference.getChartDetails();
+      // const charts = userPreference.getChartDetails();
 
-      // let chartData = {};
+      let chartData = {};
 
-      // let  CHART_DETAILS = {
-      //     [NO_MEDICATION]: {
-      //       type: "no_medication",
-      //       name: "Missed Medication",
-      //     },
-      //     [NO_APPOINTMENT]: {
-      //       type: "no_appointment",
-      //       name: "Missed Appointment",
-      //     },
-      //     [NO_ACTION]: {
-      //       type: "no_action",
-      //       name: "Missed Action",
-      //     }
-      //   };
+      let  CHART_DETAILS = {
+          [NO_MEDICATION]: {
+            type: "no_medication",
+            name: "Missed Medication",
+          },
+          [NO_APPOINTMENT]: {
+            type: "no_appointment",
+            name: "Missed Appointment",
+          },
+          [NO_ACTION]: {
+            type: "no_action",
+            name: "Missed Action",
+          }
+        };
 
-      // charts.forEach(chart => {
-      //     Logger.debug("324564322456432678786745643",CHART_DETAILS[chart]);
-      //    chartData[chart] = CHART_DETAILS[chart];
-      // });
+      charts.forEach(chart => {
+          Logger.debug("Chart details for each chart: ",CHART_DETAILS[chart]);
+         chartData[chart] = CHART_DETAILS[chart];
+      });
+       */
     } catch (error) {
-      Logger.debug("getAllGraphs 500 error", error);
+      Logger.debug("Could not display the chart -> get all graphs 500 error: ", error);
       return raiseServerError(res);
     }
   };
 
+  /**
+   * Function to add the selected graph on the dashboard page.
+   * These are 5 pre-defined graphs, which are for displaying the Vitals
+   *
+   * @param req
+   * @param res
+   * @returns {Promise<*>}
+   */
   addGraphType = async (req, res) => {
     const { raiseServerError, raiseSuccess } = this;
     try {
@@ -148,13 +166,14 @@ class GraphController extends Controller {
         },
       };
 
-      // Logger.debug("userPreference.getChartDetails().includes(id) ", userPreference.getChartDetails().includes(id));
+      /*
+      Logger.debug("userPreference.getChartDetails().includes(id) ", userPreference.getChartDetails().includes(id));
 
-      // userPreference.getChartDetails().forEach(id => {
-      //     if(chart_ids.includes(id)) {
-      //         return this.raiseClientError(res, 422, {}, "Chart Type already added");
-      //     }
-      // });
+      userPreference.getChartDetails().forEach(id => {
+          if(chart_ids.includes(id)) {
+              return this.raiseClientError(res, 422, {}, "Chart Type already added");
+          }
+      });*/
 
       const updatedChart = [
         // ...userPreference.getChartDetails(),
@@ -201,11 +220,18 @@ class GraphController extends Controller {
         "Charts added successfully"
       );
     } catch (error) {
-      Logger.debug("Add Graphs 500 error ---> ", error);
+      Logger.debug("Adding Graphs not working correctly: ", error);
       return raiseServerError(res);
     }
   };
 
+  /**
+   * Graphs for the Provider, which can have multiple Doctors
+   *
+   * @param req
+   * @param res
+   * @returns {Promise<*>}
+   */
   updateProviderGraph = async (req, res) => {
     const { raiseServerError, raiseClientError, raiseSuccess } = this;
     try {
@@ -253,7 +279,7 @@ class GraphController extends Controller {
         "Provider preferences updated successfully"
       );
     } catch (error) {
-      Logger.debug("updateProviderGraph 500 error ---> ", error);
+      Logger.debug("Updated Provider Graph not working: ", error);
       return raiseServerError(res);
     }
   };
