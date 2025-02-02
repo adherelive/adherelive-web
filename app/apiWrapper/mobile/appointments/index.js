@@ -19,7 +19,7 @@ class MAppointmentWrapper extends BaseAppointment {
     super(data);
   }
 
-  // Gauarav changes
+  // code implementation after phase 1
   getOrganizerDetailsFromId = async (organizer_id, organizer_type) => {
     let organizer = {};
 

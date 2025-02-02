@@ -20,7 +20,7 @@ class AgoraController extends Controller {
   }
 
   generateVideoAccessToken = async (req, res) => {
-    res.header("Acess-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Origin", "*");
     try {
       const {
         params: { id = null } = {},
