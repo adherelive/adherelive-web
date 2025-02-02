@@ -63,7 +63,7 @@ router.post(
 );
 
 router.post(
-  "/:carePlanId",
+  "/:carePlanId/appointments",
   Authenticate,
   validator.validateAppointmentFormData,
   Appointment.createCarePlanAppointment
@@ -76,6 +76,6 @@ router.post(
   Appointment.update
 );
 
-router.delete("/:appointment_id", Authenticate, Appointment.delete);
+router.delete("/:appointment_id/delete", Authenticate, Appointment.delete);
 
 module.exports = router;

@@ -60,7 +60,7 @@ class PushNotification {
       const req = https.request(options, function (res) {
         res.on("data", function (data) {
           console.log("sendPushNotification response template: ", template);
-          console.log("sendPushNotification Data: ", data);
+          console.log("Push Notification sendPushNotification Data: ", data);
         });
 
         res.on("error", function (err) {
@@ -76,7 +76,7 @@ class PushNotification {
       req.write(JSON.stringify(template));
       req.end();
     } catch (err) {
-      Log.debug("sendPushNotification 500 error: ", err);
+      Log.debug("OneSignal sendPushNotification 500 error: ", err);
     }
   };
 }

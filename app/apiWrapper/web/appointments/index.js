@@ -27,7 +27,7 @@ class AppointmentWrapper extends BaseAppointment {
     }
     return organizer;
   };
-  // Gauarav changes
+  // code implementation after phase 1
   getOrganizerDetailsFromId = async (organizer_id, organizer_type) => {
     let organizer = {};
 

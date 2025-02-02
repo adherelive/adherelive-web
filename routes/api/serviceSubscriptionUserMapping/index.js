@@ -7,11 +7,13 @@ import { isDoctor } from "../../commonmiddlewares/doctor";
 const router = express.Router();
 
 router.post("/", Authenticate, isDoctor, ServiceSubscriptionUserMapping.create);
+
 router.put(
-  "/:id",
+  "/:id/update",
   Authenticate,
   ServiceSubscriptionUserMapping.updateServiceSubscriptionUserMapping
 );
+
 router.get(
   "/:patient_id",
   Authenticate,

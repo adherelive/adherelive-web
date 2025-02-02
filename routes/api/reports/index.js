@@ -47,7 +47,7 @@ router.post(
   }
 );
 
-router.delete("/:document_id", Authenticated, async (req, res, next) => {
+router.delete("/:document_id/delete", Authenticated, async (req, res, next) => {
     try {
       await Report.deleteReportDocument(req, res);
     } catch (error) {

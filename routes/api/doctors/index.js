@@ -152,7 +152,7 @@ router.delete(
 // );
 
 router.post(
-  "/:id",
+  "/:id/update",
   Authenticate,
   // validator.validateAddDoctorData,
   DoctorController.updateDoctorDetails
@@ -193,7 +193,7 @@ router.get(
 
 router.get("/:doctor_id", Authenticate, DoctorController.getAllDoctorDetails);
 
-router.delete("/:doctor_id", Authenticate, DoctorController.deactivateDoctor);
+router.delete("/:doctor_id/deactivate", Authenticate, DoctorController.deactivateDoctor);
 
 router.post(
   "/activate/:user_id",

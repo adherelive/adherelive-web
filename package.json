@@ -22,8 +22,6 @@
   "homepage": "https://github.com/adherelive/adherelive-web#readme",
   "scripts": {
     "start": "node --trace-deprecation --max-old-space-size=4096 ./node_modules/.bin/babel-node ./server/bin/www",
-    "build": "npm run build --prefix client",
-    "client": "npm run start --prefix client",
     "server": "node --max-old-space-size=4096 --exec ./node_modules/.bin/babel-node ./server/bin/www",
     "postinstall": "",
     "migrate": "./node_modules/.bin/babel-node ./node_modules/.bin/sequelize db:migrate",

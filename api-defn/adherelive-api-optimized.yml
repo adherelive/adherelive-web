@@ -18,6 +18,104 @@ tags:
     description: Patient related endpoints
   - name: Provider
     description: Provider related endpoints
+  - name: General
+    description: Operations related to General
+  - name: Appointments
+    description: Operations related to Appointments
+  - name: Auth-his
+    description: Operations related to Auth-his
+  - name: Careplans
+    description: Operations related to Careplans
+  - name: Charts
+    description: Operations related to Charts
+  - name: Events
+    description: Operations related to Events
+  - name: Medications
+    description: Operations related to Medications
+  - name: Medicines
+    description: Operations related to Medicines
+  - name: Twilio
+    description: Operations related to Twilio
+  - name: Care-plan-templates
+    description: Operations related to Care-plan-templates
+  - name: Colleges
+    description: Operations related to Colleges
+  - name: Conditions
+    description: Operations related to Conditions
+  - name: Councils
+    description: Operations related to Councils
+  - name: Degrees
+    description: Operations related to Degrees
+  - name: Severity
+    description: Operations related to Severity
+  - name: Specialities
+    description: Operations related to Specialities
+  - name: Treatments
+    description: Operations related to Treatments
+  - name: Accounts
+    description: Operations related to Accounts
+  - name: Adhoc
+    description: Operations related to Adhoc
+  - name: Agora
+    description: Operations related to Agora
+  - name: Cdss
+    description: Operations related to Cdss
+  - name: Diet
+    description: Operations related to Diet
+  - name: Exercises
+    description: Operations related to Exercises
+  - name: Favourites
+    description: Operations related to Favourites
+  - name: Features
+    description: Operations related to Features
+  - name: Flashcard
+    description: Operations related to Flashcard
+  - name: Food-items
+    description: Operations related to Food-items
+  - name: His
+    description: Operations related to His
+  - name: Meal
+    description: Operations related to Meal
+  - name: Notes
+    description: Operations related to Notes
+  - name: Notifications
+    description: Operations related to Notifications
+  - name: Portions
+    description: Operations related to Portions
+  - name: Prescription
+    description: Operations related to Prescription
+  - name: Providers
+    description: Operations related to Providers
+  - name: Reassignaudit
+    description: Operations related to Reassignaudit
+  - name: Reports
+    description: Operations related to Reports
+  - name: Serviceoffering
+    description: Operations related to Serviceoffering
+  - name: Servicesubscription
+    description: Operations related to Servicesubscription
+  - name: Servicesubscriptionusermapping
+    description: Operations related to Servicesubscriptionusermapping
+  - name: Servicesubtx
+    description: Operations related to Servicesubtx
+  - name: Serviceusermapping
+    description: Operations related to Serviceusermapping
+  - name: Symptoms
+    description: Operations related to Symptoms
+  - name: Transactions
+    description: Operations related to Transactions
+  - name: Txactivities
+    description: Operations related to Txactivities
+  - name: User-roles
+    description: Operations related to User-roles
+  - name: Vitals
+    description: Operations related to Vitals
+  - name: Workout
+    description: Operations related to Workout
+  - name: Care-plans
+    description: Operations related to Care-plans
+  - name: Sync
+    description: Operations related to Sync
 schemes:
   - https
   - http
@@ -33,13 +131,16 @@ produces:
 paths:
   /*:
     get:
-      description: ''
+      description: GET operation for /*
       responses:
         '200':
           description: OK
+      operationId: get_*
+      tags:
+        - General
   /api/admin/details/{type}:
     get:
-      description: ''
+      description: GET operation for /api/admin/details/{type}
       parameters:
         - name: type
           in: path
@@ -54,9 +155,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: get_api_admin_details_{type}
+      tags:
+        - Admin
   /api/admin/terms_and_conditions/{id}:
     get:
-      description: ''
+      description: GET operation for /api/admin/terms_and_conditions/{id}
       parameters:
         - name: id
           in: path
@@ -71,9 +175,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: get_api_admin_terms_and_conditions_{id}
+      tags:
+        - Admin
   /api/admin/doctors:
     get:
-      description: ''
+      description: GET operation for /api/admin/doctors
       parameters:
         - name: authorization
           in: header
@@ -84,9 +191,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: get_api_admin_doctors
+      tags:
+        - Admin
   /api/admin/doctors/{id}:
     get:
-      description: ''
+      description: GET operation for /api/admin/doctors/{id}
       parameters:
         - name: id
           in: path
@@ -101,8 +211,11 @@ paths:
       responses:
         default:
           description: ''
+      operationId: get_api_admin_doctors_{id}
+      tags:
+        - Admin
     post:
-      description: ''
+      description: POST operation for /api/admin/doctors/{id}
       parameters:
         - name: id
           in: path
@@ -117,9 +230,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: post_api_admin_doctors_{id}
+      tags:
+        - Admin
   /api/admin/providers:
     get:
-      description: ''
+      description: GET operation for /api/admin/providers
       parameters:
         - name: authorization
           in: header
@@ -130,8 +246,11 @@ paths:
       responses:
         default:
           description: ''
+      operationId: get_api_admin_providers
+      tags:
+        - Admin
     post:
-      description: ''
+      description: POST operation for /api/admin/providers
       parameters:
         - name: authorization
           in: header
@@ -142,9 +261,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: post_api_admin_providers
+      tags:
+        - Admin
   /api/admin/doctors/{id}/account:
     get:
-      description: ''
+      description: GET operation for /api/admin/doctors/{id}/account
       parameters:
         - name: id
           in: path
@@ -159,8 +281,11 @@ paths:
       responses:
         default:
           description: ''
+      operationId: get_api_admin_doctors_{id}_account
+      tags:
+        - Admin
     post:
-      description: ''
+      description: POST operation for /api/admin/doctors/{id}/account
       parameters:
         - name: id
           in: path
@@ -175,9 +300,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: post_api_admin_doctors_{id}_account
+      tags:
+        - Admin
   /api/admin/medicines:
     get:
-      description: ''
+      description: GET operation for /api/admin/medicines
       parameters:
         - name: authorization
           in: header
@@ -197,8 +325,11 @@ paths:
       responses:
         default:
           description: ''
+      operationId: get_api_admin_medicines
+      tags:
+        - Admin
     post:
-      description: ''
+      description: POST operation for /api/admin/medicines
       parameters:
         - name: authorization
           in: header
@@ -220,9 +351,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: post_api_admin_medicines
+      tags:
+        - Admin
   /api/admin/chats:
     get:
-      description: ''
+      description: GET operation for /api/admin/chats
       parameters:
         - name: authorization
           in: header
@@ -233,9 +367,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: get_api_admin_chats
+      tags:
+        - Admin
   /api/admin/providers/graphs:
     post:
-      description: ''
+      description: POST operation for /api/admin/providers/graphs
       parameters:
         - name: authorization
           in: header
@@ -246,9 +383,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: post_api_admin_providers_graphs
+      tags:
+        - Admin
   /api/admin/providers/{id}:
     post:
-      description: ''
+      description: POST operation for /api/admin/providers/{id}
       parameters:
         - name: id
           in: path
@@ -263,9 +403,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: post_api_admin_providers_{id}
+      tags:
+        - Admin
   /api/admin/details:
     post:
-      description: ''
+      description: POST operation for /api/admin/details
       parameters:
         - name: authorization
           in: header
@@ -276,9 +419,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: post_api_admin_details
+      tags:
+        - Admin
   /api/admin/algolia/medicine:
     post:
-      description: ''
+      description: POST operation for /api/admin/algolia/medicine
       parameters:
         - name: authorization
           in: header
@@ -289,9 +435,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: post_api_admin_algolia_medicine
+      tags:
+        - Admin
   /api/admin/medicines/{id}/public:
     post:
-      description: ''
+      description: POST operation for /api/admin/medicines/{id}/public
       parameters:
         - name: id
           in: path
@@ -306,9 +455,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: post_api_admin_medicines_{id}_public
+      tags:
+        - Admin
   /api/admin/enable-all-features:
     post:
-      description: ''
+      description: POST operation for /api/admin/enable-all-features
       parameters:
         - name: authorization
           in: header
@@ -319,9 +471,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: post_api_admin_enable-all-features
+      tags:
+        - Admin
   /api/admin/medicines/{id}:
     delete:
-      description: ''
+      description: DELETE operation for /api/admin/medicines/{id}
       parameters:
         - name: id
           in: path
@@ -336,9 +491,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: delete_api_admin_medicines_{id}
+      tags:
+        - Admin
   /api/admin/chats/delete:
     delete:
-      description: ''
+      description: DELETE operation for /api/admin/chats/delete
       parameters:
         - name: authorization
           in: header
@@ -349,9 +507,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: delete_api_admin_chats_delete
+      tags:
+        - Admin
   /api/admin/update/provider-terms:
     post:
-      description: ''
+      description: POST operation for /api/admin/update/provider-terms
       parameters:
         - name: authorization
           in: header
@@ -362,9 +523,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: post_api_admin_update_provider-terms
+      tags:
+        - Admin
   /api/appointments/details:
     get:
-      description: ''
+      description: GET operation for /api/appointments/details
       parameters:
         - name: authorization
           in: header
@@ -375,9 +539,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: get_api_appointments_details
+      tags:
+        - Appointments
   /api/appointments/download-doc:
     post:
-      description: ''
+      description: POST operation for /api/appointments/download-doc
       parameters:
         - name: authorization
           in: header
@@ -388,9 +555,12 @@ paths:
       responses:
         '200':
           description: OK
+      operationId: post_api_appointments_download-doc
+      tags:
+        - Appointments
   /api/appointments/{appointment_id}/upload-doc:
     post:
-      description: ''
+      description: POST operation for /api/appointments/{appointment_id}/upload-doc
       parameters:
         - name: appointment_id
           in: path
@@ -405,9 +575,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: post_api_appointments_{appointment_id}_upload-doc
+      tags:
+        - Appointments
   /api/appointments/{document_id}/delete-doc:
     delete:
-      description: ''
+      description: DELETE operation for /api/appointments/{document_id}/delete-doc
       parameters:
         - name: document_id
           in: path
@@ -422,9 +595,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: delete_api_appointments_{document_id}_delete-doc
+      tags:
+        - Appointments
   /api/appointments/missed:
     get:
-      description: ''
+      description: GET operation for /api/appointments/missed
       parameters:
         - name: authorization
           in: header
@@ -435,9 +611,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: get_api_appointments_missed
+      tags:
+        - Appointments
   /api/appointments/date:
     get:
-      description: ''
+      description: GET operation for /api/appointments/date
       parameters:
         - name: authorization
           in: header
@@ -448,9 +627,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: get_api_appointments_date
+      tags:
+        - Appointments
   /api/appointments/{id}:
     get:
-      description: ''
+      description: GET operation for /api/appointments/{id}
       parameters:
         - name: id
           in: path
@@ -465,9 +647,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: get_api_appointments_{id}
+      tags:
+        - Appointments
   /api/appointments/:
     post:
-      description: ''
+      description: POST operation for /api/appointments/
       parameters:
         - name: authorization
           in: header
@@ -505,9 +690,12 @@ paths:
       responses:
         '422':
           description: Unprocessable Entity
+      operationId: post_api_appointments
+      tags:
+        - Appointments
   /api/appointments/{carePlanId}/appointments:
     post:
-      description: ''
+      description: POST operation for /api/appointments/{carePlanId}/appointments
       parameters:
         - name: carePlanId
           in: path
@@ -547,9 +735,12 @@ paths:
       responses:
         '422':
           description: Unprocessable Entity
+      operationId: post_api_appointments_{carePlanId}_appointments
+      tags:
+        - Appointments
   /api/appointments/update/{appointment_id}:
     post:
-      description: ''
+      description: POST operation for /api/appointments/update/{appointment_id}
       parameters:
         - name: appointment_id
           in: path
@@ -564,9 +755,12 @@ paths:
       responses:
         '422':
           description: Unprocessable Entity
+      operationId: post_api_appointments_update_{appointment_id}
+      tags:
+        - Appointments
   /api/appointments/{appointment_id}/delete:
     delete:
-      description: ''
+      description: DELETE operation for /api/appointments/{appointment_id}/delete
       parameters:
         - name: appointment_id
           in: path
@@ -581,9 +775,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: delete_api_appointments_{appointment_id}_delete
+      tags:
+        - Appointments
   /api/auth/register/{link}:
     get:
-      description: ''
+      description: GET operation for /api/auth/register/{link}
       parameters:
         - name: link
           in: path
@@ -598,9 +795,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: get_api_auth_register_{link}
+      tags:
+        - Auth
   /api/auth/sign-in:
     post:
-      description: ''
+      description: POST operation for /api/auth/sign-in
       parameters:
         - name: authorization
           in: header
@@ -620,9 +820,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: post_api_auth_sign-in
+      tags:
+        - Auth
   /api/auth/consent:
     post:
-      description: ''
+      description: POST operation for /api/auth/consent
       parameters:
         - name: authorization
           in: header
@@ -633,9 +836,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: post_api_auth_consent
+      tags:
+        - Auth
   /api/auth/sign-up:
     post:
-      description: ''
+      description: POST operation for /api/auth/sign-up
       parameters:
         - name: authorization
           in: header
@@ -646,9 +852,12 @@ paths:
       responses:
         '422':
           description: Unprocessable Entity
+      operationId: post_api_auth_sign-up
+      tags:
+        - Auth
   /api/auth/get-basic-info:
     get:
-      description: ''
+      description: GET operation for /api/auth/get-basic-info
       parameters:
         - name: authorization
           in: header
@@ -659,9 +868,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: get_api_auth_get-basic-info
+      tags:
+        - Auth
   /api/auth/upload:
     post:
-      description: ''
+      description: POST operation for /api/auth/upload
       parameters:
         - name: authorization
           in: header
@@ -679,9 +891,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: post_api_auth_upload
+      tags:
+        - Auth
   /api/auth/sign-out:
     post:
-      description: ''
+      description: POST operation for /api/auth/sign-out
       parameters:
         - name: authorization
           in: header
@@ -692,9 +907,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: post_api_auth_sign-out
+      tags:
+        - Auth
   /api/auth/forgot-password:
     post:
-      description: ''
+      description: POST operation for /api/auth/forgot-password
       parameters:
         - name: authorization
           in: header
@@ -712,9 +930,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: post_api_auth_forgot-password
+      tags:
+        - Auth
   /api/auth/verify/{link}:
     post:
-      description: ''
+      description: POST operation for /api/auth/verify/{link}
       parameters:
         - name: link
           in: path
@@ -729,9 +950,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: post_api_auth_verify_{link}
+      tags:
+        - Auth
   /api/auth/password-reset:
     post:
-      description: ''
+      description: POST operation for /api/auth/password-reset
       parameters:
         - name: authorization
           in: header
@@ -742,9 +966,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: post_api_auth_password-reset
+      tags:
+        - Auth
   /api/auth-his/sign-in:
     post:
-      description: ''
+      description: POST operation for /api/auth-his/sign-in
       parameters:
         - name: authorization
           in: header
@@ -764,9 +991,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: post_api_auth-his_sign-in
+      tags:
+        - Auth-his
   /api/carePlans/profile:
     post:
-      description: ''
+      description: POST operation for /api/carePlans/profile
       parameters:
         - name: authorization
           in: header
@@ -777,9 +1007,12 @@ paths:
       responses:
         '401':
           description: Unauthorized
+      operationId: post_api_carePlans_profile
+      tags:
+        - Careplans
   /api/carePlans/{carePlanId}:
     post:
-      description: ''
+      description: POST operation for /api/carePlans/{carePlanId}
       parameters:
         - name: carePlanId
           in: path
@@ -823,8 +1056,11 @@ paths:
       responses:
         '401':
           description: Unauthorized
+      operationId: post_api_carePlans_{carePlanId}
+      tags:
+        - Careplans
     get:
-      description: ''
+      description: GET operation for /api/carePlans/{carePlanId}
       parameters:
         - name: carePlanId
           in: path
@@ -839,9 +1075,12 @@ paths:
       responses:
         '401':
           description: Unauthorized
+      operationId: get_api_carePlans_{carePlanId}
+      tags:
+        - Careplans
   /api/carePlans/patient-care-plan-name:
     get:
-      description: ''
+      description: GET operation for /api/carePlans/patient-care-plan-name
       parameters:
         - name: authorization
           in: header
@@ -864,9 +1103,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: get_api_carePlans_patient-care-plan-name
+      tags:
+        - Careplans
   /api/carePlans/patient-care-plan-details/{patientId}:
     get:
-      description: ''
+      description: GET operation for /api/carePlans/patient-care-plan-details/{patientId}
       parameters:
         - name: patientId
           in: path
@@ -881,9 +1123,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: get_api_carePlans_patient-care-plan-details_{patientId}
+      tags:
+        - Careplans
   /api/carePlans/patient-care-plan-details-sec/{patient_id}:
     get:
-      description: ''
+      description: GET operation for /api/carePlans/patient-care-plan-details-sec/{patient_id}
       parameters:
         - name: patient_id
           in: path
@@ -898,9 +1143,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: get_api_carePlans_patient-care-plan-details-sec_{patient_id}
+      tags:
+        - Careplans
   /api/charts/:
     get:
-      description: ''
+      description: GET operation for /api/charts/
       parameters:
         - name: authorization
           in: header
@@ -911,8 +1159,11 @@ paths:
       responses:
         default:
           description: ''
+      operationId: get_api_charts
+      tags:
+        - Charts
     post:
-      description: ''
+      description: POST operation for /api/charts/
       parameters:
         - name: authorization
           in: header
@@ -923,9 +1174,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: post_api_charts
+      tags:
+        - Charts
   /api/doctors/:
     post:
-      description: ''
+      description: POST operation for /api/doctors/
       parameters:
         - name: authorization
           in: header
@@ -936,9 +1190,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: post_api_doctors
+      tags:
+        - Doctors
   /api/doctors/search-mail:
     get:
-      description: ''
+      description: GET operation for /api/doctors/search-mail
       parameters:
         - name: authorization
           in: header
@@ -949,9 +1206,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: get_api_doctors_search-mail
+      tags:
+        - Doctors
   /api/doctors/search-name:
     get:
-      description: ''
+      description: GET operation for /api/doctors/search-name
       parameters:
         - name: authorization
           in: header
@@ -962,9 +1222,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: get_api_doctors_search-name
+      tags:
+        - Doctors
   /api/doctors/day-appointments:
     get:
-      description: ''
+      description: GET operation for /api/doctors/day-appointments
       parameters:
         - name: authorization
           in: header
@@ -975,9 +1238,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: get_api_doctors_day-appointments
+      tags:
+        - Doctors
   /api/doctors/upload:
     post:
-      description: ''
+      description: POST operation for /api/doctors/upload
       parameters:
         - name: authorization
           in: header
@@ -988,9 +1254,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: post_api_doctors_upload
+      tags:
+        - Doctors
   /api/doctors/details:
     post:
-      description: ''
+      description: POST operation for /api/doctors/details
       parameters:
         - name: authorization
           in: header
@@ -1016,9 +1285,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: post_api_doctors_details
+      tags:
+        - Doctors
   /api/doctors/qualifications:
     post:
-      description: ''
+      description: POST operation for /api/doctors/qualifications
       parameters:
         - name: authorization
           in: header
@@ -1036,9 +1308,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: post_api_doctors_qualifications
+      tags:
+        - Doctors
   /api/doctors/qualifications/docs:
     post:
-      description: ''
+      description: POST operation for /api/doctors/qualifications/docs
       parameters:
         - name: authorization
           in: header
@@ -1049,9 +1324,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: post_api_doctors_qualifications_docs
+      tags:
+        - Doctors
   /api/doctors/medicineModification:
     post:
-      description: ''
+      description: POST operation for /api/doctors/medicineModification
       parameters:
         - name: authorization
           in: header
@@ -1062,9 +1340,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: post_api_doctors_medicineModification
+      tags:
+        - Doctors
   /api/doctors/registrations:
     post:
-      description: ''
+      description: POST operation for /api/doctors/registrations
       parameters:
         - name: authorization
           in: header
@@ -1075,9 +1356,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: post_api_doctors_registrations
+      tags:
+        - Doctors
   /api/doctors/registrations/docs:
     post:
-      description: ''
+      description: POST operation for /api/doctors/registrations/docs
       parameters:
         - name: authorization
           in: header
@@ -1088,9 +1372,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: post_api_doctors_registrations_docs
+      tags:
+        - Doctors
   /api/doctors/clinics:
     post:
-      description: ''
+      description: POST operation for /api/doctors/clinics
       parameters:
         - name: authorization
           in: header
@@ -1110,9 +1397,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: post_api_doctors_clinics
+      tags:
+        - Doctors
   /api/doctors/qualification-documents/{id}:
     delete:
-      description: ''
+      description: DELETE operation for /api/doctors/qualification-documents/{id}
       parameters:
         - name: id
           in: path
@@ -1134,9 +1424,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: delete_api_doctors_qualification-documents_{id}
+      tags:
+        - Doctors
   /api/doctors/registration-documents/{id}:
     delete:
-      description: ''
+      description: DELETE operation for /api/doctors/registration-documents/{id}
       parameters:
         - name: id
           in: path
@@ -1158,9 +1451,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: delete_api_doctors_registration-documents_{id}
+      tags:
+        - Doctors
   /api/doctors/patients:
     post:
-      description: ''
+      description: POST operation for /api/doctors/patients
       parameters:
         - name: authorization
           in: header
@@ -1212,8 +1508,11 @@ paths:
       responses:
         '422':
           description: Unprocessable Entity
+      operationId: post_api_doctors_patients
+      tags:
+        - Doctors
     get:
-      description: ''
+      description: GET operation for /api/doctors/patients
       parameters:
         - name: authorization
           in: header
@@ -1224,9 +1523,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: get_api_doctors_patients
+      tags:
+        - Doctors
   /api/doctors/watchlist/{patient_id}:
     post:
-      description: ''
+      description: POST operation for /api/doctors/watchlist/{patient_id}
       parameters:
         - name: patient_id
           in: path
@@ -1241,8 +1543,11 @@ paths:
       responses:
         default:
           description: ''
+      operationId: post_api_doctors_watchlist_{patient_id}
+      tags:
+        - Doctors
     delete:
-      description: ''
+      description: DELETE operation for /api/doctors/watchlist/{patient_id}
       parameters:
         - name: patient_id
           in: path
@@ -1257,9 +1562,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: delete_api_doctors_watchlist_{patient_id}
+      tags:
+        - Doctors
   /api/doctors/consultations:
     post:
-      description: ''
+      description: POST operation for /api/doctors/consultations
       parameters:
         - name: authorization
           in: header
@@ -1270,8 +1578,11 @@ paths:
       responses:
         default:
           description: ''
+      operationId: post_api_doctors_consultations
+      tags:
+        - Doctors
     delete:
-      description: ''
+      description: DELETE operation for /api/doctors/consultations
       parameters:
         - name: authorization
           in: header
@@ -1289,8 +1600,11 @@ paths:
       responses:
         default:
           description: ''
+      operationId: delete_api_doctors_consultations
+      tags:
+        - Doctors
     get:
-      description: ''
+      description: GET operation for /api/doctors/consultations
       parameters:
         - name: authorization
           in: header
@@ -1301,9 +1615,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: get_api_doctors_consultations
+      tags:
+        - Doctors
   /api/doctors/updatePatient_careplan/{careplan_id}:
     post:
-      description: ''
+      description: POST operation for /api/doctors/updatePatient_careplan/{careplan_id}
       parameters:
         - name: careplan_id
           in: path
@@ -1357,9 +1674,12 @@ paths:
       responses:
         '422':
           description: Unprocessable Entity
+      operationId: post_api_doctors_updatePatient_careplan_{careplan_id}
+      tags:
+        - Doctors
   /api/doctors/{id}/update:
     post:
-      description: ''
+      description: POST operation for /api/doctors/{id}/update
       parameters:
         - name: id
           in: path
@@ -1374,9 +1694,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: post_api_doctors_{id}_update
+      tags:
+        - Doctors
   /api/doctors/consultations/default:
     get:
-      description: ''
+      description: GET operation for /api/doctors/consultations/default
       parameters:
         - name: authorization
           in: header
@@ -1387,9 +1710,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: get_api_doctors_consultations_default
+      tags:
+        - Doctors
   /api/doctors/treatment/templates:
     get:
-      description: ''
+      description: GET operation for /api/doctors/treatment/templates
       parameters:
         - name: authorization
           in: header
@@ -1403,9 +1729,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: get_api_doctors_treatment_templates
+      tags:
+        - Doctors
   /api/doctors/{doctor_id}:
     get:
-      description: ''
+      description: GET operation for /api/doctors/{doctor_id}
       parameters:
         - name: doctor_id
           in: path
@@ -1420,9 +1749,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: get_api_doctors_{doctor_id}
+      tags:
+        - Doctors
   /api/doctors/{doctor_id}/deactivate:
     delete:
-      description: ''
+      description: DELETE operation for /api/doctors/{doctor_id}/deactivate
       parameters:
         - name: doctor_id
           in: path
@@ -1437,9 +1769,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: delete_api_doctors_{doctor_id}_deactivate
+      tags:
+        - Doctors
   /api/doctors/activate/{user_id}:
     post:
-      description: ''
+      description: POST operation for /api/doctors/activate/{user_id}
       parameters:
         - name: user_id
           in: path
@@ -1454,9 +1789,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: post_api_doctors_activate_{user_id}
+      tags:
+        - Doctors
   /api/events/missed:
     get:
-      description: ''
+      description: GET operation for /api/events/missed
       parameters:
         - name: authorization
           in: header
@@ -1467,9 +1805,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: get_api_events_missed
+      tags:
+        - Events
   /api/events/details:
     get:
-      description: ''
+      description: GET operation for /api/events/details
       parameters:
         - name: authorization
           in: header
@@ -1480,9 +1821,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: get_api_events_details
+      tags:
+        - Events
   /api/events/count:
     get:
-      description: ''
+      description: GET operation for /api/events/count
       parameters:
         - name: authorization
           in: header
@@ -1493,9 +1837,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: get_api_events_count
+      tags:
+        - Events
   /api/events/missed/{patient_id}:
     get:
-      description: ''
+      description: GET operation for /api/events/missed/{patient_id}
       parameters:
         - name: patient_id
           in: path
@@ -1510,9 +1857,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: get_api_events_missed_{patient_id}
+      tags:
+        - Events
   /api/events/{patient_id}:
     get:
-      description: ''
+      description: GET operation for /api/events/{patient_id}
       parameters:
         - name: patient_id
           in: path
@@ -1527,9 +1877,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: get_api_events_{patient_id}
+      tags:
+        - Events
   /api/events/{id}/complete:
     post:
-      description: ''
+      description: POST operation for /api/events/{id}/complete
       parameters:
         - name: id
           in: path
@@ -1544,9 +1897,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: post_api_events_{id}_complete
+      tags:
+        - Events
   /api/events/{id}/vitals/response:
     post:
-      description: ''
+      description: POST operation for /api/events/{id}/vitals/response
       parameters:
         - name: id
           in: path
@@ -1561,8 +1917,11 @@ paths:
       responses:
         default:
           description: ''
+      operationId: post_api_events_{id}_vitals_response
+      tags:
+        - Events
     delete:
-      description: ''
+      description: DELETE operation for /api/events/{id}/vitals/response
       parameters:
         - name: id
           in: path
@@ -1577,9 +1936,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: delete_api_events_{id}_vitals_response
+      tags:
+        - Events
   /api/medications/{id}:
     get:
-      description: ''
+      description: GET operation for /api/medications/{id}
       parameters:
         - name: id
           in: path
@@ -1594,8 +1956,11 @@ paths:
       responses:
         '401':
           description: Unauthorized
+      operationId: get_api_medications_{id}
+      tags:
+        - Medications
     post:
-      description: ''
+      description: POST operation for /api/medications/{id}
       parameters:
         - name: id
           in: path
@@ -1610,8 +1975,11 @@ paths:
       responses:
         '401':
           description: Unauthorized
+      operationId: post_api_medications_{id}
+      tags:
+        - Medications
     delete:
-      description: ''
+      description: DELETE operation for /api/medications/{id}
       parameters:
         - name: id
           in: path
@@ -1626,9 +1994,12 @@ paths:
       responses:
         '401':
           description: Unauthorized
+      operationId: delete_api_medications_{id}
+      tags:
+        - Medications
   /api/medications/{patient_id}/details:
     get:
-      description: ''
+      description: GET operation for /api/medications/{patient_id}/details
       parameters:
         - name: patient_id
           in: path
@@ -1643,9 +2014,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: get_api_medications_{patient_id}_details
+      tags:
+        - Medications
   /api/medications/treatment/{patient_id}/{carePlanId}:
     post:
-      description: ''
+      description: POST operation for /api/medications/treatment/{patient_id}/{carePlanId}
       parameters:
         - name: patient_id
           in: path
@@ -1664,9 +2038,12 @@ paths:
       responses:
         '401':
           description: Unauthorized
+      operationId: post_api_medications_treatment_{patient_id}_{carePlanId}
+      tags:
+        - Medications
   /api/medications/{id}/timeline:
     get:
-      description: ''
+      description: GET operation for /api/medications/{id}/timeline
       parameters:
         - name: id
           in: path
@@ -1681,9 +2058,12 @@ paths:
       responses:
         '401':
           description: Unauthorized
+      operationId: get_api_medications_{id}_timeline
+      tags:
+        - Medications
   /api/medicines/:
     get:
-      description: ''
+      description: GET operation for /api/medicines/
       parameters:
         - name: authorization
           in: header
@@ -1697,8 +2077,11 @@ paths:
       responses:
         default:
           description: ''
+      operationId: get_api_medicines
+      tags:
+        - Medicines
     post:
-      description: ''
+      description: POST operation for /api/medicines/
       parameters:
         - name: authorization
           in: header
@@ -1720,9 +2103,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: post_api_medicines
+      tags:
+        - Medicines
   /api/patients/:
     post:
-      description: ''
+      description: POST operation for /api/patients/
       parameters:
         - name: authorization
           in: header
@@ -1764,8 +2150,11 @@ paths:
       responses:
         default:
           description: ''
+      operationId: post_api_patients
+      tags:
+        - Patients
     get:
-      description: ''
+      description: GET operation for /api/patients/
       parameters:
         - name: authorization
           in: header
@@ -1776,9 +2165,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: get_api_patients
+      tags:
+        - Patients
   /api/patients/create-patient:
     post:
-      description: ''
+      description: POST operation for /api/patients/create-patient
       parameters:
         - name: authorization
           in: header
@@ -1802,9 +2194,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: post_api_patients_create-patient
+      tags:
+        - Patients
   /api/patients/{id}/consents/request:
     post:
-      description: ''
+      description: POST operation for /api/patients/{id}/consents/request
       parameters:
         - name: id
           in: path
@@ -1819,9 +2214,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: post_api_patients_{id}_consents_request
+      tags:
+        - Patients
   /api/patients/consents/payments:
     post:
-      description: ''
+      description: POST operation for /api/patients/consents/payments
       parameters:
         - name: authorization
           in: header
@@ -1832,9 +2230,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: post_api_patients_consents_payments
+      tags:
+        - Patients
   /api/patients/consents/verify:
     post:
-      description: ''
+      description: POST operation for /api/patients/consents/verify
       parameters:
         - name: authorization
           in: header
@@ -1845,9 +2246,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: post_api_patients_consents_verify
+      tags:
+        - Patients
   /api/patients/pagination:
     get:
-      description: ''
+      description: GET operation for /api/patients/pagination
       parameters:
         - name: authorization
           in: header
@@ -1858,9 +2262,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: get_api_patients_pagination
+      tags:
+        - Patients
   /api/patients/searchpatient:
     get:
-      description: ''
+      description: GET operation for /api/patients/searchpatient
       parameters:
         - name: authorization
           in: header
@@ -1871,9 +2278,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: get_api_patients_searchpatient
+      tags:
+        - Patients
   /api/patients/servicesubplan:
     get:
-      description: ''
+      description: GET operation for /api/patients/servicesubplan
       parameters:
         - name: authorization
           in: header
@@ -1896,9 +2306,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: get_api_patients_servicesubplan
+      tags:
+        - Patients
   /api/patients/{patient_id}:
     get:
-      description: ''
+      description: GET operation for /api/patients/{patient_id}
       parameters:
         - name: patient_id
           in: path
@@ -1913,9 +2326,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: get_api_patients_{patient_id}
+      tags:
+        - Patients
   /api/patients/{id}/appointments:
     get:
-      description: ''
+      description: GET operation for /api/patients/{id}/appointments
       parameters:
         - name: id
           in: path
@@ -1930,9 +2346,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: get_api_patients_{id}_appointments
+      tags:
+        - Patients
   /api/patients/{id}/medications:
     get:
-      description: ''
+      description: GET operation for /api/patients/{id}/medications
       parameters:
         - name: id
           in: path
@@ -1947,9 +2366,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: get_api_patients_{id}_medications
+      tags:
+        - Patients
   /api/patients/{id}/careplan-details:
     get:
-      description: ''
+      description: GET operation for /api/patients/{id}/careplan-details
       parameters:
         - name: id
           in: path
@@ -1964,9 +2386,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: get_api_patients_{id}_careplan-details
+      tags:
+        - Patients
   /api/patients/{id}/careplan-details-sec-doc:
     get:
-      description: ''
+      description: GET operation for /api/patients/{id}/careplan-details-sec-doc
       parameters:
         - name: id
           in: path
@@ -1981,9 +2406,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: get_api_patients_{id}_careplan-details-sec-doc
+      tags:
+        - Patients
   /api/patients/{patient_id}/symptoms:
     get:
-      description: ''
+      description: GET operation for /api/patients/{patient_id}/symptoms
       parameters:
         - name: patient_id
           in: path
@@ -1998,9 +2426,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: get_api_patients_{patient_id}_symptoms
+      tags:
+        - Patients
   /api/patients/{careplan_id}/vitals:
     get:
-      description: ''
+      description: GET operation for /api/patients/{careplan_id}/vitals
       parameters:
         - name: careplan_id
           in: path
@@ -2015,9 +2446,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: get_api_patients_{careplan_id}_vitals
+      tags:
+        - Patients
   /api/patients/{patient_id}/reports:
     get:
-      description: ''
+      description: GET operation for /api/patients/{patient_id}/reports
       parameters:
         - name: patient_id
           in: path
@@ -2032,9 +2466,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: get_api_patients_{patient_id}_reports
+      tags:
+        - Patients
   /api/patients/{patient_id}/parts/symptoms:
     get:
-      description: ''
+      description: GET operation for /api/patients/{patient_id}/parts/symptoms
       parameters:
         - name: patient_id
           in: path
@@ -2049,9 +2486,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: get_api_patients_{patient_id}_parts_symptoms
+      tags:
+        - Patients
   /api/patients/add-careplan-for-patient/{patient_id}:
     post:
-      description: ''
+      description: POST operation for /api/patients/add-careplan-for-patient/{patient_id}
       parameters:
         - name: patient_id
           in: path
@@ -2087,9 +2527,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: post_api_patients_add-careplan-for-patient_{patient_id}
+      tags:
+        - Patients
   /api/patients/generate_prescription/{care_plan_id}:
     get:
-      description: ''
+      description: GET operation for /api/patients/generate_prescription/{care_plan_id}
       parameters:
         - name: care_plan_id
           in: path
@@ -2104,9 +2547,12 @@ paths:
       responses:
         '200':
           description: OK
+      operationId: get_api_patients_generate_prescription_{care_plan_id}
+      tags:
+        - Patients
   /api/patients/servicesubplan/{patient_id}:
     get:
-      description: ''
+      description: GET operation for /api/patients/servicesubplan/{patient_id}
       parameters:
         - name: patient_id
           in: path
@@ -2121,9 +2567,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: get_api_patients_servicesubplan_{patient_id}
+      tags:
+        - Patients
   /api/patients/servicesubplan/doctor/{patient_id}:
     get:
-      description: ''
+      description: GET operation for /api/patients/servicesubplan/doctor/{patient_id}
       parameters:
         - name: patient_id
           in: path
@@ -2138,9 +2587,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: get_api_patients_servicesubplan_doctor_{patient_id}
+      tags:
+        - Patients
   /api/twilio/getTwilioVideoAccessToken:
     get:
-      description: ''
+      description: GET operation for /api/twilio/getTwilioVideoAccessToken
       parameters:
         - name: authorization
           in: header
@@ -2151,9 +2603,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: get_api_twilio_getTwilioVideoAccessToken
+      tags:
+        - Twilio
   /api/twilio/getTwilioChatAccessToken:
     get:
-      description: ''
+      description: GET operation for /api/twilio/getTwilioChatAccessToken
       parameters:
         - name: authorization
           in: header
@@ -2170,9 +2625,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: get_api_twilio_getTwilioChatAccessToken
+      tags:
+        - Twilio
   /api/twilio/getConnectedParticipants/{roomId}:
     get:
-      description: ''
+      description: GET operation for /api/twilio/getConnectedParticipants/{roomId}
       parameters:
         - name: roomId
           in: path
@@ -2187,9 +2645,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: get_api_twilio_getConnectedParticipants_{roomId}
+      tags:
+        - Twilio
   /api/care-plan-templates/:
     get:
-      description: ''
+      description: GET operation for /api/care-plan-templates/
       parameters:
         - name: authorization
           in: header
@@ -2203,8 +2664,11 @@ paths:
       responses:
         '401':
           description: Unauthorized
+      operationId: get_api_care-plan-templates
+      tags:
+        - Care-plan-templates
     post:
-      description: ''
+      description: POST operation for /api/care-plan-templates/
       parameters:
         - name: authorization
           in: header
@@ -2215,9 +2679,12 @@ paths:
       responses:
         '401':
           description: Unauthorized
+      operationId: post_api_care-plan-templates
+      tags:
+        - Care-plan-templates
   /api/care-plan-templates/search:
     get:
-      description: ''
+      description: GET operation for /api/care-plan-templates/search
       parameters:
         - name: authorization
           in: header
@@ -2231,9 +2698,12 @@ paths:
       responses:
         '401':
           description: Unauthorized
+      operationId: get_api_care-plan-templates_search
+      tags:
+        - Care-plan-templates
   /api/care-plan-templates/duplicate/{id}:
     post:
-      description: ''
+      description: POST operation for /api/care-plan-templates/duplicate/{id}
       parameters:
         - name: id
           in: path
@@ -2248,9 +2718,12 @@ paths:
       responses:
         '401':
           description: Unauthorized
+      operationId: post_api_care-plan-templates_duplicate_{id}
+      tags:
+        - Care-plan-templates
   /api/care-plan-templates/{id}:
     post:
-      description: ''
+      description: POST operation for /api/care-plan-templates/{id}
       parameters:
         - name: id
           in: path
@@ -2265,8 +2738,11 @@ paths:
       responses:
         '401':
           description: Unauthorized
+      operationId: post_api_care-plan-templates_{id}
+      tags:
+        - Care-plan-templates
     delete:
-      description: ''
+      description: DELETE operation for /api/care-plan-templates/{id}
       parameters:
         - name: id
           in: path
@@ -2281,9 +2757,12 @@ paths:
       responses:
         '401':
           description: Unauthorized
+      operationId: delete_api_care-plan-templates_{id}
+      tags:
+        - Care-plan-templates
   /api/colleges/:
     get:
-      description: ''
+      description: GET operation for /api/colleges/
       parameters:
         - name: authorization
           in: header
@@ -2297,9 +2776,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: get_api_colleges
+      tags:
+        - Colleges
   /api/conditions/:
     get:
-      description: ''
+      description: GET operation for /api/conditions/
       parameters:
         - name: authorization
           in: header
@@ -2313,9 +2795,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: get_api_conditions
+      tags:
+        - Conditions
   /api/councils/:
     get:
-      description: ''
+      description: GET operation for /api/councils/
       parameters:
         - name: authorization
           in: header
@@ -2329,9 +2814,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: get_api_councils
+      tags:
+        - Councils
   /api/degrees/:
     get:
-      description: ''
+      description: GET operation for /api/degrees/
       parameters:
         - name: authorization
           in: header
@@ -2345,9 +2833,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: get_api_degrees
+      tags:
+        - Degrees
   /api/severity/:
     get:
-      description: ''
+      description: GET operation for /api/severity/
       parameters:
         - name: authorization
           in: header
@@ -2361,9 +2852,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: get_api_severity
+      tags:
+        - Severity
   /api/specialities/:
     get:
-      description: ''
+      description: GET operation for /api/specialities/
       parameters:
         - name: authorization
           in: header
@@ -2374,9 +2868,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: get_api_specialities
+      tags:
+        - Specialities
   /api/treatments/:
     get:
-      description: ''
+      description: GET operation for /api/treatments/
       parameters:
         - name: authorization
           in: header
@@ -2390,9 +2887,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: get_api_treatments
+      tags:
+        - Treatments
   /api/accounts/:
     post:
-      description: ''
+      description: POST operation for /api/accounts/
       parameters:
         - name: authorization
           in: header
@@ -2403,8 +2903,11 @@ paths:
       responses:
         default:
           description: ''
+      operationId: post_api_accounts
+      tags:
+        - Accounts
     get:
-      description: ''
+      description: GET operation for /api/accounts/
       parameters:
         - name: authorization
           in: header
@@ -2415,9 +2918,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: get_api_accounts
+      tags:
+        - Accounts
   /api/accounts/{id}:
     post:
-      description: ''
+      description: POST operation for /api/accounts/{id}
       parameters:
         - name: id
           in: path
@@ -2432,8 +2938,11 @@ paths:
       responses:
         default:
           description: ''
+      operationId: post_api_accounts_{id}
+      tags:
+        - Accounts
     delete:
-      description: ''
+      description: DELETE operation for /api/accounts/{id}
       parameters:
         - name: id
           in: path
@@ -2448,9 +2957,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: delete_api_accounts_{id}
+      tags:
+        - Accounts
   /api/adhoc/purge/sqs:
     post:
-      description: ''
+      description: POST operation for /api/adhoc/purge/sqs
       parameters:
         - name: authorization
           in: header
@@ -2461,9 +2973,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: post_api_adhoc_purge_sqs
+      tags:
+        - Adhoc
   /api/adhoc/populate-user-roles:
     post:
-      description: ''
+      description: POST operation for /api/adhoc/populate-user-roles
       parameters:
         - name: authorization
           in: header
@@ -2474,9 +2989,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: post_api_adhoc_populate-user-roles
+      tags:
+        - Adhoc
   /api/adhoc/test-api:
     post:
-      description: ''
+      description: POST operation for /api/adhoc/test-api
       parameters:
         - name: authorization
           in: header
@@ -2487,9 +3005,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: post_api_adhoc_test-api
+      tags:
+        - Adhoc
   /api/adhoc/patient/update-timings:
     post:
-      description: ''
+      description: POST operation for /api/adhoc/patient/update-timings
       parameters:
         - name: authorization
           in: header
@@ -2500,9 +3021,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: post_api_adhoc_patient_update-timings
+      tags:
+        - Adhoc
   /api/adhoc/permissions:
     post:
-      description: ''
+      description: POST operation for /api/adhoc/permissions
       parameters:
         - name: authorization
           in: header
@@ -2513,9 +3037,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: post_api_adhoc_permissions
+      tags:
+        - Adhoc
   /api/adhoc/careplan/channels:
     post:
-      description: ''
+      description: POST operation for /api/adhoc/careplan/channels
       parameters:
         - name: authorization
           in: header
@@ -2526,9 +3053,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: post_api_adhoc_careplan_channels
+      tags:
+        - Adhoc
   /api/agora/video/token/{id}:
     get:
-      description: ''
+      description: GET operation for /api/agora/video/token/{id}
       parameters:
         - name: id
           in: path
@@ -2546,9 +3076,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: get_api_agora_video_token_{id}
+      tags:
+        - Agora
   /api/agora/missed:
     post:
-      description: ''
+      description: POST operation for /api/agora/missed
       parameters:
         - name: authorization
           in: header
@@ -2559,9 +3092,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: post_api_agora_missed
+      tags:
+        - Agora
   /api/agora/start:
     post:
-      description: ''
+      description: POST operation for /api/agora/start
       parameters:
         - name: authorization
           in: header
@@ -2572,9 +3108,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: post_api_agora_start
+      tags:
+        - Agora
   /api/cdss/:
     post:
-      description: ''
+      description: POST operation for /api/cdss/
       parameters:
         - name: authorization
           in: header
@@ -2594,8 +3133,11 @@ paths:
           description: Created
         '400':
           description: Bad Request
+      operationId: post_api_cdss
+      tags:
+        - Cdss
     get:
-      description: ''
+      description: GET operation for /api/cdss/
       parameters:
         - name: authorization
           in: header
@@ -2611,9 +3153,12 @@ paths:
           description: OK
         '500':
           description: Internal Server Error
+      operationId: get_api_cdss
+      tags:
+        - Cdss
   /api/cdss/get:
     post:
-      description: ''
+      description: POST operation for /api/cdss/get
       parameters:
         - name: authorization
           in: header
@@ -2635,9 +3180,12 @@ paths:
           description: OK
         '500':
           description: Internal Server Error
+      operationId: post_api_cdss_get
+      tags:
+        - Cdss
   /api/diet/:
     get:
-      description: ''
+      description: GET operation for /api/diet/
       parameters:
         - name: authorization
           in: header
@@ -2648,8 +3196,11 @@ paths:
       responses:
         default:
           description: ''
+      operationId: get_api_diet
+      tags:
+        - Diet
     post:
-      description: ''
+      description: POST operation for /api/diet/
       parameters:
         - name: authorization
           in: header
@@ -2660,9 +3211,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: post_api_diet
+      tags:
+        - Diet
   /api/diet/all-diets:
     get:
-      description: ''
+      description: GET operation for /api/diet/all-diets
       parameters:
         - name: authorization
           in: header
@@ -2673,9 +3227,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: get_api_diet_all-diets
+      tags:
+        - Diet
   /api/diet/{id}/timeline:
     get:
-      description: ''
+      description: GET operation for /api/diet/{id}/timeline
       parameters:
         - name: id
           in: path
@@ -2690,9 +3247,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: get_api_diet_{id}_timeline
+      tags:
+        - Diet
   /api/diet/details/patients/{patient_id}:
     get:
-      description: ''
+      description: GET operation for /api/diet/details/patients/{patient_id}
       parameters:
         - name: patient_id
           in: path
@@ -2707,9 +3267,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: get_api_diet_details_patients_{patient_id}
+      tags:
+        - Diet
   /api/diet/{id}:
     get:
-      description: ''
+      description: GET operation for /api/diet/{id}
       parameters:
         - name: id
           in: path
@@ -2724,8 +3287,11 @@ paths:
       responses:
         default:
           description: ''
+      operationId: get_api_diet_{id}
+      tags:
+        - Diet
     post:
-      description: ''
+      description: POST operation for /api/diet/{id}
       parameters:
         - name: id
           in: path
@@ -2740,8 +3306,11 @@ paths:
       responses:
         default:
           description: ''
+      operationId: post_api_diet_{id}
+      tags:
+        - Diet
     delete:
-      description: ''
+      description: DELETE operation for /api/diet/{id}
       parameters:
         - name: id
           in: path
@@ -2756,9 +3325,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: delete_api_diet_{id}
+      tags:
+        - Diet
   /api/diet/update-calories:
     post:
-      description: ''
+      description: POST operation for /api/diet/update-calories
       parameters:
         - name: authorization
           in: header
@@ -2769,9 +3341,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: post_api_diet_update-calories
+      tags:
+        - Diet
   /api/exercises/:
     get:
-      description: ''
+      description: GET operation for /api/exercises/
       parameters:
         - name: authorization
           in: header
@@ -2785,8 +3360,11 @@ paths:
       responses:
         '401':
           description: Unauthorized
+      operationId: get_api_exercises
+      tags:
+        - Exercises
     post:
-      description: ''
+      description: POST operation for /api/exercises/
       parameters:
         - name: authorization
           in: header
@@ -2797,9 +3375,12 @@ paths:
       responses:
         '401':
           description: Unauthorized
+      operationId: post_api_exercises
+      tags:
+        - Exercises
   /api/exercises/upload:
     post:
-      description: ''
+      description: POST operation for /api/exercises/upload
       parameters:
         - name: authorization
           in: header
@@ -2810,9 +3391,12 @@ paths:
       responses:
         '401':
           description: Unauthorized
+      operationId: post_api_exercises_upload
+      tags:
+        - Exercises
   /api/exercises/{id}:
     post:
-      description: ''
+      description: POST operation for /api/exercises/{id}
       parameters:
         - name: id
           in: path
@@ -2827,9 +3411,12 @@ paths:
       responses:
         '401':
           description: Unauthorized
+      operationId: post_api_exercises_{id}
+      tags:
+        - Exercises
   /api/favourites/:
     post:
-      description: ''
+      description: POST operation for /api/favourites/
       parameters:
         - name: authorization
           in: header
@@ -2840,8 +3427,11 @@ paths:
       responses:
         default:
           description: ''
+      operationId: post_api_favourites
+      tags:
+        - Favourites
     get:
-      description: ''
+      description: GET operation for /api/favourites/
       parameters:
         - name: authorization
           in: header
@@ -2852,8 +3442,11 @@ paths:
       responses:
         default:
           description: ''
+      operationId: get_api_favourites
+      tags:
+        - Favourites
     delete:
-      description: ''
+      description: DELETE operation for /api/favourites/
       parameters:
         - name: authorization
           in: header
@@ -2864,9 +3457,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: delete_api_favourites
+      tags:
+        - Favourites
   /api/favourites/{id}:
     delete:
-      description: ''
+      description: DELETE operation for /api/favourites/{id}
       parameters:
         - name: id
           in: path
@@ -2881,9 +3477,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: delete_api_favourites_{id}
+      tags:
+        - Favourites
   /api/features/toggleChatMessagePermission/{patient_id}:
     post:
-      description: ''
+      description: POST operation for /api/features/toggleChatMessagePermission/{patient_id}
       parameters:
         - name: patient_id
           in: path
@@ -2898,9 +3497,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: post_api_features_toggleChatMessagePermission_{patient_id}
+      tags:
+        - Features
   /api/features/toggleVideoCallPermission/{patient_id}:
     post:
-      description: ''
+      description: POST operation for /api/features/toggleVideoCallPermission/{patient_id}
       parameters:
         - name: patient_id
           in: path
@@ -2915,9 +3517,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: post_api_features_toggleVideoCallPermission_{patient_id}
+      tags:
+        - Features
   /api/features/:
     get:
-      description: ''
+      description: GET operation for /api/features/
       parameters:
         - name: authorization
           in: header
@@ -2928,9 +3533,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: get_api_features
+      tags:
+        - Features
   /api/flashcard/:
     post:
-      description: ''
+      description: POST operation for /api/flashcard/
       parameters:
         - name: authorization
           in: header
@@ -2948,9 +3556,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: post_api_flashcard
+      tags:
+        - Flashcard
   /api/flashcard/{patient_id}:
     get:
-      description: ''
+      description: GET operation for /api/flashcard/{patient_id}
       parameters:
         - name: patient_id
           in: path
@@ -2965,9 +3576,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: get_api_flashcard_{patient_id}
+      tags:
+        - Flashcard
   /api/flashcard/activity/{tx_activity_id}:
     get:
-      description: ''
+      description: GET operation for /api/flashcard/activity/{tx_activity_id}
       parameters:
         - name: tx_activity_id
           in: path
@@ -2982,9 +3596,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: get_api_flashcard_activity_{tx_activity_id}
+      tags:
+        - Flashcard
   /api/flashcard/{id}/update:
     put:
-      description: ''
+      description: PUT operation for /api/flashcard/{id}/update
       parameters:
         - name: id
           in: path
@@ -2999,9 +3616,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: put_api_flashcard_{id}_update
+      tags:
+        - Flashcard
   /api/food-items/:
     post:
-      description: ''
+      description: POST operation for /api/food-items/
       parameters:
         - name: authorization
           in: header
@@ -3012,8 +3632,11 @@ paths:
       responses:
         default:
           description: ''
+      operationId: post_api_food-items
+      tags:
+        - Food-items
     get:
-      description: ''
+      description: GET operation for /api/food-items/
       parameters:
         - name: authorization
           in: header
@@ -3024,9 +3647,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: get_api_food-items
+      tags:
+        - Food-items
   /api/food-items/{id}:
     post:
-      description: ''
+      description: POST operation for /api/food-items/{id}
       parameters:
         - name: id
           in: path
@@ -3041,9 +3667,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: post_api_food-items_{id}
+      tags:
+        - Food-items
   /api/his/:
     post:
-      description: ''
+      description: POST operation for /api/his/
       parameters:
         - name: authorization
           in: header
@@ -3063,8 +3692,11 @@ paths:
       responses:
         default:
           description: ''
+      operationId: post_api_his
+      tags:
+        - His
     get:
-      description: ''
+      description: GET operation for /api/his/
       parameters:
         - name: authorization
           in: header
@@ -3075,9 +3707,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: get_api_his
+      tags:
+        - His
   /api/his/sign-in:
     post:
-      description: ''
+      description: POST operation for /api/his/sign-in
       parameters:
         - name: authorization
           in: header
@@ -3097,9 +3732,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: post_api_his_sign-in
+      tags:
+        - His
   /api/his/{id}:
     get:
-      description: ''
+      description: GET operation for /api/his/{id}
       parameters:
         - name: id
           in: path
@@ -3114,8 +3752,11 @@ paths:
       responses:
         default:
           description: ''
+      operationId: get_api_his_{id}
+      tags:
+        - His
     put:
-      description: ''
+      description: PUT operation for /api/his/{id}
       parameters:
         - name: id
           in: path
@@ -3137,8 +3778,11 @@ paths:
       responses:
         default:
           description: ''
+      operationId: put_api_his_{id}
+      tags:
+        - His
     delete:
-      description: ''
+      description: DELETE operation for /api/his/{id}
       parameters:
         - name: id
           in: path
@@ -3153,9 +3797,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: delete_api_his_{id}
+      tags:
+        - His
   /api/meal/templates/:
     post:
-      description: ''
+      description: POST operation for /api/meal/templates/
       parameters:
         - name: authorization
           in: header
@@ -3166,9 +3813,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: post_api_meal_templates
+      tags:
+        - Meal
   /api/meal/templates/{id}:
     post:
-      description: ''
+      description: POST operation for /api/meal/templates/{id}
       parameters:
         - name: id
           in: path
@@ -3183,8 +3833,11 @@ paths:
       responses:
         default:
           description: ''
+      operationId: post_api_meal_templates_{id}
+      tags:
+        - Meal
     delete:
-      description: ''
+      description: DELETE operation for /api/meal/templates/{id}
       parameters:
         - name: id
           in: path
@@ -3199,9 +3852,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: delete_api_meal_templates_{id}
+      tags:
+        - Meal
   /api/notes/:
     post:
-      description: ''
+      description: POST operation for /api/notes/
       parameters:
         - name: authorization
           in: header
@@ -3212,9 +3868,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: post_api_notes
+      tags:
+        - Notes
   /api/notes/{patient_id}:
     get:
-      description: ''
+      description: GET operation for /api/notes/{patient_id}
       parameters:
         - name: patient_id
           in: path
@@ -3229,9 +3888,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: get_api_notes_{patient_id}
+      tags:
+        - Notes
   /api/notifications/:
     post:
-      description: ''
+      description: POST operation for /api/notifications/
       parameters:
         - name: authorization
           in: header
@@ -3242,9 +3904,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: post_api_notifications
+      tags:
+        - Notifications
   /api/notifications/chat-notification:
     post:
-      description: ''
+      description: POST operation for /api/notifications/chat-notification
       parameters:
         - name: authorization
           in: header
@@ -3255,9 +3920,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: post_api_notifications_chat-notification
+      tags:
+        - Notifications
   /api/portions/:
     get:
-      description: ''
+      description: GET operation for /api/portions/
       parameters:
         - name: authorization
           in: header
@@ -3268,9 +3936,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: get_api_portions
+      tags:
+        - Portions
   /api/prescription/{care_plan_id}:
     get:
-      description: ''
+      description: GET operation for /api/prescription/{care_plan_id}
       parameters:
         - name: care_plan_id
           in: path
@@ -3285,9 +3956,12 @@ paths:
       responses:
         '200':
           description: OK
+      operationId: get_api_prescription_{care_plan_id}
+      tags:
+        - Prescription
   /api/prescription/details/{care_plan_id}:
     get:
-      description: ''
+      description: GET operation for /api/prescription/details/{care_plan_id}
       parameters:
         - name: care_plan_id
           in: path
@@ -3302,9 +3976,12 @@ paths:
       responses:
         '200':
           description: OK
+      operationId: get_api_prescription_details_{care_plan_id}
+      tags:
+        - Prescription
   /api/providers/doctors:
     get:
-      description: ''
+      description: GET operation for /api/providers/doctors
       parameters:
         - name: authorization
           in: header
@@ -3315,9 +3992,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: get_api_providers_doctors
+      tags:
+        - Providers
   /api/providers/:
     get:
-      description: ''
+      description: GET operation for /api/providers/
       parameters:
         - name: authorization
           in: header
@@ -3328,9 +4008,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: get_api_providers
+      tags:
+        - Providers
   /api/providers/appointments-count:
     get:
-      description: ''
+      description: GET operation for /api/providers/appointments-count
       parameters:
         - name: authorization
           in: header
@@ -3341,9 +4024,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: get_api_providers_appointments-count
+      tags:
+        - Providers
   /api/providers/day-appointments:
     get:
-      description: ''
+      description: GET operation for /api/providers/day-appointments
       parameters:
         - name: authorization
           in: header
@@ -3354,9 +4040,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: get_api_providers_day-appointments
+      tags:
+        - Providers
   /api/providers/patients:
     get:
-      description: ''
+      description: GET operation for /api/providers/patients
       parameters:
         - name: authorization
           in: header
@@ -3367,9 +4056,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: get_api_providers_patients
+      tags:
+        - Providers
   /api/providers/mail-password:
     post:
-      description: ''
+      description: POST operation for /api/providers/mail-password
       parameters:
         - name: authorization
           in: header
@@ -3380,9 +4072,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: post_api_providers_mail-password
+      tags:
+        - Providers
   /api/reassignaudit/:
     get:
-      description: ''
+      description: GET operation for /api/reassignaudit/
       parameters:
         - name: authorization
           in: header
@@ -3393,9 +4088,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: get_api_reassignaudit
+      tags:
+        - Reassignaudit
   /api/reports/:
     post:
-      description: ''
+      description: POST operation for /api/reports/
       parameters:
         - name: authorization
           in: header
@@ -3406,9 +4104,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: post_api_reports
+      tags:
+        - Reports
   /api/reports/upload/{patient_id}:
     post:
-      description: ''
+      description: POST operation for /api/reports/upload/{patient_id}
       parameters:
         - name: patient_id
           in: path
@@ -3423,9 +4124,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: post_api_reports_upload_{patient_id}
+      tags:
+        - Reports
   /api/reports/{id}:
     post:
-      description: ''
+      description: POST operation for /api/reports/{id}
       parameters:
         - name: id
           in: path
@@ -3440,9 +4144,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: post_api_reports_{id}
+      tags:
+        - Reports
   /api/reports/{document_id}/delete:
     delete:
-      description: ''
+      description: DELETE operation for /api/reports/{document_id}/delete
       parameters:
         - name: document_id
           in: path
@@ -3457,9 +4164,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: delete_api_reports_{document_id}_delete
+      tags:
+        - Reports
   /api/serviceoffering/:
     post:
-      description: ''
+      description: POST operation for /api/serviceoffering/
       parameters:
         - name: authorization
           in: header
@@ -3477,8 +4187,11 @@ paths:
       responses:
         default:
           description: ''
+      operationId: post_api_serviceoffering
+      tags:
+        - Serviceoffering
     get:
-      description: ''
+      description: GET operation for /api/serviceoffering/
       parameters:
         - name: authorization
           in: header
@@ -3489,9 +4202,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: get_api_serviceoffering
+      tags:
+        - Serviceoffering
   /api/serviceoffering/{id}:
     put:
-      description: ''
+      description: PUT operation for /api/serviceoffering/{id}
       parameters:
         - name: id
           in: path
@@ -3506,8 +4222,11 @@ paths:
       responses:
         default:
           description: ''
+      operationId: put_api_serviceoffering_{id}
+      tags:
+        - Serviceoffering
     get:
-      description: ''
+      description: GET operation for /api/serviceoffering/{id}
       parameters:
         - name: id
           in: path
@@ -3522,9 +4241,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: get_api_serviceoffering_{id}
+      tags:
+        - Serviceoffering
   /api/serviceoffering/user:
     get:
-      description: ''
+      description: GET operation for /api/serviceoffering/user
       parameters:
         - name: authorization
           in: header
@@ -3535,9 +4257,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: get_api_serviceoffering_user
+      tags:
+        - Serviceoffering
   /api/serviceoffering/provider/{doctor_id}:
     get:
-      description: ''
+      description: GET operation for /api/serviceoffering/provider/{doctor_id}
       parameters:
         - name: doctor_id
           in: path
@@ -3552,9 +4277,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: get_api_serviceoffering_provider_{doctor_id}
+      tags:
+        - Serviceoffering
   /api/serviceoffering/doctor:
     get:
-      description: ''
+      description: GET operation for /api/serviceoffering/doctor
       parameters:
         - name: authorization
           in: header
@@ -3574,9 +4302,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: get_api_serviceoffering_doctor
+      tags:
+        - Serviceoffering
   /api/servicesubscription/:
     post:
-      description: ''
+      description: POST operation for /api/servicesubscription/
       parameters:
         - name: authorization
           in: header
@@ -3594,8 +4325,11 @@ paths:
       responses:
         default:
           description: ''
+      operationId: post_api_servicesubscription
+      tags:
+        - Servicesubscription
     get:
-      description: ''
+      description: GET operation for /api/servicesubscription/
       parameters:
         - name: authorization
           in: header
@@ -3606,9 +4340,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: get_api_servicesubscription
+      tags:
+        - Servicesubscription
   /api/servicesubscription/{id}:
     put:
-      description: ''
+      description: PUT operation for /api/servicesubscription/{id}
       parameters:
         - name: id
           in: path
@@ -3623,8 +4360,11 @@ paths:
       responses:
         default:
           description: ''
+      operationId: put_api_servicesubscription_{id}
+      tags:
+        - Servicesubscription
     get:
-      description: ''
+      description: GET operation for /api/servicesubscription/{id}
       parameters:
         - name: id
           in: path
@@ -3639,9 +4379,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: get_api_servicesubscription_{id}
+      tags:
+        - Servicesubscription
   /api/servicesubscription/user:
     get:
-      description: ''
+      description: GET operation for /api/servicesubscription/user
       parameters:
         - name: authorization
           in: header
@@ -3652,9 +4395,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: get_api_servicesubscription_user
+      tags:
+        - Servicesubscription
   /api/servicesubscription/provider/{doctor_id}:
     get:
-      description: ''
+      description: GET operation for /api/servicesubscription/provider/{doctor_id}
       parameters:
         - name: doctor_id
           in: path
@@ -3669,9 +4415,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: get_api_servicesubscription_provider_{doctor_id}
+      tags:
+        - Servicesubscription
   /api/servicesubscription/doctor:
     get:
-      description: ''
+      description: GET operation for /api/servicesubscription/doctor
       parameters:
         - name: authorization
           in: header
@@ -3691,9 +4440,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: get_api_servicesubscription_doctor
+      tags:
+        - Servicesubscription
   /api/servicesubscriptionusermapping/:
     post:
-      description: ''
+      description: POST operation for /api/servicesubscriptionusermapping/
       parameters:
         - name: authorization
           in: header
@@ -3717,9 +4469,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: post_api_servicesubscriptionusermapping
+      tags:
+        - Servicesubscriptionusermapping
   /api/servicesubscriptionusermapping/{id}/update:
     put:
-      description: ''
+      description: PUT operation for /api/servicesubscriptionusermapping/{id}/update
       parameters:
         - name: id
           in: path
@@ -3743,9 +4498,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: put_api_servicesubscriptionusermapping_{id}_update
+      tags:
+        - Servicesubscriptionusermapping
   /api/servicesubscriptionusermapping/{patient_id}:
     get:
-      description: ''
+      description: GET operation for /api/servicesubscriptionusermapping/{patient_id}
       parameters:
         - name: patient_id
           in: path
@@ -3760,9 +4518,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: get_api_servicesubscriptionusermapping_{patient_id}
+      tags:
+        - Servicesubscriptionusermapping
   /api/servicesubscriptionusermapping/all/{patient_id}:
     get:
-      description: ''
+      description: GET operation for /api/servicesubscriptionusermapping/all/{patient_id}
       parameters:
         - name: patient_id
           in: path
@@ -3777,9 +4538,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: get_api_servicesubscriptionusermapping_all_{patient_id}
+      tags:
+        - Servicesubscriptionusermapping
   /api/servicesubtx/:
     post:
-      description: ''
+      description: POST operation for /api/servicesubtx/
       parameters:
         - name: authorization
           in: header
@@ -3797,8 +4561,11 @@ paths:
       responses:
         default:
           description: ''
+      operationId: post_api_servicesubtx
+      tags:
+        - Servicesubtx
     get:
-      description: ''
+      description: GET operation for /api/servicesubtx/
       parameters:
         - name: authorization
           in: header
@@ -3809,9 +4576,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: get_api_servicesubtx
+      tags:
+        - Servicesubtx
   /api/servicesubtx/activity:
     post:
-      description: ''
+      description: POST operation for /api/servicesubtx/activity
       parameters:
         - name: authorization
           in: header
@@ -3833,9 +4603,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: post_api_servicesubtx_activity
+      tags:
+        - Servicesubtx
   /api/servicesubtx/{id}:
     put:
-      description: ''
+      description: PUT operation for /api/servicesubtx/{id}
       parameters:
         - name: id
           in: path
@@ -3850,9 +4623,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: put_api_servicesubtx_{id}
+      tags:
+        - Servicesubtx
   /api/serviceusermapping/:
     post:
-      description: ''
+      description: POST operation for /api/serviceusermapping/
       parameters:
         - name: authorization
           in: header
@@ -3874,9 +4650,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: post_api_serviceusermapping
+      tags:
+        - Serviceusermapping
   /api/serviceusermapping/{id}/update:
     put:
-      description: ''
+      description: PUT operation for /api/serviceusermapping/{id}/update
       parameters:
         - name: id
           in: path
@@ -3891,9 +4670,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: put_api_serviceusermapping_{id}_update
+      tags:
+        - Serviceusermapping
   /api/serviceusermapping/{patient_id}:
     get:
-      description: ''
+      description: GET operation for /api/serviceusermapping/{patient_id}
       parameters:
         - name: patient_id
           in: path
@@ -3908,9 +4690,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: get_api_serviceusermapping_{patient_id}
+      tags:
+        - Serviceusermapping
   /api/symptoms/:
     post:
-      description: ''
+      description: POST operation for /api/symptoms/
       parameters:
         - name: authorization
           in: header
@@ -3921,9 +4706,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: post_api_symptoms
+      tags:
+        - Symptoms
   /api/transactions/:
     get:
-      description: ''
+      description: GET operation for /api/transactions/
       parameters:
         - name: authorization
           in: header
@@ -3934,9 +4722,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: get_api_transactions
+      tags:
+        - Transactions
   /api/txactivities/:
     get:
-      description: ''
+      description: GET operation for /api/txactivities/
       parameters:
         - name: authorization
           in: header
@@ -3947,9 +4738,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: get_api_txactivities
+      tags:
+        - Txactivities
   /api/txactivities/tasks:
     get:
-      description: ''
+      description: GET operation for /api/txactivities/tasks
       parameters:
         - name: authorization
           in: header
@@ -3960,9 +4754,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: get_api_txactivities_tasks
+      tags:
+        - Txactivities
   /api/txactivities/{id}:
     put:
-      description: ''
+      description: PUT operation for /api/txactivities/{id}
       parameters:
         - name: id
           in: path
@@ -3977,9 +4774,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: put_api_txactivities_{id}
+      tags:
+        - Txactivities
   /api/txactivities/reassign/{id}:
     put:
-      description: ''
+      description: PUT operation for /api/txactivities/reassign/{id}
       parameters:
         - name: id
           in: path
@@ -3994,9 +4794,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: put_api_txactivities_reassign_{id}
+      tags:
+        - Txactivities
   /api/user-roles/switch-role-id:
     post:
-      description: ''
+      description: POST operation for /api/user-roles/switch-role-id
       parameters:
         - name: authorization
           in: header
@@ -4007,9 +4810,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: post_api_user-roles_switch-role-id
+      tags:
+        - User-roles
   /api/user-roles/:
     get:
-      description: ''
+      description: GET operation for /api/user-roles/
       parameters:
         - name: authorization
           in: header
@@ -4020,9 +4826,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: get_api_user-roles
+      tags:
+        - User-roles
   /api/vitals/:
     get:
-      description: ''
+      description: GET operation for /api/vitals/
       parameters:
         - name: authorization
           in: header
@@ -4033,8 +4842,11 @@ paths:
       responses:
         default:
           description: ''
+      operationId: get_api_vitals
+      tags:
+        - Vitals
     post:
-      description: ''
+      description: POST operation for /api/vitals/
       parameters:
         - name: authorization
           in: header
@@ -4045,9 +4857,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: post_api_vitals
+      tags:
+        - Vitals
   /api/vitals/details:
     get:
-      description: ''
+      description: GET operation for /api/vitals/details
       parameters:
         - name: authorization
           in: header
@@ -4058,9 +4873,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: get_api_vitals_details
+      tags:
+        - Vitals
   /api/vitals/missed:
     get:
-      description: ''
+      description: GET operation for /api/vitals/missed
       parameters:
         - name: authorization
           in: header
@@ -4071,9 +4889,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: get_api_vitals_missed
+      tags:
+        - Vitals
   /api/vitals/{id}/timeline:
     get:
-      description: ''
+      description: GET operation for /api/vitals/{id}/timeline
       parameters:
         - name: id
           in: path
@@ -4088,9 +4909,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: get_api_vitals_{id}_timeline
+      tags:
+        - Vitals
   /api/vitals/{id}:
     post:
-      description: ''
+      description: POST operation for /api/vitals/{id}
       parameters:
         - name: id
           in: path
@@ -4105,8 +4929,11 @@ paths:
       responses:
         default:
           description: ''
+      operationId: post_api_vitals_{id}
+      tags:
+        - Vitals
     delete:
-      description: ''
+      description: DELETE operation for /api/vitals/{id}
       parameters:
         - name: id
           in: path
@@ -4121,9 +4948,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: delete_api_vitals_{id}
+      tags:
+        - Vitals
   /api/workout/patients:
     get:
-      description: ''
+      description: GET operation for /api/workout/patients
       parameters:
         - name: authorization
           in: header
@@ -4137,9 +4967,12 @@ paths:
       responses:
         '401':
           description: Unauthorized
+      operationId: get_api_workout_patients
+      tags:
+        - Workout
   /api/workout/details:
     get:
-      description: ''
+      description: GET operation for /api/workout/details
       parameters:
         - name: authorization
           in: header
@@ -4150,9 +4983,12 @@ paths:
       responses:
         '401':
           description: Unauthorized
+      operationId: get_api_workout_details
+      tags:
+        - Workout
   /api/workout/{id}/timeline:
     get:
-      description: ''
+      description: GET operation for /api/workout/{id}/timeline
       parameters:
         - name: id
           in: path
@@ -4167,9 +5003,12 @@ paths:
       responses:
         '401':
           description: Unauthorized
+      operationId: get_api_workout_{id}_timeline
+      tags:
+        - Workout
   /api/workout/{id}:
     get:
-      description: ''
+      description: GET operation for /api/workout/{id}
       parameters:
         - name: id
           in: path
@@ -4184,8 +5023,11 @@ paths:
       responses:
         '401':
           description: Unauthorized
+      operationId: get_api_workout_{id}
+      tags:
+        - Workout
     post:
-      description: ''
+      description: POST operation for /api/workout/{id}
       parameters:
         - name: id
           in: path
@@ -4200,8 +5042,11 @@ paths:
       responses:
         '401':
           description: Unauthorized
+      operationId: post_api_workout_{id}
+      tags:
+        - Workout
     delete:
-      description: ''
+      description: DELETE operation for /api/workout/{id}
       parameters:
         - name: id
           in: path
@@ -4216,9 +5061,12 @@ paths:
       responses:
         '401':
           description: Unauthorized
+      operationId: delete_api_workout_{id}
+      tags:
+        - Workout
   /api/workout/update-calories:
     post:
-      description: ''
+      description: POST operation for /api/workout/update-calories
       parameters:
         - name: authorization
           in: header
@@ -4235,9 +5083,12 @@ paths:
       responses:
         '401':
           description: Unauthorized
+      operationId: post_api_workout_update-calories
+      tags:
+        - Workout
   /api/workout/:
     post:
-      description: ''
+      description: POST operation for /api/workout/
       parameters:
         - name: authorization
           in: header
@@ -4248,9 +5099,12 @@ paths:
       responses:
         '401':
           description: Unauthorized
+      operationId: post_api_workout
+      tags:
+        - Workout
   /api/workout/response/:
     get:
-      description: ''
+      description: GET operation for /api/workout/response/
       parameters:
         - name: authorization
           in: header
@@ -4261,9 +5115,12 @@ paths:
       responses:
         '401':
           description: Unauthorized
+      operationId: get_api_workout_response
+      tags:
+        - Workout
   /m-api/auth/sign-in:
     post:
-      description: ''
+      description: POST operation for /m-api/auth/sign-in
       parameters:
         - name: body
           in: body
@@ -4279,9 +5136,12 @@ paths:
       responses:
         '422':
           description: Unprocessable Entity
+      operationId: post_m-api_auth_sign-in
+      tags:
+        - Auth
   /m-api/auth/consent:
     post:
-      description: ''
+      description: POST operation for /m-api/auth/consent
       parameters:
         - name: authorization
           in: header
@@ -4289,9 +5149,12 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: post_m-api_auth_consent
+      tags:
+        - Auth
   /m-api/auth/verify-otp:
     post:
-      description: ''
+      description: POST operation for /m-api/auth/verify-otp
       parameters:
         - name: body
           in: body
@@ -4305,9 +5168,12 @@ paths:
       responses:
         '422':
           description: Unprocessable Entity
+      operationId: post_m-api_auth_verify-otp
+      tags:
+        - Auth
   /m-api/auth/doctors/sign-in:
     post:
-      description: ''
+      description: POST operation for /m-api/auth/doctors/sign-in
       parameters:
         - name: body
           in: body
@@ -4321,9 +5187,12 @@ paths:
       responses:
         '422':
           description: Unprocessable Entity
+      operationId: post_m-api_auth_doctors_sign-in
+      tags:
+        - Auth
   /m-api/auth/sign-up:
     post:
-      description: ''
+      description: POST operation for /m-api/auth/sign-up
       parameters:
         - name: body
           in: body
@@ -4339,9 +5208,12 @@ paths:
       responses:
         '422':
           description: Unprocessable Entity
+      operationId: post_m-api_auth_sign-up
+      tags:
+        - Auth
   /m-api/auth/get-basic-info:
     get:
-      description: ''
+      description: GET operation for /m-api/auth/get-basic-info
       parameters:
         - name: authorization
           in: header
@@ -4351,9 +5223,12 @@ paths:
           description: Bad Request
         '500':
           description: Internal Server Error
+      operationId: get_m-api_auth_get-basic-info
+      tags:
+        - Auth
   /m-api/auth/sign-out:
     post:
-      description: ''
+      description: POST operation for /m-api/auth/sign-out
       parameters:
         - name: authorization
           in: header
@@ -4361,9 +5236,12 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: post_m-api_auth_sign-out
+      tags:
+        - Auth
   /m-api/auth/forgot-password:
     post:
-      description: ''
+      description: POST operation for /m-api/auth/forgot-password
       parameters:
         - name: body
           in: body
@@ -4375,9 +5253,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: post_m-api_auth_forgot-password
+      tags:
+        - Auth
   /m-api/auth/verify-password/{link}:
     post:
-      description: ''
+      description: POST operation for /m-api/auth/verify-password/{link}
       parameters:
         - name: link
           in: path
@@ -4386,9 +5267,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: post_m-api_auth_verify-password_{link}
+      tags:
+        - Auth
   /m-api/auth/verify/{link}:
     post:
-      description: ''
+      description: POST operation for /m-api/auth/verify/{link}
       parameters:
         - name: link
           in: path
@@ -4397,9 +5281,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: post_m-api_auth_verify_{link}
+      tags:
+        - Auth
   /m-api/auth/password-reset:
     post:
-      description: ''
+      description: POST operation for /m-api/auth/password-reset
       parameters:
         - name: authorization
           in: header
@@ -4407,9 +5294,12 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: post_m-api_auth_password-reset
+      tags:
+        - Auth
   /m-api/auth/devices/:
     post:
-      description: ''
+      description: POST operation for /m-api/auth/devices/
       parameters:
         - name: authorization
           in: header
@@ -4428,8 +5318,11 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: post_m-api_auth_devices
+      tags:
+        - Auth
     delete:
-      description: ''
+      description: DELETE operation for /m-api/auth/devices/
       parameters:
         - name: authorization
           in: header
@@ -4444,9 +5337,12 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: delete_m-api_auth_devices
+      tags:
+        - Auth
   /m-api/appointments/details:
     get:
-      description: ''
+      description: GET operation for /m-api/appointments/details
       parameters:
         - name: authorization
           in: header
@@ -4454,9 +5350,12 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: get_m-api_appointments_details
+      tags:
+        - Appointments
   /m-api/appointments/{document_id}/download-doc:
     get:
-      description: ''
+      description: GET operation for /m-api/appointments/{document_id}/download-doc
       parameters:
         - name: document_id
           in: path
@@ -4470,9 +5369,12 @@ paths:
           description: OK
         '400':
           description: Bad Request
+      operationId: get_m-api_appointments_{document_id}_download-doc
+      tags:
+        - Appointments
   /m-api/appointments/{document_id}/delete-doc:
     delete:
-      description: ''
+      description: DELETE operation for /m-api/appointments/{document_id}/delete-doc
       parameters:
         - name: document_id
           in: path
@@ -4484,9 +5386,12 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: delete_m-api_appointments_{document_id}_delete-doc
+      tags:
+        - Appointments
   /m-api/appointments/{appointment_id}/upload-doc:
     post:
-      description: ''
+      description: POST operation for /m-api/appointments/{appointment_id}/upload-doc
       parameters:
         - name: appointment_id
           in: path
@@ -4498,9 +5403,12 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: post_m-api_appointments_{appointment_id}_upload-doc
+      tags:
+        - Appointments
   /m-api/appointments/{patient_id}:
     get:
-      description: ''
+      description: GET operation for /m-api/appointments/{patient_id}
       parameters:
         - name: patient_id
           in: path
@@ -4512,9 +5420,12 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: get_m-api_appointments_{patient_id}
+      tags:
+        - Appointments
   /m-api/appointments/:
     post:
-      description: ''
+      description: POST operation for /m-api/appointments/
       parameters:
         - name: authorization
           in: header
@@ -4551,9 +5462,12 @@ paths:
           description: Bad Request
         '422':
           description: Unprocessable Entity
+      operationId: post_m-api_appointments
+      tags:
+        - Appointments
   /m-api/appointments/{id}/update:
     post:
-      description: ''
+      description: POST operation for /m-api/appointments/{id}/update
       parameters:
         - name: id
           in: path
@@ -4567,9 +5481,12 @@ paths:
           description: Bad Request
         '422':
           description: Unprocessable Entity
+      operationId: post_m-api_appointments_{id}_update
+      tags:
+        - Appointments
   /m-api/appointments/{id}/delete:
     delete:
-      description: ''
+      description: DELETE operation for /m-api/appointments/{id}
       parameters:
         - name: id
           in: path
@@ -4581,9 +5498,12 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: delete_m-api_appointments_{id}
+      tags:
+        - Appointments
   /m-api/medications/{patient_id}/medication-run-rate:
     get:
-      description: ''
+      description: GET operation for /m-api/medications/{patient_id}/medication-run-rate
       parameters:
         - name: patient_id
           in: path
@@ -4597,9 +5517,12 @@ paths:
           description: Bad Request
         '401':
           description: Unauthorized
+      operationId: get_m-api_medications_{patient_id}_medication-run-rate
+      tags:
+        - Medications
   /m-api/medications/{patient_id}/details:
     get:
-      description: ''
+      description: GET operation for /m-api/medications/{patient_id}/details
       parameters:
         - name: patient_id
           in: path
@@ -4611,9 +5534,12 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: get_m-api_medications_{patient_id}_details
+      tags:
+        - Medications
   /m-api/medications/:
     post:
-      description: ''
+      description: POST operation for /m-api/medications/
       parameters:
         - name: authorization
           in: header
@@ -4666,9 +5592,12 @@ paths:
           description: Unauthorized
         '422':
           description: Unprocessable Entity
+      operationId: post_m-api_medications
+      tags:
+        - Medications
   /m-api/medications/{id}:
     post:
-      description: ''
+      description: POST operation for /m-api/medications/{id}
       parameters:
         - name: id
           in: path
@@ -4684,8 +5613,11 @@ paths:
           description: Unauthorized
         '422':
           description: Unprocessable Entity
+      operationId: post_m-api_medications_{id}
+      tags:
+        - Medications
     delete:
-      description: ''
+      description: DELETE operation for /m-api/medications/{id}
       parameters:
         - name: id
           in: path
@@ -4699,9 +5631,12 @@ paths:
           description: Bad Request
         '401':
           description: Unauthorized
+      operationId: delete_m-api_medications_{id}
+      tags:
+        - Medications
   /m-api/events/appointments:
     post:
-      description: ''
+      description: POST operation for /m-api/events/appointments
       parameters:
         - name: authorization
           in: header
@@ -4738,9 +5673,12 @@ paths:
           description: Bad Request
         '422':
           description: Unprocessable Entity
+      operationId: post_m-api_events_appointments
+      tags:
+        - Events
   /m-api/events/medication-details:
     get:
-      description: ''
+      description: GET operation for /m-api/events/medication-details
       parameters:
         - name: authorization
           in: header
@@ -4748,9 +5686,12 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: get_m-api_events_medication-details
+      tags:
+        - Events
   /m-api/events/missed:
     get:
-      description: ''
+      description: GET operation for /m-api/events/missed
       parameters:
         - name: authorization
           in: header
@@ -4758,9 +5699,12 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: get_m-api_events_missed
+      tags:
+        - Events
   /m-api/events/missed/{patient_id}:
     get:
-      description: ''
+      description: GET operation for /m-api/events/missed/{patient_id}
       parameters:
         - name: patient_id
           in: path
@@ -4772,9 +5716,12 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: get_m-api_events_missed_{patient_id}
+      tags:
+        - Events
   /m-api/events/vitals/{id}:
     get:
-      description: ''
+      description: GET operation for /m-api/events/vitals/{id}
       parameters:
         - name: id
           in: path
@@ -4786,9 +5733,12 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: get_m-api_events_vitals_{id}
+      tags:
+        - Events
   /m-api/events/:
     get:
-      description: ''
+      description: GET operation for /m-api/events/
       parameters:
         - name: authorization
           in: header
@@ -4796,9 +5746,12 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: get_m-api_events
+      tags:
+        - Events
   /m-api/events/{patient_id}/last-visit:
     get:
-      description: ''
+      description: GET operation for /m-api/events/{patient_id}/last-visit
       parameters:
         - name: patient_id
           in: path
@@ -4810,9 +5763,12 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: get_m-api_events_{patient_id}_last-visit
+      tags:
+        - Events
   /m-api/events/medication-status/{eventId}:
     post:
-      description: ''
+      description: POST operation for /m-api/events/medication-status/{eventId}
       parameters:
         - name: eventId
           in: path
@@ -4824,9 +5780,12 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: post_m-api_events_medication-status_{eventId}
+      tags:
+        - Events
   /m-api/events/{id}/complete:
     post:
-      description: ''
+      description: POST operation for /m-api/events/{id}/complete
       parameters:
         - name: id
           in: path
@@ -4838,9 +5797,12 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: post_m-api_events_{id}_complete
+      tags:
+        - Events
   /m-api/events/{id}/cancel:
     post:
-      description: ''
+      description: POST operation for /m-api/events/{id}/cancel
       parameters:
         - name: id
           in: path
@@ -4852,9 +5814,12 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: post_m-api_events_{id}_cancel
+      tags:
+        - Events
   /m-api/events/{id}/reschedule:
     post:
-      description: ''
+      description: POST operation for /m-api/events/{id}/reschedule
       parameters:
         - name: id
           in: path
@@ -4866,9 +5831,12 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: post_m-api_events_{id}_reschedule
+      tags:
+        - Events
   /m-api/events/{id}/vitals/response:
     delete:
-      description: ''
+      description: DELETE operation for /m-api/events/{id}/vitals/response
       parameters:
         - name: id
           in: path
@@ -4880,8 +5848,11 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: delete_m-api_events_{id}_vitals_response
+      tags:
+        - Events
     post:
-      description: ''
+      description: POST operation for /m-api/events/{id}/vitals/response
       parameters:
         - name: id
           in: path
@@ -4893,9 +5864,12 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: post_m-api_events_{id}_vitals_response
+      tags:
+        - Events
   /m-api/patients/:
     post:
-      description: ''
+      description: POST operation for /m-api/patients/
       parameters:
         - name: authorization
           in: header
@@ -4903,8 +5877,11 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: post_m-api_patients
+      tags:
+        - Patients
     get:
-      description: ''
+      description: GET operation for /m-api/patients/
       parameters:
         - name: authorization
           in: header
@@ -4912,9 +5889,12 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: get_m-api_patients
+      tags:
+        - Patients
   /m-api/patients/consents/payments:
     post:
-      description: ''
+      description: POST operation for /m-api/patients/consents/payments
       parameters:
         - name: authorization
           in: header
@@ -4922,9 +5902,12 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: post_m-api_patients_consents_payments
+      tags:
+        - Patients
   /m-api/patients/{id}/consents/request:
     post:
-      description: ''
+      description: POST operation for /m-api/patients/{id}/consents/request
       parameters:
         - name: id
           in: path
@@ -4936,9 +5919,12 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: post_m-api_patients_{id}_consents_request
+      tags:
+        - Patients
   /m-api/patients/consents/verify:
     post:
-      description: ''
+      description: POST operation for /m-api/patients/consents/verify
       parameters:
         - name: authorization
           in: header
@@ -4946,9 +5932,12 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: post_m-api_patients_consents_verify
+      tags:
+        - Patients
   /m-api/patients/payment-links:
     get:
-      description: ''
+      description: GET operation for /m-api/patients/payment-links
       parameters:
         - name: authorization
           in: header
@@ -4956,9 +5945,12 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: get_m-api_patients_payment-links
+      tags:
+        - Patients
   /m-api/patients/{id}/appointments:
     get:
-      description: ''
+      description: GET operation for /m-api/patients/{id}/appointments
       parameters:
         - name: id
           in: path
@@ -4970,9 +5962,12 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: get_m-api_patients_{id}_appointments
+      tags:
+        - Patients
   /m-api/patients/{id}/medications:
     get:
-      description: ''
+      description: GET operation for /m-api/patients/{id}/medications
       parameters:
         - name: id
           in: path
@@ -4984,9 +5979,12 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: get_m-api_patients_{id}_medications
+      tags:
+        - Patients
   /m-api/patients/{id}/careplan-details:
     get:
-      description: ''
+      description: GET operation for /m-api/patients/{id}/careplan-details
       parameters:
         - name: id
           in: path
@@ -4998,9 +5996,12 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: get_m-api_patients_{id}_careplan-details
+      tags:
+        - Patients
   /m-api/patients/{patient_id}/symptoms:
     get:
-      description: ''
+      description: GET operation for /m-api/patients/{patient_id}/symptoms
       parameters:
         - name: patient_id
           in: path
@@ -5012,9 +6013,12 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: get_m-api_patients_{patient_id}_symptoms
+      tags:
+        - Patients
   /m-api/patients/{patient_id}/parts/symptoms:
     get:
-      description: ''
+      description: GET operation for /m-api/patients/{patient_id}/parts/symptoms
       parameters:
         - name: patient_id
           in: path
@@ -5026,9 +6030,12 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: get_m-api_patients_{patient_id}_parts_symptoms
+      tags:
+        - Patients
   /m-api/patients/{patient_id}/vitals:
     get:
-      description: ''
+      description: GET operation for /m-api/patients/{patient_id}/vitals
       parameters:
         - name: patient_id
           in: path
@@ -5040,9 +6047,12 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: get_m-api_patients_{patient_id}_vitals
+      tags:
+        - Patients
   /m-api/patients/{patient_id}/reports:
     get:
-      description: ''
+      description: GET operation for /m-api/patients/{patient_id}/reports
       parameters:
         - name: patient_id
           in: path
@@ -5054,9 +6064,12 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: get_m-api_patients_{patient_id}_reports
+      tags:
+        - Patients
   /m-api/patients/diet:
     get:
-      description: ''
+      description: GET operation for /m-api/patients/diet
       parameters:
         - name: authorization
           in: header
@@ -5064,9 +6077,12 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: get_m-api_patients_diet
+      tags:
+        - Patients
   /m-api/patients/searchpatient:
     get:
-      description: ''
+      description: GET operation for /m-api/patients/searchpatient
       parameters:
         - name: authorization
           in: header
@@ -5074,9 +6090,12 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: get_m-api_patients_searchpatient
+      tags:
+        - Patients
   /m-api/patients/generate_prescription/{care_plan_id}:
     get:
-      description: ''
+      description: GET operation for /m-api/patients/generate_prescription/{care_plan_id}
       parameters:
         - name: care_plan_id
           in: path
@@ -5090,9 +6109,12 @@ paths:
           description: OK
         '400':
           description: Bad Request
+      operationId: get_m-api_patients_generate_prescription_{care_plan_id}
+      tags:
+        - Patients
   /m-api/patients/timings:
     get:
-      description: ''
+      description: GET operation for /m-api/patients/timings
       parameters:
         - name: authorization
           in: header
@@ -5100,9 +6122,12 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: get_m-api_patients_timings
+      tags:
+        - Patients
   /m-api/doctors/day-appointments:
     get:
-      description: ''
+      description: GET operation for /m-api/doctors/day-appointments
       parameters:
         - name: authorization
           in: header
@@ -5110,9 +6135,12 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: get_m-api_doctors_day-appointments
+      tags:
+        - Doctors
   /m-api/doctors/:
     post:
-      description: ''
+      description: POST operation for /m-api/doctors/
       parameters:
         - name: authorization
           in: header
@@ -5122,8 +6150,11 @@ paths:
           description: Bad Request
         '422':
           description: Unprocessable Entity
+      operationId: post_m-api_doctors
+      tags:
+        - Doctors
     get:
-      description: ''
+      description: GET operation for /m-api/doctors/
       parameters:
         - name: authorization
           in: header
@@ -5131,9 +6162,12 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: get_m-api_doctors
+      tags:
+        - Doctors
   /m-api/doctors/details:
     post:
-      description: ''
+      description: POST operation for /m-api/doctors/details
       parameters:
         - name: authorization
           in: header
@@ -5154,9 +6188,12 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: post_m-api_doctors_details
+      tags:
+        - Doctors
   /m-api/doctors/search-name:
     get:
-      description: ''
+      description: GET operation for /m-api/doctors/search-name
       parameters:
         - name: authorization
           in: header
@@ -5164,9 +6201,12 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: get_m-api_doctors_search-name
+      tags:
+        - Doctors
   /m-api/doctors/patients:
     get:
-      description: ''
+      description: GET operation for /m-api/doctors/patients
       parameters:
         - name: authorization
           in: header
@@ -5174,8 +6214,11 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: get_m-api_doctors_patients
+      tags:
+        - Doctors
     post:
-      description: ''
+      description: POST operation for /m-api/doctors/patients
       parameters:
         - name: authorization
           in: header
@@ -5226,9 +6269,12 @@ paths:
           description: Bad Request
         '422':
           description: Unprocessable Entity
+      operationId: post_m-api_doctors_patients
+      tags:
+        - Doctors
   /m-api/doctors/upload:
     post:
-      description: ''
+      description: POST operation for /m-api/doctors/upload
       parameters:
         - name: authorization
           in: header
@@ -5236,9 +6282,12 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: post_m-api_doctors_upload
+      tags:
+        - Doctors
   /m-api/doctors/qualifications:
     post:
-      description: ''
+      description: POST operation for /m-api/doctors/qualifications
       parameters:
         - name: authorization
           in: header
@@ -5246,9 +6295,12 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: post_m-api_doctors_qualifications
+      tags:
+        - Doctors
   /m-api/doctors/qualifications/docs:
     post:
-      description: ''
+      description: POST operation for /m-api/doctors/qualifications/docs
       parameters:
         - name: authorization
           in: header
@@ -5256,9 +6308,12 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: post_m-api_doctors_qualifications_docs
+      tags:
+        - Doctors
   /m-api/doctors/registrations:
     post:
-      description: ''
+      description: POST operation for /m-api/doctors/registrations
       parameters:
         - name: authorization
           in: header
@@ -5266,9 +6321,12 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: post_m-api_doctors_registrations
+      tags:
+        - Doctors
   /m-api/doctors/registrations/docs:
     post:
-      description: ''
+      description: POST operation for /m-api/doctors/registrations/docs
       parameters:
         - name: authorization
           in: header
@@ -5276,9 +6334,12 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: post_m-api_doctors_registrations_docs
+      tags:
+        - Doctors
   /m-api/doctors/clinics:
     post:
-      description: ''
+      description: POST operation for /m-api/doctors/clinics
       parameters:
         - name: authorization
           in: header
@@ -5293,9 +6354,12 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: post_m-api_doctors_clinics
+      tags:
+        - Doctors
   /m-api/doctors/watchlist/{patient_id}:
     post:
-      description: ''
+      description: POST operation for /m-api/doctors/watchlist/{patient_id}
       parameters:
         - name: patient_id
           in: path
@@ -5307,8 +6371,11 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: post_m-api_doctors_watchlist_{patient_id}
+      tags:
+        - Doctors
     delete:
-      description: ''
+      description: DELETE operation for /m-api/doctors/watchlist/{patient_id}
       parameters:
         - name: patient_id
           in: path
@@ -5320,9 +6387,12 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: delete_m-api_doctors_watchlist_{patient_id}
+      tags:
+        - Doctors
   /m-api/doctors/consultations:
     post:
-      description: ''
+      description: POST operation for /m-api/doctors/consultations
       parameters:
         - name: authorization
           in: header
@@ -5341,8 +6411,11 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: post_m-api_doctors_consultations
+      tags:
+        - Doctors
     get:
-      description: ''
+      description: GET operation for /m-api/doctors/consultations
       parameters:
         - name: authorization
           in: header
@@ -5350,9 +6423,12 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: get_m-api_doctors_consultations
+      tags:
+        - Doctors
   /m-api/doctors/qualification-documents/{id}:
     delete:
-      description: ''
+      description: DELETE operation for /m-api/doctors/qualification-documents/{id}
       parameters:
         - name: id
           in: path
@@ -5371,9 +6447,12 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: delete_m-api_doctors_qualification-documents_{id}
+      tags:
+        - Doctors
   /m-api/doctors/registration-documents/{id}:
     delete:
-      description: ''
+      description: DELETE operation for /m-api/doctors/registration-documents/{id}
       parameters:
         - name: id
           in: path
@@ -5392,9 +6471,12 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: delete_m-api_doctors_registration-documents_{id}
+      tags:
+        - Doctors
   /m-api/doctors/consultations/{id}:
     delete:
-      description: ''
+      description: DELETE operation for /m-api/doctors/consultations/{id}
       parameters:
         - name: id
           in: path
@@ -5406,9 +6488,12 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: delete_m-api_doctors_consultations_{id}
+      tags:
+        - Doctors
   /m-api/doctors/consultations/default:
     get:
-      description: ''
+      description: GET operation for /m-api/doctors/consultations/default
       parameters:
         - name: authorization
           in: header
@@ -5416,9 +6501,12 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: get_m-api_doctors_consultations_default
+      tags:
+        - Doctors
   /m-api/doctors/updatePatient_careplan/{careplan_id}:
     post:
-      description: ''
+      description: POST operation for /m-api/doctors/updatePatient_careplan/{careplan_id}
       parameters:
         - name: careplan_id
           in: path
@@ -5473,9 +6561,12 @@ paths:
           description: Bad Request
         '422':
           description: Unprocessable Entity
+      operationId: post_m-api_doctors_updatePatient_careplan_{careplan_id}
+      tags:
+        - Doctors
   /m-api/doctors/treatment/templates:
     get:
-      description: ''
+      description: GET operation for /m-api/doctors/treatment/templates
       parameters:
         - name: authorization
           in: header
@@ -5486,9 +6577,12 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: get_m-api_doctors_treatment_templates
+      tags:
+        - Doctors
   /m-api/care-plans/profile:
     post:
-      description: ''
+      description: POST operation for /m-api/care-plans/profile
       parameters:
         - name: authorization
           in: header
@@ -5498,9 +6592,12 @@ paths:
           description: Bad Request
         '401':
           description: Unauthorized
+      operationId: post_m-api_care-plans_profile
+      tags:
+        - Care-plans
   /m-api/care-plans/{carePlanId}:
     post:
-      description: ''
+      description: POST operation for /m-api/care-plans/{carePlanId}
       parameters:
         - name: carePlanId
           in: path
@@ -5539,9 +6636,12 @@ paths:
           description: Bad Request
         '401':
           description: Unauthorized
+      operationId: post_m-api_care-plans_{carePlanId}
+      tags:
+        - Care-plans
   /m-api/care-plans/activate/{carePlanId}:
     post:
-      description: ''
+      description: POST operation for /m-api/care-plans/activate/{carePlanId}
       parameters:
         - name: carePlanId
           in: path
@@ -5564,9 +6664,12 @@ paths:
           description: Bad Request
         '401':
           description: Unauthorized
+      operationId: post_m-api_care-plans_activate_{carePlanId}
+      tags:
+        - Care-plans
   /m-api/medicines/:
     get:
-      description: ''
+      description: GET operation for /m-api/medicines/
       parameters:
         - name: authorization
           in: header
@@ -5574,8 +6677,11 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: get_m-api_medicines
+      tags:
+        - Medicines
     post:
-      description: ''
+      description: POST operation for /m-api/medicines/
       parameters:
         - name: authorization
           in: header
@@ -5583,9 +6689,12 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: post_m-api_medicines
+      tags:
+        - Medicines
   /m-api/charts/:
     get:
-      description: ''
+      description: GET operation for /m-api/charts/
       parameters:
         - name: authorization
           in: header
@@ -5593,9 +6702,12 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: get_m-api_charts
+      tags:
+        - Charts
   /m-api/charts/{id}:
     post:
-      description: ''
+      description: POST operation for /m-api/charts/{id}
       parameters:
         - name: id
           in: path
@@ -5607,15 +6719,21 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: post_m-api_charts_{id}
+      tags:
+        - Charts
   /m-api/twilio/getTwilioVideoAccessToken:
     get:
-      description: ''
+      description: GET operation for /m-api/twilio/getTwilioVideoAccessToken
       responses:
         default:
           description: ''
+      operationId: get_m-api_twilio_getTwilioVideoAccessToken
+      tags:
+        - Twilio
   /m-api/twilio/getTwilioChatAccessToken:
     get:
-      description: ''
+      description: GET operation for /m-api/twilio/getTwilioChatAccessToken
       parameters:
         - name: authorization
           in: header
@@ -5629,9 +6747,12 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: get_m-api_twilio_getTwilioChatAccessToken
+      tags:
+        - Twilio
   /m-api/twilio/getConnectedParticipants/{roomId}:
     get:
-      description: ''
+      description: GET operation for /m-api/twilio/getConnectedParticipants/{roomId}
       parameters:
         - name: roomId
           in: path
@@ -5640,9 +6761,12 @@ paths:
       responses:
         default:
           description: ''
+      operationId: get_m-api_twilio_getConnectedParticipants_{roomId}
+      tags:
+        - Twilio
   /m-api/agora/video-token/{id}:
     get:
-      description: ''
+      description: GET operation for /m-api/agora/video-token/{id}
       parameters:
         - name: id
           in: path
@@ -5654,9 +6778,12 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: get_m-api_agora_video-token_{id}
+      tags:
+        - Agora
   /m-api/agora/missed-call/{id}:
     get:
-      description: ''
+      description: GET operation for /m-api/agora/missed-call/{id}
       parameters:
         - name: id
           in: path
@@ -5668,9 +6795,12 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: get_m-api_agora_missed-call_{id}
+      tags:
+        - Agora
   /m-api/agora/start:
     post:
-      description: ''
+      description: POST operation for /m-api/agora/start
       parameters:
         - name: authorization
           in: header
@@ -5678,9 +6808,12 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: post_m-api_agora_start
+      tags:
+        - Agora
   /m-api/providers/day-appointments:
     get:
-      description: ''
+      description: GET operation for /m-api/providers/day-appointments
       parameters:
         - name: authorization
           in: header
@@ -5688,9 +6821,12 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: get_m-api_providers_day-appointments
+      tags:
+        - Providers
   /m-api/colleges/:
     get:
-      description: ''
+      description: GET operation for /m-api/colleges/
       parameters:
         - name: authorization
           in: header
@@ -5701,9 +6837,12 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: get_m-api_colleges
+      tags:
+        - Colleges
   /m-api/degrees/:
     get:
-      description: ''
+      description: GET operation for /m-api/degrees/
       parameters:
         - name: authorization
           in: header
@@ -5714,9 +6853,12 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: get_m-api_degrees
+      tags:
+        - Degrees
   /m-api/councils/:
     get:
-      description: ''
+      description: GET operation for /m-api/councils/
       parameters:
         - name: authorization
           in: header
@@ -5727,9 +6869,12 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: get_m-api_councils
+      tags:
+        - Councils
   /m-api/conditions/:
     get:
-      description: ''
+      description: GET operation for /m-api/conditions/
       parameters:
         - name: authorization
           in: header
@@ -5740,9 +6885,12 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: get_m-api_conditions
+      tags:
+        - Conditions
   /m-api/severity/:
     get:
-      description: ''
+      description: GET operation for /m-api/severity/
       parameters:
         - name: authorization
           in: header
@@ -5753,9 +6901,12 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: get_m-api_severity
+      tags:
+        - Severity
   /m-api/treatments/:
     get:
-      description: ''
+      description: GET operation for /m-api/treatments/
       parameters:
         - name: authorization
           in: header
@@ -5766,9 +6917,12 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: get_m-api_treatments
+      tags:
+        - Treatments
   /m-api/specialities/:
     get:
-      description: ''
+      description: GET operation for /m-api/specialities/
       parameters:
         - name: authorization
           in: header
@@ -5776,9 +6930,12 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: get_m-api_specialities
+      tags:
+        - Specialities
   /m-api/care-plan-templates/:
     get:
-      description: ''
+      description: GET operation for /m-api/care-plan-templates/
       parameters:
         - name: authorization
           in: header
@@ -5788,8 +6945,11 @@ paths:
           description: Bad Request
         '401':
           description: Unauthorized
+      operationId: get_m-api_care-plan-templates
+      tags:
+        - Care-plan-templates
     post:
-      description: ''
+      description: POST operation for /m-api/care-plan-templates/
       parameters:
         - name: authorization
           in: header
@@ -5799,9 +6959,12 @@ paths:
           description: Bad Request
         '401':
           description: Unauthorized
+      operationId: post_m-api_care-plan-templates
+      tags:
+        - Care-plan-templates
   /m-api/care-plan-templates/search:
     get:
-      description: ''
+      description: GET operation for /m-api/care-plan-templates/search
       parameters:
         - name: authorization
           in: header
@@ -5814,9 +6977,12 @@ paths:
           description: Bad Request
         '401':
           description: Unauthorized
+      operationId: get_m-api_care-plan-templates_search
+      tags:
+        - Care-plan-templates
   /m-api/care-plan-templates/duplicate/{id}:
     post:
-      description: ''
+      description: POST operation for /m-api/care-plan-templates/duplicate/{id}
       parameters:
         - name: id
           in: path
@@ -5830,9 +6996,12 @@ paths:
           description: Bad Request
         '401':
           description: Unauthorized
+      operationId: post_m-api_care-plan-templates_duplicate_{id}
+      tags:
+        - Care-plan-templates
   /m-api/care-plan-templates/{id}:
     post:
-      description: ''
+      description: POST operation for /m-api/care-plan-templates/{id}
       parameters:
         - name: id
           in: path
@@ -5846,8 +7015,11 @@ paths:
           description: Bad Request
         '401':
           description: Unauthorized
+      operationId: post_m-api_care-plan-templates_{id}
+      tags:
+        - Care-plan-templates
     delete:
-      description: ''
+      description: DELETE operation for /m-api/care-plan-templates/{id}
       parameters:
         - name: id
           in: path
@@ -5861,9 +7033,12 @@ paths:
           description: Bad Request
         '401':
           description: Unauthorized
+      operationId: delete_m-api_care-plan-templates_{id}
+      tags:
+        - Care-plan-templates
   /m-api/notifications/:
     post:
-      description: ''
+      description: POST operation for /m-api/notifications/
       parameters:
         - name: authorization
           in: header
@@ -5871,9 +7046,12 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: post_m-api_notifications
+      tags:
+        - Notifications
   /m-api/notifications/chat-notification:
     post:
-      description: ''
+      description: POST operation for /m-api/notifications/chat-notification
       parameters:
         - name: authorization
           in: header
@@ -5881,9 +7059,12 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: post_m-api_notifications_chat-notification
+      tags:
+        - Notifications
   /m-api/symptoms/:
     post:
-      description: ''
+      description: POST operation for /m-api/symptoms/
       parameters:
         - name: authorization
           in: header
@@ -5891,9 +7072,12 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: post_m-api_symptoms
+      tags:
+        - Symptoms
   /m-api/symptoms/audio:
     post:
-      description: ''
+      description: POST operation for /m-api/symptoms/audio
       parameters:
         - name: authorization
           in: header
@@ -5901,9 +7085,12 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: post_m-api_symptoms_audio
+      tags:
+        - Symptoms
   /m-api/symptoms/videos:
     post:
-      description: ''
+      description: POST operation for /m-api/symptoms/videos
       parameters:
         - name: authorization
           in: header
@@ -5911,9 +7098,12 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: post_m-api_symptoms_videos
+      tags:
+        - Symptoms
   /m-api/symptoms/photo:
     post:
-      description: ''
+      description: POST operation for /m-api/symptoms/photo
       parameters:
         - name: authorization
           in: header
@@ -5921,9 +7111,12 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: post_m-api_symptoms_photo
+      tags:
+        - Symptoms
   /m-api/symptoms/{patient_id}:
     post:
-      description: ''
+      description: POST operation for /m-api/symptoms/{patient_id}
       parameters:
         - name: patient_id
           in: path
@@ -5935,9 +7128,12 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: post_m-api_symptoms_{patient_id}
+      tags:
+        - Symptoms
   /m-api/vitals/:
     get:
-      description: ''
+      description: GET operation for /m-api/vitals/
       parameters:
         - name: authorization
           in: header
@@ -5945,8 +7141,11 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: get_m-api_vitals
+      tags:
+        - Vitals
     post:
-      description: ''
+      description: POST operation for /m-api/vitals/
       parameters:
         - name: authorization
           in: header
@@ -5954,9 +7153,12 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: post_m-api_vitals
+      tags:
+        - Vitals
   /m-api/vitals/details:
     get:
-      description: ''
+      description: GET operation for /m-api/vitals/details
       parameters:
         - name: authorization
           in: header
@@ -5964,9 +7166,12 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: get_m-api_vitals_details
+      tags:
+        - Vitals
   /m-api/vitals/{id}:
     get:
-      description: ''
+      description: GET operation for /m-api/vitals/{id}
       parameters:
         - name: id
           in: path
@@ -5978,8 +7183,11 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: get_m-api_vitals_{id}
+      tags:
+        - Vitals
     post:
-      description: ''
+      description: POST operation for /m-api/vitals/{id}
       parameters:
         - name: id
           in: path
@@ -5991,9 +7199,12 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: post_m-api_vitals_{id}
+      tags:
+        - Vitals
   /m-api/vitals/{id}/response:
     post:
-      description: ''
+      description: POST operation for /m-api/vitals/{id}/response
       parameters:
         - name: id
           in: path
@@ -6005,9 +7216,12 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: post_m-api_vitals_{id}_response
+      tags:
+        - Vitals
   /m-api/sync/:
     post:
-      description: ''
+      description: POST operation for /m-api/sync/
       parameters:
         - name: authorization
           in: header
@@ -6015,9 +7229,12 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: post_m-api_sync
+      tags:
+        - Sync
   /m-api/transactions/:
     post:
-      description: ''
+      description: POST operation for /m-api/transactions/
       parameters:
         - name: authorization
           in: header
@@ -6025,9 +7242,12 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: post_m-api_transactions
+      tags:
+        - Transactions
   /m-api/transactions/{id}:
     post:
-      description: ''
+      description: POST operation for /m-api/transactions/{id}
       parameters:
         - name: id
           in: path
@@ -6039,9 +7259,12 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: post_m-api_transactions_{id}
+      tags:
+        - Transactions
   /m-api/accounts/:
     post:
-      description: ''
+      description: POST operation for /m-api/accounts/
       parameters:
         - name: authorization
           in: header
@@ -6049,8 +7272,11 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: post_m-api_accounts
+      tags:
+        - Accounts
     get:
-      description: ''
+      description: GET operation for /m-api/accounts/
       parameters:
         - name: authorization
           in: header
@@ -6058,9 +7284,12 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: get_m-api_accounts
+      tags:
+        - Accounts
   /m-api/accounts/{id}:
     post:
-      description: ''
+      description: POST operation for /m-api/accounts/{id}
       parameters:
         - name: id
           in: path
@@ -6072,8 +7301,11 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: post_m-api_accounts_{id}
+      tags:
+        - Accounts
     delete:
-      description: ''
+      description: DELETE operation for /m-api/accounts/{id}
       parameters:
         - name: id
           in: path
@@ -6085,9 +7317,12 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: delete_m-api_accounts_{id}
+      tags:
+        - Accounts
   /m-api/accounts/{user_id}/payments:
     get:
-      description: ''
+      description: GET operation for /m-api/accounts/{user_id}/payments
       parameters:
         - name: user_id
           in: path
@@ -6099,9 +7334,12 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: get_m-api_accounts_{user_id}_payments
+      tags:
+        - Accounts
   /m-api/features/toggleChatMessagePermission/{patient_id}:
     post:
-      description: ''
+      description: POST operation for /m-api/features/toggleChatMessagePermission/{patient_id}
       parameters:
         - name: patient_id
           in: path
@@ -6113,9 +7351,12 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: post_m-api_features_toggleChatMessagePermission_{patient_id}
+      tags:
+        - Features
   /m-api/features/toggleVideoCallPermission/{patient_id}:
     post:
-      description: ''
+      description: POST operation for /m-api/features/toggleVideoCallPermission/{patient_id}
       parameters:
         - name: patient_id
           in: path
@@ -6127,9 +7368,12 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: post_m-api_features_toggleVideoCallPermission_{patient_id}
+      tags:
+        - Features
   /m-api/features/:
     get:
-      description: ''
+      description: GET operation for /m-api/features/
       parameters:
         - name: authorization
           in: header
@@ -6137,9 +7381,12 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: get_m-api_features
+      tags:
+        - Features
   /m-api/reports/latest:
     get:
-      description: ''
+      description: GET operation for /m-api/reports/latest
       parameters:
         - name: authorization
           in: header
@@ -6147,9 +7394,12 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: get_m-api_reports_latest
+      tags:
+        - Reports
   /m-api/reports/:
     post:
-      description: ''
+      description: POST operation for /m-api/reports/
       parameters:
         - name: authorization
           in: header
@@ -6157,9 +7407,12 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: post_m-api_reports
+      tags:
+        - Reports
   /m-api/reports/upload/{patient_id}:
     post:
-      description: ''
+      description: POST operation for /m-api/reports/upload/{patient_id}
       parameters:
         - name: patient_id
           in: path
@@ -6171,9 +7424,12 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: post_m-api_reports_upload_{patient_id}
+      tags:
+        - Reports
   /m-api/reports/{document_id}:
     delete:
-      description: ''
+      description: DELETE operation for /m-api/reports/{document_id}
       parameters:
         - name: document_id
           in: path
@@ -6185,9 +7441,12 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: delete_m-api_reports_{document_id}
+      tags:
+        - Reports
   /m-api/favourites/:
     post:
-      description: ''
+      description: POST operation for /m-api/favourites/
       parameters:
         - name: authorization
           in: header
@@ -6195,8 +7454,11 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: post_m-api_favourites
+      tags:
+        - Favourites
     get:
-      description: ''
+      description: GET operation for /m-api/favourites/
       parameters:
         - name: authorization
           in: header
@@ -6204,8 +7466,11 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: get_m-api_favourites
+      tags:
+        - Favourites
     delete:
-      description: ''
+      description: DELETE operation for /m-api/favourites/
       parameters:
         - name: authorization
           in: header
@@ -6213,9 +7478,12 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: delete_m-api_favourites
+      tags:
+        - Favourites
   /m-api/favourites/{id}:
     delete:
-      description: ''
+      description: DELETE operation for /m-api/favourites/{id}
       parameters:
         - name: id
           in: path
@@ -6227,9 +7495,12 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: delete_m-api_favourites_{id}
+      tags:
+        - Favourites
   /m-api/adhoc/populate-user-roles:
     post:
-      description: ''
+      description: POST operation for /m-api/adhoc/populate-user-roles
       parameters:
         - name: authorization
           in: header
@@ -6237,9 +7508,12 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: post_m-api_adhoc_populate-user-roles
+      tags:
+        - Adhoc
   /m-api/adhoc/test-api:
     post:
-      description: ''
+      description: POST operation for /m-api/adhoc/test-api
       parameters:
         - name: authorization
           in: header
@@ -6247,9 +7521,12 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: post_m-api_adhoc_test-api
+      tags:
+        - Adhoc
   /m-api/user-roles/switch-role-id:
     post:
-      description: ''
+      description: POST operation for /m-api/user-roles/switch-role-id
       parameters:
         - name: authorization
           in: header
@@ -6257,9 +7534,12 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: post_m-api_user-roles_switch-role-id
+      tags:
+        - User-roles
   /m-api/user-roles/:
     get:
-      description: ''
+      description: GET operation for /m-api/user-roles/
       parameters:
         - name: authorization
           in: header
@@ -6267,9 +7547,12 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: get_m-api_user-roles
+      tags:
+        - User-roles
   /m-api/food-items/:
     post:
-      description: ''
+      description: POST operation for /m-api/food-items/
       parameters:
         - name: authorization
           in: header
@@ -6277,8 +7560,11 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: post_m-api_food-items
+      tags:
+        - Food-items
     get:
-      description: ''
+      description: GET operation for /m-api/food-items/
       parameters:
         - name: authorization
           in: header
@@ -6286,9 +7572,12 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: get_m-api_food-items
+      tags:
+        - Food-items
   /m-api/food-items/{id}:
     post:
-      description: ''
+      description: POST operation for /m-api/food-items/{id}
       parameters:
         - name: id
           in: path
@@ -6300,9 +7589,12 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: post_m-api_food-items_{id}
+      tags:
+        - Food-items
   /m-api/meal/templates/:
     post:
-      description: ''
+      description: POST operation for /m-api/meal/templates/
       parameters:
         - name: authorization
           in: header
@@ -6310,9 +7602,12 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: post_m-api_meal_templates
+      tags:
+        - Meal
   /m-api/meal/templates/{id}:
     post:
-      description: ''
+      description: POST operation for /m-api/meal/templates/{id}
       parameters:
         - name: id
           in: path
@@ -6324,8 +7619,11 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: post_m-api_meal_templates_{id}
+      tags:
+        - Meal
     delete:
-      description: ''
+      description: DELETE operation for /m-api/meal/templates/{id}
       parameters:
         - name: id
           in: path
@@ -6337,9 +7635,12 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: delete_m-api_meal_templates_{id}
+      tags:
+        - Meal
   /m-api/diet/:
     get:
-      description: ''
+      description: GET operation for /m-api/diet/
       parameters:
         - name: authorization
           in: header
@@ -6347,8 +7648,11 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: get_m-api_diet
+      tags:
+        - Diet
     post:
-      description: ''
+      description: POST operation for /m-api/diet/
       parameters:
         - name: authorization
           in: header
@@ -6356,9 +7660,12 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: post_m-api_diet
+      tags:
+        - Diet
   /m-api/diet/all-diets:
     get:
-      description: ''
+      description: GET operation for /m-api/diet/all-diets
       parameters:
         - name: authorization
           in: header
@@ -6366,9 +7673,12 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: get_m-api_diet_all-diets
+      tags:
+        - Diet
   /m-api/diet/{id}/timeline:
     get:
-      description: ''
+      description: GET operation for /m-api/diet/{id}/timeline
       parameters:
         - name: id
           in: path
@@ -6380,9 +7690,12 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: get_m-api_diet_{id}_timeline
+      tags:
+        - Diet
   /m-api/diet/details/patients/{patient_id}:
     get:
-      description: ''
+      description: GET operation for /m-api/diet/details/patients/{patient_id}
       parameters:
         - name: patient_id
           in: path
@@ -6394,9 +7707,12 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: get_m-api_diet_details_patients_{patient_id}
+      tags:
+        - Diet
   /m-api/diet/{id}:
     get:
-      description: ''
+      description: GET operation for /m-api/diet/{id}
       parameters:
         - name: id
           in: path
@@ -6408,8 +7724,11 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: get_m-api_diet_{id}
+      tags:
+        - Diet
     post:
-      description: ''
+      description: POST operation for /m-api/diet/{id}
       parameters:
         - name: id
           in: path
@@ -6421,8 +7740,11 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: post_m-api_diet_{id}
+      tags:
+        - Diet
     delete:
-      description: ''
+      description: DELETE operation for /m-api/diet/{id}
       parameters:
         - name: id
           in: path
@@ -6434,9 +7756,12 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: delete_m-api_diet_{id}
+      tags:
+        - Diet
   /m-api/diet/update-calories:
     post:
-      description: ''
+      description: POST operation for /m-api/diet/update-calories
       parameters:
         - name: authorization
           in: header
@@ -6444,9 +7769,12 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: post_m-api_diet_update-calories
+      tags:
+        - Diet
   /m-api/diet/response/:
     post:
-      description: ''
+      description: POST operation for /m-api/diet/response/
       parameters:
         - name: authorization
           in: header
@@ -6456,9 +7784,12 @@ paths:
           description: Bad Request
         '401':
           description: Unauthorized
+      operationId: post_m-api_diet_response
+      tags:
+        - Diet
   /m-api/diet/response/upload:
     post:
-      description: ''
+      description: POST operation for /m-api/diet/response/upload
       parameters:
         - name: authorization
           in: header
@@ -6468,9 +7799,12 @@ paths:
           description: Bad Request
         '401':
           description: Unauthorized
+      operationId: post_m-api_diet_response_upload
+      tags:
+        - Diet
   /m-api/portions/:
     get:
-      description: ''
+      description: GET operation for /m-api/portions/
       parameters:
         - name: authorization
           in: header
@@ -6478,9 +7812,12 @@ paths:
       responses:
         '400':
           description: Bad Request
+      operationId: get_m-api_portions
+      tags:
+        - Portions
   /m-api/exercises/:
     get:
-      description: ''
+      description: GET operation for /m-api/exercises/
       parameters:
         - name: authorization
           in: header
@@ -6493,8 +7830,11 @@ paths:
           description: Bad Request
         '401':
           description: Unauthorized
+      operationId: get_m-api_exercises
+      tags:
+        - Exercises
     post:
-      description: ''
+      description: POST operation for /m-api/exercises/
       parameters:
         - name: authorization
           in: header
@@ -6504,9 +7844,12 @@ paths:
           description: Bad Request
         '401':
           description: Unauthorized
+      operationId: post_m-api_exercises
+      tags:
+        - Exercises
   /m-api/exercises/upload:
     post:
-      description: ''
+      description: POST operation for /m-api/exercises/upload
       parameters:
         - name: authorization
           in: header
@@ -6516,9 +7859,12 @@ paths:
           description: Bad Request
         '401':
           description: Unauthorized
+      operationId: post_m-api_exercises_upload
+      tags:
+        - Exercises
   /m-api/exercises/{id}:
     post:
-      description: ''
+      description: POST operation for /m-api/exercises/{id}
       parameters:
         - name: id
           in: path
@@ -6532,9 +7878,12 @@ paths:
           description: Bad Request
         '401':
           description: Unauthorized
+      operationId: post_m-api_exercises_{id}
+      tags:
+        - Exercises
   /m-api/workout/patients:
     get:
-      description: ''
+      description: GET operation for /m-api/workout/patients
       parameters:
         - name: authorization
           in: header
@@ -6547,9 +7896,12 @@ paths:
           description: Bad Request
         '401':
           description: Unauthorized
+      operationId: get_m-api_workout_patients
+      tags:
+        - Workout
   /m-api/workout/details:
     get:
-      description: ''
+      description: GET operation for /m-api/workout/details
       parameters:
         - name: authorization
           in: header
@@ -6559,9 +7911,12 @@ paths:
           description: Bad Request
         '401':
           description: Unauthorized
+      operationId: get_m-api_workout_details
+      tags:
+        - Workout
   /m-api/workout/{id}/timeline:
     get:
-      description: ''
+      description: GET operation for /m-api/workout/{id}/timeline
       parameters:
         - name: id
           in: path
@@ -6575,9 +7930,12 @@ paths:
           description: Bad Request
         '401':
           description: Unauthorized
+      operationId: get_m-api_workout_{id}_timeline
+      tags:
+        - Workout
   /m-api/workout/{id}:
     get:
-      description: ''
+      description: GET operation for /m-api/workout/{id}
       parameters:
         - name: id
           in: path
@@ -6591,8 +7949,11 @@ paths:
           description: Bad Request
         '401':
           description: Unauthorized
+      operationId: get_m-api_workout_{id}
+      tags:
+        - Workout
     post:
-      description: ''
+      description: POST operation for /m-api/workout/{id}
       parameters:
         - name: id
           in: path
@@ -6606,8 +7967,11 @@ paths:
           description: Bad Request
         '401':
           description: Unauthorized
+      operationId: post_m-api_workout_{id}
+      tags:
+        - Workout
     delete:
-      description: ''
+      description: DELETE operation for /m-api/workout/{id}
       parameters:
         - name: id
           in: path
@@ -6621,9 +7985,12 @@ paths:
           description: Bad Request
         '401':
           description: Unauthorized
+      operationId: delete_m-api_workout_{id}
+      tags:
+        - Workout
   /m-api/workout/update-calories:
     post:
-      description: ''
+      description: POST operation for /m-api/workout/update-calories
       parameters:
         - name: authorization
           in: header
@@ -6639,9 +8006,12 @@ paths:
           description: Bad Request
         '401':
           description: Unauthorized
+      operationId: post_m-api_workout_update-calories
+      tags:
+        - Workout
   /m-api/workout/:
     post:
-      description: ''
+      description: POST operation for /m-api/workout/
       parameters:
         - name: authorization
           in: header
@@ -6651,9 +8021,12 @@ paths:
           description: Bad Request
         '401':
           description: Unauthorized
+      operationId: post_m-api_workout
+      tags:
+        - Workout
   /m-api/workout/response/:
     get:
-      description: ''
+      description: GET operation for /m-api/workout/response/
       parameters:
         - name: authorization
           in: header
@@ -6663,8 +8036,11 @@ paths:
           description: Bad Request
         '401':
           description: Unauthorized
+      operationId: get_m-api_workout_response
+      tags:
+        - Workout
     post:
-      description: ''
+      description: POST operation for /m-api/workout/response/
       parameters:
         - name: authorization
           in: header
@@ -6674,9 +8050,12 @@ paths:
           description: Bad Request
         '401':
           description: Unauthorized
+      operationId: post_m-api_workout_response
+      tags:
+        - Workout
   /m-api/workout/response/skip:
     post:
-      description: ''
+      description: POST operation for /m-api/workout/response/skip
       parameters:
         - name: authorization
           in: header
@@ -6686,9 +8065,12 @@ paths:
           description: Bad Request
         '401':
           description: Unauthorized
+      operationId: post_m-api_workout_response_skip
+      tags:
+        - Workout
   /m-api/workout/response/{id}:
     post:
-      description: ''
+      description: POST operation for /m-api/workout/response/{id}
       parameters:
         - name: id
           in: path
@@ -6702,6 +8084,9 @@ paths:
           description: Bad Request
         '401':
           description: Unauthorized
+      operationId: post_m-api_workout_response_{id}
+      tags:
+        - Workout
 definitions:
   Patient:
     type: object

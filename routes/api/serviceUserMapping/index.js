@@ -9,7 +9,7 @@ const router = express.Router();
 router.post("/", Authenticate, isDoctor, ServiceUserMappingController.create);
 
 router.put(
-  "/:id",
+  "/:id/update",
   Authenticate,
   ServiceUserMappingController.updateServiceUserMapping
 );

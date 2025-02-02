@@ -70,7 +70,7 @@ class EventExecutor {
       const jsonResponse = await response.json();
       Log.debug("sendPushNotification Response: ", jsonResponse);
     } catch (err) {
-      Log.debug("sendPushNotification 500 error: ", err);
+      Log.debug("Event executor sendPushNotification 500 error: ", err);
     }
   }
    */
