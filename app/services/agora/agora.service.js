@@ -6,7 +6,7 @@ const appID = process.config.agora.app_id;
 const appCertificate = process.config.agora.app_certificate;
 let channelNameAgora = process.config.agora.app_channel_name;
 
-const Log = createLogger("AGORA SERVICES");
+const log = createLogger("AGORA SERVICES");
 
 class AgoraService {
   constructor() {}

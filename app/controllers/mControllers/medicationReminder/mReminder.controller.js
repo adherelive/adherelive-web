@@ -47,7 +47,7 @@ import UserPreferenceWrapper from "../../../apiWrapper/mobile/userPreference";
 import * as medicationHelper from "../../medicationReminder/medication.helper";
 
 const LOG_NAME = "MOBILE > MEDICATION REMINDER > CONTROLLER";
-const Log = createLogger(LOG_NAME);
+const log = createLogger(LOG_NAME);
 
 const KEY_REPEAT_TYPE = "repeat_type";
 const KEY_DAYS = "days";
@@ -193,7 +193,7 @@ class MobileMReminderController extends Controller {
 
       const sqsResponse = await QueueService.sendMessage(eventScheduleData);
 
-      Log.debug("sqsResponse ---> ", sqsResponse);
+      log.debug("sqsResponse ---> ", sqsResponse);
 
       const medicationJob = MedicationJob.execute(
         EVENT_STATUS.SCHEDULED,
@@ -201,7 +201,7 @@ class MobileMReminderController extends Controller {
       );
       await NotificationSdk.execute(medicationJob);
 
-      Log.debug("medicationJob ---> ", medicationJob.getInAppTemplate());
+      log.debug("medicationJob ---> ", medicationJob.getInAppTemplate());
 
       return this.raiseSuccess(
         res,
@@ -409,7 +409,7 @@ class MobileMReminderController extends Controller {
 
       // await Proxy_Sdk.scheduleEvent({data: eventScheduleData});
     } catch (error) {
-      Log.debug("Add medication error", error);
+      log.debug("Add medication error", error);
       return this.raiseServerError(res);
     }
   };
@@ -418,7 +418,7 @@ class MobileMReminderController extends Controller {
     const { raiseSuccess, raiseServerError } = this;
     try {
       const { params: { patient_id } = {}, userDetails: { userId } = {} } = req;
-      Log.info(`params: patient_id : ${patient_id}`);
+      log.info(`params: patient_id : ${patient_id}`);
 
       // if (!parseInt(patient_id)) {
       //   return raiseClientError(
@@ -501,7 +501,7 @@ class MobileMReminderController extends Controller {
         medicineId.push(medicationWrapper.getMedicineId());
       }
 
-      Log.debug("medicineId", medicationDetails);
+      log.debug("medicineId", medicationDetails);
 
       const medicineData = await medicineService.getMedicineById({
         id: medicineId,
@@ -515,7 +515,7 @@ class MobileMReminderController extends Controller {
           medicineWrapper.getBasicInfo();
       }
 
-      Log.debug("medicineData", medicineData);
+      log.debug("medicineData", medicineData);
 
       return raiseSuccess(
         res,
@@ -534,7 +534,7 @@ class MobileMReminderController extends Controller {
         "Medications fetched successfully"
       );
     } catch (error) {
-      Log.debug("500 error ", error);
+      log.debug("500 error ", error);
       return raiseServerError(res);
     }
   };
@@ -660,7 +660,7 @@ class MobileMReminderController extends Controller {
         "Medication updated successfully"
       );
     } catch (error) {
-      Log.debug("update m-reminder error", error);
+      log.debug("update m-reminder error", error);
       return this.raiseServerError(res);
     }
   };
@@ -715,7 +715,7 @@ class MobileMReminderController extends Controller {
 
       return raiseSuccess(res, 200, {}, "Medication deleted successfully");
     } catch (error) {
-      Log.debug("delete m-reminder error", error);
+      log.debug("delete m-reminder error", error);
       return raiseServerError(res);
     }
   };
@@ -751,7 +751,7 @@ class MobileMReminderController extends Controller {
         };
       }
 
-      Log.debug(
+      log.debug(
         "medicationScheduleEventResponse: ",
         medicationScheduleEventResponse
       );
@@ -767,7 +767,7 @@ class MobileMReminderController extends Controller {
         "Medications status fetched successfully"
       );
     } catch (error) {
-      Log.debug("getMedicationEventsStatus 500 error: ", error);
+      log.debug("getMedicationEventsStatus 500 error: ", error);
       return raiseServerError(res);
     }
   };

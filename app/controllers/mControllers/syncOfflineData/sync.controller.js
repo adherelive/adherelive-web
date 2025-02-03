@@ -7,7 +7,7 @@ import {
   syncVitalsResponseData,
 } from "./eventSync.helper";
 
-const Log = createLogger("MOBILE > SYNC > CONTROLLER");
+const log = createLogger("MOBILE > SYNC > CONTROLLER");
 
 class SyncController extends Controller {
   constructor() {
@@ -21,7 +21,7 @@ class SyncController extends Controller {
       const {
         [OFFLINE_SYNC_DATA_TASKS.SYNC_EVENTS_DATA]: event_sync_data = {},
       } = body;
-      Log.debug("data got from body is: ", event_sync_data);
+      log.debug("data got from body is: ", event_sync_data);
 
       if (event_sync_data && Object.keys(event_sync_data).length) {
         return this.syncEventsOfflineData(req, res);
@@ -29,7 +29,7 @@ class SyncController extends Controller {
 
       return raiseSuccess(res, 200, {}, "No such event present");
     } catch (error) {
-      Log.debug("Sync offline data 500 error: ", error);
+      log.debug("Sync offline data 500 error: ", error);
       return raiseServerError(res);
     }
   };
@@ -45,7 +45,7 @@ class SyncController extends Controller {
         event_id = null,
         update_time = null,
       } = event_sync_data;
-      Log.debug("data got from body is: ", event_type, event_id);
+      log.debug("data got from body is: ", event_type, event_id);
 
       if (event_type === EVENT_TYPE.MEDICATION_REMINDER) {
         const eventApiDetails = await syncMedicationReminderStatus(
@@ -91,7 +91,7 @@ class SyncController extends Controller {
 
       return raiseSuccess(res, 200, {}, "No such event present");
     } catch (error) {
-      Log.debug("Sync offline data 500 error: ", error);
+      log.debug("Sync offline data 500 error: ", error);
       return raiseServerError(res);
     }
   };

@@ -12,7 +12,7 @@ import { USER_CATEGORY } from "../../../../constant";
 
 const LOG_NAME = "MOBILE > FEATURES > CONTROLLER";
 
-const Log = createLogger(LOG_NAME);
+const log = createLogger(LOG_NAME);
 
 class MobileFeatureController extends Controller {
   constructor() {
@@ -128,7 +128,7 @@ class MobileFeatureController extends Controller {
         "Features mapping fetched successfully."
       );
     } catch (error) {
-      Log.debug("getAllFeaturesMappingForUser 500 error", error);
+      log.debug("getAllFeaturesMappingForUser 500 error", error);
       return raiseServerError(res, 500, {}, error.message);
     }
   };

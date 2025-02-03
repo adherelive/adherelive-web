@@ -26,7 +26,7 @@ import carePlanService from "../../../services/carePlan/carePlan.service";
 import SymptomsJob from "../../../jobSdk/Symptoms/observer";
 import NotificationSdk from "../../../notificationSdk";
 
-const Log = createLogger("MOBILE > SYMPTOM > CONTROLLER");
+const log = createLogger("MOBILE > SYMPTOM > CONTROLLER");
 
 class SymptomController extends Controller {
   constructor() {
@@ -36,8 +36,8 @@ class SymptomController extends Controller {
   create = async (req, res) => {
     const { raiseSuccess, raiseServerError } = this;
     try {
-      Log.debug("req body---> ", req.body);
-      Log.debug("req params---> ", req.params);
+      log.debug("req body---> ", req.body);
+      log.debug("req params---> ", req.params);
 
       const {
         body,
@@ -280,7 +280,7 @@ class SymptomController extends Controller {
         "Symptom added successfully"
       );
     } catch (error) {
-      Log.debug("create 500 error - symptom added", error);
+      log.debug("create 500 error - symptom added", error);
       return raiseServerError(res);
     }
   };
@@ -288,7 +288,7 @@ class SymptomController extends Controller {
   uploadAudio = async (req, res) => {
     const { raiseSuccess, raiseServerError } = this;
     try {
-      Log.debug("uploadAudio req.file ---> ", req.file);
+      log.debug("uploadAudio req.file ---> ", req.file);
 
       const { userDetails: { userId } = {} } = req;
 
@@ -304,7 +304,7 @@ class SymptomController extends Controller {
         "Symptom audio added successfully"
       );
     } catch (error) {
-      Log.debug("symptom uploadAudio 500 error", error);
+      log.debug("symptom uploadAudio 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -312,7 +312,7 @@ class SymptomController extends Controller {
   uploadVideo = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
-      Log.debug("uploadVideo req.file ---> ", req.file);
+      log.debug("uploadVideo req.file ---> ", req.file);
 
       const {
         file: videoFile,
@@ -325,7 +325,7 @@ class SymptomController extends Controller {
           fullFileName.length - 3,
           fullFileName.length
         );
-        Log.info(`fileExt : ${fileExt}`);
+        log.info(`fileExt : ${fileExt}`);
         if (ALLOWED_VIDEO_EXTENSIONS.includes(fileExt)) {
           const { file, name } = await uploadVideo({ userId, file: videoFile });
 
@@ -355,7 +355,7 @@ class SymptomController extends Controller {
         );
       }
     } catch (error) {
-      Log.debug("symptom uploadVideo 500 error", error);
+      log.debug("symptom uploadVideo 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -363,13 +363,13 @@ class SymptomController extends Controller {
   uploadPhotos = async (req, res) => {
     const { raiseSuccess, raiseServerError } = this;
     try {
-      Log.debug("uploadPhotos req.file ---> ", req.file);
+      log.debug("uploadPhotos req.file ---> ", req.file);
 
       const { userDetails: { userId } = {} } = req;
 
       const { file, name } = await uploadImage({ userId, file: req.file });
 
-      Log.info(`FILE_NAME: ${name} | FILE: ${file}`);
+      log.info(`FILE_NAME: ${name} | FILE: ${file}`);
 
       return raiseSuccess(
         res,
@@ -381,7 +381,7 @@ class SymptomController extends Controller {
         "Symptom photo added successfully"
       );
     } catch (error) {
-      Log.debug("symptoms uploadPhotos 500 error", error);
+      log.debug("symptoms uploadPhotos 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -389,7 +389,7 @@ class SymptomController extends Controller {
   getSymptomDetails = async (req, res) => {
     const { raiseSuccess, raiseServerError } = this;
     try {
-      Log.debug("getSymptomDetails req.body ---> ", req.body);
+      log.debug("getSymptomDetails req.body ---> ", req.body);
       const { body: { symptom_ids = [] } = {} } = req;
 
       let documentData = {};
@@ -437,7 +437,7 @@ class SymptomController extends Controller {
         "Symptom details fetched successfully"
       );
     } catch (error) {
-      Log.debug("symptoms getSymptomDetails 500 error", error);
+      log.debug("symptoms getSymptomDetails 500 error", error);
       return raiseServerError(res);
     }
   };

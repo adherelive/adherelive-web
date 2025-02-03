@@ -175,12 +175,12 @@ class AppointmentService {
       let endOfDay = moment().endOf("day").toISOString();
 
       if (date) {
-        console.log("in if condition");
+        log.info("in if condition");
         startOfDay = moment(date, "DD-MM-YYYY").startOf("day").toISOString();
         endOfDay = moment(date, "DD-MM-YYYY").endOf("day").toISOString();
       }
 
-      console.log({ date, startOfDay, endOfDay });
+      log.info({ date, startOfDay, endOfDay });
 
       const appointments = await Database.getModel(TABLE_NAME).findAll({
         where: {

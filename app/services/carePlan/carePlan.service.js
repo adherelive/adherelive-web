@@ -21,13 +21,13 @@ class CarePlanService {
       const carePlans = await Database.getModel(TABLE_NAME).findAll();
       return carePlans;
     } catch (err) {
-      console.log(err);
+      log.info(err);
       throw err;
     }
   }
 
   getCarePlanByData = async (data) => {
-    console.log("getCarePlanByData ---> data: ", data);
+    log.info("getCarePlanByData ---> data: ", data);
     try {
       const { user_role_id = null, ...rest } = data || {};
 
@@ -108,7 +108,7 @@ class CarePlanService {
    * @returns {Promise<*>}
    */
   getCarePlanById = async (id) => {
-    console.log("getCarePlanById ---> ID: ", id);
+    log.info("getCarePlanById ---> ID: ", id);
     try {
       const carePlan = await Database.getModel(TABLE_NAME).findOne({
         where: { id },
@@ -135,7 +135,7 @@ class CarePlanService {
           },
         ],
       });
-      console.log("getCarePlanById for Doctor Mapping: \n", carePlan.careplan_secondary_doctor_mappings);
+      log.info("getCarePlanById for Doctor Mapping: \n", carePlan.careplan_secondary_doctor_mappings);
       return carePlan;
     } catch (error) {
       throw "Error in getCarePlanByID for Doctor: " + error;
@@ -191,7 +191,7 @@ class CarePlanService {
           }
         );
       }
-      console.log(rest);
+      log.info(rest);
 
       const carePlan = await Database.getModel(TABLE_NAME).findAll({
         where: {
@@ -238,7 +238,7 @@ class CarePlanService {
   };
 
   updateCarePlan = async (data, id) => {
-    console.log("update care plan called", { data, id });
+    log.info("update care plan called", { data, id });
     const transaction = await Database.initTransaction();
     try {
       const carePlan = await Database.getModel(TABLE_NAME).update(data, {
@@ -417,7 +417,7 @@ class CarePlanService {
       }
 
       const [patients, metaData] = await Database.performRawQuery(query);
-      console.log("Patients Metadata, Get Paginated data of Patients: \n", {
+      log.info("Patients Metadata, Get Paginated data of Patients: \n", {
         patients,
         metaData,
       });
@@ -436,7 +436,7 @@ class CarePlanService {
                            WHERE JSON_EXTRACT(details, "$.diagnosis.type") = "${intType}";`;
 
       const [carePlans, metaData] = await Database.performRawQuery(query);
-      console.log("Patients Metadata, Get Paginated data of Patients: \n", {
+      log.info("Patients Metadata, Get Paginated data of Patients: \n", {
         metaData,
       });
       return carePlans;
@@ -453,7 +453,7 @@ class CarePlanService {
                            WHERE JSON_EXTRACT(details, "$.diagnosis.description") like "%${seachDiagnosisText}%";`;
 
       const [carePlans, metaData] = await Database.performRawQuery(query);
-      console.log("Patients Metadata, Get Paginated data of Patients: \n", {
+      log.info("Patients Metadata, Get Paginated data of Patients: \n", {
         metaData,
       });
       return carePlans;
@@ -469,10 +469,10 @@ class CarePlanService {
                            WHERE JSON_EXTRACT(details, "$.treatment_id") in (${treatmentIds});`;
 
       const [carePlans, metaData] = await Database.performRawQuery(query);
-      console.log("Patients Metadata, Get Paginated data of Patients: \n", {
+      log.info("Patients Metadata, Get Paginated data of Patients: \n", {
         metaData,
       });
-      console.log("Patient Care Plans: ", { carePlans });
+      log.info("Patient Care Plans: ", { carePlans });
 
       return carePlans;
     } catch (err) {
@@ -491,7 +491,7 @@ class CarePlanService {
     secondary_careplan_ids = null,
   }) => {
     // const patientWatchlistedIds = watchlistPatientIds.length ? watchlistPatientIds.toString() : null ;
-    // console.log("7456278467234627429384221",{offset,limit,watchlistPatientIds,patientWatchlistedIds});
+    // log.info("7456278467234627429384221",{offset,limit,watchlistPatientIds,patientWatchlistedIds});
 
     let finalFilter = filter
       ? `${filter} AND carePlan.user_role_id = ${user_role_id}`
@@ -564,7 +564,7 @@ class CarePlanService {
           type: QueryTypes.SELECT,
         })) || [];
 
-      // console.log("carePlanCount inside getPaginatedPatients: ", carePlanCount);
+      // log.info("carePlanCount inside getPaginatedPatients: ", carePlanCount);
       return [carePlanCount.length, carePlans];
 
       // TODO: Why is this code here?

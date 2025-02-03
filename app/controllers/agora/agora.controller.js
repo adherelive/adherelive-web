@@ -12,7 +12,7 @@ import { createLogger } from "../../../libs/log";
 import AgoraJob from "../../jobSdk/Agora/observer";
 import NotificationSdk from "../../notificationSdk";
 
-const Log = createLogger("WEB > AGORA > CONTROLLER");
+const log = createLogger("WEB > AGORA > CONTROLLER");
 
 class AgoraController extends Controller {
   constructor() {
@@ -53,7 +53,7 @@ class AgoraController extends Controller {
         "Created new video token with userId"
       );
     } catch (error) {
-      Log.debug("generateVideoAccessToken 50 error", error);
+      log.debug("generateVideoAccessToken 50 error", error);
       return this.raiseServerError(res, 500, {}, "Error in video calling.");
     }
   };
@@ -107,7 +107,7 @@ class AgoraController extends Controller {
         "Notification raised successfully for missed call."
       );
     } catch (error) {
-      Log.debug("missedCall 500 error", error);
+      log.debug("missedCall 500 error", error);
       return this.raiseServerError(
         res,
         500,
@@ -128,7 +128,7 @@ class AgoraController extends Controller {
           userCategoryData: { basic_info: { full_name } = {} } = {},
         } = {},
       } = req;
-      console.log("room id is ", roomId);
+      log.info("room id is ", roomId);
       const agoraJob = AgoraJob.execute(EVENT_STATUS.STARTED, {
         roomId,
         event_type: AGORA_CALL_NOTIFICATION_TYPES.START_CALL,
@@ -147,7 +147,7 @@ class AgoraController extends Controller {
         "Calling info sent to participant"
       );
     } catch (error) {
-      Log.debug("startAppointment error", error);
+      log.debug("startAppointment error", error);
       return this.raiseServerError(res);
     }
   };

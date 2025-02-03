@@ -14,11 +14,11 @@ export default class ServiceUserMapping {
           transaction,
         }
       );
-      console.log(serviceUserMapping);
+      log.info(serviceUserMapping);
       await transaction.commit();
       return serviceUserMapping;
     } catch (error) {
-      console.log(error);
+      log.info(error);
       await transaction.rollback();
       throw error;
     }
@@ -26,7 +26,7 @@ export default class ServiceUserMapping {
 
   getAllServiceUserMappingByData = async (data) => {
     try {
-      console.log(TABLE_NAME);
+      log.info(TABLE_NAME);
       return await Database.getModel(TABLE_NAME).findAll({
         where: data,
         raw: true,
@@ -40,7 +40,7 @@ export default class ServiceUserMapping {
   updateServiceUserMapping = async (data, id) => {
     const transaction = await Database.initTransaction();
     try {
-      console.log(data, id);
+      log.info(data, id);
       const serviceUserMapping = await Database.getModel(TABLE_NAME).update(
         data,
         {

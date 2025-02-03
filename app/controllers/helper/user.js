@@ -18,7 +18,7 @@ export const saveFileIntoUserBucket = async ({
     let files = [fileUrl];
     return files;
   } catch (err) {
-    console.log(err);
+    log.info(err);
     throw err;
   }
 };

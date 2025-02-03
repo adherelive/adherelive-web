@@ -10,7 +10,7 @@ import {
   handleWorkout,
 } from "./helper";
 
-const Log = createLogger("EVENTS > SQS_OBSERVER");
+const log = createLogger("EVENTS > SQS_OBSERVER");
 
 export default class SqsObserver {
   constructor() {}
@@ -18,13 +18,13 @@ export default class SqsObserver {
   observe = async (service) => {
     try {
       const eventMessage = await service.receiveMessage();
-      Log.debug("SqsObserver observe event message: ", eventMessage);
+      log.debug("SqsObserver observe event message: ", eventMessage);
 
       if (eventMessage) {
         for (const message of eventMessage) {
           const data = JSON.parse(message.Body) || null;
 
-          Log.debug("SQS Observer observe data --> ", data);
+          log.debug("SQS Observer observe data --> ", data);
 
           if (Array.isArray(data)) {
             for (let index = 0; index < data.length; index++) {
@@ -36,7 +36,7 @@ export default class SqsObserver {
         }
       }
     } catch (error) {
-      Log.debug("SQS Observer observe catch error: ", error);
+      log.debug("SQS Observer observe catch error: ", error);
     }
   };
 
@@ -73,18 +73,18 @@ export default class SqsObserver {
           break;
       }
 
-      Log.info(`SQS Observe execute response: ${response}`);
-      Log.info(`SQS Observe execute message ReceiptHandle: ${message.ReceiptHandle}`);
+      log.info(`SQS Observe execute response: ${response}`);
+      log.info(`SQS Observe execute message ReceiptHandle: ${message.ReceiptHandle}`);
 
       if (response === true) {
         const deleteMessage = await service.deleteMessage(
           message.ReceiptHandle
         );
 
-        Log.debug("SQS Observer execute deleteMessage: ", deleteMessage);
+        log.debug("SQS Observer execute deleteMessage: ", deleteMessage);
       }
     } catch (error) {
-      Log.debug("SQS Observe execute catch error: ", error);
+      log.debug("SQS Observe execute catch error: ", error);
     }
   };
 }

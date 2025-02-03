@@ -48,7 +48,7 @@ import MedicationJob from "../../jobSdk/Medications/observer";
 import NotificationSdk from "../../notificationSdk";
 
 const LOG_NAME = "WEB > MEDICATION REMINDER > CONTROLLER";
-const Log = createLogger(LOG_NAME);
+const log = createLogger(LOG_NAME);
 
 const KEY_REPEAT_TYPE = "repeat_type";
 const KEY_DAYS = "days";
@@ -158,7 +158,7 @@ class MReminderController extends Controller {
 
       const sqsResponse = await QueueService.sendMessage(eventScheduleData);
 
-      Log.debug("sqsResponse ---> ", sqsResponse);
+      log.debug("sqsResponse ---> ", sqsResponse);
 
       return this.raiseSuccess(
         res,
@@ -364,7 +364,7 @@ class MReminderController extends Controller {
         "Medication added successfully"
       );
     } catch (error) {
-      Log.debug("Add m-reminder error ---> ", error);
+      log.debug("Add m-reminder error ---> ", error);
       return raiseServerError(res);
     }
   };
@@ -515,9 +515,9 @@ class MReminderController extends Controller {
   getMedicationDetails = async (req, res) => {
     const { raiseSuccess, raiseServerError } = this;
     try {
-      // Log.debug("test", medicationReminderDetails);
+      // log.debug("test", medicationReminderDetails);
       const { params: { patient_id } = {}, userDetails: { userId } = {} } = req;
-      Log.info(`params: patient_id : ${patient_id}`);
+      log.info(`params: patient_id : ${patient_id}`);
 
       // if (!parseInt(patient_id)) {
       //   return raiseClientError(
@@ -575,7 +575,7 @@ class MReminderController extends Controller {
         "create medication basic details"
       );
     } catch (error) {
-      Log.debug("Get m-reminder details error ---> ", error);
+      log.debug("Get m-reminder details error ---> ", error);
       return raiseServerError(res);
     }
   };
@@ -656,7 +656,7 @@ class MReminderController extends Controller {
         "medications fetched successfully"
       );
     } catch (error) {
-      console.log(error);
+      log.info(error);
       return raiseServerError(res);
     }
   };
@@ -714,7 +714,7 @@ class MReminderController extends Controller {
 
       return raiseSuccess(res, 200, {}, "medication deleted successfully");
     } catch (error) {
-      Log.debug("deleteMedication error", error);
+      log.debug("deleteMedication error", error);
       return raiseServerError(res);
     }
   };
@@ -757,14 +757,14 @@ class MReminderController extends Controller {
   //       user_role_id : userRoleId
   //     });
 
-  //     // Log.debug("786756465789",docAllCarePlanData);
+  //     // log.debug("786756465789",docAllCarePlanData);
 
   //     for (let carePlan of docAllCarePlanData) {
   //       const carePlanApiWrapper = await CarePlanWrapper(carePlan);
   //       const { medication_ids } = await carePlanApiWrapper.getAllInfo();
 
   //       for (let mId of medication_ids) {
-  //         // Log.debug("87657898763545",medication_ids);
+  //         // log.debug("87657898763545",medication_ids);
 
   //         let expiredMedicationsList = await scheduleEventService.getAllEventByData(
   //           {
@@ -776,7 +776,7 @@ class MReminderController extends Controller {
 
   //         for (let medication of expiredMedicationsList) {
   //           const medicationEventWrapper = await EventWrapper(medication);
-  //           // Log.debug("8976756576890",medicationEventWrapper);
+  //           // log.debug("8976756576890",medicationEventWrapper);
 
   //           if (medicationEventWrapper.getCriticalValue()) {
   //             if (
@@ -831,7 +831,7 @@ class MReminderController extends Controller {
   //       return raiseSuccess(res, 201, {}, "No Missed Medications");
   //     }
   //   } catch (error) {
-  //     Log.debug("getMedicationDetails 500 error ", error);
+  //     log.debug("getMedicationDetails 500 error ", error);
   //     return raiseServerError(res);
   //   }
   // };
@@ -839,7 +839,7 @@ class MReminderController extends Controller {
   getMedicationResponseTimeline = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
-      Log.debug("req.params medication id ---> ", req.params);
+      log.debug("req.params medication id ---> ", req.params);
       const { params: { id } = {} } = req;
       const eventService = new EventService();
 
@@ -890,7 +890,7 @@ class MReminderController extends Controller {
         );
       }
     } catch (error) {
-      Log.debug("getMedicationResponse 500 error", error);
+      log.debug("getMedicationResponse 500 error", error);
       return raiseServerError(res);
     }
   };

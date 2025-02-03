@@ -17,7 +17,7 @@ export default class VitalTemplates {
 
   getTemplate = () => {
     const { template = [] } = this._data.get("details");
-    console.log("1289313123 details --> ", template);
+    log.info("1289313123 details --> ", template);
     return template;
   };
 }

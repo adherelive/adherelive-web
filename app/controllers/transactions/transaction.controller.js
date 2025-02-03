@@ -5,7 +5,7 @@ import { USER_CATEGORY } from "../../../constant";
 
 import * as TransactionHelper from "./transactions.helper";
 
-const Log = createLogger("WEB > TRANSACTIONS > CONTROLLER");
+const log = createLogger("WEB > TRANSACTIONS > CONTROLLER");
 
 class TransactionController extends Controller {
   constructor() {
@@ -70,7 +70,7 @@ class TransactionController extends Controller {
       //     }
       // }
     } catch (error) {
-      Log.debug("getAllTransactions 500 error", error);
+      log.debug("getAllTransactions 500 error", error);
       return raiseServerError(res);
     }
   };

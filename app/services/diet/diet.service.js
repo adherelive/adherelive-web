@@ -278,10 +278,10 @@ class DietService {
       //   }
       // } else {
       //   // for each DAY
-      //   console.log("31738129312 else food_groups", diet_food_groups);
+      //   log.info("31738129312 else food_groups", diet_food_groups);
       //   for (let day of Object.keys(diet_food_groups)) {
       //     const foodGroupsForDay = diet_food_groups[day] || {};
-      //     console.log("31738129312 else day", day);
+      //     log.info("31738129312 else day", day);
       //     isCreated = await this.createDaysDiet(
       //       foodGroupsForDay,
       //       day,

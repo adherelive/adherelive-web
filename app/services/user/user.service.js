@@ -13,7 +13,7 @@ import { TABLE_NAME as providerTableName } from "../../models/providers";
 
 import { createLogger } from "../../../libs/log";
 
-const Log = createLogger("WEB > USERS > SERVICE");
+const log = createLogger("WEB > USERS > SERVICE");
 
 class UserService {
   constructor() {}
@@ -23,7 +23,7 @@ class UserService {
       const user = await Database.getModel(TABLE_NAME).findAll();
       return user;
     } catch (err) {
-      console.log(err);
+      log.info(err);
       throw err;
     }
   }
@@ -42,7 +42,7 @@ class UserService {
       });
       return user;
     } catch (err) {
-      console.log(err);
+      log.info(err);
       throw err;
     }
   };

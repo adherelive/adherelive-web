@@ -4,7 +4,7 @@ import DegreeWrapper from "../../../apiWrapper/mobile/degree";
 
 import { createLogger } from "../../../../libs/log";
 
-const Log = createLogger("MOBILE DEGREE CONTROLLER");
+const log = createLogger("MOBILE DEGREE CONTROLLER");
 
 class DegreeController extends Controller {
   constructor() {
@@ -17,7 +17,7 @@ class DegreeController extends Controller {
       const { query } = req;
       const { value } = query || {};
 
-      // Log.debug("value in req", value);
+      // log.debug("value in req", value);
 
       const degreeDetails = await degreeService.search(value);
 
@@ -48,7 +48,7 @@ class DegreeController extends Controller {
         );
       }
     } catch (error) {
-      Log.debug("degree search 500 error", error);
+      log.debug("degree search 500 error", error);
       return raiseServerError(res);
     }
   };

@@ -7,7 +7,7 @@ import { validateMailData } from "../proxySdk/libs/validator";
 import NotificationSdk from "./index";
 import EVENTS from "../proxySdk/proxyEvents";
 
-const Log = createLogger("NOTIFICATION_SDK ---> EXECUTOR");
+const log = createLogger("NOTIFICATION_SDK ---> EXECUTOR");
 
 class EventExecutor {
   async sendMail(mailData, scheduledJobId) {
@@ -68,9 +68,9 @@ class EventExecutor {
       );
 
       const jsonResponse = await response.json();
-      Log.debug("sendPushNotification Response: ", jsonResponse);
+      log.debug("sendPushNotification Response: ", jsonResponse);
     } catch (err) {
-      Log.debug("Event executor sendPushNotification 500 error: ", err);
+      log.debug("Event executor sendPushNotification 500 error: ", err);
     }
   }
    */
@@ -81,26 +81,26 @@ class EventExecutor {
   sendAppNotification = async (template) => {
     try {
       // TODO: Add get-stream rest api call code here
-      Log.debug("Template Actor: ", template.actor.toString());
+      log.debug("Template Actor: ", template.actor.toString());
       const client = stream.connect(
           process.config.getstream.key,
           process.config.getstream.secretKey,
           process.config.getstream.appId
       );
       const userToken = client.createUserToken(template.actor.toString());
-      Log.debug("Generated get-stream userToken in use: ", userToken);
-      Log.debug("Get-Stream client --> ", client);
+      log.debug("Generated get-stream userToken in use: ", userToken);
+      log.debug("Get-Stream client --> ", client);
 
       const feed = client.feed("notification", template.object);
-      Log.debug("Feed Initialized: ", feed);
+      log.debug("Feed Initialized: ", feed);
       const response = await feed.addActivity(template).catch((err) => {
-        Log.debug("Get-Stream response error: ", err);
+        log.debug("Get-Stream response error: ", err);
       });
-      Log.debug("Activity Added: ", response);
+      log.debug("Activity Added: ", response);
 
       return response;
     } catch (err) {
-      Log.debug("Error in sendAppNotification: ", err);
+      log.debug("Error in sendAppNotification: ", err);
       throw err; // Re-throw the error for further handling
     }
   };

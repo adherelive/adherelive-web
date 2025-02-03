@@ -17,7 +17,7 @@ import { EVENT_STATUS, EVENT_TYPE, USER_CATEGORY } from "../../../../constant";
 import * as EventHelper from "../../scheduleEvents/event.helper";
 import SymptomService from "../../../services/symptom/symptom.service";
 
-const Log = createLogger("MOBILE > SCHEDULE_EVENTS > CONTROLLER");
+const log = createLogger("MOBILE > SCHEDULE_EVENTS > CONTROLLER");
 
 class EventController extends Controller {
   constructor() {
@@ -27,7 +27,7 @@ class EventController extends Controller {
   getVitalEvent = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
-      Log.debug("req.params", req.params);
+      log.debug("req.params", req.params);
       const { params: { id } = {} } = req;
       const eventService = new EventService();
 
@@ -64,7 +64,7 @@ class EventController extends Controller {
         );
       }
     } catch (error) {
-      Log.debug("getVitalEvent 500 error", error);
+      log.debug("getVitalEvent 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -80,7 +80,7 @@ class EventController extends Controller {
           userCategoryId,
         } = {},
       } = req;
-      Log.info(`query : key = ${key} | type = ${type}`);
+      log.info(`query : key = ${key} | type = ${type}`);
 
       if (category !== USER_CATEGORY.PATIENT) {
         return raiseClientError(
@@ -188,7 +188,7 @@ class EventController extends Controller {
         /**
          * TODO: Need to check the below code
         scheduleEvents = [...scheduleEvents, ...carePlanScheduleEvents];
-        Log.debug("21237193721 events --> ", scheduleEvents.length);
+        log.debug("21237193721 events --> ", scheduleEvents.length);
 
         const vitalEvents = await eventService.getPageEventByData({
           startLimit,
@@ -313,7 +313,7 @@ class EventController extends Controller {
         );
       }
     } catch (error) {
-      Log.debug("getVitalEvent 500 error: ", error);
+      log.debug("getVitalEvent 500 error: ", error);
       return raiseServerError(res);
     }
   };
@@ -361,7 +361,7 @@ class EventController extends Controller {
         "Medication reminder event status updated successfully"
       );
     } catch (error) {
-      Log.debug("Update medication status 500 error: ", error);
+      log.debug("Update medication status 500 error: ", error);
       return raiseServerError(res);
     }
   };
@@ -381,7 +381,7 @@ class EventController extends Controller {
         id
       );
 
-      Log.debug("1982732178 markEventComplete ---> ", markEventComplete);
+      log.debug("1982732178 markEventComplete ---> ", markEventComplete);
 
       const event = await EventWrapper(null, id);
       const {
@@ -403,7 +403,7 @@ class EventController extends Controller {
         "Event completed successfully"
       );
     } catch (error) {
-      Log.debug("markEventComplete 500 error: ", error);
+      log.debug("markEventComplete 500 error: ", error);
       return raiseServerError(res);
     }
   };
@@ -423,7 +423,7 @@ class EventController extends Controller {
         id
       );
 
-      Log.debug("markEventComplete ---> markEventCancelled: ", markEventCancelled);
+      log.debug("markEventComplete ---> markEventCancelled: ", markEventCancelled);
 
       const event = await EventWrapper(null, id);
       const {
@@ -445,7 +445,7 @@ class EventController extends Controller {
         "Event completed successfully"
       );
     } catch (error) {
-      Log.debug("markEventComplete 500 error: ", error);
+      log.debug("markEventComplete 500 error: ", error);
       return raiseServerError(res);
     }
   };
@@ -454,7 +454,7 @@ class EventController extends Controller {
     const { raiseSuccess, raiseServerError } = this;
     try {
       const { userDetails: { userData: { category } = {} } = {} } = req;
-      Log.info(`CHARTS FOR AUTH: ${category}`);
+      log.info(`CHARTS FOR AUTH: ${category}`);
 
       let response = {};
       let responseMessage = "No event data exists at the moment";
@@ -475,7 +475,7 @@ class EventController extends Controller {
 
       return raiseSuccess(res, 200, { ...response }, responseMessage);
     } catch (error) {
-      Log.debug("getAllMissedEvents 500 error: ", error);
+      log.debug("getAllMissedEvents 500 error: ", error);
       return raiseServerError(res);
     }
   };
@@ -491,7 +491,7 @@ class EventController extends Controller {
           userCategoryId,
         } = {},
       } = req;
-      Log.info(`params : patient_id = ${patient_id}`);
+      log.info(`params : patient_id = ${patient_id}`);
 
       // considering api to be only accessible for doctors
       const carePlans =
@@ -700,7 +700,7 @@ class EventController extends Controller {
         "Patient missed events fetched successfully"
       );
     } catch (error) {
-      Log.debug("getPatientMissedEvents 500 error: ", error);
+      log.debug("getPatientMissedEvents 500 error: ", error);
       return raiseServerError(res);
     }
   };
@@ -708,7 +708,7 @@ class EventController extends Controller {
   getLastVisitEvents = async (req, res) => {
     const { raiseSuccess, raiseServerError } = this;
     try {
-      Log.debug("req.params", req.params);
+      log.debug("req.params", req.params);
       const {
         params: { patient_id } = {},
         userDetails: { userData: { category } = {}, userRoleId = null } = {},
@@ -875,7 +875,7 @@ class EventController extends Controller {
         return raiseSuccess(res, 200, {}, "No event updated yet");
       }
     } catch (error) {
-      Log.debug("getLastVisitEvents 500 error", error);
+      log.debug("getLastVisitEvents 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -887,7 +887,7 @@ class EventController extends Controller {
         params: { id },
         query: { index } = {},
       } = req;
-      Log.info(`params: event_id: ${id} | query : index : ${index}`);
+      log.info(`params: event_id: ${id} | query : index : ${index}`);
 
       if (!id || !index) {
         return raiseClientError(
@@ -976,7 +976,7 @@ class EventController extends Controller {
         );
       }
     } catch (error) {
-      Log.debug("deleteVitalResponse 500 error", error);
+      log.debug("deleteVitalResponse 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -989,8 +989,8 @@ class EventController extends Controller {
         query: { index } = {},
         body: { value = {} } = {},
       } = req;
-      Log.info(`params: event_id: ${id} | query : index : ${index}`);
-      Log.debug("body : value ", value);
+      log.info(`params: event_id: ${id} | query : index : ${index}`);
+      log.debug("body : value ", value);
 
       if (!id || !index) {
         return raiseClientError(
@@ -1085,7 +1085,7 @@ class EventController extends Controller {
         );
       }
     } catch (error) {
-      Log.debug("updateVitalResponse500 error", error);
+      log.debug("updateVitalResponse500 error", error);
       return raiseServerError(res);
     }
   };
@@ -1186,7 +1186,7 @@ class EventController extends Controller {
         );
       }
     } catch (error) {
-      Log.debug("reschedule error", error);
+      log.debug("reschedule error", error);
       return raiseServerError(res);
     }
   };

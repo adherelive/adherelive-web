@@ -64,7 +64,7 @@ const {
 
 const { USER_MESSAGE } = MESSAGE_TYPES;
 
-const Log = createLogger("WEB > NOTIFICATION > CONTROLLER > HELPER");
+const log = createLogger("WEB > NOTIFICATION > CONTROLLER > HELPER");
 
 const medicationNotification = async (data) => {
   try {
@@ -209,14 +209,14 @@ const medicationNotification = async (data) => {
       };
     }
   } catch (error) {
-    Log.debug("medicationNotification 500 error", error);
+    log.debug("medicationNotification 500 error", error);
     return {};
   }
 };
 
 const appointmentNotification = async (data, category) => {
   try {
-    Log.debug("appointmentNotification data", data);
+    log.debug("appointmentNotification data", data);
     const scheduleEventService = new ScheduleEventService();
     const {
       data: {
@@ -335,7 +335,7 @@ const appointmentNotification = async (data, category) => {
       };
 
       for (const id of Object.keys(participants)) {
-        Log.debug("id of participants", participants[id]);
+        log.debug("id of participants", participants[id]);
         if (participants[id]) {
           const user = await UserWrapper(null, participants[id]);
           const { users, doctors, patients } = await user.getReferenceInfo();
@@ -371,14 +371,14 @@ const appointmentNotification = async (data, category) => {
       };
     }
   } catch (error) {
-    Log.debug("appointmentNotification 500 error", error);
+    log.debug("appointmentNotification 500 error", error);
     return {};
   }
 };
 
 const vitalsNotification = async (data, category) => {
   try {
-    Log.debug("vitalsNotification data", data);
+    log.debug("vitalsNotification data", data);
     const scheduleEventService = new ScheduleEventService();
     const {
       data: {
@@ -490,7 +490,7 @@ const vitalsNotification = async (data, category) => {
       };
 
       // for(const id of Object.keys(participants)) {
-      //     Log.debug("id of participants", participants[id]);
+      //     log.debug("id of participants", participants[id]);
       //     if(participants[id]) {
       //         const user = await UserWrapper(null, participants[id]);
       //         const {users, doctors, patients} = await user.getReferenceInfo();
@@ -500,7 +500,7 @@ const vitalsNotification = async (data, category) => {
       //     }
       // }
 
-      // Log.debug(" vitals userData", {...userData});
+      // log.debug(" vitals userData", {...userData});
 
       return {
         notifications: notification_data,
@@ -513,14 +513,14 @@ const vitalsNotification = async (data, category) => {
       };
     }
   } catch (error) {
-    Log.debug("vitalsNotification 500 error", error);
+    log.debug("vitalsNotification 500 error", error);
     return {};
   }
 };
 
 const carePlanNotification = async (data) => {
   try {
-    Log.debug("carePlanNotification data", data);
+    log.debug("carePlanNotification data", data);
     const scheduleEventService = new ScheduleEventService();
     const {
       data: {
@@ -603,14 +603,14 @@ const carePlanNotification = async (data) => {
       };
     }
   } catch (error) {
-    Log.debug("carePlanNotification 500 error", error);
+    log.debug("carePlanNotification 500 error", error);
     return {};
   }
 };
 
 const chatMessageNotification = async (data) => {
   try {
-    Log.debug("chatMessageNotification data", data);
+    log.debug("chatMessageNotification data", data);
     const {
       data: {
         actor,
@@ -650,14 +650,14 @@ const chatMessageNotification = async (data) => {
       notifications: notification_data,
     };
   } catch (error) {
-    Log.debug("chatMessageNotification 500 error", error);
+    log.debug("chatMessageNotification 500 error", error);
     return {};
   }
 };
 
 const callNotification = async (data) => {
   try {
-    Log.debug("callNotification data", data);
+    log.debug("callNotification data", data);
     const {
       data: {
         actor,
@@ -721,14 +721,14 @@ const callNotification = async (data) => {
       notifications: notification_data,
     };
   } catch (error) {
-    Log.debug("callNotification 500 error", error);
+    log.debug("callNotification 500 error", error);
     return {};
   }
 };
 
 const dietNotification = async (data) => {
   try {
-    Log.debug("dietNotification data", data);
+    log.debug("dietNotification data", data);
     const {
       data: {
         actor,
@@ -829,14 +829,14 @@ const dietNotification = async (data) => {
       ...(await diet.getReferenceInfo()),
     };
   } catch (error) {
-    Log.debug("dietNotification 500 error", error);
+    log.debug("dietNotification 500 error", error);
     return {};
   }
 };
 
 const workoutNotification = async (data) => {
   try {
-    Log.debug("workoutNotification data", data);
+    log.debug("workoutNotification data", data);
     const {
       data: {
         actor,
@@ -930,14 +930,14 @@ const workoutNotification = async (data) => {
       ...(await workout.getReferenceInfo()),
     };
   } catch (error) {
-    Log.debug("workoutNotification 500 error", error);
+    log.debug("workoutNotification 500 error", error);
     return {};
   }
 };
 
 const symptomsNotification = async (data) => {
   try {
-    Log.debug("symptomsNotification data", data);
+    log.debug("symptomsNotification data", data);
     const {
       data: {
         actor,
@@ -1006,7 +1006,7 @@ const symptomsNotification = async (data) => {
       patients: patientData,
     };
   } catch (error) {
-    Log.debug("symptomsNotification 500 error", error);
+    log.debug("symptomsNotification 500 error", error);
     return {};
   }
 };
@@ -1015,7 +1015,7 @@ export const getDataForNotification = async (data) => {
   try {
     const { category, data: { event } = {} } = data;
 
-    Log.debug("event", event);
+    log.debug("event", event);
 
     if (category === USER_CATEGORY.DOCTOR || category === USER_CATEGORY.HSP) {
       switch (event) {
@@ -1059,6 +1059,6 @@ export const getDataForNotification = async (data) => {
       }
     }
   } catch (error) {
-    Log.debug("getDataForNotification 500 error", error);
+    log.debug("getDataForNotification 500 error", error);
   }
 };

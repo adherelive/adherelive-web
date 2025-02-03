@@ -93,7 +93,7 @@ export const doctorQualificationData = async (userId) => {
     };
     return qualificationData;
   } catch (error) {
-    console.log(" GET DOCTOR QUALIFICATION CATCH ERROR ", error);
+    log.info(" GET DOCTOR QUALIFICATION CATCH ERROR ", error);
   }
 };
 
@@ -129,7 +129,7 @@ export const uploadImageS3 = async (userId, file, folder = "other") => {
 
     /**
      * TODO: Need to check if we need to return the file url or not.
-    console.log("file URL: ", process.config.minio.MINI);
+    log.info("file URL: ", process.config.minio.MINI);
     const file_link =
       process.config.s3.AWS_S3_HOST +
       "/" +
@@ -140,7 +140,7 @@ export const uploadImageS3 = async (userId, file, folder = "other") => {
 
     return files;
   } catch (error) {
-    console.log(" UPLOAD  CATCH ERROR ", error);
+    log.info(" UPLOAD  CATCH ERROR ", error);
   }
 };
 
@@ -296,7 +296,7 @@ export const downloadFileFromS3 = async (objectName, filePath) => {
 
     return true;
   } catch (err) {
-    console.log("Error got in downloading file from s3: ", err);
+    log.info("Error got in downloading file from s3: ", err);
     return false;
   }
 };

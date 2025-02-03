@@ -14,7 +14,7 @@ import { ACTIVITY_TYPE, DOCUMENT_PARENT_TYPE } from "../../../../constant";
 
 import { createLogger } from "../../../../libs/log";
 
-const Log = createLogger("API_WRAPPER > WEB > SYMPTOMS");
+const log = createLogger("API_WRAPPER > WEB > SYMPTOMS");
 
 class SymptomWrapper extends BaseSymptom {
   constructor(data) {
@@ -172,9 +172,9 @@ class SymptomWrapper extends BaseSymptom {
       // }
     };
 
-    // Log.debug("patient", patient);
-    // Log.debug("care_plan", care_plan);
-    // Log.debug("doctor", doctor);
+    // log.debug("patient", patient);
+    // log.debug("care_plan", care_plan);
+    // log.debug("doctor", doctor);
   };
 }
 

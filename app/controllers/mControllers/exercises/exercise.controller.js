@@ -14,7 +14,7 @@ import ExerciseContentWrapper from "../../../apiWrapper/mobile/exerciseContents"
 import * as UploadHelper from "../../../helper/uploadDocuments";
 import { DOCUMENT_PARENT_TYPE } from "../../../../constant";
 
-const Log = createLogger("MOBILE > EXERCISE > CONTROLLER");
+const log = createLogger("MOBILE > EXERCISE > CONTROLLER");
 
 class ExerciseController extends Controller {
   constructor() {
@@ -25,7 +25,7 @@ class ExerciseController extends Controller {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       const { body, userDetails } = req;
-      Log.debug("REQUEST body", body);
+      log.debug("REQUEST body", body);
       const {
         repetition_id,
         repetition_value,
@@ -159,7 +159,7 @@ class ExerciseController extends Controller {
         return raiseClientError(res, 422, {}, "Please check details entered");
       }
     } catch (error) {
-      Log.debug("create 500 - exercise created success", error);
+      log.debug("create 500 - exercise created success", error);
       return raiseServerError(res);
     }
   };
@@ -168,7 +168,7 @@ class ExerciseController extends Controller {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       const { params, body, userDetails } = req;
-      Log.debug("REQUEST ", { params, body });
+      log.debug("REQUEST ", { params, body });
       const { id } = params;
       let exerciseId = null,
         detailId = null;
@@ -268,7 +268,7 @@ class ExerciseController extends Controller {
         return raiseClientError(res, 422, {}, "Please check details entered");
       }
     } catch (error) {
-      Log.debug("update 500", error);
+      log.debug("update 500", error);
       return raiseServerError(res);
     }
   };
@@ -277,7 +277,7 @@ class ExerciseController extends Controller {
     const { raiseSuccess, raiseServerError } = this;
     try {
       const { query, userDetails } = req;
-      Log.debug("REQUEST query", query);
+      log.debug("REQUEST query", query);
       const { name } = query || {};
 
       const { userData: { category } = {}, userCategoryId } = userDetails || {};
@@ -350,7 +350,7 @@ class ExerciseController extends Controller {
         );
       }
     } catch (error) {
-      Log.debug("search 500", error);
+      log.debug("search 500", error);
       return raiseServerError(res);
     }
   };
@@ -385,7 +385,7 @@ class ExerciseController extends Controller {
         "Content uploaded successfully"
       );
     } catch (error) {
-      Log.debug("uploadContent 500", error);
+      log.debug("uploadContent 500", error);
       return raiseServerError(res);
     }
   };

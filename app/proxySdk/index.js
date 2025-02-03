@@ -14,7 +14,7 @@ const { ActivitySdk, STAGES } = require("../activitySdk");
 const schedule = require("node-schedule");
 
 function checkEventHaveToStart(startTime) {
-  console.log("START TIME: Check Event Has Started");
+  log.info("START TIME: Check Event Has Started");
   const at00 = moment().minutes(0).seconds(0).milliseconds(0);
   const at15 = moment().minutes(15).seconds(0).milliseconds(0);
   const at30 = moment().minutes(30).seconds(0).milliseconds(0);
@@ -38,7 +38,7 @@ function checkEventHaveToStart(startTime) {
   if (startTime < listOfScheduler[x]) {
     status = true;
   }
-  console.log("Start Time List of Schedulers: ", status);
+  log.info("Start Time List of Schedulers: ", status);
   return status;
 }
 
@@ -60,7 +60,7 @@ class ProxySdk extends EventEmitter {
   }
 
   execute(eventName, ...args) {
-    console.log(
+    log.info(
       "INSIDE EXECUTE EVENT EMITTER: ",
       eventName,
       " SENT ARGS ",
@@ -85,7 +85,7 @@ class ProxySdk extends EventEmitter {
   };
 
   scheduleEvent = async ({ data }) => {
-    console.log("\n HERE \n");
+    log.info("\n HERE \n");
     try {
       const {
         _id,
@@ -168,7 +168,7 @@ class ProxySdk extends EventEmitter {
         eventEndTime,
       });
 
-      console.log(allOccurrence);
+      log.info(allOccurrence);
 
       const schedule_for_later = [];
       let have_to_schedule_now;
@@ -203,7 +203,7 @@ class ProxySdk extends EventEmitter {
         );
       }
 
-      console.log(
+      log.info(
         "==================================================================================================================================================================="
       );
     } catch (error) {
@@ -273,7 +273,7 @@ class ProxySdk extends EventEmitter {
         schedule.scheduleJob(
           eventStartTime,
           function (y) {
-            console.log(
+            log.info(
               "eventType instart======================>",
               event,
               scheduledJobStatus
@@ -308,7 +308,7 @@ class ProxySdk extends EventEmitter {
           data: event,
         };
 
-        console.log(
+        log.info(
           "eventType instart======================>",
           event,
           scheduledJobStatus

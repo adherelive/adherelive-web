@@ -13,7 +13,7 @@ import doRequest from "../../../app/controllers/helper/doRequest";
  * @returns {Promise<*>}
  */
 export default async (req, res, next) => {
-  // console.log("auth-middle-ware - 1");
+  // log.info("auth-middle-ware - 1");
   try {
     const { query: { m } = {} } = req;
     let accessToken;
@@ -31,13 +31,13 @@ export default async (req, res, next) => {
       }
     }
 
-    // console.log("auth-middle-ware - 2");
+    // log.info("auth-middle-ware - 2");
     const { accesstoken: aT = "" } = req.headers || {};
     if (aT) {
       accessToken = aT;
     }
 
-    // console.log("auth-middle-ware - 3");
+    // log.info("auth-middle-ware - 3");
     if (accessToken) {
       // const secret = process.config.TOKEN_SECRET_KEY;
       // const decodedAccessToken = await jwt.verify(accessToken, secret);
@@ -45,7 +45,7 @@ export default async (req, res, next) => {
       const secret = process.config.TOKEN_SECRET_KEY;
       const decodedAccessToken = await jwt.verify(accessToken, secret);
       const access_token = decodedAccessToken.accessToken;
-      // console.log("auth-middle-ware - 4");
+      // log.info("auth-middle-ware - 4");
     } else {
       const response = new Response(false, 401);
       response.setError({ message: errMessage.COOKIES_NOT_SET });

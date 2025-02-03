@@ -28,7 +28,7 @@ import ErrorBoundary from './ErrorBoundary';
 const Events = import("../events")
     .then((module) => {})
     .catch((err) => {
-        console.log("Event module error: ", err);
+        log.info("Event module error: ", err);
     });
 
 // Create the App as an Express() app
@@ -91,7 +91,7 @@ schedule.scheduleJob("0 0 */2 * * *", async () => {
         EventObserver.runObservers();
         ActivityObserver.runObservers();
     } catch (err) {
-        console.error("Error during initialization: ", err);
+        log.error("Error during initialization: ", err);
     }
 })();
 
@@ -115,7 +115,7 @@ app.use(cors());
 //     "key_" + Math.random().toString(36).substr(2) + Date.now().toString(36)
 //   );
 // }
-// console.log(generateCookieKey());
+// log.info(generateCookieKey());
 
 let cookieKeys = [];
 
@@ -123,12 +123,12 @@ try {
     if (process.config && process.config.cookieKey) {
         cookieKeys = JSON.parse(process.config.cookieKey);
     } else {
-        console.warn("process.config.cookieKey is undefined or null");
+        log.warn("process.config.cookieKey is undefined or null");
         // Set a default value if cookieKey is not defined
         cookieKeys = ["cookie938", "abc123xyz456abc789xyz012"];
     }
 } catch (error) {
-    console.error("Error parsing cookieKey: ", error);
+    log.error("Error parsing cookieKey: ", error);
     // Set a default value in case of error
     cookieKeys = ["cookie938", "abc123xyz456abc789xyz012"];
 }

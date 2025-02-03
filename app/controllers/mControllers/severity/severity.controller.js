@@ -4,7 +4,7 @@ import SeverityWrapper from "../../../apiWrapper/mobile/severity";
 
 import { createLogger } from "../../../../libs/log";
 
-const Log = createLogger("MOBILE SEVERITY CONTROLLER");
+const log = createLogger("MOBILE SEVERITY CONTROLLER");
 
 class SeverityController extends Controller {
   constructor() {
@@ -17,7 +17,7 @@ class SeverityController extends Controller {
       const { query } = req;
       const { value } = query || {};
 
-      // Log.debug("value in req", value);
+      // log.debug("value in req", value);
 
       const severityDetails = await severityService.search(value);
 
@@ -48,7 +48,7 @@ class SeverityController extends Controller {
         );
       }
     } catch (error) {
-      Log.debug("severity search 500 error", error);
+      log.debug("severity search 500 error", error);
       return raiseServerError(res);
     }
   };

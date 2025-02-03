@@ -9,7 +9,7 @@ import { USER_CATEGORY } from "../../constant";
 
 import { createLogger } from "../../libs/log";
 
-const Log = createLogger("CRON > RENEW > SUBSCRIPTION");
+const log = createLogger("CRON > RENEW > SUBSCRIPTION");
 
 class RenewSubscription {
   runObserver = async () => {
@@ -17,7 +17,7 @@ class RenewSubscription {
       const subscriptionService = new SubscriptionService();
       const subscriptions = await subscriptionService.getAllTodayRenewingData();
 
-      Log.info(`TOTAL SUBSCRIPTIONS DUE : ${subscriptions.length}`);
+      log.info(`TOTAL SUBSCRIPTIONS DUE : ${subscriptions.length}`);
       if (subscriptions.length > 0) {
         for (let i = 0; i < subscriptions.length; i++) {
           const subscription = await SubscriptionWrapper({
@@ -60,17 +60,17 @@ class RenewSubscription {
               message
             );
           } else {
-            Log.info(
+            log.info(
               `patientUserId : ${patientUserRoleId} | doctorUserId : ${doctorUserRoleId}`
             );
           }
         }
       } else {
         // log no data
-        Log.info(`No subscriptions found due today`);
+        log.info(`No subscriptions found due today`);
       }
     } catch (error) {
-      Log.debug("RenewSubscription 500 error", error);
+      log.debug("RenewSubscription 500 error", error);
     }
   };
 }

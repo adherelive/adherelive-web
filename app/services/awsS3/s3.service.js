@@ -18,9 +18,9 @@ class S3Service {
 
     callback = (error, data) => {
         if (error) {
-            console.log("Callback error in S3 services: ", error);
+            log.info("Callback error in S3 services: ", error);
         } else {
-            console.log("S3 response data: ", data);
+            log.info("S3 response data: ", data);
         }
     };
 
@@ -63,7 +63,7 @@ class S3Service {
                 await this.uploadFile(`${__dirname}/../../../other/push_notification_sound.wav`, "push_notification_sound.wav", "audio/mpeg");
             }
         } catch (err) {
-            console.log("Error creating bucket: ", err);
+            log.info("Error creating bucket: ", err);
             throw err;
         }
     }
@@ -86,9 +86,9 @@ class S3Service {
                 ContentType: contentType,
             };
             await this.s3Client.upload(params).promise();
-            console.log(`${key} uploaded successfully.`);
+            log.info(`${key} uploaded successfully.`);
         } catch (err) {
-            console.log(`Error uploading ${key}: `, err);
+            log.info(`Error uploading ${key}: `, err);
             throw err;
         }
     }
@@ -102,9 +102,9 @@ class S3Service {
                 ContentType: contentType,
             };
             await this.s3Client.upload(params).promise();
-            console.log(`Buffer saved as ${key}.`);
+            log.info(`Buffer saved as ${key}.`);
         } catch (err) {
-            console.log("Error saving buffer: ", err);
+            log.info("Error saving buffer: ", err);
             throw err;
         }
     }
@@ -117,12 +117,12 @@ class S3Service {
                 https.get(url, (response) => {
                     response.pipe(file).on("finish", () => resolve(true));
                 }).on("error", (err) => {
-                    console.log("Error downloading file: ", err);
+                    log.info("Error downloading file: ", err);
                     reject(err);
                 });
             });
         } catch (err) {
-            console.log("Error in the download file object: ", err);
+            log.info("Error in the download file object: ", err);
             throw err;
         }
     }
@@ -133,9 +133,9 @@ class S3Service {
                 Bucket: this.bucket,
                 Key: key,
             }).promise();
-            console.log(`${key} removed successfully.`);
+            log.info(`${key} removed successfully.`);
         } catch (err) {
-            console.log("Error removing object: ", err);
+            log.info("Error removing object: ", err);
             throw err;
         }
     }

@@ -69,7 +69,7 @@ module.exports = {
     if (validExercises.length > 0) {
       return queryInterface.bulkInsert(TABLE_NAME, validExercises);
     } else {
-      console.warn("No valid exercises found to seed.");
+      log.warn("No valid exercises found to seed.");
       return Promise.resolve(); // No insertion needed
     }
   },

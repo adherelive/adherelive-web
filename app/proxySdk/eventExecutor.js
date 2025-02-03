@@ -9,17 +9,17 @@ const Scheduler = require("./scheduler");
 class EventExecutor {
   async sendMail(mailData, scheduledJobId) {
     try {
-      console.log("INSIDE THE SEND MAIL TRY");
+      log.info("INSIDE THE SEND MAIL TRY");
       // let isValid = await validateMailData(mailData);
       let response = await EmailManager.sendEmail(mailData);
 
-      console.log("INSIDE THE SEND MAIL Object Assign ---> ", response);
+      log.info("INSIDE THE SEND MAIL Object Assign ---> ", response);
       Object.assign(
         mailData,
         response ? { status: "SENT" } : { status: "FAILED" }
       );
 
-      console.log("INSIDE THE SEND MAIL Logger: ", mailData, response);
+      log.info("INSIDE THE SEND MAIL Logger: ", mailData, response);
       let logger = new Logger("email", mailData);
       logger.log();
       // if (scheduledJobId && response) {
@@ -28,7 +28,7 @@ class EventExecutor {
       //   });
       // }
     } catch (err) {
-      console.log("INSIDE THE SEND MAIL ERROR: ", err);
+      log.info("INSIDE THE SEND MAIL ERROR: ", err);
       // Proxy_Sdk.execute(EVENTS.EMAIL_ERROR, err, "mail_error");
     }
   }

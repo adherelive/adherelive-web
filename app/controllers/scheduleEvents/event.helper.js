@@ -18,16 +18,16 @@ import DietWrapper from "../../apiWrapper/web/diet";
 import WorkoutWrapper from "../../apiWrapper/web/workouts";
 import { getTime } from "../../helper/timer";
 
-const Log = createLogger("EVENT HELPER");
+const log = createLogger("EVENT HELPER");
 
 export const doctorChart = async (req) => {
   try {
     const { userDetails: { userRoleId, userCategoryId: doctor_id } = {} } = req;
-    Log.info(`Doctor ID (doctor_id): ${doctor_id}`);
+    log.info(`Doctor ID (doctor_id): ${doctor_id}`);
 
     return await getAllDataForDoctors({ doctor_id, user_role_id: userRoleId });
   } catch (error) {
-    Log.debug("doctorChart catch error: ", error);
+    log.debug("doctorChart catch error: ", error);
     throw error;
   }
 };
@@ -35,14 +35,14 @@ export const doctorChart = async (req) => {
 export const doctorChartCount = async (req) => {
   try {
     const { userDetails: { userRoleId, userCategoryId: doctor_id } = {} } = req;
-    Log.info(`Doctor ID (doctor_id): ${doctor_id}`);
+    log.info(`Doctor ID (doctor_id): ${doctor_id}`);
 
     return await getAllDataForDoctorsCount({
       doctor_id,
       user_role_id: userRoleId,
     });
   } catch (error) {
-    Log.debug("doctorChartCount catch error: ", error);
+    log.debug("doctorChartCount catch error: ", error);
     throw error;
   }
 };
@@ -54,7 +54,7 @@ export const doctorChartEventDetails = async (req) => {
       userDetails: { userRoleId, userCategoryId: doctor_id } = {},
     } = req;
 
-    Log.info(`Doctor ID (doctor_id): ${doctor_id}`);
+    log.info(`Doctor ID (doctor_id): ${doctor_id}`);
 
     return await getAllDataForDoctorsByEventType({
       event_type,
@@ -62,7 +62,7 @@ export const doctorChartEventDetails = async (req) => {
       user_role_id: userRoleId,
     });
   } catch (error) {
-    Log.debug("doctorChartEventDetails catch error", error);
+    log.debug("doctorChartEventDetails catch error", error);
     throw error;
   }
 };
@@ -70,7 +70,7 @@ export const doctorChartEventDetails = async (req) => {
 export const hspChart = async (req) => {
   try {
     const { userDetails: { userRoleId, userCategoryId: doctor_id } = {} } = req;
-    Log.info(`Doctor ID (doctor_id): ${doctor_id}`);
+    log.info(`Doctor ID (doctor_id): ${doctor_id}`);
 
     return await getAllDataForDoctorsCount({
       doctor_id,
@@ -78,7 +78,7 @@ export const hspChart = async (req) => {
       category: USER_CATEGORY.HSP,
     });
   } catch (error) {
-    Log.debug("hspChart catch error: ", error);
+    log.debug("hspChart catch error: ", error);
     throw error;
   }
 };
@@ -89,7 +89,7 @@ export const hspChartEventDetails = async (req) => {
       query: { event_type: event_type = null } = {},
       userDetails: { userRoleId, userCategoryId: doctor_id } = {},
     } = req;
-    Log.info(`Doctor ID (doctor_id): ${doctor_id}`);
+    log.info(`Doctor ID (doctor_id): ${doctor_id}`);
 
     return await getAllDataForDoctorsByEventType({
       event_type,
@@ -98,7 +98,7 @@ export const hspChartEventDetails = async (req) => {
       category: USER_CATEGORY.HSP,
     });
   } catch (error) {
-    Log.debug("hspChartEventDetails catch error: ", error);
+    log.debug("hspChartEventDetails catch error: ", error);
     throw error;
   }
 };
@@ -106,7 +106,7 @@ export const hspChartEventDetails = async (req) => {
 export const hspChartCount = async (req) => {
   try {
     const { userDetails: { userRoleId, userCategoryId: doctor_id } = {} } = req;
-    Log.info(`Doctor ID (doctor_id): ${doctor_id}`);
+    log.info(`Doctor ID (doctor_id): ${doctor_id}`);
 
     return await getAllDataForDoctorsCount({
       doctor_id,
@@ -114,7 +114,7 @@ export const hspChartCount = async (req) => {
       category: USER_CATEGORY.HSP,
     });
   } catch (error) {
-    Log.debug("hspChartCount catch error: ", error);
+    log.debug("hspChartCount catch error: ", error);
     throw error;
   }
 };
@@ -123,14 +123,14 @@ export const providerChart = async (req) => {
   try {
     const { userDetails: { userRoleId, userCategoryId: provider_id } = {} } =
       req;
-    Log.info(`Provider ID (provider_id): ${provider_id}`);
+    log.info(`Provider ID (provider_id): ${provider_id}`);
     /**
      * TODO: Check why this has been commented out?
     // get all doctors attached to provider
     const doctorData = await doctorProviderMappingService.getAllDoctorIds(provider_id) || [];
-    Log.debug("doctorData", doctorData);
+    log.debug("doctorData", doctorData);
     const doctorIds = doctorData.map(data => data.doctor_id);
-    Log.debug("doctorIds", doctorData);
+    log.debug("doctorIds", doctorData);
      */
     let allDoctorsData = {};
 
@@ -269,7 +269,7 @@ export const providerChart = async (req) => {
 
     return [{ ...allDoctorsData }, "Missed events fetched successfully"];
   } catch (error) {
-    Log.debug("providerChart catch error: ", error);
+    log.debug("providerChart catch error: ", error);
     throw error;
   }
 };
@@ -282,7 +282,7 @@ const getAllDataForDoctorsByEventType = async ({
   user_role_id,
 }) => {
   try {
-    Log.debug("getAllDataForDoctorsByEventType user_role_id: ", user_role_id);
+    log.debug("getAllDataForDoctorsByEventType user_role_id: ", user_role_id);
     const eventService = new EventService();
 
     const carePlans =
@@ -330,7 +330,7 @@ const getAllDataForDoctorsByEventType = async ({
 
     return response;
   } catch (error) {
-    Log.debug("getAllDataForDoctorsByEventType catch error: ", error);
+    log.debug("getAllDataForDoctorsByEventType catch error: ", error);
     throw error;
   }
 };
@@ -360,12 +360,12 @@ const getAllDataForDoctors = async ({
   user_role_id,
 }) => {
   try {
-    Log.debug("Starting getAllDataForDoctors for user_role_id:", user_role_id);
+    log.debug("Starting getAllDataForDoctors for user_role_id:", user_role_id);
     const eventService = new EventService();
     const carePlans = await CarePlanService.getCarePlanByData({ user_role_id });
 
     if (!carePlans || carePlans.length === 0) {
-      Log.debug("No care plans found for user_role_id: ", user_role_id);
+      log.debug("No care plans found for user_role_id: ", user_role_id);
       return [[], "No care plans found"];
     }
 
@@ -398,7 +398,7 @@ const getAllDataForDoctors = async ({
       workoutIds.push(...workout_ids);
     });
 
-    Log.debug("Extracted IDs: ", {
+    log.debug("Extracted IDs: ", {
       appointmentIds,
       medicationIds,
       vitalIds,
@@ -415,20 +415,20 @@ const getAllDataForDoctors = async ({
     });
 
     if (!scheduleEvents) {
-      Log.debug("No schedule events found for the provided IDs.");
+      log.debug("No schedule events found for the provided IDs.");
       return [[], "No schedule events found"];
     }
 
-    Log.debug("Retrieved schedule events: ", scheduleEvents);
+    log.debug("Retrieved schedule events: ", scheduleEvents);
     const formattedData = await getFormattedData(scheduleEvents, category);
-    Log.debug("Formatted data: ", formattedData);
+    log.debug("Formatted data: ", formattedData);
 
     return [
       { ...formattedData, patientCount: patientIds.size }, // Include patientCount
       "Missed events fetched successfully",
     ];
   } catch (error) {
-    Log.debug("Error in getAllDataForDoctors: ", error);
+    log.debug("Error in getAllDataForDoctors: ", error);
     throw error;
   }
 };
@@ -463,7 +463,7 @@ const getAllDataForDoctorsCount = async ({
   user_role_id,
 }) => {
   try {
-    Log.debug("user_role_id", user_role_id);
+    log.debug("user_role_id", user_role_id);
     const eventService = new EventService();
 
     const carePlans = (await CarePlanService.getCarePlanByData({ user_role_id })) || [];
@@ -513,18 +513,18 @@ const getAllDataForDoctorsCount = async ({
     // Format the data
     const formattedData = await getFormattedData(scheduleEvents, category);
     const patientCount = patientIds.size; // Get the number of unique patients
-    console.log("Unique Patient count in getAllDataForDoctorCount: ", patientCount);
+    log.info("Unique Patient count in getAllDataForDoctorCount: ", patientCount);
 
     // Prepare the response
     const response = [
       { ...formattedData, patientCount }, // Add patientCount to the response
       "Missed events fetched successfully",
     ];
-    console.log("getAllDataForDoctorCount response for the Doctor/Patient: ", response);
+    log.info("getAllDataForDoctorCount response for the Doctor/Patient: ", response);
 
     return response;
   } catch (error) {
-    Log.debug("getAllDataForDoctors catch error", error);
+    log.debug("getAllDataForDoctors catch error", error);
     throw error;
   }
 };
@@ -718,7 +718,7 @@ const getFormattedData = async (
           break;
       }
     } catch (error) {
-      console.error(`Error processing event: ${error.message}`);
+      log.error(`Error processing event: ${error.message}`);
     }
   }
 

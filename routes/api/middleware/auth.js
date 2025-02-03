@@ -6,7 +6,7 @@ import Response from "../../../app/controllers/helper/responseFormat";
 import doRequest from "../../../app/controllers/helper/doRequest";
 
 const Authenticated = async (req, res, next) => {
-  // console.log("auth-middle-ware - 1");
+  // log.info("auth-middle-ware - 1");
   try {
     let accessToken;
     const { query: { m } = {} } = req;
@@ -22,7 +22,7 @@ const Authenticated = async (req, res, next) => {
       accessToken = cookies.accessToken || aT;
     }
 
-    // console.log("auth-middle-ware - 2");
+    // log.info("auth-middle-ware - 2");
 
     if (!accessToken) {
       const response = new Response(false, 401);
@@ -30,15 +30,15 @@ const Authenticated = async (req, res, next) => {
       return res.status(400).json(response.getResponse());
     }
 
-    // console.log("auth-middle-ware - 3");
+    // log.info("auth-middle-ware - 3");
 
     try {
       const secret = process.config.TOKEN_SECRET_KEY;
       const decodedAccessToken = await jwt.verify(accessToken, secret);
       req.user = decodedAccessToken; // Attach decoded token to request object
-      // console.log("auth-middle-ware - 4");
+      // log.info("auth-middle-ware - 4");
     } catch (error) {
-      console.error("Token verification failed: ", error);
+      log.error("Token verification failed: ", error);
       throw error;
     }
 
@@ -56,11 +56,11 @@ const Authenticated = async (req, res, next) => {
         error: errMessages.INTERNAL_SERVER_ERROR,
       };
     }
-    // console.log("auth-middle-ware - 5");
+    // log.info("auth-middle-ware - 5");
     const response = new Response(false, payload.code);
-    // console.log("auth-middle-ware - 6");
+    // log.info("auth-middle-ware - 6");
     response.setError(payload);
-    // console.log("auth-middle-ware - 7");
+    // log.info("auth-middle-ware - 7");
     return res.status(payload.code).json(response.getResponse());
   }
 };

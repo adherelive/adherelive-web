@@ -5,7 +5,7 @@ import ConditionWrapper from "../../apiWrapper/web/conditions";
 
 import { createLogger } from "../../../libs/log";
 
-const Log = createLogger("WEB DEGREE CONTROLLER");
+const log = createLogger("WEB DEGREE CONTROLLER");
 
 class ConditionController extends Controller {
   constructor() {
@@ -18,7 +18,7 @@ class ConditionController extends Controller {
       const { query } = req;
       const { value } = query || {};
 
-      // Log.debug("value in req", value);
+      // log.debug("value in req", value);
 
       const conditionDetails = await conditionService.search(value);
 
@@ -49,7 +49,7 @@ class ConditionController extends Controller {
         );
       }
     } catch (error) {
-      Log.debug("condition search 500 error", error);
+      log.debug("condition search 500 error", error);
       return raiseServerError(res);
     }
   };

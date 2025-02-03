@@ -14,7 +14,7 @@ import { DOCUMENT_PARENT_TYPE } from "../../../constant";
 import { getFilePath } from "../../helper/s3FilePath";
 import * as ReportHelper from "./report.helper";
 
-const Log = createLogger("WEB > CONTROLLER > REPORTS");
+const log = createLogger("WEB > CONTROLLER > REPORTS");
 
 class ReportController extends Controller {
   constructor() {
@@ -71,7 +71,7 @@ class ReportController extends Controller {
         "Report added successfully"
       );
     } catch (error) {
-      Log.debug("addReports 500 error", error);
+      log.debug("addReports 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -80,7 +80,7 @@ class ReportController extends Controller {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       const { file = null, params: { patient_id = "NA" } = {} } = req;
-      Log.info(`patient_id : ${patient_id}`);
+      log.info(`patient_id : ${patient_id}`);
 
       if (!file) {
         return raiseClientError(res, 422, {}, "Please select file to upload");
@@ -109,7 +109,7 @@ class ReportController extends Controller {
         "Files uploaded successfully"
       );
     } catch (error) {
-      Log.debug("uploadReportDocuments 500 error", error);
+      log.debug("uploadReportDocuments 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -121,7 +121,7 @@ class ReportController extends Controller {
         params: { id } = {},
         body: { name, test_date, documents = [] } = {},
       } = req;
-      Log.info(`Report : id = ${id}`);
+      log.info(`Report : id = ${id}`);
 
       if (!id) {
         return raiseClientError(
@@ -185,7 +185,7 @@ class ReportController extends Controller {
         "Report updated successfully"
       );
     } catch (error) {
-      Log.debug("updateReports 500 error", error);
+      log.debug("updateReports 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -194,7 +194,7 @@ class ReportController extends Controller {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       const { params: { document_id } = {} } = req;
-      Log.info(`params: document_id = ${document_id}`);
+      log.info(`params: document_id = ${document_id}`);
 
       if (!document_id) {
         return raiseClientError(
@@ -208,11 +208,11 @@ class ReportController extends Controller {
       const response = await uploadDocumentService.deleteDocumentByData({
         id: document_id,
       });
-      Log.debug("response", response);
+      log.debug("response", response);
 
       return raiseSuccess(res, 200, {}, "Document deleted successfully");
     } catch (error) {
-      Log.debug("deleteReportDocument 500 error", error);
+      log.debug("deleteReportDocument 500 error", error);
       return raiseServerError(res);
     }
   };

@@ -7,8 +7,8 @@ import Sequelize, { QueryTypes } from "sequelize";
 // Config();
 import { createLogger } from "../libs/log";
 
-const Log = createLogger("MEDICINE SEQUELIZE QUERY");
-console.log("process.config.db.name --> ", process.config.db.name);
+const log = createLogger("MEDICINE SEQUELIZE QUERY");
+log.info("process.config.db.name --> ", process.config.db.name);
 
 const database = new Sequelize(
   process.config.db.name,
@@ -25,7 +25,7 @@ const database = new Sequelize(
       idle: 10000,
     },
     logging: function (str) {
-      Log.debug("query", str);
+      log.debug("query", str);
     },
   }
 );
@@ -33,10 +33,10 @@ const database = new Sequelize(
 database
   .authenticate()
   .then(() => {
-    console.log("Db and tables have been created...");
+    log.info("Db and tables have been created...");
   })
   .catch((err) => {
-    console.log("Db connect error is: ", err);
+    log.info("Db connect error is: ", err);
   });
 
 const addMedicine = async (data) => {
@@ -56,7 +56,7 @@ const addMedicine = async (data) => {
       }
     );
 
-    Log.debug("addMedicine ---> ", medicine);
+    log.debug("addMedicine ---> ", medicine);
   } catch (error) {
     throw error;
   }
@@ -99,7 +99,7 @@ fs.readFile(
 
             // fs.writeFile('medicineDb.txt', JSON.stringify(dataToUpdate), "utf8", (err) => {
             //     if(err) {
-            //         console.log("ERROR IN TESTONE ---> ", err);
+            //         log.info("ERROR IN TESTONE ---> ", err);
             //     }
             // });
 
@@ -112,22 +112,22 @@ fs.readFile(
                   pillbox_id: ID ? ID : null,
                   name: rxstring ? rxstring : medicine_name,
                 });
-                console.log("Db and tables have been created...");
+                log.info("Db and tables have been created...");
               })
               .catch((err) => {
-                console.log("Db connect error is: ", err);
+                log.info("Db connect error is: ", err);
               });
 
             // await addMedicine({pillbox_id: ID, name: rxstring});
           } catch (error) {
-            console.log("Row add error --> ", error);
+            log.info("Row add error --> ", error);
           }
         },
         complete: function (results) {
-          console.log("Finished:");
+          log.info("Finished:");
           // fs.writeFile('medicineDb.txt', JSON.stringify({dataToWrite}), "utf8", (err) => {
           //     if(err) {
-          //         console.log("ERROR IN TESTONE ---> ", err);
+          //         log.info("ERROR IN TESTONE ---> ", err);
           //     }
           // });
         },

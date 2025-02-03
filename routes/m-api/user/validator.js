@@ -84,7 +84,7 @@ export const validateCredentialsData = (req, res, next) => {
   const { email, password } = data;
   const isValid = credentialsFormSchema.validate(data);
   if (isValid && isValid.error != null) {
-    console.log("00000000000000 isValid ---> ", isValid, isValid.error);
+    log.info("00000000000000 isValid ---> ", isValid, isValid.error);
     let errorMessage = "Please check filled details";
     const { error: { details } = {} } = isValid || {};
     const { type } = details[0] || {};

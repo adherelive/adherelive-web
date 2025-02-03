@@ -40,7 +40,7 @@ export default class FoodItem {
   };
 
   // getPortionDetails = () => {
-  //     console.log("868768687687 ===>>>>>> > > > > >",{data:this._data});
+  //     log.info("868768687687 ===>>>>>> > > > > >",{data:this._data});
   //     const portion = this._data.portion ? this._data.portion : {};
   //     return { ...portion };
   // }

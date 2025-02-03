@@ -6,7 +6,7 @@ import { createLogger } from "../../../libs/log";
 import reassignAuditService from "../../services/reassignAudit/reassignAudit.service";
 import DoctorService from "../../services/doctor/doctor.service";
 
-const Log = createLogger("WEB > CONTROLLER > Service Offering");
+const log = createLogger("WEB > CONTROLLER > Service Offering");
 
 class reassignAuditController extends Controller {
   constructor() {
@@ -19,7 +19,7 @@ class reassignAuditController extends Controller {
       const {
         query: { activity_id },
       } = req;
-      console.log({ activity_id });
+      log.info({ activity_id });
       let reassignAuditServiceData =
         await reassignAuditService.getAuditByActivitiyData({ activity_id });
       let output = [];
@@ -34,8 +34,8 @@ class reassignAuditController extends Controller {
         object["assignedToDoctor"] = await DoctorService.getDoctorByDoctorId(
           reassignAuditServiceData[i]["assignedTo"]
         );
-        console.log(reassignAuditServiceData[i]["createdAt"]);
-        console.log(reassignAuditServiceData[i]);
+        log.info(reassignAuditServiceData[i]["createdAt"]);
+        log.info(reassignAuditServiceData[i]);
         output.push(object);
       }
       return raiseSuccess(
@@ -47,7 +47,7 @@ class reassignAuditController extends Controller {
         "Data Fetched Successfully"
       );
     } catch (ex) {
-      Log.debug("getServiceByData 500 error", ex);
+      log.debug("getServiceByData 500 error", ex);
       return raiseServerError(res);
     }
   };

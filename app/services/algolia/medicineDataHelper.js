@@ -10,7 +10,7 @@ export const getMedicineData = async () => {
         __dirname + "/data/subharti_medicine.json",
         async (error, data) => {
           if (error) {
-            console.error("error in reading medicine data", error);
+            log.error("error in reading medicine data", error);
             rej(error);
           }
           let updatedMedicine = [];
@@ -52,7 +52,7 @@ export const getMedicineData = async () => {
     } else {
       fs.readFile(__dirname + "/data/medicine.json", async (error, data) => {
         if (error) {
-          console.error("error in reading medicine data", error);
+          log.error("error in reading medicine data", error);
           rej(error);
         }
         let updatedMedicine = [];

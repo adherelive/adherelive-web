@@ -6,7 +6,7 @@ import { TABLE_NAME as carePlanTableName } from "../../models/carePlan";
 import { createLogger } from "../../../libs/log";
 import { TABLE_NAME as doctorTableName } from "../../models/doctors";
 
-const Log = createLogger("WEB > PATIENTS > SERVICE");
+const log = createLogger("WEB > PATIENTS > SERVICE");
 
 class PatientsService {
   constructor() {}
@@ -139,8 +139,8 @@ class PatientsService {
           },
         ],
       });
-      Log.debug("GETPDATA ---> ", id);
-      Log.debug("PATIENT ---> ", patient);
+      log.debug("GETPDATA ---> ", id);
+      log.debug("PATIENT ---> ", patient);
       return patient;
     } catch (error) {
       throw error;
@@ -178,7 +178,7 @@ class PatientsService {
         }
       }
 
-      Log.debug("2313131231", isNaN(value));
+      log.debug("2313131231", isNaN(value));
 
       const patient = await Database.getModel(TABLE_NAME).findAll({
         where: {

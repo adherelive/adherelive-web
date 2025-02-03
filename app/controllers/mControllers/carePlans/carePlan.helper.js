@@ -29,7 +29,7 @@ import {
 } from "../../../../constant";
 import moment from "moment";
 
-const Log = createLogger("CARE_PLAN > HELPER");
+const log = createLogger("CARE_PLAN > HELPER");
 
 export const getCarePlanDataWithImp = async ({
   carePlans = [],
@@ -112,7 +112,7 @@ export const getCarePlanDataWithImp = async ({
       }
     }
 
-    Log.info(`currentCarePlanId ${currentCarePlanId}`);
+    log.info(`currentCarePlanId ${currentCarePlanId}`);
     // medications
     const allMedications =
       (await medicationReminderService.getAllMedicationByData({
@@ -147,7 +147,7 @@ export const getCarePlanDataWithImp = async ({
       current_care_plan_id: currentCarePlanId,
     };
   } catch (error) {
-    Log.debug("getCarePlanData catch error", error);
+    log.debug("getCarePlanData catch error", error);
     return {};
   }
 };
@@ -201,8 +201,8 @@ export const getCarePlanData = async ({
       medicationIds = [...medicationIds, ...medication_ids];
 
       // get latest careplan id
-      // Log.debug("7123731 careplan --> ", careplan.getCreatedAt());
-      // Log.debug("71237312 careplan --> ", moment(currentCarePlanTime));
+      // log.debug("7123731 careplan --> ", careplan.getCreatedAt());
+      // log.debug("71237312 careplan --> ", moment(currentCarePlanTime));
 
       const isUserRoleAllowed = [user_role_id, ...secondaryDoctorUserRoleIds]
         .map((id) => parseInt(id))
@@ -248,7 +248,7 @@ export const getCarePlanData = async ({
       }
     }
 
-    Log.info(`getCarePlanData currentCarePlanId ${currentCarePlanId}`);
+    log.info(`getCarePlanData currentCarePlanId ${currentCarePlanId}`);
 
     // appointments
     const allAppointments =
@@ -312,7 +312,7 @@ export const getCarePlanData = async ({
       current_care_plan_id: currentCarePlanId,
     };
   } catch (error) {
-    Log.debug("getCarePlanData catch error", error);
+    log.debug("getCarePlanData catch error", error);
     return {};
   }
 };
@@ -421,7 +421,7 @@ export const createVitals = async ({
       vital_templates: vitalTemplateData,
     };
   } catch (error) {
-    Log.debug("createVitals catch error", error);
+    log.debug("createVitals catch error", error);
     return {};
   }
 };
@@ -548,7 +548,7 @@ export const createDiet = async ({
       diet_ids: dietIds,
     };
   } catch (error) {
-    Log.debug("createDiet catch error", error);
+    log.debug("createDiet catch error", error);
     return {};
   }
 };
@@ -681,7 +681,7 @@ export const createWorkout = async ({
       workout_ids: workoutIds,
     };
   } catch (error) {
-    Log.debug("createWorkout catch error", error);
+    log.debug("createWorkout catch error", error);
     return {};
   }
 };

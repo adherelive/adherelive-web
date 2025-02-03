@@ -14,7 +14,7 @@ export default class ServiceOfferingService {
       await transaction.commit();
       return notes;
     } catch (error) {
-      console.log(error);
+      log.info(error);
       await transaction.rollback();
       throw error;
     }

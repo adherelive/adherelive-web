@@ -10,7 +10,7 @@ import FoodItemDetailsWrapper from "../../../apiWrapper/mobile/foodItemDetails";
 import { createLogger } from "../../../../libs/log";
 import { USER_CATEGORY } from "../../../../constant";
 
-const Log = createLogger("MOBILE FOOD ITEM CONTROLLER");
+const log = createLogger("MOBILE FOOD ITEM CONTROLLER");
 
 class FoodItemController extends Controller {
   constructor() {
@@ -148,7 +148,7 @@ class FoodItemController extends Controller {
         "Food Item created successfully"
       );
     } catch (error) {
-      Log.debug("create food item 500 error", error);
+      log.debug("create food item 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -365,7 +365,7 @@ class FoodItemController extends Controller {
         "Food Item updated successfully"
       );
     } catch (error) {
-      Log.debug("update food item 500 error", error);
+      log.debug("update food item 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -485,7 +485,7 @@ class FoodItemController extends Controller {
         "Food Item data fetched successfully"
       );
     } catch (error) {
-      Log.debug("Search food item 500 error", error);
+      log.debug("Search food item 500 error", error);
       return raiseServerError(res);
     }
   };

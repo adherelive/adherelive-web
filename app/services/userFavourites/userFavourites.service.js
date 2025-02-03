@@ -5,7 +5,7 @@ import { TABLE_NAME } from "../../models/userFavourites";
 
 import { createLogger } from "../../../libs/log";
 
-const Log = createLogger("WEB > USER_FAVOURITES > SERVICE");
+const log = createLogger("WEB > USER_FAVOURITES > SERVICE");
 
 class UserFavouritesService {
   constructor() {}
@@ -71,7 +71,7 @@ class UserFavouritesService {
       });
       return deleteFavourite;
     } catch (error) {
-      console.log("32784284576237463256948723 ERRRRO", error);
+      log.info("32784284576237463256948723 ERRRRO", error);
       throw error;
     }
   };

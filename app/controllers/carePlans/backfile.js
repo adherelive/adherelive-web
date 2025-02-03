@@ -81,7 +81,7 @@
 //         "Patient care plan details fetched successfully"
 //     );
 // } catch (error) {
-//     Log.debug("Get CarePlan 500 error ---> ", error);
-//     console.log("GET PATIENT DETAILS ERROR Care Plan ---> ", error);
+//     log.debug("Get CarePlan 500 error ---> ", error);
+//     log.info("GET PATIENT DETAILS ERROR Care Plan ---> ", error);
 //     return raiseServerError(res);
 // }

@@ -4,7 +4,7 @@ import medicineService from "../medicine/medicine.service";
 
 import MedicineWrapper from "../../apiWrapper/mobile/medicine";
 
-const Log = createLogger("ALGOLIA > SERVICE");
+const log = createLogger("ALGOLIA > SERVICE");
 export default class AlgoliaService {
   constructor() {
     this.client = algoliasearch(
@@ -22,7 +22,7 @@ export default class AlgoliaService {
       const index = this.client.initIndex(
         process.config.algolia.medicine_index
       );
-      Log.debug("index", index);
+      log.debug("index", index);
 
       const allMedicines = await medicineService.getAllMedicines();
       const objectIdPrefix = process.config.algolia.object_id_prefix;
@@ -63,7 +63,7 @@ export default class AlgoliaService {
         autoGenerateObjectIDIfNotExist: true,
       });
 
-      console.log("result ----. ", result);
+      log.info("result ----. ", result);
 
       const searchAttributes = await index.setSettings({
         searchableAttributes: ["name", "generic_name", "classification"],
@@ -72,10 +72,10 @@ export default class AlgoliaService {
         highlightPostTag: "</em>",
       });
 
-      console.log("searchAttributes ----. ", searchAttributes);
+      log.info("searchAttributes ----. ", searchAttributes);
       return result;
     } catch (error) {
-      Log.debug("medicine data catch error", error);
+      log.debug("medicine data catch error", error);
       throw error;
     }
   };
@@ -85,7 +85,7 @@ export default class AlgoliaService {
       const index = this.client.initIndex(
         process.config.algolia.medicine_index
       );
-      Log.debug("index", index);
+      log.debug("index", index);
 
       const medicineData = await medicineService.getMedicineById(medicineId);
       const objectIdPrefix = process.config.algolia.object_id_prefix;
@@ -123,12 +123,12 @@ export default class AlgoliaService {
           })
           .wait();
 
-        console.log("result ----. ", result);
+        log.info("result ----. ", result);
 
         return result;
       }
     } catch (error) {
-      Log.debug("500 addNewMedicineData error: ", error);
+      log.debug("500 addNewMedicineData error: ", error);
       throw error;
     }
   };
@@ -138,7 +138,7 @@ export default class AlgoliaService {
       const index = this.client.initIndex(
         process.config.algolia.medicine_index
       );
-      Log.debug("index", index);
+      log.debug("index", index);
 
       const medicineData = await medicineService.getMedicineById(medicineId);
       const objectIdPrefix = process.config.algolia.object_id_prefix;
@@ -172,12 +172,12 @@ export default class AlgoliaService {
 
         const result = await index.partialUpdateObjects(updatedMedicine).wait();
 
-        console.log("result ----. ", result);
+        log.info("result ----. ", result);
 
         return result;
       }
     } catch (error) {
-      Log.debug("500 updateMedicineData error: ", error);
+      log.debug("500 updateMedicineData error: ", error);
       throw error;
     }
   };
@@ -193,7 +193,7 @@ export default class AlgoliaService {
       const result = await index.deleteObject(objectID).wait();
       return result;
     } catch (error) {
-      Log.debug("500 deleteMedicineData error: ", error);
+      log.debug("500 deleteMedicineData error: ", error);
       throw error;
     }
   };

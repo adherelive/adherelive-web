@@ -7,7 +7,7 @@ const Config = require("../../config/config");
 
 Config();
 
-// console.log("process.config.db.name --> ", process.config.db.name);
+// log.info("process.config.db.name --> ", process.config.db.name);
 
 fs.readFile(
   path.join(__dirname, "Pillbox.csv"),
@@ -31,14 +31,14 @@ fs.readFile(
               name: rxstring,
             });
             if (medicineDetails) {
-              console.log("Row done -> ", medicineDetails);
+              log.info("Row done -> ", medicineDetails);
             }
           } catch (error) {
-            console.log("Row add error --> ", error);
+            log.info("Row add error --> ", error);
           }
         },
         complete: function (results) {
-          console.log("Finished:");
+          log.info("Finished:");
         },
       });
     }

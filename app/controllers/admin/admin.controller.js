@@ -23,7 +23,7 @@ import TACWrapper from "../../apiWrapper/web/termsAndConditions";
 
 import { TERMS_AND_CONDITIONS_TYPES, USER_CATEGORY } from "../../../constant";
 
-const Log = createLogger("ADMIN > CONTROLLER");
+const log = createLogger("ADMIN > CONTROLLER");
 
 class AdminController extends Controller {
   constructor() {
@@ -54,19 +54,19 @@ class AdminController extends Controller {
           feature_type
         );
 
-        Log.debug("updateFeatureDetails --> ", updateFeatureDetails);
+        log.debug("updateFeatureDetails --> ", updateFeatureDetails);
       } else {
         const addFeatureDetails = await FeatureDetailService.add({
           feature_type,
           details: { content },
         });
 
-        Log.debug("updateFeatureDetails --> ", addFeatureDetails);
+        log.debug("updateFeatureDetails --> ", addFeatureDetails);
       }
 
       return raiseSuccess(res, 200, {}, "Details updated successfully");
     } catch (error) {
-      Log.debug("updateTermsAndPolicy 500 error", error);
+      log.debug("updateTermsAndPolicy 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -81,7 +81,7 @@ class AdminController extends Controller {
 
       const featureDetails = await FeatureDetailsWrapper(termsOrPolicy);
 
-      Log.debug("featureDetails.getBasicInfo", featureDetails.getBasicInfo());
+      log.debug("featureDetails.getBasicInfo", featureDetails.getBasicInfo());
 
       return raiseSuccess(
         res,
@@ -92,7 +92,7 @@ class AdminController extends Controller {
         "Details fetched successfully"
       );
     } catch (error) {
-      Log.debug("getTermsAndPolicy 500 error", error);
+      log.debug("getTermsAndPolicy 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -142,7 +142,7 @@ class AdminController extends Controller {
 
       return raiseSuccess(res, 200, {}, "Features updated successfully");
     } catch (error) {
-      Log.debug("enableAllFeatures 500 error", error);
+      log.debug("enableAllFeatures 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -181,7 +181,7 @@ class AdminController extends Controller {
         "Updated terms and conditions for existing providers."
       );
     } catch (error) {
-      Log.debug("updateProviderTermsMappingForExistingUsers 500 error", error);
+      log.debug("updateProviderTermsMappingForExistingUsers 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -223,7 +223,7 @@ class AdminController extends Controller {
         "Details fetched successfully"
       );
     } catch (error) {
-      Log.debug("getTermsOfPayment 500 error", error);
+      log.debug("getTermsOfPayment 500 error", error);
       return raiseServerError(res);
     }
   };

@@ -11,7 +11,7 @@ import VitalWrapper from "../apiWrapper/web/vitals";
 
 import carePlanAppointmentService from "../services/carePlanAppointment/carePlanAppointment.service";
 
-const Log = createLogger("CRON > HELPER");
+const log = createLogger("CRON > HELPER");
 
 export const uploadDocument = async ({
   buffer,
@@ -21,7 +21,7 @@ export const uploadDocument = async ({
   doHashing,
 }) => {
   try {
-    Log.info(`fileName : ${fileName}`);
+    log.info(`fileName : ${fileName}`);
     await awsS3Service.createBucket();
 
     let hash = md5.create();
@@ -33,15 +33,15 @@ export const uploadDocument = async ({
 
     const encodedFileName = subfolder + "/" + fileName;
 
-    Log.info(`encodedFileName :: ${encodedFileName}`);
+    log.info(`encodedFileName :: ${encodedFileName}`);
 
     const filePath = `${folder}/${encodedFileName}`;
-    Log.info(`filePath :: ${filePath}`);
+    log.info(`filePath :: ${filePath}`);
 
     await awsS3Service.saveBufferObject(buffer, filePath, null);
     return completePath(`/${filePath}`);
   } catch (error) {
-    Log.debug("uploadDocument catch error", error);
+    log.debug("uploadDocument catch error", error);
     throw error;
   }
 };

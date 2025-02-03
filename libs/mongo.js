@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 export default async function InitializeMongo() {
   try {
-    console.log({ mongo_db_details: process.config.mongo.db_uri });
+    log.info({ mongo_db_details: process.config.mongo.db_uri });
 
     // ConnectOptions for the MongoDB connection
     // Removed the 'authSource', as it may be different between DEV and PROD
@@ -26,11 +26,11 @@ export default async function InitializeMongo() {
 
     await mongoose
       .connect(connectionString, dbConfig)
-      .then(() => console.log("Connected to MongoDB! \n", dbConfig))
-      .catch((err) => console.error("Error connecting to MongoDB: \n", err));
+      .then(() => log.info("Connected to MongoDB! \n", dbConfig))
+      .catch((err) => log.error("Error connecting to MongoDB: \n", err));
 
-    console.log("MongoDB Database string used is: ", connectionString);
+    log.info("MongoDB Database string used is: ", connectionString);
   } catch (err) {
-    console.log("Error connecting to MongoDB: ", err);
+    log.info("Error connecting to MongoDB: ", err);
   }
 }

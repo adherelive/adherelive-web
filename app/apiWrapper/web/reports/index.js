@@ -7,7 +7,7 @@ import DocumentWrapper from "../../web/uploadDocument";
 import { createLogger } from "../../../../libs/log";
 import { DOCUMENT_PARENT_TYPE } from "../../../../constant";
 
-const Log = createLogger("WEB > API_WRAPPER > REPORTS");
+const log = createLogger("WEB > API_WRAPPER > REPORTS");
 
 class ReportWrapper extends BaseReport {
   constructor(data) {
@@ -62,7 +62,7 @@ class ReportWrapper extends BaseReport {
         report_document_ids: uploadDocumentIds,
       };
     } catch (error) {
-      Log.debug("getAllInfo error", error);
+      log.debug("getAllInfo error", error);
       throw error;
     }
   };
@@ -103,7 +103,7 @@ class ReportWrapper extends BaseReport {
         report_id: getId(),
       };
     } catch (error) {
-      Log.debug("getReferenceInfo error", error);
+      log.debug("getReferenceInfo error", error);
       throw error;
     }
   };
@@ -118,7 +118,7 @@ export default async ({ data = null, id = null }) => {
     const reports = await reportService.getReportByData({ id });
     return new ReportWrapper(reports);
   } catch (error) {
-    Log.debug("ReportWrapper catch error", error);
+    log.debug("ReportWrapper catch error", error);
     throw error;
   }
 };

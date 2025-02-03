@@ -17,7 +17,7 @@ import UserRolesWrapper from "../../apiWrapper/web/userRoles";
 // Helpers
 import { USER_CATEGORY } from "../../../constant";
 
-const Log = createLogger("TRANSACTION > HELPER");
+const log = createLogger("TRANSACTION > HELPER");
 
 export const getProviderTransactions = async (req) => {
   try {
@@ -202,7 +202,7 @@ export const getProviderTransactions = async (req) => {
       transaction_ids: transactionIds,
     };
   } catch (error) {
-    Log.debug("getProviderTransactions catch error", error);
+    log.debug("getProviderTransactions catch error", error);
     return null;
   }
 };
@@ -390,7 +390,7 @@ export const getDoctorTransactions = async (req) => {
       transaction_ids: transactionIds,
     };
   } catch (error) {
-    Log.debug("getDoctorTransactions catch error", error);
+    log.debug("getDoctorTransactions catch error", error);
     return null;
   }
 };

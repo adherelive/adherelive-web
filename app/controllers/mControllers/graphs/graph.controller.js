@@ -13,7 +13,7 @@ import userPreferenceService from "../../../services/userPreferences/userPrefere
 
 import UserPreferenceWrapper from "../../../apiWrapper/mobile/userPreference";
 
-const Log = createLogger("WEB GRAPH CONTROLLER");
+const log = createLogger("WEB GRAPH CONTROLLER");
 
 class GraphController extends Controller {
   constructor() {
@@ -68,7 +68,7 @@ class GraphController extends Controller {
       }
 
       // const userPreferenceData = await userPreferenceService.getPreferenceByData({user_id: userId});
-      // Log.debug("9182391283 userPreferenceData ---> ", userPreferenceData);
+      // log.debug("9182391283 userPreferenceData ---> ", userPreferenceData);
       // // const userPreference = await UserPreferenceWrapper(userPreferenceData);
 
       // // const charts = userPreference.getChartDetails();
@@ -91,11 +91,11 @@ class GraphController extends Controller {
       //   };
 
       // charts.forEach(chart => {
-      //     Log.debug("324564322456432678786745643",CHART_DETAILS[chart]);
+      //     log.debug("324564322456432678786745643",CHART_DETAILS[chart]);
       //    chartData[chart] = CHART_DETAILS[chart];
       // });
     } catch (error) {
-      Log.debug("getAllGraphs 500 error", error);
+      log.debug("getAllGraphs 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -142,7 +142,7 @@ class GraphController extends Controller {
         },
       };
 
-      // Log.debug("userPreference.getChartDetails().includes(id) ", userPreference.getChartDetails().includes(id));
+      // log.debug("userPreference.getChartDetails().includes(id) ", userPreference.getChartDetails().includes(id));
 
       // userPreference.getChartDetails().forEach(id => {
       //     if(chart_ids.includes(id)) {
@@ -191,7 +191,7 @@ class GraphController extends Controller {
         "Charts added successfully"
       );
     } catch (error) {
-      Log.debug("getAllGraphs 500 error ---> ", error);
+      log.debug("getAllGraphs 500 error ---> ", error);
       return raiseServerError(res);
     }
   };

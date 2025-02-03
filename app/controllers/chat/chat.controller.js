@@ -3,7 +3,7 @@ import Controller from "../index";
 import { createLogger } from "../../../libs/log";
 import ChatJob from "../../jobSdk/Chat/observer";
 
-const Log = createLogger("WEB > CHAT > CONTROLLER");
+const log = createLogger("WEB > CHAT > CONTROLLER");
 
 class ChatController extends Controller {
   constructor() {
@@ -42,7 +42,7 @@ class ChatController extends Controller {
 
       const UserMessageJob = ChatJob.execute();
     } catch (error) {
-      Log.debug("notify 500 error", error);
+      log.debug("notify 500 error", error);
       return raiseServerError(res);
     }
   };

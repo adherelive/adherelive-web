@@ -234,7 +234,7 @@ class DoctorWrapper extends BaseDoctor {
     } = _data || {};
 
     const consentService = new ConsentService();
-    // console.log("getDoctorId data in getAllInfo ---> ", _data);
+    // log.info("getDoctorId data in getAllInfo ---> ", _data);
     const watchlistPatients = await doctorService.getAllWatchlist({
       doctor_id: getDoctorId(),
     });

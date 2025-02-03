@@ -8,7 +8,7 @@ import MealTemplateWrapper from "../../apiWrapper/web/mealTemplate";
 
 import { createLogger } from "../../../libs/log";
 
-const Log = createLogger("WEB > MEAL_TEMPLATE > CONTROLLER");
+const log = createLogger("WEB > MEAL_TEMPLATE > CONTROLLER");
 
 class MealTemplateController extends Controller {
   constructor() {
@@ -18,7 +18,7 @@ class MealTemplateController extends Controller {
   create = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
-      Log.debug("create meal template request", req.body);
+      log.debug("create meal template request", req.body);
       const {
         body,
         userDetails: {
@@ -75,7 +75,7 @@ class MealTemplateController extends Controller {
         );
       }
     } catch (error) {
-      Log.debug("create Meal Template  500 error", error);
+      log.debug("create Meal Template  500 error", error);
       return raiseServerError(res);
     }
   };
@@ -83,7 +83,7 @@ class MealTemplateController extends Controller {
   update = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
-      Log.debug("update meal template request", req.body);
+      log.debug("update meal template request", req.body);
       const {
         params: { id } = {},
         body: { name, food_item_detail_ids: foodItemDetails = [] } = {},
@@ -146,7 +146,7 @@ class MealTemplateController extends Controller {
         "Meal Template updated successfully"
       );
     } catch (error) {
-      Log.debug("update Meal Template  500 error", error);
+      log.debug("update Meal Template  500 error", error);
       return raiseServerError(res);
     }
   };
@@ -177,7 +177,7 @@ class MealTemplateController extends Controller {
         );
       }
     } catch (error) {
-      Log.debug("delete Meal Template  500 error", error);
+      log.debug("delete Meal Template  500 error", error);
       return raiseServerError(res);
     }
   };

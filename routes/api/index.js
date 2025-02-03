@@ -63,24 +63,24 @@ import NotesRouter from "./notes";
 import { getTime } from "../../app/helper/timer";
 import prescriptionRouter from "./prescription";
 
-const Log = createLogger("API > INDEX");
+const log = createLogger("API > INDEX");
 
 router.use(async function (req, res, next) {
-  // console.log("api-index-1 ---> router getTime: " + getTime() + " " + getTime());
+  // log.info("api-index-1 ---> router getTime: " + getTime() + " " + getTime());
   try {
     let accessToken,
       userId = null,
       userRoleId,
       userRoleData;
     const { cookies = {} } = req;
-    // console.log("api-index-2" + getTime());
+    // log.info("api-index-2" + getTime());
 
     /**
      * TODO: Commenting out the below, as it is not required here currently
     if (cookies.accessToken) {
       accessToken = cookies.accessToken;
     }
-    console.log("api-index-3" + getTime());
+    log.info("api-index-3" + getTime());
     const { accessToken: aT = "" } = req.headers || {};
     if (aT) {
       accessToken = aT;
@@ -103,9 +103,9 @@ router.use(async function (req, res, next) {
     }
 
     const secret = process.config.TOKEN_SECRET_KEY;
-    // console.log("api-index-4" + getTime());
+    // log.info("api-index-4" + getTime());
     if (accessToken) {
-      // console.log("api-index-5" + getTime());
+      // log.info("api-index-5" + getTime());
       const decodedAccessToken = await jwt.verify(accessToken, secret);
       const {
         userRoleId: decodedUserRoleId = null,
@@ -116,7 +116,7 @@ router.use(async function (req, res, next) {
         id: decodedUserRoleId,
       });
 
-      // console.log("api-index-6" + getTime());
+      // log.info("api-index-6" + getTime());
       if (userRoleDetails) {
         const userRole = await UserRoleWrapper(userRoleDetails);
         userId = userRole.getUserId();
@@ -130,26 +130,26 @@ router.use(async function (req, res, next) {
         next();
         return;
       }
-      // console.log("api-index-7" + getTime());
+      // log.info("api-index-7" + getTime());
     } else {
-      // console.log("api-index-8" + getTime());
+      // log.info("api-index-8" + getTime());
       req.userDetails = {
         exists: false,
       };
       next();
-      // console.log("api-index-9" + getTime());
+      // log.info("api-index-9" + getTime());
       return;
     }
-    // console.log("api-index-10" + getTime());
+    // log.info("api-index-10" + getTime());
     const userData = await userService.getUser(userId);
-    // console.log("api-index-11" + getTime());
+    // log.info("api-index-11" + getTime());
     if (userData) {
-      // console.log("api-index-12" + getTime());
-      // console.log("api-index-12-1" + getTime());
+      // log.info("api-index-12" + getTime());
+      // log.info("api-index-12-1" + getTime());
       const user = await UserWrapper(userData);
-      // console.log("api-index-12-2" + getTime());
+      // log.info("api-index-12-2" + getTime());
       const { userCategoryData, userCategoryId } = (await user.getCategoryInfo()) || {};
-      // console.log("api-index-12-3" + getTime());
+      // log.info("api-index-12-3" + getTime());
 
       req.userDetails = {
         exists: true,
@@ -161,11 +161,11 @@ router.use(async function (req, res, next) {
         userCategoryId,
       };
 
-      // console.log("api-index-12-4" + getTime());
+      // log.info("api-index-12-4" + getTime());
       req.permissions = await user.getPermissions();
-      // console.log("api-index-12-5" + getTime());
-      // console.log("api-index-13" + getTime());
-      // console.log("api-index-14" + getTime());
+      // log.info("api-index-12-5" + getTime());
+      // log.info("api-index-13" + getTime());
+      // log.info("api-index-14" + getTime());
     } else {
       req.userDetails = {
         exists: false,
@@ -173,7 +173,7 @@ router.use(async function (req, res, next) {
     }
     next();
   } catch (err) {
-    Log.debug("API index catch Error ---> ", err);
+    log.debug("API index catch Error ---> ", err);
     req.userDetails = {
       exists: false,
     };

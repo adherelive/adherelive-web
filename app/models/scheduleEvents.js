@@ -8,7 +8,7 @@ import { TABLE_NAME as eventHistoryTableName } from "./eventHistory";
 
 export const TABLE_NAME = "schedule_events";
 
-const Log = createLogger("SCHEDULE_EVENTS > MODEL");
+const log = createLogger("SCHEDULE_EVENTS > MODEL");
 
 export const db = (database) => {
   database.define(
@@ -85,7 +85,7 @@ export const db = (database) => {
           const { _previousDataValues: previousValues } = instance || {};
           const { id, event_type, details, critical, event_id } =
             previousValues || {};
-          Log.info(`BEFORE_UPDATE : for event : ${event_type}`);
+          log.info(`BEFORE_UPDATE : for event : ${event_type}`);
 
           // will accept update changes from all event types
 

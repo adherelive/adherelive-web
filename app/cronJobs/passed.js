@@ -11,7 +11,7 @@ import FeatureDetailService from "../services/featureDetails/featureDetails.serv
 import ScheduleEventWrapper from "../apiWrapper/common/scheduleEvents";
 import FeatureDetailWrapper from "../apiWrapper/mobile/featureDetails";
 
-const Log = createLogger("CRON > PASSED");
+const log = createLogger("CRON > PASSED");
 
 class PassedCron {
   constructor() {
@@ -23,7 +23,7 @@ class PassedCron {
     const scheduleEventService = new ScheduleEventService();
 
     const currentTime = moment().utc().toISOString();
-    Log.info(`currentTime : ${currentTime}`);
+    log.info(`currentTime : ${currentTime}`);
     const scheduleEvents = await scheduleEventService.getPassedEventData(
       currentTime
     );
@@ -32,7 +32,7 @@ class PassedCron {
 
   runObserver = async () => {
     try {
-      Log.info("running passed cron");
+      log.info("running passed cron");
       const { getScheduleData } = this;
       const scheduleEvents = await getScheduleData();
       let count = 0;
@@ -66,9 +66,9 @@ class PassedCron {
           }
         }
       }
-      Log.info(`runObserver count : ${count} / ${scheduleEvents.length}`);
+      log.info(`runObserver count : ${count} / ${scheduleEvents.length}`);
     } catch (error) {
-      Log.debug("runObserver scheduleEvents 500 error ---> ", error);
+      log.debug("runObserver scheduleEvents 500 error ---> ", error);
     }
   };
 
@@ -89,7 +89,7 @@ class PassedCron {
         );
       }
     } catch (error) {
-      Log.debug("handleDietPassed 500 error ---> ", error);
+      log.debug("handleDietPassed 500 error ---> ", error);
     }
   };
 
@@ -110,7 +110,7 @@ class PassedCron {
         );
       }
     } catch (error) {
-      Log.debug("handleWorkoutPassed 500 error ---> ", error);
+      log.debug("handleWorkoutPassed 500 error ---> ", error);
     }
   };
 
@@ -131,7 +131,7 @@ class PassedCron {
 
       const { value = 0 } = repeat_intervals[repeatIntervalId] || {};
 
-      Log.info(
+      log.info(
         `value: ${value} | difference -> ${moment(currentTime).diff(
           event.getStartTime(),
           "hours"
@@ -147,7 +147,7 @@ class PassedCron {
         );
       }
     } catch (error) {
-      Log.debug("handleVitalPassed 500 error ---> ", error);
+      log.debug("handleVitalPassed 500 error ---> ", error);
     }
   };
 
@@ -156,7 +156,7 @@ class PassedCron {
       const scheduleEventService = new ScheduleEventService();
       const currentTime = moment().utc().toDate();
 
-      console.log("handleMedicationPassed details: ", {
+      log.info("handleMedicationPassed details: ", {
         condition:
           moment(currentTime).diff(event.updatedAt(), "minutes") ===
           this.RESCHEDULE_INTERVAL,
@@ -181,7 +181,7 @@ class PassedCron {
         );
       }
 
-      console.log("handleMedicationPassed expired diff: ", {
+      log.info("handleMedicationPassed expired diff: ", {
         count: moment(currentTime).diff(event.getStartTime(), "minutes"),
         condition:
           moment(currentTime).diff(event.getStartTime(), "minutes") >
@@ -200,7 +200,7 @@ class PassedCron {
         );
       }
     } catch (error) {
-      Log.debug("handleMedicationPassed 500 error ---> ", error);
+      log.debug("handleMedicationPassed 500 error ---> ", error);
     }
   };
 
@@ -221,7 +221,7 @@ class PassedCron {
         );
       }
     } catch (error) {
-      Log.debug("handleAppointmentPassed 500 error ---> ", error);
+      log.debug("handleAppointmentPassed 500 error ---> ", error);
     }
   };
 
@@ -247,7 +247,7 @@ class PassedCron {
         );
       }
     } catch (error) {
-      Log.debug("handleCarePlanPassed 500 error ---> ", error);
+      log.debug("handleCarePlanPassed 500 error ---> ", error);
     }
   };
 }

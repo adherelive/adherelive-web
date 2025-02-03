@@ -21,7 +21,7 @@ class serviceSubscribeTransaction {
       await transaction.commit();
       return addServiceSubscriptionTx;
     } catch (error) {
-      console.log(error);
+      log.info(error);
       await transaction.rollback();
       throw error;
     }
@@ -41,7 +41,7 @@ class serviceSubscribeTransaction {
   updateServiceSubscriptionTx = async (data, id) => {
     const transaction = await Database.initTransaction();
     try {
-      console.log(data, id);
+      log.info(data, id);
       const serviceSubscriptionTx = await Database.getModel(TABLE_NAME).update(
         data,
         {

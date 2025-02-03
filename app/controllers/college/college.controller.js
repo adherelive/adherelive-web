@@ -5,7 +5,7 @@ import CollegeWrapper from "../../apiWrapper/web/college";
 
 import { createLogger } from "../../../libs/log";
 
-const Log = createLogger("WEB COLLEGE CONTROLLER");
+const log = createLogger("WEB COLLEGE CONTROLLER");
 
 class CollegeController extends Controller {
   constructor() {
@@ -18,7 +18,7 @@ class CollegeController extends Controller {
       const { query } = req;
       const { value } = query || {};
 
-      // Log.debug("value in req", value);
+      // log.debug("value in req", value);
 
       const collegeDetails = await collegeService.search(value);
 
@@ -49,7 +49,7 @@ class CollegeController extends Controller {
         );
       }
     } catch (error) {
-      Log.debug("college search 500 error", error);
+      log.debug("college search 500 error", error);
       return raiseServerError(res);
     }
   };

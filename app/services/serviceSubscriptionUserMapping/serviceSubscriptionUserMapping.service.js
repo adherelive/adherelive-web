@@ -16,7 +16,7 @@ export default class ServiceUserMapping {
       await transaction.commit();
       return serviceSubscriptionUserMapping;
     } catch (error) {
-      console.log(error);
+      log.info(error);
       await transaction.rollback();
       throw error;
     }
@@ -24,7 +24,7 @@ export default class ServiceUserMapping {
 
   getAllServiceSubscriptionUserMappingByData = async (data) => {
     try {
-      console.log(TABLE_NAME);
+      log.info(TABLE_NAME);
       return await Database.getModel(TABLE_NAME).findAll({
         where: data,
         raw: true,
@@ -45,7 +45,7 @@ export default class ServiceUserMapping {
              patient_status: 'active'
              } 8
              */
-      console.log(data, id);
+      log.info(data, id);
       const serviceSubscriptionUserMapping = await Database.getModel(
         TABLE_NAME
       ).update(data, {

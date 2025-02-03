@@ -56,14 +56,14 @@ import WorkoutWrapper from "../app/apiWrapper/mobile/workouts";
 import { getTimeWiseDietFoodGroupMappings } from "../app/controllers/diet/diet.helper";
 import SimilarFoodMappingService from "../app/services/similarFoodMapping/similarFoodMapping.service";
 
-const Log = createLogger("EVENT > HELPER");
+const log = createLogger("EVENT > HELPER");
 
 const scheduleService = new ScheduleService();
 
 const getUserPreferences = async (user_id) => {
   try {
     if (user_id != null) {
-      Log.info(`user_id : ${user_id}`);
+      log.info(`user_id : ${user_id}`);
       const userPreference = await UserPreferenceService.getPreferenceByData({
         user_id,
       });
@@ -71,7 +71,7 @@ const getUserPreferences = async (user_id) => {
       return timings;
     }
   } catch (error) {
-    Log.debug("userPreferences catch error: ", error);
+    log.debug("userPreferences catch error: ", error);
   }
 };
 
@@ -93,7 +93,7 @@ export const handleAppointments = async (appointment) => {
       dtstart: moment(start_time).utc().toDate(),
     });
 
-    Log.debug("handleAppointments rrule ---> ", rrule.all());
+    log.debug("handleAppointments rrule ---> ", rrule.all());
 
     // create schedule for the date
     const scheduleData = {
@@ -113,21 +113,21 @@ export const handleAppointments = async (appointment) => {
     let response = false;
     const schedule = await scheduleService.create(scheduleData);
     if (schedule) {
-      Log.debug("schedule events created for appointment", true);
+      log.debug("schedule events created for appointment", true);
       response = true;
     } else {
-      Log.debug("schedule events failed for appointment", false);
+      log.debug("schedule events failed for appointment", false);
     }
 
     return response;
   } catch (error) {
-    Log.debug("schedule events appointment 500 error: ", error);
+    log.debug("schedule events appointment 500 error: ", error);
   }
 };
 
 export const handleMedications = async (data) => {
   try {
-    console.log("data for handle medications ---> ", data);
+    log.info("data for handle medications ---> ", data);
     const {
       patient_id,
       event_id,
@@ -162,7 +162,7 @@ export const handleMedications = async (data) => {
 
     const scheduleEventArr = [];
 
-    Log.debug("handleMedications helper createMedicationSchedule ---> ", {
+    log.debug("handleMedications helper createMedicationSchedule ---> ", {
       medicine_id,
       data: medicine.getBasicInfo(),
       when_to_take,
@@ -176,7 +176,7 @@ export const handleMedications = async (data) => {
           patientPreference
         );
 
-        Log.debug("create medication schedule ---> ", {
+        log.debug("create medication schedule ---> ", {
           startTime,
           text: MEDICATION_TIMING[timing],
         });
@@ -203,15 +203,15 @@ export const handleMedications = async (data) => {
     const schedule = await scheduleService.bulkCreate(scheduleEventArr);
     let response = false;
     if (schedule) {
-      Log.debug("schedule events created for appointment", true);
+      log.debug("schedule events created for appointment", true);
       response = true;
     } else {
-      Log.debug("schedule events failed for appointment", false);
+      log.debug("schedule events failed for appointment", false);
     }
 
     return response;
   } catch (error) {
-    Log.debug("schedule events medication 500 error: ", error);
+    log.debug("schedule events medication 500 error: ", error);
   }
 };
 
@@ -340,15 +340,15 @@ export const handleDiet = async (data) => {
     const schedule = await scheduleService.bulkCreate(scheduleEventArr);
     let response = false;
     if (schedule) {
-      Log.debug("schedule events created for diet", true);
+      log.debug("schedule events created for diet", true);
       response = true;
     } else {
-      Log.debug("schedule events failed for diet", false);
+      log.debug("schedule events failed for diet", false);
     }
 
     return response;
   } catch (error) {
-    Log.debug("schedule events DIET 500 error", error);
+    log.debug("schedule events DIET 500 error", error);
   }
 };
 
@@ -364,7 +364,7 @@ export const handleWorkout = async (workout) => {
       critical = false,
     } = workout || {};
 
-    Log.debug("workout", workout);
+    log.debug("workout", workout);
 
     const workoutInstance = await WorkoutWrapper({ id: event_id });
 
@@ -412,15 +412,15 @@ export const handleWorkout = async (workout) => {
     const schedule = await scheduleService.bulkCreate(allEvents);
     let response = false;
     if (schedule) {
-      Log.debug("schedule events created for workout");
+      log.debug("schedule events created for workout");
       response = true;
     } else {
-      Log.debug("schedule events failed for workout");
+      log.debug("schedule events failed for workout");
     }
 
     return response;
   } catch (error) {
-    Log.debug("schedule events WORKOUT 500 error", error);
+    log.debug("schedule events WORKOUT 500 error", error);
   }
 };
 
@@ -500,7 +500,7 @@ export const handleVitals = async (vital) => {
       }
     } else {
       for (let i = 0; i < allDays.length; i++) {
-        // console.log("Wake Up Time Value: ", WAKE_UP, timings[this.WAKE_UP]);
+        // log.info("Wake Up Time Value: ", WAKE_UP, timings[this.WAKE_UP]);
         const { value: wakeUpTime } = timings[WAKE_UP];
         const { value: sleepTime } = timings[SLEEP];
 
@@ -578,15 +578,15 @@ export const handleVitals = async (vital) => {
     let response = false;
     const schedule = await scheduleService.bulkCreate(scheduleEventArr);
     if (schedule) {
-      Log.debug("schedule events created for vitals", true);
+      log.debug("schedule events created for vitals", true);
       response = true;
     } else {
-      Log.debug("schedule events failed for vitals", false);
+      log.debug("schedule events failed for vitals", false);
     }
 
     return response;
   } catch (error) {
-    Log.debug("schedule events vitals 500 error", error);
+    log.debug("schedule events vitals 500 error", error);
   }
 };
 
@@ -608,10 +608,10 @@ export const handleAppointmentsTimeAssignment = async (appointment) => {
 
     // Check if participant_one exists and has an id
     if (participant_one && participant_one.id) {
-      console.log("Participant One ---> ID exists: ", participant_one);
+      log.info("Participant One ---> ID exists: ", participant_one);
     } else {
       // Handle the case where participant_one is missing or has no ID
-      // console.error("Participant One ID is undefined or missing: ", participant_one);
+      // log.error("Participant One ID is undefined or missing: ", participant_one);
       participant_one.id = 1; // Set a default ID
       // You can throw an error, log a warning, or handle the situation differently
       // depending on your application's requirements.
@@ -639,7 +639,7 @@ export const handleAppointmentsTimeAssignment = async (appointment) => {
       }
     );
 
-    Log.debug("getAppointmentForTimeSlot --> ", getAppointmentForTimeSlot);
+    log.debug("getAppointmentForTimeSlot --> ", getAppointmentForTimeSlot);
 
     if (getAppointmentForTimeSlot.length > 0) {
       let startTime = start_time;
@@ -737,10 +737,10 @@ export const handleAppointmentsTimeAssignment = async (appointment) => {
 
     const sqsResponse = await QueueService.sendMessage(eventScheduleData);
 
-    Log.debug("SQS Response helper in handleAppointmentsTimeAssignment ---> ", sqsResponse);
+    log.debug("SQS Response helper in handleAppointmentsTimeAssignment ---> ", sqsResponse);
     return true;
   } catch (error) {
-    Log.debug("Appointment time assignment helper in handleAppointmentsTimeAssignment has 500 error: ", error);
+    log.debug("Appointment time assignment helper in handleAppointmentsTimeAssignment has 500 error: ", error);
   }
 };
 
@@ -775,7 +775,7 @@ export const handleCarePlans = async (data) => {
       },
     };
 
-    Log.debug(
+    log.debug(
       "---> Schedule events data for careplan activation is: ",
       scheduleEvents
     );
@@ -783,14 +783,14 @@ export const handleCarePlans = async (data) => {
     const schedule = await scheduleService.create(scheduleEvents);
     let response = false;
     if (schedule) {
-      Log.debug("schedule events created for careplan activation: ", true);
+      log.debug("schedule events created for careplan activation: ", true);
       response = true;
     } else {
-      Log.debug("schedule events failed for careplan activation: ", false);
+      log.debug("schedule events failed for careplan activation: ", false);
     }
     return response;
   } catch (error) {
-    Log.debug("schedule events careplan activation 500 error", error);
+    log.debug("schedule events careplan activation 500 error", error);
   }
 };
 
@@ -905,7 +905,7 @@ const getDietTimings = (date, timing, patientPreference) => {
 };
 
 const updateMedicationTiming = (date, timing, patientPreference) => {
-  console.log("updateMedicationTiming -> date, timing, patientPreference: ", {
+  log.info("updateMedicationTiming -> date, timing, patientPreference: ", {
     date,
     timing,
     patientPreference,
@@ -1012,7 +1012,7 @@ const updateMedicationTiming = (date, timing, patientPreference) => {
 
 const repeatDays = (days) => {
   let daysArr = [];
-  Log.debug("repeatDays  ---> ", days);
+  log.debug("repeatDays  ---> ", days);
   for (const day of days) {
     switch (day) {
       case MONDAY:
@@ -1037,7 +1037,7 @@ const repeatDays = (days) => {
         daysArr.push(RRule.SU);
         break;
       default:
-        Log.debug("repeatDays day ---> ", day);
+        log.debug("repeatDays day ---> ", day);
     }
   }
 
