@@ -147,13 +147,13 @@ router.get(
     // PatientController.generatePrescription,
     async (req, res) => {
         try {
-            console.log(path.join("./routes/api/prescription/prescription.html"));
-            console.log("./prescription.html");
+            log.debug(path.join("./routes/api/prescription/prescription.html"));
+            log.debug("./prescription.html");
             const templateHtml = fs.readFileSync(
                 path.join("./routes/api/prescription/prescription.html"),
                 "utf8"
             );
-            console.log(path.join(process.cwd(), "prescription.html"));
+            log.debug(path.join(process.cwd(), "prescription.html"));
             const options = {
                 format: "A4",
                 headerTemplate: "<p></p>",
@@ -174,8 +174,8 @@ router.get(
             res.contentType("application/pdf");
             return res.send(pdf_buffer_value);
         } catch (err) {
-            console.log(err);
-            console.log("care_plan_id", req.params.care_plan_id);
+            log.debug(err);
+            log.debug("care_plan_id", req.params.care_plan_id);
         }
     }
 );
@@ -223,9 +223,9 @@ function formatDoctorsData(
     let mobileNumber = mobile_number;
     let prefixToShow = prefix;
 
-    console.log("========provider details start==================");
-    console.log(providers);
-    console.log("========provider details end====================");
+    log.debug("========provider details start==================");
+    log.debug(providers);
+    log.debug("========provider details end====================");
 
     if (Object.keys(providers).length > 0) {
         const {
@@ -295,7 +295,7 @@ function formatPatientData(patients, users) {
     const patientIds = Object.keys(patients);
 
     const patientId = patientIds[0];
-    console.log(JSON.stringify({patients, users}));
+    log.debug(JSON.stringify({patients, users}));
     const {
         [patientId]: {
             basic_info: {
@@ -395,7 +395,7 @@ function renderChiefComplaints({symptoms}) {
 
         return finalSymptom;
     } catch (err) {
-        console.log("Error in chief Compliance: ", err);
+        log.debug("Error in chief Compliance: ", err);
     }
 }
 
@@ -861,10 +861,10 @@ router.get("/details/:care_plan_id", Authenticated, async (req, res) => {
             }
         }
 
-        console.log("=========================");
-        console.log(JSON.stringify(dietList));
-        console.log({dietIds});
-        console.log("=========================");
+        log.debug("=========================");
+        log.debug(JSON.stringify(dietList));
+        log.debug({dietIds});
+        log.debug("=========================");
 
         for (const id of workout_ids) {
             const workout = await workoutService.findOne({id});
@@ -1042,10 +1042,10 @@ router.get("/details/:care_plan_id", Authenticated, async (req, res) => {
                     providerIcon
                 );
             }
-            console.log("provide details start ====================1 ");
+            log.debug("provide details start ====================1 ");
             providerData = {...providers[provider_id]};
-            console.log({providerData});
-            console.log("provide details end ====================1 ");
+            log.debug({providerData});
+            log.debug("provide details end ====================1 ");
             usersData = {...usersData, ...users};
         }
 
@@ -1070,16 +1070,16 @@ router.get("/details/:care_plan_id", Authenticated, async (req, res) => {
                 repetitionApiData[id] = {id, type};
             }
         }
-        console.log("============================");
-        console.log(" doctor id ", doctor_id);
-        console.log(doctors);
-        console.log({medicinesArray});
-        console.log({});
-        console.log("============================");
+        log.debug("============================");
+        log.debug(" doctor id ", doctor_id);
+        log.debug(doctors);
+        log.debug({medicinesArray});
+        log.debug({});
+        log.debug("============================");
 
-        console.log("details before from a doctor start");
-        console.log({providerLogo});
-        console.log("details before from a doctor end");
+        log.debug("details before from a doctor start");
+        log.debug({providerLogo});
+        log.debug("details before from a doctor end");
 
         const {
             name: doctorName = "",
@@ -1101,9 +1101,9 @@ router.get("/details/:care_plan_id", Authenticated, async (req, res) => {
             doctor_id
         );
 
-        console.log("details from a doctor start");
-        console.log({providerLogo});
-        console.log("details from a doctor end");
+        log.debug("details from a doctor start");
+        log.debug({providerLogo});
+        log.debug("details from a doctor end");
 
         let patient_data = formatPatientData(
             {
@@ -1167,15 +1167,15 @@ router.get("/details/:care_plan_id", Authenticated, async (req, res) => {
         //             `${element.symptomName} ${bodyPart} for ${element.duration}`
         //           );
         //         } else {
-        //           console.warn("Invalid symptom element: ", element); // Log invalid elements
+        //           log.warn("Invalid symptom element: ", element); // Log invalid elements
         //         }
         //       });
         //     } else {
-        //       console.warn("Symptoms data is not an array: ", parsedSymptoms);
+        //       log.warn("Symptoms data is not an array: ", parsedSymptoms);
         //       stringSymptom = symptoms;
         //     }
         //   } catch (e) {
-        //     console.error("Error parsing symptoms: ", e);
+        //     log.error("Error parsing symptoms: ", e);
         //     stringSymptom = symptoms;
         //   }
         // }
@@ -1210,12 +1210,12 @@ router.get("/details/:care_plan_id", Authenticated, async (req, res) => {
         }
 
         const medicationsList = formatMedicationsData(medications, medicines);
-        console.log("================================");
-        console.log(JSON.stringify(medicationsList));
-        console.log("diet real data start==============");
-        console.log({data: JSON.stringify({...dietApiData})});
-        console.log("diet real data end================");
-        console.log("================================");
+        log.debug("================================");
+        log.debug(JSON.stringify(medicationsList));
+        log.debug("diet real data start==============");
+        log.debug({data: JSON.stringify({...dietApiData})});
+        log.debug("diet real data end================");
+        log.debug("================================");
         let diet_old_data = {...dietApiData};
         let diet_output = [];
 
@@ -1229,15 +1229,15 @@ router.get("/details/:care_plan_id", Authenticated, async (req, res) => {
                 diet_old_data[diet_id]["diets"][diet_id]["basic_info"]["start_date"];
             let end_date =
                 diet_old_data[diet_id]["diets"][diet_id]["basic_info"]["end_date"];
-            console.log(
+            log.debug(
                 "----------------get testing info-------------- start -------"
             );
-            console.log(diet_old_data[diet_id]["diets"][diet_id]["basic_info"]);
+            log.debug(diet_old_data[diet_id]["diets"][diet_id]["basic_info"]);
             if (start_date) formattedStartDate = moment(start_date);
 
             if (end_date) formattedEndDate = moment(end_date);
 
-            console.log(
+            log.debug(
                 "----------------get testing info-------------- end ---------"
             );
             let duration = null;
@@ -1272,7 +1272,7 @@ router.get("/details/:care_plan_id", Authenticated, async (req, res) => {
             // for food groups
 
             for (let key in diet_old_data[dietIds[i]]["diet_food_groups"]) {
-                console.log({
+                log.debug({
                     key,
                     old_time: diet_old_data[dietIds[i]]["diet_food_groups"],
                 });
@@ -1311,11 +1311,11 @@ router.get("/details/:care_plan_id", Authenticated, async (req, res) => {
             diet_output.push(dietobj);
         }
 
-        console.log("============my latest diet object start===============");
-        console.log({diet_output});
+        log.debug("============my latest diet object start===============");
+        log.debug({diet_output});
 
-        console.log(JSON.stringify(diet_output));
-        console.log("============my latest diet object end===============");
+        log.debug(JSON.stringify(diet_output));
+        log.debug("============my latest diet object end===============");
 
         let {date: prescriptionDate} = getLatestUpdateDate(medications);
 
@@ -1431,10 +1431,10 @@ router.get("/details/:care_plan_id", Authenticated, async (req, res) => {
             diet_output,
             pre_workouts,
         };
-        console.log("diet real data start==============");
-        console.log({data: JSON.stringify({...dietApiData})});
-        console.log({timings});
-        console.log("diet real data end================");
+        log.debug("diet real data start==============");
+        log.debug({data: JSON.stringify({...dietApiData})});
+        log.debug({timings});
+        log.debug("diet real data end================");
 
         dataForPdf = {
             users: {...usersData},
@@ -1497,9 +1497,9 @@ router.get("/details/:care_plan_id", Authenticated, async (req, res) => {
             printBackground: true,
             path: "invoice.pdf",
         };
-        console.log("--------------------------");
-        console.log({pre_data});
-        console.log("--------------------------");
+        log.debug("--------------------------");
+        log.debug({pre_data});
+        log.debug("--------------------------");
 
         let pdf_buffer_value = await html_to_pdf({
             templateHtml,
@@ -1509,7 +1509,7 @@ router.get("/details/:care_plan_id", Authenticated, async (req, res) => {
         res.contentType("application/pdf");
         return res.send(pdf_buffer_value);
     } catch (err) {
-        console.log("Error while generating the prescription: ", err);
+        log.debug("Error while generating the prescription: ", err);
         return raiseServerError(res);
     }
 });

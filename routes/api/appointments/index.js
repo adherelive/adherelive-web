@@ -42,7 +42,8 @@ router.delete(
  *     responses:
  *       200:
  *         description: An array of missed events
- * TODO: Isn't this a redundant API, which is not being used by the frontend?
+ * TODO: This API is not being used by the frontend, to get the missed appointments?
+ *       We need to use this to ensure the data is sent, as currently the structure in the FE is from this API
  */
 router.get(
   "/missed",

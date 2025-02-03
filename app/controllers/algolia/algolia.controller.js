@@ -1,9 +1,9 @@
 import Controller from "../index";
 
 import AlgoliaService from "../../services/algolia/algolia.service";
-import Logger from "../../../libs/log";
+import { createLogger } from "../../../libs/log";
 
-const Log = new Logger("ALGOLIA > CONTROLLER");
+const log = createLogger("ALGOLIA > CONTROLLER");
 
 class AlgoliaController extends Controller {
   constructor() {
@@ -12,18 +12,18 @@ class AlgoliaController extends Controller {
 
   updateMedicine = async (req, res) => {
     try {
-      Log.info("starting medicine upload");
+      log.debug("starting medicine upload");
       const algoliaService = new AlgoliaService();
-      Log.debug("client", await algoliaService.getClient());
+      log.debug("client", await algoliaService.getClient());
       const result = await algoliaService.medicineData();
-      Log.debug("result", result);
+      log.debug("result", result);
       if (result) {
         return this.raiseSuccess(res, 200, {}, "medicine data added");
       } else {
         return this.raiseClientError(res, 422, {}, "something wrong in data");
       }
     } catch (error) {
-      Log.debug("updateMedicine catch error", error);
+      log.debug("updateMedicine catch error", error);
       return this.raiseServerError(res);
     }
   };

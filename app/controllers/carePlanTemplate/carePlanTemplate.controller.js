@@ -1,6 +1,6 @@
 import Controller from "../index";
 
-import Log from "../../../libs/log";
+import { createLogger } from "../../../libs/log";
 
 // Services
 import carePlanTemplateService from "../../services/carePlanTemplate/carePlanTemplate.service";
@@ -24,8 +24,8 @@ import moment from "moment";
 
 import PERMISSIONS from "../../../config/permissions";
 
-// Log.setFileName("WEB > CAREPLAN_TEMPLATE > CONTROLLER");
-const log = Log("WEB > CAREPLAN_TEMPLATE > CONTROLLER");
+// log.setFileName("WEB > CAREPLAN_TEMPLATE > CONTROLLER");
+const log = createLogger("WEB > CAREPLAN_TEMPLATE > CONTROLLER");
 
 class CarePlanTemplateController extends Controller {
   constructor() {
@@ -70,7 +70,7 @@ class CarePlanTemplateController extends Controller {
         follow_up_advise,
       } = body || {};
 
-      log.info(`name : ${name}`);
+      log.debug(`name : ${name}`);
 
       const existingTemplate =
         (await carePlanTemplateService.getSingleTemplateByData({
@@ -562,7 +562,7 @@ class CarePlanTemplateController extends Controller {
         permissions = [],
       } = req;
 
-      log.info(`careplan template id to duplicate : ${id}`);
+      log.debug(`careplan template id to duplicate : ${id}`);
 
       if (!id) {
         return raiseClientError(
@@ -801,7 +801,7 @@ class CarePlanTemplateController extends Controller {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       const { params: { id: careplanTemplateId } = {}, body = {} } = req;
-      log.info(`careplan template id : ${careplanTemplateId}`);
+      log.debug(`careplan template id : ${careplanTemplateId}`);
       log.debug("request body", body);
 
       const {
@@ -1046,7 +1046,7 @@ class CarePlanTemplateController extends Controller {
         permissions = [],
       } = req;
 
-      log.info(
+      log.debug(
         `Template = id : ${id} | appointment : ${appointment} | medication : ${medication} | vital : ${vital} | diet : ${diet} | workout : ${workout}`
       );
 

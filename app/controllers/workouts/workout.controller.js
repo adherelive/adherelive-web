@@ -1,6 +1,6 @@
 import Controller from "../index";
 
-import Logger from "../../../libs/log";
+import { createLogger } from "../../../libs/log";
 import moment from "moment";
 
 // Services
@@ -30,7 +30,7 @@ import {
   USER_CATEGORY,
 } from "../../../constant";
 
-const Log = new Logger("WEB > WORKOUT > CONTROLLER");
+const log = createLogger("WEB > WORKOUT > CONTROLLER");
 
 class WorkoutController extends Controller {
   constructor() {
@@ -41,7 +41,7 @@ class WorkoutController extends Controller {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       const { body, userDetails } = req;
-      Log.debug("request body", body);
+      log.debug("request body", body);
 
       const {
         userId,
@@ -150,7 +150,7 @@ class WorkoutController extends Controller {
       const queueService = new QueueService();
       const sqsResponse = await queueService.sendMessage(eventScheduleData);
 
-      Log.debug("sqsResponse ---> ", sqsResponse);
+      log.debug("sqsResponse ---> ", sqsResponse);
 
       const workoutJob = WorkoutJob.execute(
         EVENT_STATUS.SCHEDULED,
@@ -172,7 +172,7 @@ class WorkoutController extends Controller {
         "Workout created successfully."
       );
     } catch (error) {
-      Log.debug("create 500 - workout controller created", error);
+      log.debug("create 500 - workout controller created", error);
       return raiseServerError(res);
     }
   };
@@ -181,7 +181,7 @@ class WorkoutController extends Controller {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       const { params, body, userDetails } = req;
-      Log.debug("request params, body", { params, body });
+      log.debug("request params, body", { params, body });
 
       const {
         userId,
@@ -322,7 +322,7 @@ class WorkoutController extends Controller {
 
         const sqsResponse = await queueService.sendMessage(eventScheduleData);
 
-        Log.debug("sqsResponse ---> ", sqsResponse);
+        log.debug("sqsResponse ---> ", sqsResponse);
 
         return raiseSuccess(
           res,
@@ -332,7 +332,7 @@ class WorkoutController extends Controller {
         );
       }
     } catch (error) {
-      Log.debug("update 500", error);
+      log.debug("update 500", error);
       return raiseServerError(res);
     }
   };
@@ -382,7 +382,7 @@ class WorkoutController extends Controller {
         );
       }
     } catch (error) {
-      Log.debug("delete 500", error);
+      log.debug("delete 500", error);
       return raiseServerError(res);
     }
   };
@@ -391,7 +391,7 @@ class WorkoutController extends Controller {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       const { query, userDetails } = req;
-      Log.debug("request query, body", { query });
+      log.debug("request query, body", { query });
 
       const { id: workout_id, total_calories = 0 } = query || {};
 
@@ -422,7 +422,7 @@ class WorkoutController extends Controller {
         "Workout Total Calories updated successfully"
       );
     } catch (error) {
-      Log.debug("update cal 500", error);
+      log.debug("update cal 500", error);
       return raiseServerError(res);
     }
   };
@@ -467,7 +467,7 @@ class WorkoutController extends Controller {
         );
       }
     } catch (error) {
-      Log.debug("details 500", error);
+      log.debug("details 500", error);
       return raiseServerError(res);
     }
   };
@@ -476,7 +476,7 @@ class WorkoutController extends Controller {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       const { query, userDetails } = req;
-      Log.debug("request query", query);
+      log.debug("request query", query);
 
       const { patient_id = null } = query || {};
       const { userData: { category } = {}, userCategoryId } = userDetails;
@@ -609,7 +609,7 @@ class WorkoutController extends Controller {
         );
       }
     } catch (error) {
-      Log.debug("getAll 500", error);
+      log.debug("getAll 500", error);
       return raiseServerError(res);
     }
   };
@@ -618,7 +618,7 @@ class WorkoutController extends Controller {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       const { params, userDetails } = req;
-      Log.debug("get request params", { params });
+      log.debug("get request params", { params });
       const { id } = params || {};
 
       const { userData: { category } = {}, userCategoryId } = userDetails;
@@ -761,7 +761,7 @@ class WorkoutController extends Controller {
         "Workout details fetched successfully"
       );
     } catch (error) {
-      Log.debug("get 500", error);
+      log.debug("get 500", error);
       return raiseServerError(res);
     }
   };
@@ -874,7 +874,7 @@ class WorkoutController extends Controller {
         );
       }
     } catch (error) {
-      Log.debug("timeline 500", error);
+      log.debug("timeline 500", error);
       return raiseServerError(res);
     }
   };

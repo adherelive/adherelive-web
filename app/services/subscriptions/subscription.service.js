@@ -2,6 +2,9 @@ import Database from "../../../libs/mysql";
 import { TABLE_NAME } from "../../models/subscriptions";
 import { TABLE_NAME as paymentProductTableName } from "../../models/paymentProducts";
 
+import { createLogger } from "../../../libs/log";
+const log = createLogger("WEB > SUBSCRIPTION > SERVICES");
+
 import Op from "sequelize/lib/operators";
 import moment from "moment";
 

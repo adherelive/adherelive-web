@@ -1,6 +1,9 @@
 import Database from "../../../libs/mysql";
 import { TABLE_NAME } from "../../models/templateDiets";
 
+import { createLogger } from "../../../libs/log";
+const log = createLogger("WEB > DIET TEMPLATE > SERVICES");
+
 export default class TemplateDietService {
   create = async (data) => {
     const transaction = await Database.initTransaction();

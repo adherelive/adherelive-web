@@ -7,13 +7,13 @@ import {
   USER_CATEGORY,
 } from "../../../../constant";
 
-import Log from "../../../../libs/log";
+import { createLogger } from "../../../../libs/log";
 
 import AgoraJob from "../../../jobSdk/Agora/observer";
 import NotificationSdk from "../../../notificationSdk";
 
-// Log.setFileName("MOBILE > AGORA > CONTROLLER");
-const log = Log("MOBILE > AGORA > CONTROLLER");
+// log.setFileName("MOBILE > AGORA > CONTROLLER");
+const log = createLogger("MOBILE > AGORA > CONTROLLER");
 
 class AgoraController extends Controller {
   constructor() {

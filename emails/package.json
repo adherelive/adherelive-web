@@ -16,7 +16,8 @@
   "author": "Foundation <contact@get.foundation> (https://get.foundation)",
   "license": "MIT",
   "dependencies": {
-    "foundation-emails": "^2.3.1"
+    "foundation-emails": "^2.3.1",
+    "foundation-emails-template": "file:"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.2.0",

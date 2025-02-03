@@ -2,9 +2,9 @@ import { EventEmitter } from "events";
 import { ACTIVITIES, STAGES } from "./activityType";
 import { ACTIVITY_TYPE, EVENT_TYPE } from "../../constant";
 
-import Log from "../../libs/log";
+import { createLogger } from "../../libs/log";
 
-const log = Log("ACTIVITY_SDK");
+const log = createLogger("ACTIVITY_SDK");
 
 class Activity extends EventEmitter {
   constructor() {
@@ -23,7 +23,7 @@ class Activity extends EventEmitter {
 
   execute(args) {
     const { eventType, activityType, stage, data } = args;
-    log.info(`initial ${eventType}, ${stage}, ${activityType}, ${data}`);
+    log.debug(`initial ${eventType}, ${stage}, ${activityType}, ${data}`);
     //add validation for parameter here
     switch (eventType) {
       case EVENT_TYPE.APPOINTMENT:

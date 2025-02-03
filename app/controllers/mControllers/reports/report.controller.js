@@ -1,5 +1,5 @@
 import Controller from "../../index";
-import Logger from "../../../../libs/log";
+import { createLogger } from "../../../../libs/log";
 
 // services
 import ReportService from "../../../services/reports/report.service";
@@ -13,7 +13,7 @@ import { DOCUMENT_PARENT_TYPE, USER_CATEGORY } from "../../../../constant";
 import { getFilePath } from "../../../helper/s3FilePath";
 import * as ReportHelper from "../../reports/report.helper";
 
-const Log = new Logger("MOBILE > CONTROLLER > REPORTS");
+const log = createLogger("MOBILE > CONTROLLER > REPORTS");
 
 class ReportController extends Controller {
   constructor() {
@@ -70,7 +70,7 @@ class ReportController extends Controller {
         "Report added successfully"
       );
     } catch (error) {
-      Log.debug("addReports 500 error", error);
+      log.debug("addReports 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -79,8 +79,8 @@ class ReportController extends Controller {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       const { file = null, params: { patient_id = "NA" } = {} } = req;
-      Log.info(`patient_id : ${patient_id}`);
-      Log.debug("files", file);
+      log.debug(`patient_id : ${patient_id}`);
+      log.debug("files", file);
 
       if (!file) {
         return raiseClientError(res, 422, {}, "Please select files to upload");
@@ -109,7 +109,7 @@ class ReportController extends Controller {
         "Files uploaded successfully"
       );
     } catch (error) {
-      Log.debug("uploadReportDocuments 500 error", error);
+      log.debug("uploadReportDocuments 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -121,7 +121,7 @@ class ReportController extends Controller {
         query: { patient_id } = {},
         userDetails: { userData: { category } = {}, userCategoryId } = {},
       } = req;
-      Log.info(`query: patient_id : ${patient_id}`);
+      log.debug(`query: patient_id : ${patient_id}`);
 
       if (!patient_id) {
         return raiseClientError(res, 422, {}, "Please select correct patient");
@@ -162,7 +162,7 @@ class ReportController extends Controller {
         return raiseSuccess(res, 201, {}, "No reports added yet");
       }
     } catch (error) {
-      Log.debug("latestReport 500 error", error);
+      log.debug("latestReport 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -171,7 +171,7 @@ class ReportController extends Controller {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       const { params: { document_id } = {} } = req;
-      Log.info(`params: document_id = ${document_id}`);
+      log.debug(`params: document_id = ${document_id}`);
 
       if (!document_id) {
         return raiseClientError(
@@ -185,11 +185,11 @@ class ReportController extends Controller {
       const response = await uploadDocumentService.deleteDocumentByData({
         id: document_id,
       });
-      Log.debug("response", response);
+      log.debug("response", response);
 
       return raiseSuccess(res, 200, {}, "Document deleted successfully");
     } catch (error) {
-      Log.debug("deleteReportDocument 500 error", error);
+      log.debug("deleteReportDocument 500 error", error);
       return raiseServerError(res);
     }
   };

@@ -1,6 +1,6 @@
 import Controller from "../index";
 
-import Logger from "../../../libs/log";
+import { createLogger } from "../../../libs/log";
 
 // Helpers
 import * as PaymentHelper from "./payments.helper";
@@ -14,7 +14,7 @@ import doctorService from "../../services/doctor/doctor.service";
 import PaymentProductWrapper from "../../apiWrapper/web/paymentProducts";
 import { USER_CATEGORY } from "../../../constant";
 
-const Log = new Logger("WEB > CONTROLLER > PAYMENTS");
+const log = createLogger("WEB > CONTROLLER > PAYMENTS");
 
 class PaymentController extends Controller {
   constructor() {
@@ -128,7 +128,7 @@ class PaymentController extends Controller {
         );
       }
     } catch (error) {
-      Log.debug("getAllAdminPaymentProduct 500 error", error);
+      log.debug("getAllAdminPaymentProduct 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -147,7 +147,7 @@ class PaymentController extends Controller {
         });
       return raiseSuccess(res, 200, {}, "doctor product record destroyed");
     } catch (error) {
-      Log.debug("83901283091298 delete doctor product error", error);
+      log.debug("83901283091298 delete doctor product error", error);
       return raiseServerError(res);
     }
   };
@@ -238,7 +238,7 @@ class PaymentController extends Controller {
         );
       }
     } catch (error) {
-      Log.debug("getAllDoctorPaymentProduct 500 error", error);
+      log.debug("getAllDoctorPaymentProduct 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -282,7 +282,7 @@ class PaymentController extends Controller {
         );
       }
     } catch (error) {
-      Log.debug("getAllAdminPaymentProduct 500 error", error);
+      log.debug("getAllAdminPaymentProduct 500 error", error);
       return raiseServerError(res);
     }
   };

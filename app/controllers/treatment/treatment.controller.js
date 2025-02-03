@@ -3,9 +3,9 @@ import Controller from "../index";
 import treatmentService from "../../services/treatment/treatment.service";
 import TreatmentWrapper from "../../apiWrapper/web/treatments";
 
-import Log from "../../../libs/log";
+import { createLogger } from "../../../libs/log";
 
-const Logger = new Log("WEB DEGREE CONTROLLER");
+const log = createLogger("WEB DEGREE CONTROLLER");
 
 class TreatmentController extends Controller {
   constructor() {
@@ -18,7 +18,7 @@ class TreatmentController extends Controller {
       const { query } = req;
       const { condition_id } = query || {};
 
-      Logger.debug("condition_id in req", condition_id);
+      log.debug("condition_id in req", condition_id);
 
       const treatmentDetails = await treatmentService.getAll();
 
@@ -40,7 +40,7 @@ class TreatmentController extends Controller {
         "Treatments fetched successfully"
       );
     } catch (error) {
-      Logger.debug("treatment search 500 error", error);
+      log.debug("treatment search 500 error", error);
       return raiseServerError(res);
     }
   };

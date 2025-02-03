@@ -98,7 +98,7 @@ export default async (data = null, id = null) => {
     const medicine = await medicineService.getMedicineById(id);
     return new MobileMedicineWrapper(medicine);
   } catch (error) {
-    console.error("Error fetching medicine:", error);
+    log.error("Error fetching medicine:", error);
     return new MobileMedicineWrapper(null); // Or throw the error if you want it to propagate
   }
 };

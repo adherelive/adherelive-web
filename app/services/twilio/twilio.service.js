@@ -1,6 +1,6 @@
 const twilio = require("twilio");
 
-import Log from "../../../libs/log";
+import { createLogger } from "../../../libs/log";
 
 const AccessToken = twilio.jwt.AccessToken;
 const VideoGrant = AccessToken.VideoGrant;
@@ -11,7 +11,7 @@ const apiSecret = process.config.twilio.TWILIO_API_SECRET;
 const chatServiceId = process.config.twilio.TWILIO_CHAT_SERVICE_SID;
 const authToken = process.config.twilio.TWILIO_AUTH_TOKEN;
 
-const Logger = new Log("TWILIO SERVICES");
+const log = createLogger("TWILIO SERVICES");
 
 class TwilioService {
   constructor() {}
@@ -67,7 +67,7 @@ class TwilioService {
         return connectedParticipants;
       } catch (error) {
         rej(error);
-        console.log("Twilio Service error ---> ", error);
+        log.debug("Twilio Service error ---> ", error);
       }
     });
   }
@@ -98,16 +98,16 @@ class TwilioService {
           body: message,
         })
         .then((response) => {
-          console.log("Bot message sent!", response);
+          log.debug("Bot message sent!", response);
         })
         .catch((err) => {
-          console.error("Failed to send message");
-          console.error(err);
+          log.error("Failed to send message");
+          log.error(err);
         });
 
-      Logger.debug("channel -> ", channel);
+      log.debug("channel -> ", channel);
     } catch (error) {
-      Logger.debug("addSymptom message 500 error", error);
+      log.debug("addSymptom message 500 error", error);
     }
   };
 
@@ -126,16 +126,16 @@ class TwilioService {
           body: message,
         })
         .then((response) => {
-          console.log("User message sent!", response);
+          log.debug("User message sent!", response);
         })
         .catch((err) => {
-          console.error("Failed to send message");
-          console.error(err);
+          log.error("Failed to send message");
+          log.error(err);
         });
 
-      Logger.debug("channel -> ", channel);
+      log.debug("channel -> ", channel);
     } catch (error) {
-      Logger.debug("addUserMessage 500 error", error);
+      log.debug("addUserMessage 500 error", error);
       throw error;
     }
   };
@@ -147,7 +147,7 @@ class TwilioService {
         .services(process.config.twilio.TWILIO_CHAT_SERVICE_SID)
         .channels.list()
         .then((channels) => {
-          console.log(
+          log.debug(
             "Twilio Get All channels ---> ",
             channels,
             channels.length
@@ -169,7 +169,7 @@ class TwilioService {
               friendlyNames.push(friendlyName);
               channelData[uniqueName] = channels[i];
             }
-            console.log("DELETED CHANNEL NAMES AND COUNT", {
+            log.debug("DELETED CHANNEL NAMES AND COUNT", {
               channelsName,
               count: channelsName.length,
               friendlyNames: friendlyNames,
@@ -178,7 +178,7 @@ class TwilioService {
           }
         });
     } catch (error) {
-      Logger.debug("addSymptom message 500 error", error);
+      log.debug("addSymptom message 500 error", error);
     }
   };
 
@@ -189,7 +189,7 @@ class TwilioService {
         .services(process.config.twilio.TWILIO_CHAT_SERVICE_SID)
         .channels.list()
         .then((channels) => {
-          console.log(
+          log.debug(
             "Twilio Delete All channels ---> ",
             channels,
             channels.length
@@ -210,14 +210,14 @@ class TwilioService {
                 .channels(sid)
                 .remove()
                 .then((response) => {
-                  console.log("delete success response", response);
+                  log.debug("delete success response", response);
                   channelsName.push(uniqueName);
                 })
                 .catch((err) => {
-                  console.log("delete catch error", err);
+                  log.debug("delete catch error", err);
                 });
             }
-            console.log("DELETED CHANNEL NAMES AND COUNT", {
+            log.debug("DELETED CHANNEL NAMES AND COUNT", {
               channelsName,
               count: channelsName.length,
             });
@@ -230,15 +230,15 @@ class TwilioService {
       //     from: "adhere_bot",
       //     body: message
       // }).then(response => {
-      //     console.log('Bot message sent!', response);
+      //     log.debug('Bot message sent!', response);
       // }).catch(err => {
-      //     console.error('Failed to send message');
-      //     console.error(err);
+      //     log.error('Failed to send message');
+      //     log.error(err);
       // });
       //
-      // Logger.debug("channel -> ", channel);
+      // log.debug("channel -> ", channel);
     } catch (error) {
-      Logger.debug("addSymptom message 500 error", error);
+      log.debug("addSymptom message 500 error", error);
     }
   };
 
@@ -252,7 +252,7 @@ class TwilioService {
 
       return newMember ? true : false;
     } catch (error) {
-      Logger.debug("addMember 500 error", error);
+      log.debug("addMember 500 error", error);
     }
   };
 }

@@ -7,7 +7,11 @@ import { Op } from "sequelize";
 import { separateNameForSearch } from "../../helper/common/index";
 
 const DEFAULT_ORDER = [["created_at", "DESC"]];
-
+/**
+ *
+ *
+ * @class DoctorService
+ */
 class DoctorService {
   getDoctorByData = async (data, paranoid = true) => {
     try {
@@ -26,7 +30,13 @@ class DoctorService {
     }
   };
 
-  getAllDoctorByData = async (data) => {
+/**
+ *
+ *
+ * @param {*} data
+ * @memberof DoctorService
+ */
+getAllDoctorByData = async (data) => {
     try {
       const doctor = await Database.getModel(TABLE_NAME).findAll({
         where: data,
@@ -41,6 +51,12 @@ class DoctorService {
     }
   };
 
+  /**
+   *
+   *
+   * @param {*} data
+   * @memberof DoctorService
+   */
   addDoctor = async (data) => {
     const transaction = await Database.initTransaction();
     try {

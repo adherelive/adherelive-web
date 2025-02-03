@@ -2,131 +2,157 @@ import chalk from "chalk";
 import moment from "moment";
 import os from "os";
 
+// Configuration
+const CONFIG = {
+  environment: process.env.APP_ENV || process.env.NODE_ENV || 'production',
+  applicationName: process.env.APP_NAME || 'AdhereLive'
+};
+
+// Add environment checks
+const isDevelopment =
+    process.env.APP_ENV === 'Development' ||
+    process.env.NODE_ENV === 'development';
+
+// Define log levels
+const LOG_LEVELS = {
+  error: 0,
+  warn: 1,
+  info: 2,
+  debug: 3
+};
+
+// Store original console methods
+const originalConsole = {
+  log: console.log.bind(console),
+  error: console.error.bind(console),
+  warn: console.warn.bind(console),
+  info: console.info.bind(console)
+};
+
 class Log {
   constructor(filename) {
     this.source = filename;
-    this._dashString = "-".repeat(106);
+    this._dashString = '-'.repeat(106);
+    // Set log level from environment
+    this.logLevel = isDevelopment ? LOG_LEVELS.debug : LOG_LEVELS.warn;
   }
 
-  setFileName(filename) {
-    this.source = filename;
-    return this;
+  // Add level checking method
+  shouldLog(level) {
+    return level <= this.logLevel;
   }
 
+  // Get the current time for the log information to be recorded
   getLogDate() {
-    return moment().format(`D MMMM YYYY @ hh:mm A`);
+    return moment().format('YYYY-MM-DD HH:mm:ss');
   }
 
-  debug(msg, code) {
-    console.log(
-      `${this._dashString}\n${this.getLogDate()} [${chalk.yellow(
-        this.source
-      )}]\n\nMESSAGE: ${msg}\n`,
-      code
+  // Modified debug method with environment check
+  debug(msg, ...args) {
+    if (!this.shouldLog(LOG_LEVELS.debug)) return;
+
+    const formattedMsg = typeof msg === 'object' ? JSON.stringify(msg, null, 2) : msg;
+    originalConsole.log(
+        `${this._dashString}\n${this.getLogDate()} [${chalk.yellow(this.source)}]\n\nMESSAGE: ${formattedMsg}\n`,
+        ...args
     );
   }
 
-  objectInfo(msg, obj) {
-    const data = Object.entries(obj)
-      .map(([key, value]) => `${key} : ${value}`)
-      .join("\n");
-
-    console.log(
-      `${this.source} ${this.getLogDate()}\n\n${msg} ->\n\n${data}\n`
-    );
-  }
-
-  request(data) {
-    console.log(
-      `${this._dashString}\n${this.getLogDate()} [${chalk.yellow(
-        this.source
-      )}]\n\n--- REQUEST ---\n`,
-      data
-    );
-  }
-
-  warn(msg) {
-    console.log(
-      `\n${chalk.red(this.getLogDate())} ${chalk.red(
-        `( ${this.source} )`
-      )} : ${msg}\n`
-    );
-  }
-
+  // Modified info method
   info(msg) {
-    console.log(
-      `\n${chalk.blue(this.getLogDate())} ${chalk.blue(
-        `( ${this.source} )`
-      )} : ${msg}\n`
+    if (!this.shouldLog(LOG_LEVELS.info)) return;
+
+    originalConsole.log(
+        `\n${chalk.blue(this.getLogDate())} ${chalk.blue(
+            `( ${this.source} )`
+        )} : ${msg}\n`
     );
   }
 
-  success(msg) {
-    console.log(
-      `\n${chalk.green(this.getLogDate())} ${chalk.green(
-        `( ${this.source} )`
-      )} : ${msg}\n`
+  // Modified warn method
+  warn(msg) {
+    if (!this.shouldLog(LOG_LEVELS.warn)) return;
+
+    originalConsole.log(
+        `\n${chalk.red(this.getLogDate())} ${chalk.red(
+            `( ${this.source} )`
+        )} : ${msg}\n`
     );
   }
 
-  getErrorStatement(code) {
-    const statements = {
-      500: "Server Error",
-      1000: "Couldn't connect to MongoDB",
-      1002: "",
-      1003: "",
-      2000: "",
-      3000: "",
-      4000: "",
-      5000: "",
-      6000: "",
-      7000: "",
-    };
-    return statements[code] || "Unknown Error, not mapped";
+  // Keep error logging always active
+  error(msg) {
+    originalConsole.log(
+        `\n${chalk.redBright(this.getLogDate())} ${chalk.redBright(
+            `( ${this.source} )`
+        )} : ${msg}\n`
+    );
   }
 
+  // Add production-safe object inspection
+  objectInfo(msg, obj) {
+    if (!this.shouldLog(LOG_LEVELS.debug)) return;
+
+    const data = Object.entries(obj)
+        .map(([key, value]) => {
+          const stringValue = typeof value === 'object'
+              ? JSON.stringify(value, null, 2)
+              : value;
+          return `${key} : ${stringValue}`;
+        })
+        .join("\n");
+
+    originalConsole.log(
+        `${this.source} ${this.getLogDate()}\n\n${msg} ->\n\n${data}\n`
+    );
+  }
+
+  // Keep error logging  implementation as-is (always active)
   errLog(errorCode, methodName, description) {
-    var serverName = os.hostname();
-    var logDate = this.getLogDate();
-    var errLog = "\n\n";
-    errLog += "\x1b[34m" + logDate + "\x1b[0m" + "\n";
-    errLog += "\x1b[34m" + "errorCode= " + "\x1b[0m" + errorCode + "\n";
-    errLog += "\x1b[34m" + "Server=" + "\x1b[0m" + serverName + "\n";
-    errLog += "\x1b[34m" + "Application=" + "\x1b[0m" + "sendnotification" + "\n";
-    errLog += "\x1b[34m" + "Source=" + "\x1b[0m" + this.source + "\n";
-    errLog += "\x1b[34m" + "Method=" + "\x1b[0m" + methodName + "\n";
-    errLog +=
-      "\x1b[34m" +
-      "Statement=" +
-      "\x1b[0m" +
-      this.getErrorStatement(errorCode) +
-      "\n";
-    errLog += "\x1b[34m" + "Description=" + "\x1b[0m" + description + "\n";
-    console.error(errLog + "\n"); // eslint-disable-line
-    console.log(description);
-    throw new Error(errLog);
-  }
+    const serverName = os.hostname();
+    const logDate = this.getLogDate();
+    const errLog = `\n\n${chalk.blue(logDate)}\n` +
+        `${chalk.blue('errorCode=')} ${errorCode}\n` +
+        `${chalk.blue('Server=')} ${serverName}\n` +
+        `${chalk.blue('Application=')} ${CONFIG.applicationName}\n` +
+        `${chalk.blue('Source=')} ${this.source}\n` +
+        `${chalk.blue('Method=')} ${methodName}\n` +
+        `${chalk.blue('Description=')} ${description}\n`;
 
-  err(errorCode, methodName, description) {
-    var serverName = require("os").hostname(),
-      logDate = this.getLogDate();
-    var errLog = "\n\n";
-    errLog += "\x1b[34m" + logDate + "\x1b[0m" + "\n";
-    errLog += "\x1b[34m" + "errorCode= " + "\x1b[0m" + errorCode + "\n";
-    errLog += "\x1b[34m" + "Server=" + "\x1b[0m" + serverName + "\n";
-    errLog += "\x1b[34m" + "Application=" + "\x1b[0m" + "sendnotification" + "\n";
-    errLog += "\x1b[34m" + "Source=" + "\x1b[0m" + this.source + "\n";
-    errLog += "\x1b[34m" + "Method=" + "\x1b[0m" + methodName + "\n";
-    errLog +=
-      "\x1b[34m" +
-      "Statement=" +
-      "\x1b[0m" +
-      this.getErrorStatement(errorCode) +
-      "\n";
-    errLog += "\x1b[34m" + "Description=" + "\x1b[0m" + description + "\n";
-    console.error(errLog + "\n"); // eslint-disable-line
-    console.log(description);
+    originalConsole.error(errLog);
+    throw new Error(description);
   }
 }
 
-export default (filename) => new Log(filename);
+// Create a global logger instance
+const globalLogger = new Log('global');
+
+// Safe console.log override for development
+if (isDevelopment) {
+  console.log = (...args) => {
+    try {
+      const stack = new Error().stack;
+      const callerFile = stack.split('\n')[2].match(/\((.*):\d+:\d+\)/)?.[1] || 'unknown';
+      const logger = new Log(callerFile);
+      logger.debug(...args);
+    } catch (error) {
+      // Fallback to original console.log if something goes wrong
+      originalConsole.log(...args);
+    }
+  };
+}
+
+// Export factory function for specific file loggers
+export const createLogger = (filename) => new Log(filename);
+
+// Export convenience methods using the global logger
+export const debug = (...args) => globalLogger.debug(...args);
+export const info = (...args) => globalLogger.info(...args);
+export const warn = (...args) => globalLogger.warn(...args);
+export const error = (...args) => globalLogger.error(...args);
+
+// Export the global logger instance
+export const logger = globalLogger;
+
+// Default export for backward compatibility
+export default createLogger;

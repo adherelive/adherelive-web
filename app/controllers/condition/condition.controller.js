@@ -3,9 +3,9 @@ import Controller from "../index";
 import conditionService from "../../services/condition/condition.service";
 import ConditionWrapper from "../../apiWrapper/web/conditions";
 
-import Log from "../../../libs/log";
+import { createLogger } from "../../../libs/log";
 
-const Logger = new Log("WEB DEGREE CONTROLLER");
+const log = createLogger("WEB DEGREE CONTROLLER");
 
 class ConditionController extends Controller {
   constructor() {
@@ -18,7 +18,7 @@ class ConditionController extends Controller {
       const { query } = req;
       const { value } = query || {};
 
-      // Logger.debug("value in req", value);
+      // log.debug("value in req", value);
 
       const conditionDetails = await conditionService.search(value);
 
@@ -49,7 +49,7 @@ class ConditionController extends Controller {
         );
       }
     } catch (error) {
-      Logger.debug("condition search 500 error", error);
+      log.debug("condition search 500 error", error);
       return raiseServerError(res);
     }
   };
