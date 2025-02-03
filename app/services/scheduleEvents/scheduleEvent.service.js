@@ -564,6 +564,16 @@ class ScheduleEventService {
     }
   };
 
+  /**
+   *
+   *
+   * @param appointments
+   * @param medications
+   * @param vitals
+   * @param diets
+   * @param workouts
+   * @returns {Promise<Model[]>}
+   */
   getPendingEventsData = async ({
     appointments,
     medications,

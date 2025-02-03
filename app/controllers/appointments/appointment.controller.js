@@ -995,6 +995,13 @@ class AppointmentController extends Controller {
     }
   };
 
+  /**
+   *
+   *
+   * @param req
+   * @param res
+   * @returns {Promise<*>}
+   */
   uploadAppointmentDoc = async (req, res) => {
     try {
       const {
@@ -1016,21 +1023,21 @@ class AppointmentController extends Controller {
         appointment_id
       );
 
-      // const eventForAppointment = await scheduleEventService.getEventByData({
-      //   event_id: appointment_id,
-      //   event_type: EVENT_TYPE.APPOINTMENT
-      // });
+      /*const eventForAppointment = await scheduleEventService.getEventByData({
+        event_id: appointment_id,
+        event_type: EVENT_TYPE.APPOINTMENT
+      });
 
-      // const scheduleData = await EventWrapper(eventForAppointment);
+      const scheduleData = await EventWrapper(eventForAppointment);
 
-      // if (scheduleData.getStatus() !== EVENT_STATUS.COMPLETED) {
-      //   return raiseClientError(
-      //     res,
-      //     422,
-      //     {},
-      //     "Cannot upload documents before appointment is complete"
-      //   );
-      // }
+      if (scheduleData.getStatus() !== EVENT_STATUS.COMPLETED) {
+        return raiseClientError(
+          res,
+          422,
+          {},
+          "Cannot upload documents before appointment is complete"
+        );
+      }*/
 
       let userIsParticipant = true;
       let timeDifference = null;
@@ -1100,6 +1107,13 @@ class AppointmentController extends Controller {
     }
   };
 
+  /**
+   *
+   *
+   * @param req
+   * @param res
+   * @returns {Promise<*>}
+   */
   downloadAppointmentDoc = async (req, res) => {
     try {
       const {
@@ -1197,6 +1211,13 @@ class AppointmentController extends Controller {
     }
   };
 
+  /**
+   *
+   *
+   * @param req
+   * @param res
+   * @returns {Promise<*>}
+   */
   deleteAppointmentDoc = async (req, res) => {
     try {
       const {

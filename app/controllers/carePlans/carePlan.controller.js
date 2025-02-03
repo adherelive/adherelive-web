@@ -833,6 +833,13 @@ class CarePlanController extends Controller {
     }
   };
 
+  /**
+   *
+   *
+   * @param req
+   * @param res
+   * @returns {Promise<*>}
+   */
   getPatientCarePlanOnly = async (req, res) => {
     const { patient_id, doctor_user_id, provider_id, provider_type } =
       req.query;
@@ -999,8 +1006,14 @@ class CarePlanController extends Controller {
     }
   };
 
-  // code implementation after phase 1
-
+  /**
+   * [Code implementation after phase 1]
+   *
+   *
+   * @param req
+   * @param res
+   * @returns {Promise<*>}
+   */
   getCarePlanDetails = async (req, res) => {
     const { carePlanId: care_plan_id } = req.params;
     // const { patientId: patient_id = 1 } = req.params;
@@ -1019,121 +1032,123 @@ class CarePlanController extends Controller {
 
       let newCarePlan = await CarePlanWrapper(carePlan);
 
-      // let cPdetails = carePlan.get("details") ? carePlan.get("details") : {};
+      /**
+       * TODO: Check why this code has been commented and what is the alternate added for it?
+      let cPdetails = carePlan.get("details") ? carePlan.get("details") : {};
 
-      // let { shown = false } = cPdetails;
-      // let carePlanId = carePlan.get("id");
-      // let carePlanTemplateId = carePlan.get("care_plan_template_id");
-      // let carePlanMedications =
-      //   await carePlanMedicationService.getMedicationsByCarePlanId(carePlanId);
-      // let carePlanAppointments =
-      //   await carePlanAppointmentService.getAppointmentsByCarePlanId(
-      //     carePlanId
-      //   );
+      let { shown = false } = cPdetails;
+      let carePlanId = carePlan.get("id");
+      let carePlanTemplateId = carePlan.get("care_plan_template_id");
+      let carePlanMedications =
+        await carePlanMedicationService.getMedicationsByCarePlanId(carePlanId);
+      let carePlanAppointments =
+        await carePlanAppointmentService.getAppointmentsByCarePlanId(
+          carePlanId
+        );
 
-      // let carePlanAppointmentIds = await getCarePlanAppointmentIds(carePlanId);
-      // let carePlanMedicationIds = await getCarePlanMedicationIds(carePlanId);
-      // let carePlanSeverityDetails = await getCarePlanSeverityDetails(
-      //   carePlanId
-      // );
-      // const carePlanApiWrapper = await CarePlanWrapper(carePlan);
+      let carePlanAppointmentIds = await getCarePlanAppointmentIds(carePlanId);
+      let carePlanMedicationIds = await getCarePlanMedicationIds(carePlanId);
+      let carePlanSeverityDetails = await getCarePlanSeverityDetails(
+        carePlanId
+      );
+      const carePlanApiWrapper = await CarePlanWrapper(carePlan);
 
-      // let carePlanApiData = {};
+      let carePlanApiData = {};
 
-      // const { vital_ids } = await carePlanApiWrapper.getAllInfo();
+      const { vital_ids } = await carePlanApiWrapper.getAllInfo();
 
-      // carePlanApiData[carePlanApiWrapper.getCarePlanId()] = {
-      //   ...carePlanApiWrapper.getBasicInfo(),
-      //   ...carePlanSeverityDetails,
-      //   carePlanMedicationIds,
-      //   carePlanAppointmentIds,
-      //   vital_ids,
-      // };
+      carePlanApiData[carePlanApiWrapper.getCarePlanId()] = {
+        ...carePlanApiWrapper.getBasicInfo(),
+        ...carePlanSeverityDetails,
+        carePlanMedicationIds,
+        carePlanAppointmentIds,
+        vital_ids,
+      };
 
-      // Log.debug("87937198123 careplan", carePlanApiData);
+      Log.debug("Care Plan API Data", carePlanApiData);
 
-      // let templateMedications = {};
-      // let templateAppointments = {};
-      // let formattedTemplateMedications = [];
-      // let formattedTemplateAppointments = [];
-      // if (carePlanTemplateId) {
-      //   templateMedications =
-      //     await templateMedicationService.getMedicationsByCarePlanTemplateId(
-      //       carePlanTemplateId
-      //     );
-      //   templateAppointments =
-      //     await templateAppointmentService.getAppointmentsByCarePlanTemplateId(
-      //       carePlanTemplateId
-      //     );
-      //   if (
-      //     permissions.includes(PERMISSIONS.MEDICATIONS.VIEW) &&
-      //     templateMedications.length
-      //   ) {
-      //     for (let medication of templateMedications) {
-      //       let newMedication = {};
-      //       newMedication.id = medication.get("id");
-      //       newMedication.schedule_data = medication.get("schedule_data");
-      //       newMedication.care_plan_template_id = medication.get(
-      //         "care_plan_template_id"
-      //       );
-      //       let medicineId = medication.get("medicine_id");
-      //       newMedication.medicine_id = medicineId;
-      //       let medicine = await medicineService.getMedicineById(medicineId);
+      let templateMedications = {};
+      let templateAppointments = {};
+      let formattedTemplateMedications = [];
+      let formattedTemplateAppointments = [];
+      if (carePlanTemplateId) {
+        templateMedications =
+          await templateMedicationService.getMedicationsByCarePlanTemplateId(
+            carePlanTemplateId
+          );
+        templateAppointments =
+          await templateAppointmentService.getAppointmentsByCarePlanTemplateId(
+            carePlanTemplateId
+          );
+        if (
+          permissions.includes(PERMISSIONS.MEDICATIONS.VIEW) &&
+          templateMedications.length
+        ) {
+          for (let medication of templateMedications) {
+            let newMedication = {};
+            newMedication.id = medication.get("id");
+            newMedication.schedule_data = medication.get("schedule_data");
+            newMedication.care_plan_template_id = medication.get(
+              "care_plan_template_id"
+            );
+            let medicineId = medication.get("medicine_id");
+            newMedication.medicine_id = medicineId;
+            let medicine = await medicineService.getMedicineById(medicineId);
 
-      //       let medName = medicine.get("name");
-      //       let medType = medicine.get("type");
-      //       newMedication.medicine = medName;
-      //       newMedication.medicineType = medType;
-      //       formattedTemplateMedications.push(newMedication);
-      //     }
-      //   }
+            let medName = medicine.get("name");
+            let medType = medicine.get("type");
+            newMedication.medicine = medName;
+            newMedication.medicineType = medType;
+            formattedTemplateMedications.push(newMedication);
+          }
+        }
 
-      //   if (templateAppointments.length) {
-      //     for (let appointment of templateAppointments) {
-      //       let newAppointment = {};
-      //       newAppointment.id = appointment.get("id");
-      //       newAppointment.schedule_data = appointment.get("details");
-      //       newAppointment.reason = appointment.get("reason");
-      //       newAppointment.time_gap = appointment.get("time_gap");
-      //       newAppointment.care_plan_template_id = appointment.get(
-      //         "care_plan_template_id"
-      //       );
-      //       formattedTemplateAppointments.push(newAppointment);
-      //     }
-      //   }
-      // }
+        if (templateAppointments.length) {
+          for (let appointment of templateAppointments) {
+            let newAppointment = {};
+            newAppointment.id = appointment.get("id");
+            newAppointment.schedule_data = appointment.get("details");
+            newAppointment.reason = appointment.get("reason");
+            newAppointment.time_gap = appointment.get("time_gap");
+            newAppointment.care_plan_template_id = appointment.get(
+              "care_plan_template_id"
+            );
+            formattedTemplateAppointments.push(newAppointment);
+          }
+        }
+      }
 
-      // let medicationsOfTemplate = [];
+      let medicationsOfTemplate = [];
 
-      // if (permissions.includes(PERMISSIONS.MEDICATIONS.VIEW)) {
-      //   medicationsOfTemplate = formattedTemplateMedications;
-      // }
+      if (permissions.includes(PERMISSIONS.MEDICATIONS.VIEW)) {
+        medicationsOfTemplate = formattedTemplateMedications;
+      }
 
-      // let appointmentsOfTemplate = formattedTemplateAppointments;
+      let appointmentsOfTemplate = formattedTemplateAppointments;
 
-      // let carePlanMedicationsExists = carePlanMedications
-      //   ? !carePlanMedications.length
-      //   : !carePlanMedications; //true if doesnot exist
-      // let carePlanAppointmentsExists = carePlanAppointments
-      //   ? !carePlanAppointments.length
-      //   : !carePlanAppointments; //true if doesnot exist
-      // if (
-      //   carePlanTemplateId &&
-      //   carePlanMedicationsExists &&
-      //   carePlanAppointmentsExists &&
-      //   !shown
-      // ) {
-      //   show = true;
-      // }
+      let carePlanMedicationsExists = carePlanMedications
+        ? !carePlanMedications.length
+        : !carePlanMedications; //true if doesnot exist
+      let carePlanAppointmentsExists = carePlanAppointments
+        ? !carePlanAppointments.length
+        : !carePlanAppointments; //true if doesnot exist
+      if (
+        carePlanTemplateId &&
+        carePlanMedicationsExists &&
+        carePlanAppointmentsExists &&
+        !shown
+      ) {
+        show = true;
+      }
 
-      // if (shown == false) {
-      //   let details = cPdetails;
-      //   details.shown = true;
-      //   let updatedCarePlan = await carePlanService.updateCarePlan(
-      //     { details },
-      //     carePlanId
-      //   );
-      // }
+      if (shown == false) {
+        let details = cPdetails;
+        details.shown = true;
+        let updatedCarePlan = await carePlanService.updateCarePlan(
+          { details },
+          carePlanId
+        );
+      }*/
 
       return this.raiseSuccess(
         res,
