@@ -33,7 +33,7 @@ class HisService {
       const user = await Database.getModel(TABLE_NAME).findAll();
       return user;
     } catch (err) {
-      log.info(err);
+      log.debug(err);
       throw err;
     }
   };
@@ -45,7 +45,7 @@ class HisService {
       });
       return user;
     } catch (err) {
-      log.info(err);
+      log.debug(err);
       throw err;
     }
   };
@@ -83,7 +83,7 @@ class HisService {
       });
       return user;
     } catch (err) {
-      log.info(err);
+      log.debug(err);
       throw err;
     }
   };

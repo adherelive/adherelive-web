@@ -340,7 +340,7 @@ class VitalController extends Controller {
 
       const { event_id, ...rest } = response || {};
 
-      log.info(`event_id ${event_id}`);
+      log.debug(`event_id ${event_id}`);
 
       const createdTime = moment().utc().toISOString();
 
@@ -348,12 +348,12 @@ class VitalController extends Controller {
 
       const vital = await VitalWrapper({ id });
 
-      log.info(`vital ${vital.getVitalId()} ${vital.getVitalTemplateId()}`);
+      log.debug(`vital ${vital.getVitalId()} ${vital.getVitalTemplateId()}`);
       const vitalTemplate = await VitalTemplateWrapper({
         id: vital.getVitalTemplateId(),
       });
 
-      log.info(`event.getStatus() ${event.getStatus()}`);
+      log.debug(`event.getStatus() ${event.getStatus()}`);
 
       if (event.getStatus() !== EVENT_STATUS.EXPIRED) {
         let { response: prevResponse = [] } = event.getDetails() || {};

@@ -56,7 +56,7 @@ class MedicineService {
         order: [["updated_at", "DESC"]],
       });
 
-      log.info(
+      log.debug(
         "329847562389462364872384122 ************************************8******8888",
         {
           data,
@@ -147,9 +147,9 @@ class MedicineService {
   };
 
   updateMedicine = async (data, id) => {
-    log.info("updateMedicine called-service");
+    log.debug("updateMedicine called-service");
     try {
-      log.info({ data, id });
+      log.debug({ data, id });
       const transaction = await Database.initTransaction();
       const medicine = await Database.getModel(TABLE_NAME).update(data, {
         where: {
@@ -157,7 +157,7 @@ class MedicineService {
         },
         transaction,
       });
-      log.info("in service", { medicine });
+      log.debug("in service", { medicine });
       await transaction.commit();
 
       return medicine;

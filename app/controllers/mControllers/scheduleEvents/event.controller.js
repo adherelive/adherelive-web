@@ -80,7 +80,7 @@ class EventController extends Controller {
           userCategoryId,
         } = {},
       } = req;
-      log.info(`query : key = ${key} | type = ${type}`);
+      log.debug(`query : key = ${key} | type = ${type}`);
 
       if (category !== USER_CATEGORY.PATIENT) {
         return raiseClientError(
@@ -454,7 +454,7 @@ class EventController extends Controller {
     const { raiseSuccess, raiseServerError } = this;
     try {
       const { userDetails: { userData: { category } = {} } = {} } = req;
-      log.info(`CHARTS FOR AUTH: ${category}`);
+      log.debug(`CHARTS FOR AUTH: ${category}`);
 
       let response = {};
       let responseMessage = "No event data exists at the moment";
@@ -491,7 +491,7 @@ class EventController extends Controller {
           userCategoryId,
         } = {},
       } = req;
-      log.info(`params : patient_id = ${patient_id}`);
+      log.debug(`params : patient_id = ${patient_id}`);
 
       // considering api to be only accessible for doctors
       const carePlans =
@@ -887,7 +887,7 @@ class EventController extends Controller {
         params: { id },
         query: { index } = {},
       } = req;
-      log.info(`params: event_id: ${id} | query : index : ${index}`);
+      log.debug(`params: event_id: ${id} | query : index : ${index}`);
 
       if (!id || !index) {
         return raiseClientError(
@@ -989,7 +989,7 @@ class EventController extends Controller {
         query: { index } = {},
         body: { value = {} } = {},
       } = req;
-      log.info(`params: event_id: ${id} | query : index : ${index}`);
+      log.debug(`params: event_id: ${id} | query : index : ${index}`);
       log.debug("body : value ", value);
 
       if (!id || !index) {

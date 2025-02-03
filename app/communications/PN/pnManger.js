@@ -20,10 +20,10 @@ class pnManger {
       //
       //
       let isValidData = this.validatePayload(payload);
-      log.info("validating payload");
+      log.debug("validating payload");
       if (isValidData.error && isValidData.error == 1) return isValidData;
       log.success("payload valid!!");
-      log.info("creating endpointArn...!!");
+      log.debug("creating endpointArn...!!");
       //
       let PNendpointData =
         payload.type == "android"
@@ -38,11 +38,11 @@ class pnManger {
       log.success("endpointArn creation successfull!!");
       let PNendpointArn =
         payload.type == "android" ? PNendpointData.EndpointArn : PNendpointData;
-      log.info("transforming payload to aws payload");
+      log.debug("transforming payload to aws payload");
       let payloadBuilder = new PNpayloadBuilder(payload);
       log.success("payload build successfull!!");
       let tranformedPayload = payloadBuilder.getPayload();
-      log.info("sending push notification");
+      log.debug("sending push notification");
       tranformedPayload = JSON.stringify(tranformedPayload);
       //
       let PNpublishResponse = await this.sns

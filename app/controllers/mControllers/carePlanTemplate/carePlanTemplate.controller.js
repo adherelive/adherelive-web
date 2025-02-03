@@ -61,7 +61,7 @@ class CarePlanTemplateController extends Controller {
         is_public_in_provider,
       } = body || {};
 
-      log.info(`name : ${name}`);
+      log.debug(`name : ${name}`);
 
       if (
         !permissions.includes(PERMISSIONS.MEDICATIONS.ADD) &&
@@ -556,7 +556,7 @@ class CarePlanTemplateController extends Controller {
         permissions = [],
       } = req;
 
-      log.info(`careplan template id to duplicate : ${id}`);
+      log.debug(`careplan template id to duplicate : ${id}`);
 
       if (!id) {
         return raiseClientError(
@@ -798,7 +798,7 @@ class CarePlanTemplateController extends Controller {
         body = {},
         permissions = [],
       } = req;
-      log.info(`careplan template id : ${careplanTemplateId}`);
+      log.debug(`careplan template id : ${careplanTemplateId}`);
       log.debug("request body", body);
 
       const {
@@ -1047,7 +1047,7 @@ class CarePlanTemplateController extends Controller {
         permissions = [],
       } = req;
 
-      log.info(
+      log.debug(
         `Template = id : ${id} | appointment : ${appointment} | medication : ${medication} | vital : ${vital} | diet : ${diet} | workout : ${workout}`
       );
 

@@ -73,8 +73,8 @@ export default class SqsObserver {
           break;
       }
 
-      log.info(`SQS Observe execute response: ${response}`);
-      log.info(`SQS Observe execute message ReceiptHandle: ${message.ReceiptHandle}`);
+      log.debug(`SQS Observe execute response: ${response}`);
+      log.debug(`SQS Observe execute message ReceiptHandle: ${message.ReceiptHandle}`);
 
       if (response === true) {
         const deleteMessage = await service.deleteMessage(

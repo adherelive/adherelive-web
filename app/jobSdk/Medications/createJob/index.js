@@ -9,7 +9,7 @@ import { DEFAULT_PROVIDER, EVENT_TYPE } from "../../../../constant";
 
 class CreateJob extends MedicationJob {
   constructor(data) {
-    log.info("medication job called in create job");
+    log.debug("medication job called in create job");
     super(data);
   }
 

@@ -47,12 +47,12 @@ router.get("/", Authenticated, PatientController.searchPatient);
 router.get(
   "/pagination",
   (req, res, next) => {
-    // log.info("request received at router -start ", getTime());
+    // log.debug("request received at router -start ", getTime());
     next();
   },
   Authenticated,
   (req, res, next) => {
-    // log.info("request received at router -after middleware ", getTime());
+    // log.debug("request received at router -after middleware ", getTime());
     next();
   },
   PatientController.getAllPatientsPagination

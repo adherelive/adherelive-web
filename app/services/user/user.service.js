@@ -23,7 +23,7 @@ class UserService {
       const user = await Database.getModel(TABLE_NAME).findAll();
       return user;
     } catch (err) {
-      log.info(err);
+      log.debug(err);
       throw err;
     }
   }
@@ -42,7 +42,7 @@ class UserService {
       });
       return user;
     } catch (err) {
-      log.info(err);
+      log.debug(err);
       throw err;
     }
   };

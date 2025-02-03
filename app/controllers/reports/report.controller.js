@@ -80,7 +80,7 @@ class ReportController extends Controller {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       const { file = null, params: { patient_id = "NA" } = {} } = req;
-      log.info(`patient_id : ${patient_id}`);
+      log.debug(`patient_id : ${patient_id}`);
 
       if (!file) {
         return raiseClientError(res, 422, {}, "Please select file to upload");
@@ -121,7 +121,7 @@ class ReportController extends Controller {
         params: { id } = {},
         body: { name, test_date, documents = [] } = {},
       } = req;
-      log.info(`Report : id = ${id}`);
+      log.debug(`Report : id = ${id}`);
 
       if (!id) {
         return raiseClientError(
@@ -194,7 +194,7 @@ class ReportController extends Controller {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       const { params: { document_id } = {} } = req;
-      log.info(`params: document_id = ${document_id}`);
+      log.debug(`params: document_id = ${document_id}`);
 
       if (!document_id) {
         return raiseClientError(

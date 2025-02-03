@@ -14,7 +14,7 @@ export default class ServiceOfferingService {
       await transaction.commit();
       return flashCard;
     } catch (error) {
-      log.info(error);
+      log.debug(error);
       await transaction.rollback();
       throw error;
     }

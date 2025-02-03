@@ -1078,7 +1078,7 @@ function printAppointment({
     //   medicationYLevel = generalExaminationEndLevel + NORMAL_FONT_SIZE + 12;
     // }
   } catch (ex) {
-    log.info(ex);
+    log.debug(ex);
   }
 }
 
@@ -1225,7 +1225,7 @@ function printConsultation({
     //   medicationYLevel = generalExaminationEndLevel + NORMAL_FONT_SIZE + 12;
     // }
   } catch (ex) {
-    log.info(ex);
+    log.debug(ex);
   }
 }
 
@@ -1552,7 +1552,7 @@ function renderChiefComplaints({ symptoms }) {
 
     return finalSymptom;
   } catch (err) {
-    log.info("Error in chief complaints: ", err);
+    log.debug("Error in chief complaints: ", err);
   }
 }
 
@@ -1939,11 +1939,11 @@ function printCarePlanData({
     //     addPageAndNumber(doc);
     //   }
     // }
-    log.info("\n\n in printCarePlanData");
-    log.info(Object.keys(suggestedInvestigations).length);
+    log.debug("\n\n in printCarePlanData");
+    log.debug(Object.keys(suggestedInvestigations).length);
 
     if (Object.keys(suggestedInvestigations).length) {
-      log.info("\n\n In the if loop appointment \n\n");
+      log.debug("\n\n In the if loop appointment \n\n");
       const appointmentLevelEnd = printAppointment({
         doc,
         providerPrescriptionDetails,
@@ -1962,7 +1962,7 @@ function printCarePlanData({
       .text(follow_up_advise, DOC_MARGIN, doc.y + 5);
 
     if (Object.keys(suggestedInvestigations).length) {
-      log.info(
+      log.debug(
         "\n\n\n\n\\n\n\n\nin the if looop printConsultation\n\n\n\n\\n\n\n\n"
       );
       const consultationLevelEnd = printConsultation({
@@ -2007,7 +2007,7 @@ function printCarePlanData({
     const suggestedInvestigationXLevelEnd = doc.x;
     return suggestedInvestigationXLevelEnd;
   } catch (ex) {
-    log.info(ex);
+    log.debug(ex);
   }
 }
 
@@ -2062,7 +2062,7 @@ function printConsultationAppointment({
     const suggestedInvestigationXLevelEnd = doc.x;
     return suggestedInvestigationXLevelEnd;
   } catch (ex) {
-    log.info(ex);
+    log.debug(ex);
   }
 }
 
@@ -2197,16 +2197,16 @@ function printFooter(
     }
     addPageAndNumber(doc);
   }
-  log.info("\n\n\n\n\n\n\n\n\n\n\n================================");
-  log.info({ imageUrl });
-  log.info("================================\n\n\n\n\n\n\n\n\n\n\n");
+  log.debug("\n\n\n\n\n\n\n\n\n\n\n================================");
+  log.debug({ imageUrl });
+  log.debug("================================\n\n\n\n\n\n\n\n\n\n\n");
   try {
     doc.image(`${imageUrl}`, 400, doc.y + 10, {
       width: 120,
       height: signaturePictureHeight,
     });
   } catch (err) {
-    log.info("ERROR in signature pic", err);
+    log.debug("ERROR in signature pic", err);
   }
 
   if (doc.y + 3 * SMALLEST_FONT_SIZE > PAGE_END_LIMIT) {

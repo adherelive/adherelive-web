@@ -9,7 +9,7 @@ export const uploadReport = async ({ file, id }) => {
   try {
     const { mimetype } = file || {};
     const fileName = file.originalname.replace(/\s+/g, "");
-    log.info(`fileName : ${fileName}`);
+    log.debug(`fileName : ${fileName}`);
     await awsS3Service.createBucket();
 
     let hash = md5.create();
@@ -20,7 +20,7 @@ export const uploadReport = async ({ file, id }) => {
     const folder = "reports";
     const encodedFileName = hash.substring(4) + "/" + fileName;
 
-    log.info(`encodedFileName :: ${encodedFileName}`);
+    log.debug(`encodedFileName :: ${encodedFileName}`);
 
     // check for images
     let metaData = null;
@@ -32,7 +32,7 @@ export const uploadReport = async ({ file, id }) => {
     }
 
     const filePath = `${folder}/${encodedFileName}`;
-    log.info(`filePath :: ${filePath}`);
+    log.debug(`filePath :: ${filePath}`);
 
     await awsS3Service.saveBufferObject(file.buffer, filePath, metaData);
     return completePath(`/${filePath}`);

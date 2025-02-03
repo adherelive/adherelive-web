@@ -72,7 +72,7 @@ class MobileUserController extends Controller {
   signIn = async (req, res) => {
     try {
       const { prefix, mobile_number, hash = "" } = req.body;
-      log.info(`Password hash :: ${hash}`);
+      log.debug(`Password hash :: ${hash}`);
       const user = await userService.getUserByNumber({ mobile_number, prefix });
 
       if (!user) {
@@ -129,7 +129,7 @@ class MobileUserController extends Controller {
           },
         };
         Proxy_Sdk.execute(EVENTS.SEND_EMAIL, emailPayload);
-        log.info(`OTP :::: ${otp}`);
+        log.debug(`OTP :::: ${otp}`);
       } else {
         // if(apiUserDetails.getEmail()) {
         const emailPayload = {
@@ -553,7 +553,7 @@ class MobileUserController extends Controller {
         `https://graph.facebook.com/v2.3/oauth/access_token?grant_type=fb_exchange_token&client_id=3007643415948147&client_secret=60d7c3e6dc4aae01cd9096c2749fc5c1&fb_exchange_token=${accessToken}`,
           {json: true}
       ).then(response => {
-        log.info(response.data);
+        log.debug(response.data);
       }).catch(error => {
         log.error(error);
       })
@@ -1151,7 +1151,7 @@ class MobileUserController extends Controller {
       for (let qualification of qualificationsOfDoctor) {
         let qId = qualification.get("id");
         if (newQualifications.includes(qId)) {
-          log.info("QUALIFICATIONS IFFFF");
+          log.debug("QUALIFICATIONS IFFFF");
         } else {
           let deleteDocs = await documentService.deleteDocumentsOfQualification(
             DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION,
@@ -1191,7 +1191,7 @@ class MobileUserController extends Controller {
       for (let registration of registrationsOfDoctor) {
         let rId = registration.get("id");
         if (newRegistrations.includes(rId)) {
-          log.info("REGISTRATION IFFFF");
+          log.debug("REGISTRATION IFFFF");
         } else {
           let deleteDocs = await documentService.deleteDocumentsOfQualification(
             DOCUMENT_PARENT_TYPE.DOCTOR_REGISTRATION,
@@ -2203,7 +2203,7 @@ class MobileUserController extends Controller {
         body: { agreeConsent } = {},
       } = req;
 
-      log.info(
+      log.debug(
         `1897389172 agreeConsent :: ${agreeConsent} | userId : ${userId}`
       );
 

@@ -163,7 +163,7 @@ class TransactionController extends Controller {
   processTransaction = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
-      log.info(`PARAMS : id : ${req.params.id}`);
+      log.debug(`PARAMS : id : ${req.params.id}`);
       const {
         params: { id } = {},
         body: {
@@ -215,7 +215,7 @@ class TransactionController extends Controller {
         oldTransaction
       );
 
-      log.info(`transaction verified : ${isVerified}`);
+      log.debug(`transaction verified : ${isVerified}`);
 
       if (isVerified) {
         const updateTransaction = await transactionService.updateTransaction(
@@ -361,7 +361,7 @@ class TransactionController extends Controller {
   updateTransaction = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
-      log.info(`PARAMS : id : ${req.params.id}`);
+      log.debug(`PARAMS : id : ${req.params.id}`);
       const {
         params: { id } = {},
         body: { transaction_response } = {},
@@ -378,7 +378,7 @@ class TransactionController extends Controller {
         oldTransaction
       );
 
-      log.info(`transaction verified : ${isVerified}`);
+      log.debug(`transaction verified : ${isVerified}`);
 
       if (isVerified) {
         const transactionService = new TransactionService();

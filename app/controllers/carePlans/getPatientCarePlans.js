@@ -103,7 +103,7 @@ const getPatientCarePlans = async (
     );
   } catch (error) {
     log.debug("Get CarePlan 500 error ---> ", error);
-    log.info("GET PATIENT DETAILS ERROR CarePlan ---> ", error);
+    log.debug("GET PATIENT DETAILS ERROR CarePlan ---> ", error);
     return raiseServerError(res);
   }
 };

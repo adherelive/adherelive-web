@@ -294,7 +294,7 @@ class ServiceSubscriptionTxController extends Controller {
       let { params: { id } = {}, body } = req;
       let { servicesUserMapping, subscriptionUserMapping, ...txBody } =
         req.body;
-      log.info(`Report id = ${id}`);
+      log.debug(`Report id = ${id}`);
       if (!id) {
         return raiseClientError(res, 422, {}, "Please provide tx id.");
       }

@@ -108,7 +108,7 @@ class AppointmentController extends Controller {
       const { id: participant_one_id, category: participant_one_type } = participant_one || {};
       const { id: participant_two_id, category: participant_two_type } = participant_two || {};
 
-      log.info("Request data for Appointments: ", req.body)
+      log.debug("Request data for Appointments: ", req.body)
 
       // check previous time slot for appointment based on
       // date, start_time, end_time, participant_one_id, participant_one_type, participant_two_id, participant_two_type

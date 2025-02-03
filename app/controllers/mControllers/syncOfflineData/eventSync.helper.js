@@ -36,7 +36,7 @@ export const syncMedicationReminderStatus = async (
 
     return eventApiDetails;
   } catch (error) {
-    log.info("ERROR in syncing medication reminder status: ");
+    log.debug("ERROR in syncing medication reminder status: ");
   }
 };
 
@@ -109,6 +109,6 @@ export const syncVitalsResponseData = async (
       vitalTemplate,
     };
   } catch (error) {
-    log.info("error: ", error);
+    log.debug("error: ", error);
   }
 };

@@ -66,21 +66,21 @@ import prescriptionRouter from "./prescription";
 const log = createLogger("API > INDEX");
 
 router.use(async function (req, res, next) {
-  // log.info("api-index-1 ---> router getTime: " + getTime() + " " + getTime());
+  // log.debug("api-index-1 ---> router getTime: " + getTime() + " " + getTime());
   try {
     let accessToken,
       userId = null,
       userRoleId,
       userRoleData;
     const { cookies = {} } = req;
-    // log.info("api-index-2" + getTime());
+    // log.debug("api-index-2" + getTime());
 
     /**
      * TODO: Commenting out the below, as it is not required here currently
     if (cookies.accessToken) {
       accessToken = cookies.accessToken;
     }
-    log.info("api-index-3" + getTime());
+    log.debug("api-index-3" + getTime());
     const { accessToken: aT = "" } = req.headers || {};
     if (aT) {
       accessToken = aT;
@@ -103,9 +103,9 @@ router.use(async function (req, res, next) {
     }
 
     const secret = process.config.TOKEN_SECRET_KEY;
-    // log.info("api-index-4" + getTime());
+    // log.debug("api-index-4" + getTime());
     if (accessToken) {
-      // log.info("api-index-5" + getTime());
+      // log.debug("api-index-5" + getTime());
       const decodedAccessToken = await jwt.verify(accessToken, secret);
       const {
         userRoleId: decodedUserRoleId = null,
@@ -116,7 +116,7 @@ router.use(async function (req, res, next) {
         id: decodedUserRoleId,
       });
 
-      // log.info("api-index-6" + getTime());
+      // log.debug("api-index-6" + getTime());
       if (userRoleDetails) {
         const userRole = await UserRoleWrapper(userRoleDetails);
         userId = userRole.getUserId();
@@ -130,26 +130,26 @@ router.use(async function (req, res, next) {
         next();
         return;
       }
-      // log.info("api-index-7" + getTime());
+      // log.debug("api-index-7" + getTime());
     } else {
-      // log.info("api-index-8" + getTime());
+      // log.debug("api-index-8" + getTime());
       req.userDetails = {
         exists: false,
       };
       next();
-      // log.info("api-index-9" + getTime());
+      // log.debug("api-index-9" + getTime());
       return;
     }
-    // log.info("api-index-10" + getTime());
+    // log.debug("api-index-10" + getTime());
     const userData = await userService.getUser(userId);
-    // log.info("api-index-11" + getTime());
+    // log.debug("api-index-11" + getTime());
     if (userData) {
-      // log.info("api-index-12" + getTime());
-      // log.info("api-index-12-1" + getTime());
+      // log.debug("api-index-12" + getTime());
+      // log.debug("api-index-12-1" + getTime());
       const user = await UserWrapper(userData);
-      // log.info("api-index-12-2" + getTime());
+      // log.debug("api-index-12-2" + getTime());
       const { userCategoryData, userCategoryId } = (await user.getCategoryInfo()) || {};
-      // log.info("api-index-12-3" + getTime());
+      // log.debug("api-index-12-3" + getTime());
 
       req.userDetails = {
         exists: true,
@@ -161,11 +161,11 @@ router.use(async function (req, res, next) {
         userCategoryId,
       };
 
-      // log.info("api-index-12-4" + getTime());
+      // log.debug("api-index-12-4" + getTime());
       req.permissions = await user.getPermissions();
-      // log.info("api-index-12-5" + getTime());
-      // log.info("api-index-13" + getTime());
-      // log.info("api-index-14" + getTime());
+      // log.debug("api-index-12-5" + getTime());
+      // log.debug("api-index-13" + getTime());
+      // log.debug("api-index-14" + getTime());
     } else {
       req.userDetails = {
         exists: false,

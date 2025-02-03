@@ -6,12 +6,12 @@ const log = createLogger("NOTIFICATION_SDK > IN_APP > STREAM");
 
 class AppNotification {
   constructor() {
-    log.info("Connecting to Get-Stream for notification information");
+    log.debug("Connecting to Get-Stream for notification information");
 
     // Log credentials for debugging
-    // log.info(`API Key: ${process.config.getstream.key}`);
-    // log.info(`Secret Key: ${process.config.getstream.secretKey}`);
-    // log.info(`App ID: ${process.config.getstream.appId}`);
+    // log.debug(`API Key: ${process.config.getstream.key}`);
+    // log.debug(`Secret Key: ${process.config.getstream.secretKey}`);
+    // log.debug(`App ID: ${process.config.getstream.appId}`);
 
     this.client = stream.connect(
         process.config.getstream.key,
@@ -21,7 +21,7 @@ class AppNotification {
           location: 'us-east', // or 'eu-central', depending on your app's region
         }
     );
-    log.info("GetStream client initialized in constructor");
+    log.debug("GetStream client initialized in constructor");
   }
 
   notify = (templates = []) => {
@@ -51,7 +51,7 @@ class AppNotification {
             location: 'us-east', // or 'eu-central', depending on your app's region
           }
       );
-      log.info("GetStream client initialized in sendAppNotification");
+      log.debug("GetStream client initialized in sendAppNotification");
       const userToken = client.createUserToken(template.actor.toString());
       log.debug("Generated get-stream userToken in use: ", userToken);
       log.debug("Get-Stream client --> ", client);

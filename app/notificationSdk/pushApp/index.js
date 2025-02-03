@@ -45,7 +45,7 @@ class PushNotification {
         template.existing_android_channel_id = "sound_channel";
       }
 
-      log.info("sendPushNotification template: ", template);
+      log.debug("sendPushNotification template: ", template);
 
       const options = {
         // host: '104.18.226.52',
@@ -59,20 +59,20 @@ class PushNotification {
       const https = require("https");
       const req = https.request(options, function (res) {
         res.on("data", function (data) {
-          log.info("sendPushNotification response template: ", template);
-          log.info("Push Notification sendPushNotification Data: ", data);
+          log.debug("sendPushNotification response template: ", template);
+          log.debug("Push Notification sendPushNotification Data: ", data);
         });
 
         res.on("error", function (err) {
-          log.info("Error in listening in push notification: ", err);
+          log.debug("Error in listening in push notification: ", err);
         });
       });
 
       req.on("error", function (e) {
-        log.info("Error in sending push notification: ", e);
-        log.info(e);
+        log.debug("Error in sending push notification: ", e);
+        log.debug(e);
       });
-      log.info("sendPushNotification JSON -> template: ", JSON.stringify(template));
+      log.debug("sendPushNotification JSON -> template: ", JSON.stringify(template));
       req.write(JSON.stringify(template));
       req.end();
     } catch (err) {

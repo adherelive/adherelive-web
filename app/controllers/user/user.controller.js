@@ -100,7 +100,7 @@ class UserController extends Controller {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       const { params: { link } = {} } = req;
-      log.info(`(axios.post)(param) LINK :: ${link}`);
+      log.debug(`(axios.post)(param) LINK :: ${link}`);
       const verifications = await UserVerificationServices.getRequestByLink(
         link
       );
@@ -338,7 +338,7 @@ class UserController extends Controller {
         body: { agreeConsent } = {},
       } = req;
 
-      log.info(
+      log.debug(
         `1897389172 agreeConsent :: ${agreeConsent} | userId : ${userId}`
       );
 
@@ -801,7 +801,7 @@ class UserController extends Controller {
 
         return this.raiseSuccess(res, 200, response, "basic info");
       } else {
-        log.info("userExists ");
+        log.debug("userExists ");
         // throw new Error(constants.COOKIES_NOT_SET);
       }
     } catch (err) {
@@ -1075,7 +1075,7 @@ class UserController extends Controller {
 
         return this.raiseSuccess(res, 200, response, "basic info");
       } else {
-        log.info("userExists ");
+        log.debug("userExists ");
         // throw new Error(constants.COOKIES_NOT_SET);
       }
     } catch (err) {
@@ -1331,7 +1331,7 @@ class UserController extends Controller {
       for (let qualification of qualificationsOfDoctor) {
         let qId = qualification.get("id");
         if (newQualifications.includes(qId)) {
-          log.info("QUALIFICATIONS IFFFF");
+          log.debug("QUALIFICATIONS IFFFF");
         } else {
           let deleteDocs = await documentService.deleteDocumentsOfQualification(
             DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION,
@@ -1370,7 +1370,7 @@ class UserController extends Controller {
       for (let registration of registrationsOfDoctor) {
         let rId = registration.get("id");
         if (newRegistrations.includes(rId)) {
-          log.info("REGISTRATION IFFFF");
+          log.debug("REGISTRATION IFFFF");
         } else {
           let deleteDocs = await documentService.deleteDocumentsOfQualification(
             DOCUMENT_PARENT_TYPE.DOCTOR_REGISTRATION,
@@ -1703,7 +1703,7 @@ class UserController extends Controller {
       for (let qualification of qualificationsOfDoctor) {
         let qId = qualification.get("id");
         if (newQualifications.includes(qId)) {
-          log.info("QUALIFICATIONS IFFFF", newQualifications);
+          log.debug("QUALIFICATIONS IFFFF", newQualifications);
         } else {
           let deleteDocs = await documentService.deleteDocumentsOfQualification(
             DOCUMENT_PARENT_TYPE.DOCTOR_QUALIFICATION,

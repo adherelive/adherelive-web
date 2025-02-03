@@ -66,14 +66,14 @@ class PatientWrapper extends BasePatient {
 
   getAllInfo = async () => {
     const { _data, getBasicInfo, getPatientId } = this;
-    // log.info("getAllInfo in PatientWrapper has _data, should get Patient ID: ", _data);
-    // log.info("getAllInfo in PatientWrapper has getBasicInfo as: ", getBasicInfo());
+    // log.debug("getAllInfo in PatientWrapper has _data, should get Patient ID: ", _data);
+    // log.debug("getAllInfo in PatientWrapper has getBasicInfo as: ", getBasicInfo());
 
     // TODO: Check why the care plans have been removed? Is it due to performance issues?
     // const carePlans = await carePlanService.getMultipleCarePlanByData({patient_id: getPatientId()});
     const order = [["created_at", "DESC"]];
     const data = { patient_id: getPatientId() };
-    // log.info("getAllInfo in PatientWrapper has data patient_id as: ", data);
+    // log.debug("getAllInfo in PatientWrapper has data patient_id as: ", data);
     let carePlan = await carePlanService.getSingleCarePlanByData(data, order);
 
     let carePlanId = "";
@@ -106,7 +106,7 @@ class PatientWrapper extends BasePatient {
     const { _data, getAllInfo, getPatientId } = this;
     const { user } = _data || {};
     const users = await UserWrapper(user.get());
-    // log.info("getReferenceInfo in PatientWrapper has PatientID/User as: ", users);
+    // log.debug("getReferenceInfo in PatientWrapper has PatientID/User as: ", users);
 
     return {
       patients: {

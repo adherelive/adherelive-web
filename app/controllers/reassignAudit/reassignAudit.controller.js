@@ -19,7 +19,7 @@ class reassignAuditController extends Controller {
       const {
         query: { activity_id },
       } = req;
-      log.info({ activity_id });
+      log.debug({ activity_id });
       let reassignAuditServiceData =
         await reassignAuditService.getAuditByActivitiyData({ activity_id });
       let output = [];
@@ -34,8 +34,8 @@ class reassignAuditController extends Controller {
         object["assignedToDoctor"] = await DoctorService.getDoctorByDoctorId(
           reassignAuditServiceData[i]["assignedTo"]
         );
-        log.info(reassignAuditServiceData[i]["createdAt"]);
-        log.info(reassignAuditServiceData[i]);
+        log.debug(reassignAuditServiceData[i]["createdAt"]);
+        log.debug(reassignAuditServiceData[i]);
         output.push(object);
       }
       return raiseSuccess(

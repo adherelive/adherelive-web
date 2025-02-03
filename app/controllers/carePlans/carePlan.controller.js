@@ -828,7 +828,7 @@ class CarePlanController extends Controller {
         "patient care plan details fetched successfully"
       );
     } catch (error) {
-      log.info(error);
+      log.debug(error);
       return this.raiseServerError(res, 500, error);
     }
   };
@@ -893,7 +893,7 @@ class CarePlanController extends Controller {
         "patient care plan details fetched successfully"
       );
     } catch (error) {
-      log.info(error);
+      log.debug(error);
       return this.raiseServerError(res, 500, error);
     }
   };

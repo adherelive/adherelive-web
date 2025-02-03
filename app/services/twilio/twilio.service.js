@@ -67,7 +67,7 @@ class TwilioService {
         return connectedParticipants;
       } catch (error) {
         rej(error);
-        log.info("Twilio Service error ---> ", error);
+        log.debug("Twilio Service error ---> ", error);
       }
     });
   }
@@ -98,7 +98,7 @@ class TwilioService {
           body: message,
         })
         .then((response) => {
-          log.info("Bot message sent!", response);
+          log.debug("Bot message sent!", response);
         })
         .catch((err) => {
           log.error("Failed to send message");
@@ -126,7 +126,7 @@ class TwilioService {
           body: message,
         })
         .then((response) => {
-          log.info("User message sent!", response);
+          log.debug("User message sent!", response);
         })
         .catch((err) => {
           log.error("Failed to send message");
@@ -147,7 +147,7 @@ class TwilioService {
         .services(process.config.twilio.TWILIO_CHAT_SERVICE_SID)
         .channels.list()
         .then((channels) => {
-          log.info(
+          log.debug(
             "Twilio Get All channels ---> ",
             channels,
             channels.length
@@ -169,7 +169,7 @@ class TwilioService {
               friendlyNames.push(friendlyName);
               channelData[uniqueName] = channels[i];
             }
-            log.info("DELETED CHANNEL NAMES AND COUNT", {
+            log.debug("DELETED CHANNEL NAMES AND COUNT", {
               channelsName,
               count: channelsName.length,
               friendlyNames: friendlyNames,
@@ -189,7 +189,7 @@ class TwilioService {
         .services(process.config.twilio.TWILIO_CHAT_SERVICE_SID)
         .channels.list()
         .then((channels) => {
-          log.info(
+          log.debug(
             "Twilio Delete All channels ---> ",
             channels,
             channels.length
@@ -210,14 +210,14 @@ class TwilioService {
                 .channels(sid)
                 .remove()
                 .then((response) => {
-                  log.info("delete success response", response);
+                  log.debug("delete success response", response);
                   channelsName.push(uniqueName);
                 })
                 .catch((err) => {
-                  log.info("delete catch error", err);
+                  log.debug("delete catch error", err);
                 });
             }
-            log.info("DELETED CHANNEL NAMES AND COUNT", {
+            log.debug("DELETED CHANNEL NAMES AND COUNT", {
               channelsName,
               count: channelsName.length,
             });
@@ -230,7 +230,7 @@ class TwilioService {
       //     from: "adhere_bot",
       //     body: message
       // }).then(response => {
-      //     log.info('Bot message sent!', response);
+      //     log.debug('Bot message sent!', response);
       // }).catch(err => {
       //     log.error('Failed to send message');
       //     log.error(err);

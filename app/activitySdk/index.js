@@ -23,7 +23,7 @@ class Activity extends EventEmitter {
 
   execute(args) {
     const { eventType, activityType, stage, data } = args;
-    log.info(`initial ${eventType}, ${stage}, ${activityType}, ${data}`);
+    log.debug(`initial ${eventType}, ${stage}, ${activityType}, ${data}`);
     //add validation for parameter here
     switch (eventType) {
       case EVENT_TYPE.APPOINTMENT:

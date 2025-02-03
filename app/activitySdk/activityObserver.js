@@ -20,11 +20,11 @@ class ActivityObserver {
    */
   runObservers() {
     FollowUpActivity.runObservers();
-    log.info(`Observing FOLLOWUP activity..!!`);
+    log.debug(`Observing FOLLOWUP activity..!!`);
     ReminderActivity.runObservers();
-    log.info(`Observing REMINDER activity..!!`);
+    log.debug(`Observing REMINDER activity..!!`);
     MedicationReminderActivity.runObservers();
-    log.info(`Observing MEDICATION_REMINDER activity..!!`);
+    log.debug(`Observing MEDICATION_REMINDER activity..!!`);
   }
 }
 

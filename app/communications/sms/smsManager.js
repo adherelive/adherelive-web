@@ -23,20 +23,20 @@ class SmsManager {
 
   async sendSms(smsPayload) {
     try {
-      log.info("Validating SMS payload...");
+      log.debug("Validating SMS payload...");
       const isSmsDataValid = this.smsDataValidator(smsPayload);
       if (isSmsDataValid.error) return isSmsDataValid;
 
       log.success("SMS payload is valid!");
 
-      log.info("Transforming SMS payload to AWS payload...");
+      log.debug("Transforming SMS payload to AWS payload...");
       const smsData = this.smsDataTransformer(smsPayload);
-      log.info("SMS payload successfully transformed!");
+      log.debug("SMS payload successfully transformed!");
 
-      log.info("Sending SMS...");
+      log.debug("Sending SMS...");
 
       const data = await this.sns.publish(smsData).promise();
-      log.info("SMS has been sent!", data);
+      log.debug("SMS has been sent!", data);
       return { success: true, data };
     } catch (error) {
       log.error("Error sending SMS ---> ", error);

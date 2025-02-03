@@ -310,7 +310,7 @@ class PatientController extends Controller {
     try {
       const { id } = req.params;
 
-      log.info(`getPatientCarePlanSecondaryDocDetails params: patient_id = ${id}`);
+      log.debug(`getPatientCarePlanSecondaryDocDetails params: patient_id = ${id}`);
       const {
         userDetails: {
           userRoleId = null,
@@ -352,7 +352,7 @@ class PatientController extends Controller {
         "getPatientCarePlanSecondaryDocDetails Care Plan 500 error ---> ",
         error
       );
-      log.info(error);
+      log.debug(error);
       return raiseServerError(res);
     }
   };
@@ -363,7 +363,7 @@ class PatientController extends Controller {
     try {
       const { id: patient_id = 1 } = req.params;
 
-      log.info(`getPatientCarePlanDetails params: patient_id = ${patient_id}`);
+      log.debug(`getPatientCarePlanDetails params: patient_id = ${patient_id}`);
       const {
         userDetails: {
           userRoleId = null,
@@ -539,7 +539,7 @@ class PatientController extends Controller {
       );
     } catch (error) {
       // log.debug("get care plan 500 error ---> ", error);
-      log.info(error);
+      log.debug(error);
       return raiseServerError(res);
     }
   };
@@ -847,7 +847,7 @@ class PatientController extends Controller {
     const { raiseSuccess, raiseServerError } = this;
 
     try {
-      log.info(`searchPatient request query : ${req.query.value}`);
+      log.debug(`searchPatient request query : ${req.query.value}`);
       const { query: { value = "" } = {} } = req;
       const {
         userDetails: { userId, userRoleId, userData: { category } = {} } = {},
@@ -947,7 +947,7 @@ class PatientController extends Controller {
             searchPatientByName = async (req, res) => {
               const { raiseSuccess, raiseServerError } = this;
               try {
-                log.info(`searchPatient request query : ${req.query.value}`);
+                log.debug(`searchPatient request query : ${req.query.value}`);
                 const { query: { value = "" } = {} } = req;
                 const {
                   userDetails: { userId, userRoleId, userData: { category } = {} } = {},
@@ -981,7 +981,7 @@ class PatientController extends Controller {
   searchPatientOld = async (req, res) => {
     const { raiseSuccess, raiseServerError } = this;
     try {
-      log.info(`searchPatient request query : ${req.query.value}`);
+      log.debug(`searchPatient request query : ${req.query.value}`);
       const { query: { value = "" } = {} } = req;
 
       const users = await userService.getPatientByMobile(value);
@@ -1477,13 +1477,13 @@ class PatientController extends Controller {
         params: { patient_id } = {},
         userDetails: { userCategoryId } = {},
       } = req;
-      log.info(`getPatientReports params: patient_id = ${patient_id}`);
-      log.info(
+      log.debug(`getPatientReports params: patient_id = ${patient_id}`);
+      log.debug(
         `getPatientReports in PatientController has PatientID as: ${patient_id}`
       );
 
       if (!patient_id) {
-        log.info(
+        log.debug(
           `When patient_id not found in getPatientReports! = ${patient_id}`
         );
         return raiseClientError(res, 422, {}, "Please select correct patient");
@@ -1532,7 +1532,7 @@ class PatientController extends Controller {
         for (let index = 0; index < allDoctors.length; index++) {
           const doctor = await DoctorWrapper(allDoctors[index]);
           // const doctorId = doctor.getDoctorId();
-          // log.info("Doctor ID: ", doctorId);
+          // log.debug("Doctor ID: ", doctorId);
           doctorData[doctor.getDoctorId()] = await doctor.getAllInfo();
         }
       }
@@ -1556,7 +1556,7 @@ class PatientController extends Controller {
       );
     } catch (error) {
       log.debug("getPatientReports has a 500 error: ", error);
-      log.info("Console getPatientReports has a 500 error: ", error);
+      log.debug("Console getPatientReports has a 500 error: ", error);
       return raiseServerError(res);
     }
   };
@@ -1954,13 +1954,13 @@ class PatientController extends Controller {
       checkAndCreateDirectory(S3_DOWNLOAD_FOLDER);
 
       const doctorSignImage = `${S3_DOWNLOAD_FOLDER}/${full_name}.jpeg`;
-      log.info("\n\n\n\n\n\n\n\n\n\n\n================================");
-      log.info({ doctorSignImage });
+      log.debug("\n\n\n\n\n\n\n\n\n\n\n================================");
+      log.debug({ doctorSignImage });
       const downloadImage = await downloadFileFromS3(
         getFilePath(signature_pic),
         doctorSignImage
       );
-      log.info("================================\n\n\n\n\n\n\n\n\n\n\n");
+      log.debug("================================\n\n\n\n\n\n\n\n\n\n\n");
 
       const doctorQualifications =
         await qualificationService.getQualificationsByDoctorId(doctor_id);
@@ -2110,9 +2110,9 @@ class PatientController extends Controller {
       };
 
       checkAndCreateDirectory(PRESCRIPTION_PDF_FOLDER);
-      log.info("\n\n\n\n\n\n\n\n\n\n\n================================");
-      log.info({ doctorSignImage });
-      log.info("================================\n\n\n\n\n\n\n\n\n\n\n");
+      log.debug("\n\n\n\n\n\n\n\n\n\n\n================================");
+      log.debug({ doctorSignImage });
+      log.debug("================================\n\n\n\n\n\n\n\n\n\n\n");
       const pdfFileName = await generatePDF(dataForPdf, doctorSignImage);
 
       const pdfFile = `${pdfFileName}.pdf`;
@@ -2178,13 +2178,13 @@ class PatientController extends Controller {
       let count = 0;
       let treatments = {};
 
-      // log.info(
+      // log.debug(
       //   "Do I reach this place, Pagination with ID's: ",
       //   limit,
       //   offsetLimit,
       //   getWatchListPatients
       // );
-      // log.info("Patients for the Doctors: ", patientsForDoctor);
+      // log.debug("Patients for the Doctors: ", patientsForDoctor);
       // care plan ids as secondary doctor
       const {
         count: careplansCount = 0,
@@ -2215,7 +2215,7 @@ class PatientController extends Controller {
           user_id: userId,
         });
 
-        // log.info("Get the Doctor for this page: ", doctor);
+        // log.debug("Get the Doctor for this page: ", doctor);
         if (doctor && getWatchListPatients) {
           const doctorData = await DoctorWrapper(doctor);
 
@@ -2226,7 +2226,7 @@ class PatientController extends Controller {
             await doctorPatientWatchlistService.getAllByData({
               user_role_id: userRoleId,
             });
-          log.info(
+          log.debug(
             "This is the watchlistRecords details with User Role ID: ",
             watchlistRecords
           );
@@ -2237,12 +2237,12 @@ class PatientController extends Controller {
               const watchlistWrapper = await DoctorPatientWatchlistWrapper(
                 watchlistRecords[i]
               );
-              log.info(
+              log.debug(
                 "This is the watchListWrapper details with Patient ID: ",
                 watchlistWrapper
               );
               const patientId = await watchlistWrapper.getPatientId();
-              log.info(
+              log.debug(
                 "This is the Patient ID we get in pagination: ",
                 patientId
               );
@@ -2713,7 +2713,7 @@ class PatientController extends Controller {
     } = req;
 
     // Log the raw value for debugging
-    log.info(`getPatientById raw params: `, { patient_id });
+    log.debug(`getPatientById raw params: `, { patient_id });
 
     // TODO: Add type checking if needed
     // if (typeof patient_id !== 'string' && typeof patient_id !== 'number') {

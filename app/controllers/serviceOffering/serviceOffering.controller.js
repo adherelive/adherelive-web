@@ -128,7 +128,7 @@ class ReportController extends Controller {
           currency,
         },
       } = req;
-      log.info(`Report : id = ${id}`);
+      log.debug(`Report : id = ${id}`);
 
       if (!id) {
         return raiseClientError(
@@ -169,7 +169,7 @@ class ReportController extends Controller {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       let { params: { id } = {} } = req;
-      log.info(`Report : id = ${id}`);
+      log.debug(`Report : id = ${id}`);
 
       if (!id) {
         return raiseClientError(

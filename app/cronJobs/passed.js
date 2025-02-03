@@ -23,7 +23,7 @@ class PassedCron {
     const scheduleEventService = new ScheduleEventService();
 
     const currentTime = moment().utc().toISOString();
-    log.info(`currentTime : ${currentTime}`);
+    log.debug(`currentTime : ${currentTime}`);
     const scheduleEvents = await scheduleEventService.getPassedEventData(
       currentTime
     );
@@ -32,7 +32,7 @@ class PassedCron {
 
   runObserver = async () => {
     try {
-      log.info("running passed cron");
+      log.debug("running passed cron");
       const { getScheduleData } = this;
       const scheduleEvents = await getScheduleData();
       let count = 0;
@@ -66,7 +66,7 @@ class PassedCron {
           }
         }
       }
-      log.info(`runObserver count : ${count} / ${scheduleEvents.length}`);
+      log.debug(`runObserver count : ${count} / ${scheduleEvents.length}`);
     } catch (error) {
       log.debug("runObserver scheduleEvents 500 error ---> ", error);
     }
@@ -131,7 +131,7 @@ class PassedCron {
 
       const { value = 0 } = repeat_intervals[repeatIntervalId] || {};
 
-      log.info(
+      log.debug(
         `value: ${value} | difference -> ${moment(currentTime).diff(
           event.getStartTime(),
           "hours"
@@ -156,7 +156,7 @@ class PassedCron {
       const scheduleEventService = new ScheduleEventService();
       const currentTime = moment().utc().toDate();
 
-      log.info("handleMedicationPassed details: ", {
+      log.debug("handleMedicationPassed details: ", {
         condition:
           moment(currentTime).diff(event.updatedAt(), "minutes") ===
           this.RESCHEDULE_INTERVAL,
@@ -181,7 +181,7 @@ class PassedCron {
         );
       }
 
-      log.info("handleMedicationPassed expired diff: ", {
+      log.debug("handleMedicationPassed expired diff: ", {
         count: moment(currentTime).diff(event.getStartTime(), "minutes"),
         condition:
           moment(currentTime).diff(event.getStartTime(), "minutes") >

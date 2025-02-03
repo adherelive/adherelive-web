@@ -7,7 +7,7 @@ export default class ServiceSubscriptionMapping {
   constructor() {}
 
   addServiceSubscriptionMapping = async (data) => {
-    log.info(data);
+    log.debug(data);
     const transaction = await Database.initTransaction();
     try {
       const serviceSubscriptionMapping = await Database.getModel(
@@ -19,7 +19,7 @@ export default class ServiceSubscriptionMapping {
       await transaction.commit();
       return serviceSubscriptionMapping;
     } catch (error) {
-      log.info(error);
+      log.debug(error);
       await transaction.rollback();
       throw error;
     }

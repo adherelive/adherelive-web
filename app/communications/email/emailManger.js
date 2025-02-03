@@ -287,7 +287,7 @@ class EmailManger {
   async sendEmail(emailPayload) {
     try {
       let payload = await this.emailPayloadTransformer(emailPayload);
-      log.info(
+      log.debug(
         "Validating email payload!! ---> ",
         process.config.SMTP_USER,
         process.config.SMTP_KEY
@@ -295,19 +295,19 @@ class EmailManger {
       let isValid = this.emailPayloadValidator(emailPayload);
       if (isValid && isValid.error == 1) return isValid;
       log.success("email payload is valid!!");
-      log.info("Transforming email payload to aws payload!!");
+      log.debug("Transforming email payload to aws payload!!");
 
       if (payload.error && payload.error == 1) return payload;
 
-      log.info("Email payload transformed successfully!");
-      log.info("Sending email...");
+      log.debug("Email payload transformed successfully!");
+      log.debug("Sending email...");
       // let publishResponse = this.ses
       //   .sendEmail(payload, (err, data) => {
       //     if (err) {
-      //       log.info("Sending an Email error!!", err);
+      //       log.debug("Sending an Email error!!", err);
       //     }
       //     if (data) {
-      //       log.info("Email sent successfully!!", data);
+      //       log.debug("Email sent successfully!!", data);
       //     }
       //   })
       //   .promise();
@@ -319,7 +319,7 @@ class EmailManger {
 
       return publishResponse;
     } catch (err) {
-      log.info("sending mail error.........!!");
+      log.debug("sending mail error.........!!");
     }
   }
 }

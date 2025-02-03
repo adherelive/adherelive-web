@@ -275,7 +275,7 @@ class Database {
 
         // Test the connection
         await Database.connection.authenticate();
-        log.info("MySQL connection has been established successfully.");
+        log.debug("MySQL connection has been established successfully.");
       } catch (err) {
         log.error("Unable to connect to the MySQL database:", err);
         Database.connection = null; // Reset connection on failure
@@ -316,7 +316,7 @@ class Database {
       for (const model of models) {
         model.associate(database);
       }
-      log.info("MySQL DB and related tables have been created");
+      log.debug("MySQL DB and related tables have been created");
     } catch (err) {
       log.error("MySQL DB connection error is: ", err);
     }

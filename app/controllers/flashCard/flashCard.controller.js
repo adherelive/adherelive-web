@@ -126,7 +126,7 @@ class FlashCardController extends Controller {
         try {
           await createReport(req.body.data.flashCardData, "myFlashCard.pdf");
         } catch (ex) {
-          log.info(ex);
+          log.debug(ex);
         }
         let file = fs.readFileSync("myFlashCard.pdf");
         const { originalname } = file || {};
@@ -151,7 +151,7 @@ class FlashCardController extends Controller {
             parent_id: report.getId(),
           });
         } catch (ex) {
-          log.info(ex);
+          log.debug(ex);
         }
       }
 
@@ -215,7 +215,7 @@ class FlashCardController extends Controller {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       let { params: { id } = {}, body } = req;
-      log.info(`Report id = ${id}`);
+      log.debug(`Report id = ${id}`);
       if (!id) {
         return raiseClientError(
           res,

@@ -63,7 +63,7 @@ export default class AlgoliaService {
         autoGenerateObjectIDIfNotExist: true,
       });
 
-      log.info("result ----. ", result);
+      log.debug("result ----. ", result);
 
       const searchAttributes = await index.setSettings({
         searchableAttributes: ["name", "generic_name", "classification"],
@@ -72,7 +72,7 @@ export default class AlgoliaService {
         highlightPostTag: "</em>",
       });
 
-      log.info("searchAttributes ----. ", searchAttributes);
+      log.debug("searchAttributes ----. ", searchAttributes);
       return result;
     } catch (error) {
       log.debug("medicine data catch error", error);
@@ -123,7 +123,7 @@ export default class AlgoliaService {
           })
           .wait();
 
-        log.info("result ----. ", result);
+        log.debug("result ----. ", result);
 
         return result;
       }
@@ -172,7 +172,7 @@ export default class AlgoliaService {
 
         const result = await index.partialUpdateObjects(updatedMedicine).wait();
 
-        log.info("result ----. ", result);
+        log.debug("result ----. ", result);
 
         return result;
       }

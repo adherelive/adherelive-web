@@ -42,7 +42,7 @@ export default class ServiceSubscriptionService {
       serviceSubscription.services = servicesData;
       return serviceSubscription;
     } catch (error) {
-      log.info(error);
+      log.debug(error);
       await transaction.rollback();
       throw error;
     }
@@ -51,7 +51,7 @@ export default class ServiceSubscriptionService {
   updateServiceSubscription = async (data, id) => {
     const transaction = await Database.initTransaction();
     try {
-      log.info(data, id);
+      log.debug(data, id);
       const serviceSubscription = await Database.getModel(TABLE_NAME).update(
         data,
         {
@@ -72,7 +72,7 @@ export default class ServiceSubscriptionService {
   };
 
   getServiceSubscriptionByData = async (data) => {
-    log.info("getServiceSubscriptionByDataCalled - services - ", data);
+    log.debug("getServiceSubscriptionByDataCalled - services - ", data);
     try {
       return await Database.getModel(TABLE_NAME).findOne({
         where: data,

@@ -79,7 +79,7 @@ class ReportController extends Controller {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       const { file = null, params: { patient_id = "NA" } = {} } = req;
-      log.info(`patient_id : ${patient_id}`);
+      log.debug(`patient_id : ${patient_id}`);
       log.debug("files", file);
 
       if (!file) {
@@ -121,7 +121,7 @@ class ReportController extends Controller {
         query: { patient_id } = {},
         userDetails: { userData: { category } = {}, userCategoryId } = {},
       } = req;
-      log.info(`query: patient_id : ${patient_id}`);
+      log.debug(`query: patient_id : ${patient_id}`);
 
       if (!patient_id) {
         return raiseClientError(res, 422, {}, "Please select correct patient");
@@ -171,7 +171,7 @@ class ReportController extends Controller {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       const { params: { document_id } = {} } = req;
-      log.info(`params: document_id = ${document_id}`);
+      log.debug(`params: document_id = ${document_id}`);
 
       if (!document_id) {
         return raiseClientError(

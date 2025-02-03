@@ -63,7 +63,7 @@ const scheduleService = new ScheduleService();
 const getUserPreferences = async (user_id) => {
   try {
     if (user_id != null) {
-      log.info(`user_id : ${user_id}`);
+      log.debug(`user_id : ${user_id}`);
       const userPreference = await UserPreferenceService.getPreferenceByData({
         user_id,
       });
@@ -127,7 +127,7 @@ export const handleAppointments = async (appointment) => {
 
 export const handleMedications = async (data) => {
   try {
-    log.info("data for handle medications ---> ", data);
+    log.debug("data for handle medications ---> ", data);
     const {
       patient_id,
       event_id,
@@ -500,7 +500,7 @@ export const handleVitals = async (vital) => {
       }
     } else {
       for (let i = 0; i < allDays.length; i++) {
-        // log.info("Wake Up Time Value: ", WAKE_UP, timings[this.WAKE_UP]);
+        // log.debug("Wake Up Time Value: ", WAKE_UP, timings[this.WAKE_UP]);
         const { value: wakeUpTime } = timings[WAKE_UP];
         const { value: sleepTime } = timings[SLEEP];
 
@@ -608,7 +608,7 @@ export const handleAppointmentsTimeAssignment = async (appointment) => {
 
     // Check if participant_one exists and has an id
     if (participant_one && participant_one.id) {
-      log.info("Participant One ---> ID exists: ", participant_one);
+      log.debug("Participant One ---> ID exists: ", participant_one);
     } else {
       // Handle the case where participant_one is missing or has no ID
       // log.error("Participant One ID is undefined or missing: ", participant_one);
@@ -905,7 +905,7 @@ const getDietTimings = (date, timing, patientPreference) => {
 };
 
 const updateMedicationTiming = (date, timing, patientPreference) => {
-  log.info("updateMedicationTiming -> date, timing, patientPreference: ", {
+  log.debug("updateMedicationTiming -> date, timing, patientPreference: ", {
     date,
     timing,
     patientPreference,

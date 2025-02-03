@@ -30,9 +30,9 @@ class AwsS3Service {
   callback = (error, data) => {
     if (error) {
       // throw error;
-      log.info("Callback error in AWS S3 services: ", error);
+      log.debug("Callback error in AWS S3 services: ", error);
     } else {
-      log.info("AWS S3 has sent response data: ", data);
+      log.debug("AWS S3 has sent response data: ", data);
     }
   };
 
@@ -49,7 +49,7 @@ class AwsS3Service {
       let result;
 
       let doesBucketExists = true;
-      log.info("Check if the S3 Bucket exists: ", doesBucketExists);
+      log.debug("Check if the S3 Bucket exists: ", doesBucketExists);
       const bucket_name = process.config.s3.BUCKET_NAME;
       if (!doesBucketExists) {
         const policy = {
@@ -82,16 +82,16 @@ class AwsS3Service {
         fs.readFile(`${__dirname}/../../../other/logo.png`, (err, data) => {
           if (!err) {
             const emailLogo = this.saveBufferObject(data, "logo.png");
-            log.info("Image name for emailLogo: ", emailLogo);
-            //log.info("Email logo has been uploaded successfully: ", logoImage);
+            log.debug("Image name for emailLogo: ", emailLogo);
+            //log.debug("Email logo has been uploaded successfully: ", logoImage);
           } else {
-            log.info("Error in getting the logo image", err);
+            log.debug("Error in getting the logo image", err);
           }
           if (!err) {
             const emailLogo = this.saveBufferObject(data, "logo.png");
-            log.info("Image for emailLogo: ", emailLogo);
+            log.debug("Image for emailLogo: ", emailLogo);
           } else {
-            log.info("Error in getting the email logo image: ", err);
+            log.debug("Error in getting the email logo image: ", err);
           }
         });
 
@@ -105,22 +105,22 @@ class AwsS3Service {
                 data,
                 "push_notification_sound.wav"
               );
-              log.info("File for wave sound audioObject: ", audioObject);
+              log.debug("File for wave sound audioObject: ", audioObject);
             } else {
-              log.info("Error in getting the wave sound file: ", err);
+              log.debug("Error in getting the wave sound file: ", err);
             }
           }
         );
       }
       return result;
     } catch (err) {
-      // log.info("u19281011 err --> ", err);
+      // log.debug("u19281011 err --> ", err);
       throw err;
     }
   }
 
   getSignedUrl = (path) => {
-    log.info("getSignedUrl path needs to be defined: ", { path });
+    log.debug("getSignedUrl path needs to be defined: ", { path });
     if (!path) {
       throw new Error("Invalid path provided. Path cannot be null or undefined.");
     }
@@ -155,7 +155,7 @@ class AwsS3Service {
         metaData = { "Content-Type": "application/octet-stream" };
       }
 
-      log.info("Save Buffer Object file: ", file);
+      log.debug("Save Buffer Object file: ", file);
       let result = await this.s3Client.putObject(
         {
           Bucket: this.bucket,
@@ -172,11 +172,11 @@ class AwsS3Service {
       //   Expires: 60
       // });
       //
-      // log.info("AWS S3 URL: ", url);
+      // log.debug("AWS S3 URL: ", url);
 
       return result;
     } catch (err) {
-      log.info("AWS S3 service has an error ---> \n", err);
+      log.debug("AWS S3 service has an error ---> \n", err);
       // throw err;
     }
   }
@@ -220,7 +220,7 @@ class AwsS3Service {
       let result = await this.s3Client.removeObject(this.bucket, file);
       return result;
     } catch (err) {
-      log.info("Error in the remove file object: ", err);
+      log.debug("Error in the remove file object: ", err);
       throw err;
     }
   }
@@ -231,7 +231,7 @@ class AwsS3Service {
         metaData = { "Content-Type": "audio/mpeg" };
       }
 
-      log.info("Save Audio Object in S3 audio file: ", file);
+      log.debug("Save Audio Object in S3 audio file: ", file);
       let result = await this.s3Client.putObject(
         {
           Bucket: this.bucket,
@@ -244,7 +244,7 @@ class AwsS3Service {
 
       return result;
     } catch (err) {
-      log.info("Error in the saveAudioObject function: ", err);
+      log.debug("Error in the saveAudioObject function: ", err);
       // throw err;
     }
   };
@@ -255,7 +255,7 @@ class AwsS3Service {
         metaData = { "Content-Type": "video/mp4" };
       }
 
-      log.info("Save video object file: ", file);
+      log.debug("Save video object file: ", file);
       let result = await this.s3Client.putObject(
         {
           Bucket: this.bucket,
@@ -275,7 +275,7 @@ class AwsS3Service {
 
       return result;
     } catch (err) {
-      log.info("Error in the saveVideoObject function: ", err);
+      log.debug("Error in the saveVideoObject function: ", err);
       // throw err;
     }
   };

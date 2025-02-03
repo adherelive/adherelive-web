@@ -17,7 +17,7 @@ class Notifier {
 
       return this;
     } catch (err) {
-      log.info("err", err.message);
+      log.debug("err", err.message);
     }
   }
 
@@ -42,24 +42,24 @@ class Notifier {
       let result = {};
       const feed = this.client.feed("notification", data.object);
       const response = await feed.addActivity(data);
-      log.info("response", response);
+      log.debug("response", response);
       return result;
     } catch (err) {
-      log.info("Error", err);
+      log.debug("Error", err);
     }
   }
 
   async updateNotification() {
     try {
     } catch (err) {
-      log.info(err);
+      log.debug(err);
     }
   }
 
   async deleteNotification() {
     try {
     } catch (err) {
-      log.info(err);
+      log.debug(err);
     }
   }
 }

@@ -578,7 +578,7 @@ class MPatientController extends Controller {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       const { id: patient_id = 1 } = req.params;
-      log.info(`params: patient_id = ${patient_id}`);
+      log.debug(`params: patient_id = ${patient_id}`);
       const {
         userDetails: {
           userRoleId = null,
@@ -1445,7 +1445,7 @@ class MPatientController extends Controller {
   searchPatient = async (req, res) => {
     const { raiseSuccess, raiseServerError } = this;
     try {
-      log.info(`searchPatient request query : ${req.query.value}`);
+      log.debug(`searchPatient request query : ${req.query.value}`);
       const { query: { value = "" } = {} } = req;
 
       const {
@@ -2457,7 +2457,7 @@ class MPatientController extends Controller {
         params: { patient_id } = {},
         userDetails: { userCategoryId } = {},
       } = req;
-      log.info(`params: patient_id = ${patient_id}`);
+      log.debug(`params: patient_id = ${patient_id}`);
 
       if (!patient_id) {
         return raiseClientError(res, 422, {}, "Please select correct patient");

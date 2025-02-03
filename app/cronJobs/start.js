@@ -28,7 +28,7 @@ class StartCron {
   getScheduleData = async () => {
     const scheduleEventService = new ScheduleEventService();
     const currentTime = moment().utc().toISOString();
-    log.info(`currentTime : ${currentTime}`);
+    log.debug(`currentTime : ${currentTime}`);
     const scheduleEvents = await scheduleEventService.getStartEventByData(
       currentTime
     );
@@ -37,7 +37,7 @@ class StartCron {
   // TODO: running cron job on event table that have more then 17gb data and its make application slow and also logs unreadble.
   runObserver = async () => {
     try {
-      log.info("running START cron");
+      log.debug("running START cron");
       const { getScheduleData } = this;
       const scheduleEvents = await getScheduleData();
 
@@ -70,7 +70,7 @@ class StartCron {
           }
         }
       }
-      log.info(`START count : ${count} / ${scheduleEvents.length}`);
+      log.debug(`START count : ${count} / ${scheduleEvents.length}`);
     } catch (error) {
       log.debug("scheduleEvents 500 error ---> ", error);
     }

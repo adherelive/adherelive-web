@@ -74,7 +74,7 @@ export default class QueueService {
     try {
       const formattedData = [];
 
-      log.info("sendBatchMessage dataArr --> ", dataArr);
+      log.debug("sendBatchMessage dataArr --> ", dataArr);
       dataArr.forEach((data, index) => {
         const stringData = JSON.stringify(data);
         const params = {
@@ -102,7 +102,7 @@ export default class QueueService {
 
   receiveMessage = async () => {
     try {
-      log.info(`Receive Message queue URI: ${this.getQueueUrl()}`);
+      log.debug(`Receive Message queue URI: ${this.getQueueUrl()}`);
 
       const params = {
         AttributeNames: ["SentTimestamp"],
@@ -117,7 +117,7 @@ export default class QueueService {
 
       return response.Messages || [];
     } catch (error) {
-      log.info("receiveMessage 500 error: ", error);
+      log.debug("receiveMessage 500 error: ", error);
     }
   };
 
@@ -132,7 +132,7 @@ export default class QueueService {
 
       return response;
     } catch (error) {
-      log.info("deleteMessage 500 error: ", error);
+      log.debug("deleteMessage 500 error: ", error);
     }
   };
 
@@ -149,7 +149,7 @@ export default class QueueService {
         return null;
       }
     } catch (error) {
-      log.info("purgeQueue 500 error: ", error);
+      log.debug("purgeQueue 500 error: ", error);
     }
   };
 }

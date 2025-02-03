@@ -8,7 +8,7 @@ Config();
 const rollback = async () => {
   return await Promise.all(
     map(models, (key) => {
-      log.info("MySQL map models key ---> ", key.db);
+      console.debug("MySQL map models key ---> ", key.db);
       if (["sequelize", "Sequelize"].includes(key)) return null;
 
       return key.db.destroy({ where: {}, force: true });

@@ -128,7 +128,7 @@ class AgoraController extends Controller {
           userCategoryData: { basic_info: { full_name } = {} } = {},
         } = {},
       } = req;
-      log.info("room id is ", roomId);
+      log.debug("room id is ", roomId);
       const agoraJob = AgoraJob.execute(EVENT_STATUS.STARTED, {
         roomId,
         event_type: AGORA_CALL_NOTIFICATION_TYPES.START_CALL,

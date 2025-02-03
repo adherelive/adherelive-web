@@ -114,7 +114,7 @@ class ActivePatient {
               event_type: EVENT_TYPE.WORKOUT,
             },
           })) || [];
-        log.info(
+        log.debug(
           `Total events :: ${events.length} :: for Care Plan ID :: ${id}`
         );
         log.debug("Status of the events: ", events);

@@ -85,7 +85,7 @@ export const db = (database) => {
           const { _previousDataValues: previousValues } = instance || {};
           const { id, event_type, details, critical, event_id } =
             previousValues || {};
-          log.info(`BEFORE_UPDATE : for event : ${event_type}`);
+          log.debug(`BEFORE_UPDATE : for event : ${event_type}`);
 
           // will accept update changes from all event types
 

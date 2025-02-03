@@ -566,7 +566,7 @@ class ServiceSubscriptionUserMappingController extends Controller {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       let { params: { id } = {}, body } = req;
-      log.info(`Report : id = ${id}`);
+      log.debug(`Report : id = ${id}`);
       if (!id) {
         return raiseClientError(
           res,

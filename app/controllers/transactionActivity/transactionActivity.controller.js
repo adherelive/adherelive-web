@@ -147,12 +147,12 @@ class TransactionActivityController extends Controller {
       txActivities[i].patient = patientData;
       let serviceSubscription = new ServiceSubscription();
 
-      log.info("=========================================");
-      log.info({
+      log.debug("=========================================");
+      log.debug({
         value: txActivities[i].service_subscription_id != null,
         mytestservice_subid: txActivities[i].service_subscription_id,
       });
-      log.info("=========================================");
+      log.debug("=========================================");
 
       if (txActivities[i].service_subscription_id != null) {
         let serviceSubscriptionDetails =
@@ -191,7 +191,7 @@ class TransactionActivityController extends Controller {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       let { params: { id } = {}, body } = req;
-      log.info(`Report : id = ${id}`);
+      log.debug(`Report : id = ${id}`);
       if (!id) {
         return raiseClientError(
           res,
@@ -223,7 +223,7 @@ class TransactionActivityController extends Controller {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       let { params: { id } = {}, body } = req;
-      log.info(`Report : id = ${id}`);
+      log.debug(`Report : id = ${id}`);
       if (!id) {
         return raiseClientError(
           res,

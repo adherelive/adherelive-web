@@ -21,7 +21,7 @@ export const uploadDocument = async ({
   doHashing,
 }) => {
   try {
-    log.info(`fileName : ${fileName}`);
+    log.debug(`fileName : ${fileName}`);
     await awsS3Service.createBucket();
 
     let hash = md5.create();
@@ -33,10 +33,10 @@ export const uploadDocument = async ({
 
     const encodedFileName = subfolder + "/" + fileName;
 
-    log.info(`encodedFileName :: ${encodedFileName}`);
+    log.debug(`encodedFileName :: ${encodedFileName}`);
 
     const filePath = `${folder}/${encodedFileName}`;
-    log.info(`filePath :: ${filePath}`);
+    log.debug(`filePath :: ${filePath}`);
 
     await awsS3Service.saveBufferObject(buffer, filePath, null);
     return completePath(`/${filePath}`);

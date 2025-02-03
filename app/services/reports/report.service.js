@@ -15,7 +15,7 @@ export default class ReportService {
       return report;
     } catch (error) {
       await transaction.rollback();
-      log.info("Error in addReport: ", error);
+      log.debug("Error in addReport: ", error);
       throw error;
     }
   };
@@ -35,7 +35,7 @@ export default class ReportService {
       return report;
     } catch (error) {
       await transaction.rollback();
-      log.info("Error in updateReport: ", error);
+      log.debug("Error in updateReport: ", error);
       throw error;
     }
   };
@@ -47,7 +47,7 @@ export default class ReportService {
         raw: true,
       });
     } catch (error) {
-      log.info("Error in getReportByData: ", error);
+      log.debug("Error in getReportByData: ", error);
       throw error;
     }
   };
@@ -60,7 +60,7 @@ export default class ReportService {
         order: [["test_date", "DESC"]],
       });
     } catch (error) {
-      log.info("Error in getAllReportByData: ", error);
+      log.debug("Error in getAllReportByData: ", error);
       throw error;
     }
   };
@@ -73,7 +73,7 @@ export default class ReportService {
         raw: true,
       });
     } catch (error) {
-      log.info("Error in latestReportAndCount: ", error);
+      log.debug("Error in latestReportAndCount: ", error);
       throw error;
     }
   };

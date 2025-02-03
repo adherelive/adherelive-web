@@ -82,6 +82,6 @@
 //     );
 // } catch (error) {
 //     log.debug("Get CarePlan 500 error ---> ", error);
-//     log.info("GET PATIENT DETAILS ERROR Care Plan ---> ", error);
+//     log.debug("GET PATIENT DETAILS ERROR Care Plan ---> ", error);
 //     return raiseServerError(res);
 // }

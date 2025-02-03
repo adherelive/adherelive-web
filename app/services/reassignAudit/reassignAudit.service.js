@@ -5,12 +5,12 @@ const log = createLogger("WEB USER CONTROLLER");
 
 class reassignAuditService {
   getAuditByActivitiyData = async (data) => {
-    log.info(data);
+    log.debug(data);
     try {
       let audites = await reassignAudit.find(data);
       return audites;
     } catch (ex) {
-      log.info(ex);
+      log.debug(ex);
     }
   };
 }

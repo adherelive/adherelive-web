@@ -4236,7 +4236,7 @@ class DoctorController extends Controller {
 
       // let baseId = 22016;
       fs.writeFile("file.xlsx", file.buffer, async function (err, result) {
-        if (err) log.info("error", err);
+        if (err) log.debug("error", err);
 
         // let workbook = XLSX.readFile("file.xlsx");
         // let sheet_name_list = workbook.SheetNames;
@@ -4263,7 +4263,7 @@ class DoctorController extends Controller {
         // Usage:
         readExcelData("file.xlsx")
             .then(data => {
-              log.info(data);
+              log.debug(data);
             });
 
         let error = [];
@@ -4304,7 +4304,7 @@ class DoctorController extends Controller {
       // let files = await uploadImageS3(doctorUserId, file);
       // read the file and convert it in the json and update the value accordingly.
     } catch (error) {
-      log.info(error);
+      log.debug(error);
       return raiseServerError(res);
     }
   };

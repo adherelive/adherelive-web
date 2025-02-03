@@ -418,7 +418,7 @@ class MobileMReminderController extends Controller {
     const { raiseSuccess, raiseServerError } = this;
     try {
       const { params: { patient_id } = {}, userDetails: { userId } = {} } = req;
-      log.info(`params: patient_id : ${patient_id}`);
+      log.debug(`params: patient_id : ${patient_id}`);
 
       // if (!parseInt(patient_id)) {
       //   return raiseClientError(

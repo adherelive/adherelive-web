@@ -107,7 +107,7 @@ class CdssController extends Controller {
 
       return res.status(200).send(filterDia);
     } catch (ex) {
-      log.info(ex);
+      log.debug(ex);
       return res
         .status(500)
         .send({ error: "Error fetching data from mongodb database" });

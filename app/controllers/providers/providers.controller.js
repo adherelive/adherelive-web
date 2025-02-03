@@ -949,7 +949,7 @@ class ProvidersController extends Controller {
   updateProvider = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
-      log.info(`provider id : ${req.params.id}`);
+      log.debug(`provider id : ${req.params.id}`);
       const { params: { id } = {}, body = {} } = req;
       const {
         email,

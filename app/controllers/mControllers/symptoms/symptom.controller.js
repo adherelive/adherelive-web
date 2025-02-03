@@ -325,7 +325,7 @@ class SymptomController extends Controller {
           fullFileName.length - 3,
           fullFileName.length
         );
-        log.info(`fileExt : ${fileExt}`);
+        log.debug(`fileExt : ${fileExt}`);
         if (ALLOWED_VIDEO_EXTENSIONS.includes(fileExt)) {
           const { file, name } = await uploadVideo({ userId, file: videoFile });
 
@@ -369,7 +369,7 @@ class SymptomController extends Controller {
 
       const { file, name } = await uploadImage({ userId, file: req.file });
 
-      log.info(`FILE_NAME: ${name} | FILE: ${file}`);
+      log.debug(`FILE_NAME: ${name} | FILE: ${file}`);
 
       return raiseSuccess(
         res,

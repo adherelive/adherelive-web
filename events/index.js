@@ -113,7 +113,7 @@ function createCircuitBreaker({ failureThreshold, timeoutMs }) {
  const cron = schedule.scheduleJob("*!/1 * * * * *", async () => {
      const QueueService = new queueService();
      QueueService.receiveMessage("test_queue").then(response => {
-        log.info("Response ---> ", response);
+        log.debug("Response ---> ", response);
      });
  });
  */

@@ -133,6 +133,6 @@ export const getTimings = (userTimings) => {
 
     return allDietTimings;
   } catch (error) {
-    log.info("error", error);
+    log.debug("error", error);
   }
 };

@@ -12,7 +12,7 @@ class AlgoliaController extends Controller {
 
   updateMedicine = async (req, res) => {
     try {
-      log.info("starting medicine upload");
+      log.debug("starting medicine upload");
       const algoliaService = new AlgoliaService();
       log.debug("client", await algoliaService.getClient());
       const result = await algoliaService.medicineData();

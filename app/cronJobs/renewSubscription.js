@@ -17,7 +17,7 @@ class RenewSubscription {
       const subscriptionService = new SubscriptionService();
       const subscriptions = await subscriptionService.getAllTodayRenewingData();
 
-      log.info(`TOTAL SUBSCRIPTIONS DUE : ${subscriptions.length}`);
+      log.debug(`TOTAL SUBSCRIPTIONS DUE : ${subscriptions.length}`);
       if (subscriptions.length > 0) {
         for (let i = 0; i < subscriptions.length; i++) {
           const subscription = await SubscriptionWrapper({
@@ -60,14 +60,14 @@ class RenewSubscription {
               message
             );
           } else {
-            log.info(
+            log.debug(
               `patientUserId : ${patientUserRoleId} | doctorUserId : ${doctorUserRoleId}`
             );
           }
         }
       } else {
         // log no data
-        log.info(`No subscriptions found due today`);
+        log.debug(`No subscriptions found due today`);
       }
     } catch (error) {
       log.debug("RenewSubscription 500 error", error);

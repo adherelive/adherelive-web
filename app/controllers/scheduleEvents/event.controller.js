@@ -496,7 +496,7 @@ class EventController extends Controller {
               log.debug("event_ids", allIds);
 
               for(const event of [...scheduleEvents, ...latestSymptom]) {
-                  log.info(`event.get("updated_at") : ${event.get("updated_at")}`);
+                  log.debug(`event.get("updated_at") : ${event.get("updated_at")}`);
                   lastVisitData.push({
                       event_type: event.get("event_type") ? "schedule_events" : "symptoms",
                       id: event.get("id"),
@@ -544,7 +544,7 @@ class EventController extends Controller {
     const { raiseSuccess, raiseServerError } = this;
     try {
       const { userDetails: { userData: { category } = {} } = {} } = req;
-      log.info(`Charts for AUTH getAllMissedEventsCount - with category: ${category}`);
+      log.debug(`Charts for AUTH getAllMissedEventsCount - with category: ${category}`);
 
       let response = {};
       let responseMessage = "No event data exists at the moment";
@@ -571,7 +571,7 @@ class EventController extends Controller {
     const { raiseSuccess, raiseServerError } = this;
     try {
       const { userDetails: { userData: { category } = {} } = {} } = req;
-      log.info(`Charts for AUTH getEventsDetails - with category: ${category}`);
+      log.debug(`Charts for AUTH getEventsDetails - with category: ${category}`);
 
       let response = {};
       let responseMessage = "No event data exists at the moment";
@@ -601,9 +601,9 @@ class EventController extends Controller {
     const { raiseSuccess, raiseServerError } = this;
     try {
       const { userDetails: { userData: { category } = {} } = {} } = req;
-      log.info(`Charts for AUTH getAllMissedEvents - with category: ${category}`);
-      log.info("Request for all events: \n", req);
-      log.info("Response for all events: \n", res);
+      log.debug(`Charts for AUTH getAllMissedEvents - with category: ${category}`);
+      log.debug("Request for all events: \n", req);
+      log.debug("Response for all events: \n", res);
 
       let response = {};
       let responseMessage = "No event data exists at the moment";
@@ -638,7 +638,7 @@ class EventController extends Controller {
           userCategoryId,
         } = {},
       } = req;
-      log.info(`getPatientMissedEvents params : patient_id = ${patient_id}`);
+      log.debug(`getPatientMissedEvents params : patient_id = ${patient_id}`);
 
       // considering api to be only accessible for doctors
       const carePlans =
@@ -858,7 +858,7 @@ class EventController extends Controller {
         params: { id },
         query: { index } = {},
       } = req;
-      log.info(`deleteVitalResponse params: event_id: ${id} | query : index : ${index}`);
+      log.debug(`deleteVitalResponse params: event_id: ${id} | query : index : ${index}`);
 
       if (!id || !index) {
         return raiseClientError(
@@ -960,7 +960,7 @@ class EventController extends Controller {
         query: { index } = {},
         body: { value = {} } = {},
       } = req;
-      log.info(`updateVitalResponse params: event_id: ${id} | query : index : ${index}`);
+      log.debug(`updateVitalResponse params: event_id: ${id} | query : index : ${index}`);
       log.debug("updateVitalResponse body : value ", value);
 
       if (!id || !index) {

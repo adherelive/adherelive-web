@@ -19,12 +19,12 @@ export const uploadImage = async ({ userId, file }) => {
     const file_name = hash.substring(4) + "/" + imageName + "/" + fileExt;
 
     const fileUrl = "/" + file_name;
-    log.info(`FILE_NAME: ${file_name}`);
+    log.debug(`FILE_NAME: ${file_name}`);
     await awsS3Service.saveBufferObject(file.buffer, file_name);
 
     // const file_link = process.config.s3.AWS_S3_HOST +"/" + process.config.s3.BUCKET_NAME + fileUrl;
 
-    log.info(`FILE_LINK: ${fileUrl}`);
+    log.debug(`FILE_LINK: ${fileUrl}`);
 
     return { file: completePath(fileUrl), name: file.originalname };
   } catch (error) {
@@ -47,11 +47,11 @@ export const uploadAudio = async ({ userId, file }) => {
 
     const fileUrl = "/" + file_name;
 
-    log.info(`FILE_NAME: ${file_name}`);
+    log.debug(`FILE_NAME: ${file_name}`);
     await awsS3Service.saveAudioObject(file.buffer, file_name);
 
     // const file_link = process.config.s3.AWS_S3_HOST +"/" + process.config.s3.BUCKET_NAME + fileUrl;
-    log.info(`FILE_LINK: ${fileUrl}`);
+    log.debug(`FILE_LINK: ${fileUrl}`);
 
     return { file: completePath(fileUrl), name: file.originalname };
   } catch (error) {
@@ -74,11 +74,11 @@ export const uploadVideo = async ({ userId, file }) => {
 
     const fileUrl = "/" + file_name;
 
-    log.info(`FILE_NAME: ${file_name}`);
+    log.debug(`FILE_NAME: ${file_name}`);
     await awsS3Service.saveVideoObject(file.buffer, file_name);
 
     // const file_link = process.config.s3.AWS_S3_HOST +"/" + process.config.s3.BUCKET_NAME + fileUrl;
-    log.info(`FILE_LINK: ${fileUrl}`);
+    log.debug(`FILE_LINK: ${fileUrl}`);
 
     return { file: completePath(fileUrl), name: file.originalname };
   } catch (error) {

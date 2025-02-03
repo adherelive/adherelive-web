@@ -79,7 +79,7 @@ class RemoveDocuments {
 
   readFiles = (file, fileName, upload, awsFolder) => {
     try {
-      log.info(`File got to read is: file = ${file}, fileName = ${fileName}`);
+      log.debug(`File got to read is: file = ${file}, fileName = ${fileName}`);
       const { deleteFile, uploadOnAWS } = this;
       fs.readFile(file, function (err, data) {
         if (err) {
@@ -128,7 +128,7 @@ class RemoveDocuments {
   deleteFile = (path) => {
     try {
       fs.unlink(path, function (err) {
-        log.info("ERRor got in the unlink the file is: ", err);
+        log.debug("ERRor got in the unlink the file is: ", err);
       });
     } catch (error) {
       log.debug("ERROR: in deleting file: ", error);
@@ -137,7 +137,7 @@ class RemoveDocuments {
 
   runObserver = async () => {
     try {
-      log.info("running REMOVE_DOCUMENTS cron");
+      log.debug("running REMOVE_DOCUMENTS cron");
       const { checkIfAnyLocalDocumentExists } = this;
 
       const prescriptionPdfsPresent = await checkIfAnyLocalDocumentExists(
@@ -147,7 +147,7 @@ class RemoveDocuments {
         S3_DOWNLOAD_FOLDER
       );
 
-      log.info(
+      log.debug(
         `Check values are: prescriptionPdfsPresent = ${prescriptionPdfsPresent} s3ImagesPresent = ${s3ImagesPresent}`
       );
 

@@ -517,7 +517,7 @@ class MReminderController extends Controller {
     try {
       // log.debug("test", medicationReminderDetails);
       const { params: { patient_id } = {}, userDetails: { userId } = {} } = req;
-      log.info(`params: patient_id : ${patient_id}`);
+      log.debug(`params: patient_id : ${patient_id}`);
 
       // if (!parseInt(patient_id)) {
       //   return raiseClientError(
@@ -656,7 +656,7 @@ class MReminderController extends Controller {
         "medications fetched successfully"
       );
     } catch (error) {
-      log.info(error);
+      log.debug(error);
       return raiseServerError(res);
     }
   };

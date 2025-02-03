@@ -71,7 +71,7 @@ class UserFavouritesService {
       });
       return deleteFavourite;
     } catch (error) {
-      log.info("32784284576237463256948723 ERRRRO", error);
+      log.debug("32784284576237463256948723 ERRRRO", error);
       throw error;
     }
   };

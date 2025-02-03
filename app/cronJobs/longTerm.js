@@ -204,7 +204,7 @@ class LongTerm {
 
       let patientUserRoleId = null;
       for (const participant of participants) {
-        log.info("participant in LongTerm: ", participant);
+        log.debug("participant in LongTerm: ", participant);
         if (participant !== user_role_id) {
           patientUserRoleId = participant;
           break;
@@ -212,7 +212,7 @@ class LongTerm {
       }
 
       const patientUserId = await this.getUserFromRole(patientUserRoleId);
-      log.info("patientUserId in LongTerm: ", patientUserId);
+      log.debug("patientUserId in LongTerm: ", patientUserId);
 
       if (!patientUserId) return;
       const patientData = await patientsService.getPatientByUserId(
@@ -240,7 +240,7 @@ class LongTerm {
       log.debug("createVitalEvents eventScheduleData: ", eventScheduleData);
 
       const queueService = new QueueService();
-      log.info("8");
+      log.debug("8");
       await queueService.sendMessage(eventScheduleData);
     } catch (error) {
       log.debug("createVitalEvents error", error);

@@ -26,7 +26,7 @@ export default class ServiceOfferingService {
       await transaction.commit();
       return serviceOffering;
     } catch (error) {
-      log.info(error);
+      log.debug(error);
       await transaction.rollback();
       throw error;
     }
@@ -67,7 +67,7 @@ export default class ServiceOfferingService {
    * @returns {Promise<*>}
    */
   getServiceOfferingByData = async (data) => {
-    // log.info("getServiceOfferingByDataCalled - services - ", data);
+    // log.debug("getServiceOfferingByDataCalled - services - ", data);
     try {
       return await Database.getModel(TABLE_NAME).findOne({
         where: data,
