@@ -1,5 +1,5 @@
 import Controller from "../../index";
-import Logger from "../../../../libs/log";
+import { createLogger } from "../../../../libs/log";
 import jwt from "jsonwebtoken";
 import base64 from "js-base64";
 
@@ -13,7 +13,7 @@ import userService from "../../../services/user/user.service";
 import UserRoleWrapper from "../../../apiWrapper/mobile/userRoles";
 import UserWrapper from "../../../apiWrapper/mobile/user";
 
-const Log = new Logger("MOBILE > CONTROLLER > USER_ROLES");
+const Log = createLogger("MOBILE > CONTROLLER > USER_ROLES");
 
 class UserRoleController extends Controller {
   constructor() {

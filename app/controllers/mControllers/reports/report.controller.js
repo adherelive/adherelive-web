@@ -1,5 +1,5 @@
 import Controller from "../../index";
-import Logger from "../../../../libs/log";
+import { createLogger } from "../../../../libs/log";
 
 // services
 import ReportService from "../../../services/reports/report.service";
@@ -13,7 +13,7 @@ import { DOCUMENT_PARENT_TYPE, USER_CATEGORY } from "../../../../constant";
 import { getFilePath } from "../../../helper/s3FilePath";
 import * as ReportHelper from "../../reports/report.helper";
 
-const Log = new Logger("MOBILE > CONTROLLER > REPORTS");
+const Log = createLogger("MOBILE > CONTROLLER > REPORTS");
 
 class ReportController extends Controller {
   constructor() {

@@ -1,6 +1,6 @@
 import moment from "moment";
 import { EVENT_STATUS, EVENT_TYPE } from "../../constant";
-import Logger from "../../libs/log";
+import { createLogger } from "../../libs/log";
 
 // services
 import medicationService from "../services/medicationReminder/mReminder.service";
@@ -16,7 +16,7 @@ import WorkoutService from "../services/workouts/workout.service";
 import VitalWrapper from "../apiWrapper/mobile/vitals";
 import PatientWrapper from "../apiWrapper/mobile/patient";
 
-const Log = new Logger("LONG_TERM > CRON-JOBS");
+const Log = createLogger("LONG_TERM > CRON-JOBS");
 
 class LongTerm {
   getUserFromRole = async (roleId) => {

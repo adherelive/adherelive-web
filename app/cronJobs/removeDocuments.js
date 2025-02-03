@@ -1,5 +1,5 @@
 const fs = require("fs");
-import Logger from "../../libs/log";
+import { createLogger } from "../../libs/log";
 
 import {
   DOCUMENT_PARENT_TYPE,
@@ -17,7 +17,7 @@ const AWS_FOLDER_NAME = {
   OTHERS: "others",
 };
 
-const Log = new Logger("CRON > REMOVE_DOCUMENTS");
+const Log = createLogger("CRON > REMOVE_DOCUMENTS");
 
 class RemoveDocuments {
   checkIfAnyLocalDocumentExists = async (path) => {

@@ -1,4 +1,4 @@
-import Logger from "../../../../libs/log";
+import { createLogger } from "../../../../libs/log";
 
 import BaseVital from "../../../services/vitals";
 
@@ -13,7 +13,7 @@ import EventWrapper from "../../common/scheduleEvents";
 import { EVENT_STATUS, EVENT_TYPE } from "../../../../constant";
 import moment from "moment";
 
-const Log = new Logger("MOBILE > API_WRAPPER > VITALS");
+const Log = createLogger("MOBILE > API_WRAPPER > VITALS");
 
 class VitalWrapper extends BaseVital {
   constructor(data) {

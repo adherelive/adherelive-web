@@ -1,6 +1,6 @@
 import Controller from "../index";
 
-import Logger from "../../../libs/log";
+import { createLogger } from "../../../libs/log";
 import jwt from "jsonwebtoken";
 import base64 from "js-base64";
 
@@ -13,7 +13,7 @@ import UserRoleWrapper from "../../apiWrapper/web/userRoles";
 import UserWrapper from "../../apiWrapper/web/user";
 import AppNotification from "../../notificationSdk/inApp";
 
-const Log = new Logger("WEB > CONTROLLER > PAYMENTS");
+const Log = createLogger("WEB > CONTROLLER > PAYMENTS");
 
 class UserRoleController extends Controller {
   constructor() {

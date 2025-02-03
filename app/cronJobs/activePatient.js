@@ -1,4 +1,4 @@
-import Logger from "../../libs/log";
+import { createLogger } from "../../libs/log";
 import moment from "moment";
 
 // services
@@ -13,7 +13,7 @@ import ProviderWrapper from "../apiWrapper/web/provider";
 import CarePlanWrapper from "../apiWrapper/web/carePlan";
 import { EVENT_STATUS, EVENT_TYPE } from "../../constant";
 
-const Log = new Logger("CRON - ACTIVE_PATIENT");
+const Log = createLogger("CRON - ACTIVE_PATIENT");
 
 class ActivePatient {
   getAllProviders = async () => {

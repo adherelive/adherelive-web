@@ -17,7 +17,7 @@ import ExerciseContentWrapper from "../../../apiWrapper/mobile/exerciseContents"
 import WorkoutJob from "../../../jobSdk/Workout/observer";
 import NotificationSdk from "../../../notificationSdk";
 
-import Logger from "../../../../libs/log";
+import { createLogger } from "../../../../libs/log";
 import {
   EVENT_STATUS,
   NOTIFICATION_STAGES,
@@ -25,7 +25,7 @@ import {
   WORKOUT_RESPONSE_STATUS,
 } from "../../../../constant";
 
-const Log = new Logger("MOBILE > WORKOUT_RESPONSE > CONTROLLER");
+const Log = createLogger("MOBILE > WORKOUT_RESPONSE > CONTROLLER");
 
 class WorkoutResponseController extends Controller {
   constructor() {

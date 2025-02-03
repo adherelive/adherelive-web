@@ -1,5 +1,5 @@
 // Services
-import Logger from "../../../libs/log";
+import { createLogger } from "../../../libs/log";
 import doctorService from "../../services/doctor/doctor.service";
 import patientService from "../../services/patients/patients.service";
 import providerService from "../../services/provider/provider.service";
@@ -11,7 +11,7 @@ import ProviderWrapper from "../../apiWrapper/web/provider";
 
 import { USER_CATEGORY } from "../../../constant";
 
-const Log = new Logger("ADHOC > HELPER");
+const Log = createLogger("ADHOC > HELPER");
 
 export const getLinkDetails = async (category, userId) => {
   try {

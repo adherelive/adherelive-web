@@ -1,10 +1,10 @@
 import schedule from "node-schedule";
-import Log from "../libs/log";
+import { createLogger } from "../libs/log";
 
 import queueService from "../app/services/awsQueue/queue.service";
 import { importModule } from '../libs/helper.js'; // A helper function for dynamic imports
 
-const Logger = new Log("EVENT SCHEDULE CREATOR");
+const Log = createLogger("EVENT SCHEDULE CREATOR");
 
 /**
  * Demonstrate the use of a helper function (importModule) for dynamically importing a module (./sqsObserver).

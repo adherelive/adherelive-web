@@ -43,9 +43,9 @@ import AppointmentWrapper from "../../apiWrapper/web/appointments";
 import CarePlanTemplateWrapper from "../../apiWrapper/web/carePlanTemplate";
 import MedicationWrapper from "../../apiWrapper/web/medicationReminder";
 
-import Logger from "../../../libs/log";
+import { createLogger } from "../../../libs/log";
 
-const Log = new Logger("WEB > CARE PLAN > CONTROLLER");
+const Log = createLogger("WEB > CARE PLAN > CONTROLLER");
 
 class CarePlanController extends Controller {
   constructor() {

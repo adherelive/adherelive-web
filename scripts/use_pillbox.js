@@ -5,9 +5,9 @@ import moment from "moment";
 import Sequelize, { QueryTypes } from "sequelize";
 // const Config = require("../config/config");
 // Config();
-import Log from "../libs/log";
+import { createLogger } from "../libs/log";
 
-const Logger = new Log("MEDICINE SEQUELIZE QUERY");
+const Log = createLogger("MEDICINE SEQUELIZE QUERY");
 console.log("process.config.db.name --> ", process.config.db.name);
 
 const database = new Sequelize(
@@ -25,7 +25,7 @@ const database = new Sequelize(
       idle: 10000,
     },
     logging: function (str) {
-      Logger.debug("query", str);
+      Log.debug("query", str);
     },
   }
 );
@@ -56,7 +56,7 @@ const addMedicine = async (data) => {
       }
     );
 
-    Logger.debug("addMedicine ---> ", medicine);
+    Log.debug("addMedicine ---> ", medicine);
   } catch (error) {
     throw error;
   }

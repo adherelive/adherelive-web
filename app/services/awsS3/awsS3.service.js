@@ -1,7 +1,7 @@
 import AWS from "aws-sdk";
 import * as https from "https";
 import fs from "fs";
-import Log from "../../../libs/log";
+import { createLogger } from "../../../libs/log";
 
 const log = Log("AWS S3 Service");
 

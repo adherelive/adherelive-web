@@ -1,7 +1,7 @@
 import FollowUpActivity from "./followUp";
 import ReminderActivity from "./reminder";
 import MedicationReminderActivity from "./medicationReminder";
-import Logger from "../../libs/log";
+import { createLogger } from "../../libs/log";
 
 const log = new Logger("activitySdk:ActivityObserver");
 

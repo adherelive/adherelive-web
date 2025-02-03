@@ -36,7 +36,7 @@ import {
 import FeatureDetailWrapper from "../app/apiWrapper/web/featureDetails";
 import { RRule } from "rrule";
 import moment from "moment";
-import Logger from "../libs/log";
+import { createLogger } from "../libs/log";
 
 // Services
 import FeatureDetailService from "../app/services/featureDetails/featureDetails.service";
@@ -56,7 +56,7 @@ import WorkoutWrapper from "../app/apiWrapper/mobile/workouts";
 import { getTimeWiseDietFoodGroupMappings } from "../app/controllers/diet/diet.helper";
 import SimilarFoodMappingService from "../app/services/similarFoodMapping/similarFoodMapping.service";
 
-const Log = new Logger("EVENT > HELPER");
+const Log = createLogger("EVENT > HELPER");
 
 const scheduleService = new ScheduleService();
 

@@ -1,8 +1,8 @@
-import Log from "../../libs/log";
+import { createLogger } from "../../libs/log";
 import inApp from "./inApp";
 import PushApp from "./pushApp";
 
-const Logger = new Log("NOTIFICATION_SDK > INDEX");
+const Log = createLogger("NOTIFICATION_SDK > INDEX");
 
 class NotificationSdk {
   constructor() {}

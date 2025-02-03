@@ -2,7 +2,7 @@ import Controller from "../index";
 
 import base64 from "js-base64";
 import bcrypt from "bcrypt";
-import Log from "../../../libs/log";
+import { createLogger } from "../../../libs/log";
 
 // Services
 import userService from "../../services/user/user.service";
@@ -48,7 +48,7 @@ const Response = require("../helper/responseFormat");
 
 const errMessage = require("../../../config/messages.json").errMessages;
 
-const Logger = new Log("WEB USER CONTROLLER");
+const Log = createLogger("WEB USER CONTROLLER");
 
 class UserController extends Controller {
   constructor() {
@@ -79,7 +79,7 @@ class UserController extends Controller {
         "Signed up successfully. Please check your email to proceed"
       );
     } catch (err) {
-      Logger.debug("signup 500", err);
+      Log.debug("signup 500", err);
       if (err.code && err.code == 11000) {
         return raiseClientError(res, 400, errMessage.EMAIL_ALREADY_EXISTS);
         // let response = new Response(false, 400);
@@ -100,7 +100,7 @@ class UserController extends Controller {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       const { params: { link } = {} } = req;
-      Logger.info(`(axios.post)(param) LINK :: ${link}`);
+      Log.info(`(axios.post)(param) LINK :: ${link}`);
       const verifications = await UserVerificationServices.getRequestByLink(
         link
       );
@@ -175,7 +175,7 @@ class UserController extends Controller {
         );
       }
     } catch (error) {
-      Logger.debug("verifyUser 500 error", error);
+      Log.debug("verifyUser 500 error", error);
       // res.redirect("/sign-in");
       return raiseServerError(res);
     }
@@ -263,8 +263,8 @@ class UserController extends Controller {
         const notificationToken = appNotification.getUserToken(`${userRoleId}`);
         const feedId = base64.encode(`${userRoleId}`);
 
-        // Logger.debug("notificationToken --> ", notificationToken);
-        // Logger.debug("feedId --> ", feedId);
+        // Log.debug("notificationToken --> ", notificationToken);
+        // Log.debug("feedId --> ", feedId);
 
         const userRef = await userService.getUserData({ id: user.get("id") });
 
@@ -320,7 +320,7 @@ class UserController extends Controller {
         return this.raiseClientError(res, 401, {}, "Invalid Credentials");
       }
     } catch (error) {
-      Logger.debug("User Controller signIn 500 error ---> ", error);
+      Log.debug("User Controller signIn 500 error ---> ", error);
 
       // notification
       const crashJob = await AdhocJob.execute("crash", { apiName: "signIn" });
@@ -338,7 +338,7 @@ class UserController extends Controller {
         body: { agreeConsent } = {},
       } = req;
 
-      Logger.info(
+      Log.info(
         `1897389172 agreeConsent :: ${agreeConsent} | userId : ${userId}`
       );
 
@@ -413,7 +413,7 @@ class UserController extends Controller {
         "Initial data retrieved successfully"
       );
     } catch (error) {
-      Logger.debug("giveConsent 500 error ---> ", error);
+      Log.debug("giveConsent 500 error ---> ", error);
       return this.raiseServerError(res);
     }
   };
@@ -570,7 +570,7 @@ class UserController extends Controller {
 
         // const user = await userService.getUserById(userId);
 
-        // Logger.debug("user data in request", userData);
+        // Log.debug("user data in request", userData);
 
         // const userDetails = user[0];
 
@@ -745,7 +745,7 @@ class UserController extends Controller {
         if (authUserDetails.isActivated()) {
           permissions = await authUserDetails.getPermissions();
         }
-        // Logger.debug("permissions --> ", permissions);
+        // Log.debug("permissions --> ", permissions);
 
         // speciality temp todo
         let referenceData = {};
@@ -805,7 +805,7 @@ class UserController extends Controller {
         // throw new Error(constants.COOKIES_NOT_SET);
       }
     } catch (err) {
-      Logger.debug("onAppStart 500 error", err);
+      Log.debug("onAppStart 500 error", err);
       return this.raiseServerError(res);
     }
   };
@@ -1004,7 +1004,7 @@ class UserController extends Controller {
         if (authUserDetails.isActivated()) {
           permissions = await authUserDetails.getPermissions();
         }
-        // Logger.debug("permissions --> ", permissions);
+        // Log.debug("permissions --> ", permissions);
 
         // speciality temp todo
         let referenceData = {};
@@ -1079,7 +1079,7 @@ class UserController extends Controller {
         // throw new Error(constants.COOKIES_NOT_SET);
       }
     } catch (err) {
-      Logger.debug("onAppStart 500 error", err);
+      Log.debug("onAppStart 500 error", err);
       return this.raiseServerError(res);
     }
   };
@@ -1108,7 +1108,7 @@ class UserController extends Controller {
 
     const { type } = body || {};
 
-    Logger.debug("file", file);
+    Log.debug("file", file);
     // const fileExt= file.originalname.replace(/\s+/g, '');
     try {
       let files = await uploadImageS3(userId, file, type);
@@ -1131,7 +1131,7 @@ class UserController extends Controller {
     let doctorName = name.split(" ");
     // const { userId: user_id } = req.params;
 
-    Logger.debug("POST DOCTOR REGISTER --> ", user_id, req.params, req.body);
+    Log.debug("POST DOCTOR REGISTER --> ", user_id, req.params, req.body);
     try {
       let user = await userService.getUserById(user_id);
       let user_data_to_update = {
@@ -1145,7 +1145,7 @@ class UserController extends Controller {
 
       let doctorExist = await doctorService.getDoctorByUserId(user_id);
 
-      Logger.debug("POST DOCTOR REGISTER --> ", user_id, doctorExist);
+      Log.debug("POST DOCTOR REGISTER --> ", user_id, doctorExist);
 
       let first_name = doctorName[0];
       let middle_name = doctorName.length == 3 ? doctorName[1] : "";
@@ -1208,7 +1208,7 @@ class UserController extends Controller {
 
       const { userDetails: { userId } = {} } = req || {};
 
-      Logger.debug("userId ---> ", req);
+      Log.debug("userId ---> ", req);
 
       let user = await userService.getUserById(userId);
 
@@ -1237,7 +1237,7 @@ class UserController extends Controller {
           profile_pic: docPic = "",
         } = docInfo || {};
 
-        Logger.debug(
+        Log.debug(
           "MIDDLE NAME --> ",
           first_name,
           middle_name,
@@ -1456,7 +1456,7 @@ class UserController extends Controller {
         "doctor registration data fetched successfully"
       );
     } catch (error) {
-      Logger.debug("GET DOCTOR REGISTRATION DATA 500 ERROR ---> ", error);
+      Log.debug("GET DOCTOR REGISTRATION DATA 500 ERROR ---> ", error);
       return raiseServerError(res);
     }
   };
@@ -1472,7 +1472,7 @@ class UserController extends Controller {
       const doctorRegistrationDetails =
         await registrationService.getRegistrationByDoctorId(doctor.get("id"));
 
-      // Logger.debug("283462843 ", doctorRegistrationDetails);
+      // Log.debug("283462843 ", doctorRegistrationDetails);
 
       let doctorRegistrationApiDetails = {};
       let uploadDocumentApiDetails = {};
@@ -1497,7 +1497,7 @@ class UserController extends Controller {
           upload_document_ids.push(uploadDocumentWrapper.getUploadDocumentId());
         });
 
-        Logger.debug(
+        Log.debug(
           "76231238368126312 ",
           doctorRegistrationWrapper.getBasicInfo()
         );
@@ -1511,7 +1511,7 @@ class UserController extends Controller {
         upload_document_ids = [];
       }
 
-      Logger.debug(
+      Log.debug(
         "doctorRegistrationApiDetails --> ",
         doctorRegistrationApiDetails
       );
@@ -1544,7 +1544,7 @@ class UserController extends Controller {
 
       let files = await uploadImageS3(userId, file);
 
-      Logger.debug("files", files);
+      Log.debug("files", files);
 
       return this.raiseSuccess(
         res,
@@ -1555,7 +1555,7 @@ class UserController extends Controller {
         "doctor qualification updated successfully"
       );
     } catch (error) {
-      Logger.debug(
+      Log.debug(
         "uploadDoctorRegistrationDocuments CATCH ERROR ---> ",
         error
       );
@@ -1574,7 +1574,7 @@ class UserController extends Controller {
       let doctor = await doctorService.getDoctorByUserId(userId);
       let doctor_id = doctor.get("id");
 
-      Logger.debug("files", files);
+      Log.debug("files", files);
       return this.raiseSuccess(
         res,
         200,
@@ -1613,7 +1613,7 @@ class UserController extends Controller {
         "doctor registration document deleted successfully"
       );
     } catch (error) {
-      Logger.debug(
+      Log.debug(
         "DOCTOR REGISTRATION DOCUMENT DELETE 500 ERROR ---> ",
         error
       );
@@ -1661,7 +1661,7 @@ class UserController extends Controller {
       let doctor = await doctorService.getDoctorByUserId(userId);
       let doctor_id = doctor.get("id");
 
-      Logger.debug("doctor id ---128371 -> ", doctor_id);
+      Log.debug("doctor id ---128371 -> ", doctor_id);
 
       if (gender && speciality) {
         let doctor_data = { gender, speciality };
@@ -1965,7 +1965,7 @@ class UserController extends Controller {
         "clinic time slots fetched successfully"
       );
     } catch (error) {
-      Logger.debug("getTimeSlots 500 error---> ", error);
+      Log.debug("getTimeSlots 500 error---> ", error);
       return raiseServerError(res);
     }
   };
@@ -2027,7 +2027,7 @@ class UserController extends Controller {
       let password = process.config.DEFAULT_PASSWORD;
       const salt = await bcrypt.genSalt(Number(process.config.saltRounds));
 
-      Logger.debug("89312793812 ---> ", password, salt);
+      Log.debug("89312793812 ---> ", password, salt);
       const hash = await bcrypt.hash(password, salt);
       let user = await userService.addUser({
         prefix,
@@ -2066,7 +2066,7 @@ class UserController extends Controller {
       const patient_id = patient.get("id");
       const doctor_id = doctor.get("id");
 
-      Logger.debug(
+      Log.debug(
         "Get Doctor ID's being used ---> ",
         doctor,
         doctor.get("id"),
@@ -2126,7 +2126,7 @@ class UserController extends Controller {
           type: VERIFICATION_TYPE.FORGOT_PASSWORD,
         });
 
-        Logger.debug(
+        Log.debug(
           "forgotPassword User Controller Web URL ---> ",
           process.config.WEB_URL
         );
@@ -2168,7 +2168,7 @@ class UserController extends Controller {
         "Thank You! If there is an account associated with the given e-mail, we will send the password reset link to it"
       );
     } catch (error) {
-      Logger.debug("Forgot Password - 500 Error: ", error);
+      Log.debug("Forgot Password - 500 Error: ", error);
       return raiseServerError(res);
     }
   };
@@ -2238,7 +2238,7 @@ class UserController extends Controller {
         );
       }
     } catch (error) {
-      Logger.debug("updateUserPassword 500 error", error);
+      Log.debug("updateUserPassword 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -2256,7 +2256,7 @@ class UserController extends Controller {
       }
 
       const user = await userService.getUserById(userId);
-      Logger.debug("User ID being used ---> ", user);
+      Log.debug("User ID being used ---> ", user);
       const userData = await UserWrapper(user.get());
 
       const salt = await bcrypt.genSalt(Number(process.config.saltRounds));
@@ -2288,7 +2288,7 @@ class UserController extends Controller {
         // return res.status(500).json(response.getResponse());
       }
     } catch (error) {
-      Logger.debug("updateUserPassword 500 error", error);
+      Log.debug("updateUserPassword 500 error", error);
       return raiseServerError(res);
     }
   };

@@ -1,5 +1,5 @@
 import AWS from "aws-sdk";
-import Log from "../../../libs/log";
+import { createLogger } from "../../../libs/log";
 
 const log = Log("communications --> pnManger");
 

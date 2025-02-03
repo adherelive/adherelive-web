@@ -1,11 +1,11 @@
 import Controller from "../index";
 
-import Logger from "../../../libs/log";
+import { createLogger } from "../../../libs/log";
 import specialityService from "../../services/speciality/speciality.service";
 
 import SpecialityWrapper from "../../apiWrapper/mobile/speciality";
 
-const Log = new Logger("SPECIALITY WEB CONTROLLER");
+const Log = createLogger("SPECIALITY WEB CONTROLLER");
 
 class SpecialityController extends Controller {
   constructor() {

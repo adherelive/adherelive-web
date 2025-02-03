@@ -1,8 +1,8 @@
 import AWS from "aws-sdk";
 import moment from "moment";
-import Logger from "../../../libs/log";
+import { createLogger } from "../../../libs/log";
 
-const Log = new Logger("QUEUE > SERVICE");
+const Log = createLogger("QUEUE > SERVICE");
 
 export default class QueueService {
   constructor() {

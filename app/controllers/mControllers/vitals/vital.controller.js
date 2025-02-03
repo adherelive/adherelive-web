@@ -1,5 +1,5 @@
 import Controller from "../../index";
-import Logger from "../../../../libs/log";
+import { createLogger } from "../../../../libs/log";
 import moment from "moment";
 import * as vitalHelper from "../../vitals/vital.helper";
 
@@ -31,7 +31,7 @@ import {
   USER_CATEGORY,
 } from "../../../../constant";
 
-const Log = new Logger("MOBILE > VITALS > CONTROLLER");
+const Log = createLogger("MOBILE > VITALS > CONTROLLER");
 
 class VitalController extends Controller {
   constructor() {

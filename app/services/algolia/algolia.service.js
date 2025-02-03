@@ -1,10 +1,10 @@
 import algoliasearch from "algoliasearch";
-import Logger from "../../../libs/log";
+import { createLogger } from "../../../libs/log";
 import medicineService from "../medicine/medicine.service";
 
 import MedicineWrapper from "../../apiWrapper/mobile/medicine";
 
-const Log = new Logger("ALGOLIA > SERVICE");
+const Log = createLogger("ALGOLIA > SERVICE");
 export default class AlgoliaService {
   constructor() {
     this.client = algoliasearch(

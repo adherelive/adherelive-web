@@ -1,13 +1,13 @@
 import serviceSubscribeTransaction from "../services/serviceSubscribeTransaction/serviceSubscribeTransaction";
 import ServiceSubscriptionUserMapping from "../services/serviceSubscriptionUserMapping/serviceSubscriptionUserMapping.service";
 import { TABLE_NAME as serviceSubscriptionUserMappingTable } from "../models/serviceSubscriptionUserMapping";
-import Logger from "../../libs/log";
+import { createLogger } from "../../libs/log";
 import Database from "../../libs/mysql";
 import { TABLE_NAME as serviceSubscribeTransactionTable } from "../models/serviceSubscribeTransaction";
 import moment from "moment";
 import { Op } from "sequelize";
 
-const Log = new Logger("CRON > RENEW > SUBSCRIPTION");
+const Log = createLogger("CRON > RENEW > SUBSCRIPTION");
 
 class RenewTxActivity {
   runObserver = async () => {

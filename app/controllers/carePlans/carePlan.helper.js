@@ -19,7 +19,7 @@ import DietWrapper from "../../apiWrapper/web/diet";
 import WorkoutWrapper from "../../apiWrapper/web/workouts";
 import UserRoleWrapper from "../../apiWrapper/web/userRoles";
 
-import Logger from "../../../libs/log";
+import { createLogger } from "../../../libs/log";
 import {
   EVENT_LONG_TERM_VALUE,
   EVENT_STATUS,
@@ -28,7 +28,7 @@ import {
 } from "../../../constant";
 import moment from "moment";
 
-const Log = new Logger("CARE_PLAN > HELPER");
+const Log = createLogger("CARE_PLAN > HELPER");
 
 /**
  * medicines,

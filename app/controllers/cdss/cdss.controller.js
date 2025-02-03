@@ -1,10 +1,10 @@
 import Controller from "../index";
 
-import Log from "../../../libs/log";
+import { createLogger } from "../../../libs/log";
 
 const Response = require("../helper/responseFormat");
 const Cdss = require("../../models/mongoModel/cdss");
-const Logger = new Log("Web CDSS user controller");
+const Log = createLogger("Web CDSS user controller");
 
 class CdssController extends Controller {
   constructor() {

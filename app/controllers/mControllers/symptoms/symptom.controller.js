@@ -13,7 +13,7 @@ import CarePlanWrapper from "../../../apiWrapper/mobile/carePlan";
 import PatientWrapper from "../../../apiWrapper/mobile/patient";
 
 import { uploadAudio, uploadImage, uploadVideo } from "./symptoms.helper";
-import Logger from "../../../../libs/log";
+import { createLogger } from "../../../../libs/log";
 import {
   ALLOWED_VIDEO_EXTENSIONS,
   DOCUMENT_PARENT_TYPE,
@@ -26,7 +26,7 @@ import carePlanService from "../../../services/carePlan/carePlan.service";
 import SymptomsJob from "../../../jobSdk/Symptoms/observer";
 import NotificationSdk from "../../../notificationSdk";
 
-const Log = new Logger("MOBILE > SYMPTOM > CONTROLLER");
+const Log = createLogger("MOBILE > SYMPTOM > CONTROLLER");
 
 class SymptomController extends Controller {
   constructor() {

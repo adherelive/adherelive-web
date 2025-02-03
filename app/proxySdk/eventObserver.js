@@ -1,8 +1,8 @@
 import { EVENTS, Proxy_Sdk } from ".";
 import eventExecutor from "./eventExecutor";
 
-import Log from "../../libs/log";
-import Logger from "./libs/logger";
+import { createLogger } from "../../libs/log";
+import { createLogger } from "./libs/logger";
 
 const log = Log("proxySdk:EventObserver");
 

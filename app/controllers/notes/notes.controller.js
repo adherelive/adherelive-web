@@ -1,12 +1,12 @@
 import Controller from "../index";
 
-import Logger from "../../../libs/log";
+import { createLogger } from "../../../libs/log";
 
 // Services
 import NotesService from "../../services/notes/notes.service";
 import { USER_CATEGORY } from "../../../constant";
 
-const Log = new Logger("WEB > CONTROLLER > NOTES");
+const Log = createLogger("WEB > CONTROLLER > NOTES");
 
 class NotesController extends Controller {
   constructor() {

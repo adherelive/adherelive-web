@@ -1,6 +1,6 @@
 import Controller from "../index";
 
-import Logger from "../../../libs/log";
+import { createLogger } from "../../../libs/log";
 
 import FeatureDetailService from "../../services/featureDetails/featureDetails.service";
 import doctorService from "../../services/doctor/doctor.service";
@@ -23,7 +23,7 @@ import TACWrapper from "../../apiWrapper/web/termsAndConditions";
 
 import { TERMS_AND_CONDITIONS_TYPES, USER_CATEGORY } from "../../../constant";
 
-const Log = new Logger("ADMIN > CONTROLLER");
+const Log = createLogger("ADMIN > CONTROLLER");
 
 class AdminController extends Controller {
   constructor() {

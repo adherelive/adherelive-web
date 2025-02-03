@@ -14,14 +14,14 @@ import * as UploadHelper from "../../../helper/uploadDocuments";
 import DietJob from "../../../jobSdk/Diet/observer";
 import NotificationSdk from "../../../notificationSdk";
 
-import Logger from "../../../../libs/log";
+import { createLogger } from "../../../../libs/log";
 import {
   DOCUMENT_PARENT_TYPE,
   NOTIFICATION_STAGES,
   USER_CATEGORY,
 } from "../../../../constant";
 
-const Log = new Logger("MOBILE > DIET_RESPONSE > CONTROLLER");
+const Log = createLogger("MOBILE > DIET_RESPONSE > CONTROLLER");
 
 class DietResponseController extends Controller {
   constructor() {

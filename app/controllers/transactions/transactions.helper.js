@@ -1,4 +1,4 @@
-import Logger from "../../../libs/log";
+import { createLogger } from "../../../libs/log";
 
 // Services
 import TransactionService from "../../services/transactions/transaction.service";
@@ -17,7 +17,7 @@ import UserRolesWrapper from "../../apiWrapper/web/userRoles";
 // Helpers
 import { USER_CATEGORY } from "../../../constant";
 
-const Log = new Logger("TRANSACTION > HELPER");
+const Log = createLogger("TRANSACTION > HELPER");
 
 export const getProviderTransactions = async (req) => {
   try {

@@ -20,7 +20,7 @@ import DietWrapper from "../../../apiWrapper/mobile/diet";
 import WorkoutWrapper from "../../../apiWrapper/mobile/workouts";
 import UserRoleWrapper from "../../../apiWrapper/mobile/userRoles";
 
-import Logger from "../../../../libs/log";
+import { createLogger } from "../../../../libs/log";
 import {
   EVENT_LONG_TERM_VALUE,
   EVENT_STATUS,
@@ -29,7 +29,7 @@ import {
 } from "../../../../constant";
 import moment from "moment";
 
-const Log = new Logger("CARE_PLAN > HELPER");
+const Log = createLogger("CARE_PLAN > HELPER");
 
 export const getCarePlanDataWithImp = async ({
   carePlans = [],

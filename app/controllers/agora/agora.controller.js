@@ -7,12 +7,12 @@ import {
   USER_CATEGORY,
 } from "../../../constant";
 
-import Logger from "../../../libs/log";
+import { createLogger } from "../../../libs/log";
 
 import AgoraJob from "../../jobSdk/Agora/observer";
 import NotificationSdk from "../../notificationSdk";
 
-const Log = new Logger("WEB > AGORA > CONTROLLER");
+const Log = createLogger("WEB > AGORA > CONTROLLER");
 
 class AgoraController extends Controller {
   constructor() {

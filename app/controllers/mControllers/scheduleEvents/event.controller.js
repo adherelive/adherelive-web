@@ -1,5 +1,5 @@
 import Controller from "../../index";
-import Logger from "../../../../libs/log";
+import { createLogger } from "../../../../libs/log";
 import moment from "moment";
 
 // Services
@@ -17,7 +17,7 @@ import { EVENT_STATUS, EVENT_TYPE, USER_CATEGORY } from "../../../../constant";
 import * as EventHelper from "../../scheduleEvents/event.helper";
 import SymptomService from "../../../services/symptom/symptom.service";
 
-const Log = new Logger("MOBILE > SCHEDULE_EVENTS > CONTROLLER");
+const Log = createLogger("MOBILE > SCHEDULE_EVENTS > CONTROLLER");
 
 class EventController extends Controller {
   constructor() {

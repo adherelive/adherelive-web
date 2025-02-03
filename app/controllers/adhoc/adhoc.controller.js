@@ -22,7 +22,7 @@ import WatchlistWrapper from "../../apiWrapper/web/doctorPatientWatchlist";
 import permissions from "../../../config/permissions";
 import * as PermissionHelper from "../../helper/userCategoryPermisssions";
 import { getLinkDetails, getUserDetails } from "./adhoc.helper";
-import Logger from "../../../libs/log";
+import { createLogger } from "../../../libs/log";
 import userPreferenceService from "../../services/userPreferences/userPreference.service";
 import QueueService from "../../services/awsQueue/queue.service";
 import patientsService from "../../services/patients/patients.service";
@@ -31,7 +31,7 @@ import permissionService from "../../services/permission/permission.service";
 import userPermissionService from "../../services/userPermission/userPermission.service";
 import { USER_CATEGORY_ARRAY } from "../../models/users";
 
-const Log = new Logger("WEB > ADHOC > CONTROLLER");
+const Log = createLogger("WEB > ADHOC > CONTROLLER");
 
 class AdhocController extends Controller {
   constructor() {

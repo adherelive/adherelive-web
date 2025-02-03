@@ -1,6 +1,6 @@
 import Controller from "../../index";
 
-import Logger from "../../../../libs/log";
+import { createLogger } from "../../../../libs/log";
 
 // services
 import WorkoutTemplateService from "../../../services/workoutTemplates/workoutTemplate.service";
@@ -8,7 +8,7 @@ import WorkoutTemplateService from "../../../services/workoutTemplates/workoutTe
 // wrappers
 import WorkoutTemplateWrapper from "../../../apiWrapper/mobile/workoutTemplates";
 
-const Log = new Logger("MOBILE > WORKOUT_TEMPLATE > CONTROLLER");
+const Log = createLogger("MOBILE > WORKOUT_TEMPLATE > CONTROLLER");
 
 class WorkoutTemplateController extends Controller {
   constructor() {

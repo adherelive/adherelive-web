@@ -1,6 +1,6 @@
 import Controller from "../";
 
-import Logger from "../../../libs/log";
+import { createLogger } from "../../../libs/log";
 import { getDataForNotification } from "./notification.helper";
 
 import ChatJob from "../../jobSdk/Chat/observer";
@@ -8,7 +8,7 @@ import NotificationSdk from "../../notificationSdk";
 
 import { MESSAGE_TYPES } from "../../../constant";
 
-const Log = new Logger("WEB > NOTIFICATION > CONTROLLER");
+const Log = createLogger("WEB > NOTIFICATION > CONTROLLER");
 
 class NotificationController extends Controller {
   constructor() {

@@ -1,6 +1,6 @@
 import Controller from "../index";
 
-import Logger from "../../../libs/log";
+import { createLogger } from "../../../libs/log";
 
 // Helpers
 import * as PaymentHelper from "./payments.helper";
@@ -14,7 +14,7 @@ import doctorService from "../../services/doctor/doctor.service";
 import PaymentProductWrapper from "../../apiWrapper/web/paymentProducts";
 import { USER_CATEGORY } from "../../../constant";
 
-const Log = new Logger("WEB > CONTROLLER > PAYMENTS");
+const Log = createLogger("WEB > CONTROLLER > PAYMENTS");
 
 class PaymentController extends Controller {
   constructor() {

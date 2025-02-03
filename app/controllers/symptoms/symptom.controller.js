@@ -1,6 +1,6 @@
 import Controller from "../";
 
-import Logger from "../../../libs/log";
+import { createLogger } from "../../../libs/log";
 
 // Services
 import SymptomService from "../../services/symptom/symptom.service";
@@ -8,7 +8,7 @@ import SymptomService from "../../services/symptom/symptom.service";
 // Wrappers
 import SymptomWrapper from "../../apiWrapper/web/symptoms";
 
-const Log = new Logger("WEB > CONTROLLERS > SYMPTOMS");
+const Log = createLogger("WEB > CONTROLLERS > SYMPTOMS");
 
 class SymptomController extends Controller {
   constructor() {

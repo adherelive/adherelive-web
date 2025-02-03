@@ -1,9 +1,9 @@
 import Controller from "../index";
 
 import AlgoliaService from "../../services/algolia/algolia.service";
-import Logger from "../../../libs/log";
+import { createLogger } from "../../../libs/log";
 
-const Log = new Logger("ALGOLIA > CONTROLLER");
+const Log = createLogger("ALGOLIA > CONTROLLER");
 
 class AlgoliaController extends Controller {
   constructor() {

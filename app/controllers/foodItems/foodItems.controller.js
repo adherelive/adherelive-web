@@ -7,10 +7,10 @@ import FoodItemService from "../../services/foodItems/foodItems.service";
 import FoodItemWrapper from "../../apiWrapper/web/foodItem";
 import FoodItemDetailsWrapper from "../../apiWrapper/web/foodItemDetails";
 
-import Log from "../../../libs/log";
+import { createLogger } from "../../../libs/log";
 import { USER_CATEGORY } from "../../../constant";
 
-const Logger = new Log("WEB FOOD ITEM CONTROLLER");
+const Log = createLogger("WEB FOOD ITEM CONTROLLER");
 
 class FoodItemController extends Controller {
   constructor() {
@@ -148,7 +148,7 @@ class FoodItemController extends Controller {
         "Food Item created successfully"
       );
     } catch (error) {
-      Logger.debug("create food item 500 error", error);
+      Log.debug("create food item 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -364,7 +364,7 @@ class FoodItemController extends Controller {
         "Food Item updated successfully"
       );
     } catch (error) {
-      Logger.debug("update food item 500 error", error);
+      Log.debug("update food item 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -450,7 +450,7 @@ class FoodItemController extends Controller {
         "Food Item data fetched successfully"
       );
     } catch (error) {
-      Logger.debug("Search food item 500 error", error);
+      Log.debug("Search food item 500 error", error);
       return raiseServerError(res);
     }
   };

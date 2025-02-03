@@ -1,4 +1,4 @@
-import Logger from "../../libs/log";
+import { createLogger } from "../../libs/log";
 import moment from "moment";
 
 import { EVENT_STATUS, EVENT_TYPE, FEATURE_TYPE } from "../../constant";
@@ -11,7 +11,7 @@ import FeatureDetailService from "../services/featureDetails/featureDetails.serv
 import ScheduleEventWrapper from "../apiWrapper/common/scheduleEvents";
 import FeatureDetailWrapper from "../apiWrapper/mobile/featureDetails";
 
-const Log = new Logger("CRON > PASSED");
+const Log = createLogger("CRON > PASSED");
 
 class PassedCron {
   constructor() {

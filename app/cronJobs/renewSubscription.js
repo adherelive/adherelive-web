@@ -7,9 +7,9 @@ import DoctorWrapper from "../apiWrapper/mobile/doctor";
 import PatientWrapper from "../apiWrapper/mobile/patient";
 import { USER_CATEGORY } from "../../constant";
 
-import Logger from "../../libs/log";
+import { createLogger } from "../../libs/log";
 
-const Log = new Logger("CRON > RENEW > SUBSCRIPTION");
+const Log = createLogger("CRON > RENEW > SUBSCRIPTION");
 
 class RenewSubscription {
   runObserver = async () => {

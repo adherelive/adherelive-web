@@ -1,6 +1,6 @@
 import Controller from "../index";
 
-import Logger from "../../../libs/log";
+import { createLogger } from "../../../libs/log";
 
 // Helpers
 import * as vitalHelper from "./vital.helper";
@@ -35,7 +35,7 @@ import EventWrapper from "../../apiWrapper/common/scheduleEvents";
 import JobSdk from "../../jobSdk";
 import NotificationSdk from "../../notificationSdk";
 
-const Log = new Logger("WEB > VITALS > CONTROLLER");
+const Log = createLogger("WEB > VITALS > CONTROLLER");
 
 class VitalController extends Controller {
   constructor() {
@@ -289,7 +289,7 @@ class VitalController extends Controller {
       await NotificationSdk.execute(medicationDetails);
       return raiseSuccess(res, 200, {}, "medication deleted successfully");
     } catch (error) {
-      Logger.debug("deleteMedication error", error);
+      Log.debug("deleteMedication error", error);
       return raiseServerError(res);
     }
   };
@@ -442,14 +442,14 @@ class VitalController extends Controller {
         user_role_id: userRoleId,
       });
 
-      // Logger.debug("786756465789",docAllCarePlanData);
+      // Log.debug("786756465789",docAllCarePlanData);
 
       for (let carePlan of docAllCarePlanData) {
         const carePlanApiWrapper = await CarePlanWrapper(carePlan);
         const { vital_ids } = await carePlanApiWrapper.getAllInfo();
 
         for (let vId of vital_ids) {
-          // Logger.debug("87657898763545",vital_ids);
+          // Log.debug("87657898763545",vital_ids);
 
           let expiredVitalsList = await scheduleEventService.getAllEventByData({
             event_type: EVENT_TYPE.VITALS,
@@ -459,7 +459,7 @@ class VitalController extends Controller {
 
           for (let vital of expiredVitalsList) {
             const vitalEventWrapper = await EventWrapper(vital);
-            // Logger.debug("8976756576890",vitalEventWrapper);
+            // Log.debug("8976756576890",vitalEventWrapper);
 
             if (vitalEventWrapper.getCriticalValue()) {
               if (

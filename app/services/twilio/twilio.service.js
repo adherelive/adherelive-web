@@ -1,6 +1,6 @@
 const twilio = require("twilio");
 
-import Log from "../../../libs/log";
+import { createLogger } from "../../../libs/log";
 
 const AccessToken = twilio.jwt.AccessToken;
 const VideoGrant = AccessToken.VideoGrant;
@@ -11,7 +11,7 @@ const apiSecret = process.config.twilio.TWILIO_API_SECRET;
 const chatServiceId = process.config.twilio.TWILIO_CHAT_SERVICE_SID;
 const authToken = process.config.twilio.TWILIO_AUTH_TOKEN;
 
-const Logger = new Log("TWILIO SERVICES");
+const Log = createLogger("TWILIO SERVICES");
 
 class TwilioService {
   constructor() {}
@@ -105,9 +105,9 @@ class TwilioService {
           console.error(err);
         });
 
-      Logger.debug("channel -> ", channel);
+      Log.debug("channel -> ", channel);
     } catch (error) {
-      Logger.debug("addSymptom message 500 error", error);
+      Log.debug("addSymptom message 500 error", error);
     }
   };
 
@@ -133,9 +133,9 @@ class TwilioService {
           console.error(err);
         });
 
-      Logger.debug("channel -> ", channel);
+      Log.debug("channel -> ", channel);
     } catch (error) {
-      Logger.debug("addUserMessage 500 error", error);
+      Log.debug("addUserMessage 500 error", error);
       throw error;
     }
   };
@@ -178,7 +178,7 @@ class TwilioService {
           }
         });
     } catch (error) {
-      Logger.debug("addSymptom message 500 error", error);
+      Log.debug("addSymptom message 500 error", error);
     }
   };
 
@@ -236,9 +236,9 @@ class TwilioService {
       //     console.error(err);
       // });
       //
-      // Logger.debug("channel -> ", channel);
+      // Log.debug("channel -> ", channel);
     } catch (error) {
-      Logger.debug("addSymptom message 500 error", error);
+      Log.debug("addSymptom message 500 error", error);
     }
   };
 
@@ -252,7 +252,7 @@ class TwilioService {
 
       return newMember ? true : false;
     } catch (error) {
-      Logger.debug("addMember 500 error", error);
+      Log.debug("addMember 500 error", error);
     }
   };
 }

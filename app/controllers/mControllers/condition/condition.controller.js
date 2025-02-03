@@ -2,9 +2,9 @@ import Controller from "../../index";
 import conditionService from "../../../services/condition/condition.service";
 import ConditionWrapper from "../../../apiWrapper/mobile/conditions";
 
-import Log from "../../../../libs/log";
+import { createLogger } from "../../../../libs/log";
 
-const Logger = new Log("MOBILE CONDITION CONTROLLER");
+const Log = createLogger("MOBILE CONDITION CONTROLLER");
 
 class ConditionController extends Controller {
   constructor() {
@@ -17,7 +17,7 @@ class ConditionController extends Controller {
       const { query } = req;
       const { value } = query || {};
 
-      // Logger.debug("value in req", value);
+      // Log.debug("value in req", value);
 
       const conditionDetails = await conditionService.search(value);
 
@@ -48,7 +48,7 @@ class ConditionController extends Controller {
         );
       }
     } catch (error) {
-      Logger.debug("condition search 500 error", error);
+      Log.debug("condition search 500 error", error);
       return raiseServerError(res);
     }
   };

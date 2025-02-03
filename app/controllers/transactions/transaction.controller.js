@@ -1,11 +1,11 @@
 import Controller from "../index";
 
-import Logger from "../../../libs/log";
+import { createLogger } from "../../../libs/log";
 import { USER_CATEGORY } from "../../../constant";
 
 import * as TransactionHelper from "./transactions.helper";
 
-const Log = new Logger("WEB > TRANSACTIONS > CONTROLLER");
+const Log = createLogger("WEB > TRANSACTIONS > CONTROLLER");
 
 class TransactionController extends Controller {
   constructor() {

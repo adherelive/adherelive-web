@@ -1,5 +1,5 @@
 import Controller from "../../index";
-import Log from "../../../../libs/log";
+import { createLogger } from "../../../../libs/log";
 import featuresService from "../../../services/features/features.service";
 
 import carePlanService from "../../../services/carePlan/carePlan.service";
@@ -12,7 +12,7 @@ import { USER_CATEGORY } from "../../../../constant";
 
 const FILE_NAME = "MOBILE FEATURE CONTROLLER";
 
-const Logger = new Log(FILE_NAME);
+const Log = createLogger(FILE_NAME);
 
 class MobileFeatureController extends Controller {
   constructor() {
@@ -128,7 +128,7 @@ class MobileFeatureController extends Controller {
         "Features mapping fetched successfully."
       );
     } catch (error) {
-      Logger.debug("getAllFeaturesMappingForUser 500 error", error);
+      Log.debug("getAllFeaturesMappingForUser 500 error", error);
       return raiseServerError(res, 500, {}, error.message);
     }
   };

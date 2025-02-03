@@ -1,6 +1,6 @@
 import Controller from "../index";
 
-import Logger from "../../../libs/log";
+import { createLogger } from "../../../libs/log";
 import moment from "moment";
 
 // Services
@@ -30,7 +30,7 @@ import {
   USER_CATEGORY,
 } from "../../../constant";
 
-const Log = new Logger("WEB > WORKOUT > CONTROLLER");
+const Log = createLogger("WEB > WORKOUT > CONTROLLER");
 
 class WorkoutController extends Controller {
   constructor() {

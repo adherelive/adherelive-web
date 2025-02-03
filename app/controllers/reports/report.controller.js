@@ -1,6 +1,6 @@
 import Controller from "../index";
 
-import Logger from "../../../libs/log";
+import { createLogger } from "../../../libs/log";
 import moment from "moment";
 
 // Services
@@ -14,7 +14,7 @@ import { DOCUMENT_PARENT_TYPE } from "../../../constant";
 import { getFilePath } from "../../helper/s3FilePath";
 import * as ReportHelper from "./report.helper";
 
-const Log = new Logger("WEB > CONTROLLER > REPORTS");
+const Log = createLogger("WEB > CONTROLLER > REPORTS");
 
 class ReportController extends Controller {
   constructor() {

@@ -9,7 +9,7 @@ import userRolesService from "../../app/services/userRoles/userRoles.service";
 import UserWrapper from "../../app/apiWrapper/web/user";
 import UserRoleWrapper from "../../app/apiWrapper/mobile/userRoles";
 
-import Logger from "../../libs/log";
+import { createLogger } from "../../libs/log";
 import userRouter from "./user";
 
 import appointmentRouter from "./appointments";
@@ -63,7 +63,7 @@ import NotesRouter from "./notes";
 import { getTime } from "../../app/helper/timer";
 import prescriptionRouter from "./prescription";
 
-const Log = new Logger("API > INDEX");
+const Log = createLogger("API > INDEX");
 
 router.use(async function (req, res, next) {
   // console.log("api-index-1 ---> router getTime: " + getTime() + " " + getTime());

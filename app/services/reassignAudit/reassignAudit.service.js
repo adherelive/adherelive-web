@@ -1,7 +1,7 @@
 const reassignAudit = require("../../models/mongoModel/reassignAudit");
-import Log from "../../../libs/log";
+import { createLogger } from "../../../libs/log";
 
-const Logger = new Log("WEB USER CONTROLLER");
+const Log = createLogger("WEB USER CONTROLLER");
 
 class reassignAuditService {
   getAuditByActivitiyData = async (data) => {

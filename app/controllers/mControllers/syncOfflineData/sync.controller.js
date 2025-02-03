@@ -1,5 +1,5 @@
 import Controller from "../../index";
-import Logger from "../../../../libs/log";
+import { createLogger } from "../../../../libs/log";
 
 import { EVENT_TYPE, OFFLINE_SYNC_DATA_TASKS } from "../../../../constant";
 import {
@@ -7,7 +7,7 @@ import {
   syncVitalsResponseData,
 } from "./eventSync.helper";
 
-const Log = new Logger("MOBILE > SYNC > CONTROLLER");
+const Log = createLogger("MOBILE > SYNC > CONTROLLER");
 
 class SyncController extends Controller {
   constructor() {

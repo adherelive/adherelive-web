@@ -1,4 +1,4 @@
-import Logger from "../../../libs/log";
+import { createLogger } from "../../../libs/log";
 
 import {
   AGORA_CALL_NOTIFICATION_TYPES,
@@ -64,7 +64,7 @@ const {
 
 const { USER_MESSAGE } = MESSAGE_TYPES;
 
-const Log = new Logger("WEB > NOTIFICATION > CONTROLLER > HELPER");
+const Log = createLogger("WEB > NOTIFICATION > CONTROLLER > HELPER");
 
 const medicationNotification = async (data) => {
   try {

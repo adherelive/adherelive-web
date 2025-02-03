@@ -18,13 +18,13 @@ import AccountDetailsWrapper from "../../../apiWrapper/mobile/accountDetails";
 import { CHECKOUT, STATUS, UPI } from "../../../models/transactions";
 
 // Helpers
-import Logger from "../../../../libs/log";
+import { createLogger } from "../../../../libs/log";
 import { generateTransactionId } from "../../../helper/payment";
 import * as TransactionHelper from "./transactions.helper";
 import { USER_CATEGORY } from "../../../../constant";
 import { PAYMENT_TYPE } from "../../../models/paymentProducts";
 
-const Log = new Logger("TRANSACTIONS > MOBILE > CONTROLLER");
+const Log = createLogger("TRANSACTIONS > MOBILE > CONTROLLER");
 
 class TransactionController extends Controller {
   constructor() {

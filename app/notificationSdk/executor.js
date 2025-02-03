@@ -1,13 +1,13 @@
 import EmailManager from "../communications/email/emailManger";
 import SmsManager from "../communications/sms/smsManager";
-import Logger from "../../libs/log";
+import { createLogger } from "../../libs/log";
 import fetch from "node-fetch";
 import stream from "getstream";
 import { validateMailData } from "../proxySdk/libs/validator";
 import NotificationSdk from "./index";
 import EVENTS from "../proxySdk/proxyEvents";
 
-const Log = new Logger("NOTIFICATION_SDK ---> EXECUTOR");
+const Log = createLogger("NOTIFICATION_SDK ---> EXECUTOR");
 
 class EventExecutor {
   async sendMail(mailData, scheduledJobId) {

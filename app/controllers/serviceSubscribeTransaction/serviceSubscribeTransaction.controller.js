@@ -1,6 +1,6 @@
 import Controller from "../index";
 
-import Logger from "../../../libs/log";
+import { createLogger } from "../../../libs/log";
 import moment from "moment";
 
 // Services
@@ -15,7 +15,7 @@ import ServiceSubscriptionMapping from "../../services/serviceSubscriptionMappin
 import TransactionActivate from "../../services/transactionActivity/transactionActivity.service";
 import { USER_CATEGORY } from "../../../constant";
 
-const Log = new Logger("WEB > CONTROLLER > Service Subscribe Transaction");
+const Log = createLogger("WEB > CONTROLLER > Service Subscribe Transaction");
 
 class ServiceSubscriptionTxController extends Controller {
   constructor() {

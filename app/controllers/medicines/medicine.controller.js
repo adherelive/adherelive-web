@@ -12,10 +12,10 @@ import ScheduleEventService from "../../services/scheduleEvents/scheduleEvent.se
 import MedicineWrapper from "../../apiWrapper/web/medicine";
 import DoctorWrapper from "../../apiWrapper/web/doctor";
 
-import Log from "../../../libs/log";
+import { createLogger } from "../../../libs/log";
 import { EVENT_TYPE } from "../../../constant";
 
-const Logger = new Log("WEB MEDICINE CONTROLLER");
+const Log = createLogger("WEB MEDICINE CONTROLLER");
 
 class MedicineController extends Controller {
   constructor() {
@@ -28,7 +28,7 @@ class MedicineController extends Controller {
       const { query } = req;
       const { value } = query || {};
 
-      // Logger.debug("value in req: ", value);
+      // Log.debug("value in req: ", value);
       const medicineDetails = await medicineService.search(value);
 
       if (medicineDetails.length > 0) {
@@ -58,7 +58,7 @@ class MedicineController extends Controller {
         );
       }
     } catch (error) {
-      // Logger.debug("getAll 500 error: ", error);
+      // Log.debug("getAll 500 error: ", error);
       return raiseServerError(res);
     }
   };
@@ -106,7 +106,7 @@ class MedicineController extends Controller {
         "New medicine added successfully."
       );
     } catch (error) {
-      Logger.debug("500 addMedicine error: ", error);
+      Log.debug("500 addMedicine error: ", error);
       return raiseServerError(res);
     }
   };
@@ -149,7 +149,7 @@ class MedicineController extends Controller {
         "New medicine added successfully."
       );
     } catch (error) {
-      Logger.debug("500 addMedicine error: ", error);
+      Log.debug("500 addMedicine error: ", error);
       return raiseServerError(res);
     }
   };
@@ -192,7 +192,7 @@ class MedicineController extends Controller {
         "Medicine is made public to all doctors successfully."
       );
     } catch (error) {
-      Logger.debug("500 makeMedicinePublic error: ", error);
+      Log.debug("500 makeMedicinePublic error: ", error);
       return raiseServerError(res);
     }
   };
@@ -233,7 +233,7 @@ class MedicineController extends Controller {
         publicMedicine,
         doctorIds
       );
-      Logger.debug("Get Medicines for Admin: ", {
+      Log.debug("Get Medicines for Admin: ", {
         total_count,
         l: medicineDetails.length,
         medicineDetails,
@@ -287,7 +287,7 @@ class MedicineController extends Controller {
         );
       }
     } catch (error) {
-      Logger.debug("500 getMedicinesForAdmin error", error);
+      Log.debug("500 getMedicinesForAdmin error", error);
       return raiseServerError(res);
     }
   };
@@ -324,7 +324,7 @@ class MedicineController extends Controller {
         }
       }
 
-      Logger.debug("medicationIds", medicationIds);
+      Log.debug("medicationIds", medicationIds);
 
       // delete events wrt medications
       const scheduleEventService = new ScheduleEventService();
@@ -346,12 +346,12 @@ class MedicineController extends Controller {
 
       if (medicineDetails) {
         const response = await algoliaService.deleteMedicineData(medicine_id);
-        Logger.debug("algolia delete response", response);
+        Log.debug("algolia delete response", response);
       }
 
       return raiseSuccess(res, 200, {}, "Medicine deleted successfully.");
     } catch (error) {
-      Logger.debug("500 deleteMedicine error", error);
+      Log.debug("500 deleteMedicine error", error);
       return raiseServerError(res);
     }
   };

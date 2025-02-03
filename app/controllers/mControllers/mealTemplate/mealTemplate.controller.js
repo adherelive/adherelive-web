@@ -6,9 +6,9 @@ import MealTemplateService from "../../../services/mealTemplate/mealTemplate.ser
 //Wrappers
 import MealTemplateWrapper from "../../../apiWrapper/mobile/mealTemplate";
 
-import Logger from "../../../../libs/log";
+import { createLogger } from "../../../../libs/log";
 
-const Log = new Logger("MOBILE > MEAL_TEMPLATE > CONTROLLER");
+const Log = createLogger("MOBILE > MEAL_TEMPLATE > CONTROLLER");
 
 class MealTemplateController extends Controller {
   constructor() {

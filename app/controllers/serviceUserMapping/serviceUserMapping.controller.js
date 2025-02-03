@@ -1,6 +1,6 @@
 import Controller from "../index";
 
-import Logger from "../../../libs/log";
+import { createLogger } from "../../../libs/log";
 
 // Services
 import ServiceUserMappingService from "../../services/serviceUserMapping/serviceUserMapping.service";
@@ -8,7 +8,7 @@ import ServiceOffering from "../../services/serviceOffering/serviceOffering.serv
 import { USER_CATEGORY, USER_STATUS } from "../../../constant";
 import TxService from "../../services/serviceSubscribeTransaction/serviceSubscribeTransaction";
 
-const Log = new Logger("WEB > CONTROLLER > Service Offering");
+const Log = createLogger("WEB > CONTROLLER > Service Offering");
 
 class ServiceUserMappingController extends Controller {
   constructor() {

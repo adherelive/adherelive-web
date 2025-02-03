@@ -3,11 +3,11 @@ import {
   USER_CATEGORY,
   DEFAULT_PROVIDER,
 } from "../../../constant";
-import Logger from "../../../libs/log";
+import { createLogger } from "../../../libs/log";
 import EventExecutor from "../executor";
 import fetch from "node-fetch";
 
-const Log = new Logger("NOTIFICATION_SDK > PUSH_APP");
+const Log = createLogger("NOTIFICATION_SDK > PUSH_APP");
 
 // Log.filename("NOTIFICATION_SDK > PUSH_APP");
 

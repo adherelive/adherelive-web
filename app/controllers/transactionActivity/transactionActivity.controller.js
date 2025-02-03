@@ -1,6 +1,6 @@
 import Controller from "../index";
 
-import Logger from "../../../libs/log";
+import { createLogger } from "../../../libs/log";
 
 // Services
 import TxActivities from "../../services/transactionActivity/transactionActivity.service";
@@ -13,7 +13,7 @@ import PatientWrapper from "../../apiWrapper/web/patient";
 import { USER_CATEGORY } from "../../../constant";
 
 const ReassignAudit = require("../../models/mongoModel/reassignAudit");
-const Log = new Logger("WEB > CONTROLLER > Service Offering");
+const Log = createLogger("WEB > CONTROLLER > Service Offering");
 
 class TransactionActivityController extends Controller {
   constructor() {

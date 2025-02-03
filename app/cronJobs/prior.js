@@ -1,4 +1,4 @@
-import Logger from "../../libs/log";
+import { createLogger } from "../../libs/log";
 import moment from "moment";
 
 import { EVENT_STATUS, EVENT_TYPE } from "../../constant";
@@ -17,7 +17,7 @@ import * as CronHelper from "./helper";
 
 import NotificationSdk from "../notificationSdk";
 
-const Log = new Logger("CRON-JOBS > PRIOR");
+const Log = createLogger("CRON-JOBS > PRIOR");
 
 class PriorCron {
   // allPriorAppointmentEvents;

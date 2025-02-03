@@ -1,5 +1,5 @@
 import Controller from "../../index";
-import Logger from "../../../../libs/log";
+import { createLogger } from "../../../../libs/log";
 
 // HELPERS
 // Services
@@ -11,7 +11,7 @@ import UserWrapper from "../../../apiWrapper/mobile/user";
 
 import { FAVOURITE_TYPE } from "../../../../constant";
 
-const Log = new Logger("MOBILE > CONTROLLER > USER_FAVOURITES");
+const Log = createLogger("MOBILE > CONTROLLER > USER_FAVOURITES");
 
 class UserFavouritesController extends Controller {
   constructor() {

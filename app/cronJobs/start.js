@@ -1,4 +1,4 @@
-import Logger from "../../libs/log";
+import { createLogger } from "../../libs/log";
 import moment from "moment";
 
 import { EVENT_STATUS, EVENT_TYPE, NOTIFICATION_STAGES } from "../../constant";
@@ -22,7 +22,7 @@ import CarePlanJob from "../jobSdk/CarePlan/observer";
 import DietJob from "../jobSdk/Diet/observer";
 import WorkoutJob from "../jobSdk/Workout/observer";
 
-const Log = new Logger("CRON > START");
+const Log = createLogger("CRON > START");
 
 class StartCron {
   getScheduleData = async () => {

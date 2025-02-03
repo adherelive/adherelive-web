@@ -1,6 +1,6 @@
 import Controller from "../index";
 
-import Logger from "../../../libs/log";
+import { createLogger } from "../../../libs/log";
 
 // Services
 import ServiceSubscriptionService from "../../services/serviceSubscription/serviceSubscription.service";
@@ -8,7 +8,7 @@ import ServiceOfferingService from "../../services/serviceOffering/serviceOfferi
 import { USER_CATEGORY } from "../../../constant";
 import ServiceSubscriptionMapping from "../../services/serviceSubscriptionMapping/serviceSubscritpionMapping.service";
 
-const Log = new Logger("WEB > CONTROLLER > Service Offering");
+const Log = createLogger("WEB > CONTROLLER > Service Offering");
 
 class ReportController extends Controller {
   constructor() {

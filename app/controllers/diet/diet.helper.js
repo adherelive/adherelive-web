@@ -7,9 +7,9 @@ import {
   SLEEP,
   WAKE_UP,
 } from "../../../constant";
-import Logger from "../../../libs/log";
+import { createLogger } from "../../../libs/log";
 
-const Log = new Logger("DIET > HELPER");
+const Log = createLogger("DIET > HELPER");
 
 export const getTimeWiseDietFoodGroupMappings = async ({
   diet_food_group_mappings,

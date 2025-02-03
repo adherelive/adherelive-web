@@ -1,5 +1,5 @@
 import { Sequelize } from "sequelize";
-import Logger from "./log";
+import { createLogger } from "./log";
 
 // Get the details of all the Models created for MySQL - 114 till date
 import * as ActionDetails from "../app/models/actionDetails";

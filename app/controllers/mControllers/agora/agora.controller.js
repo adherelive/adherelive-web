@@ -7,7 +7,7 @@ import {
   USER_CATEGORY,
 } from "../../../../constant";
 
-import Log from "../../../../libs/log";
+import { createLogger } from "../../../../libs/log";
 
 import AgoraJob from "../../../jobSdk/Agora/observer";
 import NotificationSdk from "../../../notificationSdk";

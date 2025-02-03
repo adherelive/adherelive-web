@@ -1,4 +1,4 @@
-import Logger from "../../../../libs/log";
+import { createLogger } from "../../../../libs/log";
 
 import BaseVital from "../../../services/vitals";
 
@@ -15,7 +15,7 @@ import { EVENT_STATUS, EVENT_TYPE, FEATURE_TYPE } from "../../../../constant";
 import FeatureDetailService from "../../../services/featureDetails/featureDetails.service";
 import FeatureDetailWrapper from "../featureDetails";
 
-const Log = new Logger("SERVICES > VITALS");
+const Log = createLogger("SERVICES > VITALS");
 
 class VitalWrapper extends BaseVital {
   constructor(data) {

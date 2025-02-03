@@ -3,9 +3,9 @@ import Database from "../../../libs/mysql";
 // TABLES
 import { TABLE_NAME } from "../../models/userFavourites";
 
-import Log from "../../../libs/log";
+import { createLogger } from "../../../libs/log";
 
-const Logger = new Log("WEB > USER_FAVOURITES > SERVICE");
+const Log = createLogger("WEB > USER_FAVOURITES > SERVICE");
 
 class UserFavouritesService {
   constructor() {}

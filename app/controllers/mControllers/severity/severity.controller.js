@@ -2,9 +2,9 @@ import Controller from "../../index";
 import severityService from "../../../services/severity/severity.service";
 import SeverityWrapper from "../../../apiWrapper/mobile/severity";
 
-import Log from "../../../../libs/log";
+import { createLogger } from "../../../../libs/log";
 
-const Logger = new Log("MOBILE SEVERITY CONTROLLER");
+const Log = createLogger("MOBILE SEVERITY CONTROLLER");
 
 class SeverityController extends Controller {
   constructor() {
@@ -17,7 +17,7 @@ class SeverityController extends Controller {
       const { query } = req;
       const { value } = query || {};
 
-      // Logger.debug("value in req", value);
+      // Log.debug("value in req", value);
 
       const severityDetails = await severityService.search(value);
 
@@ -48,7 +48,7 @@ class SeverityController extends Controller {
         );
       }
     } catch (error) {
-      Logger.debug("severity search 500 error", error);
+      Log.debug("severity search 500 error", error);
       return raiseServerError(res);
     }
   };

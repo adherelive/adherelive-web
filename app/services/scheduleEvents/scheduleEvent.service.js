@@ -1,13 +1,17 @@
 import { Op } from "sequelize";
 import { TABLE_NAME } from "../../models/scheduleEvents";
-// import {TABLE_NAME as eventHistoryTableName} from "../../models/eventHistory";
+// import { TABLE_NAME as eventHistoryTableName } from "../../models/eventHistory";
 
 import { EVENT_STATUS, EVENT_TYPE } from "../../../constant";
 import Database from "../../../libs/mysql";
 import moment from "moment";
 import { getTime } from "../../helper/timer";
 
-
+/**
+ *
+ *
+ * @class ScheduleEventService
+ */
 class ScheduleEventService {
   create = async (data) => {
     try {
@@ -19,6 +23,12 @@ class ScheduleEventService {
     }
   };
 
+  /**
+   *
+   *
+   * @param data
+   * @returns {Promise<*>}
+   */
   bulkCreate = async (data) => {
     try {
       // console.log("logsForMonintorByAhere - Schedule EventService bulkCreate Called: ",getTime())
@@ -31,6 +41,13 @@ class ScheduleEventService {
     }
   };
 
+  /**
+   *
+   *
+   * @param data
+   * @param id
+   * @returns {Promise<*>}
+   */
   update = async (data, id) => {
     // console.log("logsForMonintorByAhere - Schedule EventService update Called: ",getTime())
     const transaction = await Database.initTransaction();
@@ -52,6 +69,13 @@ class ScheduleEventService {
     }
   };
 
+  /**
+   *
+   *
+   * @param paranoid
+   * @param data
+   * @returns {Promise<*>}
+   */
   getEventByData = async ({ paranoid = true, ...data }) => {
     // console.log("logsForMonintorByAhere - Schedule EventService getEventByData Called: ",getTime())
     try {
@@ -65,6 +89,12 @@ class ScheduleEventService {
     }
   };
 
+  /**
+   *
+   *
+   * @param data
+   * @returns {Promise<Model[]>}
+   */
   getAllEventByData = async (data) => {
     // console.log("logsForMonintorByAhere - Schedule EventService getAllEventByData Called: ",getTime())
     try {
@@ -77,6 +107,12 @@ class ScheduleEventService {
     }
   };
 
+  /**
+   *
+   *
+   * @param data
+   * @returns {Promise<Model[]>}
+   */
   getAllPreviousByData = async (data = {}) => {
     console.log("logsForMonintorByAhere - Schedule EventService getAllPreviousByData Called: ",getTime())
     try {
@@ -97,6 +133,12 @@ class ScheduleEventService {
     }
   };
 
+  /**
+   *
+   *
+   * @param data
+   * @returns {Promise<Model[]>}
+   */
   getAllPreviousByDataM = async (data = {}) => {
     // console.log("logsForMonintorByAhere - Schedule EventService getAllPreviousByDataM Called: ",getTime())
     try {
@@ -123,6 +165,12 @@ class ScheduleEventService {
     }
   };
 
+  /**
+   *
+   *
+   * @param data
+   * @returns {Promise<Model[]>}
+   */
   getLastVisitData = async (data = {}) => {
     // console.log("logsForMonintorByAhere - Schedule EventService getLastVisitData Called: ",getTime())
     try {
@@ -150,6 +198,12 @@ class ScheduleEventService {
     }
   };
 
+  /**
+   *
+   *
+   * @param data
+   * @returns {Promise<Model[]>}
+   */
   getAllPassedByData = async (data = {}) => {
     // console.log("logsForMonintorByAhere - Schedule EventService getAllPassedByData Called: ",getTime())
     try {
@@ -187,6 +241,12 @@ class ScheduleEventService {
     }
   };
 
+  /**
+   *
+   *
+   * @param data
+   * @returns {Promise<Model[]>}
+   */
   getAllPassedAndCompletedEventsData = async (data = {}) => {
     // console.log("logsForMonintorByAhere - Schedule EventService getAllPassedAndCompletedEventsData Called: ",getTime())
     try {
@@ -225,6 +285,13 @@ class ScheduleEventService {
     }
   };
 
+  /**
+   *
+   *
+   * @param time
+   * @param event_type
+   * @returns {Promise<Model[]>}
+   */
   getPriorEventByData = async (time, event_type = null) => {
     // console.log("logsForMonintorByAhere - Schedule EventService getPriorEventByData Called: ",getTime())
     try {
@@ -243,6 +310,12 @@ class ScheduleEventService {
     }
   };
 
+  /**
+   *
+   *
+   * @param time
+   * @returns {Promise<Model[]>}
+   */
   getStartEventByData = async (time) => {
     // console.log("logsForMonintorByAhere - Schedule EventService getStartEventByData Called: ",getTime())
     try {
@@ -260,6 +333,12 @@ class ScheduleEventService {
     }
   };
 
+  /**
+   *
+   *
+   * @param time
+   * @returns {Promise<Model[]>}
+   */
   getPassedEventData = async (time) => {
     // console.log("logsForMonintorByAhere - Schedule EventService getPassedEventData Called: ",getTime())
     try {
@@ -281,6 +360,12 @@ class ScheduleEventService {
     }
   };
 
+  /**
+   *
+   *
+   * @param data
+   * @returns {Promise<*>}
+   */
   deleteBatch = async (data) => {
     // console.log("logsForMonintorByAhere - Schedule EventService deleteBatch Called: ",getTime())
     try {
@@ -293,6 +378,12 @@ class ScheduleEventService {
     }
   };
 
+  /**
+   *
+   *
+   * @param data
+   * @returns {Promise<Model[]>}
+   */
   getAllPastData = async (data) => {
     // console.log("logsForMonintorByAhere - Schedule EventService getAllPastData Called: ",getTime())
     try {
@@ -311,6 +402,12 @@ class ScheduleEventService {
     }
   };
 
+  /**
+   *
+   *
+   * @param data
+   * @returns {Promise<Model[]>}
+   */
   getUpcomingByData = async (data) => {
     // console.log("logsForMonintorByAhere - Schedule EventService getUpcomingByData Called: ",getTime())
     try {
@@ -361,6 +458,12 @@ class ScheduleEventService {
     }
   };
 
+  /**
+   *
+   *
+   * @param data
+   * @returns {Promise<Model[]>}
+   */
   getMissedByDataEventType = async (data) => {
     // console.log("logsForMonintorByAhere - Schedule EventService getMissedByDataEventType Called: ",getTime())
     try {
@@ -545,6 +648,12 @@ class ScheduleEventService {
   };
    */
 
+  /**
+   * Not used?
+   *
+   * @param data
+   * @returns {Promise<Model[]>}
+   */
   getPageEventByData = async (data) => {
     // console.log("logsForMonintorByAhere - Schedule EventService getPageEventByData Called: ",getTime())
     try {
@@ -617,6 +726,16 @@ class ScheduleEventService {
     }
   };
 
+  /**
+   *
+   *
+   * @param appointment
+   * @param medication
+   * @param vital
+   * @param diet
+   * @param workout
+   * @returns {Promise<Model[]>}
+   */
   getAllEventStatusByData = async ({
     appointment,
     medication,
@@ -650,6 +769,12 @@ class ScheduleEventService {
     }
   };
 
+  /**
+   *
+   *
+   * @param data
+   * @returns {Promise<*>}
+   */
   getCount = async (data) => {
     // console.log("logsForMonintorByAhere - Schedule EventService getCount Called: ",getTime())
     try {

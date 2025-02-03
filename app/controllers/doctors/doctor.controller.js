@@ -1,6 +1,6 @@
 import Controller from "../index";
 
-import Log from "../../../libs/log";
+import { createLogger } from "../../../libs/log";
 import moment from "moment";
 
 // Services
@@ -90,7 +90,7 @@ const { Workbook } = require('exceljs');
 
 var fs = require("fs");
 
-const Logger = new Log("WEB > DOCTOR > CONTROLLER");
+const Log = createLogger("WEB > DOCTOR > CONTROLLER");
 const APPOINTMENT_QUERY_TYPE = {
   DAY: "d",
   MONTH: "m",
@@ -106,7 +106,7 @@ class DoctorController extends Controller {
     try {
       const doctors = await doctorService.getAllDoctors();
 
-      Logger.debug("getAll --> ", doctors);
+      Log.debug("getAll --> ", doctors);
 
       let doctorApiDetails = {};
       let userApiDetails = {};
@@ -153,7 +153,7 @@ class DoctorController extends Controller {
         "doctor details fetched successfully"
       );
     } catch (error) {
-      Logger.debug("getall 500 error ", error);
+      Log.debug("getall 500 error ", error);
       return raiseServerError(res);
     }
   };
@@ -177,7 +177,7 @@ class DoctorController extends Controller {
       let degree_ids = [];
       let college_ids = [];
 
-      Logger.debug("Doctors --> ", doctors);
+      Log.debug("Doctors --> ", doctors);
 
       const doctorWrapper = await DoctorWrapper(doctors);
 
@@ -234,7 +234,7 @@ class DoctorController extends Controller {
           doctorWrapper.getDoctorId()
         );
 
-      Logger.debug("Get All Admin Doctor details ---> ", doctorRegistrations);
+      Log.debug("Get All Admin Doctor details ---> ", doctorRegistrations);
 
       await doctorRegistrations.forEach(async (doctorRegistration) => {
         const doctorRegistrationWrapper = await RegistrationWrapper(
@@ -353,7 +353,7 @@ class DoctorController extends Controller {
         "doctor details fetched successfully"
       );
     } catch (error) {
-      Logger.debug("500 error", error);
+      Log.debug("500 error", error);
       return raiseServerError(res);
     }
   };
@@ -450,7 +450,7 @@ class DoctorController extends Controller {
         "Doctor verified successfully"
       );
     } catch (error) {
-      Logger.debug("Verify Doctor - 500 Error", error);
+      Log.debug("Verify Doctor - 500 Error", error);
       return raiseServerError(res);
     }
   };
@@ -491,7 +491,7 @@ class DoctorController extends Controller {
           doctor_id: doctorWrapper.getDoctorId(),
         })) || [];
 
-      Logger.debug("allPatients", allPatients);
+      Log.debug("allPatients", allPatients);
 
       let patientUserIds = [];
 
@@ -530,7 +530,7 @@ class DoctorController extends Controller {
         "Doctor deactivated successfully"
       );
     } catch (error) {
-      Logger.debug("DELETE DOCTOR 500 error", error);
+      Log.debug("DELETE DOCTOR 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -569,7 +569,7 @@ class DoctorController extends Controller {
       const allPatients =
         (await carePlanService.getAllPatients({ doctor_id })) || [];
 
-      Logger.debug("allPatients", allPatients);
+      Log.debug("allPatients", allPatients);
 
       let patientUserIds = [];
 
@@ -604,7 +604,7 @@ class DoctorController extends Controller {
         "Doctor activated successfully"
       );
     } catch (error) {
-      Logger.debug("ACTIVATE DOCTOR 500 error", error);
+      Log.debug("ACTIVATE DOCTOR 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -838,7 +838,7 @@ class DoctorController extends Controller {
         "doctor profile updated successfully"
       );
     } catch (error) {
-      Logger.debug("add doctor 500 error", error);
+      Log.debug("add doctor 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -871,7 +871,7 @@ class DoctorController extends Controller {
 
       let speciality_id = null;
 
-      Logger.debug("Doctor Controller Request Body: ", req.body);
+      Log.debug("Doctor Controller Request Body: ", req.body);
 
       let doctorUserId = id;
 
@@ -1186,7 +1186,7 @@ class DoctorController extends Controller {
               clinicDetails["details"] = { time_slots: time_slots };
             }
             clinicDetails["doctor_id"] = doctor_id;
-            Logger.debug("datatata", clinicDetails);
+            Log.debug("datatata", clinicDetails);
             // TODO: Check if changing from "0" to 0, works or not
             if (id && id !== 0) {
               const newClinic = await clinicService.updateClinic(
@@ -1222,8 +1222,8 @@ class DoctorController extends Controller {
         return raiseClientError(res, 422, {}, "Doctor Not Found.");
       }
     } catch (error) {
-      Logger.debug("932647583246723908478783246", { error });
-      Logger.debug("update doctor 500 error", error);
+      Log.debug("932647583246723908478783246", { error });
+      Log.debug("update doctor 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -1478,7 +1478,7 @@ class DoctorController extends Controller {
 
       const mobileUrl = `${process.config.WEB_URL}/${process.config.app.mobile_verify_link}/${link}`;
 
-      Logger.debug("109312983912 universalLink", universalLink);
+      Log.debug("109312983912 universalLink", universalLink);
 
       const smsPayload = {
         // countryCode: prefix,
@@ -1583,7 +1583,7 @@ class DoctorController extends Controller {
         "Patient added successfully"
       );
     } catch (error) {
-      Logger.debug("ADD DOCTOR PATIENT 500 ERROR", error);
+      Log.debug("ADD DOCTOR PATIENT 500 ERROR", error);
       return this.raiseServerError(res);
     }
   };
@@ -1716,7 +1716,7 @@ class DoctorController extends Controller {
               name: college_name,
             });
 
-            // Logger.debug("876546789653456789876789",existingCollege);
+            // Log.debug("876546789653456789876789",existingCollege);
 
             if (!existingCollege) {
               const college = await collegeService.create({
@@ -1983,7 +1983,7 @@ class DoctorController extends Controller {
         "qualifications updated successfully"
       );
     } catch (error) {
-      Logger.debug("addDoctorQualification 500 error", error);
+      Log.debug("addDoctorQualification 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -2009,7 +2009,7 @@ class DoctorController extends Controller {
 
       const { mimetype } = file || {};
       const fileType = mimetype.split("/");
-      Logger.debug("mimetype ---> ", mimetype);
+      Log.debug("mimetype ---> ", mimetype);
       if (!ALLOWED_DOC_TYPE_DOCTORS.includes(fileType[1])) {
         return this.raiseClientError(
           res,
@@ -2046,7 +2046,7 @@ class DoctorController extends Controller {
         body: { doctor_id = null } = {},
       } = req;
 
-      Logger.debug("updateRegistrationDocs file", file);
+      Log.debug("updateRegistrationDocs file", file);
 
       let doctorUserId = userId;
       if (doctor_id) {
@@ -2060,7 +2060,7 @@ class DoctorController extends Controller {
 
       const { mimetype } = file || {};
       const fileType = mimetype.split("/");
-      Logger.debug("updateRegistrationDocs mimetype ---> ", mimetype);
+      Log.debug("updateRegistrationDocs mimetype ---> ", mimetype);
       if (!ALLOWED_DOC_TYPE_DOCTORS.includes(fileType[1])) {
         return this.raiseClientError(
           res,
@@ -2072,7 +2072,7 @@ class DoctorController extends Controller {
 
       let files = await uploadImageS3(doctorUserId, file);
 
-      Logger.debug("files --->", files);
+      Log.debug("files --->", files);
 
       return this.raiseSuccess(
         res,
@@ -2232,8 +2232,8 @@ class DoctorController extends Controller {
             getFilePath(photo)
           );
 
-          Logger.debug("docExists --> ", docExist);
-          Logger.debug("docQualification --> ", docQualification.get("id"));
+          Log.debug("docExists --> ", docExist);
+          Log.debug("docQualification --> ", docQualification.get("id"));
 
           if (!docExist) {
             const qualificationDoc = await documentService.addDocument({
@@ -2304,7 +2304,7 @@ class DoctorController extends Controller {
           updatedDoctorData.getDoctorId()
         );
 
-      Logger.debug(
+      Log.debug(
         "1893712983 doctorQualifications --> ",
         doctorQualifications
       );
@@ -2365,7 +2365,7 @@ class DoctorController extends Controller {
         "qualification details updated successfully"
       );
     } catch (error) {
-      Logger.debug("qualificationStep 500 error", error);
+      Log.debug("qualificationStep 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -2422,7 +2422,7 @@ class DoctorController extends Controller {
       const speWrapper = await SpecialityWrapper(speciality);
       specialityData[speWrapper.getSpecialityId()] = speWrapper.getBasicInfo();
 
-      Logger.debug("3456754321345643", doctor_id);
+      Log.debug("3456754321345643", doctor_id);
 
       let doctorData = null;
 
@@ -2796,7 +2796,7 @@ class DoctorController extends Controller {
         "registration details updated successfully"
       );
     } catch (error) {
-      Logger.debug("registrationStep 500 error", error);
+      Log.debug("registrationStep 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -2811,7 +2811,7 @@ class DoctorController extends Controller {
 
       const doctors = await doctorService.getDoctorByData({ user_id: userId });
 
-      Logger.debug("getAllDoctorDetails User ID: ", userId);
+      Log.debug("getAllDoctorDetails User ID: ", userId);
 
       let doctorQualificationApiDetails = {};
       let doctorClinicApiDetails = {};
@@ -2827,7 +2827,7 @@ class DoctorController extends Controller {
       if (parseInt(doctor_id) > 0) {
         doctorWrapper = await DoctorWrapper(null, doctor_id);
       } else {
-        Logger.debug(
+        Log.debug(
           "getAllDoctorDetails Doctor Controller doctors ---> ",
           doctors
         );
@@ -2888,7 +2888,7 @@ class DoctorController extends Controller {
           doctorWrapper.getDoctorId()
         );
 
-      Logger.debug(
+      Log.debug(
         "Get all Doctor detail registrations ---> ",
         doctorRegistrations
       );
@@ -2970,7 +2970,7 @@ class DoctorController extends Controller {
 
       const refInfo = await doctorWrapper.getReferenceInfo();
       const { doctors: docss = {}, users: userss = {} } = refInfo;
-      Logger.debug(
+      Log.debug(
         "Get all Doctor details -> getAllDoctorDetails, users and doctors: ",
         {
           refInfo,
@@ -3020,7 +3020,7 @@ class DoctorController extends Controller {
         "Doctor details fetched successfully"
       );
     } catch (error) {
-      Logger.debug(" get all details 500 error", error);
+      Log.debug(" get all details 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -3067,7 +3067,7 @@ class DoctorController extends Controller {
         let newClinic = "";
 
         if (clinic_id) {
-          Logger.debug("76578976546786546789", clinic_id);
+          Log.debug("76578976546786546789", clinic_id);
           if (name) {
             clinicDetails["name"] = name;
           }
@@ -3083,7 +3083,7 @@ class DoctorController extends Controller {
 
           newClinic = await clinicService.getClinicById(clinic_id);
 
-          Logger.debug("76578976546786546789 --->", newClinic);
+          Log.debug("76578976546786546789 --->", newClinic);
         } else {
           if (name && location) {
             newClinic = await clinicService.addClinic({
@@ -3129,7 +3129,7 @@ class DoctorController extends Controller {
         "Doctor clinics added successfully"
       );
     } catch (error) {
-      Logger.debug("updateDoctorClinics 500 error", error);
+      Log.debug("updateDoctorClinics 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -3155,7 +3155,7 @@ class DoctorController extends Controller {
         "doctor qualification document deleted successfully"
       );
     } catch (error) {
-      Logger.debug(
+      Log.debug(
         "DOCTOR QUALIFICATION DOCUMENT DELETE 500 ERROR ---> ",
         error
       );
@@ -3184,7 +3184,7 @@ class DoctorController extends Controller {
         "doctor registration document deleted successfully"
       );
     } catch (error) {
-      Logger.debug(
+      Log.debug(
         "DOCTOR REGISTRATION DOCUMENT DELETE 500 ERROR ---> ",
         error
       );
@@ -3200,7 +3200,7 @@ class DoctorController extends Controller {
     const { doctor_id = null } = body;
 
     const file = req.file;
-    Logger.debug("file ---> ", file);
+    Log.debug("file ---> ", file);
     // const fileExt= file.originalname.replace(/\s+/g, '');
     try {
       let doctorUserId = userId;
@@ -3267,7 +3267,7 @@ class DoctorController extends Controller {
         return raiseClientError(res, 422, {}, "Doctor/patient do not exist");
       }
     } catch (error) {
-      Logger.debug("83901283091298 add patient to watchlist error", error);
+      Log.debug("83901283091298 add patient to watchlist error", error);
       return raiseServerError(res);
     }
   };
@@ -3310,7 +3310,7 @@ class DoctorController extends Controller {
         return raiseClientError(res, 422, {}, "Doctor/patient do not exist");
       }
     } catch (error) {
-      Logger.debug("83901283091298 add patient to watchlist error", error);
+      Log.debug("83901283091298 add patient to watchlist error", error);
       return raiseServerError(res);
     }
   };
@@ -3369,7 +3369,7 @@ class DoctorController extends Controller {
       //   return raiseClientError(res, 422, {}, "Please check filled details");
       // }
     } catch (error) {
-      Logger.debug("updateRazorpayAccount 500 error", error);
+      Log.debug("updateRazorpayAccount 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -3498,7 +3498,7 @@ class DoctorController extends Controller {
         "Careplan added successfully"
       );
     } catch (error) {
-      Logger.debug("UPDATE  PATIENT AND CAREPLAN 500 ERROR", error);
+      Log.debug("UPDATE  PATIENT AND CAREPLAN 500 ERROR", error);
       return raiseServerError(res);
     }
   };
@@ -3564,7 +3564,7 @@ class DoctorController extends Controller {
         "Chat permission updated successfully."
       );
     } catch (error) {
-      Logger.debug("toggleChatMessagePermission 500 ERROR", error);
+      Log.debug("toggleChatMessagePermission 500 ERROR", error);
       return raiseServerError(res);
     }
   };
@@ -3632,7 +3632,7 @@ class DoctorController extends Controller {
         "Video call permission updated successfully."
       );
     } catch (error) {
-      Logger.debug("toggleVideoCallPermission 500 ERROR", error);
+      Log.debug("toggleVideoCallPermission 500 ERROR", error);
       return raiseServerError(res);
     }
   };
@@ -3654,7 +3654,7 @@ class DoctorController extends Controller {
         seachDiagnosisText = "",
       } = query || {};
 
-      Logger.debug("783425462354725436211", { query });
+      Log.debug("783425462354725436211", { query });
 
       const limit = process.config.PATIENT_LIST_SIZE_LIMIT;
 
@@ -3883,7 +3883,7 @@ class DoctorController extends Controller {
         "Patients data fetched successfully."
       );
     } catch (error) {
-      Logger.debug("getPaginatedDataForPatients 500 ERROR", error);
+      Log.debug("getPaginatedDataForPatients 500 ERROR", error);
       return raiseServerError(res);
     }
   };
@@ -3943,7 +3943,7 @@ class DoctorController extends Controller {
         return raiseClientError(res, 422, {}, "No Matching Doctors found.");
       }
     } catch (error) {
-      Logger.debug("searchEmail 500 ERROR", error);
+      Log.debug("searchEmail 500 ERROR", error);
       return raiseServerError(res);
     }
   };
@@ -4039,7 +4039,7 @@ class DoctorController extends Controller {
         );
       }
     } catch (error) {
-      Logger.debug("searchDoctorName 500 error ---> ", error);
+      Log.debug("searchDoctorName 500 error ---> ", error);
       return raiseServerError(res);
     }
   };
@@ -4172,7 +4172,7 @@ class DoctorController extends Controller {
         "Appointments data fetched successfully."
       );
     } catch (error) {
-      Logger.debug("getAllAppointmentForDoctors 500 error ", error);
+      Log.debug("getAllAppointmentForDoctors 500 error ", error);
       return raiseServerError(res);
     }
   };
@@ -4198,7 +4198,7 @@ class DoctorController extends Controller {
   //         return raiseClientError(res, 422, {}, "Profile already added in the treatment");
   //       }
   //   } catch(error) {
-  //     Logger.debug("addProfile 500 ERROR", error);
+  //     Log.debug("addProfile 500 ERROR", error);
   //     return raiseServerError(res);
   //   }
   // };
@@ -4224,7 +4224,7 @@ class DoctorController extends Controller {
       const { mimetype } = file || {};
       const fileType = mimetype.split("/");
 
-      Logger.debug("medicineModificationDocs mimetype ---> ", mimetype);
+      Log.debug("medicineModificationDocs mimetype ---> ", mimetype);
       if (!ALLOWED_DOC_TYPE_DOCTORS.includes(fileType[1])) {
         return this.raiseClientError(
           res,

@@ -2,9 +2,9 @@ import Controller from "../../index";
 import collegeService from "../../../services/college/college.service";
 import CollegeWrapper from "../../../apiWrapper/mobile/college";
 
-import Log from "../../../../libs/log";
+import { createLogger } from "../../../../libs/log";
 
-const Logger = new Log("MOBILE COLLEGE CONTROLLER");
+const Log = createLogger("MOBILE COLLEGE CONTROLLER");
 
 class CollegeController extends Controller {
   constructor() {
@@ -17,7 +17,7 @@ class CollegeController extends Controller {
       const { query } = req;
       const { value } = query || {};
 
-      // Logger.debug("value in req", value);
+      // Log.debug("value in req", value);
 
       const collegeDetails = await collegeService.search(value);
 
@@ -48,7 +48,7 @@ class CollegeController extends Controller {
         );
       }
     } catch (error) {
-      Logger.debug("college search 500 error", error);
+      Log.debug("college search 500 error", error);
       return raiseServerError(res);
     }
   };

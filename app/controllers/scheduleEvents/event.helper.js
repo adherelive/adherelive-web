@@ -1,4 +1,4 @@
-import Logger from "../../../libs/log";
+import { createLogger } from "../../../libs/log";
 import { EVENT_TYPE, USER_CATEGORY } from "../../../constant";
 
 // Services
@@ -18,7 +18,7 @@ import DietWrapper from "../../apiWrapper/web/diet";
 import WorkoutWrapper from "../../apiWrapper/web/workouts";
 import { getTime } from "../../helper/timer";
 
-const Log = new Logger("EVENT HELPER");
+const Log = createLogger("EVENT HELPER");
 
 export const doctorChart = async (req) => {
   try {

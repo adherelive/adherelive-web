@@ -1,6 +1,6 @@
-import Logger from "../../../libs/log";
+import { createLogger } from "../../../libs/log";
 
-const Log = new Logger("PATIENT > HELPER");
+const Log = createLogger("PATIENT > HELPER");
 
 export const getCarePlanData = async (carePlans = []) => {
   try {

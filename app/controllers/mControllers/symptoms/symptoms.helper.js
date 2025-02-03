@@ -1,10 +1,10 @@
 import awsS3Service from "../../../services/awsS3/awsS3.service";
 import md5 from "js-md5";
 
-import Logger from "../../../../libs/log";
+import { createLogger } from "../../../../libs/log";
 import { completePath } from "../../../helper/s3FilePath";
 
-const Log = new Logger("SYMPTOM > CONTROLLER > HELPER");
+const Log = createLogger("SYMPTOM > CONTROLLER > HELPER");
 
 export const uploadImage = async ({ userId, file }) => {
   try {

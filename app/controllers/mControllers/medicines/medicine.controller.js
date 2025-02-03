@@ -3,11 +3,11 @@ import medicineService from "../../../services/medicine/medicine.service";
 import AlgoliaService from "../../../services/algolia/algolia.service";
 
 import MedicineApiWrapper from "../../../apiWrapper/mobile/medicine";
-import Log from "../../../../libs/log";
+import { createLogger } from "../../../../libs/log";
 
 const FILE_NAME = "MOBILE MEDICINE CONTROLLER";
 
-const Logger = new Log(FILE_NAME);
+const Log = createLogger(FILE_NAME);
 
 class MobileMedicineController extends Controller {
   constructor() {
@@ -21,7 +21,7 @@ class MobileMedicineController extends Controller {
 
       const allMedicine = await medicineService.search(value);
 
-      // Logger.debug("medicine search value", value);
+      // Log.debug("medicine search value", value);
 
       let medicineApiDetails = {};
 
@@ -41,7 +41,7 @@ class MobileMedicineController extends Controller {
         "medicine data fetched successfully"
       );
     } catch (error) {
-      // Logger.debug("500 error", error);
+      // Log.debug("500 error", error);
       return raiseServerError(res, 500, {}, error.message);
     }
   };
@@ -89,7 +89,7 @@ class MobileMedicineController extends Controller {
         "New medicine added successfully."
       );
     } catch (error) {
-      Logger.debug("500 addMedicine error", error);
+      Log.debug("500 addMedicine error", error);
       return raiseServerError(res, 500, {}, error.message);
     }
   };

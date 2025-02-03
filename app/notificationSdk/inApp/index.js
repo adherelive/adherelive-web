@@ -1,8 +1,8 @@
 import stream from "getstream";
-import Logger from "../../../libs/log";
+import { createLogger } from "../../../libs/log";
 import EventExecutor from "../executor";
 
-const Log = new Logger("NOTIFICATION_SDK > IN_APP > STREAM");
+const Log = createLogger("NOTIFICATION_SDK > IN_APP > STREAM");
 
 class AppNotification {
   constructor() {

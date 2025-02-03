@@ -1,5 +1,5 @@
 import Controller from "../../index";
-import Logger from "../../../../libs/log";
+import { createLogger } from "../../../../libs/log";
 
 // services
 import carePlanTemplateService from "../../../services/carePlanTemplate/carePlanTemplate.service";
@@ -18,7 +18,7 @@ import { TEMPLATE_DUPLICATE_TEXT } from "../../../../constant";
 
 import PERMISSIONS from "../../../../config/permissions";
 
-const Log = new Logger("MOBILE > CAREPLAN_TEMPLATE > CONTROLLER");
+const Log = createLogger("MOBILE > CAREPLAN_TEMPLATE > CONTROLLER");
 
 class CarePlanTemplateController extends Controller {
   constructor() {

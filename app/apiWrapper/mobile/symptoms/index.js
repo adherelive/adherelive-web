@@ -12,9 +12,9 @@ import DocumentWrapper from "../uploadDocument";
 
 import { ACTIVITY_TYPE, DOCUMENT_PARENT_TYPE } from "../../../../constant";
 
-import Logger from "../../../../libs/log";
+import { createLogger } from "../../../../libs/log";
 
-const Log = new Logger("API_WRAPPER > WEB > SYMPTOMS");
+const Log = createLogger("API_WRAPPER > WEB > SYMPTOMS");
 
 class SymptomWrapper extends BaseSymptom {
   constructor(data) {

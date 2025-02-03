@@ -39,7 +39,7 @@ import DietWrapper from "../../../apiWrapper/mobile/diet";
 import * as DietHelper from "../../diet/diet.helper";
 
 import { randomString } from "../../../../libs/helper";
-import Log from "../../../../libs/log";
+import { createLogger } from "../../../../libs/log";
 
 import fs from "fs";
 import md5 from "js-md5";
@@ -96,7 +96,7 @@ import * as carePlanHelper from "../carePlans/carePlan.helper";
 
 const path = require("path");
 
-const Logger = new Log("mobile patient controller");
+const Log = createLogger("mobile patient controller");
 
 class MPatientController extends Controller {
   constructor() {
@@ -143,7 +143,7 @@ class MPatientController extends Controller {
               userPreferenceId
             );
         }
-        // Logger.debug("addTimingPreference", addTimingPreference);
+        // Log.debug("addTimingPreference", addTimingPreference);
       }
 
       const patientDetails = await patientService.getPatientByUserId(userId);
@@ -205,7 +205,7 @@ class MPatientController extends Controller {
 
       const profilePicUrl = `/${profilePic}`;
 
-      // Logger.debug("18371823 profilePicUrl ---> ", profilePicUrl);
+      // Log.debug("18371823 profilePicUrl ---> ", profilePicUrl);
 
       // TODO: minio configure here
 
@@ -309,7 +309,7 @@ class MPatientController extends Controller {
         `Appointment data for patient: ${id} fetched successfully`
       );
     } catch (error) {
-      Logger.debug("getPatientAppointments 500 error", error);
+      Log.debug("getPatientAppointments 500 error", error);
       raiseServerError(res);
     }
   };
@@ -340,7 +340,7 @@ class MPatientController extends Controller {
         medicineId.push(medicationWrapper.getMedicineId());
       }
 
-      Logger.debug("medicineId", medicineId);
+      Log.debug("medicineId", medicineId);
 
       const medicineData = await medicineService.getMedicineByData({
         id: medicineId,
@@ -348,7 +348,7 @@ class MPatientController extends Controller {
 
       let medicineApiData = {};
 
-      Logger.debug("medicineData", medicineData);
+      Log.debug("medicineData", medicineData);
 
       for (const medicine of medicineData) {
         const medicineWrapper = await MedicineApiWrapper(medicine);
@@ -356,7 +356,7 @@ class MPatientController extends Controller {
           medicineWrapper.getBasicInfo();
       }
 
-      Logger.debug("medicineData", medicineData);
+      Log.debug("medicineData", medicineData);
 
       return raiseSuccess(
         res,
@@ -375,7 +375,7 @@ class MPatientController extends Controller {
         "Medications fetched successfully"
       );
     } catch (error) {
-      Logger.debug("medication get 500 error ", error);
+      Log.debug("medication get 500 error ", error);
       return raiseServerError(res);
     }
   };
@@ -535,7 +535,7 @@ class MPatientController extends Controller {
         "Patient care plan details fetched successfully"
       );
     } catch (error) {
-      Logger.debug("get careplan 500 error ---> ", error);
+      Log.debug("get careplan 500 error ---> ", error);
       return this.raiseServerError(res);
     }
   };
@@ -578,7 +578,7 @@ class MPatientController extends Controller {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       const { id: patient_id = 1 } = req.params;
-      Logger.info(`params: patient_id = ${patient_id}`);
+      Log.info(`params: patient_id = ${patient_id}`);
       const {
         userDetails: {
           userRoleId = null,
@@ -769,7 +769,7 @@ class MPatientController extends Controller {
         "Patient care plan details fetched successfully"
       );
     } catch (error) {
-      // Logger.debug("get careplan 500 error ---> ", error);
+      // Log.debug("get careplan 500 error ---> ", error);
       return raiseServerError(res);
     }
   };
@@ -1152,7 +1152,7 @@ class MPatientController extends Controller {
         "Patient care plan details fetched successfully"
       );
     } catch (error) {
-      Logger.debug("get careplan 500 error ---> ", error);
+      Log.debug("get careplan 500 error ---> ", error);
       return this.raiseServerError(res);
     }
   };
@@ -1160,7 +1160,7 @@ class MPatientController extends Controller {
   getPatientSymptoms = async (req, res) => {
     const { raiseSuccess, raiseServerError, raiseClientError } = this;
     try {
-      Logger.debug("getPatientSymptoms req.params ---> ", req.params);
+      Log.debug("getPatientSymptoms req.params ---> ", req.params);
       const { params: { patient_id } = {}, userDetails: { userId } = {} } = req;
 
       const symptomData = await SymptomService.getAllByData({ patient_id });
@@ -1180,7 +1180,7 @@ class MPatientController extends Controller {
         for (const data of symptomData) {
           const symptom = await SymptomWrapper({ data });
 
-          Logger.debug("symptom created date ---> ", symptom.getCreatedDate());
+          Log.debug("symptom created date ---> ", symptom.getCreatedDate());
 
           // DATA FORMATTED FOR DATE ORDER
           const symptomDetails = await symptom.getDateWiseInfo();
@@ -1245,7 +1245,7 @@ class MPatientController extends Controller {
         );
       }
     } catch (error) {
-      Logger.debug("getPatientSymptoms 500 error", error);
+      Log.debug("getPatientSymptoms 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -1253,7 +1253,7 @@ class MPatientController extends Controller {
   getPatientPartSymptoms = async (req, res) => {
     const { raiseSuccess, raiseServerError, raiseClientError } = this;
     try {
-      Logger.debug("getPatientPartSymptoms req.params ---> ", req.params);
+      Log.debug("getPatientPartSymptoms req.params ---> ", req.params);
       const { query: { duration = "5" } = {}, params: { patient_id } = {} } =
         req;
 
@@ -1363,7 +1363,7 @@ class MPatientController extends Controller {
         );
       }
     } catch (error) {
-      Logger.debug("getPatientPartSymptoms 500 error", error);
+      Log.debug("getPatientPartSymptoms 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -1371,7 +1371,7 @@ class MPatientController extends Controller {
   getPatientVitals = async (req, res) => {
     const { raiseSuccess, raiseServerError, raiseClientError } = this;
     try {
-      Logger.debug("Get Pateint Vitals -> req.params: ", req.params);
+      Log.debug("Get Pateint Vitals -> req.params: ", req.params);
       const { params: { patient_id } = {} } = req;
 
       const carePlans = await carePlanService.getMultipleCarePlanByData({
@@ -1437,7 +1437,7 @@ class MPatientController extends Controller {
         );
       }
     } catch (error) {
-      Logger.debug("getPatientVitals 500 error", error);
+      Log.debug("getPatientVitals 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -1445,7 +1445,7 @@ class MPatientController extends Controller {
   searchPatient = async (req, res) => {
     const { raiseSuccess, raiseServerError } = this;
     try {
-      Logger.info(`searchPatient request query : ${req.query.value}`);
+      Log.info(`searchPatient request query : ${req.query.value}`);
       const { query: { value = "" } = {} } = req;
 
       const {
@@ -1533,7 +1533,7 @@ class MPatientController extends Controller {
         );
       }
     } catch (error) {
-      Logger.debug("searchPatient 500 error", error);
+      Log.debug("searchPatient 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -1552,7 +1552,7 @@ class MPatientController extends Controller {
       const { basic_info: { prefix, mobile_number, email } = {} } =
         users.getBasicInfo();
 
-      Logger.debug("patient_id ---> ", mobile_number);
+      Log.debug("patient_id ---> ", mobile_number);
 
       const otp = generateOTP();
 
@@ -1614,7 +1614,7 @@ class MPatientController extends Controller {
         "OTP sent successfully"
       );
     } catch (error) {
-      Logger.debug("patientConsentRequest 500 error", error);
+      Log.debug("patientConsentRequest 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -1724,7 +1724,7 @@ class MPatientController extends Controller {
         );
       }
     } catch (error) {
-      Logger.debug("patientConsentVerification 500 error", error);
+      Log.debug("patientConsentVerification 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -1842,7 +1842,7 @@ class MPatientController extends Controller {
         }
       }
     } catch (error) {
-      Logger.debug("searchPatientForDoctor 500 error", error);
+      Log.debug("searchPatientForDoctor 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -2209,7 +2209,7 @@ class MPatientController extends Controller {
         }
       });
 
-      Logger.debug("Sorted investigations ", sortedInvestigations);
+      Log.debug("Sorted investigations ", sortedInvestigations);
 
       if (nextAppointment) {
         nextAppointmentDuration =
@@ -2420,7 +2420,7 @@ class MPatientController extends Controller {
       };
       return res.sendFile(pdfFile, options);
     } catch (err) {
-      Logger.debug("Error got in the generate prescription: ", err);
+      Log.debug("Error got in the generate prescription: ", err);
       return raiseServerError(res);
     }
   };
@@ -2445,7 +2445,7 @@ class MPatientController extends Controller {
         "User preference fetched successfully."
       );
     } catch (err) {
-      Logger.debug("Error got in the get patient timings: ", err);
+      Log.debug("Error got in the get patient timings: ", err);
       return raiseServerError(res);
     }
   };
@@ -2457,7 +2457,7 @@ class MPatientController extends Controller {
         params: { patient_id } = {},
         userDetails: { userCategoryId } = {},
       } = req;
-      Logger.info(`params: patient_id = ${patient_id}`);
+      Log.info(`params: patient_id = ${patient_id}`);
 
       if (!patient_id) {
         return raiseClientError(res, 422, {}, "Please select correct patient");
@@ -2525,7 +2525,7 @@ class MPatientController extends Controller {
         "Reports for patient fetched successfully"
       );
     } catch (error) {
-      Logger.debug("getPatientReports 500 error", error);
+      Log.debug("getPatientReports 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -2613,7 +2613,7 @@ class MPatientController extends Controller {
         "Payment terms changed successfully."
       );
     } catch (error) {
-      Logger.debug("acceptPaymentsTerms 500 error ---> ", error);
+      Log.debug("acceptPaymentsTerms 500 error ---> ", error);
       return this.raiseServerError(res);
     }
   };
@@ -2783,7 +2783,7 @@ class MPatientController extends Controller {
         "Payment links data fetched successfully."
       );
     } catch (error) {
-      Logger.debug("getAllRelatedDoctorPaymentLinks 500 error ---> ", error);
+      Log.debug("getAllRelatedDoctorPaymentLinks 500 error ---> ", error);
       return this.raiseServerError(res);
     }
   };

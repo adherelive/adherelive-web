@@ -1,9 +1,9 @@
 import Controller from "../index";
 
-import Logger from "../../../libs/log";
+import { createLogger } from "../../../libs/log";
 import ChatJob from "../../jobSdk/Chat/observer";
 
-const Log = new Logger("WEB > CHAT > CONTROLLER");
+const Log = createLogger("WEB > CHAT > CONTROLLER");
 
 class ChatController extends Controller {
   constructor() {

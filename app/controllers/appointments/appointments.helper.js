@@ -1,10 +1,10 @@
-import Logger from "../../../libs/log";
+import { createLogger } from "../../../libs/log";
 import { FAVOURITE_TYPE, MEDICAL_TEST } from "../../../constant";
 
 // Services
 import FavoriteService from "../../services/userFavourites/userFavourites.service";
 
-const Log = new Logger("APPOINTMENT > HELPER");
+const Log = createLogger("APPOINTMENT > HELPER");
 
 export const getFavoriteInDetails = async (
   userTypeData,

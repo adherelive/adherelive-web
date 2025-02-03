@@ -1,6 +1,6 @@
 import Controller from "../index";
 
-import Logger from "../../../libs/log";
+import { createLogger } from "../../../libs/log";
 import FlashCardService from "../../services/flashCard/flashCard.service";
 import ReportService from "../../services/reports/report.service";
 import TxActivity from "../../services/transactionActivity/transactionActivity.service";
@@ -22,7 +22,7 @@ import { DOCUMENT_PARENT_TYPE, USER_CATEGORY } from "../../../constant";
 const { createReport } = require("./generateTable.helper");
 
 const fs = require("fs");
-const Log = new Logger("WEB > CONTROLLER > FLASH CARD");
+const Log = createLogger("WEB > CONTROLLER > FLASH CARD");
 
 class FlashCardController extends Controller {
   constructor() {

@@ -36,9 +36,9 @@ import ScheduleEventService from "../../../services/scheduleEvents/scheduleEvent
 import moment from "moment";
 import PERMISSIONS from "../../../../config/permissions";
 
-import Logger from "../../../../libs/log";
+import { createLogger } from "../../../../libs/log";
 
-const Log = new Logger("MOBILE > CARE_PLAN > CONTROLLER");
+const Log = createLogger("MOBILE > CARE_PLAN > CONTROLLER");
 
 class CarePlanController extends Controller {
   constructor() {

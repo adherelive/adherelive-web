@@ -1,6 +1,6 @@
 import Controller from "../../index";
 
-import Logger from "../../../../libs/log";
+import { createLogger } from "../../../../libs/log";
 
 // services
 import ExerciseService from "../../../services/exercises/exercise.service";
@@ -14,7 +14,7 @@ import ExerciseContentWrapper from "../../../apiWrapper/mobile/exerciseContents"
 import * as UploadHelper from "../../../helper/uploadDocuments";
 import { DOCUMENT_PARENT_TYPE } from "../../../../constant";
 
-const Log = new Logger("MOBILE > EXERCISE > CONTROLLER");
+const Log = createLogger("MOBILE > EXERCISE > CONTROLLER");
 
 class ExerciseController extends Controller {
   constructor() {

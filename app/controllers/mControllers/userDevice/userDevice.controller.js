@@ -1,11 +1,11 @@
 import Controller from "../../index";
-import Logger from "../../../../libs/log";
+import { createLogger } from "../../../../libs/log";
 
 // services
 import UserService from "../../../services/user/user.service";
 import UserDeviceService from "../../../services/userDevices/userDevice.service";
 
-const Log = new Logger("MOBILE > USER_DEVICE > CONTROLLER");
+const Log = createLogger("MOBILE > USER_DEVICE > CONTROLLER");
 
 class UserDeviceController extends Controller {
   constructor() {

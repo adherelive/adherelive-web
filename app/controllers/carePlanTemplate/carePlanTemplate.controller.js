@@ -1,6 +1,6 @@
 import Controller from "../index";
 
-import Log from "../../../libs/log";
+import { createLogger } from "../../../libs/log";
 
 // Services
 import carePlanTemplateService from "../../services/carePlanTemplate/carePlanTemplate.service";

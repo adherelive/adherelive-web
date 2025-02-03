@@ -1,6 +1,6 @@
 import Controller from "../index";
 
-import Logger from "../../../libs/log";
+import { createLogger } from "../../../libs/log";
 import moment from "moment";
 
 import * as EventHelper from "./event.helper";
@@ -20,7 +20,7 @@ import VitalWrapper from "../../apiWrapper/web/vitals";
 // Timer
 import { getTime } from "../../helper/timer";
 
-const Log = new Logger("WEB > EVENT > CONTROLLER");
+const Log = createLogger("WEB > EVENT > CONTROLLER");
 
 class EventController extends Controller {
   constructor() {

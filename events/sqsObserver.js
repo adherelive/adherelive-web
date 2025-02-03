@@ -1,4 +1,4 @@
-import Logger from "../libs/log";
+import { createLogger } from "../libs/log";
 import { EVENT_TYPE } from "../constant";
 import {
   handleAppointments,
@@ -10,7 +10,7 @@ import {
   handleWorkout,
 } from "./helper";
 
-const Log = new Logger("EVENTS > SQS_OBSERVER");
+const Log = createLogger("EVENTS > SQS_OBSERVER");
 
 export default class SqsObserver {
   constructor() {}
