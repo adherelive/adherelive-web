@@ -1,6 +1,9 @@
 import Database from "../../../libs/mysql";
 import { TABLE_NAME } from "../../models/serviceUserMapping";
 
+import { createLogger } from "../../../libs/log";
+const log = createLogger("WEB > SERVICE USER MAPPING > SERVICES");
+
 export default class ServiceUserMapping {
   constructor() {}
 

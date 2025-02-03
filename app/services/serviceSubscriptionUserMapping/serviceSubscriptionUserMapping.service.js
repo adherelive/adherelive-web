@@ -1,6 +1,9 @@
 import Database from "../../../libs/mysql";
 import { TABLE_NAME } from "../../models/serviceSubscriptionUserMapping";
 
+import { createLogger } from "../../../libs/log";
+const log = createLogger("WEB > SUBSCRIPTION USER MAPPING > SERVICES");
+
 export default class ServiceUserMapping {
   constructor() {}
 
@@ -38,13 +41,14 @@ export default class ServiceUserMapping {
     const transaction = await Database.initTransaction();
     try {
       /**
-             * {
-             notes: 'asdasdasdasdasd',
-             durations: 2,
-             service_charge: 1000,
-             patient_status: 'active'
-             } 8
-             */
+       * TODO: Remove this code?
+      {
+       notes: 'asdasdasdasdasd',
+       durations: 2,
+       service_charge: 1000,
+       patient_status: 'active'
+      }
+        */
       log.debug(data, id);
       const serviceSubscriptionUserMapping = await Database.getModel(
         TABLE_NAME

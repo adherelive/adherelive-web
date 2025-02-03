@@ -1,15 +1,23 @@
 import Database from "../../../libs/mysql";
-
-// TABLES
 import { TABLE_NAME } from "../../models/userFavourites";
 
 import { createLogger } from "../../../libs/log";
-
 const log = createLogger("WEB > USER_FAVOURITES > SERVICE");
 
+/**
+ *
+ *
+ * @class UserFavouritesService
+ */
 class UserFavouritesService {
   constructor() {}
 
+  /**
+   *
+   *
+   * @param data
+   * @returns {Promise<*>}
+   */
   markFavourite = async (data) => {
     const transaction = await Database.initTransaction();
     try {
@@ -25,6 +33,12 @@ class UserFavouritesService {
     }
   };
 
+  /**
+   *
+   *
+   * @param data
+   * @returns {Promise<Model[]>}
+   */
   getAllFavourites = async (data) => {
     try {
       const favourite = await Database.getModel(TABLE_NAME).findAll({
@@ -37,6 +51,12 @@ class UserFavouritesService {
     }
   };
 
+  /**
+   *
+   *
+   * @param data
+   * @returns {Promise<*>}
+   */
   findExistingFavourite = async (data) => {
     try {
       const existing = await Database.getModel(TABLE_NAME).findOne({
@@ -49,6 +69,12 @@ class UserFavouritesService {
     }
   };
 
+  /**
+   *
+   *
+   * @param data
+   * @returns {Promise<*>}
+   */
   getByData = async (data) => {
     try {
       const favourite = await Database.getModel(TABLE_NAME).findOne({
@@ -61,6 +87,12 @@ class UserFavouritesService {
     }
   };
 
+  /**
+   *
+   *
+   * @param id
+   * @returns {Promise<*>}
+   */
   delete = async (id) => {
     try {
       const deleteFavourite = await Database.getModel(TABLE_NAME).destroy({
@@ -71,7 +103,7 @@ class UserFavouritesService {
       });
       return deleteFavourite;
     } catch (error) {
-      log.debug("32784284576237463256948723 ERRRRO", error);
+      log.debug("Error while deleting a User Favourite: ", error);
       throw error;
     }
   };

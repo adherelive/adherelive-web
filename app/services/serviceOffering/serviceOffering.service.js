@@ -1,6 +1,9 @@
 import Database from "../../../libs/mysql";
 import { TABLE_NAME } from "../../models/serviceOffering";
 
+import { createLogger } from "../../../libs/log";
+const log = createLogger("WEB > SERVICE OFFERING > SERVICES");
+
 /**
  *
  *

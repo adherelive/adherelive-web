@@ -2,6 +2,9 @@ import { Op } from "sequelize";
 import Database from "../../../libs/mysql";
 import { TABLE_NAME } from "../../models/severity";
 
+import { createLogger } from "../../../libs/log";
+const log = createLogger("WEB > SEVERITY > SERVICES");
+
 class SeverityService {
   getAll = async () => {
     try {
