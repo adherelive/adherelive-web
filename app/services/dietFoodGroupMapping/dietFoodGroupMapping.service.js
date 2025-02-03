@@ -4,6 +4,9 @@ import { TABLE_NAME as foodGroupTableName } from "../../models/foodGroups";
 import { TABLE_NAME as dietTableName } from "../../models/diet";
 import { TABLE_NAME as similarFoodMappingTableName } from "../../models/similarFoodMapping";
 
+import { createLogger } from "../../../libs/log";
+const log = createLogger("WEB > DIET FOOD GROUP > SERVICE");
+
 const DEFAULT_ORDER = [["created_at", "DESC"]];
 
 class DietFoodGroupMappingService {
@@ -27,20 +30,22 @@ class DietFoodGroupMappingService {
     }
   };
 
-  // getByData = async data => {
-  //   try {
-  //     return await Database.getModel(TABLE_NAME).findOne({
-  //           where: data,
-  //           include: [
-  //               Database.getModel(foodGroupTableName),
-  //               Database.getModel(dietTableName)
-  //           ],
-  //           raw: true
-  //       });
-  //   } catch(error) {
-  //       throw error;
-  //   }
-  // };
+  /**
+   * TODO: Check on why the function has been changed and a duplicate created?
+  getByData = async data => {
+    try {
+      return await Database.getModel(TABLE_NAME).findOne({
+            where: data,
+            include: [
+                Database.getModel(foodGroupTableName),
+                Database.getModel(dietTableName)
+            ],
+            raw: true
+        });
+    } catch(error) {
+        throw error;
+    }
+  };*/
 
   getByData = async (data) => {
     try {

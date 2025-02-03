@@ -1,10 +1,6 @@
-import { createLogger } from "../../../libs/log";
-
 const emailLoggerModel = require("../../models/emailLogger");
 // const smsLoggerModel = require("../../models/smsLogger");
 // const eventErrorLoggerModel = require("../../models/eventErrorLogger");
-
-const log = createLogger("ProxySDK Event Logging")
 
 class Logger {
     constructor(type, payload) {
@@ -38,9 +34,9 @@ class Logger {
         // await result.save();
     }
 
-    info(message) {
-        log.debug(`[INFO] ${message}`);
-    }
+    // info(message) {
+    //     log.debug(`[INFO] ${message}`);
+    // }
 }
 
 module.exports = Logger;

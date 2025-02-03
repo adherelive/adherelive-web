@@ -4,6 +4,14 @@ import moment from "moment";
 import { USER_CATEGORY } from "../../../constant";
 import { TABLE_NAME } from "../../models/appointments";
 
+import { createLogger } from "../../../libs/log";
+const log = createLogger("WEB > APPOINTMENT > SERVICE");
+
+/**
+ *
+ *
+ * @class AppointmentService
+ */
 class AppointmentService {
   async addAppointment(data) {
     const transaction = await Database.initTransaction();
@@ -19,6 +27,13 @@ class AppointmentService {
     }
   }
 
+  /**
+   *
+   *
+   * @param id
+   * @param data
+   * @returns {Promise<*>}
+   */
   updateAppointment = async (id, data) => {
     try {
       const appointment = await Database.getModel(TABLE_NAME).update(data, {
@@ -32,6 +47,12 @@ class AppointmentService {
     }
   };
 
+  /**
+   *
+   *
+   * @param id
+   * @returns {Promise<*>}
+   */
   getAppointmentById = async (id) => {
     try {
       const appointment = await Database.getModel(TABLE_NAME).findOne({
@@ -45,6 +66,14 @@ class AppointmentService {
     }
   };
 
+  /**
+   *
+   *
+   * @param today
+   * @param participant_one_id
+   * @param participant_two_id
+   * @returns {Promise<Model[]>}
+   */
   getDoctorAppointmentsForDate = async ({
     today,
     participant_one_id,
@@ -77,6 +106,12 @@ class AppointmentService {
     }
   };
 
+  /**
+   *
+   *
+   * @param data
+   * @returns {Promise<Model[]>}
+   */
   getAppointmentByData = async (data) => {
     try {
       const appointment = await Database.getModel(TABLE_NAME).findAll({
@@ -88,6 +123,12 @@ class AppointmentService {
     }
   };
 
+  /**
+   *
+   *
+   * @param patient_id
+   * @returns {Promise<Model[]>}
+   */
   getAppointmentForPatient = async (patient_id) => {
     try {
       const appointments = await Database.getModel(TABLE_NAME).findAll({
@@ -111,6 +152,12 @@ class AppointmentService {
     }
   };
 
+  /**
+   *
+   *
+   * @param doctor_id
+   * @returns {Promise<Model[]>}
+   */
   getAllAppointmentForDoctor = async (doctor_id) => {
     try {
       const appointments = await Database.getModel(TABLE_NAME).findAll({
@@ -133,41 +180,50 @@ class AppointmentService {
     }
   };
 
-  // getDayAppointmentForDoctor = async (doctor_id, provider_id, date) => {
-  //   try {
-  //     const startOfDay = moment(date).startOf("day").toISOString();
-  //     const endOfDay = moment(date).endOf("day").toISOString();
-  //     const appointments = await Database.getModel(TABLE_NAME).findAll({
-  //       where: {
-  //         [Op.and]: [
-  //           {
-  //             start_date: {
-  //               [Op.between]: [startOfDay, endOfDay],
-  //             },
-  //           },
-  //           {
-  //             [Op.or]: [
-  //               {
-  //                 participant_two_id: doctor_id,
-  //                 participant_two_type: USER_CATEGORY.DOCTOR,
-  //                 provider_id: provider_id,
-  //               },
-  //               {
-  //                 participant_one_id: doctor_id,
-  //                 participant_one_type: USER_CATEGORY.DOCTOR,
-  //                 provider_id: provider_id,
-  //               },
-  //             ],
-  //           },
-  //         ],
-  //       },
-  //     });
-  //     return appointments;
-  //   } catch (error) {
-  //     throw error;
-  //   }
-  // };
+  /**
+   * TODO: Check why this code is commented?
+  getDayAppointmentForDoctor = async (doctor_id, provider_id, date) => {
+    try {
+      const startOfDay = moment(date).startOf("day").toISOString();
+      const endOfDay = moment(date).endOf("day").toISOString();
+      const appointments = await Database.getModel(TABLE_NAME).findAll({
+        where: {
+          [Op.and]: [
+            {
+              start_date: {
+                [Op.between]: [startOfDay, endOfDay],
+              },
+            },
+            {
+              [Op.or]: [
+                {
+                  participant_two_id: doctor_id,
+                  participant_two_type: USER_CATEGORY.DOCTOR,
+                  provider_id: provider_id,
+                },
+                {
+                  participant_one_id: doctor_id,
+                  participant_one_type: USER_CATEGORY.DOCTOR,
+                  provider_id: provider_id,
+                },
+              ],
+            },
+          ],
+        },
+      });
+      return appointments;
+    } catch (error) {
+      throw error;
+    }
+  };
+   */
 
+  /**
+   *
+   *
+   * @param date
+   * @returns {Promise<Model[]>}
+   */
   // getDayAppointmentByDate = async (doctor_id, provider_id, date) =>
   getAppointmentsByDate = async (date) => {
     try {
@@ -190,20 +246,23 @@ class AppointmentService {
                 [Op.between]: [startOfDay, endOfDay],
               },
             },
-            // {
-            //   [Op.or]: [
-            //     {
-            //       participant_two_id: doctor_id,
-            //       participant_two_type: USER_CATEGORY.DOCTOR,
-            //       provider_id: provider_id,
-            //     },
-            //     {
-            //       participant_one_id: doctor_id,
-            //       participant_one_type: USER_CATEGORY.DOCTOR,
-            //       provider_id: provider_id,
-            //     },
-            //   ],
-            // },
+            /**
+             * TODO: Check why this has been commented?
+            {
+              [Op.or]: [
+                {
+                  participant_two_id: doctor_id,
+                  participant_two_type: USER_CATEGORY.DOCTOR,
+                  provider_id: provider_id,
+                },
+                {
+                  participant_one_id: doctor_id,
+                  participant_one_type: USER_CATEGORY.DOCTOR,
+                  provider_id: provider_id,
+                },
+              ],
+            },
+             */
           ],
         },
       });
@@ -213,6 +272,14 @@ class AppointmentService {
     }
   };
 
+  /**
+   *
+   *
+   * @param doctor_id
+   * @param provider_id
+   * @param date
+   * @returns {Promise<Model[]>}
+   */
   getDayAppointmentForDoctor = async (doctor_id, provider_id, date) => {
     try {
       const startOfDay = moment(date).startOf("day").toISOString();
@@ -248,6 +315,14 @@ class AppointmentService {
     }
   };
 
+  /**
+   *
+   *
+   * @param doctor_id
+   * @param provider_id
+   * @param value
+   * @returns {Promise<Model[]>}
+   */
   getMonthAppointmentForDoctor = async (doctor_id, provider_id, value) => {
     try {
       const month = moment(value).month();
@@ -320,6 +395,13 @@ class AppointmentService {
     }
   };
 
+  /**
+   *
+   *
+   * @param doctor_id
+   * @param date
+   * @returns {Promise<Model[]>}
+   */
   getMonthAppointmentCountForDoctor = async (doctor_id, date) => {
     try {
       const startOfMonth = moment(date).startOf("month").toISOString();
@@ -356,6 +438,15 @@ class AppointmentService {
     }
   };
 
+  /**
+   *
+   *
+   * @param start_time
+   * @param end_time
+   * @param participantOne
+   * @param participantTwo
+   * @returns {Promise<Model[]>}
+   */
   checkTimeSlot = async (
     start_time,
     end_time,
@@ -403,6 +494,12 @@ class AppointmentService {
     }
   };
 
+  /**
+   *
+   *
+   * @param id
+   * @returns {Promise<*>}
+   */
   deleteAppointment = async (id) => {
     try {
       const appointment = await Database.getModel(TABLE_NAME).destroy({

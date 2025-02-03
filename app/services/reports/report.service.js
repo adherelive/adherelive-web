@@ -1,6 +1,9 @@
 import Database from "../../../libs/mysql";
 import { TABLE_NAME } from "../../models/reports";
 
+import { createLogger } from "../../../libs/log";
+const log = createLogger("WEB > REPORT > SERVICE");
+
 export default class ReportService {
   constructor() {}
 

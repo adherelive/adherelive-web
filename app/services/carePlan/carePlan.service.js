@@ -13,6 +13,9 @@ import { TABLE_NAME as medicineTableName } from "../../models/medicines";
 import { TABLE_NAME as userRolesTableName } from "../../models/userRoles";
 import { TABLE_NAME as carePlanSecondaryDoctorMappingsTableName } from "../../models/carePlanSecondaryDoctorMappings";
 
+import { createLogger } from "../../../libs/log";
+const log = createLogger("WEB > CARE PLAN > SERVICES");
+
 const DEFAULT_ORDER = [["created_at", "DESC"]];
 
 class CarePlanService {
@@ -27,7 +30,7 @@ class CarePlanService {
   }
 
   getCarePlanByData = async (data) => {
-    log.debug("getCarePlanByData ---> data: ", data);
+    log.debug("getCarePlanByData -> data: ", data);
     try {
       const { user_role_id = null, ...rest } = data || {};
 

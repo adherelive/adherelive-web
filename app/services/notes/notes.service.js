@@ -1,9 +1,23 @@
 import Database from "../../../libs/mysql";
 import { TABLE_NAME } from "../../models/notes";
 
+import { createLogger } from "../../../libs/log";
+const log = createLogger("WEB > NOTES > SERVICE");
+
+/**
+ * Duplicated in flashCard.service.js?
+ *
+ * @class ServiceOfferingService
+ */
 export default class ServiceOfferingService {
   constructor() {}
 
+  /**
+   *
+   *
+   * @param data
+   * @returns {Promise<*>}
+   */
   addNotes = async (data) => {
     const transaction = await Database.initTransaction();
     try {
@@ -20,6 +34,12 @@ export default class ServiceOfferingService {
     }
   };
 
+  /**
+   *
+   *
+   * @param data
+   * @returns {Promise<Model[]>}
+   */
   getAllNotesByData = async (data) => {
     try {
       return await Database.getModel(TABLE_NAME).findAll({
