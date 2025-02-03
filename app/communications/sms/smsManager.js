@@ -1,7 +1,7 @@
 import AWS from "aws-sdk";
 import { createLogger } from "../../../libs/log";
 
-const log = Log("Communications ---> SMS Manager");
+const log = createLogger("Communications ---> SMS Manager");
 
 class SmsManager {
   constructor() {

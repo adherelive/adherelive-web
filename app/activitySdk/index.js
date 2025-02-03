@@ -4,7 +4,7 @@ import { ACTIVITY_TYPE, EVENT_TYPE } from "../../constant";
 
 import { createLogger } from "../../libs/log";
 
-const log = Log("ACTIVITY_SDK");
+const log = createLogger("ACTIVITY_SDK");
 
 class Activity extends EventEmitter {
   constructor() {

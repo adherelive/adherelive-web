@@ -58,8 +58,8 @@ import notificationSdk from "../../notificationSdk";
 
 const path = require("path");
 
-const FILE_NAME = "WEB > APPOINTMENT > CONTROLLER";
-const Log = createLogger(FILE_NAME);
+const LOG_NAME = "WEB > APPOINTMENT > CONTROLLER";
+const Log = createLogger(LOG_NAME);
 
 /**
  *

@@ -5,9 +5,9 @@ import AlgoliaService from "../../../services/algolia/algolia.service";
 import MedicineApiWrapper from "../../../apiWrapper/mobile/medicine";
 import { createLogger } from "../../../../libs/log";
 
-const FILE_NAME = "MOBILE MEDICINE CONTROLLER";
+const LOG_NAME = "MOBILE > MEDICINE > CONTROLLER";
 
-const Log = createLogger(FILE_NAME);
+const Log = createLogger(LOG_NAME);
 
 class MobileMedicineController extends Controller {
   constructor() {

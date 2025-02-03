@@ -2,7 +2,7 @@ import AWS from "aws-sdk";
 import axios from "axios";
 import { createLogger } from "../../../libs/log";
 
-const log = Log("Communications ---> SMS Sender");
+const log = createLogger("Communications ---> SMS Sender");
 
 class SmsSender {
   constructor(payload) {

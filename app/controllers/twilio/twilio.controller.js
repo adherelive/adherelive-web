@@ -4,7 +4,7 @@ import { faker } from '@faker-js/faker';
 import twilioService from "../../services/twilio/twilio.service";
 import { createLogger } from "../../../libs/log";
 
-const log = Log("WEB > TWILIO > CONTROLLER");
+const log = createLogger("WEB > TWILIO > CONTROLLER");
 
 // Log.fileName("WEB > TWILIO > CONTROLLER");
 

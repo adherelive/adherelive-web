@@ -10,9 +10,9 @@ import FeatureMappingWrapper from "../../../apiWrapper/mobile/doctorPatientFeatu
 
 import { USER_CATEGORY } from "../../../../constant";
 
-const FILE_NAME = "MOBILE FEATURE CONTROLLER";
+const LOG_NAME = "MOBILE > FEATURES > CONTROLLER";
 
-const Log = createLogger(FILE_NAME);
+const Log = createLogger(LOG_NAME);
 
 class MobileFeatureController extends Controller {
   constructor() {

@@ -3,7 +3,7 @@ import * as https from "https";
 import fs from "fs";
 import { createLogger } from "../../../libs/log";
 
-const log = Log("AWS S3 Service");
+const log = createLogger("AWS S3 Service");
 
 class S3Service {
     constructor() {

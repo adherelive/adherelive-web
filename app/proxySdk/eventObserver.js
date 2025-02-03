@@ -4,7 +4,7 @@ import eventExecutor from "./eventExecutor";
 import { createLogger } from "../../libs/log";
 import { createLogger } from "./libs/logger";
 
-const log = Log("proxySdk:EventObserver");
+const log = createLogger("proxySdk:EventObserver");
 
 const {
   SEND_EMAIL,

@@ -7,7 +7,7 @@ const { existsSync } = require("fs");
 const ejs = require("ejs");
 const emailPayloadBuilder = require("./emailPayloadBuilder");
 
-const log = Log("communications --> emailManger");
+const log = createLogger("communications --> emailManger");
 
 const nodemailer = require("nodemailer");
 const smtpTransport = require("nodemailer-sendgrid-transport");

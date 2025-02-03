@@ -5,7 +5,7 @@ import Controller from "../../index";
 import { createLogger } from "../../../../libs/log";
 
 // Log.setFileName("MOBILE > TWILIO > CONTROLLER");
-const log = Log("MOBILE > TWILIO > CONTROLLER");
+const log = createLogger("MOBILE > TWILIO > CONTROLLER");
 
 class TwilioController extends Controller {
   constructor() {

@@ -46,8 +46,8 @@ import UserPreferenceWrapper from "../../../apiWrapper/mobile/userPreference";
 
 import * as medicationHelper from "../../medicationReminder/medication.helper";
 
-const FILE_NAME = "MOBILE - MEDICATION REMINDER CONTROLLER";
-const Log = createLogger(FILE_NAME);
+const LOG_NAME = "MOBILE > MEDICATION REMINDER > CONTROLLER";
+const Log = createLogger(LOG_NAME);
 
 const KEY_REPEAT_TYPE = "repeat_type";
 const KEY_DAYS = "days";

@@ -25,7 +25,7 @@ import moment from "moment";
 import PERMISSIONS from "../../../config/permissions";
 
 // Log.setFileName("WEB > CAREPLAN_TEMPLATE > CONTROLLER");
-const log = Log("WEB > CAREPLAN_TEMPLATE > CONTROLLER");
+const log = createLogger("WEB > CAREPLAN_TEMPLATE > CONTROLLER");
 
 class CarePlanTemplateController extends Controller {
   constructor() {

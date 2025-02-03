@@ -3,13 +3,21 @@ import ReminderActivity from "./reminder";
 import MedicationReminderActivity from "./medicationReminder";
 import { createLogger } from "../../libs/log";
 
-const log = new Logger("activitySdk:ActivityObserver");
+const log = createLogger("activitySdk:ActivityObserver");
 
-//const Log = require("../../libs/log")("activitySdk:ActivityObserver");
-
+/**
+ *
+ *
+ * @class ActivityObserver
+ */
 class ActivityObserver {
   constructor() {}
 
+  /**
+   * Run the Observer for Events
+   *
+   * @returns
+   */
   runObservers() {
     FollowUpActivity.runObservers();
     log.info(`Observing FOLLOWUP activity..!!`);

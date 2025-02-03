@@ -1,10 +1,9 @@
 import scheduleService from "../services/scheduleEvents/scheduleEvent.service";
 import moment from "moment";
 import { EVENT_TYPE } from "../../constant";
-// const log = require("../../libs/log")("PROXY_SDK");
 import { createLogger } from "../../libs/log";
 
-const log = Log("PROXY_SDK");
+const log = createLogger("PROXY_SDK");
 
 const getAllOccurrence = require("./scheduler/helper");
 const { EventEmitter } = require("events");

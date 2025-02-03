@@ -14,7 +14,7 @@ import {
 import { NotificationSdk } from "../../notificationSdk";
 import { createLogger } from "../../../libs/log";
 
-const log = Logger("ACTIVITY_SDK");
+const log = createLogger("ACTIVITY_SDK");
 
 // TODO: Going back to require, as the module export is used
 // import ActivitySdk from "../index";

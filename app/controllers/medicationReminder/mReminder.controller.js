@@ -47,8 +47,8 @@ import { RRule } from "rrule";
 import MedicationJob from "../../jobSdk/Medications/observer";
 import NotificationSdk from "../../notificationSdk";
 
-const FILE_NAME = "WEB - MEDICATION REMINDER CONTROLLER";
-const Log = createLogger(FILE_NAME);
+const LOG_NAME = "WEB > MEDICATION REMINDER > CONTROLLER";
+const Log = createLogger(LOG_NAME);
 
 const KEY_REPEAT_TYPE = "repeat_type";
 const KEY_DAYS = "days";

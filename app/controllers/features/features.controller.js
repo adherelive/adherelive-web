@@ -13,9 +13,9 @@ import FeatureMappingWrapper from "../../apiWrapper/web/doctorPatientFeatureMapp
 
 import { USER_CATEGORY } from "../../../constant";
 
-const FILE_NAME = "WEB FEATURE CONTROLLER";
+const LOG_NAME = "WEB > FEATURES > CONTROLLER";
 
-const Log = createLogger(FILE_NAME);
+const Log = createLogger(LOG_NAME);
 
 class FeatureController extends Controller {
   constructor() {
