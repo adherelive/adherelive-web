@@ -1,10 +1,9 @@
 import { EVENTS, Proxy_Sdk } from ".";
 import eventExecutor from "./eventExecutor";
 
-import { createLogger } from "../../libs/log";
 import Logger from "./libs/logger";
 
-const log = Logger("proxySdk:EventObserver");
+const observerLogger = new Logger("proxySdk:EventObserver ");
 
 const {
   SEND_EMAIL,
@@ -22,28 +21,28 @@ class EventObserver {
 
   async errorEventHandler(err, type) {
     try {
-      let logger = new Logger("event_error", {
+      let eventHandlerLogger = new Logger("event_error", {
         eventType: type,
         errorData: err,
       });
-      await logger.log();
+      await eventHandlerLogger.log();
     } catch (err) {
       throw err;
     }
   }
 
   runObservers() {
+    observerLogger.info(`Observing EMAIL events!`);
     this._event.on(SEND_EMAIL, eventExecutor.sendMail);
 
-    log.info(`Observing EMAIL events!`);
+    observerLogger.info(`Observing SMS events!`);
     this._event.on(SEND_SMS, eventExecutor.sendSms);
-    log.info(`Observing SMS events!`);
 
     //error event observers
-    log.info(`Observing EMAIL ERROR events!`);
+    observerLogger.info(`Observing EMAIL ERROR events!`);
     this._event.on(EMAIL_ERROR, this.errorEventHandler);
 
-    log.info(`Observing SMS ERROR events!`);
+    observerLogger.info(`Observing SMS ERROR events!`);
     this._event.on(SMS_ERROR, this.errorEventHandler);
   }
 }
