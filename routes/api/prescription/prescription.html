@@ -128,7 +128,7 @@
       .top_setion_wrapper {
         border: 1px solid black;
         /* border-bottom: 0px; */
-        border-top: 0px;
+        /* border-top: 0px; */
         display: grid;
         grid-template-columns: repeat(2, 3fr);
         /* gap: 20px; */
@@ -136,20 +136,20 @@
       }
 
       .top_setion_wrapper .top_setion_wrapper_one {
-        border-right: 1px solid black;
-        padding: 10px;
+        /* border-right: 1px solid black; */
+        padding: 0px 10px;
         /* border-bottom: 1px solid black; */
         display: flex;
         align-items: center;
-        border-top: 1px solid black;
+        /* border-top: 1px solid black; */
       }
 
       .top_setion_wrapper .top_setion_wrapper_two {
         /* border-bottom: 1px solid black; */
-        padding: 10px;
+        padding: 0px 10px;
         display: flex;
-        align-items: baseline;
-        border-top: 1px solid black;
+        align-items: center;
+        /* border-top: 1px solid black; */
       }
 
       /* COMPLAINT SETCION */
@@ -341,7 +341,7 @@
       .medicine_table td:nth-child(4),
       .medicine_table th:nth-child(4),
       .medicine_table td:nth-child(5) {
-        width: 5%; /* Dose and Qty */
+        width: 4%; /* Dose and Qty */
       }
 
       .medicine_table th:nth-child(5),
@@ -524,11 +524,11 @@
 
     <div class="top_setion_wrapper">
       <!-- <h3>Diagnosis : </h3> -->
-      <div class="top_setion_wrapper_one">
+      <div class="top_setion_wrapper_one" style="border-right: 1px solid; padding:10px;">
         <h3>Diagnosis :</h3>
         <p>{{ diagnosis }}</p>
       </div>
-      <div class="top_setion_wrapper_two">
+      <div class="top_setion_wrapper_two" style="padding:10px;">
         <h3>Symptoms :</h3>
         <p style="width: 250px">{{ symptoms_final_value }}</p>
       </div>
