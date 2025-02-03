@@ -11,9 +11,9 @@ import { TABLE_NAME as userDeviceTableName } from "../../models/userDevices";
 import { TABLE_NAME as carePlanTableName } from "../../models/carePlan";
 import { TABLE_NAME as providerTableName } from "../../models/providers";
 
-import Log from "../../../libs/log";
+import { createLogger } from "../../../libs/log";
 
-const Logger = new Log("WEB > USERS > SERVICE");
+const log = createLogger("WEB > USERS > SERVICE");
 
 class UserService {
   constructor() {}
@@ -23,7 +23,7 @@ class UserService {
       const user = await Database.getModel(TABLE_NAME).findAll();
       return user;
     } catch (err) {
-      console.log(err);
+      log.debug(err);
       throw err;
     }
   }
@@ -42,7 +42,7 @@ class UserService {
       });
       return user;
     } catch (err) {
-      console.log(err);
+      log.debug(err);
       throw err;
     }
   };

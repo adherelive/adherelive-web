@@ -19,7 +19,7 @@ import DietWrapper from "../../apiWrapper/web/diet";
 import WorkoutWrapper from "../../apiWrapper/web/workouts";
 import UserRoleWrapper from "../../apiWrapper/web/userRoles";
 
-import Logger from "../../../libs/log";
+import { createLogger } from "../../../libs/log";
 import {
   EVENT_LONG_TERM_VALUE,
   EVENT_STATUS,
@@ -28,7 +28,7 @@ import {
 } from "../../../constant";
 import moment from "moment";
 
-const Log = new Logger("CARE_PLAN > HELPER");
+const log = createLogger("CARE_PLAN > HELPER");
 
 /**
  * medicines,
@@ -133,7 +133,7 @@ export const getCarePlanDataWithImp = async ({
       current_care_plan_id: currentCarePlanId,
     };
   } catch (error) {
-    Log.debug("Issue with getCarePlanDataWithImp catch error: ", error);
+    log.debug("Issue with getCarePlanDataWithImp catch error: ", error);
     return {};
   }
 };
@@ -157,7 +157,7 @@ export const getCarePlanDataWithDoctor = async ({
       },
     };
   } catch (error) {
-    Log.debug("getCarePlanDataWithDoctor catch error: ", error);
+    log.debug("getCarePlanDataWithDoctor catch error: ", error);
     return {};
   }
 };
@@ -315,7 +315,7 @@ export const getCarePlanData = async ({
       current_care_plan_id: currentCarePlanId,
     };
   } catch (error) {
-    Log.debug("getCarePlanData issues catch error: ", error);
+    log.debug("getCarePlanData issues catch error: ", error);
     return {};
   }
 };
@@ -424,7 +424,7 @@ export const createVitals = async ({
       vital_templates: vitalTemplateData,
     };
   } catch (error) {
-    Log.debug("createVitals catch error: ", error);
+    log.debug("createVitals catch error: ", error);
     return {};
   }
 };
@@ -542,7 +542,7 @@ export const createDiet = async ({
       diet_ids: dietIds,
     };
   } catch (error) {
-    Log.debug("createDiet catch error: ", error);
+    log.debug("createDiet catch error: ", error);
     return {};
   }
 };
@@ -667,7 +667,7 @@ export const createWorkout = async ({
       workout_ids: workoutIds,
     };
   } catch (error) {
-    Log.debug("createWorkout catch error: ", error);
+    log.debug("createWorkout catch error: ", error);
     return {};
   }
 };

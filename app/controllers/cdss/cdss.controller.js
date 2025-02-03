@@ -1,10 +1,10 @@
 import Controller from "../index";
 
-import Log from "../../../libs/log";
+import { createLogger } from "../../../libs/log";
 
 const Response = require("../helper/responseFormat");
 const Cdss = require("../../models/mongoModel/cdss");
-const Logger = new Log("Web CDSS user controller");
+const log = createLogger("Web CDSS user controller");
 
 class CdssController extends Controller {
   constructor() {
@@ -107,7 +107,7 @@ class CdssController extends Controller {
 
       return res.status(200).send(filterDia);
     } catch (ex) {
-      console.log(ex);
+      log.debug(ex);
       return res
         .status(500)
         .send({ error: "Error fetching data from mongodb database" });

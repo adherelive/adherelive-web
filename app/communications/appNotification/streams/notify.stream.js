@@ -11,7 +11,7 @@ function notifier() {
       Notfier(data).connect().verb("create-reminder").sendNotification();
     });
   } catch (err) {
-    console.log(err);
+    log.debug(err);
   }
 }
 

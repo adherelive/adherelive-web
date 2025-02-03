@@ -7,6 +7,7 @@ import cors from "cors";
 
 import Database from "../libs/mysql";
 import initMongo from "../libs/mongo";
+// WARN: do not enable this, except on the local development
 // import connection from "../libs/dbConnection";
 
 import ApiRouter from "../routes/api";
@@ -28,7 +29,7 @@ import ErrorBoundary from './ErrorBoundary';
 const Events = import("../events")
     .then((module) => {})
     .catch((err) => {
-        console.log("Event module error: ", err);
+        console.info("Event module error: ", err);
     });
 
 // Create the App as an Express() app
@@ -39,13 +40,13 @@ const swaggerJsDoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
 const swaggerFile = require('../api-defn/adherelive-api-swagger.json');
 
-/*
+/**
  * Schedule jobs
+ * [Schedule job at the start of every month or per day cycle]
  * cron jobs run at every one minute.
  * for now, we have changed it to one hour intervals, due to performance on server
  * Example: const cron = schedule.scheduleJob("* /1 * * * *", async () => {
  */
-// Schedule job at the start of every month
 const monthlyRule = new schedule.RecurrenceRule();
 const perDayUtcRule = new schedule.RecurrenceRule();
 
@@ -107,7 +108,7 @@ app.use(cookieParser());
 app.use(cors());
 
 
-/*
+/**
  * Add a check to handle cases where process.config.cookieKey might be undefined or not a valid JSON string
  */
 // function generateCookieKey() {
@@ -115,7 +116,7 @@ app.use(cors());
 //     "key_" + Math.random().toString(36).substr(2) + Date.now().toString(36)
 //   );
 // }
-// console.log(generateCookieKey());
+// console.debug(generateCookieKey());
 
 let cookieKeys = [];
 
@@ -133,6 +134,7 @@ try {
     cookieKeys = ["cookie938", "abc123xyz456abc789xyz012"];
 }
 
+// Create a cookie session value - 30 days currently
 app.use(
     cookieSession({
         maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
@@ -169,6 +171,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerFile, {
     customCss: '.swagger-ui .topbar { display: none }',
     customSiteTitle: "AdhereLive API Documentation"
 }));
+
 // TODO: Use the below, if you want to create and serve it from the locally created JSDoc comments
 // const swaggerSpec = swaggerJsDoc(swaggerOptions);
 // app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));

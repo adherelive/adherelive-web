@@ -1,6 +1,6 @@
 import Controller from "../../index";
 import moment from "moment";
-import Log from "../../../../libs/log";
+import { createLogger } from "../../../../libs/log";
 import providerService from "../../../services/provider/provider.service";
 import appointmentService from "../../../services/appointment/appointment.service";
 import UserRoleService from "../../../services/userRoles/userRoles.service";
@@ -13,7 +13,7 @@ import PatientWrapper from "../../../apiWrapper/web/patient";
 import UserRoleWrapper from "../../../apiWrapper/web/userRoles";
 import { USER_CATEGORY } from "../../../../constant";
 
-const Logger = new Log("MOBILE > PROVIDERS > CONTROLLER");
+const log = createLogger("MOBILE > PROVIDERS > CONTROLLER");
 
 const APPOINTMENT_QUERY_TYPE = {
   DAY: "d",
@@ -161,7 +161,7 @@ class MobileProvidersController extends Controller {
         "Appointments data fetched successfully."
       );
     } catch (error) {
-      Logger.debug("getAllAppointmentForDoctors 500 error ", error);
+      log.debug("getAllAppointmentForDoctors 500 error ", error);
       return raiseServerError(res);
     }
   };

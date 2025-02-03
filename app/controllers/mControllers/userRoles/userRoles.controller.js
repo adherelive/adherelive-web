@@ -1,5 +1,5 @@
 import Controller from "../../index";
-import Logger from "../../../../libs/log";
+import { createLogger } from "../../../../libs/log";
 import jwt from "jsonwebtoken";
 import base64 from "js-base64";
 
@@ -13,7 +13,7 @@ import userService from "../../../services/user/user.service";
 import UserRoleWrapper from "../../../apiWrapper/mobile/userRoles";
 import UserWrapper from "../../../apiWrapper/mobile/user";
 
-const Log = new Logger("MOBILE > CONTROLLER > USER_ROLES");
+const log = createLogger("MOBILE > CONTROLLER > USER_ROLES");
 
 class UserRoleController extends Controller {
   constructor() {
@@ -80,7 +80,7 @@ class UserRoleController extends Controller {
         "User role data fetched successfully"
       );
     } catch (error) {
-      Log.debug("get UserRole Data 500 error", error);
+      log.debug("get UserRole Data 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -161,7 +161,7 @@ class UserRoleController extends Controller {
         "Account switched successfully."
       );
     } catch (error) {
-      Log.debug("switchRoleId data 500 error ---> ", error);
+      log.debug("switchRoleId data 500 error ---> ", error);
       return raiseServerError(res);
     }
   };

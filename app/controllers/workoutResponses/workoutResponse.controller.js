@@ -11,9 +11,9 @@ import WorkoutWrapper from "../../apiWrapper/web/workouts";
 import EventWrapper from "../../apiWrapper/common/scheduleEvents";
 import ExerciseContentWrapper from "../../apiWrapper/web/exerciseContents";
 import CarePlanWrapper from "../../apiWrapper/web/carePlan";
-import Logger from "../../../libs/log";
+import { createLogger } from "../../../libs/log";
 
-const Log = new Logger("WEB > WORKOUT_RESPONSE > CONTROLLER");
+const log = createLogger("WEB > WORKOUT_RESPONSE > CONTROLLER");
 
 class WorkoutResponseController extends Controller {
   constructor() {
@@ -176,7 +176,7 @@ class WorkoutResponseController extends Controller {
       //   );
       // }
     } catch (error) {
-      Log.debug("get 500", error);
+      log.debug("get 500", error);
       return raiseServerError(res);
     }
   };

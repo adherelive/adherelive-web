@@ -7,9 +7,9 @@
  */
 import Database from "../../../libs/mysql";
 import { TABLE_NAME } from "../../models/his";
-import Log from "../../../libs/log";
+import { createLogger } from "../../../libs/log";
 
-const Logger = new Log("WEB > HIS > SERVICE");
+const log = createLogger("WEB > HIS > SERVICE");
 
 class HisService {
   constructor() {}
@@ -33,7 +33,7 @@ class HisService {
       const user = await Database.getModel(TABLE_NAME).findAll();
       return user;
     } catch (err) {
-      console.log(err);
+      log.debug(err);
       throw err;
     }
   };
@@ -45,7 +45,7 @@ class HisService {
       });
       return user;
     } catch (err) {
-      console.log(err);
+      log.debug(err);
       throw err;
     }
   };
@@ -83,7 +83,7 @@ class HisService {
       });
       return user;
     } catch (err) {
-      console.log(err);
+      log.debug(err);
       throw err;
     }
   };

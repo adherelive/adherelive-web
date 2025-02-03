@@ -1,4 +1,4 @@
-import Logger from "../../libs/log";
+import { createLogger } from "../../libs/log";
 import moment from "moment";
 
 // services
@@ -13,17 +13,17 @@ import ProviderWrapper from "../apiWrapper/web/provider";
 import CarePlanWrapper from "../apiWrapper/web/carePlan";
 import { EVENT_STATUS, EVENT_TYPE } from "../../constant";
 
-const Log = new Logger("CRON - ACTIVE_PATIENT");
+const log = createLogger("CRON - ACTIVE_PATIENT");
 
 class ActivePatient {
   getAllProviders = async () => {
     try {
       // const providerService = new ProviderService();
       const providers = (await ProviderService.getAll()) || [];
-      // Log.debug("providers", providers);
+      // log.debug("providers", providers);
       return providers;
     } catch (error) {
-      Log.debug("getAllProviders catch error", error);
+      log.debug("getAllProviders catch error", error);
       throw error;
     }
   };
@@ -44,11 +44,11 @@ class ActivePatient {
           doctorIds = [...doctorIds, doctor_id];
         });
       }
-      // Log.debug("doctor IDS", doctorIds);
+      // log.debug("doctor IDS", doctorIds);
 
       return doctorIds;
     } catch (error) {
-      Log.debug("getAllDoctors catch error", error);
+      log.debug("getAllDoctors catch error", error);
       throw error;
     }
   };
@@ -68,10 +68,10 @@ class ActivePatient {
         carePlanData[carePlan.getCarePlanId()] = await carePlan.getAllInfo();
         carePlanIds.push(carePlan.getCarePlanId());
       }
-      Log.debug("Care Plan IDs: ", carePlanIds);
+      log.debug("Care Plan IDs: ", carePlanIds);
       return { carePlanData, carePlanIds };
     } catch (error) {
-      Log.debug("getAllCarePlans catch error: ", error);
+      log.debug("getAllCarePlans catch error: ", error);
       throw error;
     }
   };
@@ -114,10 +114,10 @@ class ActivePatient {
               event_type: EVENT_TYPE.WORKOUT,
             },
           })) || [];
-        Log.info(
+        log.debug(
           `Total events :: ${events.length} :: for Care Plan ID :: ${id}`
         );
-        Log.debug("Status of the events: ", events);
+        log.debug("Status of the events: ", events);
 
         let passedEventCount = 0;
 
@@ -160,7 +160,7 @@ class ActivePatient {
         }
       }
     } catch (error) {
-      Log.debug("getEvents catch error: ", error);
+      log.debug("getEvents catch error: ", error);
       throw error;
     }
   };
@@ -173,7 +173,7 @@ class ActivePatient {
     try {
       await this.getEvents();
     } catch (error) {
-      Log.debug("runObserver catch error: ", error);
+      log.debug("runObserver catch error: ", error);
       throw error;
     }
   };

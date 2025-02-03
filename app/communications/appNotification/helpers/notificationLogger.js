@@ -25,7 +25,7 @@ const notificationLogger = {
       .insertMany({ data, status: "success" })
       .then((result) => {})
       .catch((err) => {
-        console.log(
+        log.debug(
           chalk.red(
             `Notifications [ ${moment().format("DD-MM-YY HH:MM:SS")}]:`
           ),
@@ -35,7 +35,7 @@ const notificationLogger = {
       });
   },
   error: function (message, data = null, errObj = null) {
-    console.log(
+    log.debug(
       chalk.red(`Notifications [ ${moment().format("DD-MM-YY HH:MM:SS")}]:`),
       message,
       data,
@@ -44,7 +44,7 @@ const notificationLogger = {
     notificationModel
       .insertMany({ data, status: "failed" })
       .then((result) => {
-        console.log(
+        log.debug(
           chalk.blue(
             `Notifications [ ${moment().format("DD-MM-YY HH:MM:SS")}]:`
           ),
@@ -53,7 +53,7 @@ const notificationLogger = {
         );
       })
       .catch((err) => {
-        console.log(
+        log.debug(
           chalk.red(
             `Notifications [ ${moment().format("DD-MM-YY HH:MM:SS")}]:`
           ),

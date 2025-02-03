@@ -3,20 +3,20 @@ import {
   USER_CATEGORY,
   DEFAULT_PROVIDER,
 } from "../../../constant";
-import Logger from "../../../libs/log";
+import { createLogger } from "../../../libs/log";
 import EventExecutor from "../executor";
 import fetch from "node-fetch";
 
-const Log = new Logger("NOTIFICATION_SDK > PUSH_APP");
+const log = createLogger("NOTIFICATION_SDK > PUSH_APP");
 
-// Log.filename("NOTIFICATION_SDK > PUSH_APP");
+// log.filename("NOTIFICATION_SDK > PUSH_APP");
 
 class PushNotification {
   constructor() {}
 
   notify = (templates = []) => {
     for (const template of templates) {
-      Log.debug("templates one signal app: ", template);
+      log.debug("templates one signal app: ", template);
       this.sendPushNotification(template);
     }
   };
@@ -45,7 +45,7 @@ class PushNotification {
         template.existing_android_channel_id = "sound_channel";
       }
 
-      console.log("sendPushNotification template: ", template);
+      log.debug("sendPushNotification template: ", template);
 
       const options = {
         // host: '104.18.226.52',
@@ -59,24 +59,24 @@ class PushNotification {
       const https = require("https");
       const req = https.request(options, function (res) {
         res.on("data", function (data) {
-          console.log("sendPushNotification response template: ", template);
-          console.log("Push Notification sendPushNotification Data: ", data);
+          log.debug("sendPushNotification response template: ", template);
+          log.debug("Push Notification sendPushNotification Data: ", data);
         });
 
         res.on("error", function (err) {
-          console.log("Error in listening in push notification: ", err);
+          log.debug("Error in listening in push notification: ", err);
         });
       });
 
       req.on("error", function (e) {
-        console.log("Error in sending push notification: ", e);
-        console.log(e);
+        log.debug("Error in sending push notification: ", e);
+        log.debug(e);
       });
-      console.log("sendPushNotification JSON -> template: ", JSON.stringify(template));
+      log.debug("sendPushNotification JSON -> template: ", JSON.stringify(template));
       req.write(JSON.stringify(template));
       req.end();
     } catch (err) {
-      Log.debug("OneSignal sendPushNotification 500 error: ", err);
+      log.debug("OneSignal sendPushNotification 500 error: ", err);
     }
   };
 }

@@ -3,6 +3,9 @@ import { TABLE_NAME } from "../../models/serviceSubscriptions";
 import ServiceSubscriptionMapping from "../../services/serviceSubscriptionMapping/serviceSubscritpionMapping.service";
 //import { TABLE_NAME as serviceSubscriptionMapping } from "../../models/serviceSubscriptionMapping";
 
+import { createLogger } from "../../../libs/log";
+const log = createLogger("WEB > SERVICE SUBSCRIPTION > SERVICES");
+
 export default class ServiceSubscriptionService {
   constructor() {}
 
@@ -42,7 +45,7 @@ export default class ServiceSubscriptionService {
       serviceSubscription.services = servicesData;
       return serviceSubscription;
     } catch (error) {
-      console.log(error);
+      log.debug(error);
       await transaction.rollback();
       throw error;
     }
@@ -51,7 +54,7 @@ export default class ServiceSubscriptionService {
   updateServiceSubscription = async (data, id) => {
     const transaction = await Database.initTransaction();
     try {
-      console.log(data, id);
+      log.debug(data, id);
       const serviceSubscription = await Database.getModel(TABLE_NAME).update(
         data,
         {
@@ -72,7 +75,7 @@ export default class ServiceSubscriptionService {
   };
 
   getServiceSubscriptionByData = async (data) => {
-    console.log("getServiceSubscriptionByDataCalled - services - ", data);
+    log.debug("getServiceSubscriptionByDataCalled - services - ", data);
     try {
       return await Database.getModel(TABLE_NAME).findOne({
         where: data,

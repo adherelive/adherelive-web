@@ -1,8 +1,8 @@
 import AWS from "aws-sdk";
 import axios from "axios";
-import Log from "../../../libs/log";
+import { createLogger } from "../../../libs/log";
 
-const log = Log("Communications ---> SMS Sender");
+const log = createLogger("Communications ---> SMS Sender");
 
 class SmsSender {
   constructor(payload) {
@@ -26,11 +26,11 @@ class SmsSender {
 
       log.success("SMS payload is valid!");
 
-      log.info("Transforming SMS payload to AWS payload...");
+      log.debug("Transforming SMS payload to AWS payload...");
       const smsData = this.smsDataTransformer(smsPayload);
-      log.info("SMS payload successfully transformed!");
+      log.debug("SMS payload successfully transformed!");
 
-      log.info("Sending SMS...");
+      log.debug("Sending SMS...");
 
       // Setup options for axios request
       const options = {
@@ -55,16 +55,16 @@ class SmsSender {
 
       // Send SMS via axios
       const response = await axios(options);
-      log.info("SMS sent via SMS sender: ", response.data);
+      log.debug("SMS sent via SMS sender: ", response.data);
       return { success: true, data: response.data };
 
       // let smsPublishResponse = await this.sns
       //   .publish(smsData, (err, data) => {
       //     if (err) {
-      //       log.info("Sending SMS error ---> ", err);
+      //       log.debug("Sending SMS error ---> ", err);
       //     }
       //     if (data) {
-      //       log.info("SMS sent successfully", data);
+      //       log.debug("SMS sent successfully", data);
       //     }
       //   })
       //   .promise();
@@ -75,10 +75,10 @@ class SmsSender {
       //   .publish(smsData, (err, data) => {
 
       //     if (err) {
-      //       log.info("Sending SMS has an error ---> ", err);
+      //       log.debug("Sending SMS has an error ---> ", err);
       //     }
       //     if (data) {
-      //       log.info("SMS has been sent: ", data);
+      //       log.debug("SMS has been sent: ", data);
       //     }
       //   })
       //   .promise();

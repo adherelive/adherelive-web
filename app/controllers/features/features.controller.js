@@ -1,6 +1,6 @@
 import Controller from "../index";
 
-import Log from "../../../libs/log";
+import { createLogger } from "../../../libs/log";
 
 // Services
 import featuresService from "../../services/features/features.service";
@@ -13,9 +13,9 @@ import FeatureMappingWrapper from "../../apiWrapper/web/doctorPatientFeatureMapp
 
 import { USER_CATEGORY } from "../../../constant";
 
-const FILE_NAME = "WEB FEATURE CONTROLLER";
+const LOG_NAME = "WEB > FEATURES > CONTROLLER";
 
-const Logger = new Log(FILE_NAME);
+const log = createLogger(LOG_NAME);
 
 class FeatureController extends Controller {
   constructor() {
@@ -131,7 +131,7 @@ class FeatureController extends Controller {
         "Features mapping fetched successfully."
       );
     } catch (error) {
-      Logger.debug("getAllFeaturesMappingForUser 500 error", error);
+      log.debug("getAllFeaturesMappingForUser 500 error", error);
       return raiseServerError(res, 500, {}, error.message);
     }
   };

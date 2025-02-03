@@ -1,6 +1,6 @@
 import Controller from "../index";
 
-import Logger from "../../../libs/log";
+import { createLogger } from "../../../libs/log";
 import jwt from "jsonwebtoken";
 import base64 from "js-base64";
 
@@ -13,7 +13,7 @@ import UserRoleWrapper from "../../apiWrapper/web/userRoles";
 import UserWrapper from "../../apiWrapper/web/user";
 import AppNotification from "../../notificationSdk/inApp";
 
-const Log = new Logger("WEB > CONTROLLER > PAYMENTS");
+const log = createLogger("WEB > CONTROLLER > PAYMENTS");
 
 class UserRoleController extends Controller {
   constructor() {
@@ -68,7 +68,7 @@ class UserRoleController extends Controller {
         "User role data fetched successfully"
       );
     } catch (error) {
-      Log.debug("get UserRole Data 500 error", error);
+      log.debug("get UserRole Data 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -140,7 +140,7 @@ class UserRoleController extends Controller {
         "User role data fetched successfully"
       );
     } catch (error) {
-      Log.debug("get UserRole Data 500 error", error);
+      log.debug("get UserRole Data 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -227,7 +227,7 @@ class UserRoleController extends Controller {
         "User data for RoleId retrieved successfully"
       );
     } catch (error) {
-      Log.debug("switchRoleId data 500 error ---> ", error);
+      log.debug("switchRoleId data 500 error ---> ", error);
 
       // notification
       // const crashJob = await AdhocJob.execute("crash", {

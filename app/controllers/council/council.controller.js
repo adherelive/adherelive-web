@@ -3,9 +3,9 @@ import Controller from "../index";
 import councilService from "../../services/council/council.service";
 import CouncilWrapper from "../../apiWrapper/web/council";
 
-import Log from "../../../libs/log";
+import { createLogger } from "../../../libs/log";
 
-const Logger = new Log("WEB DEGREE CONTROLLER");
+const log = createLogger("WEB DEGREE CONTROLLER");
 
 class CouncilController extends Controller {
   constructor() {
@@ -18,7 +18,7 @@ class CouncilController extends Controller {
       const { query } = req;
       const { value } = query || {};
 
-      // Logger.debug("value in req", value);
+      // log.debug("value in req", value);
 
       const councilDetails = await councilService.search(value);
 
@@ -49,7 +49,7 @@ class CouncilController extends Controller {
         );
       }
     } catch (error) {
-      Logger.debug("council search 500 error", error);
+      log.debug("council search 500 error", error);
       return raiseServerError(res);
     }
   };

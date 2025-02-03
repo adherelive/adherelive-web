@@ -1,16 +1,16 @@
 import md5 from "js-md5";
 
 import awsS3Service from "../../services/awsS3/awsS3.service";
-import Logger from "../../../libs/log";
+import { createLogger } from "../../../libs/log";
 import { completePath } from "../s3FilePath";
 
-const Log = new Logger("UPLOAD > HELPER");
+const log = createLogger("UPLOAD > HELPER");
 
 export const upload = async ({ file, id, folder }) => {
   try {
     const { mimetype } = file || {};
     const fileName = file.originalname.replace(/\s+/g, "");
-    Log.info(`fileName : ${fileName}`);
+    log.debug(`fileName : ${fileName}`);
     await awsS3Service.createBucket();
 
     let hash = md5.create();
@@ -20,7 +20,7 @@ export const upload = async ({ file, id, folder }) => {
 
     const encodedFileName = hash.substring(4) + "/" + fileName;
 
-    Log.info(`encodedFileName :: ${encodedFileName}`);
+    log.debug(`encodedFileName :: ${encodedFileName}`);
 
     // check for images
     let metaData = null;
@@ -32,7 +32,7 @@ export const upload = async ({ file, id, folder }) => {
     // }
 
     const filePath = `${folder}/${encodedFileName}`;
-    Log.info(`filePath :: ${filePath}`);
+    log.debug(`filePath :: ${filePath}`);
 
     await awsS3Service.saveBufferObject(file.buffer, filePath, metaData);
     return completePath(`/${filePath}`);

@@ -1,6 +1,6 @@
 import Controller from "../index";
 
-import Logger from "../../../libs/log";
+import { createLogger } from "../../../libs/log";
 
 // Services
 import ServiceSubscriptionService from "../../services/serviceSubscription/serviceSubscription.service";
@@ -8,7 +8,7 @@ import ServiceOfferingService from "../../services/serviceOffering/serviceOfferi
 import { USER_CATEGORY } from "../../../constant";
 import ServiceSubscriptionMapping from "../../services/serviceSubscriptionMapping/serviceSubscritpionMapping.service";
 
-const Log = new Logger("WEB > CONTROLLER > Service Offering");
+const log = createLogger("WEB > CONTROLLER > Service Offering");
 
 class ReportController extends Controller {
   constructor() {
@@ -109,7 +109,7 @@ class ReportController extends Controller {
         "Service added successfully"
       );
     } catch (error) {
-      Log.debug("Service Offering 500 error: ", error);
+      log.debug("Service Offering 500 error: ", error);
       return raiseServerError(res);
     }
   };
@@ -128,7 +128,7 @@ class ReportController extends Controller {
           currency,
         },
       } = req;
-      Log.info(`Report : id = ${id}`);
+      log.debug(`Report : id = ${id}`);
 
       if (!id) {
         return raiseClientError(
@@ -160,7 +160,7 @@ class ReportController extends Controller {
         "Service updated successfully"
       );
     } catch (error) {
-      Log.debug("updateService 500 error", error);
+      log.debug("updateService 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -169,7 +169,7 @@ class ReportController extends Controller {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       let { params: { id } = {} } = req;
-      Log.info(`Report : id = ${id}`);
+      log.debug(`Report : id = ${id}`);
 
       if (!id) {
         return raiseClientError(
@@ -194,7 +194,7 @@ class ReportController extends Controller {
         "success"
       );
     } catch (error) {
-      Log.debug("updateService 500 error", error);
+      log.debug("updateService 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -218,7 +218,7 @@ class ReportController extends Controller {
         "Service updated successfully"
       );
     } catch (ex) {
-      Log.debug("getServiceByData 500 error", ex);
+      log.debug("getServiceByData 500 error", ex);
       return raiseServerError(res);
     }
   };
@@ -362,7 +362,7 @@ class ReportController extends Controller {
         "Success"
       );
     } catch (ex) {
-      Log.debug("getServiceByData 500 error", ex);
+      log.debug("getServiceByData 500 error", ex);
       return raiseServerError(res);
     }
   };

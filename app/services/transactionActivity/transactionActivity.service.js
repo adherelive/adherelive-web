@@ -16,7 +16,7 @@ export default class ServiceSubscriptionMapping {
       await transaction.commit();
       return txActivitie;
     } catch (error) {
-      console.log(error);
+      log.debug(error);
       await transaction.rollback();
       throw error;
     }

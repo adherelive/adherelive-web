@@ -1,6 +1,9 @@
 import Database from "../../../libs/mysql";
 import { TABLE_NAME } from "../../models/serviceSubscriptionUserMapping";
 
+import { createLogger } from "../../../libs/log";
+const log = createLogger("WEB > SUBSCRIPTION USER MAPPING > SERVICES");
+
 export default class ServiceUserMapping {
   constructor() {}
 
@@ -16,7 +19,7 @@ export default class ServiceUserMapping {
       await transaction.commit();
       return serviceSubscriptionUserMapping;
     } catch (error) {
-      console.log(error);
+      log.debug(error);
       await transaction.rollback();
       throw error;
     }
@@ -24,7 +27,7 @@ export default class ServiceUserMapping {
 
   getAllServiceSubscriptionUserMappingByData = async (data) => {
     try {
-      console.log(TABLE_NAME);
+      log.debug(TABLE_NAME);
       return await Database.getModel(TABLE_NAME).findAll({
         where: data,
         raw: true,
@@ -38,14 +41,15 @@ export default class ServiceUserMapping {
     const transaction = await Database.initTransaction();
     try {
       /**
-             * {
-             notes: 'asdasdasdasdasd',
-             durations: 2,
-             service_charge: 1000,
-             patient_status: 'active'
-             } 8
-             */
-      console.log(data, id);
+       * TODO: Remove this code?
+      {
+       notes: 'asdasdasdasdasd',
+       durations: 2,
+       service_charge: 1000,
+       patient_status: 'active'
+      }
+        */
+      log.debug(data, id);
       const serviceSubscriptionUserMapping = await Database.getModel(
         TABLE_NAME
       ).update(data, {
