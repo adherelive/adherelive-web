@@ -2,6 +2,12 @@ import chalk from "chalk";
 import moment from "moment";
 import os from "os";
 
+// Configuration
+const CONFIG = {
+  environment: process.env.APP_ENV || process.env.NODE_ENV || 'production',
+  applicationName: process.env.APP_NAME || 'AdhereLive'
+};
+
 // Add environment checks
 const isDevelopment =
     process.env.APP_ENV === 'Development' ||
@@ -15,47 +21,14 @@ const LOG_LEVELS = {
   debug: 3
 };
 
-// Override console.log in development
-if (isDevelopment) {
-  const originalConsoleLog = console.log;
-  console.log = (...args) => {
-    const stack = new Error().stack;
-    const callerFile = stack.split('\n')[2].match(/\((.*):\d+:\d+\)/)?.[1] || 'unknown';
-    const logger = new Log(callerFile);
-    logger.debug(...args);
-  };
-}
+// Store original console methods
+const originalConsole = {
+  log: console.log.bind(console),
+  error: console.error.bind(console),
+  warn: console.warn.bind(console),
+  info: console.info.bind(console)
+};
 
-/**
- * Structured Output:
- * Log.debug/info provides consistent formatting with:
- * - Timestamps
- * - Source file identification
- * - Color coding (using chalk)
- * - Log level categorization
- *
- * Production Safety:
- * console.log statements remain in your production code unless manually removed
- * Your Log class automatically filters debug/info logs in production
- * Error logs always show regardless of environment
- *
- * Use log levels appropriately:
- * - debug: Detailed information for debugging
- * - info: General operational information
- * - warn: Warning messages for potential issues
- * - error: Error conditions that need attention
- *
- * In production:
- * - debug and info logs are automatically filtered out
- * - warnings and errors will still show
- * - No performance impact from disabled logs
- *
- * Example Use:
- * import { createLogger } from '../libs/log';
- * const Log = createLogger('UserService.js');
- *
- * Log.debug('Processing user data');
- */
 class Log {
   constructor(filename) {
     this.source = filename;
@@ -79,7 +52,7 @@ class Log {
     if (!this.shouldLog(LOG_LEVELS.debug)) return;
 
     const formattedMsg = typeof msg === 'object' ? JSON.stringify(msg, null, 2) : msg;
-    console.log(
+    originalConsole.log(
         `${this._dashString}\n${this.getLogDate()} [${chalk.yellow(this.source)}]\n\nMESSAGE: ${formattedMsg}\n`,
         ...args
     );
@@ -87,10 +60,9 @@ class Log {
 
   // Modified info method
   info(msg) {
-    // In production (when not in development), logs are automatically filtered based on severity
     if (!this.shouldLog(LOG_LEVELS.info)) return;
 
-    console.log(
+    originalConsole.log(
         `\n${chalk.blue(this.getLogDate())} ${chalk.blue(
             `( ${this.source} )`
         )} : ${msg}\n`
@@ -101,7 +73,7 @@ class Log {
   warn(msg) {
     if (!this.shouldLog(LOG_LEVELS.warn)) return;
 
-    console.log(
+    originalConsole.log(
         `\n${chalk.red(this.getLogDate())} ${chalk.red(
             `( ${this.source} )`
         )} : ${msg}\n`
@@ -110,7 +82,7 @@ class Log {
 
   // Keep error logging always active
   error(msg) {
-    console.log(
+    originalConsole.log(
         `\n${chalk.redBright(this.getLogDate())} ${chalk.redBright(
             `( ${this.source} )`
         )} : ${msg}\n`
@@ -130,25 +102,57 @@ class Log {
         })
         .join("\n");
 
-    console.log(
+    originalConsole.log(
         `${this.source} ${this.getLogDate()}\n\n${msg} ->\n\n${data}\n`
     );
   }
 
-  // Keep error logging as-is (always active)
+  // Keep error logging  implementation as-is (always active)
   errLog(errorCode, methodName, description) {
-    // ... existing implementation ...
+    const serverName = os.hostname();
+    const logDate = this.getLogDate();
+    const errLog = `\n\n${chalk.blue(logDate)}\n` +
+        `${chalk.blue('errorCode=')} ${errorCode}\n` +
+        `${chalk.blue('Server=')} ${serverName}\n` +
+        `${chalk.blue('Application=')} ${CONFIG.applicationName}\n` +
+        `${chalk.blue('Source=')} ${this.source}\n` +
+        `${chalk.blue('Method=')} ${methodName}\n` +
+        `${chalk.blue('Description=')} ${description}\n`;
+
+    originalConsole.error(errLog);
+    throw new Error(description);
   }
 }
 
 // Create a global logger instance
-export const logger = new Log('global');
+const globalLogger = new Log('global');
+
+// Safe console.log override for development
+if (isDevelopment) {
+  console.log = (...args) => {
+    try {
+      const stack = new Error().stack;
+      const callerFile = stack.split('\n')[2].match(/\((.*):\d+:\d+\)/)?.[1] || 'unknown';
+      const logger = new Log(callerFile);
+      logger.debug(...args);
+    } catch (error) {
+      // Fallback to original console.log if something goes wrong
+      originalConsole.log(...args);
+    }
+  };
+}
 
 // Export factory function for specific file loggers
 export const createLogger = (filename) => new Log(filename);
 
-// Export convenience methods
-export const debug = (...args) => logger.debug(...args);
-export const info = (...args) => logger.info(...args);
-export const warn = (...args) => logger.warn(...args);
-export const error = (...args) => logger.error(...args);
+// Export convenience methods using the global logger
+export const debug = (...args) => globalLogger.debug(...args);
+export const info = (...args) => globalLogger.info(...args);
+export const warn = (...args) => globalLogger.warn(...args);
+export const error = (...args) => globalLogger.error(...args);
+
+// Export the global logger instance
+export const logger = globalLogger;
+
+// Default export for backward compatibility
+export default createLogger;
