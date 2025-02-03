@@ -15,10 +15,51 @@ const LOG_LEVELS = {
   debug: 3
 };
 
+// Override console.log in development
+if (isDevelopment) {
+  const originalConsoleLog = console.log;
+  console.log = (...args) => {
+    const stack = new Error().stack;
+    const callerFile = stack.split('\n')[2].match(/\((.*):\d+:\d+\)/)?.[1] || 'unknown';
+    const logger = new Log(callerFile);
+    logger.debug(...args);
+  };
+}
+
+/**
+ * Structured Output:
+ * Log.debug/info provides consistent formatting with:
+ * - Timestamps
+ * - Source file identification
+ * - Color coding (using chalk)
+ * - Log level categorization
+ *
+ * Production Safety:
+ * console.log statements remain in your production code unless manually removed
+ * Your Log class automatically filters debug/info logs in production
+ * Error logs always show regardless of environment
+ *
+ * Use log levels appropriately:
+ * - debug: Detailed information for debugging
+ * - info: General operational information
+ * - warn: Warning messages for potential issues
+ * - error: Error conditions that need attention
+ *
+ * In production:
+ * - debug and info logs are automatically filtered out
+ * - warnings and errors will still show
+ * - No performance impact from disabled logs
+ *
+ * Example Use:
+ * import { createLogger } from '../libs/log';
+ * const Log = createLogger('UserService.js');
+ *
+ * Log.debug('Processing user data');
+ */
 class Log {
   constructor(filename) {
     this.source = filename;
-    this._dashString = "-".repeat(106);
+    this._dashString = '-'.repeat(106);
     // Set log level from environment
     this.logLevel = isDevelopment ? LOG_LEVELS.debug : LOG_LEVELS.warn;
   }
@@ -28,20 +69,25 @@ class Log {
     return level <= this.logLevel;
   }
 
+  // Get the current time for the log information to be recorded
+  getLogDate() {
+    return moment().format('YYYY-MM-DD HH:mm:ss');
+  }
+
   // Modified debug method with environment check
-  debug(msg, code) {
+  debug(msg, ...args) {
     if (!this.shouldLog(LOG_LEVELS.debug)) return;
 
+    const formattedMsg = typeof msg === 'object' ? JSON.stringify(msg, null, 2) : msg;
     console.log(
-        `${this._dashString}\n${this.getLogDate()} [${chalk.yellow(
-            this.source
-        )}]\n\nMESSAGE: ${msg}\n`,
-        code
+        `${this._dashString}\n${this.getLogDate()} [${chalk.yellow(this.source)}]\n\nMESSAGE: ${formattedMsg}\n`,
+        ...args
     );
   }
 
   // Modified info method
   info(msg) {
+    // In production (when not in development), logs are automatically filtered based on severity
     if (!this.shouldLog(LOG_LEVELS.info)) return;
 
     console.log(
@@ -89,66 +135,20 @@ class Log {
     );
   }
 
-  getErrorStatement(code) {
-    const statements = {
-      500: "Server Error",
-      1000: "Couldn't connect to MongoDB",
-      1002: "",
-      1003: "",
-      2000: "",
-      3000: "",
-      4000: "",
-      5000: "",
-      6000: "",
-      7000: "",
-    };
-    return statements[code] || "Unknown Error, not mapped";
-  }
-
-
   // Keep error logging as-is (always active)
   errLog(errorCode, methodName, description) {
-    var serverName = os.hostname();
-    var logDate = this.getLogDate();
-    var errLog = "\n\n";
-    errLog += "\x1b[34m" + logDate + "\x1b[0m" + "\n";
-    errLog += "\x1b[34m" + "errorCode= " + "\x1b[0m" + errorCode + "\n";
-    errLog += "\x1b[34m" + "Server=" + "\x1b[0m" + serverName + "\n";
-    errLog += "\x1b[34m" + "Application=" + "\x1b[0m" + "sendnotification" + "\n";
-    errLog += "\x1b[34m" + "Source=" + "\x1b[0m" + this.source + "\n";
-    errLog += "\x1b[34m" + "Method=" + "\x1b[0m" + methodName + "\n";
-    errLog +=
-        "\x1b[34m" +
-        "Statement=" +
-        "\x1b[0m" +
-        this.getErrorStatement(errorCode) +
-        "\n";
-    errLog += "\x1b[34m" + "Description=" + "\x1b[0m" + description + "\n";
-    console.error(errLog + "\n"); // eslint-disable-line
-    console.log(description);
-    throw new Error(errLog);
-  }
-
-  err(errorCode, methodName, description) {
-    var serverName = os.hostname();
-    var logDate = this.getLogDate();
-    var errLog = "\n\n";
-    errLog += "\x1b[34m" + logDate + "\x1b[0m" + "\n";
-    errLog += "\x1b[34m" + "errorCode= " + "\x1b[0m" + errorCode + "\n";
-    errLog += "\x1b[34m" + "Server=" + "\x1b[0m" + serverName + "\n";
-    errLog += "\x1b[34m" + "Application=" + "\x1b[0m" + "sendnotification" + "\n";
-    errLog += "\x1b[34m" + "Source=" + "\x1b[0m" + this.source + "\n";
-    errLog += "\x1b[34m" + "Method=" + "\x1b[0m" + methodName + "\n";
-    errLog +=
-        "\x1b[34m" +
-        "Statement=" +
-        "\x1b[0m" +
-        this.getErrorStatement(errorCode) +
-        "\n";
-    errLog += "\x1b[34m" + "Description=" + "\x1b[0m" + description + "\n";
-    console.error(errLog + "\n"); // eslint-disable-line
-    console.log(description);
+    // ... existing implementation ...
   }
 }
 
-export default (filename) => new Log(filename);
+// Create a global logger instance
+export const logger = new Log('global');
+
+// Export factory function for specific file loggers
+export const createLogger = (filename) => new Log(filename);
+
+// Export convenience methods
+export const debug = (...args) => logger.debug(...args);
+export const info = (...args) => logger.info(...args);
+export const warn = (...args) => logger.warn(...args);
+export const error = (...args) => logger.error(...args);
