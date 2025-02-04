@@ -150,7 +150,7 @@ class VitalController extends Controller {
         );
       }
     } catch (error) {
-      logger.debug("create 500 error - vitals already added", error);
+      logger.error("create 500 error - vitals already added", error);
       return raiseServerError(res);
     }
   };
@@ -255,7 +255,7 @@ class VitalController extends Controller {
         );
       }
     } catch (error) {
-      logger.debug("create 500 error - vitals updated", error);
+      logger.error("create 500 error - vitals updated", error);
       return raiseServerError(res);
     }
   };
@@ -279,7 +279,7 @@ class VitalController extends Controller {
         "Vital form details fetched successfully"
       );
     } catch (error) {
-      logger.debug("getVitalFormDetails 500 error", error);
+      logger.error("getVitalFormDetails 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -318,7 +318,7 @@ class VitalController extends Controller {
         return raiseClientError(res, 422, {}, "No vital exists with this name");
       }
     } catch (error) {
-      logger.debug("vitals search 500 error", error);
+      logger.error("vitals search 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -467,7 +467,7 @@ class VitalController extends Controller {
         `${vitalTemplate.getName().toUpperCase()} vital updated successfully`
       );
     } catch (error) {
-      logger.debug("addVitalResponse 500 error", error);
+      logger.error("addVitalResponse 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -527,7 +527,7 @@ class VitalController extends Controller {
         );
       }
     } catch (error) {
-      logger.debug("getVitalResponse 500 error", error);
+      logger.error("getVitalResponse 500 error", error);
       return raiseServerError(res);
     }
   };

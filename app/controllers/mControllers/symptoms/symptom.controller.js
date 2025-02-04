@@ -280,7 +280,7 @@ class SymptomController extends Controller {
         "Symptom added successfully"
       );
     } catch (error) {
-      logger.debug("create 500 error - symptom added", error);
+      logger.error("create 500 error - symptom added", error);
       return raiseServerError(res);
     }
   };
@@ -304,7 +304,7 @@ class SymptomController extends Controller {
         "Symptom audio added successfully"
       );
     } catch (error) {
-      logger.debug("symptom uploadAudio 500 error", error);
+      logger.error("symptom uploadAudio 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -355,7 +355,7 @@ class SymptomController extends Controller {
         );
       }
     } catch (error) {
-      logger.debug("symptom uploadVideo 500 error", error);
+      logger.error("symptom uploadVideo 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -381,7 +381,7 @@ class SymptomController extends Controller {
         "Symptom photo added successfully"
       );
     } catch (error) {
-      logger.debug("symptoms uploadPhotos 500 error", error);
+      logger.error("symptoms uploadPhotos 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -437,7 +437,7 @@ class SymptomController extends Controller {
         "Symptom details fetched successfully"
       );
     } catch (error) {
-      logger.debug("symptoms getSymptomDetails 500 error", error);
+      logger.error("symptoms getSymptomDetails 500 error", error);
       return raiseServerError(res);
     }
   };

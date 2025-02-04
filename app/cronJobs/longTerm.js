@@ -29,7 +29,7 @@ class LongTerm {
 
       return user_identity;
     } catch (error) {
-      logger.debug("getUserFromRole error in LongTerm: ", error);
+      logger.error("getUserFromRole error in LongTerm: ", error);
       throw error;
     }
   };
@@ -50,7 +50,7 @@ class LongTerm {
 
       return medicationIds;
     } catch (error) {
-      logger.debug("getMedications error in LongTerm: ", error);
+      logger.error("getMedications error in LongTerm: ", error);
       throw error;
     }
   };
@@ -70,7 +70,7 @@ class LongTerm {
 
       return vitalIds;
     } catch (error) {
-      logger.debug("getVitals error in LongTerm: ", error);
+      logger.error("getVitals error in LongTerm: ", error);
       throw error;
     }
   };
@@ -92,7 +92,7 @@ class LongTerm {
 
       return dietIds;
     } catch (error) {
-      logger.debug("getDiets error in LongTerm: ", error);
+      logger.error("getDiets error in LongTerm: ", error);
       throw error;
     }
   };
@@ -114,7 +114,7 @@ class LongTerm {
 
       return workoutIds;
     } catch (error) {
-      logger.debug("getWorkouts error in LongTerm: ", error);
+      logger.error("getWorkouts error in LongTerm: ", error);
       throw error;
     }
   };
@@ -173,7 +173,7 @@ class LongTerm {
       const queueService = new QueueService();
       await queueService.sendMessage(eventScheduleData);
     } catch (error) {
-      logger.debug("createMedicationEvents error in LongTerm: ", error);
+      logger.error("createMedicationEvents error in LongTerm: ", error);
       throw error;
     }
   };
@@ -243,7 +243,7 @@ class LongTerm {
       logger.debug("8");
       await queueService.sendMessage(eventScheduleData);
     } catch (error) {
-      logger.debug("createVitalEvents error", error);
+      logger.error("createVitalEvents error", error);
       throw error;
     }
   };
@@ -292,7 +292,7 @@ class LongTerm {
       const queueService = new QueueService();
       await queueService.sendMessage(eventScheduleData);
     } catch (error) {
-      logger.debug("createDietEvents error in LongTerm: ", error);
+      logger.error("createDietEvents error in LongTerm: ", error);
       throw error;
     }
   };
@@ -339,7 +339,7 @@ class LongTerm {
       const queueService = new QueueService();
       await queueService.sendMessage(eventScheduleData);
     } catch (error) {
-      logger.debug("createWorkoutEvents error in LongTerm: ", error);
+      logger.error("createWorkoutEvents error in LongTerm: ", error);
       throw error;
     }
   };
@@ -464,7 +464,7 @@ class LongTerm {
         }
       }
     } catch (error) {
-      logger.debug("Error running observer in LongTerm: ", error);
+      logger.error("Error running observer in LongTerm: ", error);
       throw error;
     }
   };

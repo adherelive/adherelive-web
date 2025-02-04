@@ -59,7 +59,7 @@ class DietResponseController extends Controller {
         "Image uploaded successfully"
       );
     } catch (error) {
-      logger.debug("upload 500", error);
+      logger.error("upload 500", error);
       return raiseServerError(res);
     }
   };
@@ -143,7 +143,7 @@ class DietResponseController extends Controller {
         return raiseClientError(res, 422, {}, "Please check details entered");
       }
     } catch (error) {
-      logger.debug("create 500 - diet response controller", error);
+      logger.error("create 500 - diet response controller", error);
       return raiseServerError(res);
     }
   };

@@ -110,7 +110,7 @@ class GraphController extends Controller {
       });
        */
     } catch (error) {
-      logger.debug("Could not display the chart -> get all graphs 500 error: ", error);
+      logger.error("Could not display the chart -> get all graphs 500 error: ", error);
       return raiseServerError(res);
     }
   };
@@ -220,7 +220,7 @@ class GraphController extends Controller {
         "Charts added successfully"
       );
     } catch (error) {
-      logger.debug("Adding Graphs not working correctly: ", error);
+      logger.error("Adding Graphs not working correctly: ", error);
       return raiseServerError(res);
     }
   };
@@ -279,7 +279,7 @@ class GraphController extends Controller {
         "Provider preferences updated successfully"
       );
     } catch (error) {
-      logger.debug("Updated Provider Graph not working: ", error);
+      logger.error("Updated Provider Graph not working: ", error);
       return raiseServerError(res);
     }
   };

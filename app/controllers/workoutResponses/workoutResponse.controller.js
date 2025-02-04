@@ -176,7 +176,7 @@ class WorkoutResponseController extends Controller {
       //   );
       // }
     } catch (error) {
-      logger.debug("get 500", error);
+      logger.error("get 500", error);
       return raiseServerError(res);
     }
   };

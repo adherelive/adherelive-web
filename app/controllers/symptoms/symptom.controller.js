@@ -66,7 +66,7 @@ class SymptomController extends Controller {
         "Symptom details fetched successfully"
       );
     } catch (error) {
-      logger.debug("symptoms getSymptomDetails 500 error", error);
+      logger.error("symptoms getSymptomDetails 500 error", error);
       return raiseServerError(res);
     }
   };

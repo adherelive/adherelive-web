@@ -148,7 +148,7 @@ class FoodItemController extends Controller {
         "Food Item created successfully"
       );
     } catch (error) {
-      logger.debug("create food item 500 error", error);
+      logger.error("create food item 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -365,7 +365,7 @@ class FoodItemController extends Controller {
         "Food Item updated successfully"
       );
     } catch (error) {
-      logger.debug("update food item 500 error", error);
+      logger.error("update food item 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -485,7 +485,7 @@ class FoodItemController extends Controller {
         "Food Item data fetched successfully"
       );
     } catch (error) {
-      logger.debug("Search food item 500 error", error);
+      logger.error("Search food item 500 error", error);
       return raiseServerError(res);
     }
   };

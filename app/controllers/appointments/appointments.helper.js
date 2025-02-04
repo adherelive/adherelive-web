@@ -34,7 +34,7 @@ export const getFavoriteInDetails = async (
         return response;
     }
   } catch (error) {
-    logger.debug("getFavouriteInDetails error", error);
+    logger.error("getFavouriteInDetails error", error);
     return null;
   }
 };
@@ -78,7 +78,7 @@ const medicalTestFavorites = async (userTypeData, types) => {
     updatedTypes = [...favTypesList, ...notFavTypesList];
     return updatedTypes;
   } catch (error) {
-    logger.debug("medicalTestFavorites error", error);
+    logger.error("medicalTestFavorites error", error);
   }
 };
 
@@ -157,6 +157,6 @@ const radiologyTypeFavorites = async (userTypeData, types) => {
     }
     return types;
   } catch (error) {
-    logger.debug("medicalTestFavorites error", error);
+    logger.error("medicalTestFavorites error", error);
   }
 };

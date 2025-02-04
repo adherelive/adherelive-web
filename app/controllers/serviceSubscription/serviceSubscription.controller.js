@@ -71,7 +71,7 @@ class ServiceSubscriptionController extends Controller {
         "Subscription added successfully"
       );
     } catch (error) {
-      logger.debug("Service Subscription 500 error: ", error);
+      logger.error("Service Subscription 500 error: ", error);
       return raiseServerError(res);
     }
   };
@@ -101,7 +101,7 @@ class ServiceSubscriptionController extends Controller {
         "Service updated successfully"
       );
     } catch (error) {
-      logger.debug("updateServiceSubscription 500 error: ", error);
+      logger.error("updateServiceSubscription 500 error: ", error);
       return raiseServerError(res);
     }
   };
@@ -142,7 +142,7 @@ class ServiceSubscriptionController extends Controller {
         "success"
       );
     } catch (error) {
-      logger.debug("getServiceOfferingById 500 error: ", error);
+      logger.error("getServiceOfferingById 500 error: ", error);
       return raiseServerError(res);
     }
   };
@@ -177,8 +177,8 @@ class ServiceSubscriptionController extends Controller {
         },
         "Service updated successfully"
       );
-    } catch (ex) {
-      logger.debug("getServiceOfferingByData 500 error: ", ex);
+    } catch (err) {
+      logger.error("Service subscription get service offering by data has an error: ", err);
       return raiseServerError(res);
     }
   };
@@ -246,8 +246,8 @@ class ServiceSubscriptionController extends Controller {
         },
         "Service updated successfully"
       );
-    } catch (ex) {
-      logger.debug("getServiceSubscriptionForAdmin 500 error: ", ex);
+    } catch (err) {
+      logger.error("Service Subscription get service subscription for Admin has an error: ", err);
       return raiseServerError(res);
     }
   };
@@ -296,8 +296,8 @@ class ServiceSubscriptionController extends Controller {
         },
         "Service updated successfully"
       );
-    } catch (ex) {
-      logger.debug("getServiceSubscriptionForPatient 500 error: ", ex);
+    } catch (err) {
+      logger.error("Service Subscription get service subscription for Patient has an error: ", err);
       return raiseServerError(res);
     }
   };
@@ -356,8 +356,8 @@ class ServiceSubscriptionController extends Controller {
         },
         "Service updated successfully"
       );
-    } catch (ex) {
-      logger.debug("getServiceOfferingForUser 500 error: ", ex);
+    } catch (err) {
+      logger.error("Service subscription get service offering for User has an error: ", err);
       return raiseServerError(res);
     }
   };

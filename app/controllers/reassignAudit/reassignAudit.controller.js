@@ -46,8 +46,8 @@ class reassignAuditController extends Controller {
         },
         "Data Fetched Successfully"
       );
-    } catch (ex) {
-      logger.debug("getServiceByData 500 error", ex);
+    } catch (err) {
+      logger.error("Reassign Audit get service by data has an error: ", err);
       return raiseServerError(res);
     }
   };

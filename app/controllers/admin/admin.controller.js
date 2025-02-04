@@ -66,7 +66,7 @@ class AdminController extends Controller {
 
       return raiseSuccess(res, 200, {}, "Details updated successfully");
     } catch (error) {
-      logger.debug("updateTermsAndPolicy 500 error", error);
+      logger.error("updateTermsAndPolicy 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -92,7 +92,7 @@ class AdminController extends Controller {
         "Details fetched successfully"
       );
     } catch (error) {
-      logger.debug("getTermsAndPolicy 500 error", error);
+      logger.error("getTermsAndPolicy 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -142,7 +142,7 @@ class AdminController extends Controller {
 
       return raiseSuccess(res, 200, {}, "Features updated successfully");
     } catch (error) {
-      logger.debug("enableAllFeatures 500 error", error);
+      logger.error("enableAllFeatures 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -181,7 +181,7 @@ class AdminController extends Controller {
         "Updated terms and conditions for existing providers."
       );
     } catch (error) {
-      logger.debug("updateProviderTermsMappingForExistingUsers 500 error", error);
+      logger.error("updateProviderTermsMappingForExistingUsers 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -223,7 +223,7 @@ class AdminController extends Controller {
         "Details fetched successfully"
       );
     } catch (error) {
-      logger.debug("getTermsOfPayment 500 error", error);
+      logger.error("getTermsOfPayment 500 error", error);
       return raiseServerError(res);
     }
   };

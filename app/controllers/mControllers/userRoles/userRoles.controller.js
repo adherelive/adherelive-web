@@ -80,7 +80,7 @@ class UserRoleController extends Controller {
         "User role data fetched successfully"
       );
     } catch (error) {
-      logger.debug("get UserRole Data 500 error", error);
+      logger.error("get UserRole Data 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -161,7 +161,7 @@ class UserRoleController extends Controller {
         "Account switched successfully."
       );
     } catch (error) {
-      logger.debug("switchRoleId data 500 error ---> ", error);
+      logger.error("switchRoleId data 500 error ---> ", error);
       return raiseServerError(res);
     }
   };

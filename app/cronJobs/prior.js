@@ -65,7 +65,7 @@ class PriorCron {
         this.handleWorkoutPrior
       );
     } catch (error) {
-      logger.debug("prior runObserver catch error", error);
+      logger.error("prior runObserver catch error", error);
     }
   }
 
@@ -98,7 +98,7 @@ class PriorCron {
       );
       // const updateEventStatus = await this.scheduleEventService.update({ status: EVENT_STATUS.PRIOR, }, id);
     } catch (error) {
-      logger.debug("handleAppointmentPrior error", error);
+      logger.error("handleAppointmentPrior error", error);
     }
   }
 
@@ -113,7 +113,7 @@ class PriorCron {
         id
       );
     } catch (error) {
-      logger.debug("handleDietPrior error", error);
+      logger.error("handleDietPrior error", error);
     }
   }
 
@@ -128,7 +128,7 @@ class PriorCron {
         id
       );
     } catch (error) {
-      logger.debug("handleWorkoutPrior error", error);
+      logger.error("handleWorkoutPrior error", error);
     }
   }
 }

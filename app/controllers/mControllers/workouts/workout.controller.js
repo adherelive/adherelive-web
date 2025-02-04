@@ -177,7 +177,7 @@ class WorkoutController extends Controller {
         "Workout created successfully."
       );
     } catch (error) {
-      logger.debug("create 500 - workout controller created", error);
+      logger.error("create 500 - workout controller created", error);
       return raiseServerError(res);
     }
   };
@@ -318,7 +318,7 @@ class WorkoutController extends Controller {
         "Workout created successfully."
       );
     } catch (error) {
-      logger.debug("create 500 - workout created", error);
+      logger.error("create 500 - workout created", error);
       return raiseServerError(res);
     }
   };
@@ -478,7 +478,7 @@ class WorkoutController extends Controller {
         );
       }
     } catch (error) {
-      logger.debug("update 500", error);
+      logger.error("update 500", error);
       return raiseServerError(res);
     }
   };
@@ -526,7 +526,7 @@ class WorkoutController extends Controller {
         );
       }
     } catch (error) {
-      logger.debug("delete 500", error);
+      logger.error("delete 500", error);
       return raiseServerError(res);
     }
   };
@@ -566,7 +566,7 @@ class WorkoutController extends Controller {
         "Workout Total Calories updated successfully"
       );
     } catch (error) {
-      logger.debug("update cal 500", error);
+      logger.error("update cal 500", error);
       return raiseServerError(res);
     }
   };
@@ -611,7 +611,7 @@ class WorkoutController extends Controller {
         );
       }
     } catch (error) {
-      logger.debug("details 500", error);
+      logger.error("details 500", error);
       return raiseServerError(res);
     }
   };
@@ -770,7 +770,7 @@ class WorkoutController extends Controller {
         );
       }
     } catch (error) {
-      logger.debug("getAll 500", error);
+      logger.error("getAll 500", error);
       return raiseServerError(res);
     }
   };
@@ -922,7 +922,7 @@ class WorkoutController extends Controller {
         "Workout details fetched successfully"
       );
     } catch (error) {
-      logger.debug("get 500", error);
+      logger.error("get 500", error);
       return raiseServerError(res);
     }
   };
@@ -1035,7 +1035,7 @@ class WorkoutController extends Controller {
         );
       }
     } catch (error) {
-      logger.debug("timeline 500", error);
+      logger.error("timeline 500", error);
       return raiseServerError(res);
     }
   };

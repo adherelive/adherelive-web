@@ -23,7 +23,7 @@ class AlgoliaController extends Controller {
         return this.raiseClientError(res, 422, {}, "something wrong in data");
       }
     } catch (error) {
-      logger.debug("updateMedicine catch error", error);
+      logger.error("updateMedicine catch error", error);
       return this.raiseServerError(res);
     }
   };

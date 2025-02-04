@@ -162,7 +162,7 @@ class FlashCardController extends Controller {
         "FlashCard added successfully!"
       );
     } catch (error) {
-      logger.debug("FlashCard 500 error: ", error);
+      logger.error("FlashCard 500 error: ", error);
       return raiseServerError(res);
     }
   };
@@ -184,7 +184,7 @@ class FlashCardController extends Controller {
       let flashCard = await flashCardService.getAllFlashCardByData(data);
       return raiseSuccess(res, 200, { flashCard }, "Success!");
     } catch (error) {
-      logger.debug("Flash Card 500 error: ", error);
+      logger.error("Flash Card 500 error: ", error);
       return raiseServerError(res);
     }
   };
@@ -206,7 +206,7 @@ class FlashCardController extends Controller {
       let flashCard = await flashCardService.getAllFlashCardByData(data);
       return raiseSuccess(res, 200, { flashCard }, "success");
     } catch (error) {
-      logger.debug("getFlashCardDetailsByActivityId 500 error: ", error);
+      logger.error("getFlashCardDetailsByActivityId 500 error: ", error);
       return raiseServerError(res);
     }
   };
@@ -269,7 +269,7 @@ class FlashCardController extends Controller {
         "FlashCard updated successfully"
       );
     } catch (error) {
-      logger.debug("updateFlashCard 500 error: ", error);
+      logger.error("updateFlashCard 500 error: ", error);
       return raiseServerError(res);
     }
   };

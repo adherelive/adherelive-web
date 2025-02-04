@@ -27,7 +27,7 @@ export const doctorChart = async (req) => {
 
     return await getAllDataForDoctors({ doctor_id, user_role_id: userRoleId });
   } catch (error) {
-    logger.debug("doctorChart catch error: ", error);
+    logger.error("doctorChart catch error: ", error);
     throw error;
   }
 };
@@ -42,7 +42,7 @@ export const doctorChartCount = async (req) => {
       user_role_id: userRoleId,
     });
   } catch (error) {
-    logger.debug("doctorChartCount catch error: ", error);
+    logger.error("doctorChartCount catch error: ", error);
     throw error;
   }
 };
@@ -62,7 +62,7 @@ export const doctorChartEventDetails = async (req) => {
       user_role_id: userRoleId,
     });
   } catch (error) {
-    logger.debug("doctorChartEventDetails catch error", error);
+    logger.error("doctorChartEventDetails catch error", error);
     throw error;
   }
 };
@@ -78,7 +78,7 @@ export const hspChart = async (req) => {
       category: USER_CATEGORY.HSP,
     });
   } catch (error) {
-    logger.debug("hspChart catch error: ", error);
+    logger.error("hspChart catch error: ", error);
     throw error;
   }
 };
@@ -98,7 +98,7 @@ export const hspChartEventDetails = async (req) => {
       category: USER_CATEGORY.HSP,
     });
   } catch (error) {
-    logger.debug("hspChartEventDetails catch error: ", error);
+    logger.error("hspChartEventDetails catch error: ", error);
     throw error;
   }
 };
@@ -114,7 +114,7 @@ export const hspChartCount = async (req) => {
       category: USER_CATEGORY.HSP,
     });
   } catch (error) {
-    logger.debug("hspChartCount catch error: ", error);
+    logger.error("hspChartCount catch error: ", error);
     throw error;
   }
 };
@@ -269,7 +269,7 @@ export const providerChart = async (req) => {
 
     return [{ ...allDoctorsData }, "Missed events fetched successfully"];
   } catch (error) {
-    logger.debug("providerChart catch error: ", error);
+    logger.error("providerChart catch error: ", error);
     throw error;
   }
 };
@@ -330,7 +330,7 @@ const getAllDataForDoctorsByEventType = async ({
 
     return response;
   } catch (error) {
-    logger.debug("getAllDataForDoctorsByEventType catch error: ", error);
+    logger.error("getAllDataForDoctorsByEventType catch error: ", error);
     throw error;
   }
 };
@@ -428,7 +428,7 @@ const getAllDataForDoctors = async ({
       "Missed events fetched successfully",
     ];
   } catch (error) {
-    logger.debug("Error in getAllDataForDoctors: ", error);
+    logger.error("Error in getAllDataForDoctors: ", error);
     throw error;
   }
 };
@@ -524,7 +524,7 @@ const getAllDataForDoctorsCount = async ({
 
     return response;
   } catch (error) {
-    logger.debug("getAllDataForDoctors catch error", error);
+    logger.error("getAllDataForDoctors catch error", error);
     throw error;
   }
 };

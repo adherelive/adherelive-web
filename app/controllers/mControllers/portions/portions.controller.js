@@ -45,7 +45,7 @@ class PortionController extends Controller {
         );
       }
     } catch (error) {
-      logger.debug("portion search 500 error", error);
+      logger.error("portion search 500 error", error);
       return raiseServerError(res);
     }
   };

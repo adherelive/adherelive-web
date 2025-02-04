@@ -53,7 +53,7 @@ class AgoraController extends Controller {
         "Created new video token with userId"
       );
     } catch (error) {
-      logger.debug("generateVideoAccessToken 50 error", error);
+      logger.error("generateVideoAccessToken 50 error", error);
       return this.raiseServerError(res, 500, {}, "Error in video calling.");
     }
   };
@@ -107,7 +107,7 @@ class AgoraController extends Controller {
         "Notification raised successfully for missed call."
       );
     } catch (error) {
-      logger.debug("missedCall 500 error", error);
+      logger.error("missedCall 500 error", error);
       return this.raiseServerError(
         res,
         500,
@@ -147,7 +147,7 @@ class AgoraController extends Controller {
         "Calling info sent to participant"
       );
     } catch (error) {
-      logger.debug("startAppointment error", error);
+      logger.error("startAppointment error", error);
       return this.raiseServerError(res);
     }
   };

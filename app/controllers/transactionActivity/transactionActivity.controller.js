@@ -214,7 +214,7 @@ class TransactionActivityController extends Controller {
         "Activity updated successfully"
       );
     } catch (error) {
-      logger.debug("updateService 500 error", error);
+      logger.error("updateService 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -270,7 +270,7 @@ class TransactionActivityController extends Controller {
         "Activity updated successfully"
       );
     } catch (error) {
-      logger.debug("updateService 500 error", error);
+      logger.error("updateService 500 error", error);
       return raiseServerError(res);
     }
   };

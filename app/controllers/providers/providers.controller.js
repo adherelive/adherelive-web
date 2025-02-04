@@ -318,7 +318,7 @@ class ProvidersController extends Controller {
         "doctor details fetched successfully"
       );
     } catch (error) {
-      logger.debug("getall 500 error ", error);
+      logger.error("getall 500 error ", error);
       return raiseServerError(res);
     }
   };
@@ -386,7 +386,7 @@ class ProvidersController extends Controller {
 
       return raiseSuccess(res, 200, {}, "Password mailed successfully.");
     } catch (error) {
-      logger.debug("mailPassword 500 error ", error);
+      logger.error("mailPassword 500 error ", error);
       return raiseServerError(res);
     }
   };
@@ -529,7 +529,7 @@ class ProvidersController extends Controller {
         "Appointments data fetched successfully."
       );
     } catch (error) {
-      logger.debug("getAllAppointmentForDoctors 500 error ", error);
+      logger.error("getAllAppointmentForDoctors 500 error ", error);
       return raiseServerError(res);
     }
   };
@@ -605,7 +605,7 @@ class ProvidersController extends Controller {
         "Appointments data fetched successfully."
       );
     } catch (error) {
-      logger.debug("getAllAppointmentForDoctors 500 error ", error);
+      logger.error("getAllAppointmentForDoctors 500 error ", error);
       return raiseServerError(res);
     }
   };
@@ -685,7 +685,7 @@ class ProvidersController extends Controller {
          * */
       }
     } catch (error) {
-      logger.debug("getPatientEvents 500 error ", error);
+      logger.error("getPatientEvents 500 error ", error);
       return raiseServerError(res);
     }
   };
@@ -712,7 +712,7 @@ class ProvidersController extends Controller {
         "Providers fetched successfully"
       );
     } catch (error) {
-      logger.debug("getAllProviders 500 error ", error);
+      logger.error("getAllProviders 500 error ", error);
       return raiseServerError(res);
     }
   };
@@ -771,7 +771,7 @@ class ProvidersController extends Controller {
         "Providers fetched successfully"
       );
     } catch (error) {
-      logger.debug("getAllProviders 500 error ", error);
+      logger.error("getAllProviders 500 error ", error);
       return raiseServerError(res);
     }
   };
@@ -941,7 +941,7 @@ class ProvidersController extends Controller {
         "Provider added successfully"
       );
     } catch (error) {
-      logger.debug("addProvider 500 error ", error);
+      logger.error("addProvider 500 error ", error);
       return raiseServerError(res);
     }
   };
@@ -1095,7 +1095,7 @@ class ProvidersController extends Controller {
         "Provider updated successfully"
       );
     } catch (error) {
-      logger.debug("updateProvider 500 error", error);
+      logger.error("updateProvider 500 error", error);
       return raiseServerError(res);
     }
   };

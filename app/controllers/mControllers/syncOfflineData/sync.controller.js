@@ -29,7 +29,7 @@ class SyncController extends Controller {
 
       return raiseSuccess(res, 200, {}, "No such event present");
     } catch (error) {
-      logger.debug("Sync offline data 500 error: ", error);
+      logger.error("Sync offline data 500 error: ", error);
       return raiseServerError(res);
     }
   };
@@ -91,7 +91,7 @@ class SyncController extends Controller {
 
       return raiseSuccess(res, 200, {}, "No such event present");
     } catch (error) {
-      logger.debug("Sync offline data 500 error: ", error);
+      logger.error("Sync offline data 500 error: ", error);
       return raiseServerError(res);
     }
   };

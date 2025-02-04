@@ -131,7 +131,7 @@ class FeatureController extends Controller {
         "Features mapping fetched successfully."
       );
     } catch (error) {
-      logger.debug("getAllFeaturesMappingForUser 500 error", error);
+      logger.error("getAllFeaturesMappingForUser 500 error", error);
       return raiseServerError(res, 500, {}, error.message);
     }
   };

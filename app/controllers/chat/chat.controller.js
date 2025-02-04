@@ -42,7 +42,7 @@ class ChatController extends Controller {
 
       const UserMessageJob = ChatJob.execute();
     } catch (error) {
-      logger.debug("notify 500 error", error);
+      logger.error("notify 500 error", error);
       return raiseServerError(res);
     }
   };

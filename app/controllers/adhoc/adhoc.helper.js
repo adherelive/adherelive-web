@@ -39,7 +39,7 @@ export const getLinkDetails = async (category, userId) => {
 
     return response;
   } catch (error) {
-    logger.debug("getLinkDetails error", error);
+    logger.error("getLinkDetails error", error);
     return null;
   }
 };
@@ -81,7 +81,7 @@ export const getUserDetails = async (category, categoryId) => {
 
     return response;
   } catch (error) {
-    logger.debug("getLinkDetails error", error);
+    logger.error("getLinkDetails error", error);
     return null;
   }
 };

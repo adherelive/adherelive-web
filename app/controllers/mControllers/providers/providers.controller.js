@@ -161,7 +161,7 @@ class MobileProvidersController extends Controller {
         "Appointments data fetched successfully."
       );
     } catch (error) {
-      logger.debug("getAllAppointmentForDoctors 500 error ", error);
+      logger.error("getAllAppointmentForDoctors 500 error ", error);
       return raiseServerError(res);
     }
   };

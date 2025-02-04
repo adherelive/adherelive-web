@@ -102,8 +102,8 @@ const getPatientCarePlans = async (
       "Patient care plan details fetched successfully"
     );
   } catch (error) {
-    logger.debug("Get CarePlan 500 error ---> ", error);
-    logger.debug("GET PATIENT DETAILS ERROR CarePlan ---> ", error);
+    logger.error("Get CarePlan 500 error ---> ", error);
+    logger.error("GET PATIENT DETAILS ERROR CarePlan ---> ", error);
     return raiseServerError(res);
   }
 };

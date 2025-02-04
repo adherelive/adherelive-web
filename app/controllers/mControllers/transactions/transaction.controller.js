@@ -155,7 +155,7 @@ class TransactionController extends Controller {
         }
       }
     } catch (error) {
-      logger.debug("createOrder 500 error", error);
+      logger.error("createOrder 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -353,7 +353,7 @@ class TransactionController extends Controller {
         return raiseClientError(res, 400, {}, "Payment has not been processed");
       }
     } catch (error) {
-      logger.debug("process transaction 500 error", error);
+      logger.error("process transaction 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -414,7 +414,7 @@ class TransactionController extends Controller {
         return raiseClientError(res, 400, {}, "Payment has not been processed");
       }
     } catch (error) {
-      logger.debug("createOrder 500 error", error);
+      logger.error("createOrder 500 error", error);
       return raiseServerError(res);
     }
   };

@@ -109,7 +109,7 @@ class ReportController extends Controller {
         "Service added successfully"
       );
     } catch (error) {
-      logger.debug("Service Offering 500 error: ", error);
+      logger.error("Service Offering 500 error: ", error);
       return raiseServerError(res);
     }
   };
@@ -160,7 +160,7 @@ class ReportController extends Controller {
         "Service updated successfully"
       );
     } catch (error) {
-      logger.debug("updateService 500 error", error);
+      logger.error("updateService 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -194,7 +194,7 @@ class ReportController extends Controller {
         "success"
       );
     } catch (error) {
-      logger.debug("updateService 500 error", error);
+      logger.error("updateService 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -217,8 +217,8 @@ class ReportController extends Controller {
         },
         "Service updated successfully"
       );
-    } catch (ex) {
-      logger.debug("getServiceByData 500 error", ex);
+    } catch (err) {
+      logger.error("Service Offering get service by data has an error: ", err);
       return raiseServerError(res);
     }
   };
@@ -361,8 +361,8 @@ class ReportController extends Controller {
         },
         "Success"
       );
-    } catch (ex) {
-      logger.debug("getServiceByData 500 error", ex);
+    } catch (err) {
+      logger.error("Service Offering get service by data has an error: ", err);
       return raiseServerError(res);
     }
   };

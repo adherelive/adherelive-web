@@ -73,7 +73,7 @@ class RemoveDocuments {
         }
       });
     } catch (error) {
-      logger.debug("ERROR: in reading directory: ", error);
+      logger.error("ERROR: in reading directory: ", error);
     }
   };
 
@@ -98,7 +98,7 @@ class RemoveDocuments {
         deleteFile(file);
       });
     } catch (error) {
-      logger.debug("ERROR: in reading file: ", error);
+      logger.error("ERROR: in reading file: ", error);
     }
   };
 
@@ -121,7 +121,7 @@ class RemoveDocuments {
         });
       }
     } catch (error) {
-      logger.debug("ERROR: in uploading file on aws: ", error);
+      logger.error("ERROR: in uploading file on aws: ", error);
     }
   };
 
@@ -159,7 +159,7 @@ class RemoveDocuments {
         this.readDirectory(S3_DOWNLOAD_FOLDER);
       }
     } catch (error) {
-      logger.debug("REMOVE_DOCUMENTS runObserver 500 error ---> ", error);
+      logger.error("REMOVE_DOCUMENTS runObserver 500 error ---> ", error);
     }
   };
 }

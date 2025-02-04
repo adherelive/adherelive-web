@@ -103,7 +103,7 @@ class UserFavouritesService {
       });
       return deleteFavourite;
     } catch (error) {
-      logger.debug("Error while deleting a User Favourite: ", error);
+      logger.error("Error while deleting a User Favourite: ", error);
       throw error;
     }
   };

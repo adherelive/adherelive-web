@@ -281,7 +281,7 @@ class MobileUserController extends Controller {
         );
       }
     } catch (error) {
-      logger.debug("verifyOtp 500 error", error);
+      logger.error("verifyOtp 500 error", error);
       raiseServerError(res);
     }
   };
@@ -1783,7 +1783,7 @@ class MobileUserController extends Controller {
         "registrations updated successfully"
       );
     } catch (error) {
-      logger.debug("500 error", error);
+      logger.error("500 error", error);
       return raiseServerError(res);
     }
   };
@@ -1887,7 +1887,7 @@ class MobileUserController extends Controller {
         "doctor registration data fetched successfully"
       );
     } catch (error) {
-      logger.debug("GET DOCTOR REGISTRATION DATA 500 ERROR ---> ", error);
+      logger.error("GET DOCTOR REGISTRATION DATA 500 ERROR ---> ", error);
       return raiseServerError(res);
     }
   };
@@ -1960,7 +1960,7 @@ class MobileUserController extends Controller {
         "Thanks! If there is an account associated with the email, we will send the password reset link to it"
       );
     } catch (error) {
-      logger.debug("Forgot Password - 500 Error", error);
+      logger.error("Forgot Password - 500 Error", error);
       return raiseServerError(res);
     }
   };
@@ -2023,7 +2023,7 @@ class MobileUserController extends Controller {
         );
       }
     } catch (error) {
-      logger.debug("updateUserPassword 500 error", error);
+      logger.error("updateUserPassword 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -2068,7 +2068,7 @@ class MobileUserController extends Controller {
         "Password reset successful. Please login to continue"
       );
     } catch (error) {
-      logger.debug("updateUserPassword 500 error", error);
+      logger.error("updateUserPassword 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -2126,7 +2126,7 @@ class MobileUserController extends Controller {
         );
       }
     } catch (error) {
-      logger.debug("updateUserPassword 500 error", error);
+      logger.error("updateUserPassword 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -2190,7 +2190,7 @@ class MobileUserController extends Controller {
         "Password updated successfully"
       );
     } catch (error) {
-      logger.debug("updatePassword 500 error", error);
+      logger.error("updatePassword 500 error", error);
       return this.raiseServerError(res);
     }
   };
@@ -2278,7 +2278,7 @@ class MobileUserController extends Controller {
         "Initial data retrieved successfully"
       );
     } catch (error) {
-      logger.debug("giveConsent 500 error ---> ", error);
+      logger.error("giveConsent 500 error ---> ", error);
       return this.raiseServerError(res);
     }
   };
