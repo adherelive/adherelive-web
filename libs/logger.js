@@ -303,12 +303,12 @@ class EnhancedWinstonLogger {
       } = info;
 
       // Get the source from either the metadata or the logger instance
-      const source = info.source || this.source || 'unknown source';
+      const source = info.source || this.source || 'unknown';
 
-      // Create the log entry without the undefined brackets
+      // Create the log entry without the undefined brackets and strip color codes
       const logEntry = {
         timestamp,
-        level,
+        level: level.replace(/\u001b\[\d+m/g, ''), // Remove ANSI color codes
         message,
         ...metadata
       };
@@ -328,7 +328,7 @@ class EnhancedWinstonLogger {
     transports.push(
         new winston.transports.Console({
           format: winston.format.combine(
-              winston.format.colorize(),
+              winston.format.uncolorize(), // Add this line to remove colors
               winston.format.printf(this._createLogFormatter())
           )
         })
