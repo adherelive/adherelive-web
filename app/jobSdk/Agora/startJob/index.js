@@ -10,10 +10,10 @@ import {
   USER_CATEGORY,
 } from "../../../../constant";
 
-import { createLogger } from "../../../../libs/log"
+import { createLogger } from "../../../../libs/logger"
 import moment from "moment";
 
-const log = createLogger("WEB > JOBS SDK > AGORA");
+const logger = createLogger("WEB > JOBS SDK > AGORA");
 
 class StartJob extends AgoraJob {
   constructor(data) {
@@ -40,10 +40,10 @@ class StartJob extends AgoraJob {
     const participants = roomId.split(
       `-${process.config.twilio.CHANNEL_SERVER}-`
     );
-    log.debug("Inside getPush App Template: \n");
-    log.debug(JSON.stringify(getAgoraData()));
-    log.debug("getPushTemplate ---> participants: ", participants);
-    log.debug("getPushTemplate ---> roomId: ", roomId);
+    logger.debug("Inside getPush App Template: \n");
+    logger.debug(JSON.stringify(getAgoraData()));
+    logger.debug("getPushTemplate ---> participants: ", participants);
+    logger.debug("getPushTemplate ---> roomId: ", roomId);
 
     const templateData = [];
     const playerIds = [];
@@ -57,22 +57,22 @@ class StartJob extends AgoraJob {
       })) || {};
 
     let providerId = null;
-    log.debug("Start job for Agora using index.html: ");
+    logger.debug("Start job for Agora using index.html: ");
 
-    log.debug("Push App Template -> userRoles: ", userRoles);
+    logger.debug("Push App Template -> userRoles: ", userRoles);
     for (const userRole of userRoles) {
       const { id, user_identity, linked_id } = userRole || {};
-      log.debug("User Role -> getPushTemplate: ", { userRole });
-      log.debug("ID, User Role ID, Linked ID, User ID ---> getPushTemplate: ", { id, user_role_id, linked_id, user_identity });
+      logger.debug("User Role -> getPushTemplate: ", { userRole });
+      logger.debug("ID, User Role ID, Linked ID, User ID ---> getPushTemplate: ", { id, user_role_id, linked_id, user_identity });
       if (id === user_role_id) {
-        log.debug("getPushTemplate -> in if - 1: ", id);
+        logger.debug("getPushTemplate -> in if - 1: ", id);
         // userIds.push(user_identity)
         if (linked_id) {
           providerId = linked_id;
-          log.debug("getPushTemplate -> in if - 2: ", providerId);
+          logger.debug("getPushTemplate -> in if - 2: ", providerId);
         }
       } else {
-        log.debug("getPushTemplate -> in else: ", user_identity);
+        logger.debug("getPushTemplate -> in else: ", user_identity);
         userIds.push(user_identity);
       }
     }
@@ -86,24 +86,24 @@ class StartJob extends AgoraJob {
       providerName = name;
     }
 
-    log.debug("getPushTemplate -> userIds: ", { userIds });
+    logger.debug("getPushTemplate -> userIds: ", { userIds });
 
     const userDevices =
       (await UserDeviceService.getAllDeviceByData({
         user_id: userIds,
       })) || [];
-    log.debug("getPushTemplate -> userDevices: ", { userDevices });
+    logger.debug("getPushTemplate -> userDevices: ", { userDevices });
     if (userDevices.length > 0) {
       for (const device of userDevices) {
         const userDevice = await UserDeviceWrapper({ data: device });
-        log.debug("getPushTemplate -> userDevice: ", { userDevice });
+        logger.debug("getPushTemplate -> userDevice: ", { userDevice });
         playerIds.push(userDevice.getOneSignalDeviceId());
       }
     }
 
     const url = getNotificationUrl(AGORA_CALL_NOTIFICATION_TYPES.START_CALL);
 
-    log.debug("Player ID's in Template: ", { playerIds });
+    logger.debug("Player ID's in Template: ", { playerIds });
 
     templateData.push({
       small_icon: process.config.app.icon_android,

@@ -1,5 +1,5 @@
-import { createLogger } from "../libs/log";
 import { EVENT_TYPE } from "../constant";
+import { createLogger } from "../libs/logger";
 import {
   handleAppointments,
   handleAppointmentsTimeAssignment,
@@ -10,7 +10,7 @@ import {
   handleWorkout,
 } from "./helper";
 
-const log = createLogger("EVENTS > SQS_OBSERVER");
+const logger = createLogger("EVENTS > SQS_OBSERVER");
 
 export default class SqsObserver {
   constructor() {}
@@ -18,13 +18,13 @@ export default class SqsObserver {
   observe = async (service) => {
     try {
       const eventMessage = await service.receiveMessage();
-      log.debug("SqsObserver observe event message: ", eventMessage);
+      logger.debug("SqsObserver observe event message: ", eventMessage);
 
       if (eventMessage) {
         for (const message of eventMessage) {
           const data = JSON.parse(message.Body) || null;
 
-          log.debug("SQS Observer observe data --> ", data);
+          logger.debug("SQS Observer observe data --> ", data);
 
           if (Array.isArray(data)) {
             for (let index = 0; index < data.length; index++) {
@@ -36,7 +36,7 @@ export default class SqsObserver {
         }
       }
     } catch (error) {
-      log.debug("SQS Observer observe catch error: ", error);
+      logger.debug("SQS Observer observe catch error: ", error);
     }
   };
 
@@ -73,18 +73,18 @@ export default class SqsObserver {
           break;
       }
 
-      log.debug(`SQS Observe execute response: ${response}`);
-      log.debug(`SQS Observe execute message ReceiptHandle: ${message.ReceiptHandle}`);
+      logger.debug(`SQS Observe execute response: ${response}`);
+      logger.debug(`SQS Observe execute message ReceiptHandle: ${message.ReceiptHandle}`);
 
       if (response === true) {
         const deleteMessage = await service.deleteMessage(
           message.ReceiptHandle
         );
 
-        log.debug("SQS Observer execute deleteMessage: ", deleteMessage);
+        logger.debug("SQS Observer execute deleteMessage: ", deleteMessage);
       }
     } catch (error) {
-      log.debug("SQS Observe execute catch error: ", error);
+      logger.debug("SQS Observe execute catch error: ", error);
     }
   };
 }

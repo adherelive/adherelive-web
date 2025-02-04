@@ -1,9 +1,7 @@
 import scheduleService from "../services/scheduleEvents/scheduleEvent.service";
 import moment from "moment";
 import { EVENT_TYPE } from "../../constant";
-import { createLogger } from "../../libs/log";
-
-const log = createLogger("PROXY_SDK");
+import { createLogger } from "../../libs/logger";
 
 const getAllOccurrence = require("./scheduler/helper");
 const { EventEmitter } = require("events");
@@ -13,8 +11,10 @@ const { NotificationSdk } = require("../notificationSdk");
 const { ActivitySdk, STAGES } = require("../activitySdk");
 const schedule = require("node-schedule");
 
+const logger = createLogger("PROXY_SDK");
+
 function checkEventHaveToStart(startTime) {
-  log.debug("START TIME: Check Event Has Started");
+  logger.debug("START TIME: Check Event Has Started");
   const at00 = moment().minutes(0).seconds(0).milliseconds(0);
   const at15 = moment().minutes(15).seconds(0).milliseconds(0);
   const at30 = moment().minutes(30).seconds(0).milliseconds(0);
@@ -38,7 +38,7 @@ function checkEventHaveToStart(startTime) {
   if (startTime < listOfScheduler[x]) {
     status = true;
   }
-  log.debug("Start Time List of Schedulers: ", status);
+  logger.debug("Start Time List of Schedulers: ", status);
   return status;
 }
 
@@ -60,7 +60,7 @@ class ProxySdk extends EventEmitter {
   }
 
   execute(eventName, ...args) {
-    log.debug(
+    logger.debug(
       "INSIDE EXECUTE EVENT EMITTER: ",
       eventName,
       " SENT ARGS ",
@@ -85,7 +85,7 @@ class ProxySdk extends EventEmitter {
   };
 
   scheduleEvent = async ({ data }) => {
-    log.debug("\n HERE \n");
+    logger.debug("\n HERE \n");
     try {
       const {
         _id,
@@ -168,7 +168,7 @@ class ProxySdk extends EventEmitter {
         eventEndTime,
       });
 
-      log.debug(allOccurrence);
+      logger.debug(allOccurrence);
 
       const schedule_for_later = [];
       let have_to_schedule_now;
@@ -193,7 +193,7 @@ class ProxySdk extends EventEmitter {
         const scheduledJob = await scheduleService.addNewJob(
           have_to_schedule_now
         );
-        log.debug("event will be start soon after create");
+        logger.debug("event will be start soon after create");
         await this.scheduleStartEndOfEvent(scheduledJob);
       }
 
@@ -203,11 +203,11 @@ class ProxySdk extends EventEmitter {
         );
       }
 
-      log.debug(
+      logger.debug(
         "==================================================================================================================================================================="
       );
     } catch (error) {
-      log.warn(`Error in scheduleEvent: ${error}`);
+      logger.warn(`Error in scheduleEvent: ${error}`);
     }
   };
 
@@ -244,13 +244,13 @@ class ProxySdk extends EventEmitter {
                     data: res,
                   };
                   ActivitySdk.execute(data);
-                  log.debug("job is started", scheduledJobId);
+                  logger.debug("job is started", scheduledJobId);
                 }
               });
           }.bind(event)
         );
 
-        log.debug(`startedJob: ${event}`);
+        logger.debug(`startedJob: ${event}`);
       } else {
         scheduler
           .updateScheduledJob({
@@ -265,7 +265,7 @@ class ProxySdk extends EventEmitter {
               data: res,
             };
             ActivitySdk.execute(data);
-            log.debug("job is started", scheduledJobId);
+            logger.debug("job is started", scheduledJobId);
           });
       }
     } else {
@@ -273,7 +273,7 @@ class ProxySdk extends EventEmitter {
         schedule.scheduleJob(
           eventStartTime,
           function (y) {
-            log.debug(
+            logger.debug(
               "eventType instart======================>",
               event,
               scheduledJobStatus
@@ -295,7 +295,7 @@ class ProxySdk extends EventEmitter {
                     data: res,
                   };
                   ActivitySdk.execute(data);
-                  log.debug("job is started", scheduledJobId);
+                  logger.debug("job is started", scheduledJobId);
                 }
               });
           }.bind(event)
@@ -308,13 +308,13 @@ class ProxySdk extends EventEmitter {
           data: event,
         };
 
-        log.debug(
+        logger.debug(
           "eventType instart======================>",
           event,
           scheduledJobStatus
         );
         const result = await ActivitySdk.execute(data);
-        log.debug(`startedJob: ${event}`);
+        logger.debug(`startedJob: ${event}`);
       } else {
         scheduler
           .updateScheduledJob({
@@ -329,7 +329,7 @@ class ProxySdk extends EventEmitter {
               data: res,
             };
             ActivitySdk.execute(data);
-            log.debug("job is started", scheduledJobId);
+            logger.debug("job is started", scheduledJobId);
           });
       }
     }
@@ -362,7 +362,7 @@ class ProxySdk extends EventEmitter {
                     data: res,
                   };
                   ActivitySdk.execute(data);
-                  log.debug(`updatedJob: ${res}`);
+                  logger.debug(`updatedJob: ${res}`);
                 });
             });
         } else {
@@ -381,7 +381,7 @@ class ProxySdk extends EventEmitter {
                     data: res,
                   };
                   ActivitySdk.execute(data);
-                  log.debug(`updatedJob: ${res}`);
+                  logger.debug(`updatedJob: ${res}`);
                 });
             }
           });
@@ -394,8 +394,8 @@ class ProxySdk extends EventEmitter {
     const scheduledJobs = await scheduler.fetchScheduledJobs();
     const passedJobs = await scheduler.fetchPassedJobs();
 
-    log.debug(`scheduledJobs: , ${scheduledJobs}`);
-    log.debug(`passsedJobs: , ${passedJobs}`);
+    logger.debug(`scheduledJobs: , ${scheduledJobs}`);
+    logger.debug(`passsedJobs: , ${passedJobs}`);
 
     for (const job of scheduledJobs) {
       this.scheduleStartEndOfEvent(job);
@@ -423,7 +423,7 @@ class ProxySdk extends EventEmitter {
           eventType !== EVENT_TYPE.MEDICATION_REMINDER &&
           (await ActivitySdk.execute(data));
 
-        log.debug(`updatedJob: ${updatedJob}`);
+        logger.debug(`updatedJob: ${updatedJob}`);
       }
     }
   }

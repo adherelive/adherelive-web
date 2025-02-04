@@ -1,8 +1,8 @@
 import Database from "../../../libs/mysql";
 import { TABLE_NAME } from "../../models/flashCard";
 
-import { createLogger } from "../../../libs/log";
-const log = createLogger("WEB > FLASH CARD > SERVICE");
+import { createLogger } from "../../../libs/logger";
+const logger = createLogger("WEB > FLASH CARD > SERVICE");
 
 /**
  *
@@ -28,7 +28,7 @@ export default class ServiceOfferingService {
       await transaction.commit();
       return flashCard;
     } catch (error) {
-      log.debug(error);
+      logger.debug(error);
       await transaction.rollback();
       throw error;
     }

@@ -1,5 +1,6 @@
 import MedicationJob from "../";
 import moment from "moment";
+import { createLogger } from "../../../../libs/logger";
 
 import ProviderService from "../../../services/provider/provider.service";
 import UserRoleService from "../../../services/userRoles/userRoles.service";
@@ -7,9 +8,11 @@ import UserDeviceService from "../../../services/userDevices/userDevice.service"
 import UserDeviceWrapper from "../../../apiWrapper/mobile/userDevice";
 import { DEFAULT_PROVIDER, EVENT_TYPE } from "../../../../constant";
 
+const logger = createLogger("JOB SDK MEDICATIONS CREATE JOB");
+
 class CreateJob extends MedicationJob {
   constructor(data) {
-    log.debug("medication job called in create job");
+    logger.info("Medication job called in create job");
     super(data);
   }
 

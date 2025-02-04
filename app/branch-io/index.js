@@ -1,5 +1,9 @@
 import axios from "axios";
 
+import { createLogger } from "../../libs/logger";
+
+const logger = createLogger("BRANCH IO");
+
 export default async function createLink(data = {}) {
   try {
     // return data.$desktop_url;
@@ -15,6 +19,6 @@ export default async function createLink(data = {}) {
       return url;
     }
   } catch (err) {
-    log.debug("err creating universal deep-link", err);
+    logger.error("Error creating the universal deep-link: ", err);
   }
 }

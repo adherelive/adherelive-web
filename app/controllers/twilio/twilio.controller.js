@@ -2,11 +2,11 @@ import Controller from "../index";
 
 import { faker } from '@faker-js/faker';
 import twilioService from "../../services/twilio/twilio.service";
-import { createLogger } from "../../../libs/log";
+import { createLogger } from "../../../libs/logger";
 
-const log = createLogger("WEB > TWILIO > CONTROLLER");
+const logger = createLogger("WEB > TWILIO > CONTROLLER");
 
-// log.fileName("WEB > TWILIO > CONTROLLER");
+// logger.fileName("WEB > TWILIO > CONTROLLER");
 
 class TwilioController extends Controller {
   constructor() {
@@ -28,7 +28,7 @@ class TwilioController extends Controller {
         "Created new chat token with userId"
       );
     } catch (error) {
-      log.debug("generateTwilioChatAccessToken 500 error", error);
+      logger.debug("generateTwilioChatAccessToken 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -51,7 +51,7 @@ class TwilioController extends Controller {
         "Created new video token"
       );
     } catch (error) {
-      log.debug("generateTwilioVideoAccessToken 500 error", error);
+      logger.debug("generateTwilioVideoAccessToken 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -76,7 +76,7 @@ class TwilioController extends Controller {
         "Fetched Connected Participants"
       );
     } catch (error) {
-      log.debug("getConnectedParticipants 500 error", error);
+      logger.debug("getConnectedParticipants 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -88,7 +88,7 @@ class TwilioController extends Controller {
 
       return raiseSuccess(res, 200, {}, "DELETED ALL CHAT MESSAGES");
     } catch (error) {
-      log.debug("deleteChat 500 error", error);
+      logger.debug("deleteChat 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -98,11 +98,11 @@ class TwilioController extends Controller {
     try {
       const allChannels = await twilioService.getAllMessages();
 
-      log.debug("all Channels", allChannels);
+      logger.debug("all Channels", allChannels);
 
       return raiseSuccess(res, 200, {}, "GET ALL CHAT MESSAGES");
     } catch (error) {
-      log.debug("deleteChat 500 error", error);
+      logger.debug("deleteChat 500 error", error);
       return raiseServerError(res);
     }
   };

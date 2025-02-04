@@ -1,9 +1,9 @@
 import WebAuthenticate from "../api/middleware/auth";
 import MobileAuthenticate from "../m-api/middlewares/auth";
 import { raiseServerError } from "../api/helper";
-import { createLogger } from "../../libs/log";
+import { createLogger } from "../../libs/logger";
 
-const log = createLogger("MIDDLEWARE > AUTH");
+const logger = createLogger("MIDDLEWARE > AUTH");
 
 /**
  *
@@ -15,7 +15,7 @@ const log = createLogger("MIDDLEWARE > AUTH");
  */
 export default async (req, res, next) => {
   let { m } = req.query;
-  // log.debug("In the auth middle ware -> request query (m): ", { m });
+  // logger.debug("In the auth middle ware -> request query (m): ", { m });
 
   try {
     if (m) MobileAuthenticate(req, res, next);

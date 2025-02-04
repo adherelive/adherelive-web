@@ -4,8 +4,8 @@ import moment from "moment";
 import { USER_CATEGORY } from "../../../constant";
 import { TABLE_NAME } from "../../models/appointments";
 
-import { createLogger } from "../../../libs/log";
-const log = createLogger("WEB > APPOINTMENT > SERVICE");
+import { createLogger } from "../../../libs/logger";
+const logger = createLogger("WEB > APPOINTMENT > SERVICE");
 
 /**
  *
@@ -231,12 +231,12 @@ class AppointmentService {
       let endOfDay = moment().endOf("day").toISOString();
 
       if (date) {
-        log.debug("in if condition");
+        logger.debug("in if condition");
         startOfDay = moment(date, "DD-MM-YYYY").startOf("day").toISOString();
         endOfDay = moment(date, "DD-MM-YYYY").endOf("day").toISOString();
       }
 
-      log.debug({ date, startOfDay, endOfDay });
+      logger.debug({ date, startOfDay, endOfDay });
 
       const appointments = await Database.getModel(TABLE_NAME).findAll({
         where: {

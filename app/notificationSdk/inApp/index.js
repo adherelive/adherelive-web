@@ -1,17 +1,17 @@
 import stream from "getstream";
-import { createLogger } from "../../../libs/log";
+import { createLogger } from "../../../libs/logger";
 import EventExecutor from "../executor";
 
-const log = createLogger("NOTIFICATION_SDK > IN_APP > STREAM");
+const logger = createLogger("NOTIFICATION_SDK > IN_APP > STREAM");
 
 class AppNotification {
   constructor() {
-    log.debug("Connecting to Get-Stream for notification information");
+    logger.debug("Connecting to Get-Stream for notification information");
 
     // Log credentials for debugging
-    // log.debug(`API Key: ${process.config.getstream.key}`);
-    // log.debug(`Secret Key: ${process.config.getstream.secretKey}`);
-    // log.debug(`App ID: ${process.config.getstream.appId}`);
+    // logger.debug(`API Key: ${process.config.getstream.key}`);
+    // logger.debug(`Secret Key: ${process.config.getstream.secretKey}`);
+    // logger.debug(`App ID: ${process.config.getstream.appId}`);
 
     this.client = stream.connect(
         process.config.getstream.key,
@@ -21,28 +21,28 @@ class AppNotification {
           location: 'us-east', // or 'eu-central', depending on your app's region
         }
     );
-    log.debug("GetStream client initialized in constructor");
+    logger.debug("GetStream client initialized in constructor");
   }
 
   notify = (templates = []) => {
     for (const template of templates) {
-      log.debug("Template data: ", template);
+      logger.debug("Template data: ", template);
       this.sendAppNotification(template).then((res) => {
-        log.debug("AppNotification notify response: ", res);
+        logger.debug("AppNotification notify response: ", res);
       });
     }
   };
 
   getUserToken = (id) => {
     const userToken = this.client.createUserToken(`${id}`);
-    log.debug("Generated get-stream userToken: ", userToken);
+    logger.debug("Generated get-stream userToken: ", userToken);
     return userToken;
   };
 
   sendAppNotification = async (template) => {
     try {
       // TODO: Add get-stream rest api call code here
-      log.debug("Template Actor: ", template.actor.toString());
+      logger.debug("Template Actor: ", template.actor.toString());
       const client = stream.connect(
           process.config.getstream.key,
           process.config.getstream.secretKey,
@@ -51,21 +51,21 @@ class AppNotification {
             location: 'us-east', // or 'eu-central', depending on your app's region
           }
       );
-      log.debug("GetStream client initialized in sendAppNotification");
+      logger.debug("GetStream client initialized in sendAppNotification");
       const userToken = client.createUserToken(template.actor.toString());
-      log.debug("Generated get-stream userToken in use: ", userToken);
-      log.debug("Get-Stream client --> ", client);
+      logger.debug("Generated get-stream userToken in use: ", userToken);
+      logger.debug("Get-Stream client: ", client);
 
       const feed = client.feed("notification", template.object);
-      log.debug("Feed Initialized: ", feed);
+      logger.debug("Feed Initialized: ", feed);
       const response = await feed.addActivity(template).catch((err) => {
-        log.debug("Get-Stream response error: ", err);
+        logger.error("Get-Stream response error: ", err);
       });
-      log.debug("Activity Added: ", response);
+      logger.debug("Activity Added: ", response);
 
       return response;
     } catch (err) {
-      log.debug("Error in sendAppNotification: ", err);
+      logger.error("Error in sendAppNotification: ", err);
       throw err; // Re-throw the error for further handling
     }
   };

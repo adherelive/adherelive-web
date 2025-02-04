@@ -6,9 +6,9 @@ import AppointmentWrapper from "../../web/appointments";
 import MedicationWrapper from "../../web/medicationReminder";
 import { EVENT_TYPE } from "../../../../constant";
 
-import { createLogger } from "../../../../libs/log";
+import { createLogger } from "../../../../libs/logger";
 
-const log = createLogger("WEB > API WRAPPER > SCHEDULE_EVENTS");
+const logger = createLogger("WEB > API WRAPPER > SCHEDULE_EVENTS");
 
 class ScheduleEventWrapper extends BaseScheduleEvent {
   constructor(data) {

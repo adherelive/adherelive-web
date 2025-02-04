@@ -4,9 +4,12 @@ import userService from "../../../app/services/user/user.service";
 import { errMessages } from "../../../config/messages.json";
 import Response from "../../../app/controllers/helper/responseFormat";
 import doRequest from "../../../app/controllers/helper/doRequest";
+import { createLogger } from "../../../libs/logger";
+
+const logger = createLogger("MIDDLEWARE AUTH");
 
 const Authenticated = async (req, res, next) => {
-  // log.debug("auth-middle-ware - 1");
+  // logger.debug("auth-middle-ware - 1");
   try {
     let accessToken;
     const { query: { m } = {} } = req;
@@ -22,7 +25,7 @@ const Authenticated = async (req, res, next) => {
       accessToken = cookies.accessToken || aT;
     }
 
-    // log.debug("auth-middle-ware - 2");
+    // logger.debug("auth-middle-ware - 2");
 
     if (!accessToken) {
       const response = new Response(false, 401);
@@ -30,15 +33,15 @@ const Authenticated = async (req, res, next) => {
       return res.status(400).json(response.getResponse());
     }
 
-    // log.debug("auth-middle-ware - 3");
+    // logger.debug("auth-middle-ware - 3");
 
     try {
       const secret = process.config.TOKEN_SECRET_KEY;
       const decodedAccessToken = await jwt.verify(accessToken, secret);
       req.user = decodedAccessToken; // Attach decoded token to request object
-      // log.debug("auth-middle-ware - 4");
+      // logger.debug("auth-middle-ware - 4");
     } catch (error) {
-      log.error("Token verification failed: ", error);
+      logger.error("Token verification failed: ", error);
       throw error;
     }
 
@@ -56,11 +59,11 @@ const Authenticated = async (req, res, next) => {
         error: errMessages.INTERNAL_SERVER_ERROR,
       };
     }
-    // log.debug("auth-middle-ware - 5");
+    // logger.debug("auth-middle-ware - 5");
     const response = new Response(false, payload.code);
-    // log.debug("auth-middle-ware - 6");
+    // logger.debug("auth-middle-ware - 6");
     response.setError(payload);
-    // log.debug("auth-middle-ware - 7");
+    // logger.debug("auth-middle-ware - 7");
     return res.status(payload.code).json(response.getResponse());
   }
 };

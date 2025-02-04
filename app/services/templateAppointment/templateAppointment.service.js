@@ -1,8 +1,8 @@
 import Database from "../../../libs/mysql";
 import { TABLE_NAME } from "../../models/templateAppointments";
 
-import { createLogger } from "../../../libs/log";
-const log = createLogger("WEB > APPOINTMENT TEMPLATE > SERVICES");
+import { createLogger } from "../../../libs/logger";
+const logger = createLogger("WEB > APPOINTMENT TEMPLATE > SERVICES");
 
 class TemplateAppointmentService {
   getTemplateAppointmentByData = async (data) => {

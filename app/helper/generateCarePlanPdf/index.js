@@ -11,8 +11,10 @@ import {
 import moment from "moment";
 import PDFDocument from "pdfkit";
 import { getConvertedTime } from "../getUserTime/index";
-
+import { createLogger } from "../../../libs/logger";
 import * as fs from 'fs';
+
+const logger = createLogger("GENERATE CARE PLAN PDF");
 
 const DOC_MARGIN = 30;
 const DOC_WIDTH_MARGIN = 550;
@@ -1078,7 +1080,7 @@ function printAppointment({
     //   medicationYLevel = generalExaminationEndLevel + NORMAL_FONT_SIZE + 12;
     // }
   } catch (ex) {
-    log.debug(ex);
+    logger.debug(ex);
   }
 }
 
@@ -1225,7 +1227,7 @@ function printConsultation({
     //   medicationYLevel = generalExaminationEndLevel + NORMAL_FONT_SIZE + 12;
     // }
   } catch (ex) {
-    log.debug(ex);
+    logger.debug(ex);
   }
 }
 
@@ -1506,7 +1508,7 @@ function isMedicationUpdatedInExistingMedicine(medications) {
     } = medications;
 
     if (!updated_at || !created_at) {
-      log.warn(
+      logger.warn(
         `medicationId ${medicationId} has missing created_at or updated_at`
       );
       continue; // Skip to the next medication
@@ -1552,7 +1554,7 @@ function renderChiefComplaints({ symptoms }) {
 
     return finalSymptom;
   } catch (err) {
-    log.debug("Error in chief complaints: ", err);
+    logger.error("Error in chief complaints: ", err);
   }
 }
 
@@ -1939,11 +1941,11 @@ function printCarePlanData({
     //     addPageAndNumber(doc);
     //   }
     // }
-    log.debug("\n\n in printCarePlanData");
-    log.debug(Object.keys(suggestedInvestigations).length);
+    logger.debug("\n\n in printCarePlanData");
+    logger.debug(Object.keys(suggestedInvestigations).length);
 
     if (Object.keys(suggestedInvestigations).length) {
-      log.debug("\n\n In the if loop appointment \n\n");
+      logger.debug("\n\n In the if loop appointment \n\n");
       const appointmentLevelEnd = printAppointment({
         doc,
         providerPrescriptionDetails,
@@ -1962,7 +1964,7 @@ function printCarePlanData({
       .text(follow_up_advise, DOC_MARGIN, doc.y + 5);
 
     if (Object.keys(suggestedInvestigations).length) {
-      log.debug(
+      logger.debug(
         "\n\n\n\n\\n\n\n\nin the if looop printConsultation\n\n\n\n\\n\n\n\n"
       );
       const consultationLevelEnd = printConsultation({
@@ -2007,7 +2009,7 @@ function printCarePlanData({
     const suggestedInvestigationXLevelEnd = doc.x;
     return suggestedInvestigationXLevelEnd;
   } catch (ex) {
-    log.debug(ex);
+    logger.debug(ex);
   }
 }
 
@@ -2062,7 +2064,7 @@ function printConsultationAppointment({
     const suggestedInvestigationXLevelEnd = doc.x;
     return suggestedInvestigationXLevelEnd;
   } catch (ex) {
-    log.debug(ex);
+    logger.debug(ex);
   }
 }
 
@@ -2197,16 +2199,16 @@ function printFooter(
     }
     addPageAndNumber(doc);
   }
-  log.debug("\n\n\n\n\n\n\n\n\n\n\n================================");
-  log.debug({ imageUrl });
-  log.debug("================================\n\n\n\n\n\n\n\n\n\n\n");
+  logger.debug("\n\n\n\n\n\n\n\n\n\n\n================================");
+  logger.debug({ imageUrl });
+  logger.debug("================================\n\n\n\n\n\n\n\n\n\n\n");
   try {
     doc.image(`${imageUrl}`, 400, doc.y + 10, {
       width: 120,
       height: signaturePictureHeight,
     });
   } catch (err) {
-    log.debug("ERROR in signature pic", err);
+    logger.error("Error in uploaded signature: ", err);
   }
 
   if (doc.y + 3 * SMALLEST_FONT_SIZE > PAGE_END_LIMIT) {

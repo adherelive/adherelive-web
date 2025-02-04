@@ -1,17 +1,17 @@
 import serviceSubscribeTransaction from "../services/serviceSubscribeTransaction/serviceSubscribeTransaction";
 import ServiceSubscriptionUserMapping from "../services/serviceSubscriptionUserMapping/serviceSubscriptionUserMapping.service";
 import { TABLE_NAME as serviceSubscriptionUserMappingTable } from "../models/serviceSubscriptionUserMapping";
-import { createLogger } from "../../libs/log";
+import { createLogger } from "../../libs/logger";
 import Database from "../../libs/mysql";
 import { TABLE_NAME as serviceSubscribeTransactionTable } from "../models/serviceSubscribeTransaction";
 import moment from "moment";
 import { Op } from "sequelize";
 
-const log = createLogger("CRON > RENEW > SUBSCRIPTION");
+const logger = createLogger("CRON > RENEW > SUBSCRIPTION");
 
 class RenewTxActivity {
   runObserver = async () => {
-    log.debug("\n\n Creating transactions inside RenewTxActivity... \n\n");
+    logger.debug("\n\n Creating transactions inside RenewTxActivity... \n\n");
 
     try {
       // get all the service subscriptionuser mapping that have next rechage date in next7 days
@@ -23,7 +23,7 @@ class RenewTxActivity {
           [Op.gt]: moment().add(7, "days").toDate(),
         },
       };
-      log.debug({ data });
+      logger.debug({ data });
       let serviceSubscriptionUserMapping = new ServiceSubscriptionUserMapping();
       let newTxs =
         await serviceSubscriptionUserMapping.getAllServiceSubscriptionUserMappingByData(
@@ -37,12 +37,12 @@ class RenewTxActivity {
             is_next_tx_create: false,
           });
 
-        log.debug({ id: newTxs[i]["id"], all_details });
+        logger.debug({ id: newTxs[i]["id"], all_details });
 
         if (all_details.length > 0) {
           const transaction = await Database.initTransaction();
           try {
-            log.debug("updating tx table");
+            logger.debug("updating tx table");
             await Database.getModel(serviceSubscribeTransactionTable).update(
               { is_next_tx_create: true },
               {
@@ -53,13 +53,13 @@ class RenewTxActivity {
               }
             );
             let { id: myid, ...rest } = all_details[0];
-            log.debug({ ...rest, due_date: new Date() });
+            logger.debug({ ...rest, due_date: new Date() });
             const txDetails = {
               ...rest,
               due_date: newTxs[i]["next_recharge_date"],
               patient_status: "inactive",
             };
-            log.debug("creating in  tx table new entry -> ", { txDetails });
+            logger.debug("creating in  tx table new entry -> ", { txDetails });
 
             await Database.getModel(serviceSubscribeTransactionTable).create(
               txDetails,
@@ -68,7 +68,7 @@ class RenewTxActivity {
                 transaction,
               }
             );
-            log.debug(
+            logger.debug(
               "updating in  userservicesubmapping....",
               newTxs[i]["next_recharge_date"],
               {
@@ -96,13 +96,13 @@ class RenewTxActivity {
             );
             await transaction.commit();
           } catch (ex) {
-            log.debug(ex);
+            logger.debug(ex);
             await transaction.rollback();
           }
         }
       }
     } catch (error) {
-      log.debug("RenewSubscription 500 error", error);
+      logger.debug("RenewSubscription 500 error", error);
     }
   };
 }

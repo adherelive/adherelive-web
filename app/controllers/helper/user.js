@@ -1,5 +1,8 @@
 import md5 from "js-md5";
 import path from "path";
+import { createLogger } from "../../../libs/logger";
+
+const logger = createLogger("HELPER USER");
 
 export const saveFileIntoUserBucket = async ({
   service,
@@ -18,7 +21,7 @@ export const saveFileIntoUserBucket = async ({
     let files = [fileUrl];
     return files;
   } catch (err) {
-    log.debug(err);
+    logger.error("Error in Save File into User Bucket: ", err);
     throw err;
   }
 };

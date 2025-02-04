@@ -2,9 +2,9 @@ import { EventEmitter } from "events";
 import { ACTIVITIES, STAGES } from "./activityType";
 import { ACTIVITY_TYPE, EVENT_TYPE } from "../../constant";
 
-import { createLogger } from "../../libs/log";
+import { createLogger } from "../../libs/logger";
 
-const log = createLogger("ACTIVITY_SDK");
+const logger = createLogger("ACTIVITY_SDK");
 
 class Activity extends EventEmitter {
   constructor() {
@@ -17,13 +17,13 @@ class Activity extends EventEmitter {
         this.emit(ACTIVITIES.FOLLOW_UP[stage], data);
         break;
       default:
-        log.warn(`Invalid Activity Type: ${activityType}`);
+        logger.warn(`Invalid Activity Type: ${activityType}`);
     }
   }
 
   execute(args) {
     const { eventType, activityType, stage, data } = args;
-    log.debug(`initial ${eventType}, ${stage}, ${activityType}, ${data}`);
+    logger.debug(`initial ${eventType}, ${stage}, ${activityType}, ${data}`);
     //add validation for parameter here
     switch (eventType) {
       case EVENT_TYPE.APPOINTMENT:
@@ -36,7 +36,7 @@ class Activity extends EventEmitter {
         this.emit(ACTIVITIES.MEDICATION_REMINDER[stage], data);
         break;
       default:
-        log.warn(`Invalid Event Type: ${eventType}`);
+        logger.warn(`Invalid Event Type: ${eventType}`);
     }
   }
 }

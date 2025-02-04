@@ -1,6 +1,6 @@
 import Controller from "../../index";
 
-import { createLogger } from "../../../../libs/log";
+import { createLogger } from "../../../../libs/logger";
 
 // services
 import ExerciseService from "../../../services/exercises/exercise.service";
@@ -14,7 +14,7 @@ import ExerciseContentWrapper from "../../../apiWrapper/mobile/exerciseContents"
 import * as UploadHelper from "../../../helper/uploadDocuments";
 import { DOCUMENT_PARENT_TYPE } from "../../../../constant";
 
-const log = createLogger("MOBILE > EXERCISE > CONTROLLER");
+const logger = createLogger("MOBILE > EXERCISE > CONTROLLER");
 
 class ExerciseController extends Controller {
   constructor() {
@@ -25,7 +25,7 @@ class ExerciseController extends Controller {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       const { body, userDetails } = req;
-      log.debug("REQUEST body", body);
+      logger.debug("REQUEST body", body);
       const {
         repetition_id,
         repetition_value,
@@ -159,7 +159,7 @@ class ExerciseController extends Controller {
         return raiseClientError(res, 422, {}, "Please check details entered");
       }
     } catch (error) {
-      log.debug("create 500 - exercise created success", error);
+      logger.debug("create 500 - exercise created success", error);
       return raiseServerError(res);
     }
   };
@@ -168,7 +168,7 @@ class ExerciseController extends Controller {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       const { params, body, userDetails } = req;
-      log.debug("REQUEST ", { params, body });
+      logger.debug("REQUEST ", { params, body });
       const { id } = params;
       let exerciseId = null,
         detailId = null;
@@ -268,7 +268,7 @@ class ExerciseController extends Controller {
         return raiseClientError(res, 422, {}, "Please check details entered");
       }
     } catch (error) {
-      log.debug("update 500", error);
+      logger.debug("update 500", error);
       return raiseServerError(res);
     }
   };
@@ -277,7 +277,7 @@ class ExerciseController extends Controller {
     const { raiseSuccess, raiseServerError } = this;
     try {
       const { query, userDetails } = req;
-      log.debug("REQUEST query", query);
+      logger.debug("REQUEST query", query);
       const { name } = query || {};
 
       const { userData: { category } = {}, userCategoryId } = userDetails || {};
@@ -350,7 +350,7 @@ class ExerciseController extends Controller {
         );
       }
     } catch (error) {
-      log.debug("search 500", error);
+      logger.debug("search 500", error);
       return raiseServerError(res);
     }
   };
@@ -385,7 +385,7 @@ class ExerciseController extends Controller {
         "Content uploaded successfully"
       );
     } catch (error) {
-      log.debug("uploadContent 500", error);
+      logger.debug("uploadContent 500", error);
       return raiseServerError(res);
     }
   };

@@ -17,7 +17,7 @@ import ExerciseContentWrapper from "../../../apiWrapper/mobile/exerciseContents"
 import WorkoutJob from "../../../jobSdk/Workout/observer";
 import NotificationSdk from "../../../notificationSdk";
 
-import { createLogger } from "../../../../libs/log";
+import { createLogger } from "../../../../libs/logger";
 import {
   EVENT_STATUS,
   NOTIFICATION_STAGES,
@@ -25,7 +25,7 @@ import {
   WORKOUT_RESPONSE_STATUS,
 } from "../../../../constant";
 
-const log = createLogger("MOBILE > WORKOUT_RESPONSE > CONTROLLER");
+const logger = createLogger("MOBILE > WORKOUT_RESPONSE > CONTROLLER");
 
 class WorkoutResponseController extends Controller {
   constructor() {
@@ -35,7 +35,7 @@ class WorkoutResponseController extends Controller {
   create = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
-      log.debug("request body", req.body);
+      logger.debug("request body", req.body);
       const {
         body = {},
         userDetails: {
@@ -159,7 +159,7 @@ class WorkoutResponseController extends Controller {
         return raiseClientError(res, 422, {}, "Please check details entered");
       }
     } catch (error) {
-      log.debug("create 500 - workout response", error);
+      logger.debug("create 500 - workout response", error);
       return raiseServerError(res);
     }
   };
@@ -255,7 +255,7 @@ class WorkoutResponseController extends Controller {
         return raiseClientError(res, 422, {}, "Please check details entered");
       }
     } catch (error) {
-      log.debug("create 500 - workout response updated", error);
+      logger.debug("create 500 - workout response updated", error);
       return raiseServerError(res);
     }
   };
@@ -333,7 +333,7 @@ class WorkoutResponseController extends Controller {
         "Workout response skipped successfully"
       );
     } catch (error) {
-      log.debug("skip 500", error);
+      logger.debug("skip 500", error);
       return raiseServerError(res);
     }
   };
@@ -507,7 +507,7 @@ class WorkoutResponseController extends Controller {
       //   );
       // }
     } catch (error) {
-      log.debug("get 500", error);
+      logger.debug("get 500", error);
       return raiseServerError(res);
     }
   };

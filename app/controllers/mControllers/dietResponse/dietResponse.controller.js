@@ -14,14 +14,14 @@ import * as UploadHelper from "../../../helper/uploadDocuments";
 import DietJob from "../../../jobSdk/Diet/observer";
 import NotificationSdk from "../../../notificationSdk";
 
-import { createLogger } from "../../../../libs/log";
+import { createLogger } from "../../../../libs/logger";
 import {
   DOCUMENT_PARENT_TYPE,
   NOTIFICATION_STAGES,
   USER_CATEGORY,
 } from "../../../../constant";
 
-const log = createLogger("MOBILE > DIET_RESPONSE > CONTROLLER");
+const logger = createLogger("MOBILE > DIET_RESPONSE > CONTROLLER");
 
 class DietResponseController extends Controller {
   constructor() {
@@ -59,7 +59,7 @@ class DietResponseController extends Controller {
         "Image uploaded successfully"
       );
     } catch (error) {
-      log.debug("upload 500", error);
+      logger.debug("upload 500", error);
       return raiseServerError(res);
     }
   };
@@ -67,7 +67,7 @@ class DietResponseController extends Controller {
   create = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
-      log.debug("request body", req.body);
+      logger.debug("request body", req.body);
       const {
         body = {},
         userDetails: {
@@ -143,7 +143,7 @@ class DietResponseController extends Controller {
         return raiseClientError(res, 422, {}, "Please check details entered");
       }
     } catch (error) {
-      log.debug("create 500 - diet response controller", error);
+      logger.debug("create 500 - diet response controller", error);
       return raiseServerError(res);
     }
   };
