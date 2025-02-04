@@ -33,17 +33,17 @@ class EventObserver {
   }
 
   runObservers() {
-    log.info(`Observing EMAIL events!`);
+    log.info(`Observing Email events!`);
     this._event.on(SEND_EMAIL, eventExecutor.sendMail);
 
     log.info(`Observing SMS events!`);
     this._event.on(SEND_SMS, eventExecutor.sendSms);
 
     //error event observers
-    log.info(`Observing EMAIL ERROR events!`);
+    log.info(`Observing Email Error events!`);
     this._event.on(EMAIL_ERROR, this.errorEventHandler);
 
-    log.info(`Observing SMS ERROR events!`);
+    log.info(`Observing SMS Error events!`);
     this._event.on(SMS_ERROR, this.errorEventHandler);
   }
 }

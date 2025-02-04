@@ -53,7 +53,7 @@ export const REPEAT_TYPE = {
 const STARTED = "started";
 
 class ProxySdk extends EventEmitter {
-  scheduledJobIscheduledJobIdd;
+  scheduledJobId;
 
   constructor() {
     super();
@@ -193,7 +193,7 @@ class ProxySdk extends EventEmitter {
         const scheduledJob = await scheduleService.addNewJob(
           have_to_schedule_now
         );
-        log.debug("event will be start soon after create");
+        log.debug("Event will start after it has been created");
         await this.scheduleStartEndOfEvent(scheduledJob);
       }
 
@@ -202,10 +202,7 @@ class ProxySdk extends EventEmitter {
           schedule_for_later
         );
       }
-
-      log.debug(
-        "==================================================================================================================================================================="
-      );
+      log.debug("======================================");
     } catch (error) {
       log.warn(`Error in scheduleEvent: ${error}`);
     }
@@ -244,13 +241,13 @@ class ProxySdk extends EventEmitter {
                     data: res,
                   };
                   ActivitySdk.execute(data);
-                  log.debug("job is started", scheduledJobId);
+                  log.debug("Scheduled job has started", scheduledJobId);
                 }
               });
           }.bind(event)
         );
 
-        log.debug(`startedJob: ${event}`);
+        log.debug(`Started Job: ${event}`);
       } else {
         scheduler
           .updateScheduledJob({
