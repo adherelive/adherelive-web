@@ -37,7 +37,7 @@ export const uploadReport = async ({ file, id }) => {
     await awsS3Service.saveBufferObject(file.buffer, filePath, metaData);
     return completePath(`/${filePath}`);
   } catch (error) {
-    logger.debug("uploadReport has an error: ", error);
+    logger.error("uploadReport has an error: ", error);
     throw error;
   }
 };

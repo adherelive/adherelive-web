@@ -298,7 +298,7 @@ class NotificationController extends Controller {
         "Notification data fetched successfully"
       );
     } catch (error) {
-      logger.debug("getNotifications 500 error: ", error);
+      logger.error("getNotifications 500 error: ", error);
       return raiseServerError(res);
     }
   };
@@ -338,7 +338,7 @@ class NotificationController extends Controller {
 
       return raiseSuccess(res, 200, {}, "Notification sent successfully.");
     } catch (error) {
-      logger.debug("raiseChatNotification 500 error", error);
+      logger.error("raiseChatNotification 500 error", error);
       return raiseServerError(res);
     }
   };

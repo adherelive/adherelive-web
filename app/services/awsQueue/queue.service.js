@@ -117,7 +117,7 @@ export default class QueueService {
 
       return response.Messages || [];
     } catch (error) {
-      logger.debug("receiveMessage 500 error: ", error);
+      logger.error("AWS Queue receive message has an error: ", error);
     }
   };
 
@@ -132,7 +132,7 @@ export default class QueueService {
 
       return response;
     } catch (error) {
-      logger.debug("deleteMessage 500 error: ", error);
+      logger.error("deleteMessage 500 error: ", error);
     }
   };
 
@@ -149,7 +149,7 @@ export default class QueueService {
         return null;
       }
     } catch (error) {
-      logger.debug("purgeQueue 500 error: ", error);
+      logger.error("purgeQueue 500 error: ", error);
     }
   };
 }

@@ -75,7 +75,7 @@ class MealTemplateController extends Controller {
         );
       }
     } catch (error) {
-      logger.debug("create Meal Template  500 error", error);
+      logger.error("create Meal Template  500 error", error);
       return raiseServerError(res);
     }
   };
@@ -146,7 +146,7 @@ class MealTemplateController extends Controller {
         "Meal Template updated successfully"
       );
     } catch (error) {
-      logger.debug("update Meal Template  500 error", error);
+      logger.error("update Meal Template  500 error", error);
       return raiseServerError(res);
     }
   };
@@ -177,7 +177,7 @@ class MealTemplateController extends Controller {
         );
       }
     } catch (error) {
-      logger.debug("delete Meal Template  500 error", error);
+      logger.error("delete Meal Template  500 error", error);
       return raiseServerError(res);
     }
   };

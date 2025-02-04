@@ -73,7 +73,7 @@ class WorkoutTemplateController extends Controller {
         );
       }
     } catch (error) {
-      logger.debug("create 500 - workout template created", error);
+      logger.error("create 500 - workout template created", error);
       return raiseServerError(res);
     }
   };
@@ -141,7 +141,7 @@ class WorkoutTemplateController extends Controller {
         );
       }
     } catch (error) {
-      logger.debug("update 500", error);
+      logger.error("update 500", error);
       return raiseServerError(res);
     }
   };
@@ -190,7 +190,7 @@ class WorkoutTemplateController extends Controller {
         );
       }
     } catch (error) {
-      logger.debug("delete 500", error);
+      logger.error("delete 500", error);
       return raiseServerError(res);
     }
   };

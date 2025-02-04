@@ -49,7 +49,7 @@ class ConditionController extends Controller {
         );
       }
     } catch (error) {
-      logger.debug("condition search 500 error", error);
+      logger.error("condition search 500 error", error);
       return raiseServerError(res);
     }
   };

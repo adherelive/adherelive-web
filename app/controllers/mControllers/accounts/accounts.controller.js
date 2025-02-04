@@ -75,7 +75,7 @@ class MobileAccountsController extends Controller {
         "Account details updated successfully."
       );
     } catch (error) {
-      logger.debug("add account details 500 error", error);
+      logger.error("add account details 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -180,7 +180,7 @@ class MobileAccountsController extends Controller {
         "Account details fetched successfully."
       );
     } catch (error) {
-      logger.debug("get account details 500 error", error);
+      logger.error("get account details 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -211,7 +211,7 @@ class MobileAccountsController extends Controller {
         "Account details deleted successfully."
       );
     } catch (error) {
-      logger.debug("delete account details 500 error", error);
+      logger.error("delete account details 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -256,7 +256,7 @@ class MobileAccountsController extends Controller {
         );
       }
     } catch (error) {
-      logger.debug("getUserAvailablePaymentMethods 500 error", error);
+      logger.error("getUserAvailablePaymentMethods 500 error", error);
       return raiseServerError(res);
     }
   };

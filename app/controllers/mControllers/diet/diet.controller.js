@@ -228,7 +228,7 @@ class DietController extends Controller {
         "Diet Data fetched successfully"
       );
     } catch (error) {
-      logger.debug("get all diet details 500 error", error);
+      logger.error("get all diet details 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -330,7 +330,7 @@ class DietController extends Controller {
         "Diet created successfully."
       );
     } catch (error) {
-      logger.debug("create 500 error - diet create mobile error: ", error);
+      logger.error("create 500 error - diet create mobile error: ", error);
       return raiseServerError(res);
     }
   };
@@ -383,7 +383,7 @@ class DietController extends Controller {
         "Diet related patient details fetched successfully"
       );
     } catch (error) {
-      logger.debug("getDetails 500", error);
+      logger.error("getDetails 500", error);
       return raiseServerError(res);
     }
   };
@@ -427,7 +427,7 @@ class DietController extends Controller {
         "Diets for careplan fetched successfully"
       );
     } catch (error) {
-      logger.debug("getCareplan Diets 500", error);
+      logger.error("getCareplan Diets 500", error);
       return raiseServerError(res);
     }
   };
@@ -545,7 +545,7 @@ class DietController extends Controller {
         "Diet updated successfully"
       );
     } catch (error) {
-      logger.debug("diet updateeeee 500 error", error);
+      logger.error("diet updateeeee 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -594,7 +594,7 @@ class DietController extends Controller {
         );
       }
     } catch (error) {
-      logger.debug("delete 500", error);
+      logger.error("delete 500", error);
       return raiseServerError(res);
     }
   };
@@ -648,7 +648,7 @@ class DietController extends Controller {
         "Diet Data fetched successfully"
       );
     } catch (error) {
-      logger.debug("get Doctor Diets details 500 error", error);
+      logger.error("get Doctor Diets details 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -735,7 +735,7 @@ class DietController extends Controller {
         "Diet Data fetched successfully"
       );
     } catch (error) {
-      logger.debug("getPatientDiets 500", error);
+      logger.error("getPatientDiets 500", error);
       return raiseServerError(res);
     }
   };
@@ -841,7 +841,7 @@ class DietController extends Controller {
         );
       }
     } catch (error) {
-      logger.debug("getDietResponse 500 error", error);
+      logger.error("getDietResponse 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -882,7 +882,7 @@ class DietController extends Controller {
         "Diet total calories updated successfully"
       );
     } catch (error) {
-      logger.debug("diet total calories updateeeee 500 error", error);
+      logger.error("diet total calories updateeeee 500 error", error);
       return raiseServerError(res);
     }
   };

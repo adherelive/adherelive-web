@@ -364,7 +364,7 @@ class MReminderController extends Controller {
         "Medication added successfully"
       );
     } catch (error) {
-      logger.debug("Add m-reminder error ---> ", error);
+      logger.error("Add m-reminder error ---> ", error);
       return raiseServerError(res);
     }
   };
@@ -575,7 +575,7 @@ class MReminderController extends Controller {
         "create medication basic details"
       );
     } catch (error) {
-      logger.debug("Get m-reminder details error ---> ", error);
+      logger.error("Get m-reminder details error ---> ", error);
       return raiseServerError(res);
     }
   };
@@ -714,7 +714,7 @@ class MReminderController extends Controller {
 
       return raiseSuccess(res, 200, {}, "medication deleted successfully");
     } catch (error) {
-      logger.debug("deleteMedication error", error);
+      logger.error("deleteMedication error", error);
       return raiseServerError(res);
     }
   };
@@ -831,7 +831,7 @@ class MReminderController extends Controller {
   //       return raiseSuccess(res, 201, {}, "No Missed Medications");
   //     }
   //   } catch (error) {
-  //     logger.debug("getMedicationDetails 500 error ", error);
+  //     logger.error("getMedicationDetails 500 error ", error);
   //     return raiseServerError(res);
   //   }
   // };
@@ -890,7 +890,7 @@ class MReminderController extends Controller {
         );
       }
     } catch (error) {
-      logger.debug("getMedicationResponse 500 error", error);
+      logger.error("getMedicationResponse 500 error", error);
       return raiseServerError(res);
     }
   };

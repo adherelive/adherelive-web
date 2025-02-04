@@ -409,7 +409,7 @@ class MobileMReminderController extends Controller {
 
       // await Proxy_Sdk.scheduleEvent({data: eventScheduleData});
     } catch (error) {
-      logger.debug("Add medication error", error);
+      logger.error("Add medication error", error);
       return this.raiseServerError(res);
     }
   };
@@ -534,7 +534,7 @@ class MobileMReminderController extends Controller {
         "Medications fetched successfully"
       );
     } catch (error) {
-      logger.debug("500 error ", error);
+      logger.error("500 error ", error);
       return raiseServerError(res);
     }
   };
@@ -660,7 +660,7 @@ class MobileMReminderController extends Controller {
         "Medication updated successfully"
       );
     } catch (error) {
-      logger.debug("update m-reminder error", error);
+      logger.error("update m-reminder error", error);
       return this.raiseServerError(res);
     }
   };
@@ -715,7 +715,7 @@ class MobileMReminderController extends Controller {
 
       return raiseSuccess(res, 200, {}, "Medication deleted successfully");
     } catch (error) {
-      logger.debug("delete m-reminder error", error);
+      logger.error("delete m-reminder error", error);
       return raiseServerError(res);
     }
   };
@@ -767,7 +767,7 @@ class MobileMReminderController extends Controller {
         "Medications status fetched successfully"
       );
     } catch (error) {
-      logger.debug("getMedicationEventsStatus 500 error: ", error);
+      logger.error("getMedicationEventsStatus 500 error: ", error);
       return raiseServerError(res);
     }
   };

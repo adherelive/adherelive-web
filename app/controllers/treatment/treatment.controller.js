@@ -40,7 +40,7 @@ class TreatmentController extends Controller {
         "Treatments fetched successfully"
       );
     } catch (error) {
-      logger.debug("treatment search 500 error", error);
+      logger.error("treatment search 500 error", error);
       return raiseServerError(res);
     }
   };

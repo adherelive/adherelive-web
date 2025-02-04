@@ -73,7 +73,7 @@ export const getTimeWiseDietFoodGroupMappings = async ({
 export const daysDietPlan = async () => {
   try {
   } catch (error) {
-    logger.debug("createDiet catch error", error);
+    logger.error("createDiet catch error", error);
     return null;
   }
 };
@@ -133,6 +133,6 @@ export const getTimings = (userTimings) => {
 
     return allDietTimings;
   } catch (error) {
-    logger.debug("error", error);
+    logger.error("error", error);
   }
 };

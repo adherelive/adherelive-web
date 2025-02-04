@@ -57,7 +57,7 @@ class MedicineController extends Controller {
         );
       }
     } catch (error) {
-      // logger.debug("getAll 500 error: ", error);
+      // logger.error("getAll 500 error: ", error);
       return raiseServerError(res);
     }
   };
@@ -112,7 +112,7 @@ class MedicineController extends Controller {
         "New medicine added successfully."
       );
     } catch (error) {
-      logger.debug("500 addMedicine error: ", error);
+      logger.error("500 addMedicine error: ", error);
       return raiseServerError(res);
     }
   };
@@ -155,7 +155,7 @@ class MedicineController extends Controller {
         "New medicine added successfully."
       );
     } catch (error) {
-      logger.debug("500 addMedicine error: ", error);
+      logger.error("500 addMedicine error: ", error);
       return raiseServerError(res);
     }
   };
@@ -198,7 +198,7 @@ class MedicineController extends Controller {
         "Medicine is made public to all doctors successfully."
       );
     } catch (error) {
-      logger.debug("500 makeMedicinePublic error: ", error);
+      logger.error("500 makeMedicinePublic error: ", error);
       return raiseServerError(res);
     }
   };
@@ -293,7 +293,7 @@ class MedicineController extends Controller {
         );
       }
     } catch (error) {
-      logger.debug("500 getMedicinesForAdmin error", error);
+      logger.error("500 getMedicinesForAdmin error", error);
       return raiseServerError(res);
     }
   };
@@ -357,7 +357,7 @@ class MedicineController extends Controller {
 
       return raiseSuccess(res, 200, {}, "Medicine deleted successfully.");
     } catch (error) {
-      logger.debug("500 deleteMedicine error", error);
+      logger.error("500 deleteMedicine error", error);
       return raiseServerError(res);
     }
   };

@@ -47,7 +47,7 @@ class SpecialityController extends Controller {
         );
       }
     } catch (error) {
-      logger.debug("search 500 error", error);
+      logger.error("search 500 error", error);
       return raiseServerError(res);
     }
   };

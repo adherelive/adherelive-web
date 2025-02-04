@@ -166,7 +166,7 @@ class CarePlanTemplateController extends Controller {
         );
       }
     } catch (error) {
-      logger.debug("create 500 error - template already present", error);
+      logger.error("create 500 error - template already present", error);
       return raiseServerError(res);
     }
   };
@@ -354,7 +354,7 @@ class CarePlanTemplateController extends Controller {
         return raiseSuccess(res, 200, {}, "No templates created at the moment");
       }
     } catch (error) {
-      logger.debug("getAllForDoctor 500 error", error);
+      logger.error("getAllForDoctor 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -544,7 +544,7 @@ class CarePlanTemplateController extends Controller {
         return raiseSuccess(res, 200, {}, "No templates created at the moment");
       }
     } catch (error) {
-      logger.debug("getAllForDoctor 500 error", error);
+      logger.error("getAllForDoctor 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -792,7 +792,7 @@ class CarePlanTemplateController extends Controller {
         );
       }
     } catch (error) {
-      logger.debug("duplicate 500 error", error);
+      logger.error("duplicate 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -1026,7 +1026,7 @@ class CarePlanTemplateController extends Controller {
         );
       }
     } catch (error) {
-      logger.debug("update 500 error", error);
+      logger.error("update 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -1142,7 +1142,7 @@ class CarePlanTemplateController extends Controller {
         "Template related details deleted successfully"
       );
     } catch (error) {
-      logger.debug("delete 500 error", error);
+      logger.error("delete 500 error", error);
       return raiseServerError(res);
     }
   };

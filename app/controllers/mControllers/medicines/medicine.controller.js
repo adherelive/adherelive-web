@@ -41,7 +41,7 @@ class MobileMedicineController extends Controller {
         "medicine data fetched successfully"
       );
     } catch (error) {
-      // logger.debug("500 error", error);
+      // logger.error("500 error", error);
       return raiseServerError(res, 500, {}, error.message);
     }
   };
@@ -89,7 +89,7 @@ class MobileMedicineController extends Controller {
         "New medicine added successfully."
       );
     } catch (error) {
-      logger.debug("500 addMedicine error", error);
+      logger.error("500 addMedicine error", error);
       return raiseServerError(res, 500, {}, error.message);
     }
   };

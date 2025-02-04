@@ -95,7 +95,7 @@ class GraphController extends Controller {
       //    chartData[chart] = CHART_DETAILS[chart];
       // });
     } catch (error) {
-      logger.debug("getAllGraphs 500 error", error);
+      logger.error("getAllGraphs 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -191,7 +191,7 @@ class GraphController extends Controller {
         "Charts added successfully"
       );
     } catch (error) {
-      logger.debug("getAllGraphs 500 error ---> ", error);
+      logger.error("getAllGraphs 500 error ---> ", error);
       return raiseServerError(res);
     }
   };

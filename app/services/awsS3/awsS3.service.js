@@ -30,7 +30,7 @@ class AwsS3Service {
   callback = (error, data) => {
     if (error) {
       // throw error;
-      logger.debug("Callback error in AWS S3 services: ", error);
+      logger.error("Callback error in AWS S3 services: ", error);
     } else {
       logger.debug("AWS S3 has sent response data: ", data);
     }

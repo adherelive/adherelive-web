@@ -109,6 +109,6 @@ export const syncVitalsResponseData = async (
       vitalTemplate,
     };
   } catch (error) {
-    logger.debug("error: ", error);
+    logger.error("error: ", error);
   }
 };

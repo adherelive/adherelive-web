@@ -88,7 +88,7 @@ class ServiceUserMappingController extends Controller {
         "Service added successfully"
       );
     } catch (error) {
-      logger.debug("Service User Mapping 500 error: ", error);
+      logger.error("Service User Mapping 500 error: ", error);
       return raiseServerError(res);
     }
   };
@@ -131,7 +131,7 @@ class ServiceUserMappingController extends Controller {
         "success"
       );
     } catch (error) {
-      logger.debug("getServiceUserMappingByData 500 error: ", error);
+      logger.error("getServiceUserMappingByData 500 error: ", error);
       return raiseServerError(res);
     }
   };
@@ -162,7 +162,7 @@ class ServiceUserMappingController extends Controller {
         "Service updated successfully"
       );
     } catch (error) {
-      logger.debug("updateServiceUserMapping 500 error: ", error);
+      logger.error("updateServiceUserMapping 500 error: ", error);
       return raiseServerError(res);
     }
   };

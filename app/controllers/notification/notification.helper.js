@@ -209,7 +209,7 @@ const medicationNotification = async (data) => {
       };
     }
   } catch (error) {
-    logger.debug("medicationNotification 500 error", error);
+    logger.error("medicationNotification 500 error", error);
     return {};
   }
 };
@@ -371,7 +371,7 @@ const appointmentNotification = async (data, category) => {
       };
     }
   } catch (error) {
-    logger.debug("appointmentNotification 500 error", error);
+    logger.error("appointmentNotification 500 error", error);
     return {};
   }
 };
@@ -513,7 +513,7 @@ const vitalsNotification = async (data, category) => {
       };
     }
   } catch (error) {
-    logger.debug("vitalsNotification 500 error", error);
+    logger.error("vitalsNotification 500 error", error);
     return {};
   }
 };
@@ -603,7 +603,7 @@ const carePlanNotification = async (data) => {
       };
     }
   } catch (error) {
-    logger.debug("carePlanNotification 500 error", error);
+    logger.error("carePlanNotification 500 error", error);
     return {};
   }
 };
@@ -650,7 +650,7 @@ const chatMessageNotification = async (data) => {
       notifications: notification_data,
     };
   } catch (error) {
-    logger.debug("chatMessageNotification 500 error", error);
+    logger.error("chatMessageNotification 500 error", error);
     return {};
   }
 };
@@ -721,7 +721,7 @@ const callNotification = async (data) => {
       notifications: notification_data,
     };
   } catch (error) {
-    logger.debug("callNotification 500 error", error);
+    logger.error("callNotification 500 error", error);
     return {};
   }
 };
@@ -829,7 +829,7 @@ const dietNotification = async (data) => {
       ...(await diet.getReferenceInfo()),
     };
   } catch (error) {
-    logger.debug("dietNotification 500 error", error);
+    logger.error("dietNotification 500 error", error);
     return {};
   }
 };
@@ -930,7 +930,7 @@ const workoutNotification = async (data) => {
       ...(await workout.getReferenceInfo()),
     };
   } catch (error) {
-    logger.debug("workoutNotification 500 error", error);
+    logger.error("workoutNotification 500 error", error);
     return {};
   }
 };
@@ -1006,7 +1006,7 @@ const symptomsNotification = async (data) => {
       patients: patientData,
     };
   } catch (error) {
-    logger.debug("symptomsNotification 500 error", error);
+    logger.error("symptomsNotification 500 error", error);
     return {};
   }
 };
@@ -1059,6 +1059,6 @@ export const getDataForNotification = async (data) => {
       }
     }
   } catch (error) {
-    logger.debug("getDataForNotification 500 error", error);
+    logger.error("getDataForNotification 500 error", error);
   }
 };

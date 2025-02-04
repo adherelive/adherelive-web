@@ -49,7 +49,7 @@ class SeverityController extends Controller {
         );
       }
     } catch (error) {
-      logger.debug("severity search 500 error", error);
+      logger.error("severity search 500 error", error);
       return raiseServerError(res);
     }
   };

@@ -6,7 +6,7 @@ export const getCarePlanData = async (carePlans = []) => {
   try {
     for (let index = 0; index < carePlans.length; index++) {}
   } catch (error) {
-    logger.debug("getCarePlanData catch error: ", error);
+    logger.error("getCarePlanData catch error: ", error);
     return {};
   }
 };

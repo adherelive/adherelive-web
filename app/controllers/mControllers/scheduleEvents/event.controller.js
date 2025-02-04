@@ -64,7 +64,7 @@ class EventController extends Controller {
         );
       }
     } catch (error) {
-      logger.debug("getVitalEvent 500 error", error);
+      logger.error("getVitalEvent 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -313,7 +313,7 @@ class EventController extends Controller {
         );
       }
     } catch (error) {
-      logger.debug("getVitalEvent 500 error: ", error);
+      logger.error("getVitalEvent 500 error: ", error);
       return raiseServerError(res);
     }
   };
@@ -361,7 +361,7 @@ class EventController extends Controller {
         "Medication reminder event status updated successfully"
       );
     } catch (error) {
-      logger.debug("Update medication status 500 error: ", error);
+      logger.error("Update medication status 500 error: ", error);
       return raiseServerError(res);
     }
   };
@@ -403,7 +403,7 @@ class EventController extends Controller {
         "Event completed successfully"
       );
     } catch (error) {
-      logger.debug("markEventComplete 500 error: ", error);
+      logger.error("markEventComplete 500 error: ", error);
       return raiseServerError(res);
     }
   };
@@ -445,7 +445,7 @@ class EventController extends Controller {
         "Event completed successfully"
       );
     } catch (error) {
-      logger.debug("markEventComplete 500 error: ", error);
+      logger.error("markEventComplete 500 error: ", error);
       return raiseServerError(res);
     }
   };
@@ -475,7 +475,7 @@ class EventController extends Controller {
 
       return raiseSuccess(res, 200, { ...response }, responseMessage);
     } catch (error) {
-      logger.debug("getAllMissedEvents 500 error: ", error);
+      logger.error("getAllMissedEvents 500 error: ", error);
       return raiseServerError(res);
     }
   };
@@ -700,7 +700,7 @@ class EventController extends Controller {
         "Patient missed events fetched successfully"
       );
     } catch (error) {
-      logger.debug("getPatientMissedEvents 500 error: ", error);
+      logger.error("getPatientMissedEvents 500 error: ", error);
       return raiseServerError(res);
     }
   };
@@ -875,7 +875,7 @@ class EventController extends Controller {
         return raiseSuccess(res, 200, {}, "No event updated yet");
       }
     } catch (error) {
-      logger.debug("getLastVisitEvents 500 error", error);
+      logger.error("getLastVisitEvents 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -976,7 +976,7 @@ class EventController extends Controller {
         );
       }
     } catch (error) {
-      logger.debug("deleteVitalResponse 500 error", error);
+      logger.error("deleteVitalResponse 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -1085,7 +1085,7 @@ class EventController extends Controller {
         );
       }
     } catch (error) {
-      logger.debug("updateVitalResponse500 error", error);
+      logger.error("updateVitalResponse500 error", error);
       return raiseServerError(res);
     }
   };
@@ -1186,7 +1186,7 @@ class EventController extends Controller {
         );
       }
     } catch (error) {
-      logger.debug("reschedule error", error);
+      logger.error("reschedule error", error);
       return raiseServerError(res);
     }
   };

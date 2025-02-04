@@ -208,7 +208,7 @@ class PatientController extends Controller {
         `Appointment data for patient: ${id} fetched successfully`
       );
     } catch (error) {
-      logger.debug("getPatientAppointments 500 error: ", error);
+      logger.error("getPatientAppointments 500 error: ", error);
       raiseServerError(res);
     }
   };
@@ -266,7 +266,7 @@ class PatientController extends Controller {
         "Medications fetched successfully"
       );
     } catch (error) {
-      logger.debug("getPatientMedications 500 error: ", error);
+      logger.error("getPatientMedications 500 error: ", error);
       return raiseServerError(res);
     }
   };
@@ -538,7 +538,7 @@ class PatientController extends Controller {
         "Patient care plan details fetched successfully"
       );
     } catch (error) {
-      // logger.debug("get care plan 500 error ---> ", error);
+      // logger.error("get care plan 500 error ---> ", error);
       logger.debug(error);
       return raiseServerError(res);
     }
@@ -719,7 +719,7 @@ class PatientController extends Controller {
         );
       }
     } catch (error) {
-      logger.debug("getPatientVitals 500 error", error);
+      logger.error("getPatientVitals 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -838,7 +838,7 @@ class PatientController extends Controller {
         );
       }
     } catch (error) {
-      logger.debug("getPatientPartSymptoms 500 error", error);
+      logger.error("getPatientPartSymptoms 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -937,7 +937,7 @@ class PatientController extends Controller {
         );
       }
     } catch (error) {
-      logger.debug("searchPatient 500 error", error);
+      logger.error("searchPatient 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -972,7 +972,7 @@ class PatientController extends Controller {
                     "No patient linked with the given phone number"
                   );
               } catch (error) {
-                logger.debug("searchPatient 500 error", error);
+                logger.error("searchPatient 500 error", error);
                 return raiseServerError(res);
               }
             };
@@ -1024,7 +1024,7 @@ class PatientController extends Controller {
         );
       }
     } catch (error) {
-      logger.debug("searchPatient 500 error", error);
+      logger.error("searchPatient 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -1139,7 +1139,7 @@ class PatientController extends Controller {
         }
       }
     } catch (error) {
-      logger.debug("searchPatientForDoctor 500 error", error);
+      logger.error("searchPatientForDoctor 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -1220,7 +1220,7 @@ class PatientController extends Controller {
         "OTP sent successfully"
       );
     } catch (error) {
-      logger.debug("patientConsentRequest 500 error", error);
+      logger.error("patientConsentRequest 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -1334,7 +1334,7 @@ class PatientController extends Controller {
         );
       }
     } catch (error) {
-      logger.debug("patientConsentVerification 500 error", error);
+      logger.error("patientConsentVerification 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -1465,7 +1465,7 @@ class PatientController extends Controller {
         "Care Plan added successfully"
       );
     } catch (error) {
-      logger.debug("ADD CARE PLAN PATIENT 500 ERROR", error);
+      logger.error("ADD CARE PLAN PATIENT 500 ERROR", error);
       return raiseServerError(res);
     }
   };
@@ -1555,8 +1555,8 @@ class PatientController extends Controller {
         "Reports for patient fetched successfully"
       );
     } catch (error) {
-      logger.debug("getPatientReports has a 500 error: ", error);
-      logger.debug("Console getPatientReports has a 500 error: ", error);
+      logger.error("getPatientReports has a 500 error: ", error);
+      logger.error("Console getPatientReports has a 500 error: ", error);
       return raiseServerError(res);
     }
   };
@@ -2141,19 +2141,20 @@ class PatientController extends Controller {
 
       let allPatientIds = [];
 
-      /** TODO: Check if these are required now or not.
+      /**
+       * TODO: Check if these are required now or not.
+      userId(auth) [DOCTOR]
+
+      SORT
+      created_at [asc, desc]
+      name [asc, desc]
+
+      FILTER
+      diagnosis [description, type]
+      treatment
+
+      doctors -> careplans -> patients
        */
-      // userId(auth) [DOCTOR]
-      //
-      // SORT
-      // created_at [asc, desc]
-      // name [asc, desc]
-      //
-      // FILTER
-      // diagnosis [description, type]
-      // treatment
-      //
-      // doctors -> careplans -> patients
 
       const {
         offset = 0,
@@ -2403,7 +2404,7 @@ class PatientController extends Controller {
         "success"
       );
     } catch (error) {
-      logger.debug("getAllPatientsPagination 500", error);
+      logger.error("getAllPatientsPagination 500", error);
       return raiseServerError(res);
     }
   };
@@ -2655,7 +2656,7 @@ class PatientController extends Controller {
         "success"
       );
     } catch (error) {
-      logger.debug("getAllPatientsPagination 500", error);
+      logger.error("getAllPatientsPagination 500", error);
       return raiseServerError(res);
     }
   };
@@ -2700,7 +2701,7 @@ class PatientController extends Controller {
         "Payment terms changed successfully."
       );
     } catch (error) {
-      logger.debug("acceptPaymentsTerms 500 error ---> ", error);
+      logger.error("acceptPaymentsTerms 500 error ---> ", error);
       return this.raiseServerError(res);
     }
   };
@@ -2764,7 +2765,7 @@ class PatientController extends Controller {
           "Success."
       );
     } catch (error) {
-      logger.debug("getPatientReports get patient by ID 500 error: ", error);
+      logger.error("getPatientReports get patient by ID 500 error: ", error);
       return raiseServerError(res);
     }
   };
@@ -2953,7 +2954,7 @@ class PatientController extends Controller {
         "Patient added successfully"
       );
     } catch (error) {
-      logger.debug("ADD PATIENT 500 ERROR", error);
+      logger.error("ADD PATIENT 500 ERROR", error);
       return this.raiseServerError(res);
     }
   };

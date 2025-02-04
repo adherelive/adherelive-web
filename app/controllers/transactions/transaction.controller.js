@@ -70,7 +70,7 @@ class TransactionController extends Controller {
       //     }
       // }
     } catch (error) {
-      logger.debug("getAllTransactions 500 error", error);
+      logger.error("getAllTransactions 500 error", error);
       return raiseServerError(res);
     }
   };

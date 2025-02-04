@@ -159,7 +159,7 @@ class ExerciseController extends Controller {
         return raiseClientError(res, 422, {}, "Please check details entered");
       }
     } catch (error) {
-      logger.debug("create 500 - exercise created success", error);
+      logger.error("create 500 - exercise created success", error);
       return raiseServerError(res);
     }
   };
@@ -268,7 +268,7 @@ class ExerciseController extends Controller {
         return raiseClientError(res, 422, {}, "Please check details entered");
       }
     } catch (error) {
-      logger.debug("update 500", error);
+      logger.error("update 500", error);
       return raiseServerError(res);
     }
   };
@@ -350,7 +350,7 @@ class ExerciseController extends Controller {
         );
       }
     } catch (error) {
-      logger.debug("search 500", error);
+      logger.error("search 500", error);
       return raiseServerError(res);
     }
   };
@@ -385,7 +385,7 @@ class ExerciseController extends Controller {
         "Content uploaded successfully"
       );
     } catch (error) {
-      logger.debug("uploadContent 500", error);
+      logger.error("uploadContent 500", error);
       return raiseServerError(res);
     }
   };

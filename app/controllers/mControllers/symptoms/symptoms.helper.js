@@ -28,7 +28,7 @@ export const uploadImage = async ({ userId, file }) => {
 
     return { file: completePath(fileUrl), name: file.originalname };
   } catch (error) {
-    logger.debug("uploadImage 500 error", error);
+    logger.error("uploadImage 500 error", error);
     return {};
   }
 };
@@ -55,7 +55,7 @@ export const uploadAudio = async ({ userId, file }) => {
 
     return { file: completePath(fileUrl), name: file.originalname };
   } catch (error) {
-    logger.debug("uploadAudio 500 error", error);
+    logger.error("uploadAudio 500 error", error);
     return {};
   }
 };
@@ -82,7 +82,7 @@ export const uploadVideo = async ({ userId, file }) => {
 
     return { file: completePath(fileUrl), name: file.originalname };
   } catch (error) {
-    logger.debug("uploadVideo 500 error", error);
+    logger.error("uploadVideo 500 error", error);
     return {};
   }
 };

@@ -70,7 +70,7 @@ class ReportController extends Controller {
         "Report added successfully"
       );
     } catch (error) {
-      logger.debug("addReports 500 error", error);
+      logger.error("addReports 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -109,7 +109,7 @@ class ReportController extends Controller {
         "Files uploaded successfully"
       );
     } catch (error) {
-      logger.debug("uploadReportDocuments 500 error", error);
+      logger.error("uploadReportDocuments 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -162,7 +162,7 @@ class ReportController extends Controller {
         return raiseSuccess(res, 201, {}, "No reports added yet");
       }
     } catch (error) {
-      logger.debug("latestReport 500 error", error);
+      logger.error("latestReport 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -189,7 +189,7 @@ class ReportController extends Controller {
 
       return raiseSuccess(res, 200, {}, "Document deleted successfully");
     } catch (error) {
-      logger.debug("deleteReportDocument 500 error", error);
+      logger.error("deleteReportDocument 500 error", error);
       return raiseServerError(res);
     }
   };

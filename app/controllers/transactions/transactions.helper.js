@@ -202,7 +202,7 @@ export const getProviderTransactions = async (req) => {
       transaction_ids: transactionIds,
     };
   } catch (error) {
-    logger.debug("getProviderTransactions catch error", error);
+    logger.error("getProviderTransactions catch error", error);
     return null;
   }
 };
@@ -390,7 +390,7 @@ export const getDoctorTransactions = async (req) => {
       transaction_ids: transactionIds,
     };
   } catch (error) {
-    logger.debug("getDoctorTransactions catch error", error);
+    logger.error("getDoctorTransactions catch error", error);
     return null;
   }
 };

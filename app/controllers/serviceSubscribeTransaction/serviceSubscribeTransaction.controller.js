@@ -73,7 +73,7 @@ class ServiceSubscriptionTxController extends Controller {
         "Service added successfully"
       );
     } catch (error) {
-      logger.debug("Service Subscribe 500 error: ", error);
+      logger.error("Service Subscribe 500 error: ", error);
       return raiseServerError(res);
     }
   };
@@ -283,7 +283,7 @@ class ServiceSubscriptionTxController extends Controller {
       });
       return raiseSuccess(res, 200, { response }, "Success");
     } catch (error) {
-      logger.debug("Subscribe create activity 500 error: ", error);
+      logger.error("Subscribe create activity 500 error: ", error);
       return raiseServerError(res);
     }
   };
@@ -340,7 +340,7 @@ class ServiceSubscriptionTxController extends Controller {
         "Service updated successfully"
       );
     } catch (error) {
-      logger.debug("updateServiceTx 500 error: ", error);
+      logger.error("updateServiceTx 500 error: ", error);
       return raiseServerError(res);
     }
   };

@@ -62,7 +62,7 @@ class ReportWrapper extends BaseReport {
         report_document_ids: uploadDocumentIds,
       };
     } catch (error) {
-      logger.debug("getAllInfo error", error);
+      logger.error("getAllInfo error", error);
       throw error;
     }
   };
@@ -119,7 +119,7 @@ class ReportWrapper extends BaseReport {
         report_ids: [getId()],
       };
     } catch (error) {
-      logger.debug("getReferenceInfo error", error);
+      logger.error("getReferenceInfo error", error);
       throw error;
     }
   };
@@ -134,7 +134,7 @@ export default async ({ data = null, id = null }) => {
     const reports = await reportService.getReportByData({ id });
     return new ReportWrapper(reports);
   } catch (error) {
-    logger.debug("ReportWrapper catch error", error);
+    logger.error("ReportWrapper catch error", error);
     throw error;
   }
 };

@@ -72,7 +72,7 @@ class StartCron {
       }
       logger.debug(`START count : ${count} / ${scheduleEvents.length}`);
     } catch (error) {
-      logger.debug("scheduleEvents 500 error ---> ", error);
+      logger.error("scheduleEvents 500 error ---> ", error);
     }
   };
 
@@ -105,7 +105,7 @@ class StartCron {
       });
       NotificationSdk.execute(job);
     } catch (error) {
-      logger.debug("handleVitalStart 500 error ---> ", error);
+      logger.error("handleVitalStart 500 error ---> ", error);
     }
   };
 
@@ -140,7 +140,7 @@ class StartCron {
       // });
       // notificationSdk.execute(job);
     } catch (error) {
-      logger.debug("handleAppointmentStart 500 error ---> ", error);
+      logger.error("handleAppointmentStart 500 error ---> ", error);
     }
   };
 
@@ -186,7 +186,7 @@ class StartCron {
       // });
       // notificationSdk.execute(job);
     } catch (error) {
-      logger.debug("handleVitalStart 500 error ---> ", error);
+      logger.error("handleVitalStart 500 error ---> ", error);
     }
   };
 
@@ -225,7 +225,7 @@ class StartCron {
         );
       }
     } catch (error) {
-      logger.debug("handleDietStart 500 error", error);
+      logger.error("handleDietStart 500 error", error);
     }
   };
 
@@ -265,7 +265,7 @@ class StartCron {
         );
       }
     } catch (error) {
-      logger.debug("handleWorkoutStart 500 error", error);
+      logger.error("handleWorkoutStart 500 error", error);
     }
   };
 
@@ -292,7 +292,7 @@ class StartCron {
 
       await NotificationSdk.execute(carePlanJob);
     } catch (error) {
-      logger.debug("handleCarePlanStart 500 error ---> ", error);
+      logger.error("handleCarePlanStart 500 error ---> ", error);
     }
   };
 }

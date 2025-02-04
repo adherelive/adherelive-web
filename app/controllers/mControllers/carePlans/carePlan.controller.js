@@ -708,7 +708,7 @@ class CarePlanController extends Controller {
         "Care plan activated successfully."
       );
     } catch (error) {
-      logger.debug("activateCarePlan 500 error", error);
+      logger.error("activateCarePlan 500 error", error);
       return this.raiseServerError(res, 500);
     }
   };
@@ -960,7 +960,7 @@ class CarePlanController extends Controller {
         );
       }
     } catch (error) {
-      logger.debug("addProfile 500 ERROR", error);
+      logger.error("addProfile 500 ERROR", error);
       return raiseServerError(res);
     }
   };

@@ -1001,7 +1001,7 @@ class CarePlanController extends Controller {
         );
       }
     } catch (error) {
-      logger.debug("Unable to add the Doctor's profile to this Patient: ", error);
+      logger.error("Unable to add the Doctor's profile to this Patient: ", error);
       return raiseServerError(res);
     }
   };

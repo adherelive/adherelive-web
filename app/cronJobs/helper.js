@@ -41,7 +41,7 @@ export const uploadDocument = async ({
     await awsS3Service.saveBufferObject(buffer, filePath, null);
     return completePath(`/${filePath}`);
   } catch (error) {
-    logger.debug("uploadDocument catch error", error);
+    logger.error("uploadDocument catch error", error);
     throw error;
   }
 };
