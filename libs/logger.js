@@ -1,591 +1,637 @@
 import winston from 'winston';
 import 'winston-daily-rotate-file';
-import chalk from 'chalk';
 import moment from 'moment';
 import os from 'os';
-import path from 'path';
-import { AsyncLocalStorage } from 'async_hooks';
+import {AsyncLocalStorage} from 'async_hooks';
 
 // Trace context management
 class TraceContext {
-  static TRACE_HEADERS = [
-    'x-request-id',
-    'x-correlation-id',
-    'x-b3-traceid',
-    'x-b3-spanid',
-    'x-b3-parentspanid',
-    'traceparent',
-    'tracestate',
-    'uber-trace-id',
-    'sw8',
-    'baggage'
-  ];
+    static TRACE_HEADERS = [
+        'x-request-id',
+        'x-correlation-id',
+        'x-b3-traceid',
+        'x-b3-spanid',
+        'x-b3-parentspanid',
+        'traceparent',
+        'tracestate',
+        'uber-trace-id',
+        'sw8',
+        'baggage'
+    ];
 
-  constructor() {
-    this.traceId = '';
-    this.spanId = '';
-    this.parentId = '';
-    this.sampled = '1';
-    this.baggage = new Map();
-  }
-
-  static fromHeaders(headers) {
-    const context = new TraceContext();
-
-    // Extract W3C Trace Context
-    const traceParent = headers['traceparent'];
-    if (traceParent) {
-      const [version, traceId, spanId, flags] = traceParent.split('-');
-      context.traceId = traceId;
-      context.spanId = spanId;
-      context.sampled = flags[0];
+    constructor() {
+        this.traceId = '';
+        this.spanId = '';
+        this.parentId = '';
+        this.sampled = '1';
+        this.baggage = new Map();
     }
 
-    // Extract B3 headers (Zipkin format)
-    context.traceId = headers['x-b3-traceid'] || context.traceId;
-    context.spanId = headers['x-b3-spanid'] || context.spanId;
-    context.parentId = headers['x-b3-parentspanid'] || '';
+    static fromHeaders(headers) {
+        const context = new TraceContext();
 
-    // Extract baggage items
-    const baggage = headers['baggage'];
-    if (baggage) {
-      baggage.split(',').forEach(item => {
-        const [key, value] = item.trim().split('=');
-        context.baggage.set(key, value);
-      });
+        // Extract W3C Trace Context
+        const traceParent = headers['traceparent'];
+        if (traceParent) {
+            const [version, traceId, spanId, flags] = traceParent.split('-');
+            context.traceId = traceId;
+            context.spanId = spanId;
+            context.sampled = flags[0];
+        }
+
+        // Extract B3 headers (Zipkin format)
+        context.traceId = headers['x-b3-traceid'] || context.traceId;
+        context.spanId = headers['x-b3-spanid'] || context.spanId;
+        context.parentId = headers['x-b3-parentspanid'] || '';
+
+        // Extract baggage items
+        const baggage = headers['baggage'];
+        if (baggage) {
+            baggage.split(',').forEach(item => {
+                const [key, value] = item.trim().split('=');
+                context.baggage.set(key, value);
+            });
+        }
+
+        return context;
     }
 
-    return context;
-  }
+    toHeaders() {
+        const headers = {};
 
-  toHeaders() {
-    const headers = {};
+        // W3C Trace Context
+        if (this.traceId && this.spanId) {
+            headers['traceparent'] = `00-${this.traceId}-${this.spanId}-0${this.sampled}`;
+        }
 
-    // W3C Trace Context
-    if (this.traceId && this.spanId) {
-      headers['traceparent'] = `00-${this.traceId}-${this.spanId}-0${this.sampled}`;
+        // B3 Headers
+        if (this.traceId) headers['x-b3-traceid'] = this.traceId;
+        if (this.spanId) headers['x-b3-spanid'] = this.spanId;
+        if (this.parentId) headers['x-b3-parentspanid'] = this.parentId;
+
+        // Baggage
+        if (this.baggage.size > 0) {
+            headers['baggage'] = Array.from(this.baggage.entries())
+                .map(([key, value]) => `${key}=${value}`)
+                .join(',');
+        }
+
+        return headers;
     }
 
-    // B3 Headers
-    if (this.traceId) headers['x-b3-traceid'] = this.traceId;
-    if (this.spanId) headers['x-b3-spanid'] = this.spanId;
-    if (this.parentId) headers['x-b3-parentspanid'] = this.parentId;
-
-    // Baggage
-    if (this.baggage.size > 0) {
-      headers['baggage'] = Array.from(this.baggage.entries())
-          .map(([key, value]) => `${key}=${value}`)
-          .join(',');
+    generateNextSpan() {
+        const nextContext = new TraceContext();
+        nextContext.traceId = this.traceId;
+        nextContext.parentId = this.spanId;
+        nextContext.spanId = generateSpanId();
+        nextContext.sampled = this.sampled;
+        nextContext.baggage = new Map(this.baggage);
+        return nextContext;
     }
-
-    return headers;
-  }
-
-  generateNextSpan() {
-    const nextContext = new TraceContext();
-    nextContext.traceId = this.traceId;
-    nextContext.parentId = this.spanId;
-    nextContext.spanId = generateSpanId();
-    nextContext.sampled = this.sampled;
-    nextContext.baggage = new Map(this.baggage);
-    return nextContext;
-  }
 }
 
 // Helper functions for trace ID generation
 function generateTraceId() {
-  return Array.from({ length: 32 }, () =>
-      Math.floor(Math.random() * 16).toString(16)
-  ).join('');
+    return Array.from({length: 32}, () =>
+        Math.floor(Math.random() * 16).toString(16)
+    ).join('');
 }
 
 function generateSpanId() {
-  return Array.from({ length: 16 }, () =>
-      Math.floor(Math.random() * 16).toString(16)
-  ).join('');
+    return Array.from({length: 16}, () =>
+        Math.floor(Math.random() * 16).toString(16)
+    ).join('');
+}
+
+// Helper function for circular references
+function getCircularReplacer() {
+    const seen = new WeakSet();
+    return (key, value) => {
+        if (key === 'socket' || key === 'parser') return '[Circular]';
+        if (value === null || value === undefined) return value;
+        if (value instanceof Error) return value.stack || value.message;
+        if (typeof value === 'object' && value instanceof Buffer) return '[Buffer]';
+        if (typeof value === 'object' && value instanceof RegExp) return value.toString();
+        if (typeof value === 'function') return '[Function]';
+        if (typeof value === 'object' && value.constructor && value.constructor.name === 'Socket') return '[Socket]';
+        if (typeof value === 'object' && value.constructor && value.constructor.name === 'HTTPParser') return '[HTTPParser]';
+
+        if (typeof value === 'object' && value !== null) {
+            if (seen.has(value)) {
+                return '[Circular]';
+            }
+            seen.add(value);
+        }
+        return value;
+    };
 }
 
 // Enhanced Configuration with validation
 const CONFIG = {
-  environment: process.env.APP_ENV || process.env.NODE_ENV || 'production',
-  applicationName: process.env.APP_NAME || 'AdhereLive',
-  logDir: process.env.LOG_DIR || 'logs',
-  maxLogSize: process.env.MAX_LOG_SIZE || '20m',
-  maxLogFiles: process.env.MAX_LOG_FILES || '14d',
-  logLevel: process.env.LOG_LEVEL || 'info',
-  // Structured logging configuration
-  structuredLogging: {
-    enabled: process.env.STRUCTURED_LOGGING === 'true',
-    format: process.env.STRUCTURED_FORMAT || 'json'
-  },
-  // Error tracking configuration
-  errorTracking: {
-    captureStackTrace: true,
-    stackTraceLimit: 10,
-    includeMetadata: true
-  },
-  // Rate limiting configuration
-  rateLimiting: {
-    enabled: true,
-    maxLogs: 1000,
-    windowMs: 60000, // 1 minute
-  },
-  // Sampling configuration for high-volume logs
-  sampling: {
-    enabled: process.env.LOG_SAMPLING_ENABLED === 'true',
-    rate: parseFloat(process.env.LOG_SAMPLING_RATE || '0.1') // 10% by default
-  },
-  // Distributed tracing configuration
-  tracing: {
-    enabled: process.env.TRACING_ENABLED === 'true',
-    serviceName: process.env.SERVICE_NAME || 'unknown-service',
-    serviceVersion: process.env.SERVICE_VERSION || '1.0.0',
-    environment: process.env.NODE_ENV || 'production',
-    // Sampling specific to traces
-    samplingRate: parseFloat(process.env.TRACE_SAMPLING_RATE || '1.0'),
-    // External trace collector configuration
-    collector: {
-      enabled: process.env.TRACE_COLLECTOR_ENABLED === 'true',
-      endpoint: process.env.TRACE_COLLECTOR_ENDPOINT,
-      headers: JSON.parse(process.env.TRACE_COLLECTOR_HEADERS || '{}')
+    environment: process.env.APP_ENV || process.env.NODE_ENV || 'production',
+    applicationName: process.env.APP_NAME || 'AdhereLive',
+    logDir: process.env.LOG_DIR || 'logs',
+    maxLogSize: process.env.MAX_LOG_SIZE || '20m',
+    maxLogFiles: process.env.MAX_LOG_FILES || '14d',
+    logLevel: process.env.LOG_LEVEL || 'info',
+    // Structured logging configuration
+    structuredLogging: {
+        enabled: process.env.STRUCTURED_LOGGING === 'true',
+        format: process.env.STRUCTURED_FORMAT || 'json'
+    },
+    // Error tracking configuration
+    errorTracking: {
+        captureStackTrace: true,
+        stackTraceLimit: 10,
+        includeMetadata: true
+    },
+    // Rate limiting configuration
+    rateLimiting: {
+        enabled: true,
+        maxLogs: 1000,
+        windowMs: 60000, // 1 minute
+    },
+    // Sampling configuration for high-volume logs
+    sampling: {
+        enabled: process.env.LOG_SAMPLING_ENABLED === 'true',
+        rate: parseFloat(process.env.LOG_SAMPLING_RATE || '0.1') // 10% by default
+    },
+    // Distributed tracing configuration
+    tracing: {
+        enabled: process.env.TRACING_ENABLED === 'true',
+        serviceName: process.env.SERVICE_NAME || 'unknown-service',
+        serviceVersion: process.env.SERVICE_VERSION || '1.0.0',
+        environment: process.env.NODE_ENV || 'production',
+        // Sampling specific to traces
+        samplingRate: parseFloat(process.env.TRACE_SAMPLING_RATE || '1.0'),
+        // External trace collector configuration
+        collector: {
+            enabled: process.env.TRACE_COLLECTOR_ENABLED === 'true',
+            endpoint: process.env.TRACE_COLLECTOR_ENDPOINT,
+            headers: JSON.parse(process.env.TRACE_COLLECTOR_HEADERS || '{}')
+        }
     }
-  }
 };
 
 // Enhanced request context
 class LogContext {
-  constructor() {
-    this.storage = new AsyncLocalStorage();
-    this.contextData = new Map();
-  }
-
-  set(key, value) {
-    const store = this.storage.getStore();
-    if (store) {
-      store.set(key, value);
+    constructor() {
+        this.storage = new AsyncLocalStorage();
+        this.contextData = new Map();
     }
-  }
 
-  get(key) {
-    const store = this.storage.getStore();
-    return store ? store.get(key) : undefined;
-  }
+    set(key, value) {
+        const store = this.storage.getStore();
+        if (store) {
+            store.set(key, value);
+        }
+    }
 
-  getAll() {
-    const store = this.storage.getStore();
-    return store ? Object.fromEntries(store) : {};
-  }
+    get(key) {
+        const store = this.storage.getStore();
+        return store ? store.get(key) : undefined;
+    }
 
-  run(context, callback) {
-    return this.storage.run(new Map(Object.entries(context)), callback);
-  }
+    getAll() {
+        const store = this.storage.getStore();
+        return store ? Object.fromEntries(store) : {};
+    }
+
+    run(context, callback) {
+        return this.storage.run(new Map(Object.entries(context)), callback);
+    }
 }
 
 const logContext = new LogContext();
 
 // Enhanced error handling
 class LoggingError extends Error {
-  constructor(message, code, metadata = {}) {
-    super(message);
-    this.name = 'LoggingError';
-    this.code = code;
-    this.metadata = metadata;
-    this.timestamp = new Date().toISOString();
-  }
+    constructor(message, code, metadata = {}) {
+        super(message);
+        this.name = 'LoggingError';
+        this.code = code;
+        this.metadata = metadata;
+        this.timestamp = new Date().toISOString();
+    }
 }
 
 // Rate limiting implementation
 class RateLimiter {
-  constructor(options) {
-    this.windowMs = options.windowMs;
-    this.maxLogs = options.maxLogs;
-    this.logs = new Map();
-  }
-
-  shouldLog(source) {
-    const now = Date.now();
-    const windowStart = now - this.windowMs;
-
-    // Clean old entries
-    for (const [key, timestamp] of this.logs.entries()) {
-      if (timestamp < windowStart) {
-        this.logs.delete(key);
-      }
+    constructor(options) {
+        this.windowMs = options.windowMs;
+        this.maxLogs = options.maxLogs;
+        this.logs = new Map();
     }
 
-    const count = [...this.logs.values()].filter(timestamp => timestamp > windowStart).length;
+    shouldLog(source) {
+        const now = Date.now();
+        const windowStart = now - this.windowMs;
 
-    if (count >= this.maxLogs) {
-      return false;
+        // Clean old entries
+        for (const [key, timestamp] of this.logs.entries()) {
+            if (timestamp < windowStart) {
+                this.logs.delete(key);
+            }
+        }
+
+        const count = [...this.logs.values()].filter(timestamp => timestamp > windowStart).length;
+
+        if (count >= this.maxLogs) {
+            return false;
+        }
+
+        this.logs.set(`${source}-${now}`, now);
+        return true;
     }
-
-    this.logs.set(`${source}-${now}`, now);
-    return true;
-  }
 }
 
 // Enhanced WinstonLogger class
 class EnhancedWinstonLogger {
-  constructor(filename) {
-    this.source = filename;
-    this.rateLimiter = new RateLimiter(CONFIG.rateLimiting);
-    this._setupLogger();
-    this._setupErrorHandling();
-  }
+    constructor(filename) {
+        this.source = filename;
+        this.rateLimiter = new RateLimiter(CONFIG.rateLimiting);
+        this._setupLogger();
+        this._setupErrorHandling();
+    }
 
-  _setupLogger() {
-    const enhancedFormat = winston.format.combine(
-        winston.format.timestamp({
-          format: () => moment().format('YYYY-MM-DD HH:mm:ss.SSS')
-        }),
-        winston.format.errors({ stack: true }),
-        winston.format.printf(this._createLogFormatter())
-    );
+    _setupLogger() {
+        const enhancedFormat = winston.format.combine(
+            winston.format.timestamp({
+                format: () => moment().format('YYYY-MM-DD HH:mm:ss.SSS')
+            }),
+            winston.format.errors({stack: true}),
+            winston.format.printf(this._createLogFormatter())
+        );
 
-    const transports = this._createTransports();
+        const transports = this._createTransports();
 
-    this.logger = winston.createLogger({
-      level: CONFIG.logLevel,
-      format: enhancedFormat,
-      defaultMeta: { source: this.source },
-      transports
-    });
-  }
+        this.logger = winston.createLogger({
+            level: CONFIG.logLevel,
+            format: enhancedFormat,
+            defaultMeta: {source: this.source},
+            transports
+        });
+    }
 
-  _createLogFormatter() {
-    return (info) => {
-      const {
-        level = 'info',
-        message = '',
-        timestamp,
-        additionalData,  // New field for handling additional arguments
-        error,
-        ...rest
-      } = info;
+    _createLogFormatter() {
+        return (info) => {
+            const {
+                level = 'info',
+                message = '',
+                timestamp,
+                additionalData,
+                error,
+                ...rest
+            } = info;
 
-      // Get the source from either the metadata or the logger instance
-      const source = info.source || this.source || 'unknown';
+            // Get the source from either the metadata or the logger instance
+            const source = info.source || this.source || 'unknown';
 
-      // Format the message and any additional data
-      let formattedMessage = message;
+            // Helper function to handle circular references
+            const getCircularReplacer = () => {
+                const seen = new WeakSet();
+                return (key, value) => {
+                    // Handle special cases
+                    if (key === 'socket' || key === 'parser') return '[Circular]';
+                    if (value === null || value === undefined) return value;
+                    if (value instanceof Error) return value.stack || value.message;
+                    if (typeof value === 'object' && value instanceof Buffer) return '[Buffer]';
+                    if (typeof value === 'object' && value instanceof RegExp) return value.toString();
+                    if (typeof value === 'function') return '[Function]';
+                    if (typeof value === 'object' && value.constructor && value.constructor.name === 'Socket') return '[Socket]';
+                    if (typeof value === 'object' && value.constructor && value.constructor.name === 'HTTPParser') return '[HTTPParser]';
 
-      // If we have additional data, append it to the message
-      if (additionalData !== undefined) {
-        if (typeof additionalData === 'object') {
-          formattedMessage = `${message}\n${JSON.stringify(additionalData, null, 2)}`;
-        } else {
-          formattedMessage = `${message}${additionalData}`;
-        }
-      }
+                    // Handle circular references
+                    if (typeof value === 'object' && value !== null) {
+                        if (seen.has(value)) {
+                            return '[Circular]';
+                        }
+                        seen.add(value);
+                    }
+                    return value;
+                };
+            };
 
-      // Handle error objects
-      if (error) {
-        if (error instanceof Error) {
-          formattedMessage = `MESSAGE: ${message}\n${error.name}: ${error.message}\n${error.stack.split('\n').slice(1).join('\n')}`;
-        } else {
-          formattedMessage = `MESSAGE: ${message}\n${JSON.stringify(error, null, 2)}`;
-        }
-      }
+            // Format the message and any additional data
+            let formattedMessage = message;
 
-      // Create the log entry
-      const logEntry = {
-        timestamp,
-        level: level.replace(/\u001b\[\d+m/g, ''),
-        message: formattedMessage
-      };
+            try {
+                // If we have additional data, append it to the message
+                if (additionalData !== undefined) {
+                    if (typeof additionalData === 'object') {
+                        formattedMessage = `${message}\n${JSON.stringify(additionalData, getCircularReplacer(), 2)}`;
+                    } else {
+                        formattedMessage = `${message}${additionalData}`;
+                    }
+                }
 
-      // Return the formatted log entry with raw newlines
-      return `[${source}]: ${JSON.stringify(logEntry, null, 2)}`
-          .replace(/\\n/g, '\n')
-          .replace(/\\\"/g, '"');
-    };
-  }
+                // Handle error objects
+                if (error) {
+                    if (error instanceof Error) {
+                        formattedMessage = `MESSAGE: ${message}\n${error.name}: ${error.message}\n${error.stack.split('\n').slice(1).join('\n')}`;
+                    } else {
+                        formattedMessage = `MESSAGE: ${message}\n${JSON.stringify(error, getCircularReplacer(), 2)}`;
+                    }
+                }
 
-  _createTransports() {
-    const transports = [];
+                // Create the log entry
+                const logEntry = {
+                    timestamp,
+                    level: level.replace(/\u001b\[\d+m/g, ''),
+                    message: formattedMessage
+                };
 
-    // Console transport with enhanced formatting
-    transports.push(
-        new winston.transports.Console({
-          format: winston.format.combine(
-              winston.format.uncolorize(),
-              winston.format.printf(info => {
-                // Ensure newlines are preserved in console output
-                const formatted = this._createLogFormatter()(info);
-                return formatted.replace(/\\n/g, '\n').replace(/\\\"/g, '"');
-              })
-          )
-        })
-    );
+                // Return the formatted log entry with raw newlines
+                return `[${source}]: ${JSON.stringify(logEntry, getCircularReplacer(), 2)}`
+                    .replace(/\\n/g, '\n')
+                    .replace(/\\\"/g, '"');
+            } catch (err) {
+                // Fallback if JSON stringification fails
+                return `[${source}]: {
+                  "timestamp": "${timestamp}",
+                  "level": "${level}",
+                  "message": "Error formatting log message: ${err.message}. Original message: ${message}"
+                  }`;
+            }
+        };
+    }
 
-    // File transport with rotation (if needed)
-    if (!this._isDevelopment()) {
-      transports.push(
-          new winston.transports.DailyRotateFile({
-            dirname: CONFIG.logDir,
-            filename: 'application-%DATE%.log',
-            datePattern: 'YYYY-MM-DD',
-            maxSize: CONFIG.maxLogSize,
-            maxFiles: CONFIG.maxLogFiles,
-            format: winston.format.combine(
-                winston.format.printf(info => {
-                  const formatted = this._createLogFormatter()(info);
-                  return formatted.replace(/\\n/g, '\n').replace(/\\\"/g, '"');
+    _createTransports() {
+        const transports = [];
+
+        // Console transport with enhanced formatting
+        transports.push(
+            new winston.transports.Console({
+                format: winston.format.combine(
+                    winston.format.uncolorize(),
+                    winston.format.printf(info => {
+                        // Ensure newlines are preserved in console output
+                        const formatted = this._createLogFormatter()(info);
+                        return formatted.replace(/\\n/g, '\n').replace(/\\\"/g, '"');
+                    })
+                )
+            })
+        );
+
+        // File transport with rotation (if needed)
+        if (!this._isDevelopment()) {
+            transports.push(
+                new winston.transports.DailyRotateFile({
+                    dirname: CONFIG.logDir,
+                    filename: 'application-%DATE%.log',
+                    datePattern: 'YYYY-MM-DD',
+                    maxSize: CONFIG.maxLogSize,
+                    maxFiles: CONFIG.maxLogFiles,
+                    format: winston.format.combine(
+                        winston.format.printf(info => {
+                            const formatted = this._createLogFormatter()(info);
+                            return formatted.replace(/\\n/g, '\n').replace(/\\\"/g, '"');
+                        })
+                    )
                 })
-            )
-          })
-      );
+            );
+        }
+
+        return transports;
     }
 
-    return transports;
-  }
+    _setupErrorHandling() {
+        process.on('uncaughtException', (error) => {
+            this.error('Uncaught Exception', {error, stack: error.stack});
+            process.exit(1);
+        });
 
-  _setupErrorHandling() {
-    process.on('uncaughtException', (error) => {
-      this.error('Uncaught Exception', { error, stack: error.stack });
-      process.exit(1);
-    });
-
-    process.on('unhandledRejection', (reason, promise) => {
-      this.error('Unhandled Rejection', { reason, promise });
-    });
-  }
-
-  _isDevelopment() {
-    return CONFIG.environment === 'development';
-  }
-
-  _shouldSample() {
-    if (!CONFIG.sampling.enabled) return true;
-    return Math.random() < CONFIG.sampling.rate;
-  }
-
-  _enrichMetadata(metadata = {}) {
-    return {
-      ...metadata,
-      hostname: os.hostname(),
-      pid: process.pid,
-      ...logContext.getAll()
-    };
-  }
-
-  debug(message, ...args) {
-    if (!this._shouldSample()) return;
-    if (!this.rateLimiter.shouldLog(this.source)) {
-      this.warn('Rate limit exceeded for debug logs', { source: this.source });
-      return;
+        process.on('unhandledRejection', (reason, promise) => {
+            this.error('Unhandled Rejection', {reason, promise});
+        });
     }
 
-    let additionalData;
-    let error = null;
-
-    // Handle arguments
-    if (args.length > 0) {
-      if (args[0] instanceof Error) {
-        error = args[0];
-      } else {
-        additionalData = args[0];
-      }
+    _isDevelopment() {
+        return CONFIG.environment === 'development';
     }
 
-    this.logger.debug(message, {
-      additionalData,
-      error,
-      source: this.source
-    });
-  }
-
-  info(message, metadata = {}) {
-    if (!this._shouldSample()) return;
-    this.logger.info(message, this._enrichMetadata(metadata));
-  }
-
-  warn(message, metadata = {}) {
-    this.logger.warn(message, this._enrichMetadata(metadata));
-  }
-
-  error(message, ...args) {
-    let metadata = {};
-    let error = null;
-    let queueMessage = null;
-
-    // Process arguments
-    args.forEach(arg => {
-      if (arg instanceof Error) {
-        error = arg;
-      } else if (Array.isArray(arg) || (typeof arg === 'object' && arg?.MessageId)) {
-        queueMessage = arg;
-      } else if (typeof arg === 'object') {
-        metadata = { ...metadata, ...arg };
-      }
-    });
-
-    this.logger.error(message, {
-      ...metadata,
-      error,
-      queueMessage,
-      source: this.source
-    });
-  }
-
-  // New method for structured logging
-  structured(level, message, data = {}) {
-    if (!CONFIG.structuredLogging.enabled) return;
-
-    const structuredLog = {
-      timestamp: new Date().toISOString(),
-      level,
-      message,
-      data,
-      context: logContext.getAll(),
-      source: this.source,
-      environment: CONFIG.environment
-    };
-
-    this.logger.log(level, JSON.stringify(structuredLog));
-  }
-
-  // New method for performance logging
-  performance(label, durationMs, metadata = {}) {
-    this.info(`Performance: ${label}`, {
-      ...metadata,
-      duration_ms: durationMs,
-      type: 'performance'
-    });
-  }
-
-  // New method for audit logging
-  audit(action, details = {}) {
-    this.info(`Audit: ${action}`, {
-      ...details,
-      type: 'audit',
-      timestamp: new Date().toISOString(),
-      user: logContext.get('userId')
-    });
-  }
-
-  // Trace-specific logging method
-  trace(message, span = {}, metadata = {}) {
-    if (!CONFIG.tracing.enabled) return;
-
-    const context = logContext.getAll();
-    const traceData = {
-      trace_id: context.traceId,
-      span_id: context.spanId,
-      parent_id: context.parentId,
-      ...span,
-      ...metadata
-    };
-
-    this.structured('trace', message, traceData);
-
-    // Send to trace collector if configured
-    if (CONFIG.tracing.collector.enabled) {
-      this._sendToCollector(traceData).catch(err => {
-        this.error('Failed to send trace to collector', { error: err });
-      });
+    _shouldSample() {
+        if (!CONFIG.sampling.enabled) return true;
+        return Math.random() < CONFIG.sampling.rate;
     }
-  }
 
-  async _sendToCollector(traceData) {
-    if (!CONFIG.tracing.collector.endpoint) return;
-
-    const payload = {
-      ...traceData,
-      service: CONFIG.tracing.serviceName,
-      version: CONFIG.tracing.serviceVersion,
-      environment: CONFIG.tracing.environment,
-      timestamp: new Date().toISOString()
-    };
-
-    try {
-      const response = await fetch(CONFIG.tracing.collector.endpoint, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          ...CONFIG.tracing.collector.headers
-        },
-        body: JSON.stringify(payload)
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-    } catch (error) {
-      throw new LoggingError('Trace collector error', 'TRACE_COLLECTOR_ERROR', {
-        error: error.message,
-        endpoint: CONFIG.tracing.collector.endpoint
-      });
+    _enrichMetadata(metadata = {}) {
+        return {
+            ...metadata,
+            hostname: os.hostname(),
+            pid: process.pid,
+            ...logContext.getAll()
+        };
     }
-  }
+
+    debug(message, ...args) {
+        if (!this._shouldSample()) return;
+        if (!this.rateLimiter.shouldLog(this.source)) {
+            this.warn('Rate limit exceeded for debug logs', {source: this.source});
+            return;
+        }
+
+        let additionalData;
+        let error = null;
+
+        // Handle arguments with circular reference safety
+        if (args.length > 0) {
+            if (args[0] instanceof Error) {
+                error = args[0];
+            } else {
+                // Safely handle potential circular references in additionalData
+                try {
+                    // Test if the object can be stringified
+                    JSON.stringify(args[0], getCircularReplacer());
+                    additionalData = args[0];
+                } catch (err) {
+                    // If stringification fails, create a safe copy with basic properties
+                    if (typeof args[0] === 'object') {
+                        additionalData = Object.keys(args[0]).reduce((acc, key) => {
+                            try {
+                                const value = args[0][key];
+                                if (typeof value !== 'object' || value === null) {
+                                    acc[key] = value;
+                                } else {
+                                    acc[key] = '[Complex Object]';
+                                }
+                            } catch (e) {
+                                acc[key] = '[Unstringifiable]';
+                            }
+                            return acc;
+                        }, {});
+                    } else {
+                        additionalData = '[Unstringifiable Object]';
+                    }
+                }
+            }
+        }
+
+        this.logger.debug(message, {
+            additionalData,
+            error,
+            source: this.source
+        });
+    }
+
+    // New method for structured logging
+    structured(level, message, data = {}) {
+        if (!CONFIG.structuredLogging.enabled) return;
+
+        const structuredLog = {
+            timestamp: new Date().toISOString(),
+            level,
+            message,
+            data,
+            context: logContext.getAll(),
+            source: this.source,
+            environment: CONFIG.environment
+        };
+
+        this.logger.log(level, JSON.stringify(structuredLog));
+    }
+
+    // New method for performance logging
+    performance(label, durationMs, metadata = {}) {
+        this.info(`Performance: ${label}`, {
+            ...metadata,
+            duration_ms: durationMs,
+            type: 'performance'
+        });
+    }
+
+    // New method for audit logging
+    audit(action, details = {}) {
+        this.info(`Audit: ${action}`, {
+            ...details,
+            type: 'audit',
+            timestamp: new Date().toISOString(),
+            user: logContext.get('userId')
+        });
+    }
+
+    // Trace-specific logging method
+    trace(message, span = {}, metadata = {}) {
+        if (!CONFIG.tracing.enabled) return;
+
+        const context = logContext.getAll();
+        const traceData = {
+            trace_id: context.traceId,
+            span_id: context.spanId,
+            parent_id: context.parentId,
+            ...span,
+            ...metadata
+        };
+
+        this.structured('trace', message, traceData);
+
+        // Send to trace collector if configured
+        if (CONFIG.tracing.collector.enabled) {
+            this._sendToCollector(traceData).catch(err => {
+                this.error('Failed to send trace to collector', {error: err});
+            });
+        }
+    }
+
+    async _sendToCollector(traceData) {
+        if (!CONFIG.tracing.collector.endpoint) return;
+
+        const payload = {
+            ...traceData,
+            service: CONFIG.tracing.serviceName,
+            version: CONFIG.tracing.serviceVersion,
+            environment: CONFIG.tracing.environment,
+            timestamp: new Date().toISOString()
+        };
+
+        try {
+            const response = await fetch(CONFIG.tracing.collector.endpoint, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    ...CONFIG.tracing.collector.headers
+                },
+                body: JSON.stringify(payload)
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+        } catch (error) {
+            throw new LoggingError('Trace collector error', 'TRACE_COLLECTOR_ERROR', {
+                error: error.message,
+                endpoint: CONFIG.tracing.collector.endpoint
+            });
+        }
+    }
 }
 
 // Middleware for request tracking
 export const requestMiddleware = (req, res, next) => {
-  const startTime = Date.now();
+    const startTime = Date.now();
 
-  try {
-    // Extract or create trace context
-    let traceContext = TraceContext.fromHeaders(req.headers);
+    try {
+        // Extract or create trace context
+        let traceContext = TraceContext.fromHeaders(req.headers);
 
-    // If no existing trace context, create a new one
-    if (!traceContext.traceId) {
-      traceContext = new TraceContext();
-      traceContext.traceId = generateTraceId();
-      traceContext.spanId = generateSpanId();
-    }
-
-    // Create child span for this request
-    const requestSpan = traceContext.generateNextSpan();
-
-    const context = {
-      traceId: requestSpan.traceId,
-      spanId: requestSpan.spanId,
-      parentId: requestSpan.parentId,
-      requestId: req.headers['x-request-id'] || requestSpan.spanId,
-      method: req.method,
-      path: req.path,
-      userAgent: req.get('user-agent'),
-      userId: req.user?.id,
-      baggage: Object.fromEntries(requestSpan.baggage)
-    };
-
-    // Set response headers for distributed tracing
-    const traceHeaders = requestSpan.toHeaders();
-    Object.entries(traceHeaders).forEach(([key, value]) => {
-      res.setHeader(key, value);
-    });
-
-    // Also set traditional correlation headers for backward compatibility
-    res.setHeader('X-Request-ID', context.requestId);
-    res.setHeader('X-Correlation-ID', context.requestId);
-    logContext.run(context, () => {
-      // Start span timing
-      const spanStartTime = process.hrtime();
-
-      // Capture response timing and details
-      res.on('finish', () => {
-        try {
-          const [seconds, nanoseconds] = process.hrtime(spanStartTime);
-          const duration = seconds * 1000 + nanoseconds / 1000000; // Convert to milliseconds
-
-          const logger = new EnhancedWinstonLogger('request-logger');
-          logger.info('Request completed', {
-            statusCode: res.statusCode,
-            duration,
-            ...context
-          });
-        } catch (error) {
-          console.error('Error in request finish handler:', error);
+        // If no existing trace context, create a new one
+        if (!traceContext.traceId) {
+            traceContext = new TraceContext();
+            traceContext.traceId = generateTraceId();
+            traceContext.spanId = generateSpanId();
         }
-      });
 
-      next();
-    });
-  } catch (error) {
-    console.error('Error in request middleware:', error);
-    next(error);
-  }
+        // Create child span for this request
+        const requestSpan = traceContext.generateNextSpan();
+
+        const context = {
+            traceId: requestSpan.traceId,
+            spanId: requestSpan.spanId,
+            parentId: requestSpan.parentId,
+            requestId: req.headers['x-request-id'] || requestSpan.spanId,
+            method: req.method,
+            path: req.path,
+            userAgent: req.get('user-agent'),
+            userId: req.user?.id,
+            baggage: Object.fromEntries(requestSpan.baggage)
+        };
+
+        // Set response headers for distributed tracing
+        const traceHeaders = requestSpan.toHeaders();
+        Object.entries(traceHeaders).forEach(([key, value]) => {
+            res.setHeader(key, value);
+        });
+
+        // Also set traditional correlation headers for backward compatibility
+        res.setHeader('X-Request-ID', context.requestId);
+        res.setHeader('X-Correlation-ID', context.requestId);
+        logContext.run(context, () => {
+            // Start span timing
+            const spanStartTime = process.hrtime();
+
+            // Capture response timing and details
+            res.on('finish', () => {
+                try {
+                    const [seconds, nanoseconds] = process.hrtime(spanStartTime);
+                    const duration = seconds * 1000 + nanoseconds / 1000000; // Convert to milliseconds
+
+                    const logger = new EnhancedWinstonLogger('request-logger');
+                    logger.info('Request completed', {
+                        statusCode: res.statusCode,
+                        duration,
+                        ...context
+                    });
+                } catch (error) {
+                    console.error('Error in request finish handler:', error);
+                }
+            });
+
+            next();
+        });
+    } catch (error) {
+        console.error('Error in request middleware:', error);
+        next(error);
+    }
 };
 
 // Export factory function
@@ -595,13 +641,13 @@ export const createLogger = (filename) => new EnhancedWinstonLogger(filename);
 export const setLogContext = (key, value) => logContext.set(key, value);
 export const getLogContext = (key) => logContext.get(key);
 export const getTraceContext = () => {
-  const context = logContext.getAll();
-  return {
-    traceId: context.traceId,
-    spanId: context.spanId,
-    parentId: context.parentId,
-    baggage: context.baggage
-  };
+    const context = logContext.getAll();
+    return {
+        traceId: context.traceId,
+        spanId: context.spanId,
+        parentId: context.parentId,
+        baggage: context.baggage
+    };
 };
 
 // Create a global logger instance
