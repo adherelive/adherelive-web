@@ -259,7 +259,7 @@ class EnhancedWinstonLogger {
   _createLogFormatter() {
     return (info) => {
       const {
-        level,
+        level = 'info', // Provide a default value for level
         message,
         timestamp,
         source,
@@ -273,9 +273,9 @@ class EnhancedWinstonLogger {
           .join(' ');
 
       // Safely handle undefined level
-      const levelStr = level ? level.toUpperCase() : 'UNKNOWN';
+      // const levelStr = level ? level.toUpperCase() : 'UNKNOWN';
 
-      const baseLog = `${timestamp} [${levelStr}] [${source}] ${contextStr}: ${message}`;
+      const baseLog = `${timestamp} [${level.toUpperCase()}] [${source}] ${contextStr}: ${message}`;
 
       if (stack) {
         return `${baseLog}\n${stack}`;

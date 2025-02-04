@@ -31,7 +31,7 @@ router.post(
 );
 
 // In your Node.js backend
-app.post('/api/logs', (req, res) => {
+router.post('/api/logs', (req, res) => {
     const { level, message, source, sessionId, ...meta } = req.body;
 
     // Use your backend logger to log the frontend message
