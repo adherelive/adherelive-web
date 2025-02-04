@@ -1,6 +1,6 @@
 import Controller from "../index";
 
-import Logger from "../../../libs/log";
+import { createLogger } from "../../../libs/log";
 
 // Services
 import TxActivities from "../../services/transactionActivity/transactionActivity.service";
@@ -13,7 +13,7 @@ import PatientWrapper from "../../apiWrapper/web/patient";
 import { USER_CATEGORY } from "../../../constant";
 
 const ReassignAudit = require("../../models/mongoModel/reassignAudit");
-const Log = new Logger("WEB > CONTROLLER > Service Offering");
+const log = createLogger("WEB > CONTROLLER > Service Offering");
 
 class TransactionActivityController extends Controller {
   constructor() {
@@ -147,12 +147,12 @@ class TransactionActivityController extends Controller {
       txActivities[i].patient = patientData;
       let serviceSubscription = new ServiceSubscription();
 
-      console.log("=========================================");
-      console.log({
+      log.debug("=========================================");
+      log.debug({
         value: txActivities[i].service_subscription_id != null,
         mytestservice_subid: txActivities[i].service_subscription_id,
       });
-      console.log("=========================================");
+      log.debug("=========================================");
 
       if (txActivities[i].service_subscription_id != null) {
         let serviceSubscriptionDetails =
@@ -191,7 +191,7 @@ class TransactionActivityController extends Controller {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       let { params: { id } = {}, body } = req;
-      Log.info(`Report : id = ${id}`);
+      log.debug(`Report : id = ${id}`);
       if (!id) {
         return raiseClientError(
           res,
@@ -214,7 +214,7 @@ class TransactionActivityController extends Controller {
         "Activity updated successfully"
       );
     } catch (error) {
-      Log.debug("updateService 500 error", error);
+      log.debug("updateService 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -223,7 +223,7 @@ class TransactionActivityController extends Controller {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       let { params: { id } = {}, body } = req;
-      Log.info(`Report : id = ${id}`);
+      log.debug(`Report : id = ${id}`);
       if (!id) {
         return raiseClientError(
           res,
@@ -270,7 +270,7 @@ class TransactionActivityController extends Controller {
         "Activity updated successfully"
       );
     } catch (error) {
-      Log.debug("updateService 500 error", error);
+      log.debug("updateService 500 error", error);
       return raiseServerError(res);
     }
   };

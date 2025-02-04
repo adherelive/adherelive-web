@@ -43,15 +43,22 @@ import AppointmentWrapper from "../../apiWrapper/web/appointments";
 import CarePlanTemplateWrapper from "../../apiWrapper/web/carePlanTemplate";
 import MedicationWrapper from "../../apiWrapper/web/medicationReminder";
 
-import Logger from "../../../libs/log";
+import { createLogger } from "../../../libs/log";
 
-const Log = new Logger("WEB > CAREPLAN > CONTROLLER");
+const log = createLogger("WEB > CARE PLAN > CONTROLLER");
 
 class CarePlanController extends Controller {
   constructor() {
     super();
   }
 
+  /**
+   * This is the function that creates the Care Plan from the templates provided for the Doctors
+   *
+   * @param req
+   * @param res
+   * @returns {Promise<*>}
+   */
   createFromTemplate = async (req, res) => {
     try {
       const { carePlanId: care_plan_id } = req.params;
@@ -259,7 +266,7 @@ class CarePlanController extends Controller {
       //   carePlanScheduleData
       // );
       //
-      // Log.debug("sqsResponse for care plan---> ", sqsResponseForCarePlan);
+      // log.debug("sqsResponse for care plan---> ", sqsResponseForCarePlan);
 
       let medicationApiDetails = {};
       let medicineApiDetails = {};
@@ -588,7 +595,7 @@ class CarePlanController extends Controller {
         "Care plan medications, appointments, actions, diets and exercises added successfully"
       );
     } catch (error) {
-      Log.debug(
+      log.debug(
         "createCarePlanMedicationsAndAppointmentsByTemplateData 500 error",
         error
       );
@@ -719,7 +726,7 @@ class CarePlanController extends Controller {
         vital_ids,
       };
 
-      Log.debug("Care Plan API data: ", carePlanApiData);
+      log.debug("Care Plan API data: ", carePlanApiData);
 
       let templateMedications = {};
       let templateAppointments = {};
@@ -821,11 +828,18 @@ class CarePlanController extends Controller {
         "patient care plan details fetched successfully"
       );
     } catch (error) {
-      console.log(error);
+      log.debug(error);
       return this.raiseServerError(res, 500, error);
     }
   };
 
+  /**
+   *
+   *
+   * @param req
+   * @param res
+   * @returns {Promise<*>}
+   */
   getPatientCarePlanOnly = async (req, res) => {
     const { patient_id, doctor_user_id, provider_id, provider_type } =
       req.query;
@@ -879,11 +893,18 @@ class CarePlanController extends Controller {
         "patient care plan details fetched successfully"
       );
     } catch (error) {
-      console.log(error);
+      log.debug(error);
       return this.raiseServerError(res, 500, error);
     }
   };
 
+  /**
+   * This function adds a secondary Doctor profile to an existing Patient care plan
+   *
+   * @param req
+   * @param res
+   * @returns {Promise<*>}
+   */
   addProfile = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
@@ -907,15 +928,19 @@ class CarePlanController extends Controller {
 
         if (createdMapping) {
           const carePlan = await CarePlanWrapper(null, care_plan_id);
-          // const addUserToChat = await twilioService.addMember(
-          //   carePlan.getChannelId(),
-          //   user_role_id
-          // );
+          /*const addUserToChat = await twilioService.addMember(
+            carePlan.getChannelId(),
+            user_role_id
+          );*/
 
-          if (!carePlan.getChannelId().includes("group"))
+          // Issue: Adding a newly created additional Doctor carePlan.getChannelId() is returning null or undefined.
+          // To resolve this issue, ensuring that carePlan.getChannelId() is not null or undefined
+          // before calling includes on it. Added a null check before this line.
+          const channelId = carePlan.getChannelId();
+          if (channelId && !channelId.includes("group"))
             await carePlanService.updateCarePlan(
-              { channel_id: carePlan.getChannelId() + care_plan_id + "_group" },
-              carePlanId
+                { channel_id: channelId + care_plan_id + "_group" },
+                carePlanId
             );
 
           let carePlanAppointmentIds = await getCarePlanAppointmentIds(
@@ -976,13 +1001,19 @@ class CarePlanController extends Controller {
         );
       }
     } catch (error) {
-      Log.debug("addProfile 500 ERROR", error);
+      log.debug("Unable to add the Doctor's profile to this Patient: ", error);
       return raiseServerError(res);
     }
   };
 
-  // code implementation after phase 1
-
+  /**
+   * [Code implementation after phase 1]
+   *
+   *
+   * @param req
+   * @param res
+   * @returns {Promise<*>}
+   */
   getCarePlanDetails = async (req, res) => {
     const { carePlanId: care_plan_id } = req.params;
     // const { patientId: patient_id = 1 } = req.params;
@@ -1001,121 +1032,123 @@ class CarePlanController extends Controller {
 
       let newCarePlan = await CarePlanWrapper(carePlan);
 
-      // let cPdetails = carePlan.get("details") ? carePlan.get("details") : {};
+      /**
+       * TODO: Check why this code has been commented and what is the alternate added for it?
+      let cPdetails = carePlan.get("details") ? carePlan.get("details") : {};
 
-      // let { shown = false } = cPdetails;
-      // let carePlanId = carePlan.get("id");
-      // let carePlanTemplateId = carePlan.get("care_plan_template_id");
-      // let carePlanMedications =
-      //   await carePlanMedicationService.getMedicationsByCarePlanId(carePlanId);
-      // let carePlanAppointments =
-      //   await carePlanAppointmentService.getAppointmentsByCarePlanId(
-      //     carePlanId
-      //   );
+      let { shown = false } = cPdetails;
+      let carePlanId = carePlan.get("id");
+      let carePlanTemplateId = carePlan.get("care_plan_template_id");
+      let carePlanMedications =
+        await carePlanMedicationService.getMedicationsByCarePlanId(carePlanId);
+      let carePlanAppointments =
+        await carePlanAppointmentService.getAppointmentsByCarePlanId(
+          carePlanId
+        );
 
-      // let carePlanAppointmentIds = await getCarePlanAppointmentIds(carePlanId);
-      // let carePlanMedicationIds = await getCarePlanMedicationIds(carePlanId);
-      // let carePlanSeverityDetails = await getCarePlanSeverityDetails(
-      //   carePlanId
-      // );
-      // const carePlanApiWrapper = await CarePlanWrapper(carePlan);
+      let carePlanAppointmentIds = await getCarePlanAppointmentIds(carePlanId);
+      let carePlanMedicationIds = await getCarePlanMedicationIds(carePlanId);
+      let carePlanSeverityDetails = await getCarePlanSeverityDetails(
+        carePlanId
+      );
+      const carePlanApiWrapper = await CarePlanWrapper(carePlan);
 
-      // let carePlanApiData = {};
+      let carePlanApiData = {};
 
-      // const { vital_ids } = await carePlanApiWrapper.getAllInfo();
+      const { vital_ids } = await carePlanApiWrapper.getAllInfo();
 
-      // carePlanApiData[carePlanApiWrapper.getCarePlanId()] = {
-      //   ...carePlanApiWrapper.getBasicInfo(),
-      //   ...carePlanSeverityDetails,
-      //   carePlanMedicationIds,
-      //   carePlanAppointmentIds,
-      //   vital_ids,
-      // };
+      carePlanApiData[carePlanApiWrapper.getCarePlanId()] = {
+        ...carePlanApiWrapper.getBasicInfo(),
+        ...carePlanSeverityDetails,
+        carePlanMedicationIds,
+        carePlanAppointmentIds,
+        vital_ids,
+      };
 
-      // Log.debug("87937198123 careplan", carePlanApiData);
+      log.debug("Care Plan API Data", carePlanApiData);
 
-      // let templateMedications = {};
-      // let templateAppointments = {};
-      // let formattedTemplateMedications = [];
-      // let formattedTemplateAppointments = [];
-      // if (carePlanTemplateId) {
-      //   templateMedications =
-      //     await templateMedicationService.getMedicationsByCarePlanTemplateId(
-      //       carePlanTemplateId
-      //     );
-      //   templateAppointments =
-      //     await templateAppointmentService.getAppointmentsByCarePlanTemplateId(
-      //       carePlanTemplateId
-      //     );
-      //   if (
-      //     permissions.includes(PERMISSIONS.MEDICATIONS.VIEW) &&
-      //     templateMedications.length
-      //   ) {
-      //     for (let medication of templateMedications) {
-      //       let newMedication = {};
-      //       newMedication.id = medication.get("id");
-      //       newMedication.schedule_data = medication.get("schedule_data");
-      //       newMedication.care_plan_template_id = medication.get(
-      //         "care_plan_template_id"
-      //       );
-      //       let medicineId = medication.get("medicine_id");
-      //       newMedication.medicine_id = medicineId;
-      //       let medicine = await medicineService.getMedicineById(medicineId);
+      let templateMedications = {};
+      let templateAppointments = {};
+      let formattedTemplateMedications = [];
+      let formattedTemplateAppointments = [];
+      if (carePlanTemplateId) {
+        templateMedications =
+          await templateMedicationService.getMedicationsByCarePlanTemplateId(
+            carePlanTemplateId
+          );
+        templateAppointments =
+          await templateAppointmentService.getAppointmentsByCarePlanTemplateId(
+            carePlanTemplateId
+          );
+        if (
+          permissions.includes(PERMISSIONS.MEDICATIONS.VIEW) &&
+          templateMedications.length
+        ) {
+          for (let medication of templateMedications) {
+            let newMedication = {};
+            newMedication.id = medication.get("id");
+            newMedication.schedule_data = medication.get("schedule_data");
+            newMedication.care_plan_template_id = medication.get(
+              "care_plan_template_id"
+            );
+            let medicineId = medication.get("medicine_id");
+            newMedication.medicine_id = medicineId;
+            let medicine = await medicineService.getMedicineById(medicineId);
 
-      //       let medName = medicine.get("name");
-      //       let medType = medicine.get("type");
-      //       newMedication.medicine = medName;
-      //       newMedication.medicineType = medType;
-      //       formattedTemplateMedications.push(newMedication);
-      //     }
-      //   }
+            let medName = medicine.get("name");
+            let medType = medicine.get("type");
+            newMedication.medicine = medName;
+            newMedication.medicineType = medType;
+            formattedTemplateMedications.push(newMedication);
+          }
+        }
 
-      //   if (templateAppointments.length) {
-      //     for (let appointment of templateAppointments) {
-      //       let newAppointment = {};
-      //       newAppointment.id = appointment.get("id");
-      //       newAppointment.schedule_data = appointment.get("details");
-      //       newAppointment.reason = appointment.get("reason");
-      //       newAppointment.time_gap = appointment.get("time_gap");
-      //       newAppointment.care_plan_template_id = appointment.get(
-      //         "care_plan_template_id"
-      //       );
-      //       formattedTemplateAppointments.push(newAppointment);
-      //     }
-      //   }
-      // }
+        if (templateAppointments.length) {
+          for (let appointment of templateAppointments) {
+            let newAppointment = {};
+            newAppointment.id = appointment.get("id");
+            newAppointment.schedule_data = appointment.get("details");
+            newAppointment.reason = appointment.get("reason");
+            newAppointment.time_gap = appointment.get("time_gap");
+            newAppointment.care_plan_template_id = appointment.get(
+              "care_plan_template_id"
+            );
+            formattedTemplateAppointments.push(newAppointment);
+          }
+        }
+      }
 
-      // let medicationsOfTemplate = [];
+      let medicationsOfTemplate = [];
 
-      // if (permissions.includes(PERMISSIONS.MEDICATIONS.VIEW)) {
-      //   medicationsOfTemplate = formattedTemplateMedications;
-      // }
+      if (permissions.includes(PERMISSIONS.MEDICATIONS.VIEW)) {
+        medicationsOfTemplate = formattedTemplateMedications;
+      }
 
-      // let appointmentsOfTemplate = formattedTemplateAppointments;
+      let appointmentsOfTemplate = formattedTemplateAppointments;
 
-      // let carePlanMedicationsExists = carePlanMedications
-      //   ? !carePlanMedications.length
-      //   : !carePlanMedications; //true if doesnot exist
-      // let carePlanAppointmentsExists = carePlanAppointments
-      //   ? !carePlanAppointments.length
-      //   : !carePlanAppointments; //true if doesnot exist
-      // if (
-      //   carePlanTemplateId &&
-      //   carePlanMedicationsExists &&
-      //   carePlanAppointmentsExists &&
-      //   !shown
-      // ) {
-      //   show = true;
-      // }
+      let carePlanMedicationsExists = carePlanMedications
+        ? !carePlanMedications.length
+        : !carePlanMedications; //true if doesnot exist
+      let carePlanAppointmentsExists = carePlanAppointments
+        ? !carePlanAppointments.length
+        : !carePlanAppointments; //true if doesnot exist
+      if (
+        carePlanTemplateId &&
+        carePlanMedicationsExists &&
+        carePlanAppointmentsExists &&
+        !shown
+      ) {
+        show = true;
+      }
 
-      // if (shown == false) {
-      //   let details = cPdetails;
-      //   details.shown = true;
-      //   let updatedCarePlan = await carePlanService.updateCarePlan(
-      //     { details },
-      //     carePlanId
-      //   );
-      // }
+      if (shown == false) {
+        let details = cPdetails;
+        details.shown = true;
+        let updatedCarePlan = await carePlanService.updateCarePlan(
+          { details },
+          carePlanId
+        );
+      }*/
 
       return this.raiseSuccess(
         res,

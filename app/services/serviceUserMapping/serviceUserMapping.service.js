@@ -1,6 +1,9 @@
 import Database from "../../../libs/mysql";
 import { TABLE_NAME } from "../../models/serviceUserMapping";
 
+import { createLogger } from "../../../libs/log";
+const log = createLogger("WEB > SERVICE USER MAPPING > SERVICES");
+
 export default class ServiceUserMapping {
   constructor() {}
 
@@ -14,11 +17,11 @@ export default class ServiceUserMapping {
           transaction,
         }
       );
-      console.log(serviceUserMapping);
+      log.debug(serviceUserMapping);
       await transaction.commit();
       return serviceUserMapping;
     } catch (error) {
-      console.log(error);
+      log.debug(error);
       await transaction.rollback();
       throw error;
     }
@@ -26,7 +29,7 @@ export default class ServiceUserMapping {
 
   getAllServiceUserMappingByData = async (data) => {
     try {
-      console.log(TABLE_NAME);
+      log.debug(TABLE_NAME);
       return await Database.getModel(TABLE_NAME).findAll({
         where: data,
         raw: true,
@@ -40,7 +43,7 @@ export default class ServiceUserMapping {
   updateServiceUserMapping = async (data, id) => {
     const transaction = await Database.initTransaction();
     try {
-      console.log(data, id);
+      log.debug(data, id);
       const serviceUserMapping = await Database.getModel(TABLE_NAME).update(
         data,
         {

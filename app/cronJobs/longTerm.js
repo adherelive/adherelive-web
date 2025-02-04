@@ -1,6 +1,6 @@
 import moment from "moment";
 import { EVENT_STATUS, EVENT_TYPE } from "../../constant";
-import Logger from "../../libs/log";
+import { createLogger } from "../../libs/log";
 
 // services
 import medicationService from "../services/medicationReminder/mReminder.service";
@@ -16,7 +16,7 @@ import WorkoutService from "../services/workouts/workout.service";
 import VitalWrapper from "../apiWrapper/mobile/vitals";
 import PatientWrapper from "../apiWrapper/mobile/patient";
 
-const Log = new Logger("LONG_TERM > CRON-JOBS");
+const log = createLogger("LONG_TERM > CRON-JOBS");
 
 class LongTerm {
   getUserFromRole = async (roleId) => {
@@ -29,7 +29,7 @@ class LongTerm {
 
       return user_identity;
     } catch (error) {
-      Log.debug("getUserFromRole error in LongTerm: ", error);
+      log.debug("getUserFromRole error in LongTerm: ", error);
       throw error;
     }
   };
@@ -50,7 +50,7 @@ class LongTerm {
 
       return medicationIds;
     } catch (error) {
-      Log.debug("getMedications error in LongTerm: ", error);
+      log.debug("getMedications error in LongTerm: ", error);
       throw error;
     }
   };
@@ -70,7 +70,7 @@ class LongTerm {
 
       return vitalIds;
     } catch (error) {
-      Log.debug("getVitals error in LongTerm: ", error);
+      log.debug("getVitals error in LongTerm: ", error);
       throw error;
     }
   };
@@ -92,7 +92,7 @@ class LongTerm {
 
       return dietIds;
     } catch (error) {
-      Log.debug("getDiets error in LongTerm: ", error);
+      log.debug("getDiets error in LongTerm: ", error);
       throw error;
     }
   };
@@ -114,7 +114,7 @@ class LongTerm {
 
       return workoutIds;
     } catch (error) {
-      Log.debug("getWorkouts error in LongTerm: ", error);
+      log.debug("getWorkouts error in LongTerm: ", error);
       throw error;
     }
   };
@@ -173,7 +173,7 @@ class LongTerm {
       const queueService = new QueueService();
       await queueService.sendMessage(eventScheduleData);
     } catch (error) {
-      Log.debug("createMedicationEvents error in LongTerm: ", error);
+      log.debug("createMedicationEvents error in LongTerm: ", error);
       throw error;
     }
   };
@@ -204,7 +204,7 @@ class LongTerm {
 
       let patientUserRoleId = null;
       for (const participant of participants) {
-        console.log("participant in LongTerm: ", participant);
+        log.debug("participant in LongTerm: ", participant);
         if (participant !== user_role_id) {
           patientUserRoleId = participant;
           break;
@@ -212,7 +212,7 @@ class LongTerm {
       }
 
       const patientUserId = await this.getUserFromRole(patientUserRoleId);
-      console.log("patientUserId in LongTerm: ", patientUserId);
+      log.debug("patientUserId in LongTerm: ", patientUserId);
 
       if (!patientUserId) return;
       const patientData = await patientsService.getPatientByUserId(
@@ -237,13 +237,13 @@ class LongTerm {
         actor,
         vital_templates: vital_templates[vitals.getVitalTemplateId()],
       };
-      Log.debug("createVitalEvents eventScheduleData: ", eventScheduleData);
+      log.debug("createVitalEvents eventScheduleData: ", eventScheduleData);
 
       const queueService = new QueueService();
-      console.log("8");
+      log.debug("8");
       await queueService.sendMessage(eventScheduleData);
     } catch (error) {
-      Log.debug("createVitalEvents error", error);
+      log.debug("createVitalEvents error", error);
       throw error;
     }
   };
@@ -258,7 +258,7 @@ class LongTerm {
           event_type: EVENT_TYPE.DIET,
         })) || null;
 
-      Log.debug("dietId, scheduleEvent in LongTerm: ", dietId, scheduleEvent);
+      log.debug("dietId, scheduleEvent in LongTerm: ", dietId, scheduleEvent);
 
       const { details: { actor, participants = [] } = {} } =
         scheduleEvent || {};
@@ -284,7 +284,7 @@ class LongTerm {
         participants,
         actor,
       };
-      Log.debug(
+      log.debug(
         "createDietEvents eventScheduleData in LongTerm: ",
         eventScheduleData
       );
@@ -292,7 +292,7 @@ class LongTerm {
       const queueService = new QueueService();
       await queueService.sendMessage(eventScheduleData);
     } catch (error) {
-      Log.debug("createDietEvents error in LongTerm: ", error);
+      log.debug("createDietEvents error in LongTerm: ", error);
       throw error;
     }
   };
@@ -331,7 +331,7 @@ class LongTerm {
         participants,
         actor,
       };
-      Log.debug(
+      log.debug(
         "createWorkoutEvents eventScheduleData in LongTerm: ",
         eventScheduleData
       );
@@ -339,7 +339,7 @@ class LongTerm {
       const queueService = new QueueService();
       await queueService.sendMessage(eventScheduleData);
     } catch (error) {
-      Log.debug("createWorkoutEvents error in LongTerm: ", error);
+      log.debug("createWorkoutEvents error in LongTerm: ", error);
       throw error;
     }
   };
@@ -351,7 +351,7 @@ class LongTerm {
       // medications
       const medicationIds = await this.getMedications();
 
-      Log.debug("runObserver in LongTerm ---> medicationIds: ", medicationIds);
+      log.debug("runObserver in LongTerm ---> medicationIds: ", medicationIds);
 
       if (medicationIds.length > 0) {
         for (const medicationId of medicationIds) {
@@ -379,7 +379,7 @@ class LongTerm {
       // vitals
       const vitalIds = await this.getVitals();
 
-      Log.debug("runObserver in LongTerm ---> vitalIds: ", vitalIds);
+      log.debug("runObserver in LongTerm ---> vitalIds: ", vitalIds);
 
       if (vitalIds.length > 0) {
         for (const vitalId of vitalIds) {
@@ -407,7 +407,7 @@ class LongTerm {
       // diets
       const dietIds = await this.getDiets();
 
-      Log.debug("observer dietIds in LongTerm: ", dietIds);
+      log.debug("observer dietIds in LongTerm: ", dietIds);
 
       if (dietIds.length > 0) {
         for (const dietId of dietIds) {
@@ -425,7 +425,7 @@ class LongTerm {
                 status: EVENT_STATUS.PENDING,
               })) || [];
 
-            Log.debug(
+            log.debug(
               "observer dietIds scheduleEvents length in LongTerm: ",
               scheduleEvents.length
             );
@@ -439,7 +439,7 @@ class LongTerm {
       // workouts
       const workoutIds = await this.getWorkouts();
 
-      Log.debug("observer workoutIds in LongTerm: ", workoutIds);
+      log.debug("observer workoutIds in LongTerm: ", workoutIds);
 
       if (workoutIds.length > 0) {
         for (const workoutId of workoutIds) {
@@ -464,7 +464,7 @@ class LongTerm {
         }
       }
     } catch (error) {
-      Log.debug("Error running observer in LongTerm: ", error);
+      log.debug("Error running observer in LongTerm: ", error);
       throw error;
     }
   };

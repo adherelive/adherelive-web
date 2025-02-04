@@ -1,11 +1,11 @@
 import Controller from "../../index";
-import Logger from "../../../../libs/log";
+import { createLogger } from "../../../../libs/log";
 
 // services
 import UserService from "../../../services/user/user.service";
 import UserDeviceService from "../../../services/userDevices/userDevice.service";
 
-const Log = new Logger("MOBILE > USER_DEVICE > CONTROLLER");
+const log = createLogger("MOBILE > USER_DEVICE > CONTROLLER");
 
 class UserDeviceController extends Controller {
   constructor() {
@@ -15,7 +15,7 @@ class UserDeviceController extends Controller {
   create = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
-      Log.debug("userDevice create req.body ---> ", req.body);
+      log.debug("userDevice create req.body ---> ", req.body);
       const { userId } = req.userDetails;
       const { platform, one_signal_user_id, push_token } = req.body || {};
       const userExists = await UserService.getUserData({ id: userId });
@@ -43,7 +43,7 @@ class UserDeviceController extends Controller {
             deviceExists.get("id")
           );
 
-          Log.debug("userDeviceData", userDeviceData);
+          log.debug("userDeviceData", userDeviceData);
 
           return raiseSuccess(res, 200, {}, "Device user updated successfully");
         }
@@ -51,7 +51,7 @@ class UserDeviceController extends Controller {
         return raiseClientError(res, 422, {}, "User doesn't exists");
       }
     } catch (error) {
-      Log.debug("create 500 error - userDevice updated", error);
+      log.debug("create 500 error - userDevice updated", error);
       return raiseServerError(res);
     }
   };
@@ -66,7 +66,7 @@ class UserDeviceController extends Controller {
 
       return raiseSuccess(res, 200, {}, "Device deleted successfully");
     } catch (error) {
-      Log.debug("userDevice delete 500 error", error);
+      log.debug("userDevice delete 500 error", error);
       return raiseServerError(res);
     }
   };

@@ -1,13 +1,13 @@
 // const AWS = require("aws-sdk");
 // const Log = require("../../../libs/log")("communications --> emailManger");
-import Log from "../../../libs/log";
+import { createLogger } from "../../../libs/log";
 
 const path = require("path");
 const { existsSync } = require("fs");
 const ejs = require("ejs");
 const emailPayloadBuilder = require("./emailPayloadBuilder");
 
-const log = Log("communications --> emailManger");
+const log = createLogger("communications --> emailManger");
 
 const nodemailer = require("nodemailer");
 const smtpTransport = require("nodemailer-sendgrid-transport");
@@ -287,27 +287,27 @@ class EmailManger {
   async sendEmail(emailPayload) {
     try {
       let payload = await this.emailPayloadTransformer(emailPayload);
-      Log.info(
+      log.debug(
         "Validating email payload!! ---> ",
         process.config.SMTP_USER,
         process.config.SMTP_KEY
       );
       let isValid = this.emailPayloadValidator(emailPayload);
       if (isValid && isValid.error == 1) return isValid;
-      Log.success("email payload is valid!!");
-      Log.info("Transforming email payload to aws payload!!");
+      log.success("email payload is valid!!");
+      log.debug("Transforming email payload to aws payload!!");
 
       if (payload.error && payload.error == 1) return payload;
 
-      Log.info("Email payload transformed successfully!");
-      Log.info("Sending email...");
+      log.debug("Email payload transformed successfully!");
+      log.debug("Sending email...");
       // let publishResponse = this.ses
       //   .sendEmail(payload, (err, data) => {
       //     if (err) {
-      //       Log.info("Sending an Email error!!", err);
+      //       log.debug("Sending an Email error!!", err);
       //     }
       //     if (data) {
-      //       Log.info("Email sent successfully!!", data);
+      //       log.debug("Email sent successfully!!", data);
       //     }
       //   })
       //   .promise();
@@ -319,7 +319,7 @@ class EmailManger {
 
       return publishResponse;
     } catch (err) {
-      Log.info("sending mail error.........!!");
+      log.debug("sending mail error.........!!");
     }
   }
 }

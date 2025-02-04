@@ -1,5 +1,5 @@
 import { Sequelize } from "sequelize";
-import Logger from "./log";
+import { createLogger } from "./log";
 
 // Get the details of all the Models created for MySQL - 114 till date
 import * as ActionDetails from "../app/models/actionDetails";
@@ -121,7 +121,7 @@ import * as TransactionActivities from "../app/models/transactionActivity";
 import * as FlashCard from "../app/models/flashCard";
 import * as Notes from "../app/models/notes";
 
-const log = new Logger("SEQUELIZE QUERY");
+const log = createLogger("SEQUELIZE QUERY");
 // const Config = require("../config/config");
 // Config();
 
@@ -275,9 +275,9 @@ class Database {
 
         // Test the connection
         await Database.connection.authenticate();
-        console.log("MySQL connection has been established successfully.");
+        log.debug("MySQL connection has been established successfully.");
       } catch (err) {
-        console.log("Unable to connect to the MySQL database:", err);
+        log.error("Unable to connect to the MySQL database:", err);
         Database.connection = null; // Reset connection on failure
       }
     }
@@ -316,9 +316,9 @@ class Database {
       for (const model of models) {
         model.associate(database);
       }
-      console.log("MySQL DB and related tables have been created");
+      log.debug("MySQL DB and related tables have been created");
     } catch (err) {
-      console.error("MySQL DB connection error is: ", err);
+      log.error("MySQL DB connection error is: ", err);
     }
   };
 }

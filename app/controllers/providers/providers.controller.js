@@ -1,6 +1,6 @@
 import Controller from "../index";
 
-import Log from "../../../libs/log";
+import { createLogger } from "../../../libs/log";
 import moment from "moment";
 import isEmpty from "lodash/isEmpty";
 
@@ -58,7 +58,7 @@ import accountDetailsService from "../../services/accountDetails/accountDetails.
 import AccountsWrapper from "../../apiWrapper/web/accountsDetails";
 import { getFilePath } from "../../helper/s3FilePath";
 
-const Logger = new Log("WEB > PROVIDERS > CONTROLLER");
+const log = createLogger("WEB > PROVIDERS > CONTROLLER");
 
 const APPOINTMENT_QUERY_TYPE = {
   DAY: "d",
@@ -191,7 +191,7 @@ class ProvidersController extends Controller {
             doctorWrapper.getDoctorId()
           );
 
-        Logger.debug("getAll Doctor registration ---> ", doctorRegistrations);
+        log.debug("getAll Doctor registration ---> ", doctorRegistrations);
 
         await doctorRegistrations.forEach(async (doctorRegistration) => {
           const doctorRegistrationWrapper = await RegistrationWrapper(
@@ -318,7 +318,7 @@ class ProvidersController extends Controller {
         "doctor details fetched successfully"
       );
     } catch (error) {
-      Logger.debug("getall 500 error ", error);
+      log.debug("getall 500 error ", error);
       return raiseServerError(res);
     }
   };
@@ -386,7 +386,7 @@ class ProvidersController extends Controller {
 
       return raiseSuccess(res, 200, {}, "Password mailed successfully.");
     } catch (error) {
-      Logger.debug("mailPassword 500 error ", error);
+      log.debug("mailPassword 500 error ", error);
       return raiseServerError(res);
     }
   };
@@ -529,7 +529,7 @@ class ProvidersController extends Controller {
         "Appointments data fetched successfully."
       );
     } catch (error) {
-      Logger.debug("getAllAppointmentForDoctors 500 error ", error);
+      log.debug("getAllAppointmentForDoctors 500 error ", error);
       return raiseServerError(res);
     }
   };
@@ -605,7 +605,7 @@ class ProvidersController extends Controller {
         "Appointments data fetched successfully."
       );
     } catch (error) {
-      Logger.debug("getAllAppointmentForDoctors 500 error ", error);
+      log.debug("getAllAppointmentForDoctors 500 error ", error);
       return raiseServerError(res);
     }
   };
@@ -650,7 +650,7 @@ class ProvidersController extends Controller {
           expired_on: null,
         })) || [];
 
-      Logger.debug("carePlans", carePlans);
+      log.debug("carePlans", carePlans);
 
       for (let i = 0; i < carePlans.length; i++) {
         const carePlan = await CarePlanWrapper(carePlans[i]);
@@ -685,7 +685,7 @@ class ProvidersController extends Controller {
          * */
       }
     } catch (error) {
-      Logger.debug("getPatientEvents 500 error ", error);
+      log.debug("getPatientEvents 500 error ", error);
       return raiseServerError(res);
     }
   };
@@ -712,7 +712,7 @@ class ProvidersController extends Controller {
         "Providers fetched successfully"
       );
     } catch (error) {
-      Logger.debug("getAllProviders 500 error ", error);
+      log.debug("getAllProviders 500 error ", error);
       return raiseServerError(res);
     }
   };
@@ -771,7 +771,7 @@ class ProvidersController extends Controller {
         "Providers fetched successfully"
       );
     } catch (error) {
-      Logger.debug("getAllProviders 500 error ", error);
+      log.debug("getAllProviders 500 error ", error);
       return raiseServerError(res);
     }
   };
@@ -815,7 +815,7 @@ class ProvidersController extends Controller {
           category: USER_CATEGORY.PROVIDER,
         })) || null;
 
-      Logger.debug("providerExists --> ", providerExists);
+      log.debug("providerExists --> ", providerExists);
 
       if (providerExists) {
         return raiseClientError(
@@ -941,7 +941,7 @@ class ProvidersController extends Controller {
         "Provider added successfully"
       );
     } catch (error) {
-      Logger.debug("addProvider 500 error ", error);
+      log.debug("addProvider 500 error ", error);
       return raiseServerError(res);
     }
   };
@@ -949,7 +949,7 @@ class ProvidersController extends Controller {
   updateProvider = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
-      Logger.info(`provider id : ${req.params.id}`);
+      log.debug(`provider id : ${req.params.id}`);
       const { params: { id } = {}, body = {} } = req;
       const {
         email,
@@ -1047,7 +1047,7 @@ class ProvidersController extends Controller {
         updatedAccountData[updatedAccount.getId()] =
           updatedAccount.getBasicInfo();
 
-        Logger.debug("783453267478657894235236476289347523846923", {
+        log.debug("783453267478657894235236476289347523846923", {
           account_details: {
             ...updatedAccountData,
           },
@@ -1095,7 +1095,7 @@ class ProvidersController extends Controller {
         "Provider updated successfully"
       );
     } catch (error) {
-      Logger.debug("updateProvider 500 error", error);
+      log.debug("updateProvider 500 error", error);
       return raiseServerError(res);
     }
   };

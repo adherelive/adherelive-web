@@ -1,9 +1,9 @@
 import AWS from "aws-sdk";
 import * as https from "https";
 import fs from "fs";
-import Log from "../../../libs/log";
+import { createLogger } from "../../../libs/log";
 
-const log = Log("AWS S3 Service");
+const log = createLogger("AWS S3 Service");
 
 class AwsS3Service {
   constructor() {
@@ -30,9 +30,9 @@ class AwsS3Service {
   callback = (error, data) => {
     if (error) {
       // throw error;
-      console.log("Callback error in AWS S3 services: ", error);
+      log.debug("Callback error in AWS S3 services: ", error);
     } else {
-      console.log("AWS S3 has sent response data: ", data);
+      log.debug("AWS S3 has sent response data: ", data);
     }
   };
 
@@ -49,7 +49,7 @@ class AwsS3Service {
       let result;
 
       let doesBucketExists = true;
-      console.log("Check if the S3 Bucket exists: ", doesBucketExists);
+      log.debug("Check if the S3 Bucket exists: ", doesBucketExists);
       const bucket_name = process.config.s3.BUCKET_NAME;
       if (!doesBucketExists) {
         const policy = {
@@ -82,16 +82,16 @@ class AwsS3Service {
         fs.readFile(`${__dirname}/../../../other/logo.png`, (err, data) => {
           if (!err) {
             const emailLogo = this.saveBufferObject(data, "logo.png");
-            console.log("Image name for emailLogo: ", emailLogo);
-            //console.log("Email logo has been uploaded successfully: ", logoImage);
+            log.debug("Image name for emailLogo: ", emailLogo);
+            //log.debug("Email logo has been uploaded successfully: ", logoImage);
           } else {
-            console.log("Error in getting the logo image", err);
+            log.debug("Error in getting the logo image", err);
           }
           if (!err) {
             const emailLogo = this.saveBufferObject(data, "logo.png");
-            console.log("Image for emailLogo: ", emailLogo);
+            log.debug("Image for emailLogo: ", emailLogo);
           } else {
-            console.log("Error in getting the email logo image: ", err);
+            log.debug("Error in getting the email logo image: ", err);
           }
         });
 
@@ -105,22 +105,22 @@ class AwsS3Service {
                 data,
                 "push_notification_sound.wav"
               );
-              console.log("File for wave sound audioObject: ", audioObject);
+              log.debug("File for wave sound audioObject: ", audioObject);
             } else {
-              console.log("Error in getting the wave sound file: ", err);
+              log.debug("Error in getting the wave sound file: ", err);
             }
           }
         );
       }
       return result;
     } catch (err) {
-      // console.log("u19281011 err --> ", err);
+      // log.debug("u19281011 err --> ", err);
       throw err;
     }
   }
 
   getSignedUrl = (path) => {
-    console.log("getSignedUrl path needs to be defined: ", { path });
+    log.debug("getSignedUrl path needs to be defined: ", { path });
     if (!path) {
       throw new Error("Invalid path provided. Path cannot be null or undefined.");
     }
@@ -155,7 +155,7 @@ class AwsS3Service {
         metaData = { "Content-Type": "application/octet-stream" };
       }
 
-      console.log("Save Buffer Object file: ", file);
+      log.debug("Save Buffer Object file: ", file);
       let result = await this.s3Client.putObject(
         {
           Bucket: this.bucket,
@@ -172,11 +172,11 @@ class AwsS3Service {
       //   Expires: 60
       // });
       //
-      // console.log("AWS S3 URL: ", url);
+      // log.debug("AWS S3 URL: ", url);
 
       return result;
     } catch (err) {
-      console.log("AWS S3 service has an error ---> \n", err);
+      log.debug("AWS S3 service has an error ---> \n", err);
       // throw err;
     }
   }
@@ -184,7 +184,7 @@ class AwsS3Service {
   async downloadFileObject(objectName, filePath) {
     try {
       if (!objectName) {
-        console.error("Invalid objectName provided. Cannot download file.");
+        log.error("Invalid objectName provided. Cannot download file.");
         return { success: false, message: "Invalid objectName" };
       }
       const signedUrl = await this.getSignedUrl(objectName);
@@ -210,7 +210,7 @@ class AwsS3Service {
         });
       });
     } catch (err) {
-      console.error("Error in the download file object: ", err);
+      log.error("Error in the download file object: ", err);
       return { success: false, message: err.message };
     }
   }
@@ -220,7 +220,7 @@ class AwsS3Service {
       let result = await this.s3Client.removeObject(this.bucket, file);
       return result;
     } catch (err) {
-      console.log("Error in the remove file object: ", err);
+      log.debug("Error in the remove file object: ", err);
       throw err;
     }
   }
@@ -231,7 +231,7 @@ class AwsS3Service {
         metaData = { "Content-Type": "audio/mpeg" };
       }
 
-      console.log("Save Audio Object in S3 audio file: ", file);
+      log.debug("Save Audio Object in S3 audio file: ", file);
       let result = await this.s3Client.putObject(
         {
           Bucket: this.bucket,
@@ -244,7 +244,7 @@ class AwsS3Service {
 
       return result;
     } catch (err) {
-      console.log("Error in the saveAudioObject function: ", err);
+      log.debug("Error in the saveAudioObject function: ", err);
       // throw err;
     }
   };
@@ -255,7 +255,7 @@ class AwsS3Service {
         metaData = { "Content-Type": "video/mp4" };
       }
 
-      console.log("Save video object file: ", file);
+      log.debug("Save video object file: ", file);
       let result = await this.s3Client.putObject(
         {
           Bucket: this.bucket,
@@ -275,7 +275,7 @@ class AwsS3Service {
 
       return result;
     } catch (err) {
-      console.log("Error in the saveVideoObject function: ", err);
+      log.debug("Error in the saveVideoObject function: ", err);
       // throw err;
     }
   };

@@ -1,4 +1,4 @@
-import Logger from "../../libs/log";
+import { createLogger } from "../../libs/log";
 import moment from "moment";
 
 import { EVENT_STATUS, EVENT_TYPE } from "../../constant";
@@ -17,7 +17,7 @@ import * as CronHelper from "./helper";
 
 import NotificationSdk from "../notificationSdk";
 
-const Log = new Logger("CRON-JOBS > PRIOR");
+const log = createLogger("CRON-JOBS > PRIOR");
 
 class PriorCron {
   // allPriorAppointmentEvents;
@@ -28,13 +28,13 @@ class PriorCron {
   async getScheduleData(priorDuration, type) {
     // const scheduleEventService = new ScheduleEventService();
     const priorTime = moment().add(priorDuration, "minutes").utc().toDate();
-    Log.debug("cron getScheduleData priorTime ---> ", priorTime);
-    Log.debug("getScheduleData currentTime ---> ", moment().utc().toDate());
+    log.debug("cron getScheduleData priorTime ---> ", priorTime);
+    log.debug("getScheduleData currentTime ---> ", moment().utc().toDate());
 
     const scheduleEvents =
       (await this.scheduleEventService.getPriorEventByData(priorTime, type)) ||
       [];
-    Log.debug("getScheduleData scheduleEvents ---> ", scheduleEvents);
+    log.debug("getScheduleData scheduleEvents ---> ", scheduleEvents);
     return scheduleEvents || [];
   }
 
@@ -65,7 +65,7 @@ class PriorCron {
         this.handleWorkoutPrior
       );
     } catch (error) {
-      Log.debug("prior runObserver catch error", error);
+      log.debug("prior runObserver catch error", error);
     }
   }
 
@@ -98,7 +98,7 @@ class PriorCron {
       );
       // const updateEventStatus = await this.scheduleEventService.update({ status: EVENT_STATUS.PRIOR, }, id);
     } catch (error) {
-      Log.debug("handleAppointmentPrior error", error);
+      log.debug("handleAppointmentPrior error", error);
     }
   }
 
@@ -113,7 +113,7 @@ class PriorCron {
         id
       );
     } catch (error) {
-      Log.debug("handleDietPrior error", error);
+      log.debug("handleDietPrior error", error);
     }
   }
 
@@ -128,7 +128,7 @@ class PriorCron {
         id
       );
     } catch (error) {
-      Log.debug("handleWorkoutPrior error", error);
+      log.debug("handleWorkoutPrior error", error);
     }
   }
 }

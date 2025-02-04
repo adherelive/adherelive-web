@@ -1,9 +1,24 @@
 import Database from "../../../libs/mysql";
 import { TABLE_NAME } from "../../models/serviceOffering";
 
+import { createLogger } from "../../../libs/log";
+const log = createLogger("WEB > SERVICE OFFERING > SERVICES");
+
+/**
+ *
+ *
+ * @class ServiceOfferingService
+ */
 export default class ServiceOfferingService {
   constructor() {}
 
+  /**
+   *
+   *
+   * @memberOf ServiceOfferingService
+   * @param data
+   * @returns {Promise<*>}
+   */
   addServiceOffering = async (data) => {
     const transaction = await Database.initTransaction();
     try {
@@ -14,12 +29,20 @@ export default class ServiceOfferingService {
       await transaction.commit();
       return serviceOffering;
     } catch (error) {
-      console.log(error);
+      log.debug(error);
       await transaction.rollback();
       throw error;
     }
   };
 
+  /**
+   *
+   *
+   * @memberOf ServiceOfferingService
+   * @param data
+   * @param id
+   * @returns {Promise<*>}
+   */
   updateServiceOffering = async (data, id) => {
     const transaction = await Database.initTransaction();
     try {
@@ -39,8 +62,15 @@ export default class ServiceOfferingService {
     }
   };
 
+  /**
+   *
+   *
+   * @memberOf ServiceOfferingService
+   * @param data
+   * @returns {Promise<*>}
+   */
   getServiceOfferingByData = async (data) => {
-    console.log("getServiceOfferingByDataCalled - services - ", data);
+    // log.debug("getServiceOfferingByDataCalled - services - ", data);
     try {
       return await Database.getModel(TABLE_NAME).findOne({
         where: data,
@@ -51,6 +81,13 @@ export default class ServiceOfferingService {
     }
   };
 
+  /**
+   *
+   *
+   * @memberOf ServiceOfferingService
+   * @param data
+   * @returns {Promise<Model[]>}
+   */
   getAllServiceOfferingByData = async (data) => {
     try {
       return await Database.getModel(TABLE_NAME).findAll({

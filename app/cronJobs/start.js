@@ -1,4 +1,4 @@
-import Logger from "../../libs/log";
+import { createLogger } from "../../libs/log";
 import moment from "moment";
 
 import { EVENT_STATUS, EVENT_TYPE, NOTIFICATION_STAGES } from "../../constant";
@@ -22,13 +22,13 @@ import CarePlanJob from "../jobSdk/CarePlan/observer";
 import DietJob from "../jobSdk/Diet/observer";
 import WorkoutJob from "../jobSdk/Workout/observer";
 
-const Log = new Logger("CRON > START");
+const log = createLogger("CRON > START");
 
 class StartCron {
   getScheduleData = async () => {
     const scheduleEventService = new ScheduleEventService();
     const currentTime = moment().utc().toISOString();
-    Log.info(`currentTime : ${currentTime}`);
+    log.debug(`currentTime : ${currentTime}`);
     const scheduleEvents = await scheduleEventService.getStartEventByData(
       currentTime
     );
@@ -37,7 +37,7 @@ class StartCron {
   // TODO: running cron job on event table that have more then 17gb data and its make application slow and also logs unreadble.
   runObserver = async () => {
     try {
-      Log.info("running START cron");
+      log.debug("running START cron");
       const { getScheduleData } = this;
       const scheduleEvents = await getScheduleData();
 
@@ -70,9 +70,9 @@ class StartCron {
           }
         }
       }
-      Log.info(`START count : ${count} / ${scheduleEvents.length}`);
+      log.debug(`START count : ${count} / ${scheduleEvents.length}`);
     } catch (error) {
-      Log.debug("scheduleEvents 500 error ---> ", error);
+      log.debug("scheduleEvents 500 error ---> ", error);
     }
   };
 
@@ -105,7 +105,7 @@ class StartCron {
       });
       NotificationSdk.execute(job);
     } catch (error) {
-      Log.debug("handleVitalStart 500 error ---> ", error);
+      log.debug("handleVitalStart 500 error ---> ", error);
     }
   };
 
@@ -140,7 +140,7 @@ class StartCron {
       // });
       // notificationSdk.execute(job);
     } catch (error) {
-      Log.debug("handleAppointmentStart 500 error ---> ", error);
+      log.debug("handleAppointmentStart 500 error ---> ", error);
     }
   };
 
@@ -186,7 +186,7 @@ class StartCron {
       // });
       // notificationSdk.execute(job);
     } catch (error) {
-      Log.debug("handleVitalStart 500 error ---> ", error);
+      log.debug("handleVitalStart 500 error ---> ", error);
     }
   };
 
@@ -225,7 +225,7 @@ class StartCron {
         );
       }
     } catch (error) {
-      Log.debug("handleDietStart 500 error", error);
+      log.debug("handleDietStart 500 error", error);
     }
   };
 
@@ -265,7 +265,7 @@ class StartCron {
         );
       }
     } catch (error) {
-      Log.debug("handleWorkoutStart 500 error", error);
+      log.debug("handleWorkoutStart 500 error", error);
     }
   };
 
@@ -292,7 +292,7 @@ class StartCron {
 
       await NotificationSdk.execute(carePlanJob);
     } catch (error) {
-      Log.debug("handleCarePlanStart 500 error ---> ", error);
+      log.debug("handleCarePlanStart 500 error ---> ", error);
     }
   };
 }

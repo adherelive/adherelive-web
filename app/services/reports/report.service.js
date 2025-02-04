@@ -1,6 +1,9 @@
 import Database from "../../../libs/mysql";
 import { TABLE_NAME } from "../../models/reports";
 
+import { createLogger } from "../../../libs/log";
+const log = createLogger("WEB > REPORT > SERVICE");
+
 export default class ReportService {
   constructor() {}
 
@@ -15,7 +18,7 @@ export default class ReportService {
       return report;
     } catch (error) {
       await transaction.rollback();
-      console.log("Error in addReport: ", error);
+      log.debug("Error in addReport: ", error);
       throw error;
     }
   };
@@ -35,7 +38,7 @@ export default class ReportService {
       return report;
     } catch (error) {
       await transaction.rollback();
-      console.log("Error in updateReport: ", error);
+      log.debug("Error in updateReport: ", error);
       throw error;
     }
   };
@@ -47,7 +50,7 @@ export default class ReportService {
         raw: true,
       });
     } catch (error) {
-      console.log("Error in getReportByData: ", error);
+      log.debug("Error in getReportByData: ", error);
       throw error;
     }
   };
@@ -60,7 +63,7 @@ export default class ReportService {
         order: [["test_date", "DESC"]],
       });
     } catch (error) {
-      console.log("Error in getAllReportByData: ", error);
+      log.debug("Error in getAllReportByData: ", error);
       throw error;
     }
   };
@@ -73,7 +76,7 @@ export default class ReportService {
         raw: true,
       });
     } catch (error) {
-      console.log("Error in latestReportAndCount: ", error);
+      log.debug("Error in latestReportAndCount: ", error);
       throw error;
     }
   };

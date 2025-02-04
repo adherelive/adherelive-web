@@ -1,8 +1,16 @@
 import fs from "fs";
 
-var Config = require("../../../config/config");
-Config();
+import { createLogger } from "../../../libs/log";
+const log = createLogger("WEB > MEDICINE > HELPER");
 
+// var Config = require("../../../config/config");
+// Config();
+
+/**
+ *
+ *
+ * @returns {Promise<unknown>}
+ */
 export const getMedicineData = async () => {
   return new Promise((res, rej) => {
     if (process.config.app.medicine_data === "SUBHARTI") {
@@ -10,7 +18,7 @@ export const getMedicineData = async () => {
         __dirname + "/data/subharti_medicine.json",
         async (error, data) => {
           if (error) {
-            console.error("error in reading medicine data", error);
+            log.error("Error in reading medicine data: ", error);
             rej(error);
           }
           let updatedMedicine = [];
@@ -33,17 +41,19 @@ export const getMedicineData = async () => {
             });
             // }
 
-            // if (!updatedIndiaName.length && !internationalNameList.length) {
-            //   const details = {...medicine[i], india_name: [...updatedIndiaName]};
-            //   updatedMedicine.push({
-            //     name: generic_name,
-            //     type: "tablet",
-            //     description: "",
-            //     details: JSON.stringify(details),
-            //     created_at: new Date(),
-            //     updated_at: new Date()
-            //   });
-            // }
+            /**
+             * TODO: Check why this has been commented
+            if (!updatedIndiaName.length && !internationalNameList.length) {
+              const details = {...medicine[i], india_name: [...updatedIndiaName]};
+              updatedMedicine.push({
+                name: generic_name,
+                type: "tablet",
+                description: "",
+                details: JSON.stringify(details),
+                created_at: new Date(),
+                updated_at: new Date()
+              });
+            }*/
           }
 
           res(updatedMedicine);
@@ -52,7 +62,7 @@ export const getMedicineData = async () => {
     } else {
       fs.readFile(__dirname + "/data/medicine.json", async (error, data) => {
         if (error) {
-          console.error("error in reading medicine data", error);
+          log.error("error in reading medicine data", error);
           rej(error);
         }
         let updatedMedicine = [];

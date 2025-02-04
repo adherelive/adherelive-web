@@ -2,7 +2,7 @@ import Controller from "../index";
 
 import moment from "moment";
 
-import Log from "../../../libs/log";
+import { createLogger } from "../../../libs/log";
 import {
   getCarePlanAppointmentIds,
   getCarePlanMedicationIds,
@@ -58,19 +58,30 @@ import notificationSdk from "../../notificationSdk";
 
 const path = require("path");
 
-const FILE_NAME = "WEB APPOINTMENT CONTROLLER";
+const LOG_NAME = "WEB > APPOINTMENT > CONTROLLER";
+const log = createLogger(LOG_NAME);
 
-const Logger = new Log(FILE_NAME);
-
+/**
+ *
+ *
+ * @class AppointmentController
+ */
 class AppointmentController extends Controller {
   constructor() {
     super();
   }
 
+  /**
+   *
+   *
+   * @param req
+   * @param res
+   * @returns {Promise<*>}
+   */
   create = async (req, res) => {
     const { raiseClientError } = this;
     try {
-      Logger.debug("Request data for Appointments: ", req.body);
+      log.debug("Request data for Appointments: ", req.body);
       const { body, userDetails } = req;
       const {
         participant_two,
@@ -97,7 +108,7 @@ class AppointmentController extends Controller {
       const { id: participant_one_id, category: participant_one_type } = participant_one || {};
       const { id: participant_two_id, category: participant_two_type } = participant_two || {};
 
-      console.log("Request data for Appointments: ", req.body)
+      log.debug("Request data for Appointments: ", req.body)
 
       // check previous time slot for appointment based on
       // date, start_time, end_time, participant_one_id, participant_one_type, participant_two_id, participant_two_type
@@ -136,7 +147,7 @@ class AppointmentController extends Controller {
           break;
       }
 
-      // Logger.debug("Start date", date);
+      // log.debug("Start date", date);
       const getAppointmentForTimeSlot = await appointmentService.checkTimeSlot(
         start_time,
         end_time,
@@ -213,7 +224,7 @@ class AppointmentController extends Controller {
 
       const sqsResponse = await QueueService.sendMessage(eventScheduleData);
 
-      Logger.debug("sqsResponse ---> ", sqsResponse);
+      log.debug("sqsResponse ---> ", sqsResponse);
 
       const appointmentJob = AppointmentJob.execute(
         EVENT_STATUS.SCHEDULED,
@@ -243,6 +254,13 @@ class AppointmentController extends Controller {
     }
   };
 
+  /**
+   *
+   *
+   * @param req
+   * @param res
+   * @returns {Promise<*>}
+   */
   createCarePlanAppointment = async (req, res) => {
     const { raiseClientError } = this;
     try {
@@ -298,7 +316,7 @@ class AppointmentController extends Controller {
           break;
       }
 
-      // Logger.debug("Start date", date);
+      // log.debug("Start date", date);
       const getAppointmentForTimeSlot = await appointmentService.checkTimeSlot(
         start_time,
         end_time,
@@ -406,7 +424,7 @@ class AppointmentController extends Controller {
 
       const sqsResponse = await QueueService.sendMessage(eventScheduleData);
 
-      Logger.debug("createCarePlanAppointment sqsResponse: ", sqsResponse);
+      log.debug("createCarePlanAppointment sqsResponse: ", sqsResponse);
 
       const appointmentJob = AppointmentJob.execute(
         EVENT_STATUS.SCHEDULED,
@@ -416,7 +434,7 @@ class AppointmentController extends Controller {
       // TODO: if we need to send a mail also for the appointment
       // await NotificationSdk.execute(EVENT_TYPE.SEND_MAIL, appointmentJob);
 
-      Logger.debug("createCarePlanAppointment appointmentJob: ", appointmentJob.getInAppTemplate());
+      log.debug("createCarePlanAppointment appointmentJob: ", appointmentJob.getInAppTemplate());
       // TODO: schedule event and notifications here
       await Proxy_Sdk.scheduleEvent({ data: eventScheduleData });
 
@@ -440,6 +458,13 @@ class AppointmentController extends Controller {
     }
   };
 
+  /**
+   *
+   *
+   * @param req
+   * @param res
+   * @returns {Promise<*>}
+   */
   update = async (req, res) => {
     const { raiseSuccess, raiseServerError } = this;
     try {
@@ -637,11 +662,18 @@ class AppointmentController extends Controller {
         "Appointment updated successfully"
       );
     } catch (error) {
-      Logger.debug("updateAppointment 500 error: ", error);
+      log.debug("updateAppointment 500 error: ", error);
       return raiseServerError(res);
     }
   };
 
+  /**
+   *
+   *
+   * @param req
+   * @param res
+   * @returns {Promise<*>}
+   */
   getDayAppointmentByDate = async (req, res) => {
     const { raiseSuccess, raiseServerError } = this;
     try {
@@ -679,11 +711,18 @@ class AppointmentController extends Controller {
         `Appointment data for patient: ${id} fetched successfully`
       );
     } catch (error) {
-      Logger.debug("getDayAppointmentByDate 500 error: ", error);
+      log.debug("getDayAppointmentByDate 500 error: ", error);
       return raiseServerError(res);
     }
   };
 
+  /**
+   *
+   *
+   * @param req
+   * @param res
+   * @returns {Promise<*>}
+   */
   getAppointmentForPatient = async (req, res) => {
     const { raiseSuccess, raiseServerError } = this;
     try {
@@ -693,7 +732,7 @@ class AppointmentController extends Controller {
         id
       );
 
-      // Logger.debug("appointmentList", appointmentList);
+      // log.debug("appointmentList", appointmentList);
 
       // if (appointmentList.length > 0) {
       let appointmentApiData = {};
@@ -733,15 +772,22 @@ class AppointmentController extends Controller {
       // } else {
       // }
     } catch (error) {
-      Logger.debug("getAppointmentForPatient 500 error: ", error);
+      log.debug("getAppointmentForPatient 500 error: ", error);
       return raiseServerError(res);
     }
   };
 
+  /**
+   *
+   *
+   * @param req
+   * @param res
+   * @returns {Promise<*>}
+   */
   delete = async (req, res) => {
     const { raiseSuccess, raiseServerError } = this;
     try {
-      Logger.debug("Appointment controller request: ", req.params);
+      log.debug("Appointment controller request: ", req.params);
       const { params: { appointment_id } = {}, userDetails: { userId } = {} } =
         req;
 
@@ -762,11 +808,18 @@ class AppointmentController extends Controller {
 
       return raiseSuccess(res, 200, {}, `Appointment deleted successfully`);
     } catch (error) {
-      Logger.debug("deleteAppointment 500 error: ", error);
+      log.debug("deleteAppointment 500 error: ", error);
       return raiseServerError(res);
     }
   };
 
+  /**
+   *
+   *
+   * @param req
+   * @param res
+   * @returns {Promise<*>}
+   */
   getAppointmentDetails = async (req, res) => {
     const { raiseSuccess, raiseServerError } = this;
     try {
@@ -834,7 +887,7 @@ class AppointmentController extends Controller {
         "Appointment details fetched successfully"
       );
     } catch (error) {
-      Logger.debug("getAppointmentDetails 500 error: ", error);
+      log.debug("getAppointmentDetails 500 error: ", error);
       return raiseServerError(res);
     }
   };
@@ -936,11 +989,18 @@ class AppointmentController extends Controller {
           "Missed appointments fetched successfully"
       );
     } catch (error) {
-      Logger.debug("getAllMissedAppointments 500 error ", error);
+      log.debug("getAllMissedAppointments 500 error ", error);
       return raiseServerError(res);
     }
   };
 
+  /**
+   *
+   *
+   * @param req
+   * @param res
+   * @returns {Promise<*>}
+   */
   uploadAppointmentDoc = async (req, res) => {
     try {
       const {
@@ -962,21 +1022,21 @@ class AppointmentController extends Controller {
         appointment_id
       );
 
-      // const eventForAppointment = await scheduleEventService.getEventByData({
-      //   event_id: appointment_id,
-      //   event_type: EVENT_TYPE.APPOINTMENT
-      // });
+      /*const eventForAppointment = await scheduleEventService.getEventByData({
+        event_id: appointment_id,
+        event_type: EVENT_TYPE.APPOINTMENT
+      });
 
-      // const scheduleData = await EventWrapper(eventForAppointment);
+      const scheduleData = await EventWrapper(eventForAppointment);
 
-      // if (scheduleData.getStatus() !== EVENT_STATUS.COMPLETED) {
-      //   return raiseClientError(
-      //     res,
-      //     422,
-      //     {},
-      //     "Cannot upload documents before appointment is complete"
-      //   );
-      // }
+      if (scheduleData.getStatus() !== EVENT_STATUS.COMPLETED) {
+        return raiseClientError(
+          res,
+          422,
+          {},
+          "Cannot upload documents before appointment is complete"
+        );
+      }*/
 
       let userIsParticipant = true;
       let timeDifference = null;
@@ -1037,15 +1097,22 @@ class AppointmentController extends Controller {
           "Appointment documents uploaded successfully."
         );
       } catch (err) {
-        Logger.debug("APPOINTMENT DOC UPLOAD CATCH ERROR ", err);
+        log.debug("APPOINTMENT DOC UPLOAD CATCH ERROR ", err);
         return this.raiseServerError(res, 500, {}, `${err.message}`);
       }
     } catch (error) {
-      Logger.debug("uploadAppointmentDoc 500 error: ", error);
+      log.debug("uploadAppointmentDoc 500 error: ", error);
       return this.raiseServerError(res);
     }
   };
 
+  /**
+   *
+   *
+   * @param req
+   * @param res
+   * @returns {Promise<*>}
+   */
   downloadAppointmentDoc = async (req, res) => {
     try {
       const {
@@ -1138,11 +1205,18 @@ class AppointmentController extends Controller {
       };
       return res.sendFile(name, options);
     } catch (error) {
-      Logger.debug("downloadAppointmentDoc 500 error: ", error);
+      log.debug("downloadAppointmentDoc 500 error: ", error);
       return this.raiseServerError(res);
     }
   };
 
+  /**
+   *
+   *
+   * @param req
+   * @param res
+   * @returns {Promise<*>}
+   */
   deleteAppointmentDoc = async (req, res) => {
     try {
       const {
@@ -1207,9 +1281,7 @@ class AppointmentController extends Controller {
 
         userIsParticipant =
           participant_one_id === userCategoryId ||
-          participant_two_id === userCategoryId
-            ? true
-            : false;
+          participant_two_id === userCategoryId ? true : false;
       }
 
       if (!appointmentDetails || !userIsParticipant) {
@@ -1236,7 +1308,7 @@ class AppointmentController extends Controller {
         "Appointment document deleted."
       );
     } catch (error) {
-      Logger.debug("deleteAppointmentDoc 500 error: ", error);
+      log.debug("deleteAppointmentDoc 500 error: ", error);
       return this.raiseServerError(res);
     }
   };

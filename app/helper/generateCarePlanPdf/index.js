@@ -1078,7 +1078,7 @@ function printAppointment({
     //   medicationYLevel = generalExaminationEndLevel + NORMAL_FONT_SIZE + 12;
     // }
   } catch (ex) {
-    console.log(ex);
+    log.debug(ex);
   }
 }
 
@@ -1225,7 +1225,7 @@ function printConsultation({
     //   medicationYLevel = generalExaminationEndLevel + NORMAL_FONT_SIZE + 12;
     // }
   } catch (ex) {
-    console.log(ex);
+    log.debug(ex);
   }
 }
 
@@ -1506,7 +1506,7 @@ function isMedicationUpdatedInExistingMedicine(medications) {
     } = medications;
 
     if (!updated_at || !created_at) {
-      console.warn(
+      log.warn(
         `medicationId ${medicationId} has missing created_at or updated_at`
       );
       continue; // Skip to the next medication
@@ -1552,7 +1552,7 @@ function renderChiefComplaints({ symptoms }) {
 
     return finalSymptom;
   } catch (err) {
-    console.log("Error in chief complaints: ", err);
+    log.debug("Error in chief complaints: ", err);
   }
 }
 
@@ -1939,11 +1939,11 @@ function printCarePlanData({
     //     addPageAndNumber(doc);
     //   }
     // }
-    console.log("\n\n in printCarePlanData");
-    console.log(Object.keys(suggestedInvestigations).length);
+    log.debug("\n\n in printCarePlanData");
+    log.debug(Object.keys(suggestedInvestigations).length);
 
     if (Object.keys(suggestedInvestigations).length) {
-      console.log("\n\n In the if loop appointment \n\n");
+      log.debug("\n\n In the if loop appointment \n\n");
       const appointmentLevelEnd = printAppointment({
         doc,
         providerPrescriptionDetails,
@@ -1962,7 +1962,7 @@ function printCarePlanData({
       .text(follow_up_advise, DOC_MARGIN, doc.y + 5);
 
     if (Object.keys(suggestedInvestigations).length) {
-      console.log(
+      log.debug(
         "\n\n\n\n\\n\n\n\nin the if looop printConsultation\n\n\n\n\\n\n\n\n"
       );
       const consultationLevelEnd = printConsultation({
@@ -2007,7 +2007,7 @@ function printCarePlanData({
     const suggestedInvestigationXLevelEnd = doc.x;
     return suggestedInvestigationXLevelEnd;
   } catch (ex) {
-    console.log(ex);
+    log.debug(ex);
   }
 }
 
@@ -2062,7 +2062,7 @@ function printConsultationAppointment({
     const suggestedInvestigationXLevelEnd = doc.x;
     return suggestedInvestigationXLevelEnd;
   } catch (ex) {
-    console.log(ex);
+    log.debug(ex);
   }
 }
 
@@ -2197,16 +2197,16 @@ function printFooter(
     }
     addPageAndNumber(doc);
   }
-  console.log("\n\n\n\n\n\n\n\n\n\n\n================================");
-  console.log({ imageUrl });
-  console.log("================================\n\n\n\n\n\n\n\n\n\n\n");
+  log.debug("\n\n\n\n\n\n\n\n\n\n\n================================");
+  log.debug({ imageUrl });
+  log.debug("================================\n\n\n\n\n\n\n\n\n\n\n");
   try {
     doc.image(`${imageUrl}`, 400, doc.y + 10, {
       width: 120,
       height: signaturePictureHeight,
     });
   } catch (err) {
-    console.log("ERROR in signature pic", err);
+    log.debug("ERROR in signature pic", err);
   }
 
   if (doc.y + 3 * SMALLEST_FONT_SIZE > PAGE_END_LIMIT) {

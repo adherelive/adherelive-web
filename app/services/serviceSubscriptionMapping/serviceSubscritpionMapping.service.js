@@ -3,11 +3,14 @@ import { TABLE_NAME } from "../../models/serviceSubscriptionMapping";
 import { TABLE_NAME as ServiceOfferingTableName } from "../../models/serviceOffering";
 import ServiceOfferingService from "../serviceOffering/serviceOffering.service";
 
+import { createLogger } from "../../../libs/log";
+const log = createLogger("WEB > SUBSCRIPTION MAPPING > SERVICES");
+
 export default class ServiceSubscriptionMapping {
   constructor() {}
 
   addServiceSubscriptionMapping = async (data) => {
-    console.log(data);
+    log.debug(data);
     const transaction = await Database.initTransaction();
     try {
       const serviceSubscriptionMapping = await Database.getModel(
@@ -19,7 +22,7 @@ export default class ServiceSubscriptionMapping {
       await transaction.commit();
       return serviceSubscriptionMapping;
     } catch (error) {
-      console.log(error);
+      log.debug(error);
       await transaction.rollback();
       throw error;
     }

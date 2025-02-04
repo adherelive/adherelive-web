@@ -6,9 +6,9 @@ import MAccountsWrapper from "../../../apiWrapper/mobile/accountDetails";
 import UserWrapper from "../../../apiWrapper/mobile/user";
 import ProviderWrapper from "../../../apiWrapper/mobile/provider";
 
-import Log from "../../../../libs/log";
+import { createLogger } from "../../../../libs/log";
 
-const Logger = new Log("MOBILE ACCOUNTS CONTROLLER");
+const log = createLogger("MOBILE ACCOUNTS CONTROLLER");
 
 class MobileAccountsController extends Controller {
   constructor() {
@@ -75,7 +75,7 @@ class MobileAccountsController extends Controller {
         "Account details updated successfully."
       );
     } catch (error) {
-      Logger.debug("add account details 500 error", error);
+      log.debug("add account details 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -84,7 +84,7 @@ class MobileAccountsController extends Controller {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       const { userDetails: { userId } = {} } = req;
-      Logger.debug("Query for getUserAccountDetails User details: ", req.query);
+      log.debug("Query for getUserAccountDetails User details: ", req.query);
 
       const { query: { all_accounts = 0, provider_id = null } = {} } = req;
       const get_all_accounts = all_accounts == 0 ? false : true;
@@ -180,7 +180,7 @@ class MobileAccountsController extends Controller {
         "Account details fetched successfully."
       );
     } catch (error) {
-      Logger.debug("get account details 500 error", error);
+      log.debug("get account details 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -211,7 +211,7 @@ class MobileAccountsController extends Controller {
         "Account details deleted successfully."
       );
     } catch (error) {
-      Logger.debug("delete account details 500 error", error);
+      log.debug("delete account details 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -256,7 +256,7 @@ class MobileAccountsController extends Controller {
         );
       }
     } catch (error) {
-      Logger.debug("getUserAvailablePaymentMethods 500 error", error);
+      log.debug("getUserAvailablePaymentMethods 500 error", error);
       return raiseServerError(res);
     }
   };

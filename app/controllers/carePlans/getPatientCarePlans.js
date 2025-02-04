@@ -1,8 +1,8 @@
-import Logger from "../../../libs/log";
+import { createLogger } from "../../../libs/log";
 import carePlanService from "../../services/carePlan/carePlan.service";
 import * as carePlanHelper from "./carePlan.helper";
 
-const Log = new Logger("CARE_PLAN > Back FIle");
+const log = createLogger("CARE_PLAN > Back FIle");
 
 /**
  * In JavaScript, the top-level this typically refers to the global object when you're not inside any function or class.
@@ -102,8 +102,8 @@ const getPatientCarePlans = async (
       "Patient care plan details fetched successfully"
     );
   } catch (error) {
-    Log.debug("Get CarePlan 500 error ---> ", error);
-    console.log("GET PATIENT DETAILS ERROR CarePlan ---> ", error);
+    log.debug("Get CarePlan 500 error ---> ", error);
+    log.debug("GET PATIENT DETAILS ERROR CarePlan ---> ", error);
     return raiseServerError(res);
   }
 };

@@ -4,10 +4,10 @@ import uploadDocumentService from "../../../services/uploadDocuments/uploadDocum
 import FlashCardService from "../../../services/flashCard/flashCard.service";
 import DocumentWrapper from "../../web/uploadDocument";
 
-import Logger from "../../../../libs/log";
+import { createLogger } from "../../../../libs/log";
 import { DOCUMENT_PARENT_TYPE } from "../../../../constant";
 
-const Log = new Logger("MOBILE > API_WRAPPER > REPORTS");
+const log = createLogger("MOBILE > API_WRAPPER > REPORTS");
 
 class ReportWrapper extends BaseReport {
   constructor(data) {
@@ -62,7 +62,7 @@ class ReportWrapper extends BaseReport {
         report_document_ids: uploadDocumentIds,
       };
     } catch (error) {
-      Log.debug("getAllInfo error", error);
+      log.debug("getAllInfo error", error);
       throw error;
     }
   };
@@ -119,7 +119,7 @@ class ReportWrapper extends BaseReport {
         report_ids: [getId()],
       };
     } catch (error) {
-      Log.debug("getReferenceInfo error", error);
+      log.debug("getReferenceInfo error", error);
       throw error;
     }
   };
@@ -134,7 +134,7 @@ export default async ({ data = null, id = null }) => {
     const reports = await reportService.getReportByData({ id });
     return new ReportWrapper(reports);
   } catch (error) {
-    Log.debug("ReportWrapper catch error", error);
+    log.debug("ReportWrapper catch error", error);
     throw error;
   }
 };

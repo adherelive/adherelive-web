@@ -2,9 +2,9 @@ import Controller from "../../index";
 import PortionService from "../../../services/portions/portions.service";
 import PortionWrapper from "../../../apiWrapper/mobile/portions";
 
-import Log from "../../../../libs/log";
+import { createLogger } from "../../../../libs/log";
 
-const Logger = new Log("MOBILE PORTIONS CONTROLLER");
+const log = createLogger("MOBILE PORTIONS CONTROLLER");
 
 class PortionController extends Controller {
   constructor() {
@@ -45,7 +45,7 @@ class PortionController extends Controller {
         );
       }
     } catch (error) {
-      Logger.debug("portion search 500 error", error);
+      log.debug("portion search 500 error", error);
       return raiseServerError(res);
     }
   };

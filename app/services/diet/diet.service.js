@@ -4,11 +4,14 @@ import Database from "../../../libs/mysql";
 import { TABLE_NAME } from "../../models/diet";
 import { TABLE_NAME as carePlanTableName } from "../../models/carePlan";
 import { TABLE_NAME as dietFoodGroupMappingTableName } from "../../models/dietFoodGroupMapping";
-import { TABLE_NAME as similiarFoodMappingTableName } from "../../models/similarFoodMapping";
+import { TABLE_NAME as similarFoodMappingTableName } from "../../models/similarFoodMapping";
 import { TABLE_NAME as foodGroupTableName } from "../../models/foodGroups";
 import { TABLE_NAME as scheduleEventTableName } from "../../models/scheduleEvents";
 import { DAYS_INTEGER, EVENT_TYPE } from "../../../constant";
 import moment from "moment";
+
+import { createLogger } from "../../../libs/log";
+const log = createLogger("WEB > DIET > SERVICE");
 
 const DEFAULT_ORDER = [["created_at", "DESC"]];
 
@@ -98,7 +101,7 @@ class DietService {
   //           for (const relatedId of relatedIds) {
   //             const { [relatedId]: secondary_id } = reverseMapping || {};
   //             const similarFoodMapping = await Database.getModel(
-  //               similiarFoodMappingTableName
+  //               similarFoodMappingTableName
   //             ).create(
   //               {
   //                 related_to_id,
@@ -219,7 +222,7 @@ class DietService {
               }) || [];
 
             const similarFoodMapping = await Database.getModel(
-              similiarFoodMappingTableName
+              similarFoodMappingTableName
             ).bulkCreate(relatedIds, {
               raw: true,
               transaction,
@@ -267,29 +270,32 @@ class DietService {
         transaction
       );
 
-      // if (isSameAllDays) {
-      //   for (let day of Object.values(DAYS_INTEGER)) {
-      //     isCreated = await this.createDaysDiet(
-      //       diet_food_groups,
-      //       day,
-      //       diet_id,
-      //       transaction
-      //     );
-      //   }
-      // } else {
-      //   // for each DAY
-      //   console.log("31738129312 else food_groups", diet_food_groups);
-      //   for (let day of Object.keys(diet_food_groups)) {
-      //     const foodGroupsForDay = diet_food_groups[day] || {};
-      //     console.log("31738129312 else day", day);
-      //     isCreated = await this.createDaysDiet(
-      //       foodGroupsForDay,
-      //       day,
-      //       diet_id,
-      //       transaction
-      //     );
-      //   }
-      // }
+      /**
+       * TODO: Check why this has been commented?
+      if (isSameAllDays) {
+        for (let day of Object.values(DAYS_INTEGER)) {
+          isCreated = await this.createDaysDiet(
+            diet_food_groups,
+            day,
+            diet_id,
+            transaction
+          );
+        }
+      } else {
+        // for each DAY
+        log.debug("else food_groups: ", diet_food_groups);
+        for (let day of Object.keys(diet_food_groups)) {
+          const foodGroupsForDay = diet_food_groups[day] || {};
+          log.debug("else day: ", day);
+          isCreated = await this.createDaysDiet(
+            foodGroupsForDay,
+            day,
+            diet_id,
+            transaction
+          );
+        }
+      }
+       */
 
       await transaction.commit();
 
@@ -300,6 +306,12 @@ class DietService {
     }
   };
 
+  /**
+   *
+   * 
+   * @param data
+   * @returns {Promise<*>}
+   */
   getByData = async (data) => {
     try {
       return await Database.getModel(TABLE_NAME).findOne({
@@ -311,25 +323,36 @@ class DietService {
     }
   };
 
-  // update = async (data, id) => {
-  //   const transaction = await Database.initTransaction();
-  //   try {
-  //     const record = await Database.getModel(TABLE_NAME).update(data, {
-  //       where: {
-  //         id,
-  //       },
-  //       include: [Database.getModel(carePlanTableName)],
-  //       raw: true,
-  //       transaction,
-  //     });
-  //     await transaction.commit();
-  //     return record;
-  //   } catch (error) {
-  //     await transaction.rollback();
-  //     throw error;
-  //   }
-  // };
+  /**
+   * TODO: Check why this has been commented?
+  update = async (data, id) => {
+    const transaction = await Database.initTransaction();
+    try {
+      const record = await Database.getModel(TABLE_NAME).update(data, {
+        where: {
+          id,
+        },
+        include: [Database.getModel(carePlanTableName)],
+        raw: true,
+        transaction,
+      });
+      await transaction.commit();
+      return record;
+    } catch (error) {
+      await transaction.rollback();
+      throw error;
+    }
+  };
+   */
 
+  /**
+   *
+   *
+   * @param where
+   * @param order
+   * @param attributes
+   * @returns {Promise<*>}
+   */
   findAndCountAll = async ({ where, order = DEFAULT_ORDER, attributes }) => {
     try {
       return await Database.getModel(TABLE_NAME).findAndCountAll({
@@ -389,7 +412,7 @@ class DietService {
       //   }
 
       //   // delete similar mappings (if any)
-      //   await Database.getModel(similiarFoodMappingTableName).destroy({
+      //   await Database.getModel(similarFoodMappingTableName).destroy({
       //     where: {
       //       [Op.or]: [
       //         {
@@ -500,7 +523,7 @@ class DietService {
 
         const { count: is_primary_to_count = null, rows = [] } =
           (await Database.getModel(
-            similiarFoodMappingTableName
+            similarFoodMappingTableName
           ).findAndCountAll({
             where: {
               related_to_id: mappings_id,
@@ -516,7 +539,7 @@ class DietService {
           for (let row of rows) {
             const { id: similar_record_id } = row || {};
 
-            await Database.getModel(similiarFoodMappingTableName).destroy({
+            await Database.getModel(similarFoodMappingTableName).destroy({
               where: {
                 id: similar_record_id,
               },
@@ -531,7 +554,7 @@ class DietService {
             rows: secondary_rows = [],
           } =
             (await Database.getModel(
-              similiarFoodMappingTableName
+              similarFoodMappingTableName
             ).findAndCountAll({
               where: {
                 secondary_id: mappings_id,
@@ -545,7 +568,7 @@ class DietService {
             for (let row of secondary_rows) {
               const { id: similar_record_id } = row || {};
 
-              await Database.getModel(similiarFoodMappingTableName).destroy({
+              await Database.getModel(similarFoodMappingTableName).destroy({
                 where: {
                   id: similar_record_id,
                 },
@@ -681,7 +704,7 @@ class DietService {
 
                 const similarMappingExists =
                   (await Database.getModel(
-                    similiarFoodMappingTableName
+                    similarFoodMappingTableName
                   ).findOne({
                     where: {
                       related_to_id: currentFoodGroupMappingId,
@@ -736,7 +759,7 @@ class DietService {
               // end of similar specific for loop
             }
 
-            await Database.getModel(similiarFoodMappingTableName).bulkCreate(
+            await Database.getModel(similarFoodMappingTableName).bulkCreate(
               similarMappings,
               {
                 raw: true,
@@ -784,7 +807,7 @@ class DietService {
 
       //         for(let each of similarFoodGroupMappingIds ){
 
-      //           const { id : existingId  } = await Database.getModel(similiarFoodMappingTableName).findOne({
+      //           const { id : existingId  } = await Database.getModel(similarFoodMappingTableName).findOne({
       //             where : {
       //               secondary_id:each,
       //               related_to_id: primary_mapping_id
@@ -794,7 +817,7 @@ class DietService {
 
       //           if(!existingId){
 
-      //             const similarFoodMapping = await Database.getModel(similiarFoodMappingTableName).create({
+      //             const similarFoodMapping = await Database.getModel(similarFoodMappingTableName).create({
       //               secondary_id:each,
       //               related_to_id: primary_mapping_id
       //             }, {
@@ -923,7 +946,7 @@ class DietService {
   }) => {
     try {
       const records = await Database.getModel(
-        similiarFoodMappingTableName
+        similarFoodMappingTableName
       ).findAndCountAll({
         where,
         order,

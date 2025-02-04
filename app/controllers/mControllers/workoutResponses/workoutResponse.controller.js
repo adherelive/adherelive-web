@@ -17,7 +17,7 @@ import ExerciseContentWrapper from "../../../apiWrapper/mobile/exerciseContents"
 import WorkoutJob from "../../../jobSdk/Workout/observer";
 import NotificationSdk from "../../../notificationSdk";
 
-import Logger from "../../../../libs/log";
+import { createLogger } from "../../../../libs/log";
 import {
   EVENT_STATUS,
   NOTIFICATION_STAGES,
@@ -25,7 +25,7 @@ import {
   WORKOUT_RESPONSE_STATUS,
 } from "../../../../constant";
 
-const Log = new Logger("MOBILE > WORKOUT_RESPONSE > CONTROLLER");
+const log = createLogger("MOBILE > WORKOUT_RESPONSE > CONTROLLER");
 
 class WorkoutResponseController extends Controller {
   constructor() {
@@ -35,7 +35,7 @@ class WorkoutResponseController extends Controller {
   create = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
-      Log.debug("request body", req.body);
+      log.debug("request body", req.body);
       const {
         body = {},
         userDetails: {
@@ -159,7 +159,7 @@ class WorkoutResponseController extends Controller {
         return raiseClientError(res, 422, {}, "Please check details entered");
       }
     } catch (error) {
-      Log.debug("create 500 - workout response", error);
+      log.debug("create 500 - workout response", error);
       return raiseServerError(res);
     }
   };
@@ -255,7 +255,7 @@ class WorkoutResponseController extends Controller {
         return raiseClientError(res, 422, {}, "Please check details entered");
       }
     } catch (error) {
-      Log.debug("create 500 - workout response updated", error);
+      log.debug("create 500 - workout response updated", error);
       return raiseServerError(res);
     }
   };
@@ -333,7 +333,7 @@ class WorkoutResponseController extends Controller {
         "Workout response skipped successfully"
       );
     } catch (error) {
-      Log.debug("skip 500", error);
+      log.debug("skip 500", error);
       return raiseServerError(res);
     }
   };
@@ -507,7 +507,7 @@ class WorkoutResponseController extends Controller {
       //   );
       // }
     } catch (error) {
-      Log.debug("get 500", error);
+      log.debug("get 500", error);
       return raiseServerError(res);
     }
   };

@@ -56,7 +56,7 @@ export default async (payload = {}) => {
     // }
     universalLink = await createLink(data);
   } catch (err) {
-    console.log("formatting universal link broke: ", err);
+    log.debug("formatting universal link broke: ", err);
   }
   return universalLink;
 };

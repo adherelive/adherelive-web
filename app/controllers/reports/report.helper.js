@@ -1,15 +1,15 @@
-import Logger from "../../../libs/log";
+import { createLogger } from "../../../libs/log";
 import awsS3Service from "../../services/awsS3/awsS3.service";
 import md5 from "js-md5";
 import { completePath } from "../../helper/s3FilePath";
 
-const Log = new Logger("WEB > CONTROLLER > REPORTS > HELPER");
+const log = createLogger("WEB > CONTROLLER > REPORTS > HELPER");
 
 export const uploadReport = async ({ file, id }) => {
   try {
     const { mimetype } = file || {};
     const fileName = file.originalname.replace(/\s+/g, "");
-    Log.info(`fileName : ${fileName}`);
+    log.debug(`fileName : ${fileName}`);
     await awsS3Service.createBucket();
 
     let hash = md5.create();
@@ -20,7 +20,7 @@ export const uploadReport = async ({ file, id }) => {
     const folder = "reports";
     const encodedFileName = hash.substring(4) + "/" + fileName;
 
-    Log.info(`encodedFileName :: ${encodedFileName}`);
+    log.debug(`encodedFileName :: ${encodedFileName}`);
 
     // check for images
     let metaData = null;
@@ -32,12 +32,12 @@ export const uploadReport = async ({ file, id }) => {
     }
 
     const filePath = `${folder}/${encodedFileName}`;
-    Log.info(`filePath :: ${filePath}`);
+    log.debug(`filePath :: ${filePath}`);
 
     await awsS3Service.saveBufferObject(file.buffer, filePath, metaData);
     return completePath(`/${filePath}`);
   } catch (error) {
-    Log.debug("uploadReport has an error: ", error);
+    log.debug("uploadReport has an error: ", error);
     throw error;
   }
 };

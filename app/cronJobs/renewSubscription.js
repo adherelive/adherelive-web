@@ -7,9 +7,9 @@ import DoctorWrapper from "../apiWrapper/mobile/doctor";
 import PatientWrapper from "../apiWrapper/mobile/patient";
 import { USER_CATEGORY } from "../../constant";
 
-import Logger from "../../libs/log";
+import { createLogger } from "../../libs/log";
 
-const Log = new Logger("CRON > RENEW > SUBSCRIPTION");
+const log = createLogger("CRON > RENEW > SUBSCRIPTION");
 
 class RenewSubscription {
   runObserver = async () => {
@@ -17,7 +17,7 @@ class RenewSubscription {
       const subscriptionService = new SubscriptionService();
       const subscriptions = await subscriptionService.getAllTodayRenewingData();
 
-      Log.info(`TOTAL SUBSCRIPTIONS DUE : ${subscriptions.length}`);
+      log.debug(`TOTAL SUBSCRIPTIONS DUE : ${subscriptions.length}`);
       if (subscriptions.length > 0) {
         for (let i = 0; i < subscriptions.length; i++) {
           const subscription = await SubscriptionWrapper({
@@ -60,17 +60,17 @@ class RenewSubscription {
               message
             );
           } else {
-            Log.info(
+            log.debug(
               `patientUserId : ${patientUserRoleId} | doctorUserId : ${doctorUserRoleId}`
             );
           }
         }
       } else {
         // log no data
-        Log.info(`No subscriptions found due today`);
+        log.debug(`No subscriptions found due today`);
       }
     } catch (error) {
-      Log.debug("RenewSubscription 500 error", error);
+      log.debug("RenewSubscription 500 error", error);
     }
   };
 }
