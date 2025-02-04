@@ -83,6 +83,13 @@
       "Chikungunya",
       "HIV -1 & HIV-2",
       "ECG",
+      "Thyroid Stimulating Hormone",
+      "HBsAG",
+      "HCV",
+      "COAGULATION PROFILE (INR, APTT, Platelets and fibrinogen)",
+      "RPR (Rapid Plasma Reagin)",
+      "HIV-1/HIV-2 Rapid Screening",
+      "RPR (Rapid Plasma Reagin)",
       "Others"
     ],
     "2": ["At Clinic", "At Home", "Telephone"],
@@ -114,6 +121,18 @@
       "7": {
         "id": 7,
         "name": "CT ANGIO"
+      },
+      "8": {
+        "id": 8,
+        "name": "USG OBS FWB (FETAL WELL  BEING)"
+      },
+      "9": {
+        "id": 9,
+        "name": "USG OBS FWB (FETAL WELL  BEING) LEVEL-1"
+      },
+      "10": {
+        "id": 10,
+        "name": "USG OBS FWB (FETAL WELL  BEING) LEVEL-2"
       }
     }
   },
