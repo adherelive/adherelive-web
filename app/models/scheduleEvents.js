@@ -2,13 +2,13 @@
 import moment from "moment";
 import { DataTypes } from "sequelize";
 import { EVENT_STATUS, EVENT_TYPE } from "../../constant";
-import { createLogger } from "../../libs/log";
+import { createLogger } from "../../libs/logger";
 
 import { TABLE_NAME as eventHistoryTableName } from "./eventHistory";
 
 export const TABLE_NAME = "schedule_events";
 
-const log = createLogger("SCHEDULE_EVENTS > MODEL");
+const logger = createLogger("SCHEDULE_EVENTS > MODEL");
 
 export const db = (database) => {
   database.define(
@@ -85,7 +85,7 @@ export const db = (database) => {
           const { _previousDataValues: previousValues } = instance || {};
           const { id, event_type, details, critical, event_id } =
             previousValues || {};
-          log.debug(`BEFORE_UPDATE : for event : ${event_type}`);
+          logger.debug(`BEFORE_UPDATE : for event : ${event_type}`);
 
           // will accept update changes from all event types
 

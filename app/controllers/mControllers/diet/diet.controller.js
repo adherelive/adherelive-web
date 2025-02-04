@@ -21,7 +21,7 @@ import { getTimeWiseDietFoodGroupMappings } from "../../diet/diet.helper";
 import DietJob from "../../../jobSdk/Diet/observer";
 import NotificationSdk from "../../../notificationSdk";
 
-import { createLogger } from "../../../../libs/log";
+import { createLogger } from "../../../../libs/logger";
 
 import {
   DAYS,
@@ -32,7 +32,7 @@ import {
 } from "../../../../constant";
 import carePlanService from "../../../services/carePlan/carePlan.service";
 
-const log = createLogger("MOBILE DIET CONTROLLER");
+const logger = createLogger("MOBILE DIET CONTROLLER");
 
 class DietController extends Controller {
   constructor() {
@@ -228,7 +228,7 @@ class DietController extends Controller {
         "Diet Data fetched successfully"
       );
     } catch (error) {
-      log.debug("get all diet details 500 error", error);
+      logger.error("get all diet details 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -256,7 +256,7 @@ class DietController extends Controller {
         not_to_do = "",
         diet_food_groups = [],
       } = body;
-      log.debug("create request: ", body);
+      logger.debug("create request: ", body);
 
       const dietService = new DietService();
       // TODO: Try with the following, if this does not work:
@@ -312,7 +312,7 @@ class DietController extends Controller {
 
       const sqsResponse = await QueueService.sendMessage(eventScheduleData);
 
-      log.debug("sqsResponse ---> ", sqsResponse);
+      logger.debug("sqsResponse ---> ", sqsResponse);
 
       const dietJob = DietJob.execute(
         EVENT_STATUS.SCHEDULED,
@@ -330,7 +330,7 @@ class DietController extends Controller {
         "Diet created successfully."
       );
     } catch (error) {
-      log.debug("create 500 error - diet create mobile error: ", error);
+      logger.error("create 500 error - diet create mobile error: ", error);
       return raiseServerError(res);
     }
   };
@@ -339,7 +339,7 @@ class DietController extends Controller {
     const { raiseSuccess, raiseServerError } = this;
     try {
       const { params } = req;
-      log.debug("getDetails request params", params);
+      logger.debug("getDetails request params", params);
 
       const { patient_id } = params || {};
 
@@ -383,7 +383,7 @@ class DietController extends Controller {
         "Diet related patient details fetched successfully"
       );
     } catch (error) {
-      log.debug("getDetails 500", error);
+      logger.error("getDetails 500", error);
       return raiseServerError(res);
     }
   };
@@ -427,7 +427,7 @@ class DietController extends Controller {
         "Diets for careplan fetched successfully"
       );
     } catch (error) {
-      log.debug("getCareplan Diets 500", error);
+      logger.error("getCareplan Diets 500", error);
       return raiseServerError(res);
     }
   };
@@ -532,7 +532,7 @@ class DietController extends Controller {
 
       const sqsResponse = await QueueService.sendMessage(eventScheduleData);
 
-      log.debug("sqsResponse ---> ", sqsResponse);
+      logger.debug("sqsResponse ---> ", sqsResponse);
 
       return raiseSuccess(
         res,
@@ -545,7 +545,7 @@ class DietController extends Controller {
         "Diet updated successfully"
       );
     } catch (error) {
-      log.debug("diet updateeeee 500 error", error);
+      logger.error("diet updateeeee 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -594,7 +594,7 @@ class DietController extends Controller {
         );
       }
     } catch (error) {
-      log.debug("delete 500", error);
+      logger.error("delete 500", error);
       return raiseServerError(res);
     }
   };
@@ -648,7 +648,7 @@ class DietController extends Controller {
         "Diet Data fetched successfully"
       );
     } catch (error) {
-      log.debug("get Doctor Diets details 500 error", error);
+      logger.error("get Doctor Diets details 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -735,7 +735,7 @@ class DietController extends Controller {
         "Diet Data fetched successfully"
       );
     } catch (error) {
-      log.debug("getPatientDiets 500", error);
+      logger.error("getPatientDiets 500", error);
       return raiseServerError(res);
     }
   };
@@ -743,7 +743,7 @@ class DietController extends Controller {
   getDietResponseTimeline = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
-      log.debug(
+      logger.debug(
         "getDietResponseTimeline req.params diet id ---> ",
         req.params
       );
@@ -841,7 +841,7 @@ class DietController extends Controller {
         );
       }
     } catch (error) {
-      log.debug("getDietResponse 500 error", error);
+      logger.error("getDietResponse 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -882,7 +882,7 @@ class DietController extends Controller {
         "Diet total calories updated successfully"
       );
     } catch (error) {
-      log.debug("diet total calories updateeeee 500 error", error);
+      logger.error("diet total calories updateeeee 500 error", error);
       return raiseServerError(res);
     }
   };

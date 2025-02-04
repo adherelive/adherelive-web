@@ -11,9 +11,13 @@ import {
 import moment from "moment";
 import PDFDocument from "pdfkit";
 import { getConvertedTime } from "../getUserTime/index";
+import { createLogger } from "../../../libs/logger";
+
 // const PDFDocument = require("pdfkit");
 const fs = require("fs");
 // const moment = require("moment");
+
+const logger = createLogger("INDEX FOR HINDI");
 
 const DOC_MARGIN = 30;
 const DOC_WIDTH_MARGIN = 550;
@@ -1077,7 +1081,7 @@ function printAppointment({
       medicationYLevel = generalExaminationEndLevel + NORMAL_FONT_SIZE + 12;
     }
   } catch (ex) {
-    log.debug(ex);
+    logger.debug(ex);
   }
 }
 
@@ -1225,7 +1229,7 @@ function printConsultation({
       medicationYLevel = generalExaminationEndLevel + NORMAL_FONT_SIZE + 12;
     }
   } catch (ex) {
-    log.debug(ex);
+    logger.debug(ex);
   }
 }
 
@@ -1538,7 +1542,7 @@ function renderChiefComplaints({ symptoms }) {
 
     return finalSymptom;
   } catch (err) {
-    log.debug("error in chief Compliance", err);
+    logger.error("Error in Chief Compliance", err);
   }
 }
 
@@ -1956,7 +1960,7 @@ function printCarePlanData({
     const suggestedInvestigationXLevelEnd = doc.x;
     return suggestedInvestigationXLevelEnd;
   } catch (ex) {
-    log.debug(ex);
+    logger.debug(ex);
   }
 }
 
@@ -2011,7 +2015,7 @@ function printConsultationAppointment({
     const suggestedInvestigationXLevelEnd = doc.x;
     return suggestedInvestigationXLevelEnd;
   } catch (ex) {
-    log.debug(ex);
+    logger.debug(ex);
   }
 }
 
@@ -2144,7 +2148,7 @@ function printFooter(
       height: signaturePictureHeight,
     });
   } catch (err) {
-    log.debug("ERROR in signature pic", err);
+    logger.error("Error in uploaded signature: ", err);
   }
 
   if (doc.y + 3 * SMALLEST_FONT_SIZE > PAGE_END_LIMIT) {

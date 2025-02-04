@@ -13,7 +13,7 @@ import CarePlanWrapper from "../../../apiWrapper/mobile/carePlan";
 import PatientWrapper from "../../../apiWrapper/mobile/patient";
 
 import { uploadAudio, uploadImage, uploadVideo } from "./symptoms.helper";
-import { createLogger } from "../../../../libs/log";
+import { createLogger } from "../../../../libs/logger";
 import {
   ALLOWED_VIDEO_EXTENSIONS,
   DOCUMENT_PARENT_TYPE,
@@ -26,7 +26,7 @@ import carePlanService from "../../../services/carePlan/carePlan.service";
 import SymptomsJob from "../../../jobSdk/Symptoms/observer";
 import NotificationSdk from "../../../notificationSdk";
 
-const log = createLogger("MOBILE > SYMPTOM > CONTROLLER");
+const logger = createLogger("MOBILE > SYMPTOM > CONTROLLER");
 
 class SymptomController extends Controller {
   constructor() {
@@ -36,8 +36,8 @@ class SymptomController extends Controller {
   create = async (req, res) => {
     const { raiseSuccess, raiseServerError } = this;
     try {
-      log.debug("req body---> ", req.body);
-      log.debug("req params---> ", req.params);
+      logger.debug("req body---> ", req.body);
+      logger.debug("req params---> ", req.params);
 
       const {
         body,
@@ -280,7 +280,7 @@ class SymptomController extends Controller {
         "Symptom added successfully"
       );
     } catch (error) {
-      log.debug("create 500 error - symptom added", error);
+      logger.error("create 500 error - symptom added", error);
       return raiseServerError(res);
     }
   };
@@ -288,7 +288,7 @@ class SymptomController extends Controller {
   uploadAudio = async (req, res) => {
     const { raiseSuccess, raiseServerError } = this;
     try {
-      log.debug("uploadAudio req.file ---> ", req.file);
+      logger.debug("uploadAudio req.file ---> ", req.file);
 
       const { userDetails: { userId } = {} } = req;
 
@@ -304,7 +304,7 @@ class SymptomController extends Controller {
         "Symptom audio added successfully"
       );
     } catch (error) {
-      log.debug("symptom uploadAudio 500 error", error);
+      logger.error("symptom uploadAudio 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -312,7 +312,7 @@ class SymptomController extends Controller {
   uploadVideo = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
-      log.debug("uploadVideo req.file ---> ", req.file);
+      logger.debug("uploadVideo req.file ---> ", req.file);
 
       const {
         file: videoFile,
@@ -325,7 +325,7 @@ class SymptomController extends Controller {
           fullFileName.length - 3,
           fullFileName.length
         );
-        log.debug(`fileExt : ${fileExt}`);
+        logger.debug(`fileExt : ${fileExt}`);
         if (ALLOWED_VIDEO_EXTENSIONS.includes(fileExt)) {
           const { file, name } = await uploadVideo({ userId, file: videoFile });
 
@@ -355,7 +355,7 @@ class SymptomController extends Controller {
         );
       }
     } catch (error) {
-      log.debug("symptom uploadVideo 500 error", error);
+      logger.error("symptom uploadVideo 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -363,13 +363,13 @@ class SymptomController extends Controller {
   uploadPhotos = async (req, res) => {
     const { raiseSuccess, raiseServerError } = this;
     try {
-      log.debug("uploadPhotos req.file ---> ", req.file);
+      logger.debug("uploadPhotos req.file ---> ", req.file);
 
       const { userDetails: { userId } = {} } = req;
 
       const { file, name } = await uploadImage({ userId, file: req.file });
 
-      log.debug(`FILE_NAME: ${name} | FILE: ${file}`);
+      logger.debug(`FILE_NAME: ${name} | FILE: ${file}`);
 
       return raiseSuccess(
         res,
@@ -381,7 +381,7 @@ class SymptomController extends Controller {
         "Symptom photo added successfully"
       );
     } catch (error) {
-      log.debug("symptoms uploadPhotos 500 error", error);
+      logger.error("symptoms uploadPhotos 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -389,7 +389,7 @@ class SymptomController extends Controller {
   getSymptomDetails = async (req, res) => {
     const { raiseSuccess, raiseServerError } = this;
     try {
-      log.debug("getSymptomDetails req.body ---> ", req.body);
+      logger.debug("getSymptomDetails req.body ---> ", req.body);
       const { body: { symptom_ids = [] } = {} } = req;
 
       let documentData = {};
@@ -437,7 +437,7 @@ class SymptomController extends Controller {
         "Symptom details fetched successfully"
       );
     } catch (error) {
-      log.debug("symptoms getSymptomDetails 500 error", error);
+      logger.error("symptoms getSymptomDetails 500 error", error);
       return raiseServerError(res);
     }
   };

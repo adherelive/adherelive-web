@@ -3,9 +3,9 @@ import Controller from "../index";
 import degreeService from "../../services/degree/degree.service";
 import DegreeWrapper from "../../apiWrapper/web/degree";
 
-import { createLogger } from "../../../libs/log";
+import { createLogger } from "../../../libs/logger";
 
-const log = createLogger("WEB DEGREE CONTROLLER");
+const logger = createLogger("WEB DEGREE CONTROLLER");
 
 class DegreeController extends Controller {
   constructor() {
@@ -18,7 +18,7 @@ class DegreeController extends Controller {
       const { query } = req;
       const { value } = query || {};
 
-      // log.debug("value in req", value);
+      // logger.debug("value in req", value);
 
       const degreeDetails = await degreeService.search(value);
 
@@ -49,7 +49,7 @@ class DegreeController extends Controller {
         );
       }
     } catch (error) {
-      log.debug("degree search 500 error", error);
+      logger.error("degree search 500 error", error);
       return raiseServerError(res);
     }
   };

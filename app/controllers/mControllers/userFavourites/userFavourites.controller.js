@@ -1,5 +1,5 @@
 import Controller from "../../index";
-import { createLogger } from "../../../../libs/log";
+import { createLogger } from "../../../../libs/logger";
 
 // HELPERS
 // Services
@@ -11,7 +11,7 @@ import UserWrapper from "../../../apiWrapper/mobile/user";
 
 import { FAVOURITE_TYPE } from "../../../../constant";
 
-const log = createLogger("MOBILE > CONTROLLER > USER_FAVOURITES");
+const logger = createLogger("MOBILE > CONTROLLER > USER_FAVOURITES");
 
 class UserFavouritesController extends Controller {
   constructor() {
@@ -74,7 +74,7 @@ class UserFavouritesController extends Controller {
         "User Favourite marked successfully"
       );
     } catch (error) {
-      log.debug("create 500 error - userFavourite marked", error);
+      logger.error("create 500 error - userFavourite marked", error);
       return raiseServerError(res);
     }
   };
@@ -117,7 +117,7 @@ class UserFavouritesController extends Controller {
           const id = eachFavourite.getId();
           if (type === FAVOURITE_TYPE.MEDICINE) {
             const medicineId = await eachFavourite.getMarkedFavouriteId();
-            log.debug("983246238747523746790283", { medicineId });
+            logger.debug("983246238747523746790283", { medicineId });
             await favourite_medicine_ids.push(medicineId.toString());
           } else if (type === FAVOURITE_TYPE.MEDICAL_TESTS) {
             const medicalTestId = await eachFavourite.getMarkedFavouriteId();
@@ -143,7 +143,7 @@ class UserFavouritesController extends Controller {
         "Get User Favourites successful"
       );
     } catch (error) {
-      log.debug("user Get Favourite 500 error", error);
+      logger.error("user Get Favourite 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -185,7 +185,7 @@ class UserFavouritesController extends Controller {
         `Favourite ${type} unmarked successfully`
       );
     } catch (error) {
-      log.debug("removeFavourite 500 error", error);
+      logger.error("removeFavourite 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -219,7 +219,7 @@ class UserFavouritesController extends Controller {
 
         const favouriteId = await favourite.getId();
 
-        log.debug("32784284576237463256948723", { favouriteId });
+        logger.debug("32784284576237463256948723", { favouriteId });
         const deleted = await UserFavouritesService.delete(favouriteId);
       } else {
         return this.raiseClientError(
@@ -237,7 +237,7 @@ class UserFavouritesController extends Controller {
         `Favourite ${type} unmarked successfully`
       );
     } catch (error) {
-      log.debug("userFavourite 500 error", error);
+      logger.error("userFavourite 500 error", error);
       return raiseServerError(res);
     }
   };

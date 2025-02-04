@@ -6,8 +6,8 @@ import { TABLE_NAME as providerTableName } from "../../models/providers";
 import { TABLE_NAME as serviceOfferingTableName } from "../../models/serviceOffering";
 import { TABLE_NAME as serviceSubscriptionTableName } from "../../models/serviceSubscriptions";
 
-import { createLogger } from "../../../libs/log";
-const log = createLogger("WEB > SUBSCRIPTION TRANSACTION > SERVICES");
+import { createLogger } from "../../../libs/logger";
+const logger = createLogger("WEB > SUBSCRIPTION TRANSACTION > SERVICES");
 
 class serviceSubscribeTransaction {
   // constructor() { }
@@ -24,7 +24,7 @@ class serviceSubscribeTransaction {
       await transaction.commit();
       return addServiceSubscriptionTx;
     } catch (error) {
-      log.debug(error);
+      logger.debug(error);
       await transaction.rollback();
       throw error;
     }
@@ -44,7 +44,7 @@ class serviceSubscribeTransaction {
   updateServiceSubscriptionTx = async (data, id) => {
     const transaction = await Database.initTransaction();
     try {
-      log.debug(data, id);
+      logger.debug(data, id);
       const serviceSubscriptionTx = await Database.getModel(TABLE_NAME).update(
         data,
         {

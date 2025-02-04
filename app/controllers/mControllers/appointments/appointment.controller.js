@@ -13,7 +13,7 @@ import {
 } from "../../../../constant";
 import moment from "moment";
 
-import { createLogger } from "../../../../libs/log";
+import { createLogger } from "../../../../libs/logger";
 import AppointmentJob from "../../../jobSdk/Appointments/observer";
 import NotificationSdk from "../../../notificationSdk";
 import { downloadFileFromS3, uploadImageS3 } from "../user/user.helper";
@@ -44,7 +44,7 @@ import * as AppointmentHelper from "./appointments.helper";
 
 const path = require("path");
 
-const log = createLogger("MOBILE APPOINTMENT CONTROLLER");
+const logger = createLogger("MOBILE APPOINTMENT CONTROLLER");
 
 class MobileAppointmentController extends Controller {
   constructor() {
@@ -54,7 +54,7 @@ class MobileAppointmentController extends Controller {
   create = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
-      log.debug("REQUEST DATA ---> ", req.body);
+      logger.debug("REQUEST DATA ---> ", req.body);
       const { body, userDetails } = req;
       const {
         participant_two,
@@ -225,7 +225,7 @@ class MobileAppointmentController extends Controller {
         "appointment created successfully"
       );
     } catch (error) {
-      log.debug("500 error --> ", error);
+      logger.error("500 error --> ", error);
       return raiseServerError(res);
     }
   };
@@ -238,7 +238,7 @@ class MobileAppointmentController extends Controller {
       const appointmentList = await appointmentService.getAppointmentForPatient(
         patient_id
       );
-      // log.debug("appointmentList", appointmentList);
+      // logger.debug("appointmentList", appointmentList);
 
       // if (appointmentList.length > 0) {
       let appointmentApiData = {};
@@ -262,7 +262,7 @@ class MobileAppointmentController extends Controller {
       // } else {
       // }
     } catch (error) {
-      // log.debug("500 error", error);
+      // logger.error("500 error", error);
       return raiseServerError(res);
     }
   };
@@ -270,8 +270,8 @@ class MobileAppointmentController extends Controller {
   update = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
-      log.debug("REQUEST PARAM ---> ", req.params);
-      log.debug("REQUEST DATA ---> ", req.body);
+      logger.debug("REQUEST PARAM ---> ", req.params);
+      logger.debug("REQUEST DATA ---> ", req.body);
       const { params: { id } = {}, body, userDetails } = req;
       const {
         participant_two,
@@ -461,7 +461,7 @@ class MobileAppointmentController extends Controller {
         "appointment updated successfully"
       );
     } catch (error) {
-      log.debug("update 500 error", error);
+      logger.error("update 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -469,7 +469,7 @@ class MobileAppointmentController extends Controller {
   delete = async (req, res) => {
     const { raiseSuccess, raiseServerError } = this;
     try {
-      log.debug("APPOINTMENT REQUEST DATA ---> ", req.params);
+      logger.debug("APPOINTMENT REQUEST DATA ---> ", req.params);
       const {
         params: { id: appointment_id } = {},
         userDetails: { userId } = {},
@@ -492,7 +492,7 @@ class MobileAppointmentController extends Controller {
 
       return raiseSuccess(res, 200, {}, `Appointment deleted successfully`);
     } catch (error) {
-      // log.debug("500 error", error);
+      // logger.error("500 error", error);
       return raiseServerError(res);
     }
   };
@@ -579,7 +579,7 @@ class MobileAppointmentController extends Controller {
         "Appointment details fetched successfully"
       );
     } catch (error) {
-      log.debug("getAppointmentDetails 500 error ", error);
+      logger.error("getAppointmentDetails 500 error ", error);
       return raiseServerError(res);
     }
   };
@@ -598,7 +598,7 @@ class MobileAppointmentController extends Controller {
   //         "Appointment type description details fetched successfully");
   //
   //   } catch(error) {
-  //     log.debug("getTypeDescription 500 error ", error);
+  //     logger.error("getTypeDescription 500 error ", error);
   //     return raiseServerError(res);
   //   }
   // };
@@ -613,7 +613,7 @@ class MobileAppointmentController extends Controller {
 
       const { originalname: file_name = "" } = file;
 
-      log.debug("uploadAppointmentDoc file ---> ", file);
+      logger.debug("uploadAppointmentDoc file ---> ", file);
 
       // const scheduleEventService = new ScheduleEventService();
 
@@ -731,11 +731,11 @@ class MobileAppointmentController extends Controller {
           "Appointment documents uploaded successfully."
         );
       } catch (err) {
-        log.debug("APPOINTMENT DOC UPLOAD CATCH ERROR ", err);
+        logger.error("Appointment document has an error while uploading for Mobile: ", err);
         return this.raiseServerError(res, 500, {}, `${err.message}`);
       }
     } catch (error) {
-      log.debug("uploadAppointmentDoc 500 error: ", error);
+      logger.error("Uploading Appointment document has an error in Mobile: ", error);
       return this.raiseServerError(res);
     }
   };
@@ -834,7 +834,7 @@ class MobileAppointmentController extends Controller {
       };
       return res.sendFile(name, options);
     } catch (error) {
-      log.debug("downloadAppointmentDoc 500 error: ", error);
+      logger.error("downloadAppointmentDoc 500 error: ", error);
       return this.raiseServerError(res);
     }
   };
@@ -932,7 +932,7 @@ class MobileAppointmentController extends Controller {
         "Appointment documents deleted successfully."
       );
     } catch (error) {
-      log.debug("deleteAppointmentDoc 500 error: ", error);
+      logger.error("deleteAppointmentDoc 500 error: ", error);
       return this.raiseServerError(res);
     }
   };

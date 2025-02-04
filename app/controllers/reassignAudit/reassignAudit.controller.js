@@ -1,12 +1,12 @@
 import Controller from "../index";
 
-import { createLogger } from "../../../libs/log";
+import { createLogger } from "../../../libs/logger";
 
 // Services
 import reassignAuditService from "../../services/reassignAudit/reassignAudit.service";
 import DoctorService from "../../services/doctor/doctor.service";
 
-const log = createLogger("WEB > CONTROLLER > Service Offering");
+const logger = createLogger("WEB > CONTROLLER > Service Offering");
 
 class reassignAuditController extends Controller {
   constructor() {
@@ -19,7 +19,7 @@ class reassignAuditController extends Controller {
       const {
         query: { activity_id },
       } = req;
-      log.debug({ activity_id });
+      logger.debug({ activity_id });
       let reassignAuditServiceData =
         await reassignAuditService.getAuditByActivitiyData({ activity_id });
       let output = [];
@@ -34,8 +34,8 @@ class reassignAuditController extends Controller {
         object["assignedToDoctor"] = await DoctorService.getDoctorByDoctorId(
           reassignAuditServiceData[i]["assignedTo"]
         );
-        log.debug(reassignAuditServiceData[i]["createdAt"]);
-        log.debug(reassignAuditServiceData[i]);
+        logger.debug(reassignAuditServiceData[i]["createdAt"]);
+        logger.debug(reassignAuditServiceData[i]);
         output.push(object);
       }
       return raiseSuccess(
@@ -46,8 +46,8 @@ class reassignAuditController extends Controller {
         },
         "Data Fetched Successfully"
       );
-    } catch (ex) {
-      log.debug("getServiceByData 500 error", ex);
+    } catch (err) {
+      logger.error("Reassign Audit get service by data has an error: ", err);
       return raiseServerError(res);
     }
   };

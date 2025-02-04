@@ -1,5 +1,5 @@
 import Controller from "../../index";
-import { createLogger } from "../../../../libs/log";
+import { createLogger } from "../../../../libs/logger";
 
 // services
 import carePlanTemplateService from "../../../services/carePlanTemplate/carePlanTemplate.service";
@@ -18,7 +18,7 @@ import { TEMPLATE_DUPLICATE_TEXT } from "../../../../constant";
 
 import PERMISSIONS from "../../../../config/permissions";
 
-const log = createLogger("MOBILE > CAREPLAN_TEMPLATE > CONTROLLER");
+const logger = createLogger("MOBILE > CAREPLAN_TEMPLATE > CONTROLLER");
 
 class CarePlanTemplateController extends Controller {
   constructor() {
@@ -61,7 +61,7 @@ class CarePlanTemplateController extends Controller {
         is_public_in_provider,
       } = body || {};
 
-      log.debug(`name : ${name}`);
+      logger.debug(`name : ${name}`);
 
       if (
         !permissions.includes(PERMISSIONS.MEDICATIONS.ADD) &&
@@ -98,7 +98,7 @@ class CarePlanTemplateController extends Controller {
             template_workouts: workoutData,
           })) || null;
 
-        log.debug("createTemplate value", createTemplate);
+        logger.debug("createTemplate value", createTemplate);
 
         if (createTemplate) {
           const template = await CarePlanTemplateWrapper(createTemplate);
@@ -168,7 +168,7 @@ class CarePlanTemplateController extends Controller {
         );
       }
     } catch (error) {
-      log.debug("create 500 error - template already present", error);
+      logger.error("create 500 error - template already present", error);
       return raiseServerError(res);
     }
   };
@@ -350,7 +350,7 @@ class CarePlanTemplateController extends Controller {
         return raiseSuccess(res, 200, {}, "No templates created at the moment");
       }
     } catch (error) {
-      log.debug("getAllForDoctor 500 error", error);
+      logger.error("getAllForDoctor 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -538,7 +538,7 @@ class CarePlanTemplateController extends Controller {
         return raiseSuccess(res, 200, {}, "No templates created at the moment");
       }
     } catch (error) {
-      log.debug("getAllForDoctor 500 error", error);
+      logger.error("getAllForDoctor 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -556,7 +556,7 @@ class CarePlanTemplateController extends Controller {
         permissions = [],
       } = req;
 
-      log.debug(`careplan template id to duplicate : ${id}`);
+      logger.debug(`careplan template id to duplicate : ${id}`);
 
       if (!id) {
         return raiseClientError(
@@ -785,7 +785,7 @@ class CarePlanTemplateController extends Controller {
         );
       }
     } catch (error) {
-      log.debug("duplicate 500 error", error);
+      logger.error("duplicate 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -798,8 +798,8 @@ class CarePlanTemplateController extends Controller {
         body = {},
         permissions = [],
       } = req;
-      log.debug(`careplan template id : ${careplanTemplateId}`);
-      log.debug("request body", body);
+      logger.debug(`careplan template id : ${careplanTemplateId}`);
+      logger.debug("request body", body);
 
       const {
         userDetails: {
@@ -967,7 +967,7 @@ class CarePlanTemplateController extends Controller {
           }
         }
 
-        log.debug("updateTemplate value", updateTemplate);
+        logger.debug("updateTemplate value", updateTemplate);
 
         if (updateTemplate !== null && updateTemplate.length > 0) {
           const template = await CarePlanTemplateWrapper(
@@ -1027,7 +1027,7 @@ class CarePlanTemplateController extends Controller {
         );
       }
     } catch (error) {
-      log.debug("update 500 error", error);
+      logger.error("update 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -1047,7 +1047,7 @@ class CarePlanTemplateController extends Controller {
         permissions = [],
       } = req;
 
-      log.debug(
+      logger.debug(
         `Template = id : ${id} | appointment : ${appointment} | medication : ${medication} | vital : ${vital} | diet : ${diet} | workout : ${workout}`
       );
 
@@ -1143,7 +1143,7 @@ class CarePlanTemplateController extends Controller {
         "Template related details deleted successfully"
       );
     } catch (error) {
-      log.debug("delete 500 error", error);
+      logger.error("delete 500 error", error);
       return raiseServerError(res);
     }
   };

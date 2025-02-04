@@ -1,6 +1,6 @@
 import Controller from "../index";
 
-import { createLogger } from "../../../libs/log";
+import { createLogger } from "../../../libs/logger";
 
 // Services
 import ServiceUserMappingService from "../../services/serviceUserMapping/serviceUserMapping.service";
@@ -8,7 +8,7 @@ import ServiceOffering from "../../services/serviceOffering/serviceOffering.serv
 import { USER_CATEGORY, USER_STATUS } from "../../../constant";
 import TxService from "../../services/serviceSubscribeTransaction/serviceSubscribeTransaction";
 
-const log = createLogger("WEB > CONTROLLER > Service Offering");
+const logger = createLogger("WEB > CONTROLLER > Service Offering");
 
 class ServiceUserMappingController extends Controller {
   constructor() {
@@ -17,7 +17,7 @@ class ServiceUserMappingController extends Controller {
 
   create = async (req, res) => {
     const { raiseSuccess, raiseServerError } = this;
-    log.debug("service user mapping controller - create - called");
+    logger.debug("service user mapping controller - create - called");
 
     const {
       userDetails: { userId, userData: { category } = {}, userCategoryId } = {},
@@ -58,7 +58,7 @@ class ServiceUserMappingController extends Controller {
         next_recharge_date,
         expire_date,
       };
-      log.debug(
+      logger.debug(
         "service user mapping controller - create - userServices",
         userServices
       );
@@ -88,7 +88,7 @@ class ServiceUserMappingController extends Controller {
         "Service added successfully"
       );
     } catch (error) {
-      log.debug("Service User Mapping 500 error: ", error);
+      logger.error("Service User Mapping 500 error: ", error);
       return raiseServerError(res);
     }
   };
@@ -131,7 +131,7 @@ class ServiceUserMappingController extends Controller {
         "success"
       );
     } catch (error) {
-      log.debug("getServiceUserMappingByData 500 error: ", error);
+      logger.error("getServiceUserMappingByData 500 error: ", error);
       return raiseServerError(res);
     }
   };
@@ -140,7 +140,7 @@ class ServiceUserMappingController extends Controller {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       let { params: { id } = {}, body } = req;
-      log.debug(`Report id = ${id}`);
+      logger.debug(`Report id = ${id}`);
       if (!id) {
         return raiseClientError(
           res,
@@ -162,7 +162,7 @@ class ServiceUserMappingController extends Controller {
         "Service updated successfully"
       );
     } catch (error) {
-      log.debug("updateServiceUserMapping 500 error: ", error);
+      logger.error("updateServiceUserMapping 500 error: ", error);
       return raiseServerError(res);
     }
   };

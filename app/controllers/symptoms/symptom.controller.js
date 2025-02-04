@@ -1,6 +1,6 @@
 import Controller from "../";
 
-import { createLogger } from "../../../libs/log";
+import { createLogger } from "../../../libs/logger";
 
 // Services
 import SymptomService from "../../services/symptom/symptom.service";
@@ -8,7 +8,7 @@ import SymptomService from "../../services/symptom/symptom.service";
 // Wrappers
 import SymptomWrapper from "../../apiWrapper/web/symptoms";
 
-const log = createLogger("WEB > CONTROLLERS > SYMPTOMS");
+const logger = createLogger("WEB > CONTROLLERS > SYMPTOMS");
 
 class SymptomController extends Controller {
   constructor() {
@@ -18,7 +18,7 @@ class SymptomController extends Controller {
   getBatchSymptomDetails = async (req, res) => {
     const { raiseSuccess, raiseServerError } = this;
     try {
-      log.debug("getBatchSymptomDetails req.body ---> ", req.body);
+      logger.debug("getBatchSymptomDetails req.body ---> ", req.body);
       const { body: { symptom_ids = [] } = {} } = req;
 
       let documentData = {};
@@ -66,7 +66,7 @@ class SymptomController extends Controller {
         "Symptom details fetched successfully"
       );
     } catch (error) {
-      log.debug("symptoms getSymptomDetails 500 error", error);
+      logger.error("symptoms getSymptomDetails 500 error", error);
       return raiseServerError(res);
     }
   };

@@ -2,10 +2,10 @@ import { faker } from '@faker-js/faker';
 import twilioService from "../../../services/twilio/twilio.service";
 import Controller from "../../index";
 
-import { createLogger } from "../../../../libs/log";
+import { createLogger } from "../../../../libs/logger";
 
-// log.setFileName("MOBILE > TWILIO > CONTROLLER");
-const log = createLogger("MOBILE > TWILIO > CONTROLLER");
+// logger.setFileName("MOBILE > TWILIO > CONTROLLER");
+const logger = createLogger("MOBILE > TWILIO > CONTROLLER");
 
 class TwilioController extends Controller {
   constructor() {
@@ -36,7 +36,7 @@ class TwilioController extends Controller {
       // response.setMessage("Created new chat token with userId");
       // return res.send(response.getResponse());
     } catch (error) {
-      log.debug("generateTwilioChatAccessToken 50 error", error);
+      logger.error("generateTwilioChatAccessToken 50 error", error);
       return this.raiseServerError(res);
       // let response = new Response(false, 500);
       // response.setError({ error: err });
@@ -67,7 +67,7 @@ class TwilioController extends Controller {
       //
       // return res.send(response.getResponse());
     } catch (error) {
-      log.debug("generateTwilioVideoAccessToken 50 error", error);
+      logger.error("generateTwilioVideoAccessToken 50 error", error);
       return this.raiseServerError(res, 500, error, error.message());
       // let response = new Response(false, 500);
       // response.setError({ error: err });
@@ -96,7 +96,7 @@ class TwilioController extends Controller {
         "Fetched Connected Participants"
       );
     } catch (err) {
-      log.debug("getConnectedParticipants 50 error", error);
+      logger.error("getConnectedParticipants 50 error", error);
       return this.raiseServerError(res);
     }
   };

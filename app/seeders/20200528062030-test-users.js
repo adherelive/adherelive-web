@@ -3,6 +3,10 @@
 import { TABLE_NAME } from "../models/users";
 import bcrypt from "bcrypt";
 
+import { createLogger } from "../../libs/logger";
+
+const logger = createLogger("Seeders Test Users");
+
 const generatePasswordHash = async (password) => {
   return await bcrypt.hash(password, 5);
 };
@@ -85,7 +89,7 @@ module.exports = {
     try {
       return await queryInterface.bulkInsert(TABLE_NAME, hashedUsersData);
     } catch (error) {
-      log.error("Error seeding users:", error);
+      logger.error("Error seeding users:", error);
     }
   },
 

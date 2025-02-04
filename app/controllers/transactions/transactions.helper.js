@@ -1,4 +1,4 @@
-import { createLogger } from "../../../libs/log";
+import { createLogger } from "../../../libs/logger";
 
 // Services
 import TransactionService from "../../services/transactions/transaction.service";
@@ -17,7 +17,7 @@ import UserRolesWrapper from "../../apiWrapper/web/userRoles";
 // Helpers
 import { USER_CATEGORY } from "../../../constant";
 
-const log = createLogger("TRANSACTION > HELPER");
+const logger = createLogger("TRANSACTION > HELPER");
 
 export const getProviderTransactions = async (req) => {
   try {
@@ -202,7 +202,7 @@ export const getProviderTransactions = async (req) => {
       transaction_ids: transactionIds,
     };
   } catch (error) {
-    log.debug("getProviderTransactions catch error", error);
+    logger.error("getProviderTransactions catch error", error);
     return null;
   }
 };
@@ -390,7 +390,7 @@ export const getDoctorTransactions = async (req) => {
       transaction_ids: transactionIds,
     };
   } catch (error) {
-    log.debug("getDoctorTransactions catch error", error);
+    logger.error("getDoctorTransactions catch error", error);
     return null;
   }
 };

@@ -14,6 +14,10 @@
  * @param raiseServerError
  * @returns {Promise<*>}
  */
+// import { createLogger } from "../../libs/logger";
+//
+// const logger = createLogger("Seeders Exercise Details");
+//
 // const {raiseSuccess, raiseClientError, raiseServerError} = this;
 //
 // try {
@@ -81,7 +85,7 @@
 //         "Patient care plan details fetched successfully"
 //     );
 // } catch (error) {
-//     log.debug("Get CarePlan 500 error ---> ", error);
-//     log.debug("GET PATIENT DETAILS ERROR Care Plan ---> ", error);
+//     logger.error("Get CarePlan 500 error ---> ", error);
+//     logger.error("GET PATIENT DETAILS ERROR Care Plan ---> ", error);
 //     return raiseServerError(res);
 // }

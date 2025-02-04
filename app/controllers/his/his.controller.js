@@ -6,7 +6,7 @@
  * @desc An API Controller for HIS Operations.
  */
 import Controller from "../index";
-import { createLogger } from "../../../libs/log";
+import { createLogger } from "../../../libs/logger";
 import hisService from "../../services/his/his.service";
 import bcrypt from "bcrypt";
 
@@ -14,7 +14,7 @@ const jwt = require("jsonwebtoken");
 
 const Response = require("../helper/responseFormat");
 
-const log = createLogger("WEB USER CONTROLLER");
+const logger = createLogger("WEB USER CONTROLLER");
 
 class HisController extends Controller {
   constructor() {
@@ -59,7 +59,7 @@ class HisController extends Controller {
       });
       return this.raiseSuccess(res, 200, { his }, "His added successfully");
     } catch (error) {
-      log.debug("createHis signIn 500 error ---> ", error);
+      logger.error("createHis signIn 500 error ---> ", error);
       return this.raiseServerError(res);
     }
   };
@@ -69,7 +69,7 @@ class HisController extends Controller {
       let his = await hisService.getAllHis();
       return this.raiseSuccess(res, 200, { his }, "Data retrived successfully");
     } catch (error) {
-      log.debug("listAllHis signIn 500 error ---> ", error);
+      logger.error("listAllHis signIn 500 error ---> ", error);
       return this.raiseServerError(res);
     }
   };
@@ -80,7 +80,7 @@ class HisController extends Controller {
       let his = await hisService.getHisById(id);
       return this.raiseSuccess(res, 200, { his }, "Data Retrive successfully");
     } catch (error) {
-      log.debug("getHisById signIn 500 error ---> ", error);
+      logger.error("getHisById signIn 500 error ---> ", error);
       return this.raiseServerError(res);
     }
   };
@@ -104,7 +104,7 @@ class HisController extends Controller {
       let his = await hisService.updateHis(data, id);
       return this.raiseSuccess(res, 200, { his }, "His added successfully");
     } catch (error) {
-      log.debug("updateHis signIn 500 error ---> ", error);
+      logger.error("updateHis signIn 500 error ---> ", error);
       return this.raiseServerError(res);
     }
   };
@@ -115,7 +115,7 @@ class HisController extends Controller {
       let his = await hisService.deleteHis(id);
       return this.raiseSuccess(res, 200, { his }, "His Deleted successfully");
     } catch (error) {
-      log.debug("deleteHis signIn 500 error ---> ", error);
+      logger.error("deleteHis signIn 500 error ---> ", error);
       return this.raiseServerError(res);
     }
   };
@@ -155,7 +155,7 @@ class HisController extends Controller {
         `Username or Password Incorrect.`
       );
     } catch (error) {
-      log.debug("HIS signIn 500 error ---> ", error);
+      logger.error("HIS signIn 500 error ---> ", error);
       return this.raiseServerError(res);
     }
   };

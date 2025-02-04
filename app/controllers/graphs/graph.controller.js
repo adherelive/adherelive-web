@@ -1,6 +1,6 @@
 import Controller from "../index";
 
-import { createLogger } from "../../../libs/log";
+import { createLogger } from "../../../libs/logger";
 import {
   CHART_DETAILS,
   NO_ACTION,
@@ -18,7 +18,7 @@ import UserPreferenceWrapper from "../../apiWrapper/web/userPreference";
 import ProviderWrapper from "../../apiWrapper/web/provider";
 import userRolesService from "../../services/userRoles/userRoles.service";
 
-const log = createLogger("WEB GRAPH CONTROLLER");
+const logger = createLogger("WEB GRAPH CONTROLLER");
 
 class GraphController extends Controller {
   constructor() {
@@ -82,7 +82,7 @@ class GraphController extends Controller {
       /**
        * TODO: Check why the following has been commented out?
       const userPreferenceData = await userPreferenceService.getPreferenceByData({user_id: userId});
-      log.debug("userPreferenceData in getAllGraphs: ", userPreferenceData);
+      logger.debug("userPreferenceData in getAllGraphs: ", userPreferenceData);
       // const userPreference = await UserPreferenceWrapper(userPreferenceData);
 
       // const charts = userPreference.getChartDetails();
@@ -105,12 +105,12 @@ class GraphController extends Controller {
         };
 
       charts.forEach(chart => {
-          log.debug("Chart details for each chart: ",CHART_DETAILS[chart]);
+          logger.debug("Chart details for each chart: ",CHART_DETAILS[chart]);
          chartData[chart] = CHART_DETAILS[chart];
       });
        */
     } catch (error) {
-      log.debug("Could not display the chart -> get all graphs 500 error: ", error);
+      logger.error("Could not display the chart -> get all graphs 500 error: ", error);
       return raiseServerError(res);
     }
   };
@@ -167,7 +167,7 @@ class GraphController extends Controller {
       };
 
       /*
-      log.debug("userPreference.getChartDetails().includes(id) ", userPreference.getChartDetails().includes(id));
+      logger.debug("userPreference.getChartDetails().includes(id) ", userPreference.getChartDetails().includes(id));
 
       userPreference.getChartDetails().forEach(id => {
           if(chart_ids.includes(id)) {
@@ -220,7 +220,7 @@ class GraphController extends Controller {
         "Charts added successfully"
       );
     } catch (error) {
-      log.debug("Adding Graphs not working correctly: ", error);
+      logger.error("Adding Graphs not working correctly: ", error);
       return raiseServerError(res);
     }
   };
@@ -279,7 +279,7 @@ class GraphController extends Controller {
         "Provider preferences updated successfully"
       );
     } catch (error) {
-      log.debug("Updated Provider Graph not working: ", error);
+      logger.error("Updated Provider Graph not working: ", error);
       return raiseServerError(res);
     }
   };

@@ -1,5 +1,5 @@
 import Controller from "../../index";
-import { createLogger } from "../../../../libs/log";
+import { createLogger } from "../../../../libs/logger";
 import moment from "moment";
 import * as vitalHelper from "../../vitals/vital.helper";
 
@@ -31,7 +31,7 @@ import {
   USER_CATEGORY,
 } from "../../../../constant";
 
-const log = createLogger("MOBILE > VITALS > CONTROLLER");
+const logger = createLogger("MOBILE > VITALS > CONTROLLER");
 
 class VitalController extends Controller {
   constructor() {
@@ -40,7 +40,7 @@ class VitalController extends Controller {
 
   addVital = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
-    log.debug("req.body --->", req.body);
+    logger.debug("req.body --->", req.body);
     try {
       const {
         body: {
@@ -117,7 +117,7 @@ class VitalController extends Controller {
         // RRule
         const sqsResponse = await QueueService.sendMessage(eventScheduleData);
 
-        log.debug("sqsResponse ---> ", sqsResponse);
+        logger.debug("sqsResponse ---> ", sqsResponse);
 
         // EventSchedule.create(eventScheduleData);
 
@@ -150,15 +150,15 @@ class VitalController extends Controller {
         );
       }
     } catch (error) {
-      log.debug("create 500 error - vitals already added", error);
+      logger.error("create 500 error - vitals already added", error);
       return raiseServerError(res);
     }
   };
 
   updateVital = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
-    log.debug("req.body --->", req.body);
-    log.debug("req.params --->", req.params);
+    logger.debug("req.body --->", req.body);
+    logger.debug("req.params --->", req.params);
     try {
       const {
         userDetails: {
@@ -185,7 +185,7 @@ class VitalController extends Controller {
         });
         const vitalData = await VitalService.update(dataToUpdate, id);
 
-        log.debug("vitalData", vitalData);
+        logger.debug("vitalData", vitalData);
 
         const vitals = await VitalWrapper({ id });
         const vitalTemplates = await VitalTemplateWrapper({
@@ -222,14 +222,14 @@ class VitalController extends Controller {
           vital_templates: vitalTemplates.getBasicInfo(),
         };
 
-        log.debug("eventScheduleData", eventScheduleData);
+        logger.debug("eventScheduleData", eventScheduleData);
 
         const deletedEvents = await eventService.deleteBatch({
           event_id: vitals.getVitalId(),
           event_type: EVENT_TYPE.VITALS,
         });
 
-        log.debug("deletedEvents", deletedEvents);
+        logger.debug("deletedEvents", deletedEvents);
 
         // RRule
         const QueueService = new queueService();
@@ -255,7 +255,7 @@ class VitalController extends Controller {
         );
       }
     } catch (error) {
-      log.debug("create 500 error - vitals updated", error);
+      logger.error("create 500 error - vitals updated", error);
       return raiseServerError(res);
     }
   };
@@ -279,7 +279,7 @@ class VitalController extends Controller {
         "Vital form details fetched successfully"
       );
     } catch (error) {
-      log.debug("getVitalFormDetails 500 error", error);
+      logger.error("getVitalFormDetails 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -287,7 +287,7 @@ class VitalController extends Controller {
   search = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
-      log.debug("req.query --->", req.query);
+      logger.debug("req.query --->", req.query);
 
       const { query: { value } = {} } = req;
 
@@ -318,7 +318,7 @@ class VitalController extends Controller {
         return raiseClientError(res, 422, {}, "No vital exists with this name");
       }
     } catch (error) {
-      log.debug("vitals search 500 error", error);
+      logger.error("vitals search 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -326,7 +326,7 @@ class VitalController extends Controller {
   addVitalResponse = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
-      log.debug("req.params --->", req.params);
+      logger.debug("req.params --->", req.params);
       const {
         params: { id } = {},
         userDetails: { userRoleId, userData: { category } = {} } = {},
@@ -340,7 +340,7 @@ class VitalController extends Controller {
 
       const { event_id, ...rest } = response || {};
 
-      log.debug(`event_id ${event_id}`);
+      logger.debug(`event_id ${event_id}`);
 
       const createdTime = moment().utc().toISOString();
 
@@ -348,12 +348,12 @@ class VitalController extends Controller {
 
       const vital = await VitalWrapper({ id });
 
-      log.debug(`vital ${vital.getVitalId()} ${vital.getVitalTemplateId()}`);
+      logger.debug(`vital ${vital.getVitalId()} ${vital.getVitalTemplateId()}`);
       const vitalTemplate = await VitalTemplateWrapper({
         id: vital.getVitalTemplateId(),
       });
 
-      log.debug(`event.getStatus() ${event.getStatus()}`);
+      logger.debug(`event.getStatus() ${event.getStatus()}`);
 
       if (event.getStatus() !== EVENT_STATUS.EXPIRED) {
         let { response: prevResponse = [] } = event.getDetails() || {};
@@ -467,7 +467,7 @@ class VitalController extends Controller {
         `${vitalTemplate.getName().toUpperCase()} vital updated successfully`
       );
     } catch (error) {
-      log.debug("addVitalResponse 500 error", error);
+      logger.error("addVitalResponse 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -475,7 +475,7 @@ class VitalController extends Controller {
   getVitalResponseTimeline = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
-      log.debug("req.params vital id ---> ", req.params);
+      logger.debug("req.params vital id ---> ", req.params);
       const { params: { id } = {} } = req;
       const eventService = new EventService();
 
@@ -527,7 +527,7 @@ class VitalController extends Controller {
         );
       }
     } catch (error) {
-      log.debug("getVitalResponse 500 error", error);
+      logger.error("getVitalResponse 500 error", error);
       return raiseServerError(res);
     }
   };

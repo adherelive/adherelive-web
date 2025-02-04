@@ -1,5 +1,5 @@
 // Services
-import { createLogger } from "../../../libs/log";
+import { createLogger } from "../../../libs/logger";
 import doctorService from "../../services/doctor/doctor.service";
 import patientService from "../../services/patients/patients.service";
 import providerService from "../../services/provider/provider.service";
@@ -11,7 +11,7 @@ import ProviderWrapper from "../../apiWrapper/web/provider";
 
 import { USER_CATEGORY } from "../../../constant";
 
-const log = createLogger("ADHOC > HELPER");
+const logger = createLogger("ADHOC > HELPER");
 
 export const getLinkDetails = async (category, userId) => {
   try {
@@ -39,7 +39,7 @@ export const getLinkDetails = async (category, userId) => {
 
     return response;
   } catch (error) {
-    log.debug("getLinkDetails error", error);
+    logger.error("getLinkDetails error", error);
     return null;
   }
 };
@@ -81,7 +81,7 @@ export const getUserDetails = async (category, categoryId) => {
 
     return response;
   } catch (error) {
-    log.debug("getLinkDetails error", error);
+    logger.error("getLinkDetails error", error);
     return null;
   }
 };

@@ -1,7 +1,7 @@
 import fs from "fs";
 
-import { createLogger } from "../../../libs/log";
-const log = createLogger("WEB > MEDICINE > HELPER");
+import { createLogger } from "../../../libs/logger";
+const logger = createLogger("WEB > MEDICINE > HELPER");
 
 // var Config = require("../../../config/config");
 // Config();
@@ -18,7 +18,7 @@ export const getMedicineData = async () => {
         __dirname + "/data/subharti_medicine.json",
         async (error, data) => {
           if (error) {
-            log.error("Error in reading medicine data: ", error);
+            logger.error("Error in reading medicine data: ", error);
             rej(error);
           }
           let updatedMedicine = [];
@@ -62,7 +62,7 @@ export const getMedicineData = async () => {
     } else {
       fs.readFile(__dirname + "/data/medicine.json", async (error, data) => {
         if (error) {
-          log.error("error in reading medicine data", error);
+          logger.error("error in reading medicine data", error);
           rej(error);
         }
         let updatedMedicine = [];

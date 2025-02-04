@@ -1,13 +1,13 @@
 import Controller from "../index";
 
-import { createLogger } from "../../../libs/log";
+import { createLogger } from "../../../libs/logger";
 
 // Services
 import ServiceSubscriptionService from "../../services/serviceSubscription/serviceSubscription.service";
 import ServiceSubscriptionMapping from "../../services/serviceSubscriptionMapping/serviceSubscritpionMapping.service";
 import { USER_CATEGORY } from "../../../constant";
 
-const log = createLogger("WEB > CONTROLLER > Service Offering");
+const logger = createLogger("WEB > CONTROLLER > Service Offering");
 
 class ServiceSubscriptionController extends Controller {
   constructor() {
@@ -71,7 +71,7 @@ class ServiceSubscriptionController extends Controller {
         "Subscription added successfully"
       );
     } catch (error) {
-      log.debug("Service Subscription 500 error: ", error);
+      logger.error("Service Subscription 500 error: ", error);
       return raiseServerError(res);
     }
   };
@@ -80,7 +80,7 @@ class ServiceSubscriptionController extends Controller {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       let { params: { id } = {}, body } = req;
-      log.debug(`Report : id = ${id}`);
+      logger.debug(`Report : id = ${id}`);
       if (!id) {
         return raiseClientError(
           res,
@@ -101,7 +101,7 @@ class ServiceSubscriptionController extends Controller {
         "Service updated successfully"
       );
     } catch (error) {
-      log.debug("updateServiceSubscription 500 error: ", error);
+      logger.error("updateServiceSubscription 500 error: ", error);
       return raiseServerError(res);
     }
   };
@@ -110,7 +110,7 @@ class ServiceSubscriptionController extends Controller {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       let { params: { id } = {} } = req;
-      log.debug(`Report : id = ${id}`);
+      logger.debug(`Report : id = ${id}`);
 
       if (!id) {
         return raiseClientError(
@@ -142,7 +142,7 @@ class ServiceSubscriptionController extends Controller {
         "success"
       );
     } catch (error) {
-      log.debug("getServiceOfferingById 500 error: ", error);
+      logger.error("getServiceOfferingById 500 error: ", error);
       return raiseServerError(res);
     }
   };
@@ -177,8 +177,8 @@ class ServiceSubscriptionController extends Controller {
         },
         "Service updated successfully"
       );
-    } catch (ex) {
-      log.debug("getServiceOfferingByData 500 error: ", ex);
+    } catch (err) {
+      logger.error("Service subscription get service offering by data has an error: ", err);
       return raiseServerError(res);
     }
   };
@@ -246,8 +246,8 @@ class ServiceSubscriptionController extends Controller {
         },
         "Service updated successfully"
       );
-    } catch (ex) {
-      log.debug("getServiceSubscriptionForAdmin 500 error: ", ex);
+    } catch (err) {
+      logger.error("Service Subscription get service subscription for Admin has an error: ", err);
       return raiseServerError(res);
     }
   };
@@ -296,8 +296,8 @@ class ServiceSubscriptionController extends Controller {
         },
         "Service updated successfully"
       );
-    } catch (ex) {
-      log.debug("getServiceSubscriptionForPatient 500 error: ", ex);
+    } catch (err) {
+      logger.error("Service Subscription get service subscription for Patient has an error: ", err);
       return raiseServerError(res);
     }
   };
@@ -356,8 +356,8 @@ class ServiceSubscriptionController extends Controller {
         },
         "Service updated successfully"
       );
-    } catch (ex) {
-      log.debug("getServiceOfferingForUser 500 error: ", ex);
+    } catch (err) {
+      logger.error("Service subscription get service offering for User has an error: ", err);
       return raiseServerError(res);
     }
   };

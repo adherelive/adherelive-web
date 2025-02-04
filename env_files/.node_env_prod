@@ -1,5 +1,5 @@
 APP_KEY="live"
-APP_ENV=Production
+APP_ENV=production
 NODE_ENV=production
 APP_NAME="adherelive"
 
@@ -27,6 +27,12 @@ APP_DEBUG=true;
 # This is the log level for the application
 LOG_LEVEL=warn
 LOG_FILE=app
+LOG_DIR=logs
+
+# For external logging of errors and debugging
+#EXTERNAL_LOGGING_ENABLED=true
+#EXTERNAL_LOGGING_HOST=https://your-logging-service.com/api/logs
+#EXTERNAL_LOGGING_API_KEY=your-api-key
 
 # This is the secret key used to generate the JWT tokens
 TOKEN_SECRET_KEY=kfjaslkjfaljfl

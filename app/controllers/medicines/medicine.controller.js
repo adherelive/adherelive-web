@@ -12,10 +12,10 @@ import ScheduleEventService from "../../services/scheduleEvents/scheduleEvent.se
 import MedicineWrapper from "../../apiWrapper/web/medicine";
 import DoctorWrapper from "../../apiWrapper/web/doctor";
 
-import { createLogger } from "../../../libs/log";
+import { createLogger } from "../../../libs/logger";
 import { EVENT_TYPE } from "../../../constant";
 
-const log = createLogger("WEB MEDICINE CONTROLLER");
+const logger = createLogger("WEB MEDICINE CONTROLLER");
 
 class MedicineController extends Controller {
   constructor() {
@@ -28,15 +28,14 @@ class MedicineController extends Controller {
       const { query } = req;
       const { value } = query || {};
 
-      // log.debug("value in req: ", value);
+      // logger.debug("value in req: ", value);
       const medicineDetails = await medicineService.search(value);
 
       if (medicineDetails.length > 0) {
         let medicineApiData = {};
         await medicineDetails.forEach(async (medicine) => {
           const medicineWrapper = await new MedicineWrapper(medicine);
-          medicineApiData[medicineWrapper.getMedicineId()] =
-            medicineWrapper.getBasicInfo();
+          medicineApiData[medicineWrapper.getMedicineId()] = medicineWrapper.getBasicInfo();
         });
 
         return raiseSuccess(
@@ -58,11 +57,18 @@ class MedicineController extends Controller {
         );
       }
     } catch (error) {
-      // log.debug("getAll 500 error: ", error);
+      // logger.error("getAll 500 error: ", error);
       return raiseServerError(res);
     }
   };
 
+  /**
+   *
+   *
+   * @param req
+   * @param res
+   * @returns {Promise<*>}
+   */
   addMedicine = async (req, res) => {
     const { raiseServerError, raiseSuccess } = this;
     try {
@@ -106,7 +112,7 @@ class MedicineController extends Controller {
         "New medicine added successfully."
       );
     } catch (error) {
-      log.debug("500 addMedicine error: ", error);
+      logger.error("500 addMedicine error: ", error);
       return raiseServerError(res);
     }
   };
@@ -149,7 +155,7 @@ class MedicineController extends Controller {
         "New medicine added successfully."
       );
     } catch (error) {
-      log.debug("500 addMedicine error: ", error);
+      logger.error("500 addMedicine error: ", error);
       return raiseServerError(res);
     }
   };
@@ -192,7 +198,7 @@ class MedicineController extends Controller {
         "Medicine is made public to all doctors successfully."
       );
     } catch (error) {
-      log.debug("500 makeMedicinePublic error: ", error);
+      logger.error("500 makeMedicinePublic error: ", error);
       return raiseServerError(res);
     }
   };
@@ -233,7 +239,7 @@ class MedicineController extends Controller {
         publicMedicine,
         doctorIds
       );
-      log.debug("Get Medicines for Admin: ", {
+      logger.debug("Get Medicines for Admin: ", {
         total_count,
         l: medicineDetails.length,
         medicineDetails,
@@ -287,7 +293,7 @@ class MedicineController extends Controller {
         );
       }
     } catch (error) {
-      log.debug("500 getMedicinesForAdmin error", error);
+      logger.error("500 getMedicinesForAdmin error", error);
       return raiseServerError(res);
     }
   };
@@ -324,7 +330,7 @@ class MedicineController extends Controller {
         }
       }
 
-      log.debug("medicationIds", medicationIds);
+      logger.debug("medicationIds", medicationIds);
 
       // delete events wrt medications
       const scheduleEventService = new ScheduleEventService();
@@ -346,12 +352,12 @@ class MedicineController extends Controller {
 
       if (medicineDetails) {
         const response = await algoliaService.deleteMedicineData(medicine_id);
-        log.debug("algolia delete response", response);
+        logger.debug("algolia delete response", response);
       }
 
       return raiseSuccess(res, 200, {}, "Medicine deleted successfully.");
     } catch (error) {
-      log.debug("500 deleteMedicine error", error);
+      logger.error("500 deleteMedicine error", error);
       return raiseServerError(res);
     }
   };

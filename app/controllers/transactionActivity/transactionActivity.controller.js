@@ -1,6 +1,6 @@
 import Controller from "../index";
 
-import { createLogger } from "../../../libs/log";
+import { createLogger } from "../../../libs/logger";
 
 // Services
 import TxActivities from "../../services/transactionActivity/transactionActivity.service";
@@ -13,7 +13,7 @@ import PatientWrapper from "../../apiWrapper/web/patient";
 import { USER_CATEGORY } from "../../../constant";
 
 const ReassignAudit = require("../../models/mongoModel/reassignAudit");
-const log = createLogger("WEB > CONTROLLER > Service Offering");
+const logger = createLogger("WEB > CONTROLLER > Service Offering");
 
 class TransactionActivityController extends Controller {
   constructor() {
@@ -147,12 +147,12 @@ class TransactionActivityController extends Controller {
       txActivities[i].patient = patientData;
       let serviceSubscription = new ServiceSubscription();
 
-      log.debug("=========================================");
-      log.debug({
+      logger.debug("=========================================");
+      logger.debug({
         value: txActivities[i].service_subscription_id != null,
         mytestservice_subid: txActivities[i].service_subscription_id,
       });
-      log.debug("=========================================");
+      logger.debug("=========================================");
 
       if (txActivities[i].service_subscription_id != null) {
         let serviceSubscriptionDetails =
@@ -191,7 +191,7 @@ class TransactionActivityController extends Controller {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       let { params: { id } = {}, body } = req;
-      log.debug(`Report : id = ${id}`);
+      logger.debug(`Report : id = ${id}`);
       if (!id) {
         return raiseClientError(
           res,
@@ -203,18 +203,18 @@ class TransactionActivityController extends Controller {
       const serviceSubscriptionUserMappingService =
         new ServiceSubscriptionUserMappingService();
       const txActivities = new TxActivities();
-      let txActivitie = await txActivities.updateTxActivities(body, id);
+      let txActivate = await txActivities.updateTxActivities(body, id);
 
       return raiseSuccess(
         res,
         200,
         {
-          ...txActivitie,
+          ...txActivate,
         },
         "Activity updated successfully"
       );
     } catch (error) {
-      log.debug("updateService 500 error", error);
+      logger.error("updateService 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -223,7 +223,7 @@ class TransactionActivityController extends Controller {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       let { params: { id } = {}, body } = req;
-      log.debug(`Report : id = ${id}`);
+      logger.debug(`Report : id = ${id}`);
       if (!id) {
         return raiseClientError(
           res,
@@ -256,7 +256,7 @@ class TransactionActivityController extends Controller {
       });
       reassignAudit = reassignAudit.save();
 
-      let txActivitie = await txActivities.updateTxActivities(
+      let txActivate = await txActivities.updateTxActivities(
         { ...rest, is_reassigned: true },
         id
       );
@@ -264,13 +264,13 @@ class TransactionActivityController extends Controller {
         res,
         200,
         {
-          ...txActivitie,
+          ...txActivate,
           reassignAudit,
         },
         "Activity updated successfully"
       );
     } catch (error) {
-      log.debug("updateService 500 error", error);
+      logger.error("updateService 500 error", error);
       return raiseServerError(res);
     }
   };

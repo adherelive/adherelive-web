@@ -1,7 +1,7 @@
 import AWS from "aws-sdk";
-import { createLogger } from "../../../libs/log";
+import { createLogger } from "../../../libs/logger";
 
-const log = createLogger("Communications ---> SMS Manager");
+const logger = createLogger("Communications ---> SMS Manager");
 
 class SmsManager {
   constructor() {
@@ -23,23 +23,23 @@ class SmsManager {
 
   async sendSms(smsPayload) {
     try {
-      log.debug("Validating SMS payload...");
+      logger.debug("Validating SMS payload...");
       const isSmsDataValid = this.smsDataValidator(smsPayload);
       if (isSmsDataValid.error) return isSmsDataValid;
 
-      log.success("SMS payload is valid!");
+      logger.success("SMS payload is valid!");
 
-      log.debug("Transforming SMS payload to AWS payload...");
+      logger.debug("Transforming SMS payload to AWS payload...");
       const smsData = this.smsDataTransformer(smsPayload);
-      log.debug("SMS payload successfully transformed!");
+      logger.debug("SMS payload successfully transformed!");
 
-      log.debug("Sending SMS...");
+      logger.debug("Sending SMS...");
 
       const data = await this.sns.publish(smsData).promise();
-      log.debug("SMS has been sent!", data);
+      logger.debug("SMS has been sent!", data);
       return { success: true, data };
     } catch (error) {
-      log.error("Error sending SMS ---> ", error);
+      logger.error("Error sending SMS ---> ", error);
       return { success: false, error: error.message };
     }
   }

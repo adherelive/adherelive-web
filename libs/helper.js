@@ -77,7 +77,7 @@ export const importModule = async (path) => {
     const module = await import(path);
     return module.default; // Assuming the module exports a default export
   } catch (error) {
-    log.error(`Error importing module ${path}: `, error);
+    console.error(`Error importing module ${path}: `, error);
     throw error;
   }
 };

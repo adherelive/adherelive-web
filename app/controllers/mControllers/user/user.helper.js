@@ -77,7 +77,7 @@ export const doctorQualificationData = async (userId) => {
     };
     return qualificationData;
   } catch (error) {
-    log.debug(" GET DOCTOR QUALIFICATION CATCH ERROR ", error);
+    logger.error(" GET DOCTOR QUALIFICATION CATCH ERROR ", error);
   }
 };
 
@@ -122,7 +122,7 @@ export const uploadImageS3 = async (userId, file) => {
     let files = [completePath(fileUrl)];
     return files;
   } catch (error) {
-    log.debug(" UPLOAD  CATCH ERROR ", error);
+    logger.error(" UPLOAD  CATCH ERROR ", error);
   }
 };
 
@@ -135,7 +135,7 @@ export const downloadFileFromS3 = async (objectName, filePath) => {
     );
     return true;
   } catch (err) {
-    log.error("Error in downloadFileFromS3: ", err);
+    logger.error("Error in downloadFileFromS3: ", err);
     return false;
   }
 };

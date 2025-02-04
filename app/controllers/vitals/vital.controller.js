@@ -1,6 +1,6 @@
 import Controller from "../index";
 
-import { createLogger } from "../../../libs/log";
+import { createLogger } from "../../../libs/logger";
 
 // Helpers
 import * as vitalHelper from "./vital.helper";
@@ -35,7 +35,7 @@ import EventWrapper from "../../apiWrapper/common/scheduleEvents";
 import JobSdk from "../../jobSdk";
 import NotificationSdk from "../../notificationSdk";
 
-const log = createLogger("WEB > VITALS > CONTROLLER");
+const logger = createLogger("WEB > VITALS > CONTROLLER");
 
 class VitalController extends Controller {
   constructor() {
@@ -44,7 +44,7 @@ class VitalController extends Controller {
 
   create = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
-    log.debug("req.body --->", req.body);
+    logger.debug("req.body --->", req.body);
     try {
       const {
         userDetails: {
@@ -154,15 +154,15 @@ class VitalController extends Controller {
         );
       }
     } catch (error) {
-      log.debug("create 500 error - vitals already added", error);
+      logger.error("create 500 error - vitals already added", error);
       return raiseServerError(res);
     }
   };
 
   updateVital = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
-    log.debug("req.body --->", req.body);
-    log.debug("req.params --->", req.params);
+    logger.debug("req.body --->", req.body);
+    logger.debug("req.params --->", req.params);
     try {
       const {
         userDetails: {
@@ -196,7 +196,7 @@ class VitalController extends Controller {
 
         const vitalData = await VitalService.update(dataToUpdate, id);
 
-        log.debug("vitalData", vitalData);
+        logger.debug("vitalData", vitalData);
 
         const vitals = await VitalWrapper({ id });
         const vitalTemplates = await VitalTemplateWrapper({
@@ -233,7 +233,7 @@ class VitalController extends Controller {
           vital_templates: vitalTemplates.getBasicInfo(),
         };
 
-        log.debug("eventScheduleData", eventScheduleData);
+        logger.debug("eventScheduleData", eventScheduleData);
 
         // Delete previously scheduled events
         const deletedEvents = await eventService.deleteBatch({
@@ -241,7 +241,7 @@ class VitalController extends Controller {
           event_type: EVENT_TYPE.VITALS,
         });
 
-        log.debug("deletedEvents", deletedEvents);
+        logger.debug("deletedEvents", deletedEvents);
 
         const sqsResponse = await QueueService.sendMessage(eventScheduleData);
 
@@ -267,7 +267,7 @@ class VitalController extends Controller {
         );
       }
     } catch (error) {
-      log.debug("Cannot create vitals 500 error -> vitals added: ", error);
+      logger.error("Cannot create vitals 500 error -> vitals added: ", error);
       return raiseServerError(res);
     }
   };
@@ -289,7 +289,7 @@ class VitalController extends Controller {
       await NotificationSdk.execute(medicationDetails);
       return raiseSuccess(res, 200, {}, "medication deleted successfully");
     } catch (error) {
-      log.debug("deleteMedication error", error);
+      logger.error("deleteMedication error", error);
       return raiseServerError(res);
     }
   };
@@ -313,7 +313,7 @@ class VitalController extends Controller {
         "Vital form details fetched successfully"
       );
     } catch (error) {
-      log.debug("getVitalFormDetails 500 error", error);
+      logger.error("getVitalFormDetails 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -321,7 +321,7 @@ class VitalController extends Controller {
   search = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
-      log.debug("req.query --->", req.query);
+      logger.debug("req.query --->", req.query);
       const { query: { value } = {} } = req;
 
       const vitalTemplates = await VitalTemplateService.searchByData(value);
@@ -351,7 +351,7 @@ class VitalController extends Controller {
         return raiseClientError(res, 422, {}, "No vital exists with this name");
       }
     } catch (error) {
-      log.debug("vitals search 500 error", error);
+      logger.error("vitals search 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -359,7 +359,7 @@ class VitalController extends Controller {
   getVitalResponseTimeline = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
-      log.debug(
+      logger.debug(
         "getVitalResponseTimeline req.params vital id ---> ",
         req.params
       );
@@ -414,7 +414,7 @@ class VitalController extends Controller {
         );
       }
     } catch (error) {
-      log.debug("Cannot getVitalResponseTimeline 500 error: ", error);
+      logger.error("Cannot getVitalResponseTimeline 500 error: ", error);
       return raiseServerError(res);
     }
   };
@@ -442,14 +442,14 @@ class VitalController extends Controller {
         user_role_id: userRoleId,
       });
 
-      // log.debug("786756465789",docAllCarePlanData);
+      // logger.debug("786756465789",docAllCarePlanData);
 
       for (let carePlan of docAllCarePlanData) {
         const carePlanApiWrapper = await CarePlanWrapper(carePlan);
         const { vital_ids } = await carePlanApiWrapper.getAllInfo();
 
         for (let vId of vital_ids) {
-          // log.debug("87657898763545",vital_ids);
+          // logger.debug("87657898763545",vital_ids);
 
           let expiredVitalsList = await scheduleEventService.getAllEventByData({
             event_type: EVENT_TYPE.VITALS,
@@ -459,7 +459,7 @@ class VitalController extends Controller {
 
           for (let vital of expiredVitalsList) {
             const vitalEventWrapper = await EventWrapper(vital);
-            // log.debug("8976756576890",vitalEventWrapper);
+            // logger.debug("8976756576890",vitalEventWrapper);
 
             if (vitalEventWrapper.getCriticalValue()) {
               if (
@@ -507,7 +507,7 @@ class VitalController extends Controller {
         return raiseSuccess(res, 201, {}, "No Missed Vitals");
       }
     } catch (error) {
-      log.debug("getVitalDetails 500 error ", error);
+      logger.error("getVitalDetails 500 error ", error);
       return raiseServerError(res);
     }
   };

@@ -2,9 +2,9 @@ import Controller from "../../index";
 import councilService from "../../../services/council/council.service";
 import CouncilWrapper from "../../../apiWrapper/mobile/council";
 
-import { createLogger } from "../../../../libs/log";
+import { createLogger } from "../../../../libs/logger";
 
-const log = createLogger("MOBILE COUNCIL CONTROLLER");
+const logger = createLogger("MOBILE COUNCIL CONTROLLER");
 
 class CouncilController extends Controller {
   constructor() {
@@ -17,7 +17,7 @@ class CouncilController extends Controller {
       const { query } = req;
       const { value } = query || {};
 
-      // log.debug("value in req", value);
+      // logger.debug("value in req", value);
 
       const councilDetails = await councilService.search(value);
 
@@ -48,7 +48,7 @@ class CouncilController extends Controller {
         );
       }
     } catch (error) {
-      log.debug("council search 500 error", error);
+      logger.error("council search 500 error", error);
       return raiseServerError(res);
     }
   };

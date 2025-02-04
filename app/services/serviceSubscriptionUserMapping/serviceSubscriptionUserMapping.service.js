@@ -1,8 +1,8 @@
 import Database from "../../../libs/mysql";
 import { TABLE_NAME } from "../../models/serviceSubscriptionUserMapping";
 
-import { createLogger } from "../../../libs/log";
-const log = createLogger("WEB > SUBSCRIPTION USER MAPPING > SERVICES");
+import { createLogger } from "../../../libs/logger";
+const logger = createLogger("WEB > SUBSCRIPTION USER MAPPING > SERVICES");
 
 export default class ServiceUserMapping {
   constructor() {}
@@ -19,7 +19,7 @@ export default class ServiceUserMapping {
       await transaction.commit();
       return serviceSubscriptionUserMapping;
     } catch (error) {
-      log.debug(error);
+      logger.debug(error);
       await transaction.rollback();
       throw error;
     }
@@ -27,7 +27,7 @@ export default class ServiceUserMapping {
 
   getAllServiceSubscriptionUserMappingByData = async (data) => {
     try {
-      log.debug(TABLE_NAME);
+      logger.debug(TABLE_NAME);
       return await Database.getModel(TABLE_NAME).findAll({
         where: data,
         raw: true,
@@ -49,7 +49,7 @@ export default class ServiceUserMapping {
        patient_status: 'active'
       }
         */
-      log.debug(data, id);
+      logger.debug(data, id);
       const serviceSubscriptionUserMapping = await Database.getModel(
         TABLE_NAME
       ).update(data, {

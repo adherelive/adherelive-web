@@ -1,5 +1,5 @@
 import Controller from "../index";
-import { createLogger } from "../../../libs/log";
+import { createLogger } from "../../../libs/logger";
 
 // Services
 import WorkoutTemplateService from "../../services/workoutTemplates/workoutTemplate.service";
@@ -7,7 +7,7 @@ import WorkoutTemplateService from "../../services/workoutTemplates/workoutTempl
 // Wrappers
 import WorkoutTemplateWrapper from "../../apiWrapper/mobile/workoutTemplates";
 
-const log = createLogger("WEB > WORKOUT_TEMPLATE > CONTROLLER");
+const logger = createLogger("WEB > WORKOUT_TEMPLATE > CONTROLLER");
 
 class WorkoutTemplateController extends Controller {
   constructor() {
@@ -18,7 +18,7 @@ class WorkoutTemplateController extends Controller {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       const { body, userDetails } = req;
-      log.debug("create request", body);
+      logger.debug("create request", body);
 
       const { name, exercise_detail_ids: exerciseDetails = [] } = body || {};
       const { userData: { category } = {}, userCategoryId } = userDetails || {};
@@ -72,7 +72,7 @@ class WorkoutTemplateController extends Controller {
         );
       }
     } catch (error) {
-      log.debug("create 500 - workout controller", error);
+      logger.error("create 500 - workout controller", error);
       return raiseServerError(res);
     }
   };
@@ -81,7 +81,7 @@ class WorkoutTemplateController extends Controller {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       const { body, params, userDetails } = req;
-      log.debug("update request", { body, params });
+      logger.debug("update request", { body, params });
 
       const { id } = params || {};
       const { name, exercise_detail_ids: exerciseDetails = [] } = body || {};
@@ -140,7 +140,7 @@ class WorkoutTemplateController extends Controller {
         );
       }
     } catch (error) {
-      log.debug("update 500", error);
+      logger.error("update 500", error);
       return raiseServerError(res);
     }
   };
@@ -149,7 +149,7 @@ class WorkoutTemplateController extends Controller {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       const { params } = req;
-      log.debug("delete request", params);
+      logger.debug("delete request", params);
 
       const { id } = params || {};
 
@@ -189,7 +189,7 @@ class WorkoutTemplateController extends Controller {
         );
       }
     } catch (error) {
-      log.debug("delete 500", error);
+      logger.error("delete 500", error);
       return raiseServerError(res);
     }
   };

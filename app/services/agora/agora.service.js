@@ -1,4 +1,4 @@
-import { createLogger } from "../../../libs/log";
+import { createLogger } from "../../../libs/logger";
 
 const { RtcTokenBuilder, RtcRole } = require("agora-access-token");
 
@@ -6,7 +6,7 @@ const appID = process.config.agora.app_id;
 const appCertificate = process.config.agora.app_certificate;
 let channelNameAgora = process.config.agora.app_channel_name;
 
-const log = createLogger("AGORA SERVICES");
+const logger = createLogger("AGORA SERVICES");
 
 class AgoraService {
   constructor() {}

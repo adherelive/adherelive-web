@@ -1,5 +1,5 @@
 const fs = require("fs");
-import { createLogger } from "../../libs/log";
+import { createLogger } from "../../libs/logger";
 
 import {
   DOCUMENT_PARENT_TYPE,
@@ -17,7 +17,7 @@ const AWS_FOLDER_NAME = {
   OTHERS: "others",
 };
 
-const log = createLogger("CRON > REMOVE_DOCUMENTS");
+const logger = createLogger("CRON > REMOVE_DOCUMENTS");
 
 class RemoveDocuments {
   checkIfAnyLocalDocumentExists = async (path) => {
@@ -51,7 +51,7 @@ class RemoveDocuments {
       const uploadFolderName = getAWSFolderName(path);
       fs.readdir(path, function (err, files) {
         if (err) {
-          log.debug(
+          logger.debug(
             "REMOVE_DOCUMENTS: could not list the directory ---> ",
             err
           );
@@ -73,13 +73,13 @@ class RemoveDocuments {
         }
       });
     } catch (error) {
-      log.debug("ERROR: in reading directory: ", error);
+      logger.error("ERROR: in reading directory: ", error);
     }
   };
 
   readFiles = (file, fileName, upload, awsFolder) => {
     try {
-      log.debug(`File got to read is: file = ${file}, fileName = ${fileName}`);
+      logger.debug(`File got to read is: file = ${file}, fileName = ${fileName}`);
       const { deleteFile, uploadOnAWS } = this;
       fs.readFile(file, function (err, data) {
         if (err) {
@@ -98,7 +98,7 @@ class RemoveDocuments {
         deleteFile(file);
       });
     } catch (error) {
-      log.debug("ERROR: in reading file: ", error);
+      logger.error("ERROR: in reading file: ", error);
     }
   };
 
@@ -121,23 +121,23 @@ class RemoveDocuments {
         });
       }
     } catch (error) {
-      log.debug("ERROR: in uploading file on aws: ", error);
+      logger.error("ERROR: in uploading file on aws: ", error);
     }
   };
 
   deleteFile = (path) => {
     try {
       fs.unlink(path, function (err) {
-        log.debug("ERRor got in the unlink the file is: ", err);
+        logger.error("Error got in the unlink the file is: ", err);
       });
     } catch (error) {
-      log.debug("ERROR: in deleting file: ", error);
+      logger.error("ERROR: in deleting file: ", error);
     }
   };
 
   runObserver = async () => {
     try {
-      log.debug("running REMOVE_DOCUMENTS cron");
+      logger.debug("Running REMOVE DOCUMENTS cron");
       const { checkIfAnyLocalDocumentExists } = this;
 
       const prescriptionPdfsPresent = await checkIfAnyLocalDocumentExists(
@@ -147,7 +147,7 @@ class RemoveDocuments {
         S3_DOWNLOAD_FOLDER
       );
 
-      log.debug(
+      logger.debug(
         `Check values are: prescriptionPdfsPresent = ${prescriptionPdfsPresent} s3ImagesPresent = ${s3ImagesPresent}`
       );
 
@@ -159,7 +159,7 @@ class RemoveDocuments {
         this.readDirectory(S3_DOWNLOAD_FOLDER);
       }
     } catch (error) {
-      log.debug("REMOVE_DOCUMENTS runObserver 500 error ---> ", error);
+      logger.error("REMOVE_DOCUMENTS runObserver 500 error ---> ", error);
     }
   };
 }

@@ -15,7 +15,7 @@ import {
   USER_CATEGORY,
   WHEN_TO_TAKE_ABBREVATIONS,
 } from "../../../../constant";
-import { createLogger } from "../../../../libs/log";
+import { createLogger } from "../../../../libs/logger";
 
 import medicineService from "../../../services/medicine/medicine.service";
 import {
@@ -47,7 +47,7 @@ import UserPreferenceWrapper from "../../../apiWrapper/mobile/userPreference";
 import * as medicationHelper from "../../medicationReminder/medication.helper";
 
 const LOG_NAME = "MOBILE > MEDICATION REMINDER > CONTROLLER";
-const log = createLogger(LOG_NAME);
+const logger = createLogger(LOG_NAME);
 
 const KEY_REPEAT_TYPE = "repeat_type";
 const KEY_DAYS = "days";
@@ -193,7 +193,7 @@ class MobileMReminderController extends Controller {
 
       const sqsResponse = await QueueService.sendMessage(eventScheduleData);
 
-      log.debug("sqsResponse ---> ", sqsResponse);
+      logger.debug("sqsResponse ---> ", sqsResponse);
 
       const medicationJob = MedicationJob.execute(
         EVENT_STATUS.SCHEDULED,
@@ -201,7 +201,7 @@ class MobileMReminderController extends Controller {
       );
       await NotificationSdk.execute(medicationJob);
 
-      log.debug("medicationJob ---> ", medicationJob.getInAppTemplate());
+      logger.debug("medicationJob ---> ", medicationJob.getInAppTemplate());
 
       return this.raiseSuccess(
         res,
@@ -409,7 +409,7 @@ class MobileMReminderController extends Controller {
 
       // await Proxy_Sdk.scheduleEvent({data: eventScheduleData});
     } catch (error) {
-      log.debug("Add medication error", error);
+      logger.error("Add medication error", error);
       return this.raiseServerError(res);
     }
   };
@@ -418,7 +418,7 @@ class MobileMReminderController extends Controller {
     const { raiseSuccess, raiseServerError } = this;
     try {
       const { params: { patient_id } = {}, userDetails: { userId } = {} } = req;
-      log.debug(`params: patient_id : ${patient_id}`);
+      logger.debug(`params: patient_id : ${patient_id}`);
 
       // if (!parseInt(patient_id)) {
       //   return raiseClientError(
@@ -501,7 +501,7 @@ class MobileMReminderController extends Controller {
         medicineId.push(medicationWrapper.getMedicineId());
       }
 
-      log.debug("medicineId", medicationDetails);
+      logger.debug("medicineId", medicationDetails);
 
       const medicineData = await medicineService.getMedicineById({
         id: medicineId,
@@ -515,7 +515,7 @@ class MobileMReminderController extends Controller {
           medicineWrapper.getBasicInfo();
       }
 
-      log.debug("medicineData", medicineData);
+      logger.debug("medicineData", medicineData);
 
       return raiseSuccess(
         res,
@@ -534,7 +534,7 @@ class MobileMReminderController extends Controller {
         "Medications fetched successfully"
       );
     } catch (error) {
-      log.debug("500 error ", error);
+      logger.error("500 error ", error);
       return raiseServerError(res);
     }
   };
@@ -660,7 +660,7 @@ class MobileMReminderController extends Controller {
         "Medication updated successfully"
       );
     } catch (error) {
-      log.debug("update m-reminder error", error);
+      logger.error("update m-reminder error", error);
       return this.raiseServerError(res);
     }
   };
@@ -715,7 +715,7 @@ class MobileMReminderController extends Controller {
 
       return raiseSuccess(res, 200, {}, "Medication deleted successfully");
     } catch (error) {
-      log.debug("delete m-reminder error", error);
+      logger.error("delete m-reminder error", error);
       return raiseServerError(res);
     }
   };
@@ -751,7 +751,7 @@ class MobileMReminderController extends Controller {
         };
       }
 
-      log.debug(
+      logger.debug(
         "medicationScheduleEventResponse: ",
         medicationScheduleEventResponse
       );
@@ -767,7 +767,7 @@ class MobileMReminderController extends Controller {
         "Medications status fetched successfully"
       );
     } catch (error) {
-      log.debug("getMedicationEventsStatus 500 error: ", error);
+      logger.error("getMedicationEventsStatus 500 error: ", error);
       return raiseServerError(res);
     }
   };

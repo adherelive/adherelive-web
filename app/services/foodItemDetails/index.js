@@ -1,3 +1,7 @@
+import { createLogger } from "../../../libs/logger";
+
+const logger = createLogger("FOOD ITEM DETAILS SERVICE");
+
 export default class FoodItem {
   constructor(data) {
     this._data = data;
@@ -40,7 +44,7 @@ export default class FoodItem {
   };
 
   // getPortionDetails = () => {
-  //     log.debug("868768687687 ===>>>>>> > > > > >",{data:this._data});
+  //     logger.debug("Get Portions Data: ",{data:this._data});
   //     const portion = this._data.portion ? this._data.portion : {};
   //     return { ...portion };
   // }

@@ -1,6 +1,6 @@
 import Controller from "../index";
 
-import { createLogger } from "../../../libs/log";
+import { createLogger } from "../../../libs/logger";
 import moment from "moment";
 
 // Services
@@ -14,7 +14,7 @@ import { DOCUMENT_PARENT_TYPE } from "../../../constant";
 import { getFilePath } from "../../helper/s3FilePath";
 import * as ReportHelper from "./report.helper";
 
-const log = createLogger("WEB > CONTROLLER > REPORTS");
+const logger = createLogger("WEB > CONTROLLER > REPORTS");
 
 class ReportController extends Controller {
   constructor() {
@@ -71,7 +71,7 @@ class ReportController extends Controller {
         "Report added successfully"
       );
     } catch (error) {
-      log.debug("addReports 500 error", error);
+      logger.error("addReports 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -80,7 +80,7 @@ class ReportController extends Controller {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       const { file = null, params: { patient_id = "NA" } = {} } = req;
-      log.debug(`patient_id : ${patient_id}`);
+      logger.debug(`patient_id : ${patient_id}`);
 
       if (!file) {
         return raiseClientError(res, 422, {}, "Please select file to upload");
@@ -109,7 +109,7 @@ class ReportController extends Controller {
         "Files uploaded successfully"
       );
     } catch (error) {
-      log.debug("uploadReportDocuments 500 error", error);
+      logger.error("uploadReportDocuments 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -121,7 +121,7 @@ class ReportController extends Controller {
         params: { id } = {},
         body: { name, test_date, documents = [] } = {},
       } = req;
-      log.debug(`Report : id = ${id}`);
+      logger.debug(`Report : id = ${id}`);
 
       if (!id) {
         return raiseClientError(
@@ -185,7 +185,7 @@ class ReportController extends Controller {
         "Report updated successfully"
       );
     } catch (error) {
-      log.debug("updateReports 500 error", error);
+      logger.error("updateReports 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -194,7 +194,7 @@ class ReportController extends Controller {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       const { params: { document_id } = {} } = req;
-      log.debug(`params: document_id = ${document_id}`);
+      logger.debug(`params: document_id = ${document_id}`);
 
       if (!document_id) {
         return raiseClientError(
@@ -208,11 +208,11 @@ class ReportController extends Controller {
       const response = await uploadDocumentService.deleteDocumentByData({
         id: document_id,
       });
-      log.debug("response", response);
+      logger.debug("response", response);
 
       return raiseSuccess(res, 200, {}, "Document deleted successfully");
     } catch (error) {
-      log.debug("deleteReportDocument 500 error", error);
+      logger.error("deleteReportDocument 500 error", error);
       return raiseServerError(res);
     }
   };

@@ -41,7 +41,7 @@ import UserRoleWrapper from "../../../apiWrapper/mobile/userRoles";
 import UserPreferenceWrapper from "../../../apiWrapper/mobile/userPreference";
 import ProviderWrapper from "../../../apiWrapper/mobile/provider";
 
-import { createLogger } from "../../../../libs/log";
+import { createLogger } from "../../../../libs/logger";
 import {
   ALLOWED_DOC_TYPE_DOCTORS,
   DOCUMENT_PARENT_TYPE,
@@ -78,7 +78,7 @@ import doctorPatientWatchlistService from "../../../services/doctorPatientWatchl
 import specialityService from "../../../services/speciality/speciality.service";
 import SpecialityWrapper from "../../../apiWrapper/mobile/speciality";
 
-const log = createLogger("M-API DOCTOR CONTROLLER");
+const logger = createLogger("M-API DOCTOR CONTROLLER");
 const APPOINTMENT_QUERY_TYPE = {
   DAY: "d",
   MONTH: "m",
@@ -206,14 +206,14 @@ class MobileDoctorController extends Controller {
         "doctor profile updated successfully"
       );
     } catch (error) {
-      log.debug("add doctor 500 error", error);
+      logger.error("add doctor 500 error", error);
       return raiseServerError(res);
     }
   };
 
   addPatient = async (req, res) => {
     try {
-      log.request(req.body);
+      logger.request(req.body);
       const {
         mobile_number = "",
         name = "",
@@ -296,7 +296,7 @@ class MobileDoctorController extends Controller {
           },
           patient_id
         );
-        log.debug("Patient updateResponse ", updateResponse);
+        logger.debug("Patient updateResponse ", updateResponse);
 
         patientData = await PatientWrapper(null, patient_id);
       } else {
@@ -542,7 +542,7 @@ class MobileDoctorController extends Controller {
         "Patient added successfully"
       );
     } catch (error) {
-      log.debug("ADD DOCTOR PATIENT 500 ERROR ", error);
+      logger.error("ADD DOCTOR PATIENT 500 ERROR ", error);
       return this.raiseServerError(res);
     }
   };
@@ -916,7 +916,7 @@ class MobileDoctorController extends Controller {
         "qualifications updated successfully"
       );
     } catch (error) {
-      log.debug("addDoctorQualification 500 error", error);
+      logger.error("addDoctorQualification 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -929,7 +929,7 @@ class MobileDoctorController extends Controller {
 
       const { mimetype } = file || {};
       const fileType = mimetype.split("/");
-      log.debug("updateQualificationDocs mimetype ---> ", mimetype);
+      logger.debug("updateQualificationDocs mimetype ---> ", mimetype);
       if (!ALLOWED_DOC_TYPE_DOCTORS.includes(fileType[1])) {
         return this.raiseClientError(
           res,
@@ -953,7 +953,7 @@ class MobileDoctorController extends Controller {
         "doctor qualification document uploaded successfully"
       );
     } catch (error) {
-      log.debug("updateQualificationDocs 500 error", error);
+      logger.error("updateQualificationDocs 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -964,11 +964,11 @@ class MobileDoctorController extends Controller {
       const file = req.file;
       const { userDetails: { userId } = {} } = req;
 
-      log.debug("updateRegistrationDocs file", file);
+      logger.debug("updateRegistrationDocs file", file);
 
       let files = await uploadImageS3(userId, file);
 
-      log.debug("files --->", files);
+      logger.debug("files --->", files);
 
       return this.raiseSuccess(
         res,
@@ -1257,7 +1257,7 @@ class MobileDoctorController extends Controller {
         "qualification details updated successfully"
       );
     } catch (error) {
-      log.debug("qualificationStep 500 error", error);
+      logger.error("qualificationStep 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -1628,7 +1628,7 @@ class MobileDoctorController extends Controller {
         "Registration details updated successfully"
       );
     } catch (error) {
-      log.debug("registrationStep 500 error", error);
+      logger.error("registrationStep 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -1712,7 +1712,7 @@ class MobileDoctorController extends Controller {
         "doctor clinics added successfully"
       );
     } catch (error) {
-      log.debug("updateDoctorClinics 500 error", error);
+      logger.error("updateDoctorClinics 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -1738,7 +1738,7 @@ class MobileDoctorController extends Controller {
         "doctor qualification document deleted successfully"
       );
     } catch (error) {
-      log.debug(
+      logger.debug(
         "DOCTOR QUALIFICATION DOCUMENT DELETE 500 ERROR ---> ",
         error
       );
@@ -1767,7 +1767,7 @@ class MobileDoctorController extends Controller {
         "doctor registration document deleted successfully"
       );
     } catch (error) {
-      log.debug(
+      logger.debug(
         "DOCTOR REGISTRATION DOCUMENT DELETE 500 ERROR ---> ",
         error
       );
@@ -1779,9 +1779,9 @@ class MobileDoctorController extends Controller {
     const { raiseSuccess, raiseServerError } = this;
     try {
       const { userDetails: { userId } = {} } = req;
-      log.debug("userId --> ", req.userDetails);
+      logger.debug("userId --> ", req.userDetails);
       const doctors = await doctorService.getDoctorByData({ user_id: userId });
-      log.debug("doctors --> ", doctors);
+      logger.debug("doctors --> ", doctors);
       let doctorQualificationApiDetails = {};
       let doctorClinicApiDetails = {};
       let uploadDocumentApiDetails = {};
@@ -1842,7 +1842,7 @@ class MobileDoctorController extends Controller {
           doctorWrapper.getDoctorId()
         );
 
-      log.debug(
+      logger.debug(
         "Get all Doctor detail registrations ---> ",
         doctorRegistrations
       );
@@ -1962,7 +1962,7 @@ class MobileDoctorController extends Controller {
         "Doctor details fetched successfully"
       );
     } catch (error) {
-      log.debug("getalldoctors 500 error", error);
+      logger.error("getalldoctors 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -1971,7 +1971,7 @@ class MobileDoctorController extends Controller {
     const { userDetails, body } = req;
     const { userId = "3" } = userDetails || {};
     const file = req.file;
-    log.debug("uploadImage file ---> ", file);
+    logger.debug("uploadImage file ---> ", file);
     // const fileExt= file.originalname.replace(/\s+/g, '');
     try {
       let files = await uploadImageS3(userId, file);
@@ -2028,7 +2028,7 @@ class MobileDoctorController extends Controller {
         return raiseClientError(res, 422, {}, "Doctor/patient do not exist");
       }
     } catch (error) {
-      log.debug("83901283091298 add patient to watchlist error", error);
+      logger.error("83901283091298 add patient to watchlist error", error);
       return raiseServerError(res);
     }
   };
@@ -2071,7 +2071,7 @@ class MobileDoctorController extends Controller {
         return raiseClientError(res, 422, {}, "Doctor/patient do not exist");
       }
     } catch (error) {
-      log.debug("83901283091298 add patient to watchlist error", error);
+      logger.error("83901283091298 add patient to watchlist error", error);
       return raiseServerError(res);
     }
   };
@@ -2187,7 +2187,7 @@ class MobileDoctorController extends Controller {
         "Careplan added successfully"
       );
     } catch (error) {
-      log.debug("UPDATE  PATIENT AND CAREPLAN 500 ERROR", error);
+      logger.error("UPDATE  PATIENT AND CAREPLAN 500 ERROR", error);
       return raiseServerError(res);
     }
   };
@@ -2253,7 +2253,7 @@ class MobileDoctorController extends Controller {
         "Chat permission updated successfully."
       );
     } catch (error) {
-      log.debug("toggleChatMessagePermission 500 ERROR", error);
+      logger.error("toggleChatMessagePermission 500 ERROR", error);
       return raiseServerError(res);
     }
   };
@@ -2321,7 +2321,7 @@ class MobileDoctorController extends Controller {
         "Video call permission updated successfully."
       );
     } catch (error) {
-      log.debug("toggleVideoCallPermission 500 ERROR", error);
+      logger.error("toggleVideoCallPermission 500 ERROR", error);
       return raiseServerError(res);
     }
   };
@@ -2470,7 +2470,7 @@ class MobileDoctorController extends Controller {
         "Patients data fetched successfully."
       );
     } catch (error) {
-      log.debug("getPaginatedDataForPatients 500 ERROR", error);
+      logger.error("getPaginatedDataForPatients 500 ERROR", error);
       return raiseServerError(res);
     }
   };
@@ -2599,7 +2599,7 @@ class MobileDoctorController extends Controller {
         );
       }
     } catch (error) {
-      log.debug("searchDoctorName 500 ERROR", error);
+      logger.error("searchDoctorName 500 ERROR", error);
       return raiseServerError(res);
     }
   };
@@ -2741,7 +2741,7 @@ class MobileDoctorController extends Controller {
         "Appointments data fetched successfully."
       );
     } catch (error) {
-      log.debug("getAllAppointmentForDoctors 500 error ", error);
+      logger.error("getAllAppointmentForDoctors 500 error ", error);
       return raiseServerError(res);
     }
   };
