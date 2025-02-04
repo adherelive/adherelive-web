@@ -1,3 +1,5 @@
+import {logger} from "../../../libs/logger";
+
 const express = require("express");
 const router = express.Router();
 
@@ -27,5 +29,19 @@ router.post(
   Authenticated,
   adhocController.updateChannels
 );
+
+// In your Node.js backend
+app.post('/api/logs', (req, res) => {
+    const { level, message, source, sessionId, ...meta } = req.body;
+
+    // Use your backend logger to log the frontend message
+    logger[level](message, {
+        ...meta,
+        source: `frontend:${source}`,
+        sessionId
+    });
+
+    res.status(200).send({ status: 'logged' });
+});
 
 module.exports = router;
