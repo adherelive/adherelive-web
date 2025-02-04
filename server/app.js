@@ -24,7 +24,7 @@ import RemoveDocuments from "../app/cronJobs/removeDocuments";
 import LongTerm from "../app/cronJobs/longTerm";
 import RenewTxActivity from "../app/cronJobs/renewTxActivity";
 import ErrorBoundary from './ErrorBoundary';
-import { requestIdMiddleware, createLogger } from '../libs/logger';
+import { requestMiddleware, createLogger } from '../libs/logger';
 
 const logger = createLogger('app.js');
 
@@ -109,18 +109,18 @@ app.use(
 );
 app.use(cookieParser());
 app.use(cors());
-app.use(requestIdMiddleware);
+app.use(requestMiddleware);
 
 // Add error handling middleware
-app.use((err, req, res, next) => {
-    logger.error('Unhandled error', {
-        error: err.message,
-        stack: err.stack,
-        path: req.path,
-        method: req.method
-    });
-    res.status(500).json({ error: 'Internal Server Error!' });
-});
+// app.use((err, req, res, next) => {
+//     logger.error('Unhandled error', {
+//         error: err.message,
+//         stack: err.stack,
+//         path: req.path,
+//         method: req.method
+//     });
+//     res.status(500).json({ error: 'Internal Server Error!' });
+// });
 
 /**
  * Add a check to handle cases where process.config.cookieKey might be undefined or not a valid JSON string
