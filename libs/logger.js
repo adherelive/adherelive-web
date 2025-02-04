@@ -103,29 +103,6 @@ function generateSpanId() {
     ).join('');
 }
 
-// Helper function for circular references
-function getCircularReplacer() {
-    const seen = new WeakSet();
-    return (key, value) => {
-        if (key === 'socket' || key === 'parser') return '[Circular]';
-        if (value === null || value === undefined) return value;
-        if (value instanceof Error) return value.stack || value.message;
-        if (typeof value === 'object' && value instanceof Buffer) return '[Buffer]';
-        if (typeof value === 'object' && value instanceof RegExp) return value.toString();
-        if (typeof value === 'function') return '[Function]';
-        if (typeof value === 'object' && value.constructor && value.constructor.name === 'Socket') return '[Socket]';
-        if (typeof value === 'object' && value.constructor && value.constructor.name === 'HTTPParser') return '[HTTPParser]';
-
-        if (typeof value === 'object' && value !== null) {
-            if (seen.has(value)) {
-                return '[Circular]';
-            }
-            seen.add(value);
-        }
-        return value;
-    };
-}
-
 // Enhanced Configuration with validation
 const CONFIG = {
     environment: process.env.APP_ENV || process.env.NODE_ENV || 'production',
@@ -252,6 +229,74 @@ class EnhancedWinstonLogger {
         this.rateLimiter = new RateLimiter(CONFIG.rateLimiting);
         this._setupLogger();
         this._setupErrorHandling();
+    }
+
+    // Helper function for circular references
+    _getCircularReplacer() {
+        const seen = new WeakSet();
+        return (key, value) => {
+            if (key === 'socket' || key === 'parser') return '[Circular]';
+            if (value === null || value === undefined) return value;
+            if (value instanceof Error) return value.stack || value.message;
+            if (typeof value === 'object' && value instanceof Buffer) return '[Buffer]';
+            if (typeof value === 'object' && value instanceof RegExp) return value.toString();
+            if (typeof value === 'function') return '[Function]';
+            if (typeof value === 'object' && value.constructor && value.constructor.name === 'Socket') return '[Socket]';
+            if (typeof value === 'object' && value.constructor && value.constructor.name === 'HTTPParser') return '[HTTPParser]';
+
+            if (typeof value === 'object' && value !== null) {
+                if (seen.has(value)) {
+                    return '[Circular]';
+                }
+                seen.add(value);
+            }
+            return value;
+        };
+    }
+
+    // Helper function to process log arguments
+    _processLogArguments(message, args) {
+        let additionalData;
+        let error = null;
+
+        // Handle arguments with circular reference safety
+        if (args.length > 0) {
+            if (args[0] instanceof Error) {
+                error = args[0];
+            } else {
+                // Safely handle potential circular references in additionalData
+                try {
+                    // Test if the object can be stringified
+                    JSON.stringify(args[0], this._getCircularReplacer());
+                    additionalData = args[0];
+                } catch (err) {
+                    // If stringification fails, create a safe copy with basic properties
+                    if (typeof args[0] === 'object') {
+                        additionalData = Object.keys(args[0]).reduce((acc, key) => {
+                            try {
+                                const value = args[0][key];
+                                if (typeof value !== 'object' || value === null) {
+                                    acc[key] = value;
+                                } else {
+                                    acc[key] = '[Complex Object]';
+                                }
+                            } catch (e) {
+                                acc[key] = '[Unstringifiable]';
+                            }
+                            return acc;
+                        }, {});
+                    } else {
+                        additionalData = '[Unstringifiable Object]';
+                    }
+                }
+            }
+        }
+
+        return {
+            additionalData,
+            error,
+            source: this.source
+        };
     }
 
     _setupLogger() {
@@ -424,54 +469,32 @@ class EnhancedWinstonLogger {
         };
     }
 
+    // Implement all log levels
     debug(message, ...args) {
         if (!this._shouldSample()) return;
         if (!this.rateLimiter.shouldLog(this.source)) {
-            this.warn('Rate limit exceeded for debug logs', {source: this.source});
+            this.warn('Rate limit exceeded for debug logs', { source: this.source });
             return;
         }
 
-        let additionalData;
-        let error = null;
+        const processedArgs = this._processLogArguments(message, args);
+        this.logger.debug(message, processedArgs);
+    }
 
-        // Handle arguments with circular reference safety
-        if (args.length > 0) {
-            if (args[0] instanceof Error) {
-                error = args[0];
-            } else {
-                // Safely handle potential circular references in additionalData
-                try {
-                    // Test if the object can be stringified
-                    JSON.stringify(args[0], getCircularReplacer());
-                    additionalData = args[0];
-                } catch (err) {
-                    // If stringification fails, create a safe copy with basic properties
-                    if (typeof args[0] === 'object') {
-                        additionalData = Object.keys(args[0]).reduce((acc, key) => {
-                            try {
-                                const value = args[0][key];
-                                if (typeof value !== 'object' || value === null) {
-                                    acc[key] = value;
-                                } else {
-                                    acc[key] = '[Complex Object]';
-                                }
-                            } catch (e) {
-                                acc[key] = '[Unstringifiable]';
-                            }
-                            return acc;
-                        }, {});
-                    } else {
-                        additionalData = '[Unstringifiable Object]';
-                    }
-                }
-            }
-        }
+    info(message, ...args) {
+        if (!this._shouldSample()) return;
+        const processedArgs = this._processLogArguments(message, args);
+        this.logger.info(message, processedArgs);
+    }
 
-        this.logger.debug(message, {
-            additionalData,
-            error,
-            source: this.source
-        });
+    warn(message, ...args) {
+        const processedArgs = this._processLogArguments(message, args);
+        this.logger.warn(message, processedArgs);
+    }
+
+    error(message, ...args) {
+        const processedArgs = this._processLogArguments(message, args);
+        this.logger.error(message, processedArgs);
     }
 
     // New method for structured logging
