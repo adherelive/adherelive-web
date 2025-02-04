@@ -234,15 +234,11 @@ class EnhancedWinstonLogger {
   }
 
   _setupLogger() {
-    // Enhanced format with more context
     const enhancedFormat = winston.format.combine(
         winston.format.timestamp({
           format: () => moment().format('YYYY-MM-DD HH:mm:ss.SSS')
         }),
         winston.format.errors({ stack: true }),
-        // winston.format.metadata({
-        //   fillWith: ['timestamp', 'level', 'message', 'source', ...Object.keys(logContext.getAll())]
-        // }),
         winston.format.printf(this._createLogFormatter())
     );
 
@@ -262,46 +258,33 @@ class EnhancedWinstonLogger {
         level = 'info',
         message = '',
         timestamp,
-        metadata = {},
+        additionalData,  // New field for handling additional arguments
         error,
-        queueMessage,
         ...rest
       } = info;
 
       // Get the source from either the metadata or the logger instance
       const source = info.source || this.source || 'unknown';
 
-      // Handle message formatting
-      let formattedMessage = '';
+      // Format the message and any additional data
+      let formattedMessage = message;
 
-      // Handle Error objects and error messages
+      // If we have additional data, append it to the message
+      if (additionalData !== undefined) {
+        if (typeof additionalData === 'object') {
+          formattedMessage = `${message}\n${JSON.stringify(additionalData, null, 2)}`;
+        } else {
+          formattedMessage = `${message}${additionalData}`;
+        }
+      }
+
+      // Handle error objects
       if (error) {
         if (error instanceof Error) {
-          formattedMessage = `${message}\n${error.name}: ${error.message}\n${error.stack.split('\n').slice(1).join('\n')}`;
-        } else if (typeof error === 'string') {
-          formattedMessage = `${message}\n${error}`;
+          formattedMessage = `MESSAGE: ${message}\n${error.name}: ${error.message}\n${error.stack.split('\n').slice(1).join('\n')}`;
         } else {
-          formattedMessage = `${message}\n${JSON.stringify(error, null, 2)}`;
+          formattedMessage = `MESSAGE: ${message}\n${JSON.stringify(error, null, 2)}`;
         }
-      }
-      // Handle Queue Messages or JSON data
-      else if (queueMessage || (typeof message === 'object')) {
-        try {
-          const dataToFormat = queueMessage || message;
-          const formattedData = typeof dataToFormat === 'string'
-              ? JSON.parse(dataToFormat)  // Parse if it's a JSON string
-              : dataToFormat;             // Use as is if it's already an object
-
-          formattedMessage = queueMessage
-              ? `${message}\n${JSON.stringify(formattedData, null, 2)}`
-              : `${JSON.stringify(formattedData, null, 2)}`;
-        } catch (err) {
-          formattedMessage = `${message}\n${queueMessage || ''}`;
-        }
-      }
-      // Handle regular messages
-      else {
-        formattedMessage = message;
       }
 
       // Create the log entry
@@ -311,20 +294,10 @@ class EnhancedWinstonLogger {
         message: formattedMessage
       };
 
-      // Create the final output with proper formatting
-      const output = {
-        prefix: `[${source}]`,
-        entry: logEntry
-      };
-
-      // Custom JSON stringification to preserve formatting
-      return `${output.prefix}: ${JSON.stringify(logEntry, (key, value) => {
-        if (typeof value === 'string') {
-          // Replace escaped newlines with actual newlines
-          return value.replace(/\\n/g, '\n');
-        }
-        return value;
-      }, 2)}`;
+      // Return the formatted log entry with raw newlines
+      return `[${source}]: ${JSON.stringify(logEntry, null, 2)}`
+          .replace(/\\n/g, '\n')
+          .replace(/\\\"/g, '"');
     };
   }
 
@@ -337,17 +310,15 @@ class EnhancedWinstonLogger {
           format: winston.format.combine(
               winston.format.uncolorize(),
               winston.format.printf(info => {
-                // Ensure proper string formatting for console output
-                if (typeof info.message === 'string') {
-                  info.message = info.message.replace(/\\n/g, '\n');
-                }
-                return this._createLogFormatter()(info);
+                // Ensure newlines are preserved in console output
+                const formatted = this._createLogFormatter()(info);
+                return formatted.replace(/\\n/g, '\n').replace(/\\\"/g, '"');
               })
           )
         })
     );
 
-    // File transport with rotation
+    // File transport with rotation (if needed)
     if (!this._isDevelopment()) {
       transports.push(
           new winston.transports.DailyRotateFile({
@@ -356,7 +327,12 @@ class EnhancedWinstonLogger {
             datePattern: 'YYYY-MM-DD',
             maxSize: CONFIG.maxLogSize,
             maxFiles: CONFIG.maxLogFiles,
-            format: winston.format.json()
+            format: winston.format.combine(
+                winston.format.printf(info => {
+                  const formatted = this._createLogFormatter()(info);
+                  return formatted.replace(/\\n/g, '\n').replace(/\\\"/g, '"');
+                })
+            )
           })
       );
     }
@@ -400,30 +376,21 @@ class EnhancedWinstonLogger {
       return;
     }
 
-    let metadata = {};
+    let additionalData;
     let error = null;
-    let queueMessage = null;
 
-    // Process arguments
-    args.forEach(arg => {
-      if (arg instanceof Error) {
-        error = arg;
-      } else if (Array.isArray(arg) || (typeof arg === 'object' && arg?.MessageId)) {
-        queueMessage = arg;
-      } else if (typeof arg === 'object') {
-        metadata = { ...metadata, ...arg };
+    // Handle arguments
+    if (args.length > 0) {
+      if (args[0] instanceof Error) {
+        error = args[0];
+      } else {
+        additionalData = args[0];
       }
-    });
+    }
 
-    // If message is an object, format it properly
-    const formattedMessage = typeof message === 'object'
-        ? JSON.stringify(message, null, 2)
-        : message;
-
-    this.logger.debug(formattedMessage, {
-      ...metadata,
+    this.logger.debug(message, {
+      additionalData,
       error,
-      queueMessage,
       source: this.source
     });
   }
