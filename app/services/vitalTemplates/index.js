@@ -1,3 +1,7 @@
+import { createLogger } from "../../../libs/logger";
+
+const logger = createLogger("SERVICE VITAL TEMPLATES");
+
 export default class VitalTemplates {
   constructor(data) {
     this._data = data;
@@ -17,7 +21,7 @@ export default class VitalTemplates {
 
   getTemplate = () => {
     const { template = [] } = this._data.get("details");
-    logger.debug("1289313123 details --> ", template);
+    logger.debug("Get Template details: ", template);
     return template;
   };
 }

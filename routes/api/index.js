@@ -173,7 +173,7 @@ router.use(async function (req, res, next) {
     }
     next();
   } catch (err) {
-    logger.debug("API index catch Error ---> ", err);
+    logger.error("API index catch Error: ", err);
     req.userDetails = {
       exists: false,
     };

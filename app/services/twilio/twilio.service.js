@@ -67,7 +67,7 @@ class TwilioService {
         return connectedParticipants;
       } catch (error) {
         rej(error);
-        logger.debug("Twilio Service error ---> ", error);
+        logger.error("Twilio Service error ---> ", error);
       }
     });
   }
@@ -101,13 +101,12 @@ class TwilioService {
           logger.debug("Bot message sent!", response);
         })
         .catch((err) => {
-          logger.error("Failed to send message");
-          logger.error(err);
+          logger.error("Failed to send message: ", err);
         });
 
       logger.debug("channel -> ", channel);
     } catch (error) {
-      logger.debug("addSymptom message 500 error", error);
+      logger.error("Add Symptom Message has an error: ", error);
     }
   };
 
@@ -129,13 +128,12 @@ class TwilioService {
           logger.debug("User message sent!", response);
         })
         .catch((err) => {
-          logger.error("Failed to send message");
-          logger.error(err);
+          logger.error("Failed to send a message: ", err);
         });
 
       logger.debug("channel -> ", channel);
     } catch (error) {
-      logger.debug("addUserMessage 500 error", error);
+      logger.error("Add User Message has an error:", error);
       throw error;
     }
   };
@@ -214,7 +212,7 @@ class TwilioService {
                   channelsName.push(uniqueName);
                 })
                 .catch((err) => {
-                  logger.debug("delete catch error", err);
+                  logger.error("delete catch error", err);
                 });
             }
             logger.debug("DELETED CHANNEL NAMES AND COUNT", {

@@ -58,31 +58,33 @@ class SmsSender {
       logger.debug("SMS sent via SMS sender: ", response.data);
       return { success: true, data: response.data };
 
-      // let smsPublishResponse = await this.sns
-      //   .publish(smsData, (err, data) => {
-      //     if (err) {
-      //       logger.debug("Sending SMS error ---> ", err);
-      //     }
-      //     if (data) {
-      //       logger.debug("SMS sent successfully", data);
-      //     }
-      //   })
-      //   .promise();
-      // .promise(response => {
-      // });
+      /**
+       * TODO: Check on the commented code and remove it if not needed.
+      let smsPublishResponse = await this.sns
+        .publish(smsData, (err, data) => {
+          if (err) {
+            logger.error("Sending SMS error: ", err);
+          }
+          if (data) {
+            logger.info("SMS sent successfully: ", data);
+          }
+        })
+        .promise();
+      .promise(response => {
+      });
 
-      // let smsPublishResponse = await this.sns
-      //   .publish(smsData, (err, data) => {
+      let smsPublishResponse = await this.sns
+        .publish(smsData, (err, data) => {
 
-      //     if (err) {
-      //       logger.debug("Sending SMS has an error ---> ", err);
-      //     }
-      //     if (data) {
-      //       logger.debug("SMS has been sent: ", data);
-      //     }
-      //   })
-      //   .promise();
-      //return smsPublishResponse;
+          if (err) {
+            logger.error("Sending SMS has an error: ", err);
+          }
+          if (data) {
+            logger.info("SMS has been sent: ", data);
+          }
+        })
+        .promise();
+      return smsPublishResponse;*/
     } catch (error) {
       logger.error("Error sending SMS: ", error);
       return { success: false, error: error.message };

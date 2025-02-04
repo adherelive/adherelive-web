@@ -540,7 +540,7 @@ class MobileUserController extends Controller {
         "Sign up successful"
       );
     } catch (err) {
-      logger.debug("signup 500 error", err);
+      logger.error("Signup has an error in Mobile: ", err);
       return raiseServerError(res);
     }
   };

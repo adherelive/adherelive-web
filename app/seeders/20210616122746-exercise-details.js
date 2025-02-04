@@ -2,6 +2,9 @@
 
 import { USER_CATEGORY } from "../../constant";
 import { TABLE_NAME } from "../models/exerciseDetails";
+import { createLogger } from "../../libs/logger";
+
+const logger = createLogger("Seeders Exercise Details");
 
 const exercises = [
   {

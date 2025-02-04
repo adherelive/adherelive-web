@@ -128,16 +128,16 @@ class RemoveDocuments {
   deleteFile = (path) => {
     try {
       fs.unlink(path, function (err) {
-        logger.debug("ERRor got in the unlink the file is: ", err);
+        logger.error("Error got in the unlink the file is: ", err);
       });
     } catch (error) {
-      logger.debug("ERROR: in deleting file: ", error);
+      logger.error("ERROR: in deleting file: ", error);
     }
   };
 
   runObserver = async () => {
     try {
-      logger.debug("running REMOVE_DOCUMENTS cron");
+      logger.debug("Running REMOVE DOCUMENTS cron");
       const { checkIfAnyLocalDocumentExists } = this;
 
       const prescriptionPdfsPresent = await checkIfAnyLocalDocumentExists(

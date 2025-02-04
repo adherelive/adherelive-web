@@ -11,8 +11,10 @@ import {
 import moment from "moment";
 import PDFDocument from "pdfkit";
 import { getConvertedTime } from "../getUserTime/index";
-
+import { createLogger } from "../../../libs/logger";
 import * as fs from 'fs';
+
+const logger = createLogger("GENERATE CARE PLAN PDF");
 
 const DOC_MARGIN = 30;
 const DOC_WIDTH_MARGIN = 550;
@@ -1552,7 +1554,7 @@ function renderChiefComplaints({ symptoms }) {
 
     return finalSymptom;
   } catch (err) {
-    logger.debug("Error in chief complaints: ", err);
+    logger.error("Error in chief complaints: ", err);
   }
 }
 
@@ -2206,7 +2208,7 @@ function printFooter(
       height: signaturePictureHeight,
     });
   } catch (err) {
-    logger.debug("ERROR in signature pic", err);
+    logger.error("Error in uploaded signature: ", err);
   }
 
   if (doc.y + 3 * SMALLEST_FONT_SIZE > PAGE_END_LIMIT) {

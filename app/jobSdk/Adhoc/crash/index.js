@@ -1,5 +1,8 @@
 import AdhocJob from "../index";
 import { EMAIL_TEMPLATE_NAME } from "../../../../constant";
+import { createLogger } from "../../../../libs/logger";
+
+const logger = createLogger("JOB SDK ADHOC CRASH");
 
 export default class CrashJob extends AdhocJob {
   constructor(data) {

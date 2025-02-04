@@ -37,7 +37,7 @@ database
     logger.debug("Db and tables have been created...");
   })
   .catch((err) => {
-    logger.debug("Db connect error is: ", err);
+    logger.error("Db connect error is: ", err);
   });
 
 const addMedicine = async (data) => {
@@ -102,7 +102,7 @@ fs.readFile(
              * TODO: Check and enable this code
             fs.writeFile('medicineDb.txt', JSON.stringify(dataToUpdate), "utf8", (err) => {
                 if(err) {
-                    logger.debug("ERROR IN TESTONE ---> ", err);
+                    logger.error("ERROR IN TESTONE ---> ", err);
                 }
             });*/
 
@@ -118,21 +118,20 @@ fs.readFile(
                 logger.debug("Db and tables have been created...");
               })
               .catch((err) => {
-                logger.debug("Db connect error is: ", err);
+                logger.error("Db connect error is: ", err);
               });
-
             // await addMedicine({pillbox_id: ID, name: rxstring});
           } catch (error) {
-            logger.debug("Row add error --> ", error);
+            logger.error("Row add error: ", error);
           }
         },
         complete: function (results) {
-          logger.debug("Finished:");
+          logger.debug("Finished!");
           /**
            * TODO: Check and enable this code
           fs.writeFile('medicineDb.txt', JSON.stringify({dataToWrite}), "utf8", (err) => {
               if(err) {
-                  logger.debug("ERROR IN TESTONE ---> ", err);
+                  logger.error("Error in TestOne ---> ", err);
               }
           });*/
         },

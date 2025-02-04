@@ -85,13 +85,13 @@ class AwsS3Service {
             logger.debug("Image name for emailLogo: ", emailLogo);
             //logger.debug("Email logo has been uploaded successfully: ", logoImage);
           } else {
-            logger.debug("Error in getting the logo image", err);
+            logger.error("Error in getting the logo image: ", err);
           }
           if (!err) {
             const emailLogo = this.saveBufferObject(data, "logo.png");
             logger.debug("Image for emailLogo: ", emailLogo);
           } else {
-            logger.debug("Error in getting the email logo image: ", err);
+            logger.error("Error in getting the email logo image: ", err);
           }
         });
 
@@ -107,14 +107,14 @@ class AwsS3Service {
               );
               logger.debug("File for wave sound audioObject: ", audioObject);
             } else {
-              logger.debug("Error in getting the wave sound file: ", err);
+              logger.error("Error in getting the wave sound file: ", err);
             }
           }
         );
       }
       return result;
     } catch (err) {
-      // logger.debug("u19281011 err --> ", err);
+      // logger.error("Error in Create Bucket for S3: ", err);
       throw err;
     }
   }
@@ -166,17 +166,19 @@ class AwsS3Service {
         this.callback
       );
 
-      // let url = this.s3Client.getSignedUrl("getObject", {
-      //   Bucket: this.bucket,
-      //   Key: file,
-      //   Expires: 60
-      // });
-      //
-      // logger.debug("AWS S3 URL: ", url);
+      /**
+       * TODO: Check why these lines are commented out?
+      let url = this.s3Client.getSignedUrl("getObject", {
+        Bucket: this.bucket,
+        Key: file,
+        Expires: 60
+      });
+
+      logger.debug("AWS S3 URL: ", url);*/
 
       return result;
     } catch (err) {
-      logger.debug("AWS S3 service has an error ---> \n", err);
+      logger.error("AWS S3 service has an error ---> \n", err);
       // throw err;
     }
   }
@@ -220,7 +222,7 @@ class AwsS3Service {
       let result = await this.s3Client.removeObject(this.bucket, file);
       return result;
     } catch (err) {
-      logger.debug("Error in the remove file object: ", err);
+      logger.error("Error in the remove file object: ", err);
       throw err;
     }
   }
@@ -244,7 +246,7 @@ class AwsS3Service {
 
       return result;
     } catch (err) {
-      logger.debug("Error in the saveAudioObject function: ", err);
+      logger.error("Error in the saveAudioObject function: ", err);
       // throw err;
     }
   };
@@ -275,7 +277,7 @@ class AwsS3Service {
 
       return result;
     } catch (err) {
-      logger.debug("Error in the saveVideoObject function: ", err);
+      logger.error("Error in the saveVideoObject function: ", err);
       // throw err;
     }
   };

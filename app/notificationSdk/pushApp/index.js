@@ -64,19 +64,18 @@ class PushNotification {
         });
 
         res.on("error", function (err) {
-          logger.debug("Error in listening in push notification: ", err);
+          logger.error("Error in listening in push notification: ", err);
         });
       });
 
       req.on("error", function (e) {
-        logger.debug("Error in sending push notification: ", e);
-        logger.debug(e);
+        logger.error("Error in sending push notification: ", e);
       });
       logger.debug("sendPushNotification JSON -> template: ", JSON.stringify(template));
       req.write(JSON.stringify(template));
       req.end();
     } catch (err) {
-      logger.debug("OneSignal sendPushNotification 500 error: ", err);
+      logger.error("OneSignal sendPushNotification error: ", err);
     }
   };
 }

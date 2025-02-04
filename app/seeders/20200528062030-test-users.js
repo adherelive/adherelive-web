@@ -3,6 +3,10 @@
 import { TABLE_NAME } from "../models/users";
 import bcrypt from "bcrypt";
 
+import { createLogger } from "../../libs/logger";
+
+const logger = createLogger("Seeders Test Users");
+
 const generatePasswordHash = async (password) => {
   return await bcrypt.hash(password, 5);
 };

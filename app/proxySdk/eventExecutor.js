@@ -1,10 +1,14 @@
+import { createLogger } from "../../libs/logger";
+
 const EmailManager = require("../communications/email/emailManger");
 const SmsManager = require("../communications/sms/smsManager");
-const Logger = require("./libs/logger");
 const assert = require("assert");
+const Logger = require("./libs/logger")
 const { validateMailData, validateSmsData } = require("./libs/validator");
 const { Proxy_Sdk, EVENTS } = require(".");
 const Scheduler = require("./scheduler");
+
+const logger = createLogger("Event Executor");
 
 class EventExecutor {
   async sendMail(mailData, scheduledJobId) {
@@ -20,15 +24,15 @@ class EventExecutor {
       );
 
       logger.debug("INSIDE THE SEND MAIL Logger: ", mailData, response);
-      let logger = new Logger("email", mailData);
-      logger.log();
+      let proxyLogger = new Logger("email", mailData);
+      await proxyLogger.log();
       // if (scheduledJobId && response) {
       //   let updatedJob = await Scheduler.updateScheduledJob(scheduledJobId, {
       //     status: "completed"
       //   });
       // }
     } catch (err) {
-      logger.debug("INSIDE THE SEND MAIL ERROR: ", err);
+      logger.error("Inside the SendMail: ", err);
       // Proxy_Sdk.execute(EVENTS.EMAIL_ERROR, err, "mail_error");
     }
   }
@@ -40,8 +44,8 @@ class EventExecutor {
         smsData,
         response ? { status: "SENT" } : { status: "FAILED" }
       );
-      let logger = new Logger("sms", smsData);
-      logger.log();
+      let proxyLogger = new Logger("sms", smsData);
+      await proxyLogger.log();
       // if (scheduledJobId && response) {
       //   let updatedJob = await Scheduler.updateScheduledJob(scheduledJobId, {
       //     status: "completed"

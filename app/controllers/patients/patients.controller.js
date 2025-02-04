@@ -2122,7 +2122,7 @@ class PatientController extends Controller {
       };
       return res.sendFile(pdfFile, options);
     } catch (err) {
-      logger.debug("Error while generating the prescription: ", err);
+      logger.error("Error while generating the prescription: ", err);
       return raiseServerError(res);
     }
   };

@@ -70,7 +70,7 @@ class EventExecutor {
       const jsonResponse = await response.json();
       logger.debug("sendPushNotification Response: ", jsonResponse);
     } catch (err) {
-      logger.debug("Event executor sendPushNotification 500 error: ", err);
+      logger.error("Event executor sendPushNotification error: ", err);
     }
   }
    */
@@ -94,13 +94,13 @@ class EventExecutor {
       const feed = client.feed("notification", template.object);
       logger.debug("Feed Initialized: ", feed);
       const response = await feed.addActivity(template).catch((err) => {
-        logger.debug("Get-Stream response error: ", err);
+        logger.error("Get-Stream response error: ", err);
       });
       logger.debug("Activity Added: ", response);
 
       return response;
     } catch (err) {
-      logger.debug("Error in sendAppNotification: ", err);
+      logger.error("Error in sendAppNotification: ", err);
       throw err; // Re-throw the error for further handling
     }
   };

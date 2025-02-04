@@ -3,8 +3,6 @@ import moment from "moment";
 import { EVENT_TYPE } from "../../constant";
 import { createLogger } from "../../libs/logger";
 
-const logger = createLogger("PROXY_SDK");
-
 const getAllOccurrence = require("./scheduler/helper");
 const { EventEmitter } = require("events");
 const EVENTS = require("./proxyEvents");
@@ -12,6 +10,8 @@ const scheduler = require("./scheduler");
 const { NotificationSdk } = require("../notificationSdk");
 const { ActivitySdk, STAGES } = require("../activitySdk");
 const schedule = require("node-schedule");
+
+const logger = createLogger("PROXY_SDK");
 
 function checkEventHaveToStart(startTime) {
   logger.debug("START TIME: Check Event Has Started");

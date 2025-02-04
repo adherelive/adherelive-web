@@ -25,7 +25,7 @@ export default class QueueService {
 
     this.sqs.createQueue(params, (err, data) => {
       if (err) {
-        logger.debug("createQueue error: ", err);
+        logger.error("createQueue error: ", err);
       } else {
         logger.debug("Success ---> data queue URL: ", data.QueueUrl);
       }
@@ -63,10 +63,10 @@ export default class QueueService {
       };
 
       const response = await this.sqs.sendMessage(params).promise();
-      logger.debug("sendMessage response: ", response);
+      logger.debug("Send Message response: ", response);
       return response;
     } catch (error) {
-      logger.debug("sendMessage catch error: ", error);
+      logger.error("Sending Message has an error: ", error);
     }
   };
 
@@ -74,7 +74,7 @@ export default class QueueService {
     try {
       const formattedData = [];
 
-      logger.debug("sendBatchMessage dataArr --> ", dataArr);
+      logger.debug("sendBatchMessage -> dataArr: ", dataArr);
       dataArr.forEach((data, index) => {
         const stringData = JSON.stringify(data);
         const params = {
@@ -93,10 +93,10 @@ export default class QueueService {
       };
 
       const response = await this.sqs.sendMessageBatch(params).promise();
-      logger.debug("sendBatchMessage response: ", response);
+      logger.debug("Send Batch Message response: ", response);
       return response;
     } catch (error) {
-      logger.debug("sendBatchMessage catch error: ", error);
+      logger.error("Send Batch Message has an error: ", error);
     }
   };
 

@@ -34,6 +34,6 @@ export default async function InitializeMongo() {
 
     logger.debug("MongoDB Database string used is: ", connectionString);
   } catch (err) {
-    logger.debug("Error connecting to MongoDB: ", err);
+    logger.error("Error connecting to MongoDB: ", err);
   }
 }

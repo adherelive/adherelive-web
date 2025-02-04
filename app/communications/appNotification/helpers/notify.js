@@ -45,7 +45,7 @@ class Notifier {
       logger.debug("response", response);
       return result;
     } catch (err) {
-      logger.debug("Error", err);
+      logger.error("Error in sendign notifications: ", err);
     }
   }
 

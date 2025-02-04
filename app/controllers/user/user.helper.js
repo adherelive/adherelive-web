@@ -24,8 +24,11 @@ import {
   VERIFICATION_TYPE,
 } from "../../../constant";
 import { completePath } from "../../helper/s3FilePath";
+import { createLogger } from "../../../libs/logger";
 
 const chalk = require("chalk");
+
+const logger = createLogger("WEB > USER > CONTROLLER");
 
 export const doctorQualificationData = async (userId) => {
   try {
@@ -296,7 +299,7 @@ export const downloadFileFromS3 = async (objectName, filePath) => {
 
     return true;
   } catch (err) {
-    logger.debug("Error got in downloading file from s3: ", err);
+    logger.error("Error got in downloading file from s3: ", err);
     return false;
   }
 };

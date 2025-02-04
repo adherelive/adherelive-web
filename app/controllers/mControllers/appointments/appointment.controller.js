@@ -731,11 +731,11 @@ class MobileAppointmentController extends Controller {
           "Appointment documents uploaded successfully."
         );
       } catch (err) {
-        logger.debug("APPOINTMENT DOC UPLOAD CATCH ERROR ", err);
+        logger.error("Appointment document has an error while uploading for Mobile: ", err);
         return this.raiseServerError(res, 500, {}, `${err.message}`);
       }
     } catch (error) {
-      logger.debug("uploadAppointmentDoc 500 error: ", error);
+      logger.error("Uploading Appointment document has an error in Mobile: ", error);
       return this.raiseServerError(res);
     }
   };

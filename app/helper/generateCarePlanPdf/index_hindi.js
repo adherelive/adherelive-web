@@ -11,9 +11,13 @@ import {
 import moment from "moment";
 import PDFDocument from "pdfkit";
 import { getConvertedTime } from "../getUserTime/index";
+import { createLogger } from "../../../libs/logger";
+
 // const PDFDocument = require("pdfkit");
 const fs = require("fs");
 // const moment = require("moment");
+
+const logger = createLogger("INDEX FOR HINDI");
 
 const DOC_MARGIN = 30;
 const DOC_WIDTH_MARGIN = 550;
@@ -1538,7 +1542,7 @@ function renderChiefComplaints({ symptoms }) {
 
     return finalSymptom;
   } catch (err) {
-    logger.debug("error in chief Compliance", err);
+    logger.error("Error in Chief Compliance", err);
   }
 }
 
@@ -2144,7 +2148,7 @@ function printFooter(
       height: signaturePictureHeight,
     });
   } catch (err) {
-    logger.debug("ERROR in signature pic", err);
+    logger.error("Error in uploaded signature: ", err);
   }
 
   if (doc.y + 3 * SMALLEST_FONT_SIZE > PAGE_END_LIMIT) {

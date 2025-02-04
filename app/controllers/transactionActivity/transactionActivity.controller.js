@@ -203,13 +203,13 @@ class TransactionActivityController extends Controller {
       const serviceSubscriptionUserMappingService =
         new ServiceSubscriptionUserMappingService();
       const txActivities = new TxActivities();
-      let txActivitie = await txActivities.updateTxActivities(body, id);
+      let txActivate = await txActivities.updateTxActivities(body, id);
 
       return raiseSuccess(
         res,
         200,
         {
-          ...txActivitie,
+          ...txActivate,
         },
         "Activity updated successfully"
       );
@@ -256,7 +256,7 @@ class TransactionActivityController extends Controller {
       });
       reassignAudit = reassignAudit.save();
 
-      let txActivitie = await txActivities.updateTxActivities(
+      let txActivate = await txActivities.updateTxActivities(
         { ...rest, is_reassigned: true },
         id
       );
@@ -264,7 +264,7 @@ class TransactionActivityController extends Controller {
         res,
         200,
         {
-          ...txActivitie,
+          ...txActivate,
           reassignAudit,
         },
         "Activity updated successfully"

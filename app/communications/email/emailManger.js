@@ -299,27 +299,29 @@ class EmailManger {
 
       if (payload.error && payload.error == 1) return payload;
 
-      logger.debug("Email payload transformed successfully!");
-      logger.debug("Sending email...");
-      // let publishResponse = this.ses
-      //   .sendEmail(payload, (err, data) => {
-      //     if (err) {
-      //       logger.debug("Sending an Email error!!", err);
-      //     }
-      //     if (data) {
-      //       logger.debug("Email sent successfully!!", data);
-      //     }
-      //   })
-      //   .promise();
-      // delete payload.Message;
-      // delete payload.Destination;
-      // delete payload.ReplyToAddresses;
-      //
+      logger.info("Email payload transformed successfully!");
+      logger.info("Sending email...");
+      /**
+       * TODO: Check why it is commented and remove or reinstate
+      let publishResponse = this.ses
+        .sendEmail(payload, (err, data) => {
+          if (err) {
+            logger.error("Sending an Email error!!", err);
+          }
+          if (data) {
+            logger.info("Email sent successfully!!", data);
+          }
+        })
+        .promise();
+      delete payload.Message;
+      delete payload.Destination;
+      delete payload.ReplyToAddresses;
+       */
       const publishResponse = await this.smtpTransporter.sendMail(payload);
 
       return publishResponse;
     } catch (err) {
-      logger.debug("sending mail error.........!!");
+      logger.error("sending mail error!", err);
     }
   }
 }

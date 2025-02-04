@@ -1097,11 +1097,11 @@ class AppointmentController extends Controller {
           "Appointment documents uploaded successfully."
         );
       } catch (err) {
-        logger.debug("APPOINTMENT DOC UPLOAD CATCH ERROR ", err);
+        logger.error("Appointment document upload has an error: ", err);
         return this.raiseServerError(res, 500, {}, `${err.message}`);
       }
     } catch (error) {
-      logger.debug("uploadAppointmentDoc 500 error: ", error);
+      logger.error("Uploading an Appointment document has an error: ", error);
       return this.raiseServerError(res);
     }
   };

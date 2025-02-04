@@ -79,7 +79,7 @@ class UserController extends Controller {
         "Signed up successfully. Please check your email to proceed"
       );
     } catch (err) {
-      logger.debug("signup 500", err);
+      logger.error("Signup User has an error: ", err);
       if (err.code && err.code == 11000) {
         return raiseClientError(res, 400, errMessage.EMAIL_ALREADY_EXISTS);
         // let response = new Response(false, 400);
@@ -805,7 +805,7 @@ class UserController extends Controller {
         // throw new Error(constants.COOKIES_NOT_SET);
       }
     } catch (err) {
-      logger.debug("onAppStart 500 error", err);
+      logger.error("On App Start has an error: ", err);
       return this.raiseServerError(res);
     }
   };
@@ -1079,7 +1079,7 @@ class UserController extends Controller {
         // throw new Error(constants.COOKIES_NOT_SET);
       }
     } catch (err) {
-      logger.debug("onAppStart 500 error", err);
+      logger.error("On App Start backup has an error", err);
       return this.raiseServerError(res);
     }
   };

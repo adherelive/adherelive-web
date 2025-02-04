@@ -4236,13 +4236,15 @@ class DoctorController extends Controller {
 
       // let baseId = 22016;
       fs.writeFile("file.xlsx", file.buffer, async function (err, result) {
-        if (err) logger.debug("error", err);
+        if (err) logger.error("Error while uploading the medicine workbook: ", err);
 
-        // let workbook = XLSX.readFile("file.xlsx");
-        // let sheet_name_list = workbook.SheetNames;
-        // const medicineModificationDocs = XLSX.utils.sheet_to_json(
-        //   workbook.Sheets[sheet_name_list[0]]
-        // );
+        /**
+         * TODO: keep this here till we test 'exceljs' package as replacement
+        let workbook = XLSX.readFile("file.xlsx");
+        let sheet_name_list = workbook.SheetNames;
+        const medicineModificationDocs = XLSX.utils.sheet_to_json(
+          workbook.Sheets[sheet_name_list[0]]
+        );*/
         async function readExcelData(filePath) {
           try {
             const workbook = new Workbook();

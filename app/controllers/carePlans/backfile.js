@@ -14,6 +14,10 @@
  * @param raiseServerError
  * @returns {Promise<*>}
  */
+// import { createLogger } from "../../libs/logger";
+//
+// const logger = createLogger("Seeders Exercise Details");
+//
 // const {raiseSuccess, raiseClientError, raiseServerError} = this;
 //
 // try {

@@ -77,6 +77,7 @@ import {getFilePath} from "../../../app/helper/s3FilePath";
 import {checkAndCreateDirectory} from "../../../app/helper/common";
 
 import {getDoctorCurrentTime} from "../../../app/helper/getUserTime";
+import {raiseServerError} from "../helper";
 
 const fs = require("fs");
 const path = require("path");
@@ -399,7 +400,7 @@ function renderChiefComplaints({symptoms}) {
 
         return finalSymptom;
     } catch (err) {
-        logger.debug("Error in chief Compliance: ", err);
+        logger.error("Error in chief Compliance: ", err);
     }
 }
 
@@ -1442,17 +1443,17 @@ router.get("/details/:care_plan_id", Authenticated, async (req, res) => {
 
         dataForPdf = {
             users: {...usersData},
-            // ...(permissions.includes(PERMISSIONS.MEDICATIONS.VIEW) && {
-            //   medications,
-            // }),
-            // ...(permissions.includes(PERMISSIONS.MEDICATIONS.VIEW) && {
-            //   medicines,
-            // }),
-            // medications,
-            // clinical_notes,
-            // follow_up_advise,
-            // clinical_notes,
-            // follow_up_advise,
+            /*...(permissions.includes(PERMISSIONS.MEDICATIONS.VIEW) && {
+              medications,
+            }),
+            ...(permissions.includes(PERMISSIONS.MEDICATIONS.VIEW) && {
+              medicines,
+            }),
+            medications,
+            clinical_notes,
+            follow_up_advise,
+            clinical_notes,
+            follow_up_advise,*/
             medicines,
             care_plans: {
                 [carePlanData.getCarePlanId()]: {
@@ -1501,9 +1502,8 @@ router.get("/details/:care_plan_id", Authenticated, async (req, res) => {
             printBackground: true,
             path: "invoice.pdf",
         };
-        logger.debug("--------------------------");
+        logger.debug("Pre Data: \n");
         logger.debug({pre_data});
-        logger.debug("--------------------------");
 
         let pdf_buffer_value = await html_to_pdf({
             templateHtml,
@@ -1513,7 +1513,7 @@ router.get("/details/:care_plan_id", Authenticated, async (req, res) => {
         res.contentType("application/pdf");
         return res.send(pdf_buffer_value);
     } catch (err) {
-        logger.debug("Error while generating the prescription: ", err);
+        logger.error("Error while generating the prescription: ", err);
         return raiseServerError(res);
     }
 });

@@ -247,7 +247,7 @@ class ServiceSubscriptionTxController extends Controller {
           due_date: moment(new Date(), "DD-MM-YYYY").add(7, "days"),
         };
         const txActivities = new TransactionActivate();
-        await txActivities.addTransactionActivite(activitiesData);
+        await txActivities.addTransactionActivate(activitiesData);
         response.push(activitiesData);
         return raiseSuccess(res, 200, { response }, "Success");
       }
@@ -277,7 +277,7 @@ class ServiceSubscriptionTxController extends Controller {
           };
 
           const txActivities = new TransactionActivate();
-          txActivities.addTransactionActivite(activitiesData);
+          txActivities.addTransactionActivate(activitiesData);
           response.push(activitiesData);
         }
       });

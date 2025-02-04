@@ -2420,7 +2420,7 @@ class MPatientController extends Controller {
       };
       return res.sendFile(pdfFile, options);
     } catch (err) {
-      logger.debug("Error got in the generate prescription: ", err);
+      logger.error("Error got in the generate prescription: ", err);
       return raiseServerError(res);
     }
   };
@@ -2445,7 +2445,7 @@ class MPatientController extends Controller {
         "User preference fetched successfully."
       );
     } catch (err) {
-      logger.debug("Error got in the get patient timings: ", err);
+      logger.error("Error got in the get patient timings: ", err);
       return raiseServerError(res);
     }
   };
