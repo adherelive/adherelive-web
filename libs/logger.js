@@ -240,9 +240,9 @@ class EnhancedWinstonLogger {
           format: () => moment().format('YYYY-MM-DD HH:mm:ss.SSS')
         }),
         winston.format.errors({ stack: true }),
-        winston.format.metadata({
-          fillWith: ['timestamp', 'level', 'message', 'source', ...Object.keys(logContext.getAll())]
-        }),
+        // winston.format.metadata({
+        //   fillWith: ['timestamp', 'level', 'message', 'source', ...Object.keys(logContext.getAll())]
+        // }),
         winston.format.printf(this._createLogFormatter())
     );
 
@@ -256,13 +256,15 @@ class EnhancedWinstonLogger {
     });
   }
 
+  /**
+   * TODO: Keep the old formatter for re-use
   _createLogFormatter() {
     return (info) => {
       const {
         level = 'info', // Provide a default value for level
         message,
         timestamp,
-        source,
+        source = 'Source not defined!', // Provide a default value for source
         metadata = {},
         stack
       } = info;
@@ -275,7 +277,8 @@ class EnhancedWinstonLogger {
       // Safely handle undefined level
       // const levelStr = level ? level.toUpperCase() : 'UNKNOWN';
 
-      const baseLog = `${timestamp} [${level.toUpperCase()}] [${source}] ${contextStr}: ${message}`;
+      // Format the base log with the source and context string
+      const baseLog = `[${source}] ${contextStr}: ${timestamp} [${level.toUpperCase()}] ${message}`;
 
       if (stack) {
         return `${baseLog}\n${stack}`;
@@ -286,6 +289,35 @@ class EnhancedWinstonLogger {
       }
 
       return baseLog;
+    };
+  }
+   */
+
+  _createLogFormatter() {
+    return (info) => {
+      const {
+        level = 'info',
+        message,
+        timestamp,
+        metadata = {},
+      } = info;
+
+      // Get the source from either the metadata or the logger instance
+      const source = info.source || this.source || 'unknown source';
+
+      // Create the log entry without the undefined brackets
+      const logEntry = {
+        timestamp,
+        level,
+        message,
+        ...metadata
+      };
+
+      // Delete the source from the metadata as we're displaying it in the prefix
+      delete logEntry.source;
+
+      // Format the output with the source prefix and JSON body
+      return `[${source}]: ${JSON.stringify(logEntry, null, 2)}`;
     };
   }
 
@@ -348,6 +380,8 @@ class EnhancedWinstonLogger {
     };
   }
 
+  /**
+   * TODO: Keep the old debug to re-use, if required
   debug(message, metadata = {}) {
     if (!this._shouldSample()) return;
     if (!this.rateLimiter.shouldLog(this.source)) {
@@ -365,6 +399,22 @@ class EnhancedWinstonLogger {
     };
 
     this.logger.debug(formattedMessage, enrichedMetadata);
+  }*/
+
+  debug(message, metadata = {}) {
+    if (!this._shouldSample()) return;
+    if (!this.rateLimiter.shouldLog(this.source)) {
+      this.warn('Rate limit exceeded for debug logs', { source: this.source });
+      return;
+    }
+
+    const formattedMessage = message === undefined ? 'No message provided' :
+        (typeof message === 'object' ? JSON.stringify(message, null, 2) : message);
+
+    this.logger.debug(formattedMessage, {
+      ...metadata,
+      source: this.source
+    });
   }
 
   info(message, metadata = {}) {
