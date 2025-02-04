@@ -1,4 +1,4 @@
-import { createLogger } from "../../../libs/log";
+import { createLogger } from "../../../libs/logger";
 import carePlanService from "../../services/carePlan/carePlan.service";
 import * as carePlanHelper from "./carePlan.helper";
 

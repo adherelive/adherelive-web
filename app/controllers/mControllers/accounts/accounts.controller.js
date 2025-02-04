@@ -6,7 +6,7 @@ import MAccountsWrapper from "../../../apiWrapper/mobile/accountDetails";
 import UserWrapper from "../../../apiWrapper/mobile/user";
 import ProviderWrapper from "../../../apiWrapper/mobile/provider";
 
-import { createLogger } from "../../../../libs/log";
+import { createLogger } from "../../../../libs/logger";
 
 const logger = createLogger("MOBILE ACCOUNTS CONTROLLER");
 

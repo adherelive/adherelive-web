@@ -1,4 +1,4 @@
-import { createLogger } from "../../../libs/log";
+import { createLogger } from "../../../libs/logger";
 
 const logger = createLogger("PATIENT > HELPER");
 

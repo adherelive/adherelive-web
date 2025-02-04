@@ -2,7 +2,7 @@ import { Op } from "sequelize";
 import Database from "../../../libs/mysql";
 import { TABLE_NAME } from "../../models/specialities";
 
-import { createLogger } from "../../../libs/log";
+import { createLogger } from "../../../libs/logger";
 const logger = createLogger("WEB > SPECIALITY > SERVICES");
 
 class SpecialityService {

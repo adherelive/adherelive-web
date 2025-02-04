@@ -12,7 +12,7 @@ import {
   USER_CATEGORY,
 } from "../../../constant";
 import { NotificationSdk } from "../../notificationSdk";
-import { createLogger } from "../../../libs/log";
+import { createLogger } from "../../../libs/logger";
 
 const logger = createLogger("ACTIVITY_SDK");
 

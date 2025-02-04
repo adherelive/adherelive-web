@@ -1,5 +1,5 @@
 import schedule from "node-schedule";
-import { createLogger } from "../libs/log";
+import { createLogger } from "../libs/logger";
 
 import queueService from "../app/services/awsQueue/queue.service";
 import { importModule } from '../libs/helper.js'; // A helper function for dynamic imports

@@ -3,7 +3,7 @@ import Database from "../../../libs/mysql";
 import { TABLE_NAME } from "../../models/patients";
 import { TABLE_NAME as userTableName } from "../../models/users";
 import { TABLE_NAME as carePlanTableName } from "../../models/carePlan";
-import { createLogger } from "../../../libs/log";
+import { createLogger } from "../../../libs/logger";
 import { TABLE_NAME as doctorTableName } from "../../models/doctors";
 
 const logger = createLogger("WEB > PATIENTS > SERVICE");

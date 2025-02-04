@@ -257,8 +257,7 @@ if (isDevelopment) {
       const logger = new WinstonLogger(callerFile);
       logger.debug(...args);
     } catch (error) {
-      // Fallback to original console.log if something goes wrong
-      console.error('Logging error: ', error);
+      console.error('Logging error:', error);
     }
   };
 }

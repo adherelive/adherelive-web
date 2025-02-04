@@ -1,5 +1,5 @@
 import Controller from "../../index";
-import { createLogger } from "../../../../libs/log";
+import { createLogger } from "../../../../libs/logger";
 import moment from "moment";
 import * as vitalHelper from "../../vitals/vital.helper";
 

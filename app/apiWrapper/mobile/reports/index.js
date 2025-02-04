@@ -4,7 +4,7 @@ import uploadDocumentService from "../../../services/uploadDocuments/uploadDocum
 import FlashCardService from "../../../services/flashCard/flashCard.service";
 import DocumentWrapper from "../../web/uploadDocument";
 
-import { createLogger } from "../../../../libs/log";
+import { createLogger } from "../../../../libs/logger";
 import { DOCUMENT_PARENT_TYPE } from "../../../../constant";
 
 const logger = createLogger("MOBILE > API_WRAPPER > REPORTS");

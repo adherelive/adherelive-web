@@ -15,7 +15,7 @@ import {
   USER_CATEGORY,
   WHEN_TO_TAKE_ABBREVATIONS,
 } from "../../../../constant";
-import { createLogger } from "../../../../libs/log";
+import { createLogger } from "../../../../libs/logger";
 
 import medicineService from "../../../services/medicine/medicine.service";
 import {

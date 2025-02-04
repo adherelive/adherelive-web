@@ -1,6 +1,6 @@
 const twilio = require("twilio");
 
-import { createLogger } from "../../../libs/log";
+import { createLogger } from "../../../libs/logger";
 
 const AccessToken = twilio.jwt.AccessToken;
 const VideoGrant = AccessToken.VideoGrant;

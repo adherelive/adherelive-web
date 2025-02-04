@@ -6,7 +6,7 @@ import MealTemplateService from "../../services/mealTemplate/mealTemplate.servic
 //Wrappers
 import MealTemplateWrapper from "../../apiWrapper/web/mealTemplate";
 
-import { createLogger } from "../../../libs/log";
+import { createLogger } from "../../../libs/logger";
 
 const logger = createLogger("WEB > MEAL_TEMPLATE > CONTROLLER");
 

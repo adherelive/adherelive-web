@@ -1,7 +1,7 @@
 import awsS3Service from "../../../services/awsS3/awsS3.service";
 import md5 from "js-md5";
 
-import { createLogger } from "../../../../libs/log";
+import { createLogger } from "../../../../libs/logger";
 import { completePath } from "../../../helper/s3FilePath";
 
 const logger = createLogger("SYMPTOM > CONTROLLER > HELPER");

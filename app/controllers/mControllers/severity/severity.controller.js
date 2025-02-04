@@ -2,7 +2,7 @@ import Controller from "../../index";
 import severityService from "../../../services/severity/severity.service";
 import SeverityWrapper from "../../../apiWrapper/mobile/severity";
 
-import { createLogger } from "../../../../libs/log";
+import { createLogger } from "../../../../libs/logger";
 
 const logger = createLogger("MOBILE SEVERITY CONTROLLER");
 

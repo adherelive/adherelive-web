@@ -1,4 +1,4 @@
-import { createLogger } from "../../../../libs/log";
+import { createLogger } from "../../../../libs/logger";
 import { FAVOURITE_TYPE, MEDICAL_TEST } from "../../../../constant";
 
 // Services

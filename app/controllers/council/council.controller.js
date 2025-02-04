@@ -3,7 +3,7 @@ import Controller from "../index";
 import councilService from "../../services/council/council.service";
 import CouncilWrapper from "../../apiWrapper/web/council";
 
-import { createLogger } from "../../../libs/log";
+import { createLogger } from "../../../libs/logger";
 
 const logger = createLogger("WEB DEGREE CONTROLLER");
 

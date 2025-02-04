@@ -1,6 +1,6 @@
 import Controller from "../index";
 
-import { createLogger } from "../../../libs/log";
+import { createLogger } from "../../../libs/logger";
 import { USER_CATEGORY } from "../../../constant";
 
 import * as TransactionHelper from "./transactions.helper";

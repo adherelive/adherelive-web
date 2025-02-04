@@ -2,7 +2,7 @@ import Controller from "../index";
 
 import base64 from "js-base64";
 import bcrypt from "bcrypt";
-import { createLogger } from "../../../libs/log";
+import { createLogger } from "../../../libs/logger";
 
 // Services
 import userService from "../../services/user/user.service";

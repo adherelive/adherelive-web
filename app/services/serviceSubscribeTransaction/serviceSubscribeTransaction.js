@@ -6,7 +6,7 @@ import { TABLE_NAME as providerTableName } from "../../models/providers";
 import { TABLE_NAME as serviceOfferingTableName } from "../../models/serviceOffering";
 import { TABLE_NAME as serviceSubscriptionTableName } from "../../models/serviceSubscriptions";
 
-import { createLogger } from "../../../libs/log";
+import { createLogger } from "../../../libs/logger";
 const logger = createLogger("WEB > SUBSCRIPTION TRANSACTION > SERVICES");
 
 class serviceSubscribeTransaction {

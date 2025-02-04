@@ -9,7 +9,7 @@ import userRolesService from "../../app/services/userRoles/userRoles.service";
 import UserWrapper from "../../app/apiWrapper/web/user";
 import UserRoleWrapper from "../../app/apiWrapper/mobile/userRoles";
 
-import { createLogger } from "../../libs/log";
+import { createLogger } from "../../libs/logger";
 import userRouter from "./user";
 
 import appointmentRouter from "./appointments";

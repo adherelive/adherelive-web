@@ -2,6 +2,7 @@ import express from "express";
 import Authenticated from "../middleware/auth";
 import PatientController from "../../../app/controllers/patients/patients.controller";
 import multer from "multer";
+import { createLogger } from "../../../libs/logger";
 
 // Services
 import userService from "../../../app/services/user/user.service";
@@ -82,8 +83,10 @@ const path = require("path");
 const puppeteer = require("puppeteer");
 const handlebars = require("handlebars");
 
-var storage = multer.memoryStorage();
-var upload = multer({dest: "../app/public/", storage: storage});
+const logger = createLogger("PRESCRIPTION API");
+
+let storage = multer.memoryStorage();
+let upload = multer({dest: "../app/public/", storage: storage});
 const dataBinding = {
     items: [
         {
@@ -102,6 +105,7 @@ const dataBinding = {
     total: 600,
     isWatermark: true,
 };
+
 const getWhenToTakeText = (number) => {
     switch (number) {
         case 1:

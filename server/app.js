@@ -24,7 +24,7 @@ import RemoveDocuments from "../app/cronJobs/removeDocuments";
 import LongTerm from "../app/cronJobs/longTerm";
 import RenewTxActivity from "../app/cronJobs/renewTxActivity";
 import ErrorBoundary from './ErrorBoundary';
-import { requestIdMiddleware, createLogger } from '../libs/log';
+import { requestIdMiddleware, createLogger } from '../libs/logger';
 
 const logger = createLogger('app.js');
 

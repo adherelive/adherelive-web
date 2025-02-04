@@ -1,5 +1,5 @@
 import Controller from "../../index";
-import { createLogger } from "../../../../libs/log";
+import { createLogger } from "../../../../libs/logger";
 import {
   CHART_DETAILS,
   NO_ACTION,

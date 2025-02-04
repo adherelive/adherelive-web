@@ -10,7 +10,7 @@ import { TABLE_NAME as scheduleEventTableName } from "../../models/scheduleEvent
 import { DAYS_INTEGER, EVENT_TYPE } from "../../../constant";
 import moment from "moment";
 
-import { createLogger } from "../../../libs/log";
+import { createLogger } from "../../../libs/logger";
 const logger = createLogger("WEB > DIET > SERVICE");
 
 const DEFAULT_ORDER = [["created_at", "DESC"]];

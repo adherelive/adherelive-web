@@ -1,5 +1,5 @@
 import algoliasearch from "algoliasearch";
-import { createLogger } from "../../../libs/log";
+import { createLogger } from "../../../libs/logger";
 import medicineService from "../medicine/medicine.service";
 
 import MedicineWrapper from "../../apiWrapper/mobile/medicine";

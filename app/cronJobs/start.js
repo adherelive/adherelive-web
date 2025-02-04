@@ -1,4 +1,4 @@
-import { createLogger } from "../../libs/log";
+import { createLogger } from "../../libs/logger";
 import moment from "moment";
 
 import { EVENT_STATUS, EVENT_TYPE, NOTIFICATION_STAGES } from "../../constant";

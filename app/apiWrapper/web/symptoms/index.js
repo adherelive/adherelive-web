@@ -9,7 +9,7 @@ import DoctorWrapper from "../doctor";
 import PatientWrapper from "../patient";
 import CarePlanWrapper from "../carePlan";
 
-import { createLogger } from "../../../../libs/log";
+import { createLogger } from "../../../../libs/logger";
 import DocumentService from "../../../services/uploadDocuments/uploadDocuments.service";
 import { ACTIVITY_TYPE, DOCUMENT_PARENT_TYPE } from "../../../../constant";
 import DocumentWrapper from "../uploadDocument";

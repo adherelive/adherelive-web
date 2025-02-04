@@ -2,7 +2,7 @@
 import moment from "moment";
 import { DataTypes } from "sequelize";
 import { EVENT_STATUS, EVENT_TYPE } from "../../constant";
-import { createLogger } from "../../libs/log";
+import { createLogger } from "../../libs/logger";
 
 import { TABLE_NAME as eventHistoryTableName } from "./eventHistory";
 

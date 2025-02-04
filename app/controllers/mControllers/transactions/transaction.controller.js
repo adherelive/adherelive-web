@@ -18,7 +18,7 @@ import AccountDetailsWrapper from "../../../apiWrapper/mobile/accountDetails";
 import { CHECKOUT, STATUS, UPI } from "../../../models/transactions";
 
 // Helpers
-import { createLogger } from "../../../../libs/log";
+import { createLogger } from "../../../../libs/logger";
 import { generateTransactionId } from "../../../helper/payment";
 import * as TransactionHelper from "./transactions.helper";
 import { USER_CATEGORY } from "../../../../constant";

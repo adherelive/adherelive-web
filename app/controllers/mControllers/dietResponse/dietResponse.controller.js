@@ -14,7 +14,7 @@ import * as UploadHelper from "../../../helper/uploadDocuments";
 import DietJob from "../../../jobSdk/Diet/observer";
 import NotificationSdk from "../../../notificationSdk";
 
-import { createLogger } from "../../../../libs/log";
+import { createLogger } from "../../../../libs/logger";
 import {
   DOCUMENT_PARENT_TYPE,
   NOTIFICATION_STAGES,

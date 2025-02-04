@@ -7,7 +7,7 @@ import DoctorWrapper from "../apiWrapper/mobile/doctor";
 import PatientWrapper from "../apiWrapper/mobile/patient";
 import { USER_CATEGORY } from "../../constant";
 
-import { createLogger } from "../../libs/log";
+import { createLogger } from "../../libs/logger";
 
 const logger = createLogger("CRON > RENEW > SUBSCRIPTION");
 

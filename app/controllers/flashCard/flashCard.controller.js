@@ -1,6 +1,6 @@
 import Controller from "../index";
 
-import { createLogger } from "../../../libs/log";
+import { createLogger } from "../../../libs/logger";
 import FlashCardService from "../../services/flashCard/flashCard.service";
 import ReportService from "../../services/reports/report.service";
 import TxActivity from "../../services/transactionActivity/transactionActivity.service";

@@ -1,4 +1,4 @@
-import { createLogger } from "../../libs/log";
+import { createLogger } from "../../libs/logger";
 import inApp from "./inApp";
 import PushApp from "./pushApp";
 

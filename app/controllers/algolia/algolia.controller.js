@@ -1,7 +1,7 @@
 import Controller from "../index";
 
 import AlgoliaService from "../../services/algolia/algolia.service";
-import { createLogger } from "../../../libs/log";
+import { createLogger } from "../../../libs/logger";
 
 const logger = createLogger("ALGOLIA > CONTROLLER");
 

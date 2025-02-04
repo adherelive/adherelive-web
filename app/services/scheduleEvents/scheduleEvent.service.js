@@ -7,7 +7,7 @@ import Database from "../../../libs/mysql";
 import moment from "moment";
 import { getTime } from "../../helper/timer";
 
-import { createLogger } from "../../../libs/log";
+import { createLogger } from "../../../libs/logger";
 const logger = createLogger("WEB > SCHEDULE EVENT > SERVICES");
 
 /**

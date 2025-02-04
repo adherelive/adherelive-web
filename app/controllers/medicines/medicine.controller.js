@@ -12,7 +12,7 @@ import ScheduleEventService from "../../services/scheduleEvents/scheduleEvent.se
 import MedicineWrapper from "../../apiWrapper/web/medicine";
 import DoctorWrapper from "../../apiWrapper/web/doctor";
 
-import { createLogger } from "../../../libs/log";
+import { createLogger } from "../../../libs/logger";
 import { EVENT_TYPE } from "../../../constant";
 
 const logger = createLogger("WEB MEDICINE CONTROLLER");

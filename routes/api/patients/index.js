@@ -4,6 +4,9 @@ import PatientController from "../../../app/controllers/patients/patients.contro
 import ServiceSubscriptionUserMapping from "../../../app/controllers/serviceSubscriptionUserMapping/serviceSubscriptionUserMapping.controller";
 import multer from "multer";
 import { getTime } from "../../../app/helper/timer";
+import { createLogger } from "../../../libs/logger";
+
+const logger = createLogger("ROUTE API PATIENTS");
 
 var storage = multer.memoryStorage();
 var upload = multer({ dest: "../app/public/", storage: storage });

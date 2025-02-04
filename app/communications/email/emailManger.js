@@ -1,6 +1,6 @@
 // const AWS = require("aws-sdk");
 // const Log = require("../../../libs/log")("communications --> emailManger");
-import { createLogger } from "../../../libs/log";
+import { createLogger } from "../../../libs/logger";
 
 const path = require("path");
 const { existsSync } = require("fs");

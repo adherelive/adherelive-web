@@ -43,7 +43,7 @@ import AppointmentWrapper from "../../apiWrapper/web/appointments";
 import CarePlanTemplateWrapper from "../../apiWrapper/web/carePlanTemplate";
 import MedicationWrapper from "../../apiWrapper/web/medicationReminder";
 
-import { createLogger } from "../../../libs/log";
+import { createLogger } from "../../../libs/logger";
 
 const logger = createLogger("WEB > CARE PLAN > CONTROLLER");
 

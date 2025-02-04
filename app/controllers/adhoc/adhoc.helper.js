@@ -1,5 +1,5 @@
 // Services
-import { createLogger } from "../../../libs/log";
+import { createLogger } from "../../../libs/logger";
 import doctorService from "../../services/doctor/doctor.service";
 import patientService from "../../services/patients/patients.service";
 import providerService from "../../services/provider/provider.service";

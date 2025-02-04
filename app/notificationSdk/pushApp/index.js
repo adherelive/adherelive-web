@@ -3,7 +3,7 @@ import {
   USER_CATEGORY,
   DEFAULT_PROVIDER,
 } from "../../../constant";
-import { createLogger } from "../../../libs/log";
+import { createLogger } from "../../../libs/logger";
 import EventExecutor from "../executor";
 import fetch from "node-fetch";
 

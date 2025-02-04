@@ -1,6 +1,6 @@
 import moment from "moment";
 import { EVENT_STATUS, EVENT_TYPE } from "../../constant";
-import { createLogger } from "../../libs/log";
+import { createLogger } from "../../libs/logger";
 
 // services
 import medicationService from "../services/medicationReminder/mReminder.service";

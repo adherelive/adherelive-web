@@ -1,7 +1,7 @@
 import Database from "../../../libs/mysql";
 import { TABLE_NAME } from "../../models/serviceUserMapping";
 
-import { createLogger } from "../../../libs/log";
+import { createLogger } from "../../../libs/logger";
 const logger = createLogger("WEB > SERVICE USER MAPPING > SERVICES");
 
 export default class ServiceUserMapping {

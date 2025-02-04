@@ -1,6 +1,6 @@
 import Controller from "../index";
 
-import { createLogger } from "../../../libs/log";
+import { createLogger } from "../../../libs/logger";
 
 // Helpers
 import * as vitalHelper from "./vital.helper";

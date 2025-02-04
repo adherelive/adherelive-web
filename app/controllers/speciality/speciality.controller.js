@@ -1,6 +1,6 @@
 import Controller from "../index";
 
-import { createLogger } from "../../../libs/log";
+import { createLogger } from "../../../libs/logger";
 import specialityService from "../../services/speciality/speciality.service";
 
 import SpecialityWrapper from "../../apiWrapper/mobile/speciality";

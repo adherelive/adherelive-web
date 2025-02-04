@@ -1,7 +1,7 @@
 import { EVENTS, Proxy_Sdk } from ".";
 import eventExecutor from "./eventExecutor";
 
-import { createLogger } from "../../libs/log";
+import { createLogger } from "../../libs/logger";
 import Logger from "./libs/logger";
 
 const logger = createLogger("ProxySDK Event Logging");

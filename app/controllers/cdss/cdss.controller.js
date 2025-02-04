@@ -1,6 +1,6 @@
 import Controller from "../index";
 
-import { createLogger } from "../../../libs/log";
+import { createLogger } from "../../../libs/logger";
 
 const Response = require("../helper/responseFormat");
 const Cdss = require("../../models/mongoModel/cdss");

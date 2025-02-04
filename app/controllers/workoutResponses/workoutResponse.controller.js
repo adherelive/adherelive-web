@@ -11,7 +11,7 @@ import WorkoutWrapper from "../../apiWrapper/web/workouts";
 import EventWrapper from "../../apiWrapper/common/scheduleEvents";
 import ExerciseContentWrapper from "../../apiWrapper/web/exerciseContents";
 import CarePlanWrapper from "../../apiWrapper/web/carePlan";
-import { createLogger } from "../../../libs/log";
+import { createLogger } from "../../../libs/logger";
 
 const logger = createLogger("WEB > WORKOUT_RESPONSE > CONTROLLER");
 

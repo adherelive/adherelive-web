@@ -4,7 +4,7 @@ import { TABLE_NAME as foodGroupTableName } from "../../models/foodGroups";
 import { TABLE_NAME as dietTableName } from "../../models/diet";
 import { TABLE_NAME as similarFoodMappingTableName } from "../../models/similarFoodMapping";
 
-import { createLogger } from "../../../libs/log";
+import { createLogger } from "../../../libs/logger";
 const logger = createLogger("WEB > DIET FOOD GROUP > SERVICE");
 
 const DEFAULT_ORDER = [["created_at", "DESC"]];

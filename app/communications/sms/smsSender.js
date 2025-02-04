@@ -1,6 +1,6 @@
 import AWS from "aws-sdk";
 import axios from "axios";
-import { createLogger } from "../../../libs/log";
+import { createLogger } from "../../../libs/logger";
 
 const logger = createLogger("Communications ---> SMS Sender");
 

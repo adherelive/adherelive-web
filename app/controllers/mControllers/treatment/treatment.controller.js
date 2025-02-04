@@ -3,7 +3,7 @@ import treatmentService from "../../../services/treatment/treatment.service";
 
 import TreatmentWrapper from "../../../apiWrapper/mobile/treatments";
 
-import { createLogger } from "../../../../libs/log";
+import { createLogger } from "../../../../libs/logger";
 
 const logger = createLogger("MOBILE TREATMENT CONTROLLER");
 

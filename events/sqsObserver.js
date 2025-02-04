@@ -1,5 +1,5 @@
-import { createLogger } from "../libs/log";
 import { EVENT_TYPE } from "../constant";
+import { createLogger } from "../libs/logger";
 import {
   handleAppointments,
   handleAppointmentsTimeAssignment,

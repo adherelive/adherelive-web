@@ -5,7 +5,7 @@ import * as constants from "../../../../config/constants";
 import bcrypt from "bcrypt";
 import base64 from "js-base64";
 
-import { createLogger } from "../../../../libs/log";
+import { createLogger } from "../../../../libs/logger";
 import MPatientWrapper from "../../../apiWrapper/mobile/patient";
 import MUserWrapper from "../../../apiWrapper/mobile/user";
 import MDoctorWrapper from "../../../apiWrapper/mobile/doctor";

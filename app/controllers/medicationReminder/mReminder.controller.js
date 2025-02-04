@@ -37,7 +37,7 @@ import {
   REPEAT_TYPE,
   WHEN_TO_TAKE_ABBREVATIONS,
 } from "../../../constant";
-import { createLogger } from "../../../libs/log";
+import { createLogger } from "../../../libs/logger";
 import {
   getCarePlanAppointmentIds,
   getCarePlanMedicationIds,

@@ -1,4 +1,4 @@
-import { createLogger } from "../../../libs/log";
+import { createLogger } from "../../../libs/logger";
 
 // Services
 import TransactionService from "../../services/transactions/transaction.service";

@@ -1,5 +1,5 @@
 const fs = require("fs");
-import { createLogger } from "../../libs/log";
+import { createLogger } from "../../libs/logger";
 
 import {
   DOCUMENT_PARENT_TYPE,

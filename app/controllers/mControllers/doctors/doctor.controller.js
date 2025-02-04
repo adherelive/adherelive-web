@@ -41,7 +41,7 @@ import UserRoleWrapper from "../../../apiWrapper/mobile/userRoles";
 import UserPreferenceWrapper from "../../../apiWrapper/mobile/userPreference";
 import ProviderWrapper from "../../../apiWrapper/mobile/provider";
 
-import { createLogger } from "../../../../libs/log";
+import { createLogger } from "../../../../libs/logger";
 import {
   ALLOWED_DOC_TYPE_DOCTORS,
   DOCUMENT_PARENT_TYPE,

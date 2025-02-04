@@ -13,7 +13,7 @@ import { TABLE_NAME as medicineTableName } from "../../models/medicines";
 import { TABLE_NAME as userRolesTableName } from "../../models/userRoles";
 import { TABLE_NAME as carePlanSecondaryDoctorMappingsTableName } from "../../models/carePlanSecondaryDoctorMappings";
 
-import { createLogger } from "../../../libs/log";
+import { createLogger } from "../../../libs/logger";
 const logger = createLogger("WEB > CARE PLAN > SERVICES");
 
 const DEFAULT_ORDER = [["created_at", "DESC"]];

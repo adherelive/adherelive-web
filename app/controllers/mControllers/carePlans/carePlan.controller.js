@@ -36,7 +36,7 @@ import ScheduleEventService from "../../../services/scheduleEvents/scheduleEvent
 import moment from "moment";
 import PERMISSIONS from "../../../../config/permissions";
 
-import { createLogger } from "../../../../libs/log";
+import { createLogger } from "../../../../libs/logger";
 
 const logger = createLogger("MOBILE > CARE_PLAN > CONTROLLER");
 

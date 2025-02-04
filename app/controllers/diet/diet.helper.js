@@ -7,7 +7,7 @@ import {
   SLEEP,
   WAKE_UP,
 } from "../../../constant";
-import { createLogger } from "../../../libs/log";
+import { createLogger } from "../../../libs/logger";
 
 const logger = createLogger("DIET > HELPER");
 

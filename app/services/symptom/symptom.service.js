@@ -7,7 +7,7 @@ import { TABLE_NAME as doctorTableName } from "../../models/doctors";
 import { TABLE_NAME as patientTableName } from "../../models/patients";
 import { TABLE_NAME as carePlanTableName } from "../../models/carePlan";
 
-import { createLogger } from "../../../libs/log";
+import { createLogger } from "../../../libs/logger";
 const logger = createLogger("WEB > SYMPTOM > SERVICE");
 
 class SymptomService {

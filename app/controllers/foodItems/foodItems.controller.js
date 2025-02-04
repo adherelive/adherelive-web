@@ -7,7 +7,7 @@ import FoodItemService from "../../services/foodItems/foodItems.service";
 import FoodItemWrapper from "../../apiWrapper/web/foodItem";
 import FoodItemDetailsWrapper from "../../apiWrapper/web/foodItemDetails";
 
-import { createLogger } from "../../../libs/log";
+import { createLogger } from "../../../libs/logger";
 import { USER_CATEGORY } from "../../../constant";
 
 const logger = createLogger("WEB FOOD ITEM CONTROLLER");

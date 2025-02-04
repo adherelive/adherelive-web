@@ -2,7 +2,7 @@ import Controller from "../../index";
 import degreeService from "../../../services/degree/degree.service";
 import DegreeWrapper from "../../../apiWrapper/mobile/degree";
 
-import { createLogger } from "../../../../libs/log";
+import { createLogger } from "../../../../libs/logger";
 
 const logger = createLogger("MOBILE DEGREE CONTROLLER");
 

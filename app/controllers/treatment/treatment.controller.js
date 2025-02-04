@@ -3,7 +3,7 @@ import Controller from "../index";
 import treatmentService from "../../services/treatment/treatment.service";
 import TreatmentWrapper from "../../apiWrapper/web/treatments";
 
-import { createLogger } from "../../../libs/log";
+import { createLogger } from "../../../libs/logger";
 
 const logger = createLogger("WEB DEGREE CONTROLLER");
 

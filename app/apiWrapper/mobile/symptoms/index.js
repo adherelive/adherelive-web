@@ -12,7 +12,7 @@ import DocumentWrapper from "../uploadDocument";
 
 import { ACTIVITY_TYPE, DOCUMENT_PARENT_TYPE } from "../../../../constant";
 
-import { createLogger } from "../../../../libs/log";
+import { createLogger } from "../../../../libs/logger";
 
 const logger = createLogger("API_WRAPPER > WEB > SYMPTOMS");
 

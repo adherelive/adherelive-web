@@ -3,7 +3,7 @@ import Controller from "../index";
 import conditionService from "../../services/condition/condition.service";
 import ConditionWrapper from "../../apiWrapper/web/conditions";
 
-import { createLogger } from "../../../libs/log";
+import { createLogger } from "../../../libs/logger";
 
 const logger = createLogger("WEB DEGREE CONTROLLER");
 

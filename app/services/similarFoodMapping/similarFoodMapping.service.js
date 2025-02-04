@@ -2,7 +2,7 @@ import Database from "../../../libs/mysql";
 import { Op } from "sequelize";
 import { TABLE_NAME } from "../../models/similarFoodMapping";
 
-import { createLogger } from "../../../libs/log";
+import { createLogger } from "../../../libs/logger";
 const logger = createLogger("WEB > SIMILAR FOOD MAPPING > SERVICES");
 
 const DEFAULT_ORDER = [["created_at", "DESC"]];

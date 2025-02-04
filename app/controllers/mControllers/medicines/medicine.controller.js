@@ -3,7 +3,7 @@ import medicineService from "../../../services/medicine/medicine.service";
 import AlgoliaService from "../../../services/algolia/algolia.service";
 
 import MedicineApiWrapper from "../../../apiWrapper/mobile/medicine";
-import { createLogger } from "../../../../libs/log";
+import { createLogger } from "../../../../libs/logger";
 
 const LOG_NAME = "MOBILE > MEDICINE > CONTROLLER";
 

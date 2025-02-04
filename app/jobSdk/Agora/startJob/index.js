@@ -10,7 +10,7 @@ import {
   USER_CATEGORY,
 } from "../../../../constant";
 
-import { createLogger } from "../../../../libs/log"
+import { createLogger } from "../../../../libs/logger"
 import moment from "moment";
 
 const logger = createLogger("WEB > JOBS SDK > AGORA");

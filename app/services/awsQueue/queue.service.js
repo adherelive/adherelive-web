@@ -1,6 +1,6 @@
 import AWS from "aws-sdk";
 import moment from "moment";
-import { createLogger } from "../../../libs/log";
+import { createLogger } from "../../../libs/logger";
 
 const logger = createLogger("QUEUE > SERVICE");
 

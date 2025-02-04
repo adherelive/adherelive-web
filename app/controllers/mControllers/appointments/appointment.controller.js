@@ -13,7 +13,7 @@ import {
 } from "../../../../constant";
 import moment from "moment";
 
-import { createLogger } from "../../../../libs/log";
+import { createLogger } from "../../../../libs/logger";
 import AppointmentJob from "../../../jobSdk/Appointments/observer";
 import NotificationSdk from "../../../notificationSdk";
 import { downloadFileFromS3, uploadImageS3 } from "../user/user.helper";

@@ -6,7 +6,7 @@ import AppointmentWrapper from "../../web/appointments";
 import MedicationWrapper from "../../web/medicationReminder";
 import { EVENT_TYPE } from "../../../../constant";
 
-import { createLogger } from "../../../../libs/log";
+import { createLogger } from "../../../../libs/logger";
 
 const logger = createLogger("WEB > API WRAPPER > SCHEDULE_EVENTS");
 

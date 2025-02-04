@@ -1,7 +1,7 @@
 import serviceSubscribeTransaction from "../services/serviceSubscribeTransaction/serviceSubscribeTransaction";
 import ServiceSubscriptionUserMapping from "../services/serviceSubscriptionUserMapping/serviceSubscriptionUserMapping.service";
 import { TABLE_NAME as serviceSubscriptionUserMappingTable } from "../models/serviceSubscriptionUserMapping";
-import { createLogger } from "../../libs/log";
+import { createLogger } from "../../libs/logger";
 import Database from "../../libs/mysql";
 import { TABLE_NAME as serviceSubscribeTransactionTable } from "../models/serviceSubscribeTransaction";
 import moment from "moment";

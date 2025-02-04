@@ -1,6 +1,6 @@
 import EmailManager from "../communications/email/emailManger";
 import SmsManager from "../communications/sms/smsManager";
-import { createLogger } from "../../libs/log";
+import { createLogger } from "../../libs/logger";
 import fetch from "node-fetch";
 import stream from "getstream";
 import { validateMailData } from "../proxySdk/libs/validator";

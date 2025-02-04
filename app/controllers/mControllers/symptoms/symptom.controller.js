@@ -13,7 +13,7 @@ import CarePlanWrapper from "../../../apiWrapper/mobile/carePlan";
 import PatientWrapper from "../../../apiWrapper/mobile/patient";
 
 import { uploadAudio, uploadImage, uploadVideo } from "./symptoms.helper";
-import { createLogger } from "../../../../libs/log";
+import { createLogger } from "../../../../libs/logger";
 import {
   ALLOWED_VIDEO_EXTENSIONS,
   DOCUMENT_PARENT_TYPE,

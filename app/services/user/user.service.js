@@ -11,7 +11,7 @@ import { TABLE_NAME as userDeviceTableName } from "../../models/userDevices";
 import { TABLE_NAME as carePlanTableName } from "../../models/carePlan";
 import { TABLE_NAME as providerTableName } from "../../models/providers";
 
-import { createLogger } from "../../../libs/log";
+import { createLogger } from "../../../libs/logger";
 
 const logger = createLogger("WEB > USERS > SERVICE");
 

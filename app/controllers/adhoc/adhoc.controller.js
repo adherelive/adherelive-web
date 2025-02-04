@@ -22,7 +22,7 @@ import WatchlistWrapper from "../../apiWrapper/web/doctorPatientWatchlist";
 import permissions from "../../../config/permissions";
 import * as PermissionHelper from "../../helper/userCategoryPermisssions";
 import { getLinkDetails, getUserDetails } from "./adhoc.helper";
-import { createLogger } from "../../../libs/log";
+import { createLogger } from "../../../libs/logger";
 import userPreferenceService from "../../services/userPreferences/userPreference.service";
 import QueueService from "../../services/awsQueue/queue.service";
 import patientsService from "../../services/patients/patients.service";

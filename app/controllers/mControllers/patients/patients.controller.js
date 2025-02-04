@@ -39,7 +39,7 @@ import DietWrapper from "../../../apiWrapper/mobile/diet";
 import * as DietHelper from "../../diet/diet.helper";
 
 import { randomString } from "../../../../libs/helper";
-import { createLogger } from "../../../../libs/log";
+import { createLogger } from "../../../../libs/logger";
 
 import fs from "fs";
 import md5 from "js-md5";

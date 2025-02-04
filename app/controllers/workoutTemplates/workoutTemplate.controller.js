@@ -1,5 +1,5 @@
 import Controller from "../index";
-import { createLogger } from "../../../libs/log";
+import { createLogger } from "../../../libs/logger";
 
 // Services
 import WorkoutTemplateService from "../../services/workoutTemplates/workoutTemplate.service";

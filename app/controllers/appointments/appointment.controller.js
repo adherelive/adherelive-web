@@ -2,7 +2,7 @@ import Controller from "../index";
 
 import moment from "moment";
 
-import { createLogger } from "../../../libs/log";
+import { createLogger } from "../../../libs/logger";
 import {
   getCarePlanAppointmentIds,
   getCarePlanMedicationIds,

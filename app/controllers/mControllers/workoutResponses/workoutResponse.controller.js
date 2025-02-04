@@ -17,7 +17,7 @@ import ExerciseContentWrapper from "../../../apiWrapper/mobile/exerciseContents"
 import WorkoutJob from "../../../jobSdk/Workout/observer";
 import NotificationSdk from "../../../notificationSdk";
 
-import { createLogger } from "../../../../libs/log";
+import { createLogger } from "../../../../libs/logger";
 import {
   EVENT_STATUS,
   NOTIFICATION_STAGES,

@@ -1,7 +1,7 @@
 import Database from "../../../libs/mysql";
 import { TABLE_NAME } from "../../models/userFavourites";
 
-import { createLogger } from "../../../libs/log";
+import { createLogger } from "../../../libs/logger";
 const logger = createLogger("WEB > USER_FAVOURITES > SERVICE");
 
 /**

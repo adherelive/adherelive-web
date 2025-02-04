@@ -3,7 +3,7 @@ import fs from "fs";
 import path from "path";
 import moment from "moment";
 import Sequelize, { QueryTypes } from "sequelize";
-import { createLogger } from "../libs/log";
+import { createLogger } from "../libs/logger";
 
 // const Config = require("../config/config");
 // Config();

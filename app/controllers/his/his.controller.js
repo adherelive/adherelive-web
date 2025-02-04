@@ -6,7 +6,7 @@
  * @desc An API Controller for HIS Operations.
  */
 import Controller from "../index";
-import { createLogger } from "../../../libs/log";
+import { createLogger } from "../../../libs/logger";
 import hisService from "../../services/his/his.service";
 import bcrypt from "bcrypt";
 

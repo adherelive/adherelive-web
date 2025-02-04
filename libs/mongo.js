@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { createLogger } from "./log";
+import { createLogger } from "./logger";
 
 const logger = createLogger("SEQUELIZE QUERY MONGODB");
 

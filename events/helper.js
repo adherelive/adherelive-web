@@ -36,7 +36,7 @@ import {
 import FeatureDetailWrapper from "../app/apiWrapper/web/featureDetails";
 import { RRule } from "rrule";
 import moment from "moment";
-import { createLogger } from "../libs/log";
+import { createLogger } from "../libs/logger";
 
 // Services
 import FeatureDetailService from "../app/services/featureDetails/featureDetails.service";

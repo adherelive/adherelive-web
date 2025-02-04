@@ -1,5 +1,5 @@
 import Controller from "../../index";
-import { createLogger } from "../../../../libs/log";
+import { createLogger } from "../../../../libs/logger";
 
 import { EVENT_TYPE, OFFLINE_SYNC_DATA_TASKS } from "../../../../constant";
 import {

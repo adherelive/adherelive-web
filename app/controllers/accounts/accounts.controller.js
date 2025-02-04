@@ -8,7 +8,7 @@ import UserWrapper from "../../apiWrapper/web/user";
 import DoctorWrapper from "../../apiWrapper/web/doctor";
 import ProviderWrapper from "../../apiWrapper/web/provider";
 
-import { createLogger } from "../../../libs/log";
+import { createLogger } from "../../../libs/logger";
 
 const logger = createLogger("WEB ACCOUNTS CONTROLLER");
 

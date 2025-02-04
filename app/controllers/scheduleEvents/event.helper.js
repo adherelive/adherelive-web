@@ -1,4 +1,4 @@
-import { createLogger } from "../../../libs/log";
+import { createLogger } from "../../../libs/logger";
 import { EVENT_TYPE, USER_CATEGORY } from "../../../constant";
 
 // Services

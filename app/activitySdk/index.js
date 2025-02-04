@@ -2,7 +2,7 @@ import { EventEmitter } from "events";
 import { ACTIVITIES, STAGES } from "./activityType";
 import { ACTIVITY_TYPE, EVENT_TYPE } from "../../constant";
 
-import { createLogger } from "../../libs/log";
+import { createLogger } from "../../libs/logger";
 
 const logger = createLogger("ACTIVITY_SDK");
 

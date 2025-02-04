@@ -1,7 +1,7 @@
 import WebAuthenticate from "../api/middleware/auth";
 import MobileAuthenticate from "../m-api/middlewares/auth";
 import { raiseServerError } from "../api/helper";
-import { createLogger } from "../../libs/log";
+import { createLogger } from "../../libs/logger";
 
 const logger = createLogger("MIDDLEWARE > AUTH");
 

@@ -1,5 +1,5 @@
 import Controller from "../../index";
-import { createLogger } from "../../../../libs/log";
+import { createLogger } from "../../../../libs/logger";
 import { USER_CATEGORY } from "../../../../constant";
 
 // HELPERS

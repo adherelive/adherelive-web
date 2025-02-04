@@ -1,7 +1,7 @@
 import { isDoctor as isWebDoctor } from "../api/middleware/doctor";
 import { isDoctor as isMDoctor } from "../m-api/middlewares/doctor";
 import {raiseServerError} from "../api/helper";
-import { createLogger } from "../../libs/log";
+import { createLogger } from "../../libs/logger";
 
 const logger = createLogger("MIDDLEWARE > DOCTOR");
 

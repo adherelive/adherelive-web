@@ -1,6 +1,6 @@
 import Controller from "../../index";
 import moment from "moment";
-import { createLogger } from "../../../../libs/log";
+import { createLogger } from "../../../../libs/logger";
 import providerService from "../../../services/provider/provider.service";
 import appointmentService from "../../../services/appointment/appointment.service";
 import UserRoleService from "../../../services/userRoles/userRoles.service";

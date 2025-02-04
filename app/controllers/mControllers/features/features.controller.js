@@ -1,5 +1,5 @@
 import Controller from "../../index";
-import { createLogger } from "../../../../libs/log";
+import { createLogger } from "../../../../libs/logger";
 import featuresService from "../../../services/features/features.service";
 
 import carePlanService from "../../../services/carePlan/carePlan.service";

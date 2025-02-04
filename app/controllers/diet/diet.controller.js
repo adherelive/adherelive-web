@@ -21,7 +21,7 @@ import * as DietHelper from "./diet.helper";
 import DietJob from "../../jobSdk/Diet/observer";
 import NotificationSdk from "../../notificationSdk";
 
-import { createLogger } from "../../../libs/log";
+import { createLogger } from "../../../libs/logger";
 
 import {
   DAYS,

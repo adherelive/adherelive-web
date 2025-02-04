@@ -74,7 +74,7 @@ import { getFilePath } from "../../helper/s3FilePath";
 import * as carePlanHelper from "../carePlans/carePlan.helper";
 import { getDoctorCurrentTime } from "../../helper/getUserTime";
 import * as DietHelper from "../diet/diet.helper";
-import { createLogger } from "../../../libs/log";
+import { createLogger } from "../../../libs/logger";
 
 import bcrypt from "bcrypt";
 import moment from "moment";

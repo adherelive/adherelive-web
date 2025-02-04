@@ -1,7 +1,7 @@
 import Database from "../../../libs/mysql";
 import { TABLE_NAME } from "../../models/serviceOffering";
 
-import { createLogger } from "../../../libs/log";
+import { createLogger } from "../../../libs/logger";
 const logger = createLogger("WEB > SERVICE OFFERING > SERVICES");
 
 /**

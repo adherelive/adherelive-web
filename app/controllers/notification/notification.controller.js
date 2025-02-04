@@ -1,6 +1,6 @@
 import Controller from "../";
 
-import { createLogger } from "../../../libs/log";
+import { createLogger } from "../../../libs/logger";
 import { getDataForNotification } from "./notification.helper";
 
 import ChatJob from "../../jobSdk/Chat/observer";

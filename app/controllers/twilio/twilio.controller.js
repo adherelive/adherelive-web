@@ -2,7 +2,7 @@ import Controller from "../index";
 
 import { faker } from '@faker-js/faker';
 import twilioService from "../../services/twilio/twilio.service";
-import { createLogger } from "../../../libs/log";
+import { createLogger } from "../../../libs/logger";
 
 const logger = createLogger("WEB > TWILIO > CONTROLLER");
 

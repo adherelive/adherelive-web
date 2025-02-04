@@ -1,6 +1,6 @@
 import fs from "fs";
 
-import { createLogger } from "../../../libs/log";
+import { createLogger } from "../../../libs/logger";
 const logger = createLogger("WEB > MEDICINE > HELPER");
 
 // var Config = require("../../../config/config");
