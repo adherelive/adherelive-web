@@ -298,7 +298,6 @@
         border-collapse: collapse;
       }
 
-    
       /* MEDICINE TABLE CSS */
       .medicine_table {
         width: 100%;
@@ -354,6 +353,7 @@
       .medicine_table th:nth-child(6),
       .medicine_table td:nth-child(9) {
         width: 15%; /* Start Date / Duration */
+        white-space: normal;
       }
 
       .medicine_table td p {
@@ -495,7 +495,8 @@
         <h3>Patient Address:</h3>
         <p>{{ patient_data.address }}</p>
       </div>
-      <div class="top_setion_wrapper_two"><!--Ananjay removed doctor email -->
+      <div class="top_setion_wrapper_two">
+        <!--Ananjay removed doctor email -->
         <!-- <h3>Doctor Email :</h3>
       <p>{{ doctorEmail }}</p> -->
       </div>
@@ -524,11 +525,14 @@
 
     <div class="top_setion_wrapper">
       <!-- <h3>Diagnosis : </h3> -->
-      <div class="top_setion_wrapper_one" style="border-right: 1px solid; padding:10px;">
+      <div
+        class="top_setion_wrapper_one"
+        style="border-right: 1px solid; padding: 10px"
+      >
         <h3>Diagnosis :</h3>
         <p>{{ diagnosis }}</p>
       </div>
-      <div class="top_setion_wrapper_two" style="padding:10px;">
+      <div class="top_setion_wrapper_two" style="padding: 10px">
         <h3>Symptoms :</h3>
         <p style="width: 250px">{{ symptoms_final_value }}</p>
       </div>
@@ -601,7 +605,7 @@
               class="complaint_table"
               style="width: 100%; height: 100%; text-align: center"
             >
-            <tr>
+              <tr>
                 <th style="width: 50%; height: 30px" rowspan="2">
                   <h3>Weight</h3>
                 </th>
@@ -681,23 +685,26 @@
     <div class="medicine_section">
       <table class="medicine_table">
         <tr>
-          <th >
+          <th>
             <h3>S.No</h3>
           </th>
-          <th style="width: 30%;" colspan="2">
+          <th style="width: 30%" colspan="2">
             <h3>Name of Medicine</h3>
           </th>
-          <th >
+          <th>
             <h3>Dose</h3>
           </th>
-          <th >
+          <th>
             <h3>Qty</h3>
           </th>
-          <th  colspan="3">
+          <th colspan="3">
             <div>
               <h3>Schedule Medicine</h3>
             </div>
-            <div class="shedule_medicine_wrapper" style="display: flex; justify-content: space-around;">
+            <div
+              class="shedule_medicine_wrapper"
+              style="display: flex; justify-content: space-around"
+            >
               <div>
                 <h4>Morning</h4>
               </div>
@@ -709,7 +716,7 @@
               </div>
             </div>
           </th>
-          <th >
+          <th>
             <h3>Start Date / Duration</h3>
           </th>
         </tr>
@@ -718,17 +725,22 @@
           <td>
             <p>{{print @index }}</p>
           </td>
-          <td colspan="2" style="padding: 0px" >
+          <td colspan="2" style="padding: 0px">
             <div class="medicine_name_wrapper">
-              <div style="border-right: 1px solid;">
+              <div style="border-right: 1px solid">
                 <p>{{ medicineType }}</p>
               </div>
-              <div style=" text-align: justify;">
+              <div style="text-align: justify">
                 <p>
-                  <strong>{{ medicineName }}</strong><br>
-                  {{ genericName }} {{ strength }}<br>
-                  <span style="font-size: 10px;">by Dr. {{ organizer.name }}</span><br>
-                  Note: - <span style="font-family: TiroDevanagariHindi-Regular;">{{ description }}</span>
+                  <strong>{{ medicineName }}</strong><br />
+                  {{ genericName }} {{ strength }}<br />
+                  <span style="font-size: 10px"
+                    >by Dr. {{ organizer.name }}</span
+                  ><br />
+                  Note: -
+                  <span style="font-family: TiroDevanagariHindi-Regular"
+                    >{{ description }}</span
+                  >
                 </p>
               </div>
             </div>
@@ -752,7 +764,7 @@
                 {{/each}}
               </div>
               {{#each timings_new.morning}}
-              <p style="font-size: 8px;">{{ this }}</p>
+              <p style="font-size: 8px">{{ this }}</p>
               {{/each}}
             </div>
           </td>
@@ -769,7 +781,7 @@
                 {{/each}}
               </div>
               {{#each timings_new.afternoon}}
-              <p style="font-size: 8px;">{{ this }}</p>
+              <p style="font-size: 8px">{{ this }}</p>
               {{/each}}
             </div>
           </td>
@@ -786,7 +798,7 @@
                 {{/each}}
               </div>
               {{#each timings_new.night}}
-              <p style="font-size: 8px;">{{ this }}</p>
+              <p style="font-size: 8px">{{ this }}</p>
               {{/each}}
             </div>
           </td>
@@ -800,7 +812,6 @@
         </tr>
         {{/each}}
       </table>
-      
     </div>
 
     <!-- INVESTIGATION SECTION -->
@@ -981,12 +992,13 @@
       </h3>
     </div>
 
+    {{#if (or diet_output.length pre_workouts.length) }}
     <div style="margin-top: 30px">
       <h3>Lifestyle Advice</h3>
     </div>
-
+    {{/if}}
     <!-- DIET SECTION  -->
-
+    {{#if diet_output.length}}
     <div class="diet_section_heading">
       <h3>Diet :</h3>
     </div>
@@ -1064,6 +1076,7 @@
         </table>
       </div>
     </div>
+    {{/if}} {{#if pre_workouts.length}}
 
     <div class="workout_section_heading">
       <h3>Workout :</h3>
@@ -1122,5 +1135,6 @@
         </table>
       </div>
     </div>
+    {{/if}}
   </body>
 </html>
