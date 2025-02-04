@@ -256,65 +256,57 @@ class EnhancedWinstonLogger {
     });
   }
 
-  /**
-   * TODO: Keep the old formatter for re-use
-  _createLogFormatter() {
-    return (info) => {
-      const {
-        level = 'info', // Provide a default value for level
-        message,
-        timestamp,
-        source = 'Source not defined!', // Provide a default value for source
-        metadata = {},
-        stack
-      } = info;
-
-      const context = logContext.getAll();
-      const contextStr = Object.entries(context)
-          .map(([key, value]) => `[${key}=${value}]`)
-          .join(' ');
-
-      // Safely handle undefined level
-      // const levelStr = level ? level.toUpperCase() : 'UNKNOWN';
-
-      // Format the base log with the source and context string
-      const baseLog = `[${source}] ${contextStr}: ${timestamp} [${level.toUpperCase()}] ${message}`;
-
-      if (stack) {
-        return `${baseLog}\n${stack}`;
-      }
-
-      if (Object.keys(metadata).length > 0) {
-        return `${baseLog}\n${JSON.stringify(metadata, null, 2)}`;
-      }
-
-      return baseLog;
-    };
-  }
-   */
-
   _createLogFormatter() {
     return (info) => {
       const {
         level = 'info',
-        message,
+        message = '',
         timestamp,
         metadata = {},
+        error,
+        queueMessage,
+        ...rest
       } = info;
 
       // Get the source from either the metadata or the logger instance
-      const source = info.source || this.source || 'unknown';
+      const source = info.source || this.source || 'unknown source';
 
-      // Create the log entry without the undefined brackets and strip color codes
+      // Handle message formatting
+      let formattedMessage = '';
+
+      // Handle Error objects and error messages
+      if (error) {
+        // Format error message exactly like the example
+        if (error instanceof Error) {
+          formattedMessage = `${message}\n${error.name}: ${error.message}\n${error.stack.split('\n').slice(1).join('\n')}`;
+        } else if (typeof error === 'string') {
+          formattedMessage = `${message}\n${error}`;
+        } else {
+          formattedMessage = `${message}\n${JSON.stringify(error, null, 2)}`;
+        }
+      }
+      // Handle Queue Messages
+      else if (queueMessage) {
+        try {
+          const formattedQueue = typeof queueMessage === 'string'
+              ? queueMessage
+              : JSON.stringify(queueMessage, null, 2);
+          formattedMessage = `${message}\n${formattedQueue}`;
+        } catch (err) {
+          formattedMessage = `${message}\n${queueMessage}`;
+        }
+      }
+      // Handle regular messages
+      else {
+        formattedMessage = message;
+      }
+
+      // Create the log entry with just the message
       const logEntry = {
         timestamp,
-        level: level.replace(/\u001b\[\d+m/g, ''), // Remove ANSI color codes
-        message,
-        ...metadata
+        level: level.replace(/\u001b\[\d+m/g, ''),
+        message: formattedMessage
       };
-
-      // Delete the source from the metadata as we're displaying it in the prefix
-      delete logEntry.source;
 
       // Format the output with the source prefix and JSON body
       return `[${source}]: ${JSON.stringify(logEntry, null, 2)}`;
@@ -380,39 +372,32 @@ class EnhancedWinstonLogger {
     };
   }
 
-  /**
-   * TODO: Keep the old debug to re-use, if required
-  debug(message, metadata = {}) {
+  debug(message, ...args) {
     if (!this._shouldSample()) return;
     if (!this.rateLimiter.shouldLog(this.source)) {
       this.warn('Rate limit exceeded for debug logs', { source: this.source });
       return;
     }
 
-    const formattedMessage = message === undefined ? 'No message provided' :
-        (typeof message === 'object' ? JSON.stringify(message, null, 2) : message);
+    let metadata = {};
+    let error = null;
+    let queueMessage = null;
 
-    const enrichedMetadata = {
-      ...this._enrichMetadata(metadata),
-      source: this.source || 'Unknown Source',
-      requestId: logContext.get('requestId')
-    };
+    // Process arguments
+    args.forEach(arg => {
+      if (arg instanceof Error) {
+        error = arg;
+      } else if (Array.isArray(arg) || (typeof arg === 'object' && arg?.MessageId)) {
+        queueMessage = arg;
+      } else if (typeof arg === 'object') {
+        metadata = { ...metadata, ...arg };
+      }
+    });
 
-    this.logger.debug(formattedMessage, enrichedMetadata);
-  }*/
-
-  debug(message, metadata = {}) {
-    if (!this._shouldSample()) return;
-    if (!this.rateLimiter.shouldLog(this.source)) {
-      this.warn('Rate limit exceeded for debug logs', { source: this.source });
-      return;
-    }
-
-    const formattedMessage = message === undefined ? 'No message provided' :
-        (typeof message === 'object' ? JSON.stringify(message, null, 2) : message);
-
-    this.logger.debug(formattedMessage, {
+    this.logger.debug(message, {
       ...metadata,
+      error,
+      queueMessage,
       source: this.source
     });
   }
@@ -426,13 +411,28 @@ class EnhancedWinstonLogger {
     this.logger.warn(message, this._enrichMetadata(metadata));
   }
 
-  error(message, metadata = {}) {
-    if (metadata.error instanceof Error) {
-      metadata.stack = metadata.error.stack;
-      metadata.errorMessage = metadata.error.message;
-    }
+  error(message, ...args) {
+    let metadata = {};
+    let error = null;
+    let queueMessage = null;
 
-    this.logger.error(message, this._enrichMetadata(metadata));
+    // Process arguments
+    args.forEach(arg => {
+      if (arg instanceof Error) {
+        error = arg;
+      } else if (Array.isArray(arg) || (typeof arg === 'object' && arg?.MessageId)) {
+        queueMessage = arg;
+      } else if (typeof arg === 'object') {
+        metadata = { ...metadata, ...arg };
+      }
+    });
+
+    this.logger.error(message, {
+      ...metadata,
+      error,
+      queueMessage,
+      source: this.source
+    });
   }
 
   // New method for structured logging
