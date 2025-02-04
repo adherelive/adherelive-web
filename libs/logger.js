@@ -267,12 +267,15 @@ class EnhancedWinstonLogger {
         stack
       } = info;
 
+      // Safely handle undefined level
+      const levelStr = level ? level.toUpperCase() : 'UNKNOWN';
+
       const context = logContext.getAll();
       const contextStr = Object.entries(context)
           .map(([key, value]) => `[${key}=${value}]`)
           .join(' ');
 
-      const baseLog = `${timestamp} [${level.toUpperCase()}] [${source}] ${contextStr}: ${message}`;
+      const baseLog = `${timestamp} [${levelStr}] [${source}] ${contextStr}: ${message}`;
 
       if (stack) {
         return `${baseLog}\n${stack}`;
