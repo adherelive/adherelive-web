@@ -2,7 +2,7 @@ import AWS from "aws-sdk";
 import moment from "moment";
 import { createLogger } from "../../../libs/log";
 
-const log = createLogger("QUEUE > SERVICE");
+const logger = createLogger("QUEUE > SERVICE");
 
 export default class QueueService {
   constructor() {
@@ -25,9 +25,9 @@ export default class QueueService {
 
     this.sqs.createQueue(params, (err, data) => {
       if (err) {
-        log.debug("createQueue error: ", err);
+        logger.debug("createQueue error: ", err);
       } else {
-        log.debug("Success ---> data queue URL: ", data.QueueUrl);
+        logger.debug("Success ---> data queue URL: ", data.QueueUrl);
       }
     });
   };
@@ -63,10 +63,10 @@ export default class QueueService {
       };
 
       const response = await this.sqs.sendMessage(params).promise();
-      log.debug("sendMessage response: ", response);
+      logger.debug("sendMessage response: ", response);
       return response;
     } catch (error) {
-      log.debug("sendMessage catch error: ", error);
+      logger.debug("sendMessage catch error: ", error);
     }
   };
 
@@ -74,7 +74,7 @@ export default class QueueService {
     try {
       const formattedData = [];
 
-      log.debug("sendBatchMessage dataArr --> ", dataArr);
+      logger.debug("sendBatchMessage dataArr --> ", dataArr);
       dataArr.forEach((data, index) => {
         const stringData = JSON.stringify(data);
         const params = {
@@ -93,16 +93,16 @@ export default class QueueService {
       };
 
       const response = await this.sqs.sendMessageBatch(params).promise();
-      log.debug("sendBatchMessage response: ", response);
+      logger.debug("sendBatchMessage response: ", response);
       return response;
     } catch (error) {
-      log.debug("sendBatchMessage catch error: ", error);
+      logger.debug("sendBatchMessage catch error: ", error);
     }
   };
 
   receiveMessage = async () => {
     try {
-      log.debug(`Receive Message queue URI: ${this.getQueueUrl()}`);
+      logger.debug(`Receive Message queue URI: ${this.getQueueUrl()}`);
 
       const params = {
         AttributeNames: ["SentTimestamp"],
@@ -113,11 +113,11 @@ export default class QueueService {
       };
 
       const response = await this.sqs.receiveMessage(params).promise();
-      // log.debug("receiveMessage response", response.Messages.length);
+      // logger.debug("receiveMessage response", response.Messages.length);
 
       return response.Messages || [];
     } catch (error) {
-      log.debug("receiveMessage 500 error: ", error);
+      logger.debug("receiveMessage 500 error: ", error);
     }
   };
 
@@ -132,7 +132,7 @@ export default class QueueService {
 
       return response;
     } catch (error) {
-      log.debug("deleteMessage 500 error: ", error);
+      logger.debug("deleteMessage 500 error: ", error);
     }
   };
 
@@ -149,7 +149,7 @@ export default class QueueService {
         return null;
       }
     } catch (error) {
-      log.debug("purgeQueue 500 error: ", error);
+      logger.debug("purgeQueue 500 error: ", error);
     }
   };
 }

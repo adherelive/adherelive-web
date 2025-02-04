@@ -121,7 +121,7 @@ import * as TransactionActivities from "../app/models/transactionActivity";
 import * as FlashCard from "../app/models/flashCard";
 import * as Notes from "../app/models/notes";
 
-const log = createLogger("SEQUELIZE QUERY");
+const logger = createLogger("SEQUELIZE QUERY");
 // const Config = require("../config/config");
 // Config();
 
@@ -275,9 +275,9 @@ class Database {
 
         // Test the connection
         await Database.connection.authenticate();
-        log.debug("MySQL connection has been established successfully.");
+        logger.debug("MySQL connection has been established successfully.");
       } catch (err) {
-        log.error("Unable to connect to the MySQL database:", err);
+        logger.error("Unable to connect to the MySQL database:", err);
         Database.connection = null; // Reset connection on failure
       }
     }
@@ -316,9 +316,9 @@ class Database {
       for (const model of models) {
         model.associate(database);
       }
-      log.debug("MySQL DB and related tables have been created");
+      logger.debug("MySQL DB and related tables have been created");
     } catch (err) {
-      log.error("MySQL DB connection error is: ", err);
+      logger.error("MySQL DB connection error is: ", err);
     }
   };
 }

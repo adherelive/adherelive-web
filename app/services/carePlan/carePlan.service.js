@@ -14,7 +14,7 @@ import { TABLE_NAME as userRolesTableName } from "../../models/userRoles";
 import { TABLE_NAME as carePlanSecondaryDoctorMappingsTableName } from "../../models/carePlanSecondaryDoctorMappings";
 
 import { createLogger } from "../../../libs/log";
-const log = createLogger("WEB > CARE PLAN > SERVICES");
+const logger = createLogger("WEB > CARE PLAN > SERVICES");
 
 const DEFAULT_ORDER = [["created_at", "DESC"]];
 
@@ -24,13 +24,13 @@ class CarePlanService {
       const carePlans = await Database.getModel(TABLE_NAME).findAll();
       return carePlans;
     } catch (err) {
-      log.debug(err);
+      logger.debug(err);
       throw err;
     }
   }
 
   getCarePlanByData = async (data) => {
-    log.debug("getCarePlanByData -> data: ", data);
+    logger.debug("getCarePlanByData -> data: ", data);
     try {
       const { user_role_id = null, ...rest } = data || {};
 
@@ -111,7 +111,7 @@ class CarePlanService {
    * @returns {Promise<*>}
    */
   getCarePlanById = async (id) => {
-    log.debug("getCarePlanById ---> ID: ", id);
+    logger.debug("getCarePlanById ---> ID: ", id);
     try {
       const carePlan = await Database.getModel(TABLE_NAME).findOne({
         where: { id },
@@ -138,7 +138,7 @@ class CarePlanService {
           },
         ],
       });
-      log.debug("getCarePlanById for Doctor Mapping: \n", carePlan.careplan_secondary_doctor_mappings);
+      logger.debug("getCarePlanById for Doctor Mapping: \n", carePlan.careplan_secondary_doctor_mappings);
       return carePlan;
     } catch (error) {
       throw "Error in getCarePlanByID for Doctor: " + error;
@@ -194,7 +194,7 @@ class CarePlanService {
           }
         );
       }
-      log.debug(rest);
+      logger.debug(rest);
 
       const carePlan = await Database.getModel(TABLE_NAME).findAll({
         where: {
@@ -241,7 +241,7 @@ class CarePlanService {
   };
 
   updateCarePlan = async (data, id) => {
-    log.debug("update care plan called", { data, id });
+    logger.debug("update care plan called", { data, id });
     const transaction = await Database.initTransaction();
     try {
       const carePlan = await Database.getModel(TABLE_NAME).update(data, {
@@ -420,7 +420,7 @@ class CarePlanService {
       }
 
       const [patients, metaData] = await Database.performRawQuery(query);
-      log.debug("Patients Metadata, Get Paginated data of Patients: \n", {
+      logger.debug("Patients Metadata, Get Paginated data of Patients: \n", {
         patients,
         metaData,
       });
@@ -439,7 +439,7 @@ class CarePlanService {
                            WHERE JSON_EXTRACT(details, "$.diagnosis.type") = "${intType}";`;
 
       const [carePlans, metaData] = await Database.performRawQuery(query);
-      log.debug("Patients Metadata, Get Paginated data of Patients: \n", {
+      logger.debug("Patients Metadata, Get Paginated data of Patients: \n", {
         metaData,
       });
       return carePlans;
@@ -456,7 +456,7 @@ class CarePlanService {
                            WHERE JSON_EXTRACT(details, "$.diagnosis.description") like "%${seachDiagnosisText}%";`;
 
       const [carePlans, metaData] = await Database.performRawQuery(query);
-      log.debug("Patients Metadata, Get Paginated data of Patients: \n", {
+      logger.debug("Patients Metadata, Get Paginated data of Patients: \n", {
         metaData,
       });
       return carePlans;
@@ -472,10 +472,10 @@ class CarePlanService {
                            WHERE JSON_EXTRACT(details, "$.treatment_id") in (${treatmentIds});`;
 
       const [carePlans, metaData] = await Database.performRawQuery(query);
-      log.debug("Patients Metadata, Get Paginated data of Patients: \n", {
+      logger.debug("Patients Metadata, Get Paginated data of Patients: \n", {
         metaData,
       });
-      log.debug("Patient Care Plans: ", { carePlans });
+      logger.debug("Patient Care Plans: ", { carePlans });
 
       return carePlans;
     } catch (err) {
@@ -494,7 +494,7 @@ class CarePlanService {
     secondary_careplan_ids = null,
   }) => {
     // const patientWatchlistedIds = watchlistPatientIds.length ? watchlistPatientIds.toString() : null ;
-    // log.debug("7456278467234627429384221",{offset,limit,watchlistPatientIds,patientWatchlistedIds});
+    // logger.debug("7456278467234627429384221",{offset,limit,watchlistPatientIds,patientWatchlistedIds});
 
     let finalFilter = filter
       ? `${filter} AND carePlan.user_role_id = ${user_role_id}`
@@ -567,7 +567,7 @@ class CarePlanService {
           type: QueryTypes.SELECT,
         })) || [];
 
-      // log.debug("carePlanCount inside getPaginatedPatients: ", carePlanCount);
+      // logger.debug("carePlanCount inside getPaginatedPatients: ", carePlanCount);
       return [carePlanCount.length, carePlans];
 
       // TODO: Why is this code here?

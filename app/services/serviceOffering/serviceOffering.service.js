@@ -2,7 +2,7 @@ import Database from "../../../libs/mysql";
 import { TABLE_NAME } from "../../models/serviceOffering";
 
 import { createLogger } from "../../../libs/log";
-const log = createLogger("WEB > SERVICE OFFERING > SERVICES");
+const logger = createLogger("WEB > SERVICE OFFERING > SERVICES");
 
 /**
  *
@@ -29,7 +29,7 @@ export default class ServiceOfferingService {
       await transaction.commit();
       return serviceOffering;
     } catch (error) {
-      log.debug(error);
+      logger.debug(error);
       await transaction.rollback();
       throw error;
     }
@@ -70,7 +70,7 @@ export default class ServiceOfferingService {
    * @returns {Promise<*>}
    */
   getServiceOfferingByData = async (data) => {
-    // log.debug("getServiceOfferingByDataCalled - services - ", data);
+    // logger.debug("getServiceOfferingByDataCalled - services - ", data);
     try {
       return await Database.getModel(TABLE_NAME).findOne({
         where: data,

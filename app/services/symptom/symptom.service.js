@@ -8,7 +8,7 @@ import { TABLE_NAME as patientTableName } from "../../models/patients";
 import { TABLE_NAME as carePlanTableName } from "../../models/carePlan";
 
 import { createLogger } from "../../../libs/log";
-const log = createLogger("WEB > SYMPTOM > SERVICE");
+const logger = createLogger("WEB > SYMPTOM > SERVICE");
 
 class SymptomService {
   // Create a new symptom record
@@ -17,7 +17,7 @@ class SymptomService {
       const symptom = await Database.getModel(TABLE_NAME).create(data);
       return symptom; // Return the created symptom
     } catch (error) {
-      log.error("Error creating symptom:", error); // Log the error for debugging
+      logger.error("Error creating symptom:", error); // Log the error for debugging
       throw new Error("Unable to create symptom. Please try again later."); // Throw a user-friendly error
     }
   };
@@ -39,7 +39,7 @@ class SymptomService {
       });
       return symptom; // Return the found symptom
     } catch (error) {
-      log.error("Error fetching symptom by data:", error); // Log the error
+      logger.error("Error fetching symptom by data:", error); // Log the error
       throw new Error(
         "Unable to fetch symptom details. Please check your input."
       ); // User-friendly error
@@ -61,7 +61,7 @@ class SymptomService {
         },
       });
     } catch (error) {
-      log.error("Error counting symptoms:", error); // Log the error
+      logger.error("Error counting symptoms:", error); // Log the error
       throw new Error("Unable to count symptoms. Please try again later."); // User-friendly error
     }
   };
@@ -83,7 +83,7 @@ class SymptomService {
       });
       return symptoms; // Return the found symptoms
     } catch (error) {
-      log.error("Error fetching all symptoms:", error); // Log the error
+      logger.error("Error fetching all symptoms:", error); // Log the error
       throw new Error(
         "Unable to retrieve symptoms. Please check your criteria."
       ); // User-friendly error
@@ -113,7 +113,7 @@ class SymptomService {
       });
       return symptom; // Return the found symptoms
     } catch (error) {
-      log.error("Error fetching filtered symptoms:", error); // Log the error
+      logger.error("Error fetching filtered symptoms:", error); // Log the error
       throw new Error("Unable to filter symptoms. Please check your input."); // User-friendly error
     }
   };
@@ -137,7 +137,7 @@ class SymptomService {
       });
       return symptom; // Return the most recently updated symptom
     } catch (error) {
-      log.error("Error fetching last updated symptom:", error); // Log the error
+      logger.error("Error fetching last updated symptom:", error); // Log the error
       throw new Error(
         "Unable to retrieve the last updated symptom. Please try again later."
       ); // User-friendly error

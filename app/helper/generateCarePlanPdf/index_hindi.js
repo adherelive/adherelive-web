@@ -1077,7 +1077,7 @@ function printAppointment({
       medicationYLevel = generalExaminationEndLevel + NORMAL_FONT_SIZE + 12;
     }
   } catch (ex) {
-    log.debug(ex);
+    logger.debug(ex);
   }
 }
 
@@ -1225,7 +1225,7 @@ function printConsultation({
       medicationYLevel = generalExaminationEndLevel + NORMAL_FONT_SIZE + 12;
     }
   } catch (ex) {
-    log.debug(ex);
+    logger.debug(ex);
   }
 }
 
@@ -1538,7 +1538,7 @@ function renderChiefComplaints({ symptoms }) {
 
     return finalSymptom;
   } catch (err) {
-    log.debug("error in chief Compliance", err);
+    logger.debug("error in chief Compliance", err);
   }
 }
 
@@ -1956,7 +1956,7 @@ function printCarePlanData({
     const suggestedInvestigationXLevelEnd = doc.x;
     return suggestedInvestigationXLevelEnd;
   } catch (ex) {
-    log.debug(ex);
+    logger.debug(ex);
   }
 }
 
@@ -2011,7 +2011,7 @@ function printConsultationAppointment({
     const suggestedInvestigationXLevelEnd = doc.x;
     return suggestedInvestigationXLevelEnd;
   } catch (ex) {
-    log.debug(ex);
+    logger.debug(ex);
   }
 }
 
@@ -2144,7 +2144,7 @@ function printFooter(
       height: signaturePictureHeight,
     });
   } catch (err) {
-    log.debug("ERROR in signature pic", err);
+    logger.debug("ERROR in signature pic", err);
   }
 
   if (doc.y + 3 * SMALLEST_FONT_SIZE > PAGE_END_LIMIT) {

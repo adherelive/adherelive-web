@@ -3,7 +3,7 @@ import { TABLE_NAME } from "../../models/paymentProducts";
 import { USER_CATEGORY } from "../../../constant";
 import { createLogger } from "../../../libs/log";
 
-const log = createLogger("WEB > PAYMENT_PRODUCTS > SERVICES");
+const logger = createLogger("WEB > PAYMENT_PRODUCTS > SERVICES");
 
 export default class PaymentProductService {
   getByData = async (data) => {
@@ -65,13 +65,13 @@ export default class PaymentProductService {
           id,
         },
       });
-      //   log.debug("7657890765",deletedDoctorProduct);
+      //   logger.debug("7657890765",deletedDoctorProduct);
       return deletedDoctorProduct;
     } catch (error) {
       throw error;
     }
   };
-  //   log.debug("7657890765",deletedDoctorProduct);
+  //   logger.debug("7657890765",deletedDoctorProduct);
 
   deleteDoctorProductById = async (id) => {
     try {

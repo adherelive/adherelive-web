@@ -2,7 +2,7 @@ import Database from "../../../libs/mysql";
 import { TABLE_NAME } from "../../models/userFavourites";
 
 import { createLogger } from "../../../libs/log";
-const log = createLogger("WEB > USER_FAVOURITES > SERVICE");
+const logger = createLogger("WEB > USER_FAVOURITES > SERVICE");
 
 /**
  *
@@ -103,7 +103,7 @@ class UserFavouritesService {
       });
       return deleteFavourite;
     } catch (error) {
-      log.debug("Error while deleting a User Favourite: ", error);
+      logger.debug("Error while deleting a User Favourite: ", error);
       throw error;
     }
   };

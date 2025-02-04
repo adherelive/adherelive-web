@@ -13,7 +13,7 @@ import userService from "../../../services/user/user.service";
 import UserRoleWrapper from "../../../apiWrapper/mobile/userRoles";
 import UserWrapper from "../../../apiWrapper/mobile/user";
 
-const log = createLogger("MOBILE > CONTROLLER > USER_ROLES");
+const logger = createLogger("MOBILE > CONTROLLER > USER_ROLES");
 
 class UserRoleController extends Controller {
   constructor() {
@@ -80,7 +80,7 @@ class UserRoleController extends Controller {
         "User role data fetched successfully"
       );
     } catch (error) {
-      log.debug("get UserRole Data 500 error", error);
+      logger.debug("get UserRole Data 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -161,7 +161,7 @@ class UserRoleController extends Controller {
         "Account switched successfully."
       );
     } catch (error) {
-      log.debug("switchRoleId data 500 error ---> ", error);
+      logger.debug("switchRoleId data 500 error ---> ", error);
       return raiseServerError(res);
     }
   };

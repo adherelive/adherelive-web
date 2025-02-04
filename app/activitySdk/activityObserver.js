@@ -3,7 +3,7 @@ import ReminderActivity from "./reminder";
 import MedicationReminderActivity from "./medicationReminder";
 import { createLogger } from "../../libs/log";
 
-const log = createLogger("activitySdk:ActivityObserver");
+const logger = createLogger("activitySdk:ActivityObserver");
 
 /**
  *
@@ -20,11 +20,11 @@ class ActivityObserver {
    */
   runObservers() {
     FollowUpActivity.runObservers();
-    log.debug(`Observing FOLLOWUP activity..!!`);
+    logger.debug(`Observing FOLLOWUP activity..!!`);
     ReminderActivity.runObservers();
-    log.debug(`Observing REMINDER activity..!!`);
+    logger.debug(`Observing REMINDER activity..!!`);
     MedicationReminderActivity.runObservers();
-    log.debug(`Observing MEDICATION_REMINDER activity..!!`);
+    logger.debug(`Observing MEDICATION_REMINDER activity..!!`);
   }
 }
 

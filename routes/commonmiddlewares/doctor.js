@@ -3,7 +3,7 @@ import { isDoctor as isMDoctor } from "../m-api/middlewares/doctor";
 import {raiseServerError} from "../api/helper";
 import { createLogger } from "../../libs/log";
 
-const log = createLogger("MIDDLEWARE > DOCTOR");
+const logger = createLogger("MIDDLEWARE > DOCTOR");
 
 /**
  *
@@ -15,7 +15,7 @@ const log = createLogger("MIDDLEWARE > DOCTOR");
  */
 export const isDoctor = (req, res, next) => {
   let { m } = req.query;
-  // log.debug("In the Doctor middle ware -> request query (m): ", { m });
+  // logger.debug("In the Doctor middle ware -> request query (m): ", { m });
 
   try {
     if (m) isMDoctor(req, res, next);

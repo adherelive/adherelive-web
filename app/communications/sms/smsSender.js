@@ -2,7 +2,7 @@ import AWS from "aws-sdk";
 import axios from "axios";
 import { createLogger } from "../../../libs/log";
 
-const log = createLogger("Communications ---> SMS Sender");
+const logger = createLogger("Communications ---> SMS Sender");
 
 class SmsSender {
   constructor(payload) {
@@ -24,13 +24,13 @@ class SmsSender {
       const validationResponse = this.smsDataValidator(smsPayload);
       if (validationResponse.error) return validationResponse;
 
-      log.success("SMS payload is valid!");
+      logger.success("SMS payload is valid!");
 
-      log.debug("Transforming SMS payload to AWS payload...");
+      logger.debug("Transforming SMS payload to AWS payload...");
       const smsData = this.smsDataTransformer(smsPayload);
-      log.debug("SMS payload successfully transformed!");
+      logger.debug("SMS payload successfully transformed!");
 
-      log.debug("Sending SMS...");
+      logger.debug("Sending SMS...");
 
       // Setup options for axios request
       const options = {
@@ -55,16 +55,16 @@ class SmsSender {
 
       // Send SMS via axios
       const response = await axios(options);
-      log.debug("SMS sent via SMS sender: ", response.data);
+      logger.debug("SMS sent via SMS sender: ", response.data);
       return { success: true, data: response.data };
 
       // let smsPublishResponse = await this.sns
       //   .publish(smsData, (err, data) => {
       //     if (err) {
-      //       log.debug("Sending SMS error ---> ", err);
+      //       logger.debug("Sending SMS error ---> ", err);
       //     }
       //     if (data) {
-      //       log.debug("SMS sent successfully", data);
+      //       logger.debug("SMS sent successfully", data);
       //     }
       //   })
       //   .promise();
@@ -75,16 +75,16 @@ class SmsSender {
       //   .publish(smsData, (err, data) => {
 
       //     if (err) {
-      //       log.debug("Sending SMS has an error ---> ", err);
+      //       logger.debug("Sending SMS has an error ---> ", err);
       //     }
       //     if (data) {
-      //       log.debug("SMS has been sent: ", data);
+      //       logger.debug("SMS has been sent: ", data);
       //     }
       //   })
       //   .promise();
       //return smsPublishResponse;
     } catch (error) {
-      log.error("Error sending SMS: ", error);
+      logger.error("Error sending SMS: ", error);
       return { success: false, error: error.message };
     }
   }

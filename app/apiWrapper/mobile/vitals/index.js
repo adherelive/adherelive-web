@@ -13,7 +13,7 @@ import EventWrapper from "../../common/scheduleEvents";
 import { EVENT_STATUS, EVENT_TYPE } from "../../../../constant";
 import moment from "moment";
 
-const log = createLogger("MOBILE > API_WRAPPER > VITALS");
+const logger = createLogger("MOBILE > API_WRAPPER > VITALS");
 
 class VitalWrapper extends BaseVital {
   constructor(data) {

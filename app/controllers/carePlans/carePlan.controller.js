@@ -45,7 +45,7 @@ import MedicationWrapper from "../../apiWrapper/web/medicationReminder";
 
 import { createLogger } from "../../../libs/log";
 
-const log = createLogger("WEB > CARE PLAN > CONTROLLER");
+const logger = createLogger("WEB > CARE PLAN > CONTROLLER");
 
 class CarePlanController extends Controller {
   constructor() {
@@ -266,7 +266,7 @@ class CarePlanController extends Controller {
       //   carePlanScheduleData
       // );
       //
-      // log.debug("sqsResponse for care plan---> ", sqsResponseForCarePlan);
+      // logger.debug("sqsResponse for care plan---> ", sqsResponseForCarePlan);
 
       let medicationApiDetails = {};
       let medicineApiDetails = {};
@@ -595,7 +595,7 @@ class CarePlanController extends Controller {
         "Care plan medications, appointments, actions, diets and exercises added successfully"
       );
     } catch (error) {
-      log.debug(
+      logger.debug(
         "createCarePlanMedicationsAndAppointmentsByTemplateData 500 error",
         error
       );
@@ -726,7 +726,7 @@ class CarePlanController extends Controller {
         vital_ids,
       };
 
-      log.debug("Care Plan API data: ", carePlanApiData);
+      logger.debug("Care Plan API data: ", carePlanApiData);
 
       let templateMedications = {};
       let templateAppointments = {};
@@ -828,7 +828,7 @@ class CarePlanController extends Controller {
         "patient care plan details fetched successfully"
       );
     } catch (error) {
-      log.debug(error);
+      logger.debug(error);
       return this.raiseServerError(res, 500, error);
     }
   };
@@ -893,7 +893,7 @@ class CarePlanController extends Controller {
         "patient care plan details fetched successfully"
       );
     } catch (error) {
-      log.debug(error);
+      logger.debug(error);
       return this.raiseServerError(res, 500, error);
     }
   };
@@ -1001,7 +1001,7 @@ class CarePlanController extends Controller {
         );
       }
     } catch (error) {
-      log.debug("Unable to add the Doctor's profile to this Patient: ", error);
+      logger.debug("Unable to add the Doctor's profile to this Patient: ", error);
       return raiseServerError(res);
     }
   };
@@ -1065,7 +1065,7 @@ class CarePlanController extends Controller {
         vital_ids,
       };
 
-      log.debug("Care Plan API Data", carePlanApiData);
+      logger.debug("Care Plan API Data", carePlanApiData);
 
       let templateMedications = {};
       let templateAppointments = {};

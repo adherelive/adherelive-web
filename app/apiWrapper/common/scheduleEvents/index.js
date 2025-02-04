@@ -8,7 +8,7 @@ import { EVENT_TYPE } from "../../../../constant";
 
 import { createLogger } from "../../../../libs/log";
 
-const log = createLogger("WEB > API WRAPPER > SCHEDULE_EVENTS");
+const logger = createLogger("WEB > API WRAPPER > SCHEDULE_EVENTS");
 
 class ScheduleEventWrapper extends BaseScheduleEvent {
   constructor(data) {

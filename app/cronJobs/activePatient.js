@@ -13,17 +13,17 @@ import ProviderWrapper from "../apiWrapper/web/provider";
 import CarePlanWrapper from "../apiWrapper/web/carePlan";
 import { EVENT_STATUS, EVENT_TYPE } from "../../constant";
 
-const log = createLogger("CRON - ACTIVE_PATIENT");
+const logger = createLogger("CRON - ACTIVE_PATIENT");
 
 class ActivePatient {
   getAllProviders = async () => {
     try {
       // const providerService = new ProviderService();
       const providers = (await ProviderService.getAll()) || [];
-      // log.debug("providers", providers);
+      // logger.debug("providers", providers);
       return providers;
     } catch (error) {
-      log.debug("getAllProviders catch error", error);
+      logger.debug("getAllProviders catch error", error);
       throw error;
     }
   };
@@ -44,11 +44,11 @@ class ActivePatient {
           doctorIds = [...doctorIds, doctor_id];
         });
       }
-      // log.debug("doctor IDS", doctorIds);
+      // logger.debug("doctor IDS", doctorIds);
 
       return doctorIds;
     } catch (error) {
-      log.debug("getAllDoctors catch error", error);
+      logger.debug("getAllDoctors catch error", error);
       throw error;
     }
   };
@@ -68,10 +68,10 @@ class ActivePatient {
         carePlanData[carePlan.getCarePlanId()] = await carePlan.getAllInfo();
         carePlanIds.push(carePlan.getCarePlanId());
       }
-      log.debug("Care Plan IDs: ", carePlanIds);
+      logger.debug("Care Plan IDs: ", carePlanIds);
       return { carePlanData, carePlanIds };
     } catch (error) {
-      log.debug("getAllCarePlans catch error: ", error);
+      logger.debug("getAllCarePlans catch error: ", error);
       throw error;
     }
   };
@@ -114,10 +114,10 @@ class ActivePatient {
               event_type: EVENT_TYPE.WORKOUT,
             },
           })) || [];
-        log.debug(
+        logger.debug(
           `Total events :: ${events.length} :: for Care Plan ID :: ${id}`
         );
-        log.debug("Status of the events: ", events);
+        logger.debug("Status of the events: ", events);
 
         let passedEventCount = 0;
 
@@ -160,7 +160,7 @@ class ActivePatient {
         }
       }
     } catch (error) {
-      log.debug("getEvents catch error: ", error);
+      logger.debug("getEvents catch error: ", error);
       throw error;
     }
   };
@@ -173,7 +173,7 @@ class ActivePatient {
     try {
       await this.getEvents();
     } catch (error) {
-      log.debug("runObserver catch error: ", error);
+      logger.debug("runObserver catch error: ", error);
       throw error;
     }
   };

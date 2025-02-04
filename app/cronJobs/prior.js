@@ -17,7 +17,7 @@ import * as CronHelper from "./helper";
 
 import NotificationSdk from "../notificationSdk";
 
-const log = createLogger("CRON-JOBS > PRIOR");
+const logger = createLogger("CRON-JOBS > PRIOR");
 
 class PriorCron {
   // allPriorAppointmentEvents;
@@ -28,13 +28,13 @@ class PriorCron {
   async getScheduleData(priorDuration, type) {
     // const scheduleEventService = new ScheduleEventService();
     const priorTime = moment().add(priorDuration, "minutes").utc().toDate();
-    log.debug("cron getScheduleData priorTime ---> ", priorTime);
-    log.debug("getScheduleData currentTime ---> ", moment().utc().toDate());
+    logger.debug("cron getScheduleData priorTime ---> ", priorTime);
+    logger.debug("getScheduleData currentTime ---> ", moment().utc().toDate());
 
     const scheduleEvents =
       (await this.scheduleEventService.getPriorEventByData(priorTime, type)) ||
       [];
-    log.debug("getScheduleData scheduleEvents ---> ", scheduleEvents);
+    logger.debug("getScheduleData scheduleEvents ---> ", scheduleEvents);
     return scheduleEvents || [];
   }
 
@@ -65,7 +65,7 @@ class PriorCron {
         this.handleWorkoutPrior
       );
     } catch (error) {
-      log.debug("prior runObserver catch error", error);
+      logger.debug("prior runObserver catch error", error);
     }
   }
 
@@ -98,7 +98,7 @@ class PriorCron {
       );
       // const updateEventStatus = await this.scheduleEventService.update({ status: EVENT_STATUS.PRIOR, }, id);
     } catch (error) {
-      log.debug("handleAppointmentPrior error", error);
+      logger.debug("handleAppointmentPrior error", error);
     }
   }
 
@@ -113,7 +113,7 @@ class PriorCron {
         id
       );
     } catch (error) {
-      log.debug("handleDietPrior error", error);
+      logger.debug("handleDietPrior error", error);
     }
   }
 
@@ -128,7 +128,7 @@ class PriorCron {
         id
       );
     } catch (error) {
-      log.debug("handleWorkoutPrior error", error);
+      logger.debug("handleWorkoutPrior error", error);
     }
   }
 }

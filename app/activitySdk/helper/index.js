@@ -1,5 +1,5 @@
 // Common functionality of all Activity
-// import activityService from "../../services/activityLog/activityLog.service";
+// import activityService from "../../services/activityLog/activitylogger.service";
 import { STAGES } from "../activityType";
 import schedulerService from "../../services/scheduleEvents/scheduleEvent.service";
 // import calendarService from "../../services/calendarService/calendar.service";
@@ -14,7 +14,7 @@ import {
 import { NotificationSdk } from "../../notificationSdk";
 import { createLogger } from "../../../libs/log";
 
-const log = createLogger("ACTIVITY_SDK");
+const logger = createLogger("ACTIVITY_SDK");
 
 // TODO: Going back to require, as the module export is used
 // import ActivitySdk from "../index";
@@ -24,11 +24,11 @@ const notify = (participants, payload) => {
   // prepare notification data according to event category
   const { participantOne, participantTwo } = participants;
   if (participantOne) {
-    log.debug(`going to notify: ${payload} to ${participantOne}`);
+    logger.debug(`going to notify: ${payload} to ${participantOne}`);
     NotificationSdk.execute(participantOne, payload);
   }
   if (participantTwo) {
-    log.debug(`going to notify: ${payload} to ${participantTwo}`);
+    logger.debug(`going to notify: ${payload} to ${participantTwo}`);
     NotificationSdk.execute(participantTwo, payload);
   }
 };
@@ -50,7 +50,7 @@ const logActivity = async ({
 };
 
 export const onCreate = async (data) => {
-  log.debug(`onCreate activity:, ${data}`);
+  logger.debug(`onCreate activity:, ${data}`);
   //fetch all calendar event here if it is
   //and send it to cronofy,if this is calendar related event, but that should be goes into scheduler, because we are creating multiple schedule event from scheduler.
 
@@ -77,7 +77,7 @@ export const onCreate = async (data) => {
   //     { event: event }
   //   );
   // });
-  log.debug(message);
+  logger.debug(message);
 };
 
 export const onCancel = async (data) => {
@@ -118,7 +118,7 @@ export const onCancel = async (data) => {
   //     { event: data }
   //   );
   // });
-  log.debug(message);
+  logger.debug(message);
 };
 
 export const onRescheduled = async (data) => {
@@ -141,7 +141,7 @@ export const onRescheduled = async (data) => {
   //     eventIs: EVENT_IS.RESCHEDULED
   //   }
   // );
-  log.debug(message);
+  logger.debug(message);
 };
 
 export const onPrior = async (data) => {
@@ -167,7 +167,7 @@ export const onPrior = async (data) => {
   //     eventIs: EVENT_IS.PRIOR
   //   }
   // );
-  log.debug(message);
+  logger.debug(message);
 };
 
 export const onStart = async (data) => {
@@ -190,7 +190,7 @@ export const onStart = async (data) => {
   //     eventIs: EVENT_IS.START
   //   }
   // );
-  log.debug(message);
+  logger.debug(message);
 };
 
 export const onPassed = async (data) => {
@@ -209,7 +209,7 @@ export const onPassed = async (data) => {
   //   { participantOne, participantTwo },
   //   { message: message, data: data, eventIs: EVENT_IS.PASSED }
   // );
-  log.debug(message);
+  logger.debug(message);
 };
 
 export const onComplete = async (data) => {
@@ -230,7 +230,7 @@ export const onComplete = async (data) => {
   //   { participantOne, participantTwo },
   //   { message: message, data: data, eventIs: EVENT_IS.COMPLETE }
   // );
-  log.debug(message);
+  logger.debug(message);
 };
 
 export const onMarkInComplete = async (data) => {
@@ -250,7 +250,7 @@ export const onMarkInComplete = async (data) => {
   //   { participantOne, participantTwo },
   //   { message: message, data: data, eventIs: EVENT_IS.MARKINCOMPLETE }
   // );
-  log.debug(message);
+  logger.debug(message);
 };
 
 export const onUpdate = async (data) => {
@@ -274,11 +274,11 @@ export const onUpdate = async (data) => {
   //   { participantOne, participantTwo },
   //   { event: data }
   // );
-  log.debug(message);
+  logger.debug(message);
 };
 
 export const onAdverseEventCreate = async (data) => {
-  log.debug(`onAdverseEventCreate activity:, ${data}`);
+  logger.debug(`onAdverseEventCreate activity:, ${data}`);
   // fetch all calendar event here if it is
   // and send it to cronofy,if this is calendar related event, but that should be goes into scheduler, because we are creating multiple schedule event from scheduler.
 
@@ -319,5 +319,5 @@ export const onAdverseEventCreate = async (data) => {
   //     { event: event }
   //   );
   // });
-  log.debug(message);
+  logger.debug(message);
 };

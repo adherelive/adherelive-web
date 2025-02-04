@@ -2,7 +2,7 @@ import { createLogger } from "../../libs/log";
 import inApp from "./inApp";
 import PushApp from "./pushApp";
 
-const log = createLogger("NOTIFICATION_SDK > INDEX");
+const logger = createLogger("NOTIFICATION_SDK > INDEX");
 
 class NotificationSdk {
   constructor() {}

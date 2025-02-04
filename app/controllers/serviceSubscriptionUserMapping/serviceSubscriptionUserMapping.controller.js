@@ -14,7 +14,7 @@ import providerService from "../../services/provider/provider.service";
 import ProviderWrapper from "../../apiWrapper/web/provider";
 import { USER_CATEGORY, USER_STATUS } from "../../../constant";
 
-const log = createLogger("WEB > CONTROLLER > Service Offering");
+const logger = createLogger("WEB > CONTROLLER > Service Offering");
 
 class ServiceSubscriptionUserMappingController extends Controller {
   constructor() {
@@ -23,7 +23,7 @@ class ServiceSubscriptionUserMappingController extends Controller {
 
   create = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
-    log.debug("service user mapping controller - create - called");
+    logger.debug("service user mapping controller - create - called");
 
     const {
       userDetails: { userId, userData: { category } = {}, userCategoryId } = {},
@@ -45,7 +45,7 @@ class ServiceSubscriptionUserMappingController extends Controller {
       provider_type = req.userDetails.userRoleData.basic_info.linked_with;
     }
 
-    log.debug("service user mapping controller - create - called");
+    logger.debug("service user mapping controller - create - called");
     try {
       const serviceSubscriptionUserMappingService =
         new ServiceSubscriptionUserMappingService();
@@ -98,7 +98,7 @@ class ServiceSubscriptionUserMappingController extends Controller {
         next_recharge_date,
         expire_date,
       };
-      log.debug(
+      logger.debug(
         "service user mapping controller - create - userServices",
         userServicesSubscription
       );
@@ -130,7 +130,7 @@ class ServiceSubscriptionUserMappingController extends Controller {
         "Service added successfully"
       );
     } catch (error) {
-      log.debug("Subscribe create user mapping 500 error: ", error);
+      logger.debug("Subscribe create user mapping 500 error: ", error);
       return raiseServerError(res);
     }
   };
@@ -189,7 +189,7 @@ class ServiceSubscriptionUserMappingController extends Controller {
         "success"
       );
     } catch (error) {
-      log.debug("getServiceSubscriptionUserMappingByPatientId 500 error: ", error);
+      logger.debug("getServiceSubscriptionUserMappingByPatientId 500 error: ", error);
       return raiseServerError(res);
     }
   };
@@ -210,7 +210,7 @@ class ServiceSubscriptionUserMappingController extends Controller {
           "Please select correct ServiceOffer to update"
         );
     } catch (error) {
-      log.debug("getServiceSubscriptionUserMappingAndServiceUserByPatientId 500 error: ", error);
+      logger.debug("getServiceSubscriptionUserMappingAndServiceUserByPatientId 500 error: ", error);
       return raiseServerError(res);
     }
 
@@ -353,7 +353,7 @@ class ServiceSubscriptionUserMappingController extends Controller {
           "Please select correct ServiceOffer to update"
         );
     } catch (error) {
-      log.debug("getServiceSubscriptionDoctorByPatientId 500 error; ", error);
+      logger.debug("getServiceSubscriptionDoctorByPatientId 500 error; ", error);
       return raiseServerError(res);
     }
 
@@ -473,7 +473,7 @@ class ServiceSubscriptionUserMappingController extends Controller {
             "Please select correct ServiceOffer to update"
           );
       } catch (error) {
-        log.debug("getServiceSubscriptionUserMappingAndServiceUserByPatientIdAndDoctorId 500 error: ", error);
+        logger.debug("getServiceSubscriptionUserMappingAndServiceUserByPatientIdAndDoctorId 500 error: ", error);
         return raiseServerError(res);
       }
 
@@ -566,7 +566,7 @@ class ServiceSubscriptionUserMappingController extends Controller {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       let { params: { id } = {}, body } = req;
-      log.debug(`Report : id = ${id}`);
+      logger.debug(`Report : id = ${id}`);
       if (!id) {
         return raiseClientError(
           res,
@@ -599,7 +599,7 @@ class ServiceSubscriptionUserMappingController extends Controller {
         "Service updated successfully"
       );
     } catch (error) {
-      log.debug("updateServiceSubscriptionUserMapping 500 error: ", error);
+      logger.debug("updateServiceSubscriptionUserMapping 500 error: ", error);
       return raiseServerError(res);
     }
   };

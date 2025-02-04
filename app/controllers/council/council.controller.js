@@ -5,7 +5,7 @@ import CouncilWrapper from "../../apiWrapper/web/council";
 
 import { createLogger } from "../../../libs/log";
 
-const log = createLogger("WEB DEGREE CONTROLLER");
+const logger = createLogger("WEB DEGREE CONTROLLER");
 
 class CouncilController extends Controller {
   constructor() {
@@ -18,7 +18,7 @@ class CouncilController extends Controller {
       const { query } = req;
       const { value } = query || {};
 
-      // log.debug("value in req", value);
+      // logger.debug("value in req", value);
 
       const councilDetails = await councilService.search(value);
 
@@ -49,7 +49,7 @@ class CouncilController extends Controller {
         );
       }
     } catch (error) {
-      log.debug("council search 500 error", error);
+      logger.debug("council search 500 error", error);
       return raiseServerError(res);
     }
   };

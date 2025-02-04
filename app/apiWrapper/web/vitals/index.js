@@ -15,7 +15,7 @@ import { EVENT_STATUS, EVENT_TYPE, FEATURE_TYPE } from "../../../../constant";
 import FeatureDetailService from "../../../services/featureDetails/featureDetails.service";
 import FeatureDetailWrapper from "../featureDetails";
 
-const log = createLogger("SERVICES > VITALS");
+const logger = createLogger("SERVICES > VITALS");
 
 class VitalWrapper extends BaseVital {
   constructor(data) {
@@ -75,7 +75,7 @@ class VitalWrapper extends BaseVital {
     for (const events of scheduleEvents) {
       const scheduleEvent = await EventWrapper(events);
       const x = scheduleEvent.getAllInfo();
-      // log.debug("28739812372 scheduleEvent.getAllInfo() ---> ", x.details.details.repeat_interval_id);
+      // logger.debug("28739812372 scheduleEvent.getAllInfo() ---> ", x.details.details.repeat_interval_id);
       if (scheduleEvent.getEventType() === EVENT_TYPE.VITALS) {
         scheduleEventIds.push(scheduleEvent.getScheduleEventId());
 

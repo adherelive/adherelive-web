@@ -38,7 +38,7 @@ import PERMISSIONS from "../../../../config/permissions";
 
 import { createLogger } from "../../../../libs/log";
 
-const log = createLogger("MOBILE > CARE_PLAN > CONTROLLER");
+const logger = createLogger("MOBILE > CARE_PLAN > CONTROLLER");
 
 class CarePlanController extends Controller {
   constructor() {
@@ -253,7 +253,7 @@ class CarePlanController extends Controller {
           //     eventScheduleData
           // );
           //
-          // log.debug("sqsResponse ---> ", sqsResponse);
+          // logger.debug("sqsResponse ---> ", sqsResponse);
         }
       }
       // careplan part starts.
@@ -285,7 +285,7 @@ class CarePlanController extends Controller {
       //   carePlanScheduleData
       // );
       //
-      // log.debug("sqsResponse for care plan---> ", sqsResponseForCarePlan);
+      // logger.debug("sqsResponse for care plan---> ", sqsResponseForCarePlan);
 
       let medicationApiDetails = {};
       let medication_ids = [];
@@ -607,8 +607,8 @@ class CarePlanController extends Controller {
       let eventScheduleData = [];
 
       for (let index = 0; index < medication_ids.length; index++) {
-        // log.debug("1698727 medications", medicationsData);
-        // log.debug("1698727 index", index);
+        // logger.debug("1698727 medications", medicationsData);
+        // logger.debug("1698727 index", index);
         // const currentMedication =
         const { schedule_data: { end_date = "", start_date = "" } = {} } =
           medicationsData[index];
@@ -675,7 +675,7 @@ class CarePlanController extends Controller {
 
         // const QueueService = new queueService();
         // const sqsResponse = await QueueService.sendMessage(eventScheduleData);
-        // log.debug("sqsResponse ---> ", sqsResponse);
+        // logger.debug("sqsResponse ---> ", sqsResponse);
       }
 
       const QueueService = new queueService();
@@ -708,7 +708,7 @@ class CarePlanController extends Controller {
         "Care plan activated successfully."
       );
     } catch (error) {
-      log.debug("activateCarePlan 500 error", error);
+      logger.debug("activateCarePlan 500 error", error);
       return this.raiseServerError(res, 500);
     }
   };
@@ -960,7 +960,7 @@ class CarePlanController extends Controller {
         );
       }
     } catch (error) {
-      log.debug("addProfile 500 ERROR", error);
+      logger.debug("addProfile 500 ERROR", error);
       return raiseServerError(res);
     }
   };

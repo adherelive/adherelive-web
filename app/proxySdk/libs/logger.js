@@ -35,7 +35,7 @@ class Logger {
     }
 
     // info(message) {
-    //     log.debug(`[INFO] ${message}`);
+    //     logger.debug(`[INFO] ${message}`);
     // }
 }
 

@@ -31,7 +31,7 @@ import permissionService from "../../services/permission/permission.service";
 import userPermissionService from "../../services/userPermission/userPermission.service";
 import { USER_CATEGORY_ARRAY } from "../../models/users";
 
-const log = createLogger("WEB > ADHOC > CONTROLLER");
+const logger = createLogger("WEB > ADHOC > CONTROLLER");
 
 class AdhocController extends Controller {
   constructor() {
@@ -238,7 +238,7 @@ class AdhocController extends Controller {
         "All users migrated successfully to user roles."
       );
     } catch (error) {
-      log.debug(
+      logger.debug(
         "823746823764872634872364872 migrateAllUsersToUserRoles 50 error",
         error
       );
@@ -276,7 +276,7 @@ class AdhocController extends Controller {
         "Test api successfull."
       );
     } catch (error) {
-      log.debug("testApi 500 error", error);
+      logger.debug("testApi 500 error", error);
       return this.raiseServerError(res, 500, {}, "Error in test api.");
     }
   };
@@ -299,7 +299,7 @@ class AdhocController extends Controller {
         );
       }
     } catch (error) {
-      log.debug("purgeSqsQueue 500", error);
+      logger.debug("purgeSqsQueue 500", error);
       return this.raiseServerError(res);
     }
   };
@@ -348,7 +348,7 @@ class AdhocController extends Controller {
         );
       }
     } catch (error) {
-      log.debug("updatePatientTimings 500", error);
+      logger.debug("updatePatientTimings 500", error);
       return this.raiseServerError(res);
     }
   };
@@ -388,7 +388,7 @@ class AdhocController extends Controller {
               const categoryPermissions =
                 PermissionHelper.getPermissions(category) || [];
 
-              log.debug("102398123 updatePermissions", {
+              logger.debug("102398123 updatePermissions", {
                 category,
                 categoryPermissions,
               });
@@ -421,7 +421,7 @@ class AdhocController extends Controller {
         }
       }
     } catch (error) {
-      log.debug("updatePermissions 500", error);
+      logger.debug("updatePermissions 500", error);
       return raiseServerError(res);
     }
   };
@@ -437,7 +437,7 @@ class AdhocController extends Controller {
         for (let index = 0; index < careplans.length; index++) {
           const { id, patient_id, user_role_id } = careplans[index] || {};
 
-          log.debug(
+          logger.debug(
             "1231023 ",
             `${user_role_id}-${channelSeparator}-${patient_id}`
           );
@@ -450,7 +450,7 @@ class AdhocController extends Controller {
         return raiseSuccess(res, 200, {}, "Channels updated successfully");
       }
     } catch (error) {
-      log.debug("updateChannels 500", error);
+      logger.debug("updateChannels 500", error);
       return raiseServerError(res);
     }
   };

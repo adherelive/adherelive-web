@@ -147,13 +147,13 @@ router.get(
     // PatientController.generatePrescription,
     async (req, res) => {
         try {
-            log.debug(path.join("./routes/api/prescription/prescription.html"));
-            log.debug("./prescription.html");
+            logger.debug(path.join("./routes/api/prescription/prescription.html"));
+            logger.debug("./prescription.html");
             const templateHtml = fs.readFileSync(
                 path.join("./routes/api/prescription/prescription.html"),
                 "utf8"
             );
-            log.debug(path.join(process.cwd(), "prescription.html"));
+            logger.debug(path.join(process.cwd(), "prescription.html"));
             const options = {
                 format: "A4",
                 headerTemplate: "<p></p>",
@@ -174,8 +174,8 @@ router.get(
             res.contentType("application/pdf");
             return res.send(pdf_buffer_value);
         } catch (err) {
-            log.debug(err);
-            log.debug("care_plan_id", req.params.care_plan_id);
+            logger.debug(err);
+            logger.debug("care_plan_id", req.params.care_plan_id);
         }
     }
 );
@@ -223,9 +223,9 @@ function formatDoctorsData(
     let mobileNumber = mobile_number;
     let prefixToShow = prefix;
 
-    log.debug("========provider details start==================");
-    log.debug(providers);
-    log.debug("========provider details end====================");
+    logger.debug("========provider details start==================");
+    logger.debug(providers);
+    logger.debug("========provider details end====================");
 
     if (Object.keys(providers).length > 0) {
         const {
@@ -295,7 +295,7 @@ function formatPatientData(patients, users) {
     const patientIds = Object.keys(patients);
 
     const patientId = patientIds[0];
-    log.debug(JSON.stringify({patients, users}));
+    logger.debug(JSON.stringify({patients, users}));
     const {
         [patientId]: {
             basic_info: {
@@ -395,7 +395,7 @@ function renderChiefComplaints({symptoms}) {
 
         return finalSymptom;
     } catch (err) {
-        log.debug("Error in chief Compliance: ", err);
+        logger.debug("Error in chief Compliance: ", err);
     }
 }
 
@@ -861,10 +861,10 @@ router.get("/details/:care_plan_id", Authenticated, async (req, res) => {
             }
         }
 
-        log.debug("=========================");
-        log.debug(JSON.stringify(dietList));
-        log.debug({dietIds});
-        log.debug("=========================");
+        logger.debug("=========================");
+        logger.debug(JSON.stringify(dietList));
+        logger.debug({dietIds});
+        logger.debug("=========================");
 
         for (const id of workout_ids) {
             const workout = await workoutService.findOne({id});
@@ -1042,10 +1042,10 @@ router.get("/details/:care_plan_id", Authenticated, async (req, res) => {
                     providerIcon
                 );
             }
-            log.debug("provide details start ====================1 ");
+            logger.debug("provide details start ====================1 ");
             providerData = {...providers[provider_id]};
-            log.debug({providerData});
-            log.debug("provide details end ====================1 ");
+            logger.debug({providerData});
+            logger.debug("provide details end ====================1 ");
             usersData = {...usersData, ...users};
         }
 
@@ -1070,16 +1070,16 @@ router.get("/details/:care_plan_id", Authenticated, async (req, res) => {
                 repetitionApiData[id] = {id, type};
             }
         }
-        log.debug("============================");
-        log.debug(" doctor id ", doctor_id);
-        log.debug(doctors);
-        log.debug({medicinesArray});
-        log.debug({});
-        log.debug("============================");
+        logger.debug("============================");
+        logger.debug(" doctor id ", doctor_id);
+        logger.debug(doctors);
+        logger.debug({medicinesArray});
+        logger.debug({});
+        logger.debug("============================");
 
-        log.debug("details before from a doctor start");
-        log.debug({providerLogo});
-        log.debug("details before from a doctor end");
+        logger.debug("details before from a doctor start");
+        logger.debug({providerLogo});
+        logger.debug("details before from a doctor end");
 
         const {
             name: doctorName = "",
@@ -1101,9 +1101,9 @@ router.get("/details/:care_plan_id", Authenticated, async (req, res) => {
             doctor_id
         );
 
-        log.debug("details from a doctor start");
-        log.debug({providerLogo});
-        log.debug("details from a doctor end");
+        logger.debug("details from a doctor start");
+        logger.debug({providerLogo});
+        logger.debug("details from a doctor end");
 
         let patient_data = formatPatientData(
             {
@@ -1167,15 +1167,15 @@ router.get("/details/:care_plan_id", Authenticated, async (req, res) => {
         //             `${element.symptomName} ${bodyPart} for ${element.duration}`
         //           );
         //         } else {
-        //           log.warn("Invalid symptom element: ", element); // Log invalid elements
+        //           logger.warn("Invalid symptom element: ", element); // Log invalid elements
         //         }
         //       });
         //     } else {
-        //       log.warn("Symptoms data is not an array: ", parsedSymptoms);
+        //       logger.warn("Symptoms data is not an array: ", parsedSymptoms);
         //       stringSymptom = symptoms;
         //     }
         //   } catch (e) {
-        //     log.error("Error parsing symptoms: ", e);
+        //     logger.error("Error parsing symptoms: ", e);
         //     stringSymptom = symptoms;
         //   }
         // }
@@ -1210,12 +1210,12 @@ router.get("/details/:care_plan_id", Authenticated, async (req, res) => {
         }
 
         const medicationsList = formatMedicationsData(medications, medicines);
-        log.debug("================================");
-        log.debug(JSON.stringify(medicationsList));
-        log.debug("diet real data start==============");
-        log.debug({data: JSON.stringify({...dietApiData})});
-        log.debug("diet real data end================");
-        log.debug("================================");
+        logger.debug("================================");
+        logger.debug(JSON.stringify(medicationsList));
+        logger.debug("diet real data start==============");
+        logger.debug({data: JSON.stringify({...dietApiData})});
+        logger.debug("diet real data end================");
+        logger.debug("================================");
         let diet_old_data = {...dietApiData};
         let diet_output = [];
 
@@ -1229,15 +1229,15 @@ router.get("/details/:care_plan_id", Authenticated, async (req, res) => {
                 diet_old_data[diet_id]["diets"][diet_id]["basic_info"]["start_date"];
             let end_date =
                 diet_old_data[diet_id]["diets"][diet_id]["basic_info"]["end_date"];
-            log.debug(
+            logger.debug(
                 "----------------get testing info-------------- start -------"
             );
-            log.debug(diet_old_data[diet_id]["diets"][diet_id]["basic_info"]);
+            logger.debug(diet_old_data[diet_id]["diets"][diet_id]["basic_info"]);
             if (start_date) formattedStartDate = moment(start_date);
 
             if (end_date) formattedEndDate = moment(end_date);
 
-            log.debug(
+            logger.debug(
                 "----------------get testing info-------------- end ---------"
             );
             let duration = null;
@@ -1272,7 +1272,7 @@ router.get("/details/:care_plan_id", Authenticated, async (req, res) => {
             // for food groups
 
             for (let key in diet_old_data[dietIds[i]]["diet_food_groups"]) {
-                log.debug({
+                logger.debug({
                     key,
                     old_time: diet_old_data[dietIds[i]]["diet_food_groups"],
                 });
@@ -1311,11 +1311,11 @@ router.get("/details/:care_plan_id", Authenticated, async (req, res) => {
             diet_output.push(dietobj);
         }
 
-        log.debug("============my latest diet object start===============");
-        log.debug({diet_output});
+        logger.debug("============my latest diet object start===============");
+        logger.debug({diet_output});
 
-        log.debug(JSON.stringify(diet_output));
-        log.debug("============my latest diet object end===============");
+        logger.debug(JSON.stringify(diet_output));
+        logger.debug("============my latest diet object end===============");
 
         let {date: prescriptionDate} = getLatestUpdateDate(medications);
 
@@ -1431,10 +1431,10 @@ router.get("/details/:care_plan_id", Authenticated, async (req, res) => {
             diet_output,
             pre_workouts,
         };
-        log.debug("diet real data start==============");
-        log.debug({data: JSON.stringify({...dietApiData})});
-        log.debug({timings});
-        log.debug("diet real data end================");
+        logger.debug("diet real data start==============");
+        logger.debug({data: JSON.stringify({...dietApiData})});
+        logger.debug({timings});
+        logger.debug("diet real data end================");
 
         dataForPdf = {
             users: {...usersData},
@@ -1497,9 +1497,9 @@ router.get("/details/:care_plan_id", Authenticated, async (req, res) => {
             printBackground: true,
             path: "invoice.pdf",
         };
-        log.debug("--------------------------");
-        log.debug({pre_data});
-        log.debug("--------------------------");
+        logger.debug("--------------------------");
+        logger.debug({pre_data});
+        logger.debug("--------------------------");
 
         let pdf_buffer_value = await html_to_pdf({
             templateHtml,
@@ -1509,7 +1509,7 @@ router.get("/details/:care_plan_id", Authenticated, async (req, res) => {
         res.contentType("application/pdf");
         return res.send(pdf_buffer_value);
     } catch (err) {
-        log.debug("Error while generating the prescription: ", err);
+        logger.debug("Error while generating the prescription: ", err);
         return raiseServerError(res);
     }
 });

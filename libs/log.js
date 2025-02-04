@@ -1,131 +1,252 @@
-import chalk from "chalk";
-import moment from "moment";
-import os from "os";
+import winston from 'winston';
+import 'winston-daily-rotate-file';
+import chalk from 'chalk';
+import moment from 'moment';
+import os from 'os';
+import path from 'path';
+import { AsyncLocalStorage } from 'async_hooks';
+
+// Initialize AsyncLocalStorage for request tracking
+const requestContext = new AsyncLocalStorage();
 
 // Configuration
 const CONFIG = {
   environment: process.env.APP_ENV || process.env.NODE_ENV || 'production',
-  applicationName: process.env.APP_NAME || 'AdhereLive'
+  applicationName: process.env.APP_NAME || 'AdhereLive',
+  logDir: process.env.LOG_DIR || 'logs',
+  // External logging service configuration
+  externalLogging: {
+    enabled: process.env.EXTERNAL_LOGGING_ENABLED === 'true',
+    host: process.env.EXTERNAL_LOGGING_HOST,
+    apiKey: process.env.EXTERNAL_LOGGING_API_KEY,
+  }
 };
 
 // Add environment checks
 const isDevelopment =
-    process.env.APP_ENV === 'Development' ||
+    process.env.APP_ENV === 'development' ||
     process.env.NODE_ENV === 'development';
 
-// Define log levels
-const LOG_LEVELS = {
-  error: 0,
-  warn: 1,
-  info: 2,
-  debug: 3
+// Custom format for console output
+const consoleFormat = winston.format.printf(({ level, message, timestamp, source, requestId }) => {
+  const colorizer = {
+    debug: chalk.yellow,
+    info: chalk.blue,
+    warn: chalk.red,
+    error: chalk.redBright
+  };
+
+  const color = colorizer[level] || chalk.white;
+  const reqIdStr = requestId ? ` [${requestId}]` : '';
+  return `\n${color(timestamp)} ${color(`( ${source} )`)}${reqIdStr} : ${message}\n`;
+});
+
+// Create custom formats
+const formats = {
+  default: winston.format.combine(
+      winston.format.timestamp({
+        format: () => moment().format('YYYY-MM-DD HH:mm:ss')
+      }),
+      winston.format.metadata(),
+      consoleFormat
+  ),
+  json: winston.format.combine(
+      winston.format.timestamp({
+        format: () => moment().format('YYYY-MM-DD HH:mm:ss')
+      }),
+      winston.format.json()
+  ),
+  error: winston.format.combine(
+      winston.format.timestamp({
+        format: () => moment().format('YYYY-MM-DD HH:mm:ss')
+      }),
+      winston.format.metadata(),
+      winston.format.printf(({ message, timestamp, errorCode, methodName, source, requestId }) => {
+        const reqIdStr = requestId ? `\n${chalk.blue('RequestId=')} ${requestId}` : '';
+        return `\n\n${chalk.blue(timestamp)}\n` +
+            `${chalk.blue('errorCode=')} ${errorCode}\n` +
+            `${chalk.blue('Server=')} ${os.hostname()}\n` +
+            `${chalk.blue('Application=')} ${CONFIG.applicationName}\n` +
+            `${chalk.blue('Source=')} ${source}\n` +
+            `${chalk.blue('Method=')} ${methodName}${reqIdStr}\n` +
+            `${chalk.blue('Description=')} ${message}\n`;
+      })
+  )
 };
 
-// Store original console methods
-const originalConsole = {
-  log: console.log.bind(console),
-  error: console.error.bind(console),
-  warn: console.warn.bind(console),
-  info: console.info.bind(console)
-};
+// Custom Transport for External Logging Service
+class ExternalLoggingTransport extends winston.Transport {
+  constructor(opts) {
+    super(opts);
+    this.host = CONFIG.externalLogging.host;
+    this.apiKey = CONFIG.externalLogging.apiKey;
+  }
 
-class Log {
+  async log(info, callback) {
+    setImmediate(() => {
+      this.emit('logged', info);
+    });
+
+    if (CONFIG.externalLogging.enabled && this.host && this.apiKey) {
+      try {
+        // Example implementation - replace with your actual external logging service
+        await fetch(this.host, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${this.apiKey}`
+          },
+          body: JSON.stringify({
+            timestamp: info.timestamp,
+            level: info.level,
+            message: info.message,
+            metadata: info.metadata,
+            application: CONFIG.applicationName,
+            environment: CONFIG.environment,
+            hostname: os.hostname(),
+            requestId: info.requestId
+          })
+        });
+      } catch (error) {
+        console.error('External logging failed:', error);
+      }
+    }
+
+    callback();
+  }
+}
+
+class WinstonLogger {
   constructor(filename) {
     this.source = filename;
     this._dashString = '-'.repeat(106);
-    // Set log level from environment
-    this.logLevel = isDevelopment ? LOG_LEVELS.debug : LOG_LEVELS.warn;
+
+    // Set up file transport options
+    const fileTransportOptions = {
+      dirname: CONFIG.logDir,
+      datePattern: 'YYYY-MM-DD',
+      zippedArchive: true,
+      maxSize: '20m',
+      maxFiles: '14d',
+      format: formats.json
+    };
+
+    // Create transports array
+    const transports = [
+      new winston.transports.Console({
+        format: formats.default
+      })
+    ];
+
+    // Add file transports in production
+    if (!isDevelopment) {
+      // Combined logs
+      transports.push(
+          new winston.transports.DailyRotateFile({
+            ...fileTransportOptions,
+            filename: 'combined-%DATE%.log'
+          })
+      );
+
+      // Error logs
+      transports.push(
+          new winston.transports.DailyRotateFile({
+            ...fileTransportOptions,
+            filename: 'error-%DATE%.log',
+            level: 'error'
+          })
+      );
+    }
+
+    // Add external logging transport if enabled
+    if (CONFIG.externalLogging.enabled) {
+      transports.push(new ExternalLoggingTransport());
+    }
+
+    // Create the logger instance
+    this.logger = winston.createLogger({
+      level: isDevelopment ? 'debug' : 'warn',
+      defaultMeta: { source: filename },
+      transports
+    });
+
+    // Create error logger instance
+    this.errorLogger = winston.createLogger({
+      level: 'error',
+      defaultMeta: { source: filename },
+      transports: [
+        new winston.transports.Console({
+          format: formats.error
+        }),
+        ...((!isDevelopment) ? [
+          new winston.transports.DailyRotateFile({
+            ...fileTransportOptions,
+            filename: 'error-details-%DATE%.log'
+          })
+        ] : [])
+      ]
+    });
   }
 
-  // Add level checking method
-  shouldLog(level) {
-    return level <= this.logLevel;
+  // Helper method to get request ID from context
+  getRequestId() {
+    const store = requestContext.getStore();
+    return store?.requestId;
   }
 
-  // Get the current time for the log information to be recorded
-  getLogDate() {
-    return moment().format('YYYY-MM-DD HH:mm:ss');
+  // Helper method to add request ID to metadata
+  addRequestId(metadata = {}) {
+    const requestId = this.getRequestId();
+    return requestId ? { ...metadata, requestId } : metadata;
   }
 
-  // Modified debug method with environment check
   debug(msg, ...args) {
-    if (!this.shouldLog(LOG_LEVELS.debug)) return;
-
-    const formattedMsg = typeof msg === 'object' ? JSON.stringify(msg, null, 2) : msg;
-    originalConsole.log(
-        `${this._dashString}\n${this.getLogDate()} [${chalk.yellow(this.source)}]\n\nMESSAGE: ${formattedMsg}\n`,
+    const formattedMsg = typeof msg === 'object' ?
+        JSON.stringify(msg, null, 2) : msg;
+    this.logger.debug(
+        `${this._dashString}\nMESSAGE: ${formattedMsg}`,
+        this.addRequestId(),
         ...args
     );
   }
 
-  // Modified info method
-  info(msg) {
-    if (!this.shouldLog(LOG_LEVELS.info)) return;
-
-    originalConsole.log(
-        `\n${chalk.blue(this.getLogDate())} ${chalk.blue(
-            `( ${this.source} )`
-        )} : ${msg}\n`
-    );
+  info(msg, metadata = {}) {
+    this.logger.info(msg, this.addRequestId(metadata));
   }
 
-  // Modified warn method
-  warn(msg) {
-    if (!this.shouldLog(LOG_LEVELS.warn)) return;
-
-    originalConsole.log(
-        `\n${chalk.red(this.getLogDate())} ${chalk.red(
-            `( ${this.source} )`
-        )} : ${msg}\n`
-    );
+  warn(msg, metadata = {}) {
+    this.logger.warn(msg, this.addRequestId(metadata));
   }
 
-  // Keep error logging always active
-  error(msg) {
-    originalConsole.log(
-        `\n${chalk.redBright(this.getLogDate())} ${chalk.redBright(
-            `( ${this.source} )`
-        )} : ${msg}\n`
-    );
+  error(msg, metadata = {}) {
+    this.logger.error(msg, this.addRequestId(metadata));
   }
 
-  // Add production-safe object inspection
   objectInfo(msg, obj) {
-    if (!this.shouldLog(LOG_LEVELS.debug)) return;
+    if (!isDevelopment) return;
 
     const data = Object.entries(obj)
         .map(([key, value]) => {
-          const stringValue = typeof value === 'object'
-              ? JSON.stringify(value, null, 2)
-              : value;
+          const stringValue = typeof value === 'object' ?
+              JSON.stringify(value, null, 2) : value;
           return `${key} : ${stringValue}`;
         })
         .join("\n");
 
-    originalConsole.log(
-        `${this.source} ${this.getLogDate()}\n\n${msg} ->\n\n${data}\n`
-    );
+    this.logger.debug(`${msg} ->\n\n${data}`, this.addRequestId());
   }
 
-  // Keep error logging  implementation as-is (always active)
   errLog(errorCode, methodName, description) {
-    const serverName = os.hostname();
-    const logDate = this.getLogDate();
-    const errLog = `\n\n${chalk.blue(logDate)}\n` +
-        `${chalk.blue('errorCode=')} ${errorCode}\n` +
-        `${chalk.blue('Server=')} ${serverName}\n` +
-        `${chalk.blue('Application=')} ${CONFIG.applicationName}\n` +
-        `${chalk.blue('Source=')} ${this.source}\n` +
-        `${chalk.blue('Method=')} ${methodName}\n` +
-        `${chalk.blue('Description=')} ${description}\n`;
-
-    originalConsole.error(errLog);
+    this.errorLogger.error(description, this.addRequestId({
+      errorCode,
+      methodName
+    }));
     throw new Error(description);
   }
 }
 
 // Create a global logger instance
-const globalLogger = new Log('global');
+const globalLogger = new WinstonLogger('global');
 
 // Safe console.log override for development
 if (isDevelopment) {
@@ -133,17 +254,30 @@ if (isDevelopment) {
     try {
       const stack = new Error().stack;
       const callerFile = stack.split('\n')[2].match(/\((.*):\d+:\d+\)/)?.[1] || 'unknown';
-      const logger = new Log(callerFile);
+      const logger = new WinstonLogger(callerFile);
       logger.debug(...args);
     } catch (error) {
       // Fallback to original console.log if something goes wrong
-      originalConsole.log(...args);
+      console.error('Logging error: ', error);
     }
   };
 }
 
+// Middleware for Express to add request ID tracking
+export const requestIdMiddleware = (req, res, next) => {
+  const requestId = req.headers['x-request-id'] ||
+      req.headers['x-correlation-id'] ||
+      `req-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+
+  requestContext.run(new Map().set('requestId', requestId), () => {
+    // Add request ID to response headers
+    res.setHeader('X-Request-ID', requestId);
+    next();
+  });
+};
+
 // Export factory function for specific file loggers
-export const createLogger = (filename) => new Log(filename);
+export const createLogger = (filename) => new WinstonLogger(filename);
 
 // Export convenience methods using the global logger
 export const debug = (...args) => globalLogger.debug(...args);

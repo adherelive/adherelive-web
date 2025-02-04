@@ -63,24 +63,24 @@ import NotesRouter from "./notes";
 import { getTime } from "../../app/helper/timer";
 import prescriptionRouter from "./prescription";
 
-const log = createLogger("API > INDEX");
+const logger = createLogger("API > INDEX");
 
 router.use(async function (req, res, next) {
-  // log.debug("api-index-1 ---> router getTime: " + getTime() + " " + getTime());
+  // logger.debug("api-index-1 ---> router getTime: " + getTime() + " " + getTime());
   try {
     let accessToken,
       userId = null,
       userRoleId,
       userRoleData;
     const { cookies = {} } = req;
-    // log.debug("api-index-2" + getTime());
+    // logger.debug("api-index-2" + getTime());
 
     /**
      * TODO: Commenting out the below, as it is not required here currently
     if (cookies.accessToken) {
       accessToken = cookies.accessToken;
     }
-    log.debug("api-index-3" + getTime());
+    logger.debug("api-index-3" + getTime());
     const { accessToken: aT = "" } = req.headers || {};
     if (aT) {
       accessToken = aT;
@@ -103,9 +103,9 @@ router.use(async function (req, res, next) {
     }
 
     const secret = process.config.TOKEN_SECRET_KEY;
-    // log.debug("api-index-4" + getTime());
+    // logger.debug("api-index-4" + getTime());
     if (accessToken) {
-      // log.debug("api-index-5" + getTime());
+      // logger.debug("api-index-5" + getTime());
       const decodedAccessToken = await jwt.verify(accessToken, secret);
       const {
         userRoleId: decodedUserRoleId = null,
@@ -116,7 +116,7 @@ router.use(async function (req, res, next) {
         id: decodedUserRoleId,
       });
 
-      // log.debug("api-index-6" + getTime());
+      // logger.debug("api-index-6" + getTime());
       if (userRoleDetails) {
         const userRole = await UserRoleWrapper(userRoleDetails);
         userId = userRole.getUserId();
@@ -130,26 +130,26 @@ router.use(async function (req, res, next) {
         next();
         return;
       }
-      // log.debug("api-index-7" + getTime());
+      // logger.debug("api-index-7" + getTime());
     } else {
-      // log.debug("api-index-8" + getTime());
+      // logger.debug("api-index-8" + getTime());
       req.userDetails = {
         exists: false,
       };
       next();
-      // log.debug("api-index-9" + getTime());
+      // logger.debug("api-index-9" + getTime());
       return;
     }
-    // log.debug("api-index-10" + getTime());
+    // logger.debug("api-index-10" + getTime());
     const userData = await userService.getUser(userId);
-    // log.debug("api-index-11" + getTime());
+    // logger.debug("api-index-11" + getTime());
     if (userData) {
-      // log.debug("api-index-12" + getTime());
-      // log.debug("api-index-12-1" + getTime());
+      // logger.debug("api-index-12" + getTime());
+      // logger.debug("api-index-12-1" + getTime());
       const user = await UserWrapper(userData);
-      // log.debug("api-index-12-2" + getTime());
+      // logger.debug("api-index-12-2" + getTime());
       const { userCategoryData, userCategoryId } = (await user.getCategoryInfo()) || {};
-      // log.debug("api-index-12-3" + getTime());
+      // logger.debug("api-index-12-3" + getTime());
 
       req.userDetails = {
         exists: true,
@@ -161,11 +161,11 @@ router.use(async function (req, res, next) {
         userCategoryId,
       };
 
-      // log.debug("api-index-12-4" + getTime());
+      // logger.debug("api-index-12-4" + getTime());
       req.permissions = await user.getPermissions();
-      // log.debug("api-index-12-5" + getTime());
-      // log.debug("api-index-13" + getTime());
-      // log.debug("api-index-14" + getTime());
+      // logger.debug("api-index-12-5" + getTime());
+      // logger.debug("api-index-13" + getTime());
+      // logger.debug("api-index-14" + getTime());
     } else {
       req.userDetails = {
         exists: false,
@@ -173,7 +173,7 @@ router.use(async function (req, res, next) {
     }
     next();
   } catch (err) {
-    log.debug("API index catch Error ---> ", err);
+    logger.debug("API index catch Error ---> ", err);
     req.userDetails = {
       exists: false,
     };

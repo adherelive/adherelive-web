@@ -13,7 +13,7 @@ import userPreferenceService from "../../../services/userPreferences/userPrefere
 
 import UserPreferenceWrapper from "../../../apiWrapper/mobile/userPreference";
 
-const log = createLogger("WEB GRAPH CONTROLLER");
+const logger = createLogger("WEB GRAPH CONTROLLER");
 
 class GraphController extends Controller {
   constructor() {
@@ -68,7 +68,7 @@ class GraphController extends Controller {
       }
 
       // const userPreferenceData = await userPreferenceService.getPreferenceByData({user_id: userId});
-      // log.debug("9182391283 userPreferenceData ---> ", userPreferenceData);
+      // logger.debug("9182391283 userPreferenceData ---> ", userPreferenceData);
       // // const userPreference = await UserPreferenceWrapper(userPreferenceData);
 
       // // const charts = userPreference.getChartDetails();
@@ -91,11 +91,11 @@ class GraphController extends Controller {
       //   };
 
       // charts.forEach(chart => {
-      //     log.debug("324564322456432678786745643",CHART_DETAILS[chart]);
+      //     logger.debug("324564322456432678786745643",CHART_DETAILS[chart]);
       //    chartData[chart] = CHART_DETAILS[chart];
       // });
     } catch (error) {
-      log.debug("getAllGraphs 500 error", error);
+      logger.debug("getAllGraphs 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -142,7 +142,7 @@ class GraphController extends Controller {
         },
       };
 
-      // log.debug("userPreference.getChartDetails().includes(id) ", userPreference.getChartDetails().includes(id));
+      // logger.debug("userPreference.getChartDetails().includes(id) ", userPreference.getChartDetails().includes(id));
 
       // userPreference.getChartDetails().forEach(id => {
       //     if(chart_ids.includes(id)) {
@@ -191,7 +191,7 @@ class GraphController extends Controller {
         "Charts added successfully"
       );
     } catch (error) {
-      log.debug("getAllGraphs 500 error ---> ", error);
+      logger.debug("getAllGraphs 500 error ---> ", error);
       return raiseServerError(res);
     }
   };

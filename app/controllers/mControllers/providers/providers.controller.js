@@ -13,7 +13,7 @@ import PatientWrapper from "../../../apiWrapper/web/patient";
 import UserRoleWrapper from "../../../apiWrapper/web/userRoles";
 import { USER_CATEGORY } from "../../../../constant";
 
-const log = createLogger("MOBILE > PROVIDERS > CONTROLLER");
+const logger = createLogger("MOBILE > PROVIDERS > CONTROLLER");
 
 const APPOINTMENT_QUERY_TYPE = {
   DAY: "d",
@@ -161,7 +161,7 @@ class MobileProvidersController extends Controller {
         "Appointments data fetched successfully."
       );
     } catch (error) {
-      log.debug("getAllAppointmentForDoctors 500 error ", error);
+      logger.debug("getAllAppointmentForDoctors 500 error ", error);
       return raiseServerError(res);
     }
   };

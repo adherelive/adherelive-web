@@ -28,7 +28,7 @@ import {
 } from "../../../constant";
 import moment from "moment";
 
-const log = createLogger("CARE_PLAN > HELPER");
+const logger = createLogger("CARE_PLAN > HELPER");
 
 /**
  * medicines,
@@ -133,7 +133,7 @@ export const getCarePlanDataWithImp = async ({
       current_care_plan_id: currentCarePlanId,
     };
   } catch (error) {
-    log.debug("Issue with getCarePlanDataWithImp catch error: ", error);
+    logger.debug("Issue with getCarePlanDataWithImp catch error: ", error);
     return {};
   }
 };
@@ -157,7 +157,7 @@ export const getCarePlanDataWithDoctor = async ({
       },
     };
   } catch (error) {
-    log.debug("getCarePlanDataWithDoctor catch error: ", error);
+    logger.debug("getCarePlanDataWithDoctor catch error: ", error);
     return {};
   }
 };
@@ -315,7 +315,7 @@ export const getCarePlanData = async ({
       current_care_plan_id: currentCarePlanId,
     };
   } catch (error) {
-    log.debug("getCarePlanData issues catch error: ", error);
+    logger.debug("getCarePlanData issues catch error: ", error);
     return {};
   }
 };
@@ -424,7 +424,7 @@ export const createVitals = async ({
       vital_templates: vitalTemplateData,
     };
   } catch (error) {
-    log.debug("createVitals catch error: ", error);
+    logger.debug("createVitals catch error: ", error);
     return {};
   }
 };
@@ -542,7 +542,7 @@ export const createDiet = async ({
       diet_ids: dietIds,
     };
   } catch (error) {
-    log.debug("createDiet catch error: ", error);
+    logger.debug("createDiet catch error: ", error);
     return {};
   }
 };
@@ -667,7 +667,7 @@ export const createWorkout = async ({
       workout_ids: workoutIds,
     };
   } catch (error) {
-    log.debug("createWorkout catch error: ", error);
+    logger.debug("createWorkout catch error: ", error);
     return {};
   }
 };

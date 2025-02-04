@@ -9,7 +9,7 @@ import {
 } from "../../../constant";
 import { createLogger } from "../../../libs/log";
 
-const log = createLogger("DIET > HELPER");
+const logger = createLogger("DIET > HELPER");
 
 export const getTimeWiseDietFoodGroupMappings = async ({
   diet_food_group_mappings,
@@ -73,7 +73,7 @@ export const getTimeWiseDietFoodGroupMappings = async ({
 export const daysDietPlan = async () => {
   try {
   } catch (error) {
-    log.debug("createDiet catch error", error);
+    logger.debug("createDiet catch error", error);
     return null;
   }
 };
@@ -133,6 +133,6 @@ export const getTimings = (userTimings) => {
 
     return allDietTimings;
   } catch (error) {
-    log.debug("error", error);
+    logger.debug("error", error);
   }
 };

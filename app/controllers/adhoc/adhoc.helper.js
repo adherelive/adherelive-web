@@ -11,7 +11,7 @@ import ProviderWrapper from "../../apiWrapper/web/provider";
 
 import { USER_CATEGORY } from "../../../constant";
 
-const log = createLogger("ADHOC > HELPER");
+const logger = createLogger("ADHOC > HELPER");
 
 export const getLinkDetails = async (category, userId) => {
   try {
@@ -39,7 +39,7 @@ export const getLinkDetails = async (category, userId) => {
 
     return response;
   } catch (error) {
-    log.debug("getLinkDetails error", error);
+    logger.debug("getLinkDetails error", error);
     return null;
   }
 };
@@ -81,7 +81,7 @@ export const getUserDetails = async (category, categoryId) => {
 
     return response;
   } catch (error) {
-    log.debug("getLinkDetails error", error);
+    logger.debug("getLinkDetails error", error);
     return null;
   }
 };

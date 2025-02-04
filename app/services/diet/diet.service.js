@@ -11,7 +11,7 @@ import { DAYS_INTEGER, EVENT_TYPE } from "../../../constant";
 import moment from "moment";
 
 import { createLogger } from "../../../libs/log";
-const log = createLogger("WEB > DIET > SERVICE");
+const logger = createLogger("WEB > DIET > SERVICE");
 
 const DEFAULT_ORDER = [["created_at", "DESC"]];
 
@@ -283,10 +283,10 @@ class DietService {
         }
       } else {
         // for each DAY
-        log.debug("else food_groups: ", diet_food_groups);
+        logger.debug("else food_groups: ", diet_food_groups);
         for (let day of Object.keys(diet_food_groups)) {
           const foodGroupsForDay = diet_food_groups[day] || {};
-          log.debug("else day: ", day);
+          logger.debug("else day: ", day);
           isCreated = await this.createDaysDiet(
             foodGroupsForDay,
             day,

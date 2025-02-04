@@ -2,7 +2,7 @@ import Database from "../../../libs/mysql";
 import { TABLE_NAME } from "../../models/notes";
 
 import { createLogger } from "../../../libs/log";
-const log = createLogger("WEB > NOTES > SERVICE");
+const logger = createLogger("WEB > NOTES > SERVICE");
 
 /**
  * Duplicated in flashCard.service.js?
@@ -28,7 +28,7 @@ export default class ServiceOfferingService {
       await transaction.commit();
       return notes;
     } catch (error) {
-      log.debug(error);
+      logger.debug(error);
       await transaction.rollback();
       throw error;
     }

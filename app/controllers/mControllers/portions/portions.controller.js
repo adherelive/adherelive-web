@@ -4,7 +4,7 @@ import PortionWrapper from "../../../apiWrapper/mobile/portions";
 
 import { createLogger } from "../../../../libs/log";
 
-const log = createLogger("MOBILE PORTIONS CONTROLLER");
+const logger = createLogger("MOBILE PORTIONS CONTROLLER");
 
 class PortionController extends Controller {
   constructor() {
@@ -45,7 +45,7 @@ class PortionController extends Controller {
         );
       }
     } catch (error) {
-      log.debug("portion search 500 error", error);
+      logger.debug("portion search 500 error", error);
       return raiseServerError(res);
     }
   };

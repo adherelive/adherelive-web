@@ -8,7 +8,7 @@ import NotificationSdk from "../../notificationSdk";
 
 import { MESSAGE_TYPES } from "../../../constant";
 
-const log = createLogger("WEB > NOTIFICATION > CONTROLLER");
+const logger = createLogger("WEB > NOTIFICATION > CONTROLLER");
 
 class NotificationController extends Controller {
   constructor() {
@@ -298,7 +298,7 @@ class NotificationController extends Controller {
         "Notification data fetched successfully"
       );
     } catch (error) {
-      log.debug("getNotifications 500 error: ", error);
+      logger.debug("getNotifications 500 error: ", error);
       return raiseServerError(res);
     }
   };
@@ -338,7 +338,7 @@ class NotificationController extends Controller {
 
       return raiseSuccess(res, 200, {}, "Notification sent successfully.");
     } catch (error) {
-      log.debug("raiseChatNotification 500 error", error);
+      logger.debug("raiseChatNotification 500 error", error);
       return raiseServerError(res);
     }
   };

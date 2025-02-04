@@ -85,7 +85,7 @@ module.exports = {
     try {
       return await queryInterface.bulkInsert(TABLE_NAME, hashedUsersData);
     } catch (error) {
-      log.error("Error seeding users:", error);
+      logger.error("Error seeding users:", error);
     }
   },
 

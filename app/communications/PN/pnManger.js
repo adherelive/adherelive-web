@@ -1,7 +1,7 @@
 import AWS from "aws-sdk";
 import { createLogger } from "../../../libs/log";
 
-const log = createLogger("communications --> pnManger");
+const logger = createLogger("communications --> pnManger");
 
 const PNpayloadBuilder = require("./PNpayloadBuilder");
 
@@ -20,10 +20,10 @@ class pnManger {
       //
       //
       let isValidData = this.validatePayload(payload);
-      log.debug("validating payload");
+      logger.debug("validating payload");
       if (isValidData.error && isValidData.error == 1) return isValidData;
-      log.success("payload valid!!");
-      log.debug("creating endpointArn...!!");
+      logger.success("payload valid!!");
+      logger.debug("creating endpointArn...!!");
       //
       let PNendpointData =
         payload.type == "android"
@@ -35,14 +35,14 @@ class pnManger {
               .promise()
           : payload.targetArn;
 
-      log.success("endpointArn creation successfull!!");
+      logger.success("endpointArn creation successfull!!");
       let PNendpointArn =
         payload.type == "android" ? PNendpointData.EndpointArn : PNendpointData;
-      log.debug("transforming payload to aws payload");
+      logger.debug("transforming payload to aws payload");
       let payloadBuilder = new PNpayloadBuilder(payload);
-      log.success("payload build successfull!!");
+      logger.success("payload build successfull!!");
       let tranformedPayload = payloadBuilder.getPayload();
-      log.debug("sending push notification");
+      logger.debug("sending push notification");
       tranformedPayload = JSON.stringify(tranformedPayload);
       //
       let PNpublishResponse = await this.sns

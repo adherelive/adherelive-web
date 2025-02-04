@@ -8,7 +8,7 @@ import moment from "moment";
 import { getTime } from "../../helper/timer";
 
 import { createLogger } from "../../../libs/log";
-const log = createLogger("WEB > SCHEDULE EVENT > SERVICES");
+const logger = createLogger("WEB > SCHEDULE EVENT > SERVICES");
 
 /**
  *
@@ -18,7 +18,7 @@ const log = createLogger("WEB > SCHEDULE EVENT > SERVICES");
 class ScheduleEventService {
   create = async (data) => {
     try {
-      // log.debug("logsForMonitorByAdhere -  Schedule EventService Create Called: ",getTime())
+      // logger.debug("logsForMonitorByAdhere -  Schedule EventService Create Called: ",getTime())
       const scheduleEvents = await Database.getModel(TABLE_NAME).create(data);
       return scheduleEvents;
     } catch (error) {
@@ -34,7 +34,7 @@ class ScheduleEventService {
    */
   bulkCreate = async (data) => {
     try {
-      // log.debug("logsForMonitorByAdhere -  Schedule EventService bulkCreate Called: ",getTime())
+      // logger.debug("logsForMonitorByAdhere -  Schedule EventService bulkCreate Called: ",getTime())
       const scheduleEvents = await Database.getModel(TABLE_NAME).bulkCreate(
         data
       );
@@ -52,7 +52,7 @@ class ScheduleEventService {
    * @returns {Promise<*>}
    */
   update = async (data, id) => {
-    // log.debug("logsForMonitorByAdhere -  Schedule EventService update Called: ",getTime())
+    // logger.debug("logsForMonitorByAdhere -  Schedule EventService update Called: ",getTime())
     const transaction = await Database.initTransaction();
     try {
       const scheduleEvents = await Database.getModel(TABLE_NAME).update(data, {
@@ -80,7 +80,7 @@ class ScheduleEventService {
    * @returns {Promise<*>}
    */
   getEventByData = async ({ paranoid = true, ...data }) => {
-    // log.debug("logsForMonitorByAdhere -  Schedule EventService getEventByData Called: ",getTime())
+    // logger.debug("logsForMonitorByAdhere -  Schedule EventService getEventByData Called: ",getTime())
     try {
       const scheduleEvent = await Database.getModel(TABLE_NAME).findOne({
         where: data,
@@ -99,7 +99,7 @@ class ScheduleEventService {
    * @returns {Promise<Model[]>}
    */
   getAllEventByData = async (data) => {
-    // log.debug("logsForMonitorByAdhere -  Schedule EventService getAllEventByData Called: ",getTime())
+    // logger.debug("logsForMonitorByAdhere -  Schedule EventService getAllEventByData Called: ",getTime())
     try {
       const scheduleEvent = await Database.getModel(TABLE_NAME).findAll({
         where: data,
@@ -117,7 +117,7 @@ class ScheduleEventService {
    * @returns {Promise<Model[]>}
    */
   getAllPreviousByData = async (data = {}) => {
-    log.debug("logsForMonitorByAdhere - Schedule EventService getAllPreviousByData Called: ",getTime())
+    logger.debug("logsForMonitorByAdhere - Schedule EventService getAllPreviousByData Called: ",getTime())
     try {
       const { event_id, date, event_type = "" } = data;
       const scheduleEvent = await Database.getModel(TABLE_NAME).findAll({
@@ -143,12 +143,12 @@ class ScheduleEventService {
    * @returns {Promise<Model[]>}
    */
   getAllPreviousByDataM = async (data = {}) => {
-    // log.debug("logsForMonitorByAdhere -  Schedule EventService getAllPreviousByDataM Called: ",getTime())
+    // logger.debug("logsForMonitorByAdhere -  Schedule EventService getAllPreviousByDataM Called: ",getTime())
     try {
-      // log.debug("getAllPreviousByDataNew called - 1");
+      // logger.debug("getAllPreviousByDataNew called - 1");
       const { event_id = [], date, event_type = "" } = data;
-      log.debug("Get All Previous by Data (M) -> event_id: ", { event_id });
-      log.debug("Get All Previous by Data (M) -> typeof(event_id): ", typeof event_id);
+      logger.debug("Get All Previous by Data (M) -> event_id: ", { event_id });
+      logger.debug("Get All Previous by Data (M) -> typeof(event_id): ", typeof event_id);
 
       const scheduleEvent = await Database.getModel(TABLE_NAME).findAll({
         where: {
@@ -175,7 +175,7 @@ class ScheduleEventService {
    * @returns {Promise<Model[]>}
    */
   getLastVisitData = async (data = {}) => {
-    // log.debug("logsForMonitorByAdhere -  Schedule EventService getLastVisitData Called: ",getTime())
+    // logger.debug("logsForMonitorByAdhere -  Schedule EventService getLastVisitData Called: ",getTime())
     try {
       const { event_id, event_type, date, sort = "ASC" } = data;
       const scheduleEvent = await Database.getModel(TABLE_NAME).findAll({
@@ -208,7 +208,7 @@ class ScheduleEventService {
    * @returns {Promise<Model[]>}
    */
   getAllPassedByData = async (data = {}) => {
-    // log.debug("logsForMonitorByAdhere -  Schedule EventService getAllPassedByData Called: ",getTime())
+    // logger.debug("logsForMonitorByAdhere -  Schedule EventService getAllPassedByData Called: ",getTime())
     try {
       const {
         event_id,
@@ -251,7 +251,7 @@ class ScheduleEventService {
    * @returns {Promise<Model[]>}
    */
   getAllPassedAndCompletedEventsData = async (data = {}) => {
-    // log.debug("logsForMonitorByAdhere -  Schedule EventService getAllPassedAndCompletedEventsData Called: ",getTime())
+    // logger.debug("logsForMonitorByAdhere -  Schedule EventService getAllPassedAndCompletedEventsData Called: ",getTime())
     try {
       const { event_id, event_type = "", date, sort = "ASC" } = data;
       const scheduleEvent = await Database.getModel(TABLE_NAME).findAll({
@@ -296,7 +296,7 @@ class ScheduleEventService {
    * @returns {Promise<Model[]>}
    */
   getPriorEventByData = async (time, event_type = null) => {
-    // log.debug("logsForMonitorByAdhere -  Schedule EventService getPriorEventByData Called: ",getTime())
+    // logger.debug("logsForMonitorByAdhere -  Schedule EventService getPriorEventByData Called: ",getTime())
     try {
       const scheduleEvent = await Database.getModel(TABLE_NAME).findAll({
         where: {
@@ -320,7 +320,7 @@ class ScheduleEventService {
    * @returns {Promise<Model[]>}
    */
   getStartEventByData = async (time) => {
-    // log.debug("logsForMonitorByAdhere -  Schedule EventService getStartEventByData Called: ",getTime())
+    // logger.debug("logsForMonitorByAdhere -  Schedule EventService getStartEventByData Called: ",getTime())
     try {
       const scheduleEvent = await Database.getModel(TABLE_NAME).findAll({
         where: {
@@ -343,7 +343,7 @@ class ScheduleEventService {
    * @returns {Promise<Model[]>}
    */
   getPassedEventData = async (time) => {
-    // log.debug("logsForMonitorByAdhere -  Schedule EventService getPassedEventData Called: ",getTime())
+    // logger.debug("logsForMonitorByAdhere -  Schedule EventService getPassedEventData Called: ",getTime())
     try {
       const scheduleEvent = await Database.getModel(TABLE_NAME).findAll({
         where: {
@@ -370,7 +370,7 @@ class ScheduleEventService {
    * @returns {Promise<*>}
    */
   deleteBatch = async (data) => {
-    // log.debug("logsForMonitorByAdhere -  Schedule EventService deleteBatch Called: ",getTime())
+    // logger.debug("logsForMonitorByAdhere -  Schedule EventService deleteBatch Called: ",getTime())
     try {
       const scheduleEvent = await Database.getModel(TABLE_NAME).destroy({
         where: data,
@@ -388,7 +388,7 @@ class ScheduleEventService {
    * @returns {Promise<Model[]>}
    */
   getAllPastData = async (data) => {
-    // log.debug("logsForMonitorByAdhere -  Schedule EventService getAllPastData Called: ",getTime())
+    // logger.debug("logsForMonitorByAdhere -  Schedule EventService getAllPastData Called: ",getTime())
     try {
       const { event_id, startDate, date } = data;
       const scheduleEvent = await Database.getModel(TABLE_NAME).findAll({
@@ -412,7 +412,7 @@ class ScheduleEventService {
    * @returns {Promise<Model[]>}
    */
   getUpcomingByData = async (data) => {
-    // log.debug("logsForMonitorByAdhere -  Schedule EventService getUpcomingByData Called: ",getTime())
+    // logger.debug("logsForMonitorByAdhere -  Schedule EventService getUpcomingByData Called: ",getTime())
     try {
       const {
         vital_ids = [],
@@ -468,9 +468,9 @@ class ScheduleEventService {
    * @returns {Promise<Model[]>}
    */
   getMissedByDataEventType = async (data) => {
-    // log.debug("logsForMonitorByAdhere -  Schedule EventService getMissedByDataEventType Called: ",getTime())
+    // logger.debug("logsForMonitorByAdhere -  Schedule EventService getMissedByDataEventType Called: ",getTime())
     try {
-      // log.debug("getMissedByData Start - ", getTime());
+      // logger.debug("getMissedByData Start - ", getTime());
       const {
         vital_ids,
         event_type,
@@ -586,11 +586,11 @@ class ScheduleEventService {
       });
       const endTime = Date.now();
 
-      log.debug(`Query executed in ${endTime - startTime}ms and returned ${result.length} rows.`);
+      logger.debug(`Query executed in ${endTime - startTime}ms and returned ${result.length} rows.`);
 
       return result;
     } catch (error) {
-      log.error("Error in getMissedByData: ", error);
+      logger.error("Error in getMissedByData: ", error);
       throw error;
     }
   };
@@ -602,7 +602,7 @@ class ScheduleEventService {
    * getMissedByData: Uses separate arrays for event_id and event_type within the WHERE clause. 
    * This allows the database to potentially use indexes on both event_id and event_type more effectively.
   getMissedByData = async (data) => {
-    // log.debug("logsForMonitorByAdhere -  Schedule EventService getMissedByData Called: ",getTime())
+    // logger.debug("logsForMonitorByAdhere -  Schedule EventService getMissedByData Called: ",getTime())
     try {
       const {
         vital_ids,
@@ -658,7 +658,7 @@ class ScheduleEventService {
    * @returns {Promise<Model[]>}
    */
   getPageEventByData = async (data) => {
-    // log.debug("logsForMonitorByAdhere -  Schedule EventService getPageEventByData Called: ",getTime())
+    // logger.debug("logsForMonitorByAdhere -  Schedule EventService getPageEventByData Called: ",getTime())
     try {
       const { eventIds, startLimit, endLimit, event_type } = data;
       const scheduleEvent = await Database.getModel(TABLE_NAME).findAll({
@@ -693,7 +693,7 @@ class ScheduleEventService {
     diets,
     workouts,
   }) => {
-    // log.debug("logsForMonitorByAdhere -  Schedule EventService getPendingEventsData Called: ",getTime())
+    // logger.debug("logsForMonitorByAdhere -  Schedule EventService getPendingEventsData Called: ",getTime())
     try {
       const scheduleEvent = await Database.getModel(TABLE_NAME).findAll({
         where: {
@@ -746,7 +746,7 @@ class ScheduleEventService {
     diet,
     workout,
   }) => {
-    // log.debug("logsForMonitorByAdhere -  Schedule EventService getAllEventStatusByData Called: ",getTime())
+    // logger.debug("logsForMonitorByAdhere -  Schedule EventService getAllEventStatusByData Called: ",getTime())
     try {
       return await Database.getModel(TABLE_NAME).findAll({
         where: {
@@ -779,7 +779,7 @@ class ScheduleEventService {
    * @returns {Promise<*>}
    */
   getCount = async (data) => {
-    // log.debug("logsForMonitorByAdhere -  Schedule EventService getCount Called: ",getTime())
+    // logger.debug("logsForMonitorByAdhere -  Schedule EventService getCount Called: ",getTime())
     try {
       return await Database.getModel(TABLE_NAME).count({
         where: data,

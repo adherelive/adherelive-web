@@ -3,7 +3,7 @@ import Database from "../../../libs/mysql";
 import { TABLE_NAME } from "../../models/specialities";
 
 import { createLogger } from "../../../libs/log";
-const log = createLogger("WEB > SPECIALITY > SERVICES");
+const logger = createLogger("WEB > SPECIALITY > SERVICES");
 
 class SpecialityService {
   getAll = async () => {

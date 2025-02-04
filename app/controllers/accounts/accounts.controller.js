@@ -10,7 +10,7 @@ import ProviderWrapper from "../../apiWrapper/web/provider";
 
 import { createLogger } from "../../../libs/log";
 
-const log = createLogger("WEB ACCOUNTS CONTROLLER");
+const logger = createLogger("WEB ACCOUNTS CONTROLLER");
 
 class MobileAccountsController extends Controller {
   constructor() {
@@ -78,7 +78,7 @@ class MobileAccountsController extends Controller {
         "Account details updated successfully."
       );
     } catch (error) {
-      log.debug("add account details 500 error", error);
+      logger.debug("add account details 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -87,7 +87,7 @@ class MobileAccountsController extends Controller {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
       const { userDetails: { userId } = {} } = req;
-      log.debug("Query for getUserAccountDetails User details: ", req.query);
+      logger.debug("Query for getUserAccountDetails User details: ", req.query);
 
       const { query: { all_accounts = 0, provider_id = null } = {} } = req;
       const get_all_accounts = all_accounts == 0 ? false : true;
@@ -183,7 +183,7 @@ class MobileAccountsController extends Controller {
         "Account details fetched successfully."
       );
     } catch (error) {
-      log.debug("get account details 500 error", error);
+      logger.debug("get account details 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -235,7 +235,7 @@ class MobileAccountsController extends Controller {
         "Account details added successfully."
       );
     } catch (error) {
-      log.debug("get account details 500 error", error);
+      logger.debug("get account details 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -265,7 +265,7 @@ class MobileAccountsController extends Controller {
       );
 
       if (accountDetails) {
-        log.debug("234543453245", accountDetails);
+        logger.debug("234543453245", accountDetails);
         for (const account of accountDetails) {
           accountWrapper = await AccountsWrapper(account);
           accountWrapperDetails[accountWrapper.getId()] =
@@ -284,7 +284,7 @@ class MobileAccountsController extends Controller {
         "Account details deleted successfully."
       );
     } catch (error) {
-      log.debug("delete account details 500 error", error);
+      logger.debug("delete account details 500 error", error);
       return raiseServerError(res);
     }
   };

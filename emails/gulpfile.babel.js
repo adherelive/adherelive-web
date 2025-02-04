@@ -163,7 +163,7 @@ function creds(done) {
     CONFIG = JSON.parse(fs.readFileSync(configPath));
   } catch (e) {
     beep();
-    log.debug(
+    logger.debug(
       "[AWS]".bold.red +
         " Sorry, there was an issue locating your config.json. Please see README.md"
     );

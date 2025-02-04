@@ -1,5 +1,5 @@
 APP_KEY="test"
-APP_ENV=Development
+APP_ENV=development
 NODE_ENV=development
 APP_NAME="adherelive"
 
@@ -27,6 +27,12 @@ APP_DEBUG=true;
 # This is the log level for the application
 LOG_LEVEL=debug
 LOG_FILE=app
+LOG_DIR=logs
+
+# For external logging of errors and debugging
+#EXTERNAL_LOGGING_ENABLED=true
+#EXTERNAL_LOGGING_HOST=https://your-logging-service.com/api/logs
+#EXTERNAL_LOGGING_API_KEY=your-api-key
 
 # This is the secret key used to generate the JWT tokens
 TOKEN_SECRET_KEY=kfjaslkjfaljfl
@@ -104,6 +110,7 @@ GETSTREAM_FEED_GROUP=notification
 GOOGLE_CLIENT_ID=398277517704-eqh1lvm3872s2a5t916kua18gp60steu.apps.googleusercontent.com
 GOOGLE_CLIENT_SECRET=KszeHfBloxPaTayEXB_y6WQg
 GOOGLE_REDIRECT_URI=postmessage
+
 # Firebase Keys
 FIREBASE_PROJECT_ID=onesignal-6b0c6
 FIREBASE_API_KEY=AIzaSyCPdjkLBwzrA_osAi6QMkTbgwKQif0VxLQ

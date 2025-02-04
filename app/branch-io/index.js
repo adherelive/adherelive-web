@@ -15,6 +15,6 @@ export default async function createLink(data = {}) {
       return url;
     }
   } catch (err) {
-    log.debug("err creating universal deep-link", err);
+    logger.debug("err creating universal deep-link", err);
   }
 }

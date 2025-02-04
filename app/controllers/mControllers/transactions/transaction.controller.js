@@ -24,7 +24,7 @@ import * as TransactionHelper from "./transactions.helper";
 import { USER_CATEGORY } from "../../../../constant";
 import { PAYMENT_TYPE } from "../../../models/paymentProducts";
 
-const log = createLogger("TRANSACTIONS > MOBILE > CONTROLLER");
+const logger = createLogger("TRANSACTIONS > MOBILE > CONTROLLER");
 
 class TransactionController extends Controller {
   constructor() {
@@ -155,7 +155,7 @@ class TransactionController extends Controller {
         }
       }
     } catch (error) {
-      log.debug("createOrder 500 error", error);
+      logger.debug("createOrder 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -163,7 +163,7 @@ class TransactionController extends Controller {
   processTransaction = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
-      log.debug(`PARAMS : id : ${req.params.id}`);
+      logger.debug(`PARAMS : id : ${req.params.id}`);
       const {
         params: { id } = {},
         body: {
@@ -215,7 +215,7 @@ class TransactionController extends Controller {
         oldTransaction
       );
 
-      log.debug(`transaction verified : ${isVerified}`);
+      logger.debug(`transaction verified : ${isVerified}`);
 
       if (isVerified) {
         const updateTransaction = await transactionService.updateTransaction(
@@ -232,7 +232,7 @@ class TransactionController extends Controller {
         // if subscription based payment made -> add subscription entry for patient with next due
         // transaction -> payment_product -> (type) == recurring -> check for subscription -> existing? -> Y (update next due) N (create new subscription)
 
-        log.debug("After update transaction -->", updateTransaction);
+        logger.debug("After update transaction -->", updateTransaction);
 
         const transaction = await TransactionWrapper({ id });
 
@@ -265,7 +265,7 @@ class TransactionController extends Controller {
                   .toISOString(),
               });
 
-            log.debug("updateSubscription --> ", updateSubscription);
+            logger.debug("updateSubscription --> ", updateSubscription);
 
             const subscriptions = await SubscriptionWrapper({
               id: subscriptionExists.id,
@@ -353,7 +353,7 @@ class TransactionController extends Controller {
         return raiseClientError(res, 400, {}, "Payment has not been processed");
       }
     } catch (error) {
-      log.debug("process transaction 500 error", error);
+      logger.debug("process transaction 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -361,7 +361,7 @@ class TransactionController extends Controller {
   updateTransaction = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
-      log.debug(`PARAMS : id : ${req.params.id}`);
+      logger.debug(`PARAMS : id : ${req.params.id}`);
       const {
         params: { id } = {},
         body: { transaction_response } = {},
@@ -378,7 +378,7 @@ class TransactionController extends Controller {
         oldTransaction
       );
 
-      log.debug(`transaction verified : ${isVerified}`);
+      logger.debug(`transaction verified : ${isVerified}`);
 
       if (isVerified) {
         const transactionService = new TransactionService();
@@ -393,7 +393,7 @@ class TransactionController extends Controller {
           id
         );
 
-        log.debug("After update transaction -->", updateTransaction);
+        logger.debug("After update transaction -->", updateTransaction);
 
         // TODO: make payment to doctor or provider account
         // direct transfer (https://razorpay.com/docs/api/route/#direct-transfers)
@@ -414,7 +414,7 @@ class TransactionController extends Controller {
         return raiseClientError(res, 400, {}, "Payment has not been processed");
       }
     } catch (error) {
-      log.debug("createOrder 500 error", error);
+      logger.debug("createOrder 500 error", error);
       return raiseServerError(res);
     }
   };

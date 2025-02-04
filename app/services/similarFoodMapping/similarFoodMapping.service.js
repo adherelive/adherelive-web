@@ -3,7 +3,7 @@ import { Op } from "sequelize";
 import { TABLE_NAME } from "../../models/similarFoodMapping";
 
 import { createLogger } from "../../../libs/log";
-const log = createLogger("WEB > SIMILAR FOOD MAPPING > SERVICES");
+const logger = createLogger("WEB > SIMILAR FOOD MAPPING > SERVICES");
 
 const DEFAULT_ORDER = [["created_at", "DESC"]];
 

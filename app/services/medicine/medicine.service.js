@@ -3,7 +3,7 @@ import Database from "../../../libs/mysql";
 import { TABLE_NAME } from "../../models/medicines";
 
 import { createLogger } from "../../../libs/log";
-const log = createLogger("WEB > MEDICINE > SERVICE");
+const logger = createLogger("WEB > MEDICINE > SERVICE");
 
 /**
  *
@@ -86,7 +86,7 @@ class MedicineService {
         order: [["updated_at", "DESC"]],
       });
 
-      log.debug(
+      logger.debug(
         "Data, Offset, Limit, Public Medicine, Doctor IDs, Medicine: ",
         {
           data,
@@ -209,9 +209,9 @@ class MedicineService {
    * @returns {Promise<*>}
    */
   updateMedicine = async (data, id) => {
-    log.debug("updateMedicine called-service");
+    logger.debug("updateMedicine called-service");
     try {
-      log.debug({ data, id });
+      logger.debug({ data, id });
       const transaction = await Database.initTransaction();
       const medicine = await Database.getModel(TABLE_NAME).update(data, {
         where: {
@@ -219,7 +219,7 @@ class MedicineService {
         },
         transaction,
       });
-      log.debug("in service", { medicine });
+      logger.debug("in service", { medicine });
       await transaction.commit();
 
       return medicine;

@@ -3,7 +3,7 @@ import * as https from "https";
 import fs from "fs";
 import { createLogger } from "../../../libs/log";
 
-const log = createLogger("AWS S3 Service");
+const logger = createLogger("AWS S3 Service");
 
 class S3Service {
     constructor() {
@@ -18,9 +18,9 @@ class S3Service {
 
     callback = (error, data) => {
         if (error) {
-            log.debug("Callback error in S3 services: ", error);
+            logger.debug("Callback error in S3 services: ", error);
         } else {
-            log.debug("S3 response data: ", data);
+            logger.debug("S3 response data: ", data);
         }
     };
 
@@ -63,7 +63,7 @@ class S3Service {
                 await this.uploadFile(`${__dirname}/../../../other/push_notification_sound.wav`, "push_notification_sound.wav", "audio/mpeg");
             }
         } catch (err) {
-            log.debug("Error creating bucket: ", err);
+            logger.debug("Error creating bucket: ", err);
             throw err;
         }
     }
@@ -86,9 +86,9 @@ class S3Service {
                 ContentType: contentType,
             };
             await this.s3Client.upload(params).promise();
-            log.debug(`${key} uploaded successfully.`);
+            logger.debug(`${key} uploaded successfully.`);
         } catch (err) {
-            log.debug(`Error uploading ${key}: `, err);
+            logger.debug(`Error uploading ${key}: `, err);
             throw err;
         }
     }
@@ -102,9 +102,9 @@ class S3Service {
                 ContentType: contentType,
             };
             await this.s3Client.upload(params).promise();
-            log.debug(`Buffer saved as ${key}.`);
+            logger.debug(`Buffer saved as ${key}.`);
         } catch (err) {
-            log.debug("Error saving buffer: ", err);
+            logger.debug("Error saving buffer: ", err);
             throw err;
         }
     }
@@ -117,12 +117,12 @@ class S3Service {
                 https.get(url, (response) => {
                     response.pipe(file).on("finish", () => resolve(true));
                 }).on("error", (err) => {
-                    log.debug("Error downloading file: ", err);
+                    logger.debug("Error downloading file: ", err);
                     reject(err);
                 });
             });
         } catch (err) {
-            log.debug("Error in the download file object: ", err);
+            logger.debug("Error in the download file object: ", err);
             throw err;
         }
     }
@@ -133,9 +133,9 @@ class S3Service {
                 Bucket: this.bucket,
                 Key: key,
             }).promise();
-            log.debug(`${key} removed successfully.`);
+            logger.debug(`${key} removed successfully.`);
         } catch (err) {
-            log.debug("Error removing object: ", err);
+            logger.debug("Error removing object: ", err);
             throw err;
         }
     }
