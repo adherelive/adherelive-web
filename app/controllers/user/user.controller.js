@@ -175,7 +175,7 @@ class UserController extends Controller {
         );
       }
     } catch (error) {
-      logger.debug("verifyUser 500 error", error);
+      logger.error("verifyUser 500 error", error);
       // res.redirect("/sign-in");
       return raiseServerError(res);
     }
@@ -320,7 +320,7 @@ class UserController extends Controller {
         return this.raiseClientError(res, 401, {}, "Invalid Credentials");
       }
     } catch (error) {
-      logger.debug("User Controller signIn 500 error ---> ", error);
+      logger.error("User Controller signIn 500 error ---> ", error);
 
       // notification
       const crashJob = await AdhocJob.execute("crash", { apiName: "signIn" });
@@ -413,7 +413,7 @@ class UserController extends Controller {
         "Initial data retrieved successfully"
       );
     } catch (error) {
-      logger.debug("giveConsent 500 error ---> ", error);
+      logger.error("giveConsent 500 error ---> ", error);
       return this.raiseServerError(res);
     }
   };
@@ -1456,7 +1456,7 @@ class UserController extends Controller {
         "doctor registration data fetched successfully"
       );
     } catch (error) {
-      logger.debug("GET DOCTOR REGISTRATION DATA 500 ERROR ---> ", error);
+      logger.error("GET DOCTOR REGISTRATION DATA 500 ERROR ---> ", error);
       return raiseServerError(res);
     }
   };
@@ -1965,7 +1965,7 @@ class UserController extends Controller {
         "clinic time slots fetched successfully"
       );
     } catch (error) {
-      logger.debug("getTimeSlots 500 error---> ", error);
+      logger.error("getTimeSlots 500 error---> ", error);
       return raiseServerError(res);
     }
   };
@@ -2168,7 +2168,7 @@ class UserController extends Controller {
         "Thank You! If there is an account associated with the given e-mail, we will send the password reset link to it"
       );
     } catch (error) {
-      logger.debug("Forgot Password - 500 Error: ", error);
+      logger.error("Forgot Password - 500 Error: ", error);
       return raiseServerError(res);
     }
   };
@@ -2238,7 +2238,7 @@ class UserController extends Controller {
         );
       }
     } catch (error) {
-      logger.debug("updateUserPassword 500 error", error);
+      logger.error("updateUserPassword 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -2288,7 +2288,7 @@ class UserController extends Controller {
         // return res.status(500).json(response.getResponse());
       }
     } catch (error) {
-      logger.debug("updateUserPassword 500 error", error);
+      logger.error("updateUserPassword 500 error", error);
       return raiseServerError(res);
     }
   };

@@ -176,7 +176,7 @@ class TwilioService {
           }
         });
     } catch (error) {
-      logger.debug("addSymptom message 500 error", error);
+      logger.error("addSymptom message 500 error", error);
     }
   };
 
@@ -236,7 +236,7 @@ class TwilioService {
       //
       // logger.debug("channel -> ", channel);
     } catch (error) {
-      logger.debug("addSymptom message 500 error", error);
+      logger.error("addSymptom message 500 error", error);
     }
   };
 
@@ -250,7 +250,7 @@ class TwilioService {
 
       return newMember ? true : false;
     } catch (error) {
-      logger.debug("addMember 500 error", error);
+      logger.error("addMember 500 error", error);
     }
   };
 }

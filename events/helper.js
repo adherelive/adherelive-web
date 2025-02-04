@@ -71,7 +71,7 @@ const getUserPreferences = async (user_id) => {
       return timings;
     }
   } catch (error) {
-    logger.debug("userPreferences catch error: ", error);
+    logger.error("userPreferences catch error: ", error);
   }
 };
 
@@ -121,7 +121,7 @@ export const handleAppointments = async (appointment) => {
 
     return response;
   } catch (error) {
-    logger.debug("schedule events appointment 500 error: ", error);
+    logger.error("schedule events appointment 500 error: ", error);
   }
 };
 
@@ -211,7 +211,7 @@ export const handleMedications = async (data) => {
 
     return response;
   } catch (error) {
-    logger.debug("schedule events medication 500 error: ", error);
+    logger.error("schedule events medication 500 error: ", error);
   }
 };
 
@@ -348,7 +348,7 @@ export const handleDiet = async (data) => {
 
     return response;
   } catch (error) {
-    logger.debug("schedule events DIET 500 error", error);
+    logger.error("schedule events DIET 500 error", error);
   }
 };
 
@@ -420,7 +420,7 @@ export const handleWorkout = async (workout) => {
 
     return response;
   } catch (error) {
-    logger.debug("schedule events WORKOUT 500 error", error);
+    logger.error("schedule events WORKOUT 500 error", error);
   }
 };
 
@@ -586,7 +586,7 @@ export const handleVitals = async (vital) => {
 
     return response;
   } catch (error) {
-    logger.debug("schedule events vitals 500 error", error);
+    logger.error("schedule events vitals 500 error", error);
   }
 };
 
@@ -740,7 +740,7 @@ export const handleAppointmentsTimeAssignment = async (appointment) => {
     logger.debug("SQS Response helper in handleAppointmentsTimeAssignment ---> ", sqsResponse);
     return true;
   } catch (error) {
-    logger.debug("Appointment time assignment helper in handleAppointmentsTimeAssignment has 500 error: ", error);
+    logger.error("Appointment time assignment helper in handleAppointmentsTimeAssignment has 500 error: ", error);
   }
 };
 
@@ -790,7 +790,7 @@ export const handleCarePlans = async (data) => {
     }
     return response;
   } catch (error) {
-    logger.debug("schedule events careplan activation 500 error", error);
+    logger.error("schedule events careplan activation 500 error", error);
   }
 };
 

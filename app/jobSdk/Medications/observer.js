@@ -11,7 +11,7 @@ class MedicationObserver {
   constructor() {}
 
   execute = (typeStatus, eventDetails) => {
-    logger.debug("medication observer called", { typeStatus, eventDetails });
+    logger.debug("Medication observer in Jobs SDK called: ", { typeStatus, eventDetails });
     switch (typeStatus) {
       case EVENT_STATUS.SCHEDULED:
         return new CreateJob(eventDetails);

@@ -48,7 +48,7 @@ class CouncilController extends Controller {
         );
       }
     } catch (error) {
-      logger.debug("council search 500 error", error);
+      logger.error("council search 500 error", error);
       return raiseServerError(res);
     }
   };

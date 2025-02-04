@@ -28,7 +28,7 @@ class TwilioController extends Controller {
         "Created new chat token with userId"
       );
     } catch (error) {
-      logger.debug("generateTwilioChatAccessToken 500 error", error);
+      logger.error("generateTwilioChatAccessToken 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -51,7 +51,7 @@ class TwilioController extends Controller {
         "Created new video token"
       );
     } catch (error) {
-      logger.debug("generateTwilioVideoAccessToken 500 error", error);
+      logger.error("generateTwilioVideoAccessToken 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -76,7 +76,7 @@ class TwilioController extends Controller {
         "Fetched Connected Participants"
       );
     } catch (error) {
-      logger.debug("getConnectedParticipants 500 error", error);
+      logger.error("getConnectedParticipants 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -88,7 +88,7 @@ class TwilioController extends Controller {
 
       return raiseSuccess(res, 200, {}, "DELETED ALL CHAT MESSAGES");
     } catch (error) {
-      logger.debug("deleteChat 500 error", error);
+      logger.error("deleteChat 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -102,7 +102,7 @@ class TwilioController extends Controller {
 
       return raiseSuccess(res, 200, {}, "GET ALL CHAT MESSAGES");
     } catch (error) {
-      logger.debug("deleteChat 500 error", error);
+      logger.error("deleteChat 500 error", error);
       return raiseServerError(res);
     }
   };

@@ -44,7 +44,7 @@ class NotesController extends Controller {
       let notes = await notesService.addNotes(data);
       return raiseSuccess(res, 200, { notes }, "FlashCard Notes added successfully");
     } catch (error) {
-      logger.debug("Notes 500 error: ", error);
+      logger.error("Notes 500 error: ", error);
       return raiseServerError(res);
     }
   };
@@ -66,7 +66,7 @@ class NotesController extends Controller {
       let notes = await notesService.getAllNotesByData(data);
       return raiseSuccess(res, 200, { notes }, "success");
     } catch (error) {
-      logger.debug("getNotesByPatientId 500 error: ", error);
+      logger.error("getNotesByPatientId 500 error: ", error);
       return raiseServerError(res);
     }
   };

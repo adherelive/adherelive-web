@@ -70,7 +70,7 @@ class RenewSubscription {
         logger.debug(`No subscriptions found due today`);
       }
     } catch (error) {
-      logger.debug("RenewSubscription 500 error", error);
+      logger.error("RenewSubscription 500 error", error);
     }
   };
 }

@@ -23,7 +23,7 @@ class ActivePatient {
       // logger.debug("providers", providers);
       return providers;
     } catch (error) {
-      logger.debug("getAllProviders catch error", error);
+      logger.error("getAllProviders catch error", error);
       throw error;
     }
   };
@@ -48,7 +48,7 @@ class ActivePatient {
 
       return doctorIds;
     } catch (error) {
-      logger.debug("getAllDoctors catch error", error);
+      logger.error("getAllDoctors catch error", error);
       throw error;
     }
   };
@@ -71,7 +71,7 @@ class ActivePatient {
       logger.debug("Care Plan IDs: ", carePlanIds);
       return { carePlanData, carePlanIds };
     } catch (error) {
-      logger.debug("getAllCarePlans catch error: ", error);
+      logger.error("getAllCarePlans catch error: ", error);
       throw error;
     }
   };
@@ -160,7 +160,7 @@ class ActivePatient {
         }
       }
     } catch (error) {
-      logger.debug("getEvents catch error: ", error);
+      logger.error("getEvents catch error: ", error);
       throw error;
     }
   };
@@ -173,7 +173,7 @@ class ActivePatient {
     try {
       await this.getEvents();
     } catch (error) {
-      logger.debug("runObserver catch error: ", error);
+      logger.error("runObserver catch error: ", error);
       throw error;
     }
   };

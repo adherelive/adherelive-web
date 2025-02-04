@@ -102,7 +102,7 @@ class RenewTxActivity {
         }
       }
     } catch (error) {
-      logger.debug("RenewSubscription 500 error", error);
+      logger.error("RenewSubscription 500 error", error);
     }
   };
 }

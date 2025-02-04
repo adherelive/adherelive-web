@@ -225,7 +225,7 @@ class MobileAppointmentController extends Controller {
         "appointment created successfully"
       );
     } catch (error) {
-      logger.debug("500 error --> ", error);
+      logger.error("500 error --> ", error);
       return raiseServerError(res);
     }
   };
@@ -262,7 +262,7 @@ class MobileAppointmentController extends Controller {
       // } else {
       // }
     } catch (error) {
-      // logger.debug("500 error", error);
+      // logger.error("500 error", error);
       return raiseServerError(res);
     }
   };
@@ -461,7 +461,7 @@ class MobileAppointmentController extends Controller {
         "appointment updated successfully"
       );
     } catch (error) {
-      logger.debug("update 500 error", error);
+      logger.error("update 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -492,7 +492,7 @@ class MobileAppointmentController extends Controller {
 
       return raiseSuccess(res, 200, {}, `Appointment deleted successfully`);
     } catch (error) {
-      // logger.debug("500 error", error);
+      // logger.error("500 error", error);
       return raiseServerError(res);
     }
   };
@@ -579,7 +579,7 @@ class MobileAppointmentController extends Controller {
         "Appointment details fetched successfully"
       );
     } catch (error) {
-      logger.debug("getAppointmentDetails 500 error ", error);
+      logger.error("getAppointmentDetails 500 error ", error);
       return raiseServerError(res);
     }
   };
@@ -598,7 +598,7 @@ class MobileAppointmentController extends Controller {
   //         "Appointment type description details fetched successfully");
   //
   //   } catch(error) {
-  //     logger.debug("getTypeDescription 500 error ", error);
+  //     logger.error("getTypeDescription 500 error ", error);
   //     return raiseServerError(res);
   //   }
   // };
@@ -834,7 +834,7 @@ class MobileAppointmentController extends Controller {
       };
       return res.sendFile(name, options);
     } catch (error) {
-      logger.debug("downloadAppointmentDoc 500 error: ", error);
+      logger.error("downloadAppointmentDoc 500 error: ", error);
       return this.raiseServerError(res);
     }
   };
@@ -932,7 +932,7 @@ class MobileAppointmentController extends Controller {
         "Appointment documents deleted successfully."
       );
     } catch (error) {
-      logger.debug("deleteAppointmentDoc 500 error: ", error);
+      logger.error("deleteAppointmentDoc 500 error: ", error);
       return this.raiseServerError(res);
     }
   };

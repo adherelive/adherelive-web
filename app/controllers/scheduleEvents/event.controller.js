@@ -223,7 +223,7 @@ class EventController extends Controller {
         return raiseSuccess(res, 200, {}, "No event updated yet");
       }
     } catch (error) {
-      logger.debug("getAllEvents 500 error: ", error);
+      logger.error("getAllEvents 500 error: ", error);
       return raiseServerError(res);
     }
   };
@@ -409,7 +409,7 @@ class EventController extends Controller {
         return raiseSuccess(res, 200, {}, "No event updated yet");
       }
     } catch (error) {
-      logger.debug("getAllEventsBackup 500 error: ", error);
+      logger.error("getAllEventsBackup 500 error: ", error);
       return raiseServerError(res);
     }
   };
@@ -441,7 +441,7 @@ class EventController extends Controller {
         "Event completed successfully"
       );
     } catch (error) {
-      logger.debug("markEventComplete in event.controller 500 error: ", error);
+      logger.error("markEventComplete in event.controller 500 error: ", error);
       return raiseServerError(res);
     }
   };
@@ -531,7 +531,7 @@ class EventController extends Controller {
 
 
       } catch(error) {
-          logger.debug("getAllEvents 500 error", error);
+          logger.error("getAllEvents 500 error", error);
           return raiseServerError(res);
       }
   };
@@ -562,7 +562,7 @@ class EventController extends Controller {
       }
       return raiseSuccess(res, 200, { ...response }, responseMessage);
     } catch (error) {
-      logger.debug("getAllMissedEventsCount 500 error: ", error);
+      logger.error("getAllMissedEventsCount 500 error: ", error);
       return raiseServerError(res);
     }
   };
@@ -592,7 +592,7 @@ class EventController extends Controller {
       }
       return raiseSuccess(res, 200, { ...response }, responseMessage);
     } catch (error) {
-      logger.debug("getEventsDetails 500 error: ", error);
+      logger.error("getEventsDetails 500 error: ", error);
       return raiseServerError(res);
     }
   };
@@ -622,7 +622,7 @@ class EventController extends Controller {
 
       return raiseSuccess(res, 200, { ...response }, responseMessage);
     } catch (error) {
-      logger.debug("Not able to get all the Missed Events (getAllMissedEvents 500 error): ", error);
+      logger.error("Not able to get all the Missed Events (getAllMissedEvents 500 error): ", error);
       return raiseServerError(res);
     }
   };
@@ -846,7 +846,7 @@ class EventController extends Controller {
         "Patient missed events fetched successfully"
       );
     } catch (error) {
-      logger.debug("getPatientMissedEvents 500 error: ", error);
+      logger.error("getPatientMissedEvents 500 error: ", error);
       return raiseServerError(res);
     }
   };
@@ -947,7 +947,7 @@ class EventController extends Controller {
         );
       }
     } catch (error) {
-      logger.debug("deleteVitalResponse 500 error: ", error);
+      logger.error("deleteVitalResponse 500 error: ", error);
       return raiseServerError(res);
     }
   };
@@ -1056,7 +1056,7 @@ class EventController extends Controller {
         );
       }
     } catch (error) {
-      logger.debug("updateVitalResponse500 error", error);
+      logger.error("updateVitalResponse500 error", error);
       return raiseServerError(res);
     }
   };

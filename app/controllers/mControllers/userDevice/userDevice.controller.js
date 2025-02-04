@@ -51,7 +51,7 @@ class UserDeviceController extends Controller {
         return raiseClientError(res, 422, {}, "User doesn't exists");
       }
     } catch (error) {
-      logger.debug("create 500 error - userDevice updated", error);
+      logger.error("create 500 error - userDevice updated", error);
       return raiseServerError(res);
     }
   };
@@ -66,7 +66,7 @@ class UserDeviceController extends Controller {
 
       return raiseSuccess(res, 200, {}, "Device deleted successfully");
     } catch (error) {
-      logger.debug("userDevice delete 500 error", error);
+      logger.error("userDevice delete 500 error", error);
       return raiseServerError(res);
     }
   };

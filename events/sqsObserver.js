@@ -36,7 +36,7 @@ export default class SqsObserver {
         }
       }
     } catch (error) {
-      logger.debug("SQS Observer observe catch error: ", error);
+      logger.error("SQS Observer observe catch error: ", error);
     }
   };
 
@@ -84,7 +84,7 @@ export default class SqsObserver {
         logger.debug("SQS Observer execute deleteMessage: ", deleteMessage);
       }
     } catch (error) {
-      logger.debug("SQS Observe execute catch error: ", error);
+      logger.error("SQS Observe execute catch error: ", error);
     }
   };
 }

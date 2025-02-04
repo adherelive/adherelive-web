@@ -159,7 +159,7 @@ class WorkoutResponseController extends Controller {
         return raiseClientError(res, 422, {}, "Please check details entered");
       }
     } catch (error) {
-      logger.debug("create 500 - workout response", error);
+      logger.error("create 500 - workout response", error);
       return raiseServerError(res);
     }
   };
@@ -255,7 +255,7 @@ class WorkoutResponseController extends Controller {
         return raiseClientError(res, 422, {}, "Please check details entered");
       }
     } catch (error) {
-      logger.debug("create 500 - workout response updated", error);
+      logger.error("create 500 - workout response updated", error);
       return raiseServerError(res);
     }
   };
@@ -333,7 +333,7 @@ class WorkoutResponseController extends Controller {
         "Workout response skipped successfully"
       );
     } catch (error) {
-      logger.debug("skip 500", error);
+      logger.error("skip 500", error);
       return raiseServerError(res);
     }
   };
@@ -507,7 +507,7 @@ class WorkoutResponseController extends Controller {
       //   );
       // }
     } catch (error) {
-      logger.debug("get 500", error);
+      logger.error("get 500", error);
       return raiseServerError(res);
     }
   };

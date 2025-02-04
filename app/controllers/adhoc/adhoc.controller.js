@@ -276,7 +276,7 @@ class AdhocController extends Controller {
         "Test api successfull."
       );
     } catch (error) {
-      logger.debug("testApi 500 error", error);
+      logger.error("testApi 500 error", error);
       return this.raiseServerError(res, 500, {}, "Error in test api.");
     }
   };
@@ -299,7 +299,7 @@ class AdhocController extends Controller {
         );
       }
     } catch (error) {
-      logger.debug("purgeSqsQueue 500", error);
+      logger.error("purgeSqsQueue 500", error);
       return this.raiseServerError(res);
     }
   };
@@ -348,7 +348,7 @@ class AdhocController extends Controller {
         );
       }
     } catch (error) {
-      logger.debug("updatePatientTimings 500", error);
+      logger.error("updatePatientTimings 500", error);
       return this.raiseServerError(res);
     }
   };
@@ -421,7 +421,7 @@ class AdhocController extends Controller {
         }
       }
     } catch (error) {
-      logger.debug("updatePermissions 500", error);
+      logger.error("updatePermissions 500", error);
       return raiseServerError(res);
     }
   };
@@ -450,7 +450,7 @@ class AdhocController extends Controller {
         return raiseSuccess(res, 200, {}, "Channels updated successfully");
       }
     } catch (error) {
-      logger.debug("updateChannels 500", error);
+      logger.error("updateChannels 500", error);
       return raiseServerError(res);
     }
   };

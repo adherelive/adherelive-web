@@ -130,7 +130,7 @@ class ServiceSubscriptionUserMappingController extends Controller {
         "Service added successfully"
       );
     } catch (error) {
-      logger.debug("Subscribe create user mapping 500 error: ", error);
+      logger.error("Subscribe create user mapping 500 error: ", error);
       return raiseServerError(res);
     }
   };
@@ -189,7 +189,7 @@ class ServiceSubscriptionUserMappingController extends Controller {
         "success"
       );
     } catch (error) {
-      logger.debug("getServiceSubscriptionUserMappingByPatientId 500 error: ", error);
+      logger.error("getServiceSubscriptionUserMappingByPatientId 500 error: ", error);
       return raiseServerError(res);
     }
   };
@@ -210,7 +210,7 @@ class ServiceSubscriptionUserMappingController extends Controller {
           "Please select correct ServiceOffer to update"
         );
     } catch (error) {
-      logger.debug("getServiceSubscriptionUserMappingAndServiceUserByPatientId 500 error: ", error);
+      logger.error("getServiceSubscriptionUserMappingAndServiceUserByPatientId 500 error: ", error);
       return raiseServerError(res);
     }
 
@@ -353,7 +353,7 @@ class ServiceSubscriptionUserMappingController extends Controller {
           "Please select correct ServiceOffer to update"
         );
     } catch (error) {
-      logger.debug("getServiceSubscriptionDoctorByPatientId 500 error; ", error);
+      logger.error("getServiceSubscriptionDoctorByPatientId 500 error; ", error);
       return raiseServerError(res);
     }
 
@@ -473,7 +473,7 @@ class ServiceSubscriptionUserMappingController extends Controller {
             "Please select correct ServiceOffer to update"
           );
       } catch (error) {
-        logger.debug("getServiceSubscriptionUserMappingAndServiceUserByPatientIdAndDoctorId 500 error: ", error);
+        logger.error("getServiceSubscriptionUserMappingAndServiceUserByPatientIdAndDoctorId 500 error: ", error);
         return raiseServerError(res);
       }
 
@@ -599,7 +599,7 @@ class ServiceSubscriptionUserMappingController extends Controller {
         "Service updated successfully"
       );
     } catch (error) {
-      logger.debug("updateServiceSubscriptionUserMapping 500 error: ", error);
+      logger.error("updateServiceSubscriptionUserMapping 500 error: ", error);
       return raiseServerError(res);
     }
   };

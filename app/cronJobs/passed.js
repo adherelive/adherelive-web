@@ -68,7 +68,7 @@ class PassedCron {
       }
       logger.debug(`runObserver count : ${count} / ${scheduleEvents.length}`);
     } catch (error) {
-      logger.debug("runObserver scheduleEvents 500 error ---> ", error);
+      logger.error("runObserver scheduleEvents 500 error ---> ", error);
     }
   };
 
@@ -89,7 +89,7 @@ class PassedCron {
         );
       }
     } catch (error) {
-      logger.debug("handleDietPassed 500 error ---> ", error);
+      logger.error("handleDietPassed 500 error ---> ", error);
     }
   };
 
@@ -110,7 +110,7 @@ class PassedCron {
         );
       }
     } catch (error) {
-      logger.debug("handleWorkoutPassed 500 error ---> ", error);
+      logger.error("handleWorkoutPassed 500 error ---> ", error);
     }
   };
 
@@ -147,7 +147,7 @@ class PassedCron {
         );
       }
     } catch (error) {
-      logger.debug("handleVitalPassed 500 error ---> ", error);
+      logger.error("handleVitalPassed 500 error ---> ", error);
     }
   };
 
@@ -200,7 +200,7 @@ class PassedCron {
         );
       }
     } catch (error) {
-      logger.debug("handleMedicationPassed 500 error ---> ", error);
+      logger.error("handleMedicationPassed 500 error ---> ", error);
     }
   };
 
@@ -221,7 +221,7 @@ class PassedCron {
         );
       }
     } catch (error) {
-      logger.debug("handleAppointmentPassed 500 error ---> ", error);
+      logger.error("handleAppointmentPassed 500 error ---> ", error);
     }
   };
 
@@ -247,7 +247,7 @@ class PassedCron {
         );
       }
     } catch (error) {
-      logger.debug("handleCarePlanPassed 500 error ---> ", error);
+      logger.error("handleCarePlanPassed 500 error ---> ", error);
     }
   };
 }

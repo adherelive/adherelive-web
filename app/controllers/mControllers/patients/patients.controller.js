@@ -309,7 +309,7 @@ class MPatientController extends Controller {
         `Appointment data for patient: ${id} fetched successfully`
       );
     } catch (error) {
-      logger.debug("getPatientAppointments 500 error", error);
+      logger.error("getPatientAppointments 500 error", error);
       raiseServerError(res);
     }
   };
@@ -375,7 +375,7 @@ class MPatientController extends Controller {
         "Medications fetched successfully"
       );
     } catch (error) {
-      logger.debug("medication get 500 error ", error);
+      logger.error("medication get 500 error ", error);
       return raiseServerError(res);
     }
   };
@@ -535,7 +535,7 @@ class MPatientController extends Controller {
         "Patient care plan details fetched successfully"
       );
     } catch (error) {
-      logger.debug("get careplan 500 error ---> ", error);
+      logger.error("get careplan 500 error ---> ", error);
       return this.raiseServerError(res);
     }
   };
@@ -769,7 +769,7 @@ class MPatientController extends Controller {
         "Patient care plan details fetched successfully"
       );
     } catch (error) {
-      // logger.debug("get careplan 500 error ---> ", error);
+      // logger.error("get careplan 500 error ---> ", error);
       return raiseServerError(res);
     }
   };
@@ -1152,7 +1152,7 @@ class MPatientController extends Controller {
         "Patient care plan details fetched successfully"
       );
     } catch (error) {
-      logger.debug("get careplan 500 error ---> ", error);
+      logger.error("get careplan 500 error ---> ", error);
       return this.raiseServerError(res);
     }
   };
@@ -1245,7 +1245,7 @@ class MPatientController extends Controller {
         );
       }
     } catch (error) {
-      logger.debug("getPatientSymptoms 500 error", error);
+      logger.error("getPatientSymptoms 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -1363,7 +1363,7 @@ class MPatientController extends Controller {
         );
       }
     } catch (error) {
-      logger.debug("getPatientPartSymptoms 500 error", error);
+      logger.error("getPatientPartSymptoms 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -1437,7 +1437,7 @@ class MPatientController extends Controller {
         );
       }
     } catch (error) {
-      logger.debug("getPatientVitals 500 error", error);
+      logger.error("getPatientVitals 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -1533,7 +1533,7 @@ class MPatientController extends Controller {
         );
       }
     } catch (error) {
-      logger.debug("searchPatient 500 error", error);
+      logger.error("searchPatient 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -1614,7 +1614,7 @@ class MPatientController extends Controller {
         "OTP sent successfully"
       );
     } catch (error) {
-      logger.debug("patientConsentRequest 500 error", error);
+      logger.error("patientConsentRequest 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -1724,7 +1724,7 @@ class MPatientController extends Controller {
         );
       }
     } catch (error) {
-      logger.debug("patientConsentVerification 500 error", error);
+      logger.error("patientConsentVerification 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -1842,7 +1842,7 @@ class MPatientController extends Controller {
         }
       }
     } catch (error) {
-      logger.debug("searchPatientForDoctor 500 error", error);
+      logger.error("searchPatientForDoctor 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -2525,7 +2525,7 @@ class MPatientController extends Controller {
         "Reports for patient fetched successfully"
       );
     } catch (error) {
-      logger.debug("getPatientReports 500 error", error);
+      logger.error("getPatientReports 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -2613,7 +2613,7 @@ class MPatientController extends Controller {
         "Payment terms changed successfully."
       );
     } catch (error) {
-      logger.debug("acceptPaymentsTerms 500 error ---> ", error);
+      logger.error("acceptPaymentsTerms 500 error ---> ", error);
       return this.raiseServerError(res);
     }
   };
@@ -2783,7 +2783,7 @@ class MPatientController extends Controller {
         "Payment links data fetched successfully."
       );
     } catch (error) {
-      logger.debug("getAllRelatedDoctorPaymentLinks 500 error ---> ", error);
+      logger.error("getAllRelatedDoctorPaymentLinks 500 error ---> ", error);
       return this.raiseServerError(res);
     }
   };

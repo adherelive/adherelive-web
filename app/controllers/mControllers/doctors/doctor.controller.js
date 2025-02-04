@@ -206,7 +206,7 @@ class MobileDoctorController extends Controller {
         "doctor profile updated successfully"
       );
     } catch (error) {
-      logger.debug("add doctor 500 error", error);
+      logger.error("add doctor 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -542,7 +542,7 @@ class MobileDoctorController extends Controller {
         "Patient added successfully"
       );
     } catch (error) {
-      logger.debug("ADD DOCTOR PATIENT 500 ERROR ", error);
+      logger.error("ADD DOCTOR PATIENT 500 ERROR ", error);
       return this.raiseServerError(res);
     }
   };
@@ -916,7 +916,7 @@ class MobileDoctorController extends Controller {
         "qualifications updated successfully"
       );
     } catch (error) {
-      logger.debug("addDoctorQualification 500 error", error);
+      logger.error("addDoctorQualification 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -953,7 +953,7 @@ class MobileDoctorController extends Controller {
         "doctor qualification document uploaded successfully"
       );
     } catch (error) {
-      logger.debug("updateQualificationDocs 500 error", error);
+      logger.error("updateQualificationDocs 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -1257,7 +1257,7 @@ class MobileDoctorController extends Controller {
         "qualification details updated successfully"
       );
     } catch (error) {
-      logger.debug("qualificationStep 500 error", error);
+      logger.error("qualificationStep 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -1628,7 +1628,7 @@ class MobileDoctorController extends Controller {
         "Registration details updated successfully"
       );
     } catch (error) {
-      logger.debug("registrationStep 500 error", error);
+      logger.error("registrationStep 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -1712,7 +1712,7 @@ class MobileDoctorController extends Controller {
         "doctor clinics added successfully"
       );
     } catch (error) {
-      logger.debug("updateDoctorClinics 500 error", error);
+      logger.error("updateDoctorClinics 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -1962,7 +1962,7 @@ class MobileDoctorController extends Controller {
         "Doctor details fetched successfully"
       );
     } catch (error) {
-      logger.debug("getalldoctors 500 error", error);
+      logger.error("getalldoctors 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -2028,7 +2028,7 @@ class MobileDoctorController extends Controller {
         return raiseClientError(res, 422, {}, "Doctor/patient do not exist");
       }
     } catch (error) {
-      logger.debug("83901283091298 add patient to watchlist error", error);
+      logger.error("83901283091298 add patient to watchlist error", error);
       return raiseServerError(res);
     }
   };
@@ -2071,7 +2071,7 @@ class MobileDoctorController extends Controller {
         return raiseClientError(res, 422, {}, "Doctor/patient do not exist");
       }
     } catch (error) {
-      logger.debug("83901283091298 add patient to watchlist error", error);
+      logger.error("83901283091298 add patient to watchlist error", error);
       return raiseServerError(res);
     }
   };
@@ -2187,7 +2187,7 @@ class MobileDoctorController extends Controller {
         "Careplan added successfully"
       );
     } catch (error) {
-      logger.debug("UPDATE  PATIENT AND CAREPLAN 500 ERROR", error);
+      logger.error("UPDATE  PATIENT AND CAREPLAN 500 ERROR", error);
       return raiseServerError(res);
     }
   };
@@ -2253,7 +2253,7 @@ class MobileDoctorController extends Controller {
         "Chat permission updated successfully."
       );
     } catch (error) {
-      logger.debug("toggleChatMessagePermission 500 ERROR", error);
+      logger.error("toggleChatMessagePermission 500 ERROR", error);
       return raiseServerError(res);
     }
   };
@@ -2321,7 +2321,7 @@ class MobileDoctorController extends Controller {
         "Video call permission updated successfully."
       );
     } catch (error) {
-      logger.debug("toggleVideoCallPermission 500 ERROR", error);
+      logger.error("toggleVideoCallPermission 500 ERROR", error);
       return raiseServerError(res);
     }
   };
@@ -2470,7 +2470,7 @@ class MobileDoctorController extends Controller {
         "Patients data fetched successfully."
       );
     } catch (error) {
-      logger.debug("getPaginatedDataForPatients 500 ERROR", error);
+      logger.error("getPaginatedDataForPatients 500 ERROR", error);
       return raiseServerError(res);
     }
   };
@@ -2599,7 +2599,7 @@ class MobileDoctorController extends Controller {
         );
       }
     } catch (error) {
-      logger.debug("searchDoctorName 500 ERROR", error);
+      logger.error("searchDoctorName 500 ERROR", error);
       return raiseServerError(res);
     }
   };
@@ -2741,7 +2741,7 @@ class MobileDoctorController extends Controller {
         "Appointments data fetched successfully."
       );
     } catch (error) {
-      logger.debug("getAllAppointmentForDoctors 500 error ", error);
+      logger.error("getAllAppointmentForDoctors 500 error ", error);
       return raiseServerError(res);
     }
   };

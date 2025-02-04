@@ -128,7 +128,7 @@ class PaymentController extends Controller {
         );
       }
     } catch (error) {
-      logger.debug("getAllAdminPaymentProduct 500 error", error);
+      logger.error("getAllAdminPaymentProduct 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -147,7 +147,7 @@ class PaymentController extends Controller {
         });
       return raiseSuccess(res, 200, {}, "doctor product record destroyed");
     } catch (error) {
-      logger.debug("83901283091298 delete doctor product error", error);
+      logger.error("83901283091298 delete doctor product error", error);
       return raiseServerError(res);
     }
   };
@@ -238,7 +238,7 @@ class PaymentController extends Controller {
         );
       }
     } catch (error) {
-      logger.debug("getAllDoctorPaymentProduct 500 error", error);
+      logger.error("getAllDoctorPaymentProduct 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -282,7 +282,7 @@ class PaymentController extends Controller {
         );
       }
     } catch (error) {
-      logger.debug("getAllAdminPaymentProduct 500 error", error);
+      logger.error("getAllAdminPaymentProduct 500 error", error);
       return raiseServerError(res);
     }
   };

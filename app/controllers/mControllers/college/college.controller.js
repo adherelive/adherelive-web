@@ -48,7 +48,7 @@ class CollegeController extends Controller {
         );
       }
     } catch (error) {
-      logger.debug("college search 500 error", error);
+      logger.error("college search 500 error", error);
       return raiseServerError(res);
     }
   };

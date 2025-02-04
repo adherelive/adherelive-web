@@ -49,7 +49,7 @@ class DegreeController extends Controller {
         );
       }
     } catch (error) {
-      logger.debug("degree search 500 error", error);
+      logger.error("degree search 500 error", error);
       return raiseServerError(res);
     }
   };

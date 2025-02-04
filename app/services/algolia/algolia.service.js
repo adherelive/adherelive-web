@@ -63,7 +63,7 @@ export default class AlgoliaService {
         autoGenerateObjectIDIfNotExist: true,
       });
 
-      logger.debug("result ----. ", result);
+      logger.debug("Algolia result is: ", result);
 
       const searchAttributes = await index.setSettings({
         searchableAttributes: ["name", "generic_name", "classification"],
@@ -72,10 +72,10 @@ export default class AlgoliaService {
         highlightPostTag: "</em>",
       });
 
-      logger.debug("searchAttributes ----. ", searchAttributes);
+      logger.debug("Search attributes from Algolia are: ", searchAttributes);
       return result;
     } catch (error) {
-      logger.debug("medicine data catch error", error);
+      logger.error("Medicine data from Algolia has an error: ", error);
       throw error;
     }
   };
@@ -128,7 +128,7 @@ export default class AlgoliaService {
         return result;
       }
     } catch (error) {
-      logger.debug("500 addNewMedicineData error: ", error);
+      logger.error("500 addNewMedicineData error: ", error);
       throw error;
     }
   };
@@ -177,7 +177,7 @@ export default class AlgoliaService {
         return result;
       }
     } catch (error) {
-      logger.debug("500 updateMedicineData error: ", error);
+      logger.error("500 updateMedicineData error: ", error);
       throw error;
     }
   };
@@ -193,7 +193,7 @@ export default class AlgoliaService {
       const result = await index.deleteObject(objectID).wait();
       return result;
     } catch (error) {
-      logger.debug("500 deleteMedicineData error: ", error);
+      logger.error("500 deleteMedicineData error: ", error);
       throw error;
     }
   };

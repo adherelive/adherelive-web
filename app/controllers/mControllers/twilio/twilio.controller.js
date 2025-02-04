@@ -36,7 +36,7 @@ class TwilioController extends Controller {
       // response.setMessage("Created new chat token with userId");
       // return res.send(response.getResponse());
     } catch (error) {
-      logger.debug("generateTwilioChatAccessToken 50 error", error);
+      logger.error("generateTwilioChatAccessToken 50 error", error);
       return this.raiseServerError(res);
       // let response = new Response(false, 500);
       // response.setError({ error: err });
@@ -67,7 +67,7 @@ class TwilioController extends Controller {
       //
       // return res.send(response.getResponse());
     } catch (error) {
-      logger.debug("generateTwilioVideoAccessToken 50 error", error);
+      logger.error("generateTwilioVideoAccessToken 50 error", error);
       return this.raiseServerError(res, 500, error, error.message());
       // let response = new Response(false, 500);
       // response.setError({ error: err });
@@ -96,7 +96,7 @@ class TwilioController extends Controller {
         "Fetched Connected Participants"
       );
     } catch (err) {
-      logger.debug("getConnectedParticipants 50 error", error);
+      logger.error("getConnectedParticipants 50 error", error);
       return this.raiseServerError(res);
     }
   };

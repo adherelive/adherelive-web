@@ -76,7 +76,7 @@ class UserFavouritesController extends Controller {
         "User Favourite marked successfully"
       );
     } catch (error) {
-      logger.debug("userFavourite 500 error", error);
+      logger.error("userFavourite 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -144,7 +144,7 @@ class UserFavouritesController extends Controller {
         "Get User Favourites successful"
       );
     } catch (error) {
-      logger.debug("user Get Favourite 500 error", error);
+      logger.error("user Get Favourite 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -188,7 +188,7 @@ class UserFavouritesController extends Controller {
         `Favourite ${type} unmarked successfully`
       );
     } catch (error) {
-      logger.debug("userFavourite 500 error", error);
+      logger.error("userFavourite 500 error", error);
       return raiseServerError(res);
     }
   };
@@ -242,7 +242,7 @@ class UserFavouritesController extends Controller {
         `Favourite ${type} unmarked successfully`
       );
     } catch (error) {
-      logger.debug("userFavourite 500 error", error);
+      logger.error("userFavourite 500 error", error);
       return raiseServerError(res);
     }
   };
