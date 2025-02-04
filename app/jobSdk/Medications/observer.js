@@ -3,12 +3,15 @@ import CreateJob from "./createJob";
 import StartJob from "./startJob";
 import UpdateJob from "./updateJob";
 import DeleteJob from "./deleteJob";
+import { createLogger } from "../../../libs/logger";
+
+const logger = createLogger("JOBS SDK MEDICATIONS OBSERVER");
 
 class MedicationObserver {
   constructor() {}
 
   execute = (typeStatus, eventDetails) => {
-    log.debug("medication observer called", { typeStatus, eventDetails });
+    logger.debug("medication observer called", { typeStatus, eventDetails });
     switch (typeStatus) {
       case EVENT_STATUS.SCHEDULED:
         return new CreateJob(eventDetails);

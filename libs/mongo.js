@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
-import { createLogger } from "./log";
+import { createLogger } from "./logger";
 
-const log = createLogger("SEQUELIZE QUERY MONGODB");
+const logger = createLogger("SEQUELIZE QUERY MONGODB");
 
 export default async function InitializeMongo() {
   try {
@@ -29,11 +29,11 @@ export default async function InitializeMongo() {
 
     await mongoose
       .connect(connectionString, dbConfig)
-      .then(() => log.debug("Connected to MongoDB! \n", dbConfig))
-      .catch((err) => log.error("Error connecting to MongoDB: \n", err));
+      .then(() => logger.debug("Connected to MongoDB! \n", dbConfig))
+      .catch((err) => logger.error("Error connecting to MongoDB: \n", err));
 
-    log.debug("MongoDB Database string used is: ", connectionString);
+    logger.debug("MongoDB Database string used is: ", connectionString);
   } catch (err) {
-    log.debug("Error connecting to MongoDB: ", err);
+    logger.error("Error connecting to MongoDB: ", err);
   }
 }

@@ -1,10 +1,10 @@
 import schedule from "node-schedule";
-import { createLogger } from "../libs/log";
+import { createLogger } from "../libs/logger";
 
 import queueService from "../app/services/awsQueue/queue.service";
 import { importModule } from '../libs/helper.js'; // A helper function for dynamic imports
 
-const log = createLogger("EVENT SCHEDULE CREATOR");
+const logger = createLogger("EVENT SCHEDULE CREATOR");
 
 /**
  * Demonstrate the use of a helper function (importModule) for dynamically importing a module (./sqsObserver).
@@ -46,14 +46,14 @@ const SqsObserver = import("./sqsObserver")
                     await sqs.observe(QueueService);
                 });
             } catch (error) {
-                log.error("Error processing SQS messages: ", error);
+                logger.error("Error processing SQS messages: ", error);
                 // You can implement more sophisticated error handling here,
                 // such as sending alerts or triggering a monitoring system.
             }
         });
     })
     .catch((err) => {
-        log.error("Dynamic import error in Events: ", err);
+        logger.error("Dynamic import error in Events: ", err);
     });
 
 /**
@@ -113,7 +113,7 @@ function createCircuitBreaker({ failureThreshold, timeoutMs }) {
  const cron = schedule.scheduleJob("*!/1 * * * * *", async () => {
      const QueueService = new queueService();
      QueueService.receiveMessage("test_queue").then(response => {
-        log.debug("Response ---> ", response);
+        logger.debug("Response ---> ", response);
      });
  });
  */

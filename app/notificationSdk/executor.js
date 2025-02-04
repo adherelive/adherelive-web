@@ -1,13 +1,13 @@
 import EmailManager from "../communications/email/emailManger";
 import SmsManager from "../communications/sms/smsManager";
-import { createLogger } from "../../libs/log";
+import { createLogger } from "../../libs/logger";
 import fetch from "node-fetch";
 import stream from "getstream";
 import { validateMailData } from "../proxySdk/libs/validator";
 import NotificationSdk from "./index";
 import EVENTS from "../proxySdk/proxyEvents";
 
-const log = createLogger("NOTIFICATION_SDK ---> EXECUTOR");
+const logger = createLogger("NOTIFICATION_SDK ---> EXECUTOR");
 
 class EventExecutor {
   async sendMail(mailData, scheduledJobId) {
@@ -68,9 +68,9 @@ class EventExecutor {
       );
 
       const jsonResponse = await response.json();
-      log.debug("sendPushNotification Response: ", jsonResponse);
+      logger.debug("sendPushNotification Response: ", jsonResponse);
     } catch (err) {
-      log.debug("Event executor sendPushNotification 500 error: ", err);
+      logger.error("Event executor sendPushNotification error: ", err);
     }
   }
    */
@@ -81,26 +81,26 @@ class EventExecutor {
   sendAppNotification = async (template) => {
     try {
       // TODO: Add get-stream rest api call code here
-      log.debug("Template Actor: ", template.actor.toString());
+      logger.debug("Template Actor: ", template.actor.toString());
       const client = stream.connect(
           process.config.getstream.key,
           process.config.getstream.secretKey,
           process.config.getstream.appId
       );
       const userToken = client.createUserToken(template.actor.toString());
-      log.debug("Generated get-stream userToken in use: ", userToken);
-      log.debug("Get-Stream client --> ", client);
+      logger.debug("Generated get-stream userToken in use: ", userToken);
+      logger.debug("Get-Stream client --> ", client);
 
       const feed = client.feed("notification", template.object);
-      log.debug("Feed Initialized: ", feed);
+      logger.debug("Feed Initialized: ", feed);
       const response = await feed.addActivity(template).catch((err) => {
-        log.debug("Get-Stream response error: ", err);
+        logger.error("Get-Stream response error: ", err);
       });
-      log.debug("Activity Added: ", response);
+      logger.debug("Activity Added: ", response);
 
       return response;
     } catch (err) {
-      log.debug("Error in sendAppNotification: ", err);
+      logger.error("Error in sendAppNotification: ", err);
       throw err; // Re-throw the error for further handling
     }
   };

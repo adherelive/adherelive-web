@@ -6,9 +6,9 @@ import MealTemplateService from "../../../services/mealTemplate/mealTemplate.ser
 //Wrappers
 import MealTemplateWrapper from "../../../apiWrapper/mobile/mealTemplate";
 
-import { createLogger } from "../../../../libs/log";
+import { createLogger } from "../../../../libs/logger";
 
-const log = createLogger("MOBILE > MEAL_TEMPLATE > CONTROLLER");
+const logger = createLogger("MOBILE > MEAL_TEMPLATE > CONTROLLER");
 
 class MealTemplateController extends Controller {
   constructor() {
@@ -18,7 +18,7 @@ class MealTemplateController extends Controller {
   create = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
-      log.debug("create meal template request", req.body);
+      logger.debug("create meal template request", req.body);
       const {
         body,
         userDetails: {
@@ -75,7 +75,7 @@ class MealTemplateController extends Controller {
         );
       }
     } catch (error) {
-      log.debug("create Meal Template  500 error", error);
+      logger.debug("create Meal Template  500 error", error);
       return raiseServerError(res);
     }
   };
@@ -83,7 +83,7 @@ class MealTemplateController extends Controller {
   update = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
-      log.debug("update meal template request", req.body);
+      logger.debug("update meal template request", req.body);
       const {
         params: { id } = {},
         body: { name, food_item_detail_ids: foodItemDetails = [] } = {},
@@ -146,7 +146,7 @@ class MealTemplateController extends Controller {
         "Meal Template updated successfully"
       );
     } catch (error) {
-      log.debug("update Meal Template  500 error", error);
+      logger.debug("update Meal Template  500 error", error);
       return raiseServerError(res);
     }
   };
@@ -177,7 +177,7 @@ class MealTemplateController extends Controller {
         );
       }
     } catch (error) {
-      log.debug("delete Meal Template  500 error", error);
+      logger.debug("delete Meal Template  500 error", error);
       return raiseServerError(res);
     }
   };

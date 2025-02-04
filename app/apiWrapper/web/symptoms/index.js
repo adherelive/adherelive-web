@@ -9,12 +9,12 @@ import DoctorWrapper from "../doctor";
 import PatientWrapper from "../patient";
 import CarePlanWrapper from "../carePlan";
 
-import { createLogger } from "../../../../libs/log";
+import { createLogger } from "../../../../libs/logger";
 import DocumentService from "../../../services/uploadDocuments/uploadDocuments.service";
 import { ACTIVITY_TYPE, DOCUMENT_PARENT_TYPE } from "../../../../constant";
 import DocumentWrapper from "../uploadDocument";
 
-const log = createLogger("API_WRAPPER > WEB > SYMPTOMS");
+const logger = createLogger("API_WRAPPER > WEB > SYMPTOMS");
 
 class SymptomWrapper extends BaseSymptom {
   constructor(data) {
@@ -163,9 +163,9 @@ class SymptomWrapper extends BaseSymptom {
       // }
     };
 
-    // log.debug("patient", patient);
-    // log.debug("care_plan", care_plan);
-    // log.debug("doctor", doctor);
+    // logger.debug("patient", patient);
+    // logger.debug("care_plan", care_plan);
+    // logger.debug("doctor", doctor);
   };
 }
 

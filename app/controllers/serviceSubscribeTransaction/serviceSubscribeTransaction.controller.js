@@ -1,6 +1,6 @@
 import Controller from "../index";
 
-import { createLogger } from "../../../libs/log";
+import { createLogger } from "../../../libs/logger";
 import moment from "moment";
 
 // Services
@@ -15,7 +15,7 @@ import ServiceSubscriptionMapping from "../../services/serviceSubscriptionMappin
 import TransactionActivate from "../../services/transactionActivity/transactionActivity.service";
 import { USER_CATEGORY } from "../../../constant";
 
-const log = createLogger("WEB > CONTROLLER > Service Subscribe Transaction");
+const logger = createLogger("WEB > CONTROLLER > Service Subscribe Transaction");
 
 class ServiceSubscriptionTxController extends Controller {
   constructor() {
@@ -73,7 +73,7 @@ class ServiceSubscriptionTxController extends Controller {
         "Service added successfully"
       );
     } catch (error) {
-      log.debug("Service Subscribe 500 error: ", error);
+      logger.debug("Service Subscribe 500 error: ", error);
       return raiseServerError(res);
     }
   };
@@ -247,7 +247,7 @@ class ServiceSubscriptionTxController extends Controller {
           due_date: moment(new Date(), "DD-MM-YYYY").add(7, "days"),
         };
         const txActivities = new TransactionActivate();
-        await txActivities.addTransactionActivite(activitiesData);
+        await txActivities.addTransactionActivate(activitiesData);
         response.push(activitiesData);
         return raiseSuccess(res, 200, { response }, "Success");
       }
@@ -277,13 +277,13 @@ class ServiceSubscriptionTxController extends Controller {
           };
 
           const txActivities = new TransactionActivate();
-          txActivities.addTransactionActivite(activitiesData);
+          txActivities.addTransactionActivate(activitiesData);
           response.push(activitiesData);
         }
       });
       return raiseSuccess(res, 200, { response }, "Success");
     } catch (error) {
-      log.debug("Subscribe create activity 500 error: ", error);
+      logger.debug("Subscribe create activity 500 error: ", error);
       return raiseServerError(res);
     }
   };
@@ -294,7 +294,7 @@ class ServiceSubscriptionTxController extends Controller {
       let { params: { id } = {}, body } = req;
       let { servicesUserMapping, subscriptionUserMapping, ...txBody } =
         req.body;
-      log.debug(`Report id = ${id}`);
+      logger.debug(`Report id = ${id}`);
       if (!id) {
         return raiseClientError(res, 422, {}, "Please provide tx id.");
       }
@@ -340,7 +340,7 @@ class ServiceSubscriptionTxController extends Controller {
         "Service updated successfully"
       );
     } catch (error) {
-      log.debug("updateServiceTx 500 error: ", error);
+      logger.debug("updateServiceTx 500 error: ", error);
       return raiseServerError(res);
     }
   };

@@ -3,10 +3,10 @@ import Database from "../../../libs/mysql";
 import { TABLE_NAME } from "../../models/patients";
 import { TABLE_NAME as userTableName } from "../../models/users";
 import { TABLE_NAME as carePlanTableName } from "../../models/carePlan";
-import { createLogger } from "../../../libs/log";
+import { createLogger } from "../../../libs/logger";
 import { TABLE_NAME as doctorTableName } from "../../models/doctors";
 
-const log = createLogger("WEB > PATIENTS > SERVICE");
+const logger = createLogger("WEB > PATIENTS > SERVICE");
 
 class PatientsService {
   constructor() {}
@@ -139,8 +139,8 @@ class PatientsService {
           },
         ],
       });
-      log.debug("GETPDATA ---> ", id);
-      log.debug("PATIENT ---> ", patient);
+      logger.debug("GETPDATA ---> ", id);
+      logger.debug("PATIENT ---> ", patient);
       return patient;
     } catch (error) {
       throw error;
@@ -178,7 +178,7 @@ class PatientsService {
         }
       }
 
-      log.debug("2313131231", isNaN(value));
+      logger.debug("2313131231", isNaN(value));
 
       const patient = await Database.getModel(TABLE_NAME).findAll({
         where: {

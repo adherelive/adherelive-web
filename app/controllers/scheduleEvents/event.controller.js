@@ -1,6 +1,6 @@
 import Controller from "../index";
 
-import { createLogger } from "../../../libs/log";
+import { createLogger } from "../../../libs/logger";
 import moment from "moment";
 
 import * as EventHelper from "./event.helper";
@@ -20,7 +20,7 @@ import VitalWrapper from "../../apiWrapper/web/vitals";
 // Timer
 import { getTime } from "../../helper/timer";
 
-const log = createLogger("WEB > EVENT > CONTROLLER");
+const logger = createLogger("WEB > EVENT > CONTROLLER");
 
 class EventController extends Controller {
   constructor() {
@@ -30,7 +30,7 @@ class EventController extends Controller {
   getAllEvents = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
-      log.debug("getAllEvents req.params: ", req.params);
+      logger.debug("getAllEvents req.params: ", req.params);
 
       const {
         params: { patient_id } = {},
@@ -223,7 +223,7 @@ class EventController extends Controller {
         return raiseSuccess(res, 200, {}, "No event updated yet");
       }
     } catch (error) {
-      log.debug("getAllEvents 500 error: ", error);
+      logger.debug("getAllEvents 500 error: ", error);
       return raiseServerError(res);
     }
   };
@@ -234,7 +234,7 @@ class EventController extends Controller {
   getAllEventsBackup = async (req, res) => {
     const { raiseSuccess, raiseClientError, raiseServerError } = this;
     try {
-      log.debug("getAllEventsBackup req.params ---> ", req.params);
+      logger.debug("getAllEventsBackup req.params ---> ", req.params);
 
       const {
         params: { patient_id } = {},
@@ -409,7 +409,7 @@ class EventController extends Controller {
         return raiseSuccess(res, 200, {}, "No event updated yet");
       }
     } catch (error) {
-      log.debug("getAllEventsBackup 500 error: ", error);
+      logger.debug("getAllEventsBackup 500 error: ", error);
       return raiseServerError(res);
     }
   };
@@ -425,7 +425,7 @@ class EventController extends Controller {
         id
       );
 
-      log.debug("markEventComplete in event.controller ---> ", markEventComplete);
+      logger.debug("markEventComplete in event.controller ---> ", markEventComplete);
 
       const event = await EventWrapper(null, id);
       const { appointments = {}, schedule_events = {} } =
@@ -441,7 +441,7 @@ class EventController extends Controller {
         "Event completed successfully"
       );
     } catch (error) {
-      log.debug("markEventComplete in event.controller 500 error: ", error);
+      logger.debug("markEventComplete in event.controller 500 error: ", error);
       return raiseServerError(res);
     }
   };
@@ -451,7 +451,7 @@ class EventController extends Controller {
   getAllEventsTimeline = async (req, res) => {
       const {raiseSuccess, raiseClientError, raiseServerError} = this;
       try {
-          log.debug("req.params", req.params);
+          logger.debug("req.params", req.params);
           const {params: {patient_id} = {}} = req;
 
           const carePlanData = await CarePlanService.getSingleCarePlanByData({patient_id});
@@ -462,9 +462,9 @@ class EventController extends Controller {
           let documentData = {};
           const lastVisitData = [];
 
-          log.debug("medication_ids", medication_ids);
-          log.debug("appointment_ids", appointment_ids);
-          log.debug("vital_ids", vital_ids);
+          logger.debug("medication_ids", medication_ids);
+          logger.debug("appointment_ids", appointment_ids);
+          logger.debug("vital_ids", vital_ids);
 
           const latestSymptom = await SymptomService.getLastUpdatedData({patient_id});
           if(latestSymptom.length > 0) {
@@ -493,10 +493,10 @@ class EventController extends Controller {
                   allIds.push(event.getScheduleEventId());
               }
 
-              log.debug("event_ids", allIds);
+              logger.debug("event_ids", allIds);
 
               for(const event of [...scheduleEvents, ...latestSymptom]) {
-                  log.debug(`event.get("updated_at") : ${event.get("updated_at")}`);
+                  logger.debug(`event.get("updated_at") : ${event.get("updated_at")}`);
                   lastVisitData.push({
                       event_type: event.get("event_type") ? "schedule_events" : "symptoms",
                       id: event.get("id"),
@@ -531,7 +531,7 @@ class EventController extends Controller {
 
 
       } catch(error) {
-          log.debug("getAllEvents 500 error", error);
+          logger.debug("getAllEvents 500 error", error);
           return raiseServerError(res);
       }
   };
@@ -544,7 +544,7 @@ class EventController extends Controller {
     const { raiseSuccess, raiseServerError } = this;
     try {
       const { userDetails: { userData: { category } = {} } = {} } = req;
-      log.debug(`Charts for AUTH getAllMissedEventsCount - with category: ${category}`);
+      logger.debug(`Charts for AUTH getAllMissedEventsCount - with category: ${category}`);
 
       let response = {};
       let responseMessage = "No event data exists at the moment";
@@ -562,7 +562,7 @@ class EventController extends Controller {
       }
       return raiseSuccess(res, 200, { ...response }, responseMessage);
     } catch (error) {
-      log.debug("getAllMissedEventsCount 500 error: ", error);
+      logger.debug("getAllMissedEventsCount 500 error: ", error);
       return raiseServerError(res);
     }
   };
@@ -571,7 +571,7 @@ class EventController extends Controller {
     const { raiseSuccess, raiseServerError } = this;
     try {
       const { userDetails: { userData: { category } = {} } = {} } = req;
-      log.debug(`Charts for AUTH getEventsDetails - with category: ${category}`);
+      logger.debug(`Charts for AUTH getEventsDetails - with category: ${category}`);
 
       let response = {};
       let responseMessage = "No event data exists at the moment";
@@ -592,7 +592,7 @@ class EventController extends Controller {
       }
       return raiseSuccess(res, 200, { ...response }, responseMessage);
     } catch (error) {
-      log.debug("getEventsDetails 500 error: ", error);
+      logger.debug("getEventsDetails 500 error: ", error);
       return raiseServerError(res);
     }
   };
@@ -601,9 +601,9 @@ class EventController extends Controller {
     const { raiseSuccess, raiseServerError } = this;
     try {
       const { userDetails: { userData: { category } = {} } = {} } = req;
-      log.debug(`Charts for AUTH getAllMissedEvents - with category: ${category}`);
-      log.debug("Request for all events: \n", req);
-      log.debug("Response for all events: \n", res);
+      logger.debug(`Charts for AUTH getAllMissedEvents - with category: ${category}`);
+      logger.debug("Request for all events: \n", req);
+      logger.debug("Response for all events: \n", res);
 
       let response = {};
       let responseMessage = "No event data exists at the moment";
@@ -622,7 +622,7 @@ class EventController extends Controller {
 
       return raiseSuccess(res, 200, { ...response }, responseMessage);
     } catch (error) {
-      log.debug("Not able to get all the Missed Events (getAllMissedEvents 500 error): ", error);
+      logger.debug("Not able to get all the Missed Events (getAllMissedEvents 500 error): ", error);
       return raiseServerError(res);
     }
   };
@@ -638,7 +638,7 @@ class EventController extends Controller {
           userCategoryId,
         } = {},
       } = req;
-      log.debug(`getPatientMissedEvents params : patient_id = ${patient_id}`);
+      logger.debug(`getPatientMissedEvents params : patient_id = ${patient_id}`);
 
       // considering api to be only accessible for doctors
       const carePlans =
@@ -846,7 +846,7 @@ class EventController extends Controller {
         "Patient missed events fetched successfully"
       );
     } catch (error) {
-      log.debug("getPatientMissedEvents 500 error: ", error);
+      logger.debug("getPatientMissedEvents 500 error: ", error);
       return raiseServerError(res);
     }
   };
@@ -858,7 +858,7 @@ class EventController extends Controller {
         params: { id },
         query: { index } = {},
       } = req;
-      log.debug(`deleteVitalResponse params: event_id: ${id} | query : index : ${index}`);
+      logger.debug(`deleteVitalResponse params: event_id: ${id} | query : index : ${index}`);
 
       if (!id || !index) {
         return raiseClientError(
@@ -947,7 +947,7 @@ class EventController extends Controller {
         );
       }
     } catch (error) {
-      log.debug("deleteVitalResponse 500 error: ", error);
+      logger.debug("deleteVitalResponse 500 error: ", error);
       return raiseServerError(res);
     }
   };
@@ -960,8 +960,8 @@ class EventController extends Controller {
         query: { index } = {},
         body: { value = {} } = {},
       } = req;
-      log.debug(`updateVitalResponse params: event_id: ${id} | query : index : ${index}`);
-      log.debug("updateVitalResponse body : value ", value);
+      logger.debug(`updateVitalResponse params: event_id: ${id} | query : index : ${index}`);
+      logger.debug("updateVitalResponse body : value ", value);
 
       if (!id || !index) {
         return raiseClientError(
@@ -1056,7 +1056,7 @@ class EventController extends Controller {
         );
       }
     } catch (error) {
-      log.debug("updateVitalResponse500 error", error);
+      logger.debug("updateVitalResponse500 error", error);
       return raiseServerError(res);
     }
   };

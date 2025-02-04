@@ -2,6 +2,9 @@
 
 import { USER_CATEGORY } from "../../constant";
 import { TABLE_NAME } from "../models/exerciseDetails";
+import { createLogger } from "../../libs/logger";
+
+const logger = createLogger("Seeders Exercise Details");
 
 const exercises = [
   {
@@ -69,7 +72,7 @@ module.exports = {
     if (validExercises.length > 0) {
       return queryInterface.bulkInsert(TABLE_NAME, validExercises);
     } else {
-      log.warn("No valid exercises found to seed.");
+      logger.warn("No valid exercises found to seed.");
       return Promise.resolve(); // No insertion needed
     }
   },

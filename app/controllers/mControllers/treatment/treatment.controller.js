@@ -3,9 +3,9 @@ import treatmentService from "../../../services/treatment/treatment.service";
 
 import TreatmentWrapper from "../../../apiWrapper/mobile/treatments";
 
-import { createLogger } from "../../../../libs/log";
+import { createLogger } from "../../../../libs/logger";
 
-const log = createLogger("MOBILE TREATMENT CONTROLLER");
+const logger = createLogger("MOBILE TREATMENT CONTROLLER");
 
 class TreatmentController extends Controller {
   constructor() {
@@ -18,7 +18,7 @@ class TreatmentController extends Controller {
       const { query } = req;
       const { condition_id } = query || {};
 
-      log.debug("condition_id in req", condition_id);
+      logger.debug("condition_id in req", condition_id);
 
       const treatmentDetails = await treatmentService.getAll();
 
@@ -40,7 +40,7 @@ class TreatmentController extends Controller {
         "Treatments fetched successfully"
       );
     } catch (error) {
-      log.debug("treatment search 500 error", error);
+      logger.debug("treatment search 500 error", error);
       return raiseServerError(res);
     }
   };

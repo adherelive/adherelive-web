@@ -1,10 +1,14 @@
+import { createLogger } from "../../../libs/logger";
+
 const axios = require('axios');
+
+const logger = createLogger("HELPER DO REQUEST");
 
 module.exports = async (value) =>
   new Promise((resolve, reject) => {
     axios.get(value).then((response) => {
-        log.debug(response.data);
+        logger.debug("Response data for DoRequest Helper: ", response.data);
     }).catch((error) => {
-        log.error(error);
+        logger.error("Error in the Helper for DoRequest: ", error);
     });
   });

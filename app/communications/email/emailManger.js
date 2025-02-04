@@ -1,13 +1,13 @@
 // const AWS = require("aws-sdk");
 // const Log = require("../../../libs/log")("communications --> emailManger");
-import { createLogger } from "../../../libs/log";
+import { createLogger } from "../../../libs/logger";
 
 const path = require("path");
 const { existsSync } = require("fs");
 const ejs = require("ejs");
 const emailPayloadBuilder = require("./emailPayloadBuilder");
 
-const log = createLogger("communications --> emailManger");
+const logger = createLogger("communications --> emailManger");
 
 const nodemailer = require("nodemailer");
 const smtpTransport = require("nodemailer-sendgrid-transport");
@@ -287,39 +287,41 @@ class EmailManger {
   async sendEmail(emailPayload) {
     try {
       let payload = await this.emailPayloadTransformer(emailPayload);
-      log.debug(
+      logger.debug(
         "Validating email payload!! ---> ",
         process.config.SMTP_USER,
         process.config.SMTP_KEY
       );
       let isValid = this.emailPayloadValidator(emailPayload);
       if (isValid && isValid.error == 1) return isValid;
-      log.success("email payload is valid!!");
-      log.debug("Transforming email payload to aws payload!!");
+      logger.success("email payload is valid!!");
+      logger.debug("Transforming email payload to aws payload!!");
 
       if (payload.error && payload.error == 1) return payload;
 
-      log.debug("Email payload transformed successfully!");
-      log.debug("Sending email...");
-      // let publishResponse = this.ses
-      //   .sendEmail(payload, (err, data) => {
-      //     if (err) {
-      //       log.debug("Sending an Email error!!", err);
-      //     }
-      //     if (data) {
-      //       log.debug("Email sent successfully!!", data);
-      //     }
-      //   })
-      //   .promise();
-      // delete payload.Message;
-      // delete payload.Destination;
-      // delete payload.ReplyToAddresses;
-      //
+      logger.info("Email payload transformed successfully!");
+      logger.info("Sending email...");
+      /**
+       * TODO: Check why it is commented and remove or reinstate
+      let publishResponse = this.ses
+        .sendEmail(payload, (err, data) => {
+          if (err) {
+            logger.error("Sending an Email error!!", err);
+          }
+          if (data) {
+            logger.info("Email sent successfully!!", data);
+          }
+        })
+        .promise();
+      delete payload.Message;
+      delete payload.Destination;
+      delete payload.ReplyToAddresses;
+       */
       const publishResponse = await this.smtpTransporter.sendMail(payload);
 
       return publishResponse;
     } catch (err) {
-      log.debug("sending mail error.........!!");
+      logger.error("sending mail error!", err);
     }
   }
 }

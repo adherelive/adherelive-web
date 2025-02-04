@@ -105,7 +105,7 @@ export default async (data = null, id = null) => {
     const medicine = await medicineService.getMedicineById(id);
     return new MedicineWrapper(medicine);
   } catch (error) {
-    log.error("Error fetching medicine: ", error);
+    logger.error("Error fetching medicine: ", error);
     return new MedicineWrapper(null); // Or throw the error if you want it to propagate
   }
 };
