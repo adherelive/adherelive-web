@@ -1088,13 +1088,15 @@ class UserController extends Controller {
     try {
       if (req.cookies.accessToken) {
         res.clearCookie("accessToken");
-
         return this.raiseSuccess(res, 200, {}, "Signed out successfully!");
       } else {
         return this.raiseServerError(res, 500, {}, constants.COOKIES_NOT_SET);
-        // let response = new Response(false, 500);
-        // response.setError(errMessage.INTERNAL_SERVER_ERROR);
-        // return res.status(500).json(response.getResponse());
+        /**
+         * TODO: Check why these are not used?
+        let response = new Response(false, 500);
+        response.setError(errMessage.INTERNAL_SERVER_ERROR);
+        return res.status(500).json(response.getResponse());
+         */
       }
     } catch (error) {
       return this.raiseServerError(res, 500, {}, `${error.message}`);

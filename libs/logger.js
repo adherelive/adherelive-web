@@ -194,31 +194,64 @@ class LoggingError extends Error {
 
 // Rate limiting implementation
 class RateLimiter {
-    constructor(options) {
-        this.windowMs = options.windowMs;
-        this.maxLogs = options.maxLogs;
-        this.logs = new Map();
+    constructor(config) {
+        this.enabled = config.enabled;
+        this.maxLogs = config.maxLogs;
+        this.windowMs = config.windowMs;
+        this.logs = new Map();  // Store source -> array of timestamps
+
+        // Add LRU cache for very high traffic scenarios
+        this.maxSources = config.maxSources || 1000;
+        if (this.logs.size > this.maxSources) {
+            // Remove oldest source
+            const oldestSource = this.logs.keys().next().value;
+            this.logs.delete(oldestSource);
+        }
     }
 
     shouldLog(source) {
+        if (!this.enabled) return true;
+
+        const now = Date.now();
+        if (!this.logs.has(source)) {
+            this.logs.set(source, [now]);
+            return true;
+        }
+
+        // Get timestamps for this source and clean old ones
+        let timestamps = this.logs.get(source);
+        const windowStart = now - this.windowMs;
+
+        // Remove timestamps outside the window
+        // (efficient as array is naturally ordered)
+        while (timestamps.length && timestamps[0] <= windowStart) {
+            timestamps.shift();
+        }
+
+        // Check if we're under the limit
+        if (timestamps.length < this.maxLogs) {
+            timestamps.push(now);
+            return true;
+        }
+
+        return false;
+    }
+
+    // Clean up old entries periodically
+    cleanup() {
         const now = Date.now();
         const windowStart = now - this.windowMs;
 
-        // Clean old entries
-        for (const [key, timestamp] of this.logs.entries()) {
-            if (timestamp < windowStart) {
-                this.logs.delete(key);
+        for (const [source, timestamps] of this.logs) {
+            // Remove timestamps outside the window
+            while (timestamps.length && timestamps[0] <= windowStart) {
+                timestamps.shift();
+            }
+            // Remove empty sources
+            if (timestamps.length === 0) {
+                this.logs.delete(source);
             }
         }
-
-        const count = [...this.logs.values()].filter(timestamp => timestamp > windowStart).length;
-
-        if (count >= this.maxLogs) {
-            return false;
-        }
-
-        this.logs.set(`${source}-${now}`, now);
-        return true;
     }
 }
 
@@ -227,8 +260,19 @@ class EnhancedWinstonLogger {
     constructor(filename) {
         this.source = filename;
         this.rateLimiter = new RateLimiter(CONFIG.rateLimiting);
+        // Run cleanup every minute
+        this.cleanupInterval = setInterval(() => {
+            this.rateLimiter.cleanup();
+        }, 60000);
         this._setupLogger();
         this._setupErrorHandling();
+    }
+
+    // Don't forget to clear the interval when the logger is destroyed
+    destroy() {
+        if (this.cleanupInterval) {
+            clearInterval(this.cleanupInterval);
+        }
     }
 
     // Helper function for circular references
@@ -473,6 +517,9 @@ class EnhancedWinstonLogger {
     debug(message, ...args) {
         if (!this._shouldSample()) return;
         if (!this.rateLimiter.shouldLog(this.source)) {
+            // Optional: track dropped logs count
+            this._incrementDroppedLogs();
+            // Output a warning for when the logs exceed the limit
             this.warn('Rate limit exceeded for debug logs', { source: this.source });
             return;
         }
@@ -556,6 +603,19 @@ class EnhancedWinstonLogger {
         }
     }
 
+    // Optional: Track dropped logs
+    _incrementDroppedLogs() {
+        if (!this._droppedLogs) this._droppedLogs = 0;
+        this._droppedLogs++;
+
+        // Log a summary every 1000 dropped logs
+        if (this._droppedLogs % 1000 === 0) {
+            this.warn(`Dropped ${this._droppedLogs} debug logs due to rate limiting`, {
+                source: this.source
+            });
+        }
+    }
+
     async _sendToCollector(traceData) {
         if (!CONFIG.tracing.collector.endpoint) return;
 
@@ -588,6 +648,11 @@ class EnhancedWinstonLogger {
         }
     }
 }
+
+// Don't forget to clean up when your application shuts down
+process.on('SIGTERM', () => {
+    logger.destroy();
+});
 
 // Middleware for request tracking
 export const requestMiddleware = (req, res, next) => {

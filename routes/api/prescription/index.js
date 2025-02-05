@@ -570,7 +570,10 @@ function getLatestUpdateDate(medications) {
     return {date, isPrescriptionUpdated};
 }
 
-router.get("/details/:care_plan_id", Authenticated, async (req, res) => {
+router.get(
+    "/details/:care_plan_id",
+    Authenticated,
+    async (req, res) => {
     try {
         const {care_plan_id = null} = req.params;
         const {
@@ -599,7 +602,7 @@ router.get("/details/:care_plan_id", Authenticated, async (req, res) => {
         let medicinesArray = [];
         let nextAppointmentDuration = null;
         if (!care_plan_id) {
-            return raiseClientError(res, 422, {}, "Invalid Care Plan.");
+            return raiseClientError(res, 422, {}, "Invalid Care Plan!");
         }
         const carePlan = await carePlanService.getCarePlanById(care_plan_id);
         const carePlanData = await CarePlanWrapper(carePlan);
@@ -871,10 +874,7 @@ router.get("/details/:care_plan_id", Authenticated, async (req, res) => {
             }
         }
 
-        logger.debug("=========================");
-        logger.debug(JSON.stringify(dietList));
-        logger.debug({dietIds});
-        logger.debug("=========================");
+        logger.debug("Diet Lists and Diet IDs: ", JSON.stringify(dietList), {dietIds});
 
         for (const id of workout_ids) {
             const workout = await workoutService.findOne({id});
