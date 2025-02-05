@@ -52,8 +52,6 @@ import diet from "../../../app/apiWrapper/web/diet";
 import * as DietHelper from "../../../app/controllers/diet/diet.helper";
 import {downloadFileFromS3} from "../../../app/controllers/user/user.helper";
 
-import moment from "moment";
-
 import {
   APPOINTMENT_TYPE,
   BODY_VIEW,
@@ -79,6 +77,10 @@ import {checkAndCreateDirectory} from "../../../app/helper/common";
 import {getDoctorCurrentTime} from "../../../app/helper/getUserTime";
 import {raiseServerError} from "../helper";
 
+import moment from "moment";
+import yourTemplateEngine from "ejs";
+
+const { Translate } = require('@google-cloud/translate').v2;
 const fs = require("fs");
 const path = require("path");
 const puppeteer = require("puppeteer");
@@ -119,6 +121,50 @@ const getWhenToTakeText = (number) => {
             return "";
     }
 };
+
+/**
+ * Using Google Translate to create the Prescription PDF in Hindi
+ *
+ * @param htmlTemplate
+ * @param data
+ * @param targetLang
+ * @returns {Promise<Buffer<ArrayBufferLike>>}
+ */
+async function translatePrescription(htmlTemplate, data, targetLang) {
+    // 1. Translate template content
+    const translate = new Translate({/* config */});
+
+    // Google Translate with glossary
+    const [translation] = await translate.translate(text, {
+        from: 'en',
+        to: 'hi',
+        glossary: '../scripts/hi.json'
+    });
+
+    // Translate dynamic content
+    const translatedData = await Promise.all(
+        Object.entries(data).map(async ([key, value]) => ({
+            [key]: (await translate.translate(value, targetLang))[0]
+        }))
+    );
+
+    // 2. Generate translated HTML
+    let translatedHtml = yourTemplateEngine.render(htmlTemplate, translatedData);
+
+    // 3. Handle RTL languages
+    if (targetLang === 'hi') { // Hindi
+        translatedHtml = translatedHtml
+            .replace('<body>', '<body style="direction: rtl; font-family: TiroDevanagariHindi-Regular">');
+    }
+
+    // 4. Generate PDF
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
+    await page.setContent(translatedHtml);
+    const pdf = await page.pdf({ format: 'A4' });
+    await browser.close();
+    return pdf;
+}
 
 async function html_to_pdf({templateHtml, dataBinding, options}) {
     handlebars.registerHelper("print", function (value) {

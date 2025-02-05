@@ -59,8 +59,8 @@ class PushNotification {
       const https = require("https");
       const req = https.request(options, function (res) {
         res.on("data", function (data) {
-          logger.debug("sendPushNotification response template: ", template);
-          logger.debug("Push Notification sendPushNotification Data: ", data);
+          logger.debug("Send Push Notification response template: ", template);
+          //logger.debug("Push Notification sendPushNotification Data: ", data);
         });
 
         res.on("error", function (err) {
