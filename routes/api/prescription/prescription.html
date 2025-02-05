@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     <style>
       @page {
@@ -7,13 +7,14 @@
         margin: 10px;
       }
 
-      /* @media print {
-  html, body {
-    width: 210mm;
-    height: 297mm;
-  }
-  
-} */
+      /*
+      @media print {
+        html, body {
+          width: 210mm;
+          height: 297mm;
+        }
+      }
+       */
       @font-face {
         font-family: "PlusJakartaSans-Bold";
         src: url("https://res.cloudinary.com/myrltech/raw/upload/v1685442477/PlusJakartaSans-Bold.ttf");
@@ -102,7 +103,7 @@
 
       /* MEDICINE SECTION */
 
-      .shedule_medicine_wrapper {
+      .schedule_medicine_wrapper {
         border: 1px solid black;
         border-left: 0px;
         border-right: 0px;
@@ -125,7 +126,7 @@
 
       /* TOP SECTION */
 
-      .top_setion_wrapper {
+      .top_section_wrapper {
         border: 1px solid black;
         /* border-bottom: 0px; */
         /* border-top: 0px; */
@@ -135,7 +136,7 @@
         grid-auto-rows: minmax(30px, auto);
       }
 
-      .top_setion_wrapper .top_setion_wrapper_one {
+      .top_section_wrapper .top_section_wrapper_one {
         /* border-right: 1px solid black; */
         padding: 0px 10px;
         /* border-bottom: 1px solid black; */
@@ -144,7 +145,7 @@
         /* border-top: 1px solid black; */
       }
 
-      .top_setion_wrapper .top_setion_wrapper_two {
+      .top_section_wrapper .top_section_wrapper_two {
         /* border-bottom: 1px solid black; */
         padding: 0px 10px;
         display: flex;
@@ -152,7 +153,7 @@
         /* border-top: 1px solid black; */
       }
 
-      /* COMPLAINT SETCION */
+      /* COMPLAINT SECTION */
 
       .complaints_section {
         border: 1px solid black;
@@ -179,7 +180,7 @@
         display: grid;
       }
 
-      /* DIAGNOSIS SETCION */
+      /* DIAGNOSIS SECTION */
       .diagnosis_section {
         border: 1px solid black;
         border-top: 0px;
@@ -187,7 +188,7 @@
         /* height: 50px; */
       }
 
-      /* CHEIF SETCION */
+      /* CHIEF SECTION */
       .chef-complaints-section {
         border: 1px solid black;
         border-top: 0px;
@@ -216,7 +217,7 @@
         /* height: 50px; */
       }
 
-      /* NEXT CONSULATION SECTION */
+      /* NEXT CONSULTATION SECTION */
 
       .next_consultation_section_heading {
         border: 1px solid black;
@@ -229,9 +230,9 @@
         width: 100%;
       }
 
-      /* SIGNITURE SECTION */
+      /* SIGNATURE SECTION */
 
-      .signiture_section {
+      .signature_section {
         text-align: center;
         margin-left: 600px;
         margin-bottom: 20px;
@@ -242,11 +243,11 @@
         /* float: right;     */
       }
 
-      .signiture_image {
+      .signature_image {
         /* width: 200px; */
       }
 
-      .signiture_section .signiture_image_section {
+      .signature_section .signature_image_section {
         align-items: center;
         display: flex;
         flex-flow: column;
@@ -438,6 +439,7 @@
         display: flex;
       }
     </style>
+    <title></title>
   </head>
 
   <body>
@@ -463,40 +465,40 @@
       </div>
     </div>
 
-    <!-- SETCION TWO -->
+    <!-- SECTION TWO -->
 
-    <div class="top_setion_wrapper">
-      <div class="top_setion_wrapper_one">
+    <div class="top_section_wrapper">
+      <div class="top_section_wrapper_one">
         <h3>Patient Name :</h3>
         <p>{{ patient_data.name }}</p>
       </div>
-      <div class="top_setion_wrapper_two">
+      <div class="top_section_wrapper_two">
         <h3>Registration date/time :</h3>
         <p>{{ patient_data.created_at }}</p>
       </div>
-      <div class="top_setion_wrapper_one">
+      <div class="top_section_wrapper_one">
         <h3>Patient Age/Gender :</h3>
         <p>{{ patient_data.age }}/{{ patient_data.gender }}</p>
       </div>
 
-      <div class="top_setion_wrapper_two">
-        <h3>Patient Id :</h3>
+      <div class="top_section_wrapper_two">
+        <h3>Patient ID :</h3>
         <p>{{ patient_data.uid }}</p>
       </div>
-      <div class="top_setion_wrapper_one">
+      <div class="top_section_wrapper_one">
         <h3>Patient Mobile No. :</h3>
         <p>+{{ patient_data.prefix }}-{{ patient_data.mobile_number }}</p>
       </div>
-      <div class="top_setion_wrapper_two">
+      <div class="top_section_wrapper_two">
         <h3>Doctor Name:</h3>
         <p>Dr. {{ doctorName }} {{ degree }}</p>
       </div>
-      <div class="top_setion_wrapper_one">
+      <div class="top_section_wrapper_one">
         <h3>Patient Address:</h3>
         <p>{{ patient_data.address }}</p>
       </div>
-      <div class="top_setion_wrapper_two">
-        <!--Ananjay removed doctor email -->
+      <div class="top_section_wrapper_two">
+        <!-- Removed the Doctor Email -->
         <!-- <h3>Doctor Email :</h3>
       <p>{{ doctorEmail }}</p> -->
       </div>
@@ -506,7 +508,7 @@
 
     <div class="chef-complaints-section">
       <!-- <div style="display: flex; align-items: center">
-        <h3>Relevent History :</h3>
+        <h3>Relevant History :</h3>
         <br />
       </div> -->
       <div style="display: flex; align-items: center">
@@ -523,16 +525,16 @@
 
     <!-- DIAGNOSIS  AND SYMPTOMS-->
 
-    <div class="top_setion_wrapper">
+    <div class="top_section_wrapper">
       <!-- <h3>Diagnosis : </h3> -->
       <div
-        class="top_setion_wrapper_one"
+        class="top_section_wrapper_one"
         style="border-right: 1px solid; padding: 10px"
       >
         <h3>Diagnosis :</h3>
         <p>{{ diagnosis }}</p>
       </div>
-      <div class="top_setion_wrapper_two" style="padding: 10px">
+      <div class="top_section_wrapper_two" style="padding: 10px">
         <h3>Symptoms :</h3>
         <p style="width: 250px">{{ symptoms_final_value }}</p>
       </div>
@@ -702,7 +704,7 @@
               <h3>Schedule Medicine</h3>
             </div>
             <div
-              class="shedule_medicine_wrapper"
+              class="schedule_medicine_wrapper"
               style="display: flex; justify-content: space-around"
             >
               <div>
@@ -868,7 +870,7 @@
                 <td style="text-align: left">
                   <p>
                     CT SCAN-CECT HEAD(Radiology) <br />
-                    <span style="font-size: 8px">by Dr. Subharti Test</span>
+                    <span style="font-size: 8px">by Dr. Test</span>
                     <br />
                     Note:-
                   </p>
@@ -880,7 +882,7 @@
       </div>
     </div>
 
-    <!-- NEXT CONSULATION SECTION -->
+    <!-- NEXT CONSULTATION SECTION -->
 
     <div class="next_consultation_section_heading">
       <h3>Next Consultation :</h3>
@@ -935,7 +937,7 @@
                     <td style="text-align: left">
                       <p>
                         CT SCAN-CECT HEAD(Radiology) <br />
-                        <span style="font-size: 8px">by Dr. Subharti Test</span>
+                        <span style="font-size: 8px">by Dr. Test</span>
                         <br />
                         Note:-
                       </p>
@@ -951,12 +953,12 @@
       </div>
     </div>
 
-    <!-- SIGNITURE SECTION -->
+    <!-- SIGNATURE SECTION -->
 
-    <div class="signiture_section">
-      <div class="signiture_image_section">
+    <div class="signature_section">
+      <div class="signature_image_section">
         <img
-          class="signiture_image"
+          class="signature_image"
           height="40"
           width="120"
           src="{{ doctorSignImage }}"
@@ -992,7 +994,15 @@
       </h3>
     </div>
 
+    <!-- TODO: Issue with the OR
+              To fix the issue with the missing or helper, you need to define the or helper in your JavaScript code.
+      const Handlebars = require('handlebars');
+
+      Handlebars.registerHelper('or', function() {
+        return Array.prototype.slice.call(arguments, 0, -1).some(Boolean);
+      });
     {{#if (or diet_output.length pre_workouts.length) }}
+    -->
     <div style="margin-top: 30px">
       <h3>Lifestyle Advice</h3>
     </div>
