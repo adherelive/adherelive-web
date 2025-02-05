@@ -1075,16 +1075,9 @@ router.get("/details/:care_plan_id", Authenticated, async (req, res) => {
                 repetitionApiData[id] = {id, type};
             }
         }
-        logger.debug("============================");
-        logger.debug(" doctor id ", doctor_id);
-        logger.debug(doctors);
-        logger.debug({medicinesArray});
-        logger.debug({});
-        logger.debug("============================");
-
-        logger.debug("details before from a doctor start");
-        logger.debug({providerLogo});
-        logger.debug("details before from a doctor end");
+        logger.debug("Doctor ID: ", doctor_id);
+        logger.debug("Doctors: ", doctors);
+        logger.debug("Medicines Array Data: \n", {medicinesArray});
 
         const {
             name: doctorName = "",
@@ -1106,9 +1099,7 @@ router.get("/details/:care_plan_id", Authenticated, async (req, res) => {
             doctor_id
         );
 
-        logger.debug("details from a doctor start");
-        logger.debug({providerLogo});
-        logger.debug("details from a doctor end");
+        logger.debug("Provider logo: \n", {providerLogo});
 
         let patient_data = formatPatientData(
             {
@@ -1147,49 +1138,52 @@ router.get("/details/:care_plan_id", Authenticated, async (req, res) => {
             }
         }
 
-        // const stringSymptomArray = [];
-        // let stringSymptom = "";
-        //
-        // if (symptoms) {
-        //   try {
-        //     const parsedSymptoms = JSON.parse(symptoms);
-        //
-        //     if (Array.isArray(parsedSymptoms)) {
-        //       // Crucial check: Is it an array?
-        //       parsedSymptoms.forEach((element) => {
-        //         if (
-        //           typeof element === "object" &&
-        //           element !== null &&
-        //           element.symptomName &&
-        //           element.duration
-        //         ) {
-        //           // Check if element is an object and has required properties
-        //           const bodyPart =
-        //             Array.isArray(element.bodyParts) && element.bodyParts.length > 0
-        //               ? `(${element.bodyParts.join(", ")})` // Join array elements with commas
-        //               : "";
-        //           stringSymptomArray.push(
-        //             `${element.symptomName} ${bodyPart} for ${element.duration}`
-        //           );
-        //         } else {
-        //           logger.warn("Invalid symptom element: ", element); // Log invalid elements
-        //         }
-        //       });
-        //     } else {
-        //       logger.warn("Symptoms data is not an array: ", parsedSymptoms);
-        //       stringSymptom = symptoms;
-        //     }
-        //   } catch (e) {
-        //     logger.error("Error parsing symptoms: ", e);
-        //     stringSymptom = symptoms;
-        //   }
-        // }
-        //
-        // if (stringSymptomArray.length > 0) {
-        //     return stringSymptomArray;
-        // } else {
-        //     return stringSymptom;
-        // }
+        /**
+         * TODO: Why has this been commented out
+        const stringSymptomArray = [];
+        let stringSymptom = "";
+
+        if (symptoms) {
+          try {
+            const parsedSymptoms = JSON.parse(symptoms);
+
+            if (Array.isArray(parsedSymptoms)) {
+              // Crucial check: Is it an array?
+              parsedSymptoms.forEach((element) => {
+                if (
+                  typeof element === "object" &&
+                  element !== null &&
+                  element.symptomName &&
+                  element.duration
+                ) {
+                  // Check if element is an object and has required properties
+                  const bodyPart =
+                    Array.isArray(element.bodyParts) && element.bodyParts.length > 0
+                      ? `(${element.bodyParts.join(", ")})` // Join array elements with commas
+                      : "";
+                  stringSymptomArray.push(
+                    `${element.symptomName} ${bodyPart} for ${element.duration}`
+                  );
+                } else {
+                  logger.warn("Invalid symptom element: ", element); // Log invalid elements
+                }
+              });
+            } else {
+              logger.warn("Symptoms data is not an array: ", parsedSymptoms);
+              stringSymptom = symptoms;
+            }
+          } catch (e) {
+            logger.error("Error parsing symptoms: ", e);
+            stringSymptom = symptoms;
+          }
+        }
+
+        if (stringSymptomArray.length > 0) {
+            return stringSymptomArray;
+        } else {
+            return stringSymptom;
+        }
+         */
 
         let symptoms_final_value = "";
         if (stringSymptomArray.length < 1) {
@@ -1215,12 +1209,9 @@ router.get("/details/:care_plan_id", Authenticated, async (req, res) => {
         }
 
         const medicationsList = formatMedicationsData(medications, medicines);
-        logger.debug("================================");
-        logger.debug(JSON.stringify(medicationsList));
-        logger.debug("diet real data start==============");
-        logger.debug({data: JSON.stringify({...dietApiData})});
-        logger.debug("diet real data end================");
-        logger.debug("================================");
+        logger.debug("Medications List: \n", JSON.stringify(medicationsList));
+        logger.debug("Diet API Data: \n", {data: JSON.stringify({...dietApiData})});
+
         let diet_old_data = {...dietApiData};
         let diet_output = [];
 
@@ -1230,21 +1221,14 @@ router.get("/details/:care_plan_id", Authenticated, async (req, res) => {
             let formattedStartDate = "";
             let formattedEndDate = "";
             let diet_id = dietIds[i];
-            let start_date =
-                diet_old_data[diet_id]["diets"][diet_id]["basic_info"]["start_date"];
-            let end_date =
-                diet_old_data[diet_id]["diets"][diet_id]["basic_info"]["end_date"];
-            logger.debug(
-                "----------------get testing info-------------- start -------"
-            );
-            logger.debug(diet_old_data[diet_id]["diets"][diet_id]["basic_info"]);
-            if (start_date) formattedStartDate = moment(start_date);
+            let start_date = diet_old_data[diet_id]["diets"][diet_id]["basic_info"]["start_date"];
+            let end_date = diet_old_data[diet_id]["diets"][diet_id]["basic_info"]["end_date"];
 
+            logger.debug("Diet data + Basic Info: \n", diet_old_data[diet_id]["diets"][diet_id]["basic_info"]);
+
+            if (start_date) formattedStartDate = moment(start_date);
             if (end_date) formattedEndDate = moment(end_date);
 
-            logger.debug(
-                "----------------get testing info-------------- end ---------"
-            );
             let duration = null;
             let durationText = "";
             if (end_date) {
@@ -1315,13 +1299,7 @@ router.get("/details/:care_plan_id", Authenticated, async (req, res) => {
             // dietobj.food_item = diet_old_data[dietIds[i]]["food_items"]["food_item_detail_id"]
             diet_output.push(dietobj);
         }
-
-        logger.debug("============my latest diet object start===============");
-        logger.debug({diet_output});
-
-        logger.debug(JSON.stringify(diet_output));
-        logger.debug("============my latest diet object end===============");
-
+        logger.debug("Latest diet object: \n", JSON.stringify(diet_output));
         let {date: prescriptionDate} = getLatestUpdateDate(medications);
 
         // workout logic here
@@ -1436,14 +1414,15 @@ router.get("/details/:care_plan_id", Authenticated, async (req, res) => {
             diet_output,
             pre_workouts,
         };
-        logger.debug("diet real data start==============");
-        logger.debug({data: JSON.stringify({...dietApiData})});
-        logger.debug({timings});
-        logger.debug("diet real data end================");
+        logger.debug("Diet real data, with timings: \n",
+            {data: JSON.stringify({...dietApiData})}, {timings});
 
         dataForPdf = {
             users: {...usersData},
-            /*...(permissions.includes(PERMISSIONS.MEDICATIONS.VIEW) && {
+            /**
+             * TODO: Check why these have been commented, or remove
+             *      Some lines commented below also.
+            ...(permissions.includes(PERMISSIONS.MEDICATIONS.VIEW) && {
               medications,
             }),
             ...(permissions.includes(PERMISSIONS.MEDICATIONS.VIEW) && {
@@ -1453,7 +1432,8 @@ router.get("/details/:care_plan_id", Authenticated, async (req, res) => {
             clinical_notes,
             follow_up_advise,
             clinical_notes,
-            follow_up_advise,*/
+            follow_up_advise,
+             */
             medicines,
             care_plans: {
                 [carePlanData.getCarePlanId()]: {
@@ -1502,8 +1482,7 @@ router.get("/details/:care_plan_id", Authenticated, async (req, res) => {
             printBackground: true,
             path: "invoice.pdf",
         };
-        logger.debug("Pre Data: \n");
-        logger.debug({pre_data});
+        logger.debug("Prescription Data: \n", {pre_data});
 
         let pdf_buffer_value = await html_to_pdf({
             templateHtml,
@@ -1513,7 +1492,7 @@ router.get("/details/:care_plan_id", Authenticated, async (req, res) => {
         res.contentType("application/pdf");
         return res.send(pdf_buffer_value);
     } catch (err) {
-        logger.error("Error while generating the prescription: ", err);
+        logger.error("Error in Prescription API, while generating the prescription: ", err);
         return raiseServerError(res);
     }
 });

@@ -2110,9 +2110,7 @@ class PatientController extends Controller {
       };
 
       checkAndCreateDirectory(PRESCRIPTION_PDF_FOLDER);
-      logger.debug("\n\n\n\n\n\n\n\n\n\n\n================================");
-      logger.debug({ doctorSignImage });
-      logger.debug("================================\n\n\n\n\n\n\n\n\n\n\n");
+      logger.debug("Doctors Signature Image: \n", { doctorSignImage });
       const pdfFileName = await generatePDF(dataForPdf, doctorSignImage);
 
       const pdfFile = `${pdfFileName}.pdf`;
@@ -2122,7 +2120,7 @@ class PatientController extends Controller {
       };
       return res.sendFile(pdfFile, options);
     } catch (err) {
-      logger.error("Error while generating the prescription: ", err);
+      logger.error("Error in Patient controller, while generating the prescription: ", err);
       return raiseServerError(res);
     }
   };
