@@ -24,7 +24,7 @@ class SmsSender {
       const validationResponse = this.smsDataValidator(smsPayload);
       if (validationResponse.error) return validationResponse;
 
-      logger.success("SMS payload is valid!");
+      logger.info("SMS payload is valid!");
 
       logger.debug("Transforming SMS payload to AWS payload...");
       const smsData = this.smsDataTransformer(smsPayload);
