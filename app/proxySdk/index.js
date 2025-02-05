@@ -53,7 +53,7 @@ export const REPEAT_TYPE = {
 const STARTED = "started";
 
 class ProxySdk extends EventEmitter {
-  scheduledJobIscheduledJobIdd;
+  scheduledJobId;
 
   constructor() {
     super();
