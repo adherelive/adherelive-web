@@ -124,6 +124,11 @@ async function html_to_pdf({templateHtml, dataBinding, options}) {
     handlebars.registerHelper("print", function (value) {
         return ++value;
     });
+
+    handlebars.registerHelper('or', function() {
+        return Array.prototype.slice.call(arguments, 0, -1).some(Boolean);
+    });
+
     const template = handlebars.compile(templateHtml);
     const finalHtml = encodeURIComponent(template(dataBinding));
 
@@ -1420,7 +1425,7 @@ router.get("/details/:care_plan_id", Authenticated, async (req, res) => {
         dataForPdf = {
             users: {...usersData},
             /**
-             * TODO: Check why these have been commented, or remove
+             * TODO: Check why these have been commented, and remove
              *      Some lines commented below also.
             ...(permissions.includes(PERMISSIONS.MEDICATIONS.VIEW) && {
               medications,

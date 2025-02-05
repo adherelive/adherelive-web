@@ -1003,6 +1003,8 @@
       });
     {{#if (or diet_output.length pre_workouts.length) }}
     -->
+    {{#if diet_output.length}}
+    {{else if pre_workouts.length}}
     <div style="margin-top: 30px">
       <h3>Lifestyle Advice</h3>
     </div>
