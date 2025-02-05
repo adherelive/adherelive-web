@@ -1084,6 +1084,14 @@ class UserController extends Controller {
     }
   };
 
+  /**
+   * This function handles the user logout and is linked to the /sign-out API
+   * Need to ensure that all cookies and sessions are destroyed
+   *
+   * @param req
+   * @param res
+   * @returns {Promise<*>}
+   */
   signOut = async (req, res) => {
     try {
       if (req.cookies.accessToken) {
