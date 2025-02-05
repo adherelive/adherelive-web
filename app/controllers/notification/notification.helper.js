@@ -216,7 +216,7 @@ const medicationNotification = async (data) => {
 
 const appointmentNotification = async (data, category) => {
   try {
-    logger.debug("appointmentNotification data", data);
+    logger.debug("Appointment Notification initial data to function: ", data);
     const scheduleEventService = new ScheduleEventService();
     const {
       data: {
@@ -371,14 +371,14 @@ const appointmentNotification = async (data, category) => {
       };
     }
   } catch (error) {
-    logger.error("appointmentNotification 500 error", error);
+    logger.error("Appointment Notification in helper has an error: ", error);
     return {};
   }
 };
 
 const vitalsNotification = async (data, category) => {
   try {
-    logger.debug("vitalsNotification data", data);
+    logger.debug("Vitals Notification data: ", data);
     const scheduleEventService = new ScheduleEventService();
     const {
       data: {
@@ -513,14 +513,14 @@ const vitalsNotification = async (data, category) => {
       };
     }
   } catch (error) {
-    logger.error("vitalsNotification 500 error", error);
+    logger.error("Vitals Notification in helper has an error: ", error);
     return {};
   }
 };
 
 const carePlanNotification = async (data) => {
   try {
-    logger.debug("carePlanNotification data", data);
+    logger.debug("Care Plan Notification initial data to function: ", data);
     const scheduleEventService = new ScheduleEventService();
     const {
       data: {
@@ -603,7 +603,7 @@ const carePlanNotification = async (data) => {
       };
     }
   } catch (error) {
-    logger.error("carePlanNotification 500 error", error);
+    logger.error("Care Plan Notification in helper has an error: ", error);
     return {};
   }
 };
