@@ -141,9 +141,11 @@ async function html_to_pdf({templateHtml, dataBinding, options}) {
         waitUntil: "networkidle0",
     });
 
-    // based on = pdf(options?: PDFOptions): Promise<Buffer>;
-    // from https://pptr.dev/api/puppeteer.page.pdf
-    // pdfBuffer will store the PDF file Buffer content when "path is not provided"
+    /**
+     * based on = pdf(options?: PDFOptions): Promise<Buffer>;
+     * from https://pptr.dev/api/puppeteer.page.pdf
+     * pdfBuffer will store the PDF file Buffer content when "path is not provided"
+     */
     let pdfBuffer = await page.pdf(options);
     await browser.close();
     return pdfBuffer; // Returning the value when page.pdf promise gets resolved
@@ -170,10 +172,13 @@ router.get(
                 footerTemplate: "<p></p>",
                 displayHeaderFooter: false,
                 margin: {
-                    top: "40px",
-                    bottom: "100px",
+                    top: '5mm',
+                    bottom: '10mm',
+                    left: '5mm',
+                    right: '5mm'
                 },
                 printBackground: true,
+                preferCSSPageSize: true,
                 path: "invoice.pdf",
             };
             let pdf_buffer_value = await html_to_pdf({
