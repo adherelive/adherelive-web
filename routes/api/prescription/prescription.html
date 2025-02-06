@@ -4,13 +4,13 @@
     <style>
         /* Base Page Setup */
         /* This CSS rule ensures that table headers (contained within the <thead> element)
-	   repeat at the top of each new page when the table spans multiple pages.
-	@media print {
-            thead {
-                display: table-header-group;
+           repeat at the top of each new page when the table spans multiple pages.
+        @media print {
+                thead {
+                    display: table-header-group;
+                }
             }
-        }
-	*/
+        */
 
         @page {
             size: A4;
@@ -191,12 +191,9 @@
 
         /* Medicine Table Specific */
         .medicine_table {
-            table-layout: fixed; /* Keep columns aligned */
-            margin: auto;
-            text-align: center;
-            border: 1px solid black;
             width: 100%;
             border-collapse: collapse;
+            table-layout: fixed; /* Keep columns aligned */
         }
 
         .medicine_table td p {
@@ -210,6 +207,15 @@
             padding: 5px;
             text-align: left; /* Align text to the left within cells */
             vertical-align: top; /* Align content to the top of cells */
+            page-break-inside: avoid; /* Prevent breaks inside cells */
+        }
+
+        .medicine_table thead {
+            display: table-header-group; /* Ensure header repeats on new pages */
+        }
+
+        .medicine_table tfoot {
+            display: table-footer-group; /* For possible future use */
         }
 
         .medicine_table tr {
@@ -229,7 +235,7 @@
         .medicine_table td:nth-child(4),
         .medicine_table th:nth-child(4),
         .medicine_table td:nth-child(5) {
-            width: auto; /* Dose and Qty */
+            width: 4%; /* Dose and Qty */
         }
 
         .medicine_table th:nth-child(5),
@@ -288,11 +294,13 @@
         .complaint_table {
             width: 100%;
             table-layout: fixed; /* Important: Use fixed layout to keep columns aligned */
+            border-collapse: collapse; /* Collapse borders for a cleaner look */
         }
 
         .complaint_table th, .complaint_table td {
             padding: 5px;
             text-align: center; /* Center the content */
+            border: 1px solid black; /* Add borders back if needed */
         }
 
         /* Hide BMI, BP, RBS, Temperature */
@@ -325,17 +333,18 @@
         }
 
         /* Modified style to allow Height & Weight
-	    .complaints_subsection {
-            grid-auto-rows: minmax(30px, auto);
-            grid-template-columns: repeat(3, 3fr);
-            display: grid;
-        }
+        .complaints_subsection {
+                grid-auto-rows: minmax(30px, auto);
+                grid-template-columns: repeat(3, 3fr);
+                display: grid;
+            }
         */
 
         /* Modified Styles */
         .complaints_subsection {
             display: table; /* Use table display for the container */
             width: 100%;
+            table-layout: fixed; /* Crucial for consistent column widths */
         }
 
         .complaints_subsection > div {
@@ -544,10 +553,6 @@
                         <th><h3>Height</h3></th>
                         <td><p>{{patient_data.height}} cm</p></td>
                     </tr>
-                    <tr>
-                        <th><h3>BMI</h3></th>
-                        <td><p>___</p></td>
-                    </tr>
                 </table>
             </div>
             <div>
@@ -555,22 +560,6 @@
                     <tr>
                         <th><h3>Weight</h3></th>
                         <td><p>{{patient_data.weight}} kg</p></td>
-                    </tr>
-                    <tr>
-                        <th><h3>BP</h3></th>
-                        <td><p>___</p></td>
-                    </tr>
-                </table>
-            </div>
-            <div>
-                <table class="complaint_table">
-                    <tr>
-                        <th><h3>Random Blood Sugar (RBS)</h3></th>
-                        <td><p>___</p></td>
-                    </tr>
-                    <tr>
-                        <th><h3>Temperature</h3></th>
-                        <td><p>___</p></td>
                     </tr>
                 </table>
             </div>
