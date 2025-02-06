@@ -191,16 +191,33 @@
 
         /* Medicine Table Specific */
         .medicine_table {
-            table-layout: fixed;
+            table-layout: fixed; /* Keep columns aligned */
             margin: auto;
             text-align: center;
             border: 1px solid black;
+            width: 100%;
+            border-collapse: collapse;
         }
 
         .medicine_table td p {
             font-size: 10px;
             margin: 0;
             white-space: normal;
+        }
+
+        .medicine_table th, .medicine_table td {
+            border: 1px solid black;
+            padding: 5px;
+            text-align: left; /* Align text to the left within cells */
+            vertical-align: top; /* Align content to the top of cells */
+        }
+
+        .medicine_table tr {
+            page-break-inside: avoid; /* Prevent breaks within rows */
+        }
+
+        .medicine_table tbody tr {
+            page-break-before: auto; /* Allow page breaks before rows in the tbody */
         }
 
         .medicine_table th:nth-child(1),
@@ -270,12 +287,12 @@
         /* Complaint Table Specific */
         .complaint_table {
             width: 100%;
-            height: auto; /* Adjust height as needed */
-            text-align: center;
+            table-layout: fixed; /* Important: Use fixed layout to keep columns aligned */
         }
 
         .complaint_table th, .complaint_table td {
-            padding: 5px; /* Adjust padding as needed */
+            padding: 5px;
+            text-align: center; /* Center the content */
         }
 
         /* Hide BMI, BP, RBS, Temperature */
@@ -313,17 +330,18 @@
             grid-template-columns: repeat(3, 3fr);
             display: grid;
         }
-	 */
+        */
 
         /* Modified Styles */
         .complaints_subsection {
-            display: flex; /* Use flexbox for layout */
-            width: 100%; /* Ensure it takes full width */
+            display: table; /* Use table display for the container */
+            width: 100%;
         }
 
         .complaints_subsection > div {
-            flex: 1; /* Equal width for each div */
-            padding: 10px; /* Add some padding around the tables */
+            display: table-cell; /* Use table cell display for the inner divs */
+            vertical-align: top; /* Align cells to the top */
+            padding: 10px;
         }
 
         /* Schedule Medicine */
@@ -842,16 +860,10 @@
         </h3>
     </div>
 
-    {{#if pre_workouts.length}}
+    {{#if (or diet_output.length pre_workouts.length) }}
     <div style="margin-top: 30px">
         <h3>Lifestyle Advice</h3>
     </div>
-    {{/if}}
-    {{#if diet_output.length}}
-    <div style="margin-top: 30px">
-        <h3>Lifestyle Advice</h3>
-    </div>
-    {{/if}}
 
     <!-- DIET SECTION  -->
     {{#if diet_output.length}}
@@ -999,6 +1011,7 @@
             </table>
         </div>
     </div>
+    {{/if}}
     {{/if}}
 </div>
 
