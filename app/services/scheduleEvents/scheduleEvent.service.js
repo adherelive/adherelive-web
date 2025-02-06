@@ -1,13 +1,13 @@
 import { Op } from "sequelize";
 import { TABLE_NAME } from "../../models/scheduleEvents";
 // import { TABLE_NAME as eventHistoryTableName } from "../../models/eventHistory";
-
 import { EVENT_STATUS, EVENT_TYPE } from "../../../constant";
 import Database from "../../../libs/mysql";
 import moment from "moment";
 import { getTime } from "../../helper/timer";
 
 import { createLogger } from "../../../libs/logger";
+
 const logger = createLogger("WEB > SCHEDULE EVENT > SERVICES");
 
 /**

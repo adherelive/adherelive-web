@@ -3,7 +3,8 @@ import { createLogger } from "../../../../libs/logger";
 import featuresService from "../../../services/features/features.service";
 
 import carePlanService from "../../../services/carePlan/carePlan.service";
-import doctorPatientFeatureMappingService from "../../../services/doctorPatientFeatureMapping/doctorPatientFeatureMapping.service";
+import doctorPatientFeatureMappingService
+    from "../../../services/doctorPatientFeatureMapping/doctorPatientFeatureMapping.service";
 
 import MCarePlanWrapper from "../../../apiWrapper/mobile/carePlan";
 import FeatureMappingWrapper from "../../../apiWrapper/mobile/doctorPatientFeatureMapping";

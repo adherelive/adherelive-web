@@ -2,7 +2,6 @@
 
 import { TABLE_NAME } from "../app/models/mealTemplateFoodItemMapping";
 import { TABLE_NAME as mealTemplateTableName } from "../app/models/mealTemplates";
-import { TABLE_NAME as foodItemTableName } from "../app/models/foodItems";
 import { TABLE_NAME as foodItemDetailsTableName } from "../app/models/foodItemDetails";
 
 module.exports = {

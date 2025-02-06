@@ -1,6 +1,5 @@
 import express from "express";
 import Authenticated from "../middleware/auth";
-import PatientController from "../../../app/controllers/patients/patients.controller";
 import multer from "multer";
 import { createLogger } from "../../../libs/logger";
 
@@ -22,62 +21,45 @@ import WorkoutService from "../../../app/services/workouts/workout.service";
 import userPreferenceService from "../../../app/services/userPreferences/userPreference.service";
 
 // API Wrappers
-import ExerciseContentWrapper from "../../../app/apiWrapper/web/exerciseContents";
 import UserRolesWrapper from "../../../app/apiWrapper/web/userRoles";
-import VitalWrapper from "../../../app/apiWrapper/web/vitals";
 import UserWrapper from "../../../app/apiWrapper/web/user";
 import CarePlanWrapper from "../../../app/apiWrapper/web/carePlan";
 import AppointmentWrapper from "../../../app/apiWrapper/web/appointments";
 import MReminderWrapper from "../../../app/apiWrapper/web/medicationReminder";
 import MedicineApiWrapper from "../../../app/apiWrapper/mobile/medicine";
-import SymptomWrapper from "../../../app/apiWrapper/web/symptoms";
-import DoctorWrapper from "../../../app/apiWrapper/web/doctor";
-import ConsentWrapper from "../../../app/apiWrapper/web/consent";
 import PatientWrapper from "../../../app/apiWrapper/web/patient";
-import ReportWrapper from "../../../app/apiWrapper/web/reports";
 import ConditionWrapper from "../../../app/apiWrapper/web/conditions";
 import QualificationWrapper from "../../../app/apiWrapper/web/doctorQualification";
 import RegistrationWrapper from "../../../app/apiWrapper/web/doctorRegistration";
 import DegreeWrapper from "../../../app/apiWrapper/web/degree";
 import CouncilWrapper from "../../../app/apiWrapper/web/council";
-import TreatmentWrapper from "../../../app/apiWrapper/web/treatments";
-import DoctorPatientWatchlistWrapper from "../../../app/apiWrapper/web/doctorPatientWatchlist";
 import DietWrapper from "../../../app/apiWrapper/web/diet";
 import ProviderWrapper from "../../../app/apiWrapper/web/provider";
 import PortionWrapper from "../../../app/apiWrapper/web/portions";
 import WorkoutWrapper from "../../../app/apiWrapper/web/workouts";
 import UserPreferenceWrapper from "../../../app/apiWrapper/web/userPreference";
-import diet from "../../../app/apiWrapper/web/diet";
 
 import * as DietHelper from "../../../app/controllers/diet/diet.helper";
-import {downloadFileFromS3} from "../../../app/controllers/user/user.helper";
+import { downloadFileFromS3 } from "../../../app/controllers/user/user.helper";
 
 import moment from "moment";
 
 import {
-  APPOINTMENT_TYPE,
-  BODY_VIEW,
-  categories,
-  CONSENT_TYPE,
-  DIAGNOSIS_TYPE,
-  DOSE_UNIT,
-  EMAIL_TEMPLATE_NAME,
-  MEDICATION_TIMING,
-  ONBOARDING_STATUS,
-  PATIENT_MEAL_TIMINGS,
-  PRESCRIPTION_PDF_FOLDER,
-  S3_DOWNLOAD_FOLDER,
-  S3_DOWNLOAD_FOLDER_PROVIDER,
-  SIGN_IN_CATEGORY,
-  USER_CATEGORY,
-  WHEN_TO_TAKE_ABBREVATIONS,
+    APPOINTMENT_TYPE,
+    categories,
+    DOSE_UNIT,
+    MEDICATION_TIMING,
+    S3_DOWNLOAD_FOLDER,
+    S3_DOWNLOAD_FOLDER_PROVIDER,
+    USER_CATEGORY,
+    WHEN_TO_TAKE_ABBREVATIONS,
 } from "../../../constant";
 
-import {getFilePath} from "../../../app/helper/s3FilePath";
-import {checkAndCreateDirectory} from "../../../app/helper/common";
+import { getFilePath } from "../../../app/helper/s3FilePath";
+import { checkAndCreateDirectory } from "../../../app/helper/common";
 
-import {getDoctorCurrentTime} from "../../../app/helper/getUserTime";
-import {raiseServerError} from "../helper";
+import { getDoctorCurrentTime } from "../../../app/helper/getUserTime";
+import { raiseServerError } from "../helper";
 
 const fs = require("fs");
 const path = require("path");
@@ -141,9 +123,11 @@ async function html_to_pdf({templateHtml, dataBinding, options}) {
         waitUntil: "networkidle0",
     });
 
-    // based on = pdf(options?: PDFOptions): Promise<Buffer>;
-    // from https://pptr.dev/api/puppeteer.page.pdf
-    // pdfBuffer will store the PDF file Buffer content when "path is not provided"
+    /**
+     * based on = pdf(options?: PDFOptions): Promise<Buffer>;
+     * from https://pptr.dev/api/puppeteer.page.pdf
+     * pdfBuffer will store the PDF file Buffer content when "path is not provided"
+     */
     let pdfBuffer = await page.pdf(options);
     await browser.close();
     return pdfBuffer; // Returning the value when page.pdf promise gets resolved
@@ -170,10 +154,13 @@ router.get(
                 footerTemplate: "<p></p>",
                 displayHeaderFooter: false,
                 margin: {
-                    top: "40px",
-                    bottom: "100px",
+                    top: '5mm',
+                    bottom: '10mm',
+                    left: '5mm',
+                    right: '5mm'
                 },
                 printBackground: true,
+                preferCSSPageSize: true,
                 path: "invoice.pdf",
             };
             let pdf_buffer_value = await html_to_pdf({
@@ -570,7 +557,10 @@ function getLatestUpdateDate(medications) {
     return {date, isPrescriptionUpdated};
 }
 
-router.get("/details/:care_plan_id", Authenticated, async (req, res) => {
+router.get(
+    "/details/:care_plan_id",
+    Authenticated,
+    async (req, res) => {
     try {
         const {care_plan_id = null} = req.params;
         const {
@@ -599,7 +589,7 @@ router.get("/details/:care_plan_id", Authenticated, async (req, res) => {
         let medicinesArray = [];
         let nextAppointmentDuration = null;
         if (!care_plan_id) {
-            return raiseClientError(res, 422, {}, "Invalid Care Plan.");
+            return raiseClientError(res, 422, {}, "Invalid Care Plan!");
         }
         const carePlan = await carePlanService.getCarePlanById(care_plan_id);
         const carePlanData = await CarePlanWrapper(carePlan);
@@ -871,10 +861,7 @@ router.get("/details/:care_plan_id", Authenticated, async (req, res) => {
             }
         }
 
-        logger.debug("=========================");
-        logger.debug(JSON.stringify(dietList));
-        logger.debug({dietIds});
-        logger.debug("=========================");
+        logger.debug("Diet Lists and Diet IDs: ", JSON.stringify(dietList), {dietIds});
 
         for (const id of workout_ids) {
             const workout = await workoutService.findOne({id});

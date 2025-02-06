@@ -1,10 +1,9 @@
-import {logger} from "../../../libs/logger";
+import { logger } from "../../../libs/logger";
+import adhocController from "../../../app/controllers/adhoc/adhoc.controller";
+import Authenticated from "../middleware/auth";
 
 const express = require("express");
 const router = express.Router();
-
-import adhocController from "../../../app/controllers/adhoc/adhoc.controller";
-import Authenticated from "../middleware/auth";
 
 router.post("/purge/sqs", Authenticated, adhocController.purgeSqsQueue);
 

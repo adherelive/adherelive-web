@@ -27,8 +27,10 @@ import AccountDetailsService from "../../services/accountDetails/accountDetails.
 import providerService from "../../services/provider/provider.service";
 import doctorProviderMappingService from "../../services/doctorProviderMapping/doctorProviderMapping.service";
 import featuresService from "../../services/features/features.service";
-import doctorPatientFeatureMappingService from "../../services/doctorPatientFeatureMapping/doctorPatientFeatureMapping.service";
-import carePlanSecondaryDrMapService from "../../services/carePlanSecondaryDoctorMappings/carePlanSecondaryDoctorMappings.service";
+import doctorPatientFeatureMappingService
+    from "../../services/doctorPatientFeatureMapping/doctorPatientFeatureMapping.service";
+import carePlanSecondaryDrMapService
+    from "../../services/carePlanSecondaryDoctorMappings/carePlanSecondaryDoctorMappings.service";
 
 // Wrappers
 import AppointmentWrapper from "../../apiWrapper/web/appointments";
@@ -57,20 +59,19 @@ import NotificationSdk from "../../notificationSdk";
 import DoctorPatientWatchlistWrapper from "../../apiWrapper/web/doctorPatientWatchlist";
 import { addProviderDoctor } from "./doctors.helper";
 import {
-  ALLOWED_DOC_TYPE_DOCTORS,
-  DOCUMENT_PARENT_TYPE,
-  EMAIL_TEMPLATE_NAME,
-  EVENT_TYPE,
-  FEATURES,
-  NO_ACTION,
-  NO_APPOINTMENT,
-  NO_MEDICATION,
-  NOTIFICATION_VERB,
-  ONBOARDING_STATUS,
-  PATIENT_MEAL_TIMINGS,
-  SIGN_IN_CATEGORY,
-  USER_CATEGORY,
-  VERIFICATION_TYPE,
+    ALLOWED_DOC_TYPE_DOCTORS,
+    DOCUMENT_PARENT_TYPE,
+    EMAIL_TEMPLATE_NAME,
+    FEATURES,
+    NO_ACTION,
+    NO_APPOINTMENT,
+    NO_MEDICATION,
+    NOTIFICATION_VERB,
+    ONBOARDING_STATUS,
+    PATIENT_MEAL_TIMINGS,
+    SIGN_IN_CATEGORY,
+    USER_CATEGORY,
+    VERIFICATION_TYPE,
 } from "../../../constant";
 import { completePath, getFilePath } from "../../helper/s3FilePath";
 import getReferenceId from "../../helper/referenceIdGenerator";

@@ -2,6 +2,7 @@ import Database from "../../../libs/mysql";
 import { TABLE_NAME } from "../../models/notes";
 
 import { createLogger } from "../../../libs/logger";
+
 const logger = createLogger("WEB > NOTES > SERVICE");
 
 /**

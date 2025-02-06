@@ -8,11 +8,7 @@ import doctorService from "../../../services/doctor/doctor.service";
 import EventWrapper from "../../common/scheduleEvents";
 
 import UploadDocumentWrapper from "../../web/uploadDocument";
-import {
-  DOCUMENT_PARENT_TYPE,
-  EVENT_STATUS,
-  EVENT_TYPE,
-} from "../../../../constant";
+import { DOCUMENT_PARENT_TYPE, EVENT_STATUS, EVENT_TYPE, } from "../../../../constant";
 
 class AppointmentWrapper extends BaseAppointment {
   constructor(data) {

@@ -2,7 +2,6 @@
 
 import { TABLE_NAME } from "../app/models/exerciseGroup";
 import { TABLE_NAME as exerciseDetailTableName } from "../app/models/exerciseDetails";
-import { TABLE_NAME as repetitionTableName } from "../app/models/exerciseRepetition";
 
 module.exports = {
   up: (queryInterface, DataTypes) => {

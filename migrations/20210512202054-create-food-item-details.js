@@ -1,9 +1,6 @@
 "use strict";
 
-import {
-  TABLE_NAME,
-  TABLE_NAME as foodItemTableName,
-} from "../app/models/foodItemDetails";
+import { TABLE_NAME, TABLE_NAME as foodItemTableName, } from "../app/models/foodItemDetails";
 import { TABLE_NAME as portionTableName } from "../app/models/portions";
 import { USER_CATEGORY_ARRAY } from "../app/models/users";
 

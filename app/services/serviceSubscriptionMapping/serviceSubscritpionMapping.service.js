@@ -1,9 +1,9 @@
 import Database from "../../../libs/mysql";
 import { TABLE_NAME } from "../../models/serviceSubscriptionMapping";
-import { TABLE_NAME as ServiceOfferingTableName } from "../../models/serviceOffering";
 import ServiceOfferingService from "../serviceOffering/serviceOffering.service";
 
 import { createLogger } from "../../../libs/logger";
+
 const logger = createLogger("WEB > SUBSCRIPTION MAPPING > SERVICES");
 
 export default class ServiceSubscriptionMapping {

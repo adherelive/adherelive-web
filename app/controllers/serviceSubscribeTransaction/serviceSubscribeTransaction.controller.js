@@ -6,7 +6,8 @@ import moment from "moment";
 // Services
 import ServiceSubscribeTransaction from "../../services/serviceSubscribeTransaction/serviceSubscribeTransaction";
 import ServiceSubscription from "../../services/serviceSubscription/serviceSubscription.service";
-import ServiceSubscriptionUserMappingService from "../../services/serviceSubscriptionUserMapping/serviceSubscriptionUserMapping.service";
+import ServiceSubscriptionUserMappingService
+    from "../../services/serviceSubscriptionUserMapping/serviceSubscriptionUserMapping.service";
 import ServiceUserMapping from "../../services/serviceUserMapping/serviceUserMapping.service";
 import ServiceOffering from "../../services/serviceOffering/serviceOffering.service";
 import DoctorService from "../../services/doctor/doctor.service";

@@ -1,13 +1,13 @@
 import { EVENT_TYPE } from "../constant";
 import { createLogger } from "../libs/logger";
 import {
-  handleAppointments,
-  handleAppointmentsTimeAssignment,
-  handleCarePlans,
-  handleDiet,
-  handleMedications,
-  handleVitals,
-  handleWorkout,
+    handleAppointments,
+    handleAppointmentsTimeAssignment,
+    handleCarePlans,
+    handleDiet,
+    handleMedications,
+    handleVitals,
+    handleWorkout,
 } from "./helper";
 
 const logger = createLogger("EVENTS > SQS_OBSERVER");

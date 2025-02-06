@@ -1,5 +1,6 @@
 import serviceSubscribeTransaction from "../services/serviceSubscribeTransaction/serviceSubscribeTransaction";
-import ServiceSubscriptionUserMapping from "../services/serviceSubscriptionUserMapping/serviceSubscriptionUserMapping.service";
+import ServiceSubscriptionUserMapping
+    from "../services/serviceSubscriptionUserMapping/serviceSubscriptionUserMapping.service";
 import { TABLE_NAME as serviceSubscriptionUserMappingTable } from "../models/serviceSubscriptionUserMapping";
 import { createLogger } from "../../libs/logger";
 import Database from "../../libs/mysql";

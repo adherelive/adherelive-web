@@ -1,5 +1,6 @@
 import BasePatientConsentMapping from "../../../services/patientPaymentConsentMapping";
-import patientPaymentConsentMappingService from "../../../services/patientPaymentConsentMapping/patientPaymentConsentMapping.service";
+import patientPaymentConsentMappingService
+    from "../../../services/patientPaymentConsentMapping/patientPaymentConsentMapping.service";
 
 class PatientPaymentConsentMappingWrapper extends BasePatientConsentMapping {
   constructor(data) {

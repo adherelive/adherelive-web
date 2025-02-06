@@ -1,5 +1,6 @@
 import BaseFeatureMapping from "../../../services/doctorPatientFeatureMapping";
-import doctorPatientFeatureMappingService from "../../../services/doctorPatientFeatureMapping/doctorPatientFeatureMapping.service";
+import doctorPatientFeatureMappingService
+    from "../../../services/doctorPatientFeatureMapping/doctorPatientFeatureMapping.service";
 
 class FeatureMappingWrapper extends BaseFeatureMapping {
   constructor(data) {

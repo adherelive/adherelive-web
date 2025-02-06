@@ -1,0 +1,195 @@
+APP_KEY="test"
+APP_ENV=development
+NODE_ENV=development
+APP_NAME="adherelive"
+
+# Change this for the DEV & TEST systems to the respective URL
+API_URL=https://adherelivelenia.centralindia.cloudapp.azure.com
+WEB_URL=https://adherelivelenia.centralindia.cloudapp.azure.com
+APP_URL=https://adherelivelenia.centralindia.cloudapp.azure.com
+
+# This is the URL for the app account invite link
+INVITE_LINK=/validation/
+MOBILE_INVITE_LINK=verify
+
+# This is the URL for the app password reset link
+RESET_PASSWORD_LINK=https://adherelivelenia.centralindia.cloudapp.azure.com/reset-password/
+
+# These are the ports being used for the NodeJS app, which runs the backend
+# These are legacy and can be removed
+WEB_SERVER_PORT=5000
+REACT_SERVER_PORT=3000
+
+# This is the port on which the NodeJS app will run
+APP_PORT=5000
+APP_DEBUG=true;
+
+# This is the log level for the application
+LOG_LEVEL=debug
+LOG_FILE=app
+LOG_DIR=logs
+
+# For external logging of errors and debugging
+#EXTERNAL_LOGGING_ENABLED=true
+#EXTERNAL_LOGGING_HOST=https://your-logging-service.com/api/logs
+#EXTERNAL_LOGGING_API_KEY=your-api-key
+
+# This is the secret key used to generate the JWT tokens
+TOKEN_SECRET_KEY=kfjaslkjfaljfl
+TOKEN_EXPIRE_TIME=30d
+INVITE_EXPIRE_TIME=30
+
+# MySQL DB connection string
+DB_CONNECTION=mysql
+DB_DATABASE=adhere
+DB_DATABASE_NAME=adhere
+DB_HOST=mysql
+DB_PORT=3306
+DB_USER=user
+DB_PASSWORD=password
+DB_DIALECT=mysql
+
+# MongoDB parameters
+MONGO_DB_URI=mongodb://mongouser:password@mongodb:27017/adhere?authSource=admin
+
+# Redis Credentials, not used currently
+REDIS_HOST=
+REDIS_PORT=
+REDIS_USERNAME=
+REDIS_PASSWORD=
+
+# AWS Credentials
+AWS_ACCOUNT_ID=832280438605
+AWS_ACCESS_KEY_ID=AKIA4DR6HU5GRD73D46P
+AWS_REGION=ap-south-1
+AWS_ACCESS_KEY=XNQ2tyVXmSNOo4XQITXzcDkZKUFg3kHj8KSt3d23
+AWS_PROVIDER_BUCKET=
+AWS_BOOKING_REQUEST_BUCKET=
+AWS_PLATFORM_ARN=
+AWS_TOPIC_ARN=
+AWS_PRESCRIPTION_BUCKET=
+
+# S3 Details
+S3_BUCKET_NAME=adherelive-demo
+S3_BUCKET_URL=
+S3_HOST=amazonaws.com
+S3_ACCESS_KEY=lwzlJgSubYjdbGhYL87jgbwxhXSEAxdA
+S3_SECRET_KEY=Gc_Gj4sNAeo5zlSM56xPWa0dLpGaOUD_FtLiUydhKmOTDK15VbZeWb1wl9NwiD1t_phXodwCPDZ1_C4DC_mcAw
+S3_EXPIRY_TIME=30
+EXPIRY_TIME=30
+
+# SQS AWS Credentials
+SQS_DOMAIN_URL=https://sqs.ap-south-1.amazonaws.com
+SQS_QUEUE_NAME=adhere_demo
+
+# Twilio Account Details
+TWILIO_ACCOUNT_SID=ACeea90f2fe2b66e50da207e946954c52d
+TWILIO_API_KEY=SKa7af6661cd0eba6f72d98fb95f2f4647
+TWILIO_API_SECRET=K22GweB91vDuHppwD79cVmA7nMZMLWT6
+TWILIO_CHAT_SERVICE_SID=IS86f1dcb573a74909a8248b944aa90d9c
+TWILIO_AUTH_TOKEN=1cf5b1a6801c773fe8bd138bb0bb50d4
+TWILIO_CHANNEL_SERVER=adherelive-demo
+
+# Minio Details - not used currently, but can be used for local storage
+MINIO_ACCESS_KEY=lwzlJgSubYjdbGhYL87jgbwxhXSEAxdA
+MINIO_SECRET_KEY=Gc_Gj4sNAeo5zlSM56xPWa0dLpGaOUD_FtLiUydhKmOTDK15VbZeWb1wl9NwiD1t_phXodwCPDZ1_C4DC_mcAw
+MINIO_VOLUME_NAME=adhere_storage_stack
+MINIO_REGION=us-east-1
+MINIO_ENDPOINT=minio1
+MINIO_BUCKET_NAME=adherelive-demo
+
+# GetStream API Keys
+GETSTREAM_APP_NAME=adherelive-demo
+GETSTREAM_API_KEY=fjakqnrvnsq7
+GETSTREAM_API_SECRET=9bqv9h5w6jxqdx5hdf3qg7wrd7vrxpnaprra8yyxeccarp4c8kgs2srhqk8upqmy
+GETSTREAM_REGION=us-east
+GETSTREAM_APP_ID=1143860
+GETSTREAM_FEED_GROUP=notification
+
+# Google API Keys
+GOOGLE_CLIENT_ID=398277517704-eqh1lvm3872s2a5t916kua18gp60steu.apps.googleusercontent.com
+GOOGLE_CLIENT_SECRET=KszeHfBloxPaTayEXB_y6WQg
+GOOGLE_REDIRECT_URI=postmessage
+
+# Firebase Keys
+FIREBASE_PROJECT_ID=onesignal-6b0c6
+FIREBASE_API_KEY=AIzaSyCPdjkLBwzrA_osAi6QMkTbgwKQif0VxLQ
+FIREBASE_APP_ID=1:20318592325:android:ebe4344170824f50c1722c
+FIREBASE_MEASUREMENT_ID=G-2Y7HFMMDFC
+ANDROID_ICON_NAME=ic_stat_onesignal_default
+
+# OneSignal API Keys
+ONE_SIGNAL_APP_ID=d03d1567-d348-4980-8532-07ad57ef52d3
+ONE_SIGNAL_KEY=OWFiYjg0ZjItMWJmMC00M2ViLTkyNDMtNDRlMjAyYzI3M2Zm
+# Urgent notification channel id
+URGENT_CHANNEL_ID=105aaf07-aa23-47d3-8792-e737aaf34b3c
+
+# Facebook API Keys
+FACEBOOK_APP_TOKEN=279463729603660
+FACEBOOK_SECRET_TOKEN=1f756a8c109e56b9476e41c0fac468a8
+
+# Branch IO Keys
+BRANCH_IO_KEY=key_live_hbL5zlRfxNiPzCmRlQcXVihbywdivtNo
+BRANCH_IO_BASE_URL=https://api2.branch.io/v1/url
+
+# SendGrid Credentials
+SENDGRID_USER=adherelive
+SENDGRID_PASSWORD=Adhere$123
+SENDGRID_FROM_ADDRESS=info@adhere.live
+SENDGRID_FROM_NAME="AdhereLive Demo Support"
+SENDGRID_API_KEY_ID=9mM8i-20Q8W91fXTduT8cw
+SENDGRID_API_KEY=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
+
+# TODO: Add your Email ID here
+DEVELOPER_EMAIL=sagar.agrawal@adhere.live,ankur.agrawal@adhere.live,gagneet.singh@adhere.live
+SUPPORT_EMAIL=customersupport@adhere.live
+
+# SMS hash for sending via SNS and other services
+SMS_HASH=E0/sT0hP9oL
+
+# RazorPay Tokens
+RAZORPAY_KEY=rzp_test_Gh3UkoLeMJkEN1
+RAZORPAY_SECRET=wDuxUaX3u7elvqAhoII84ebg
+DEFAULT_CURRENCY=INR
+
+# Algolia Credentials
+ALGOLIA_APP_ID=WCKMPH5GKD
+ALGOLIA_BACKEND_KEY=208bfb2174b1eff2baa19f7da17b041a
+ALGOLIA_APP_KEY=a0879b7bec37ddf9d16458df5eac525f
+ALGOLIA_MEDICINE_INDEX=live_adhere_medicine
+ALGOLIA_OBJECT_ID_PREFIX=SUBHARTI
+
+# Agora Credentials
+AGORA_APP_ID=e43158c06dc841ebb186afb1854a125c
+AGORA_APP_CERTIFICATE=7df432e4412e432bacf96881010a2f67
+AGORA_APP_CHANNEL_NAME=adherelive-demo
+
+# Sentry Credentials
+SALT_ROUNDS=5
+DEFAULT_PASSWORD=Password@123
+COOKIE_KEY=["cookie938"]
+IMAGE_HOST=
+QUEUE_DRIVER=
+DEVICE_TOKEN=1
+
+# App related variables for page limits & scheduling
+ADMIN_MEDICINE_ONE_PAGE_LIMIT=10
+APPOINTMENT_PRIOR_NOTIFY_MINUTES=10
+APPOINTMENT_WAIT_TIME_HOURS=2
+CAREPLAN_ACTIVATION_RESCHEDULE_HOURS=6
+DIET_PRIOR_NOTIFY_MINUTES=30
+DOCTOR_NAME_SEARCH_LIST_SIZE_LIMIT=10
+EVENT_FETCH_COUNT=7
+EVENT_RESCHEDULE_NOTIFY_MINUTES=30
+FORCE_COLOR=1
+INACTIVITY_DAYS_NO=5
+OTP_LIVE_MINUTES=10
+PATIENT_LIST_SIZE_LIMIT=10
+WORKOUT_PRIOR_NOTIFY_MINUTES=30
+WORKOUT_START_HOURS=6
+WORKOUT_START_MINUTES=0
+
+# Infrastructure related variables for time outs
+COMPOSE_HTTP_TIMEOUT=120
+DOCKER_CLIENT_TIMEOUT=120
+

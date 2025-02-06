@@ -15,11 +15,11 @@ import PatientWrapper from "../../../apiWrapper/mobile/patient";
 import { uploadAudio, uploadImage, uploadVideo } from "./symptoms.helper";
 import { createLogger } from "../../../../libs/logger";
 import {
-  ALLOWED_VIDEO_EXTENSIONS,
-  DOCUMENT_PARENT_TYPE,
-  EVENT_STATUS,
-  EVENT_TYPE,
-  USER_CATEGORY,
+    ALLOWED_VIDEO_EXTENSIONS,
+    DOCUMENT_PARENT_TYPE,
+    EVENT_STATUS,
+    EVENT_TYPE,
+    USER_CATEGORY,
 } from "../../../../constant";
 import { getFilePath } from "../../../helper/s3FilePath";
 import carePlanService from "../../../services/carePlan/carePlan.service";

@@ -25,14 +25,12 @@ import userRolesService from "../../services/userRoles/userRoles.service";
 import DietService from "../../services/diet/diet.service";
 import PortionServiceService from "../../services/portions/portions.service";
 import RepetitionService from "../../services/exerciseRepetitions/repetition.service";
-import providerService from "../../services/provider/provider.service";
-import ExerciseContentService from "../../services/exerciseContents/exerciseContent.service";
 import WorkoutService from "../../services/workouts/workout.service";
 import userPreferenceService from "../../services/userPreferences/userPreference.service";
-import carePlanSecondaryDrMapService from "../../services/carePlanSecondaryDoctorMappings/carePlanSecondaryDoctorMappings.service";
+import carePlanSecondaryDrMapService
+  from "../../services/carePlanSecondaryDoctorMappings/carePlanSecondaryDoctorMappings.service";
 
 // Wrappers
-import ExerciseContentWrapper from "../../apiWrapper/web/exerciseContents";
 import UserRoleWrapper from "../../apiWrapper/web/userRoles";
 import UserRolesWrapper from "../../apiWrapper/web/userRoles";
 import VitalWrapper from "../../apiWrapper/web/vitals";
@@ -61,11 +59,7 @@ import WorkoutWrapper from "../../apiWrapper/web/workouts";
 import UserPreferenceWrapper from "../../apiWrapper/web/userPreference";
 
 // Helpers
-import {
-  checkAndCreateDirectory,
-  getRoomId,
-  getSeparateName,
-} from "../../helper/common";
+import { checkAndCreateDirectory, getRoomId, getSeparateName, } from "../../helper/common";
 import generateOTP from "../../helper/generateOtp";
 import { EVENTS, Proxy_Sdk } from "../../proxySdk";
 import generatePDF from "../../helper/generateCarePlanPdf";
@@ -2712,7 +2706,7 @@ class PatientController extends Controller {
     } = req;
 
     // Log the raw value for debugging
-    logger.debug(`getPatientById raw params: `, { patient_id });
+    logger.debug(`Get the Patient by ID raw params: `, { patient_id });
 
     // TODO: Add type checking if needed
     // if (typeof patient_id !== 'string' && typeof patient_id !== 'number') {
@@ -2721,8 +2715,8 @@ class PatientController extends Controller {
 
     // Comprehensive check for invalid patient_id
     if (!patient_id || patient_id === 'null' || patient_id === 'undefined') {
-      logger.warn('Invalid patient_id received: ', { patient_id });
-      return raiseClientError(res, 422, {}, "Please select correct patient");
+      logger.warn('Invalid Patient ID received in Patient controller: ', { patient_id });
+      return raiseClientError(res, 422, {}, "Please select correct patient!");
     }
 
     // TODO: Optional: Validate format if patient_id should match specific pattern
@@ -2763,7 +2757,7 @@ class PatientController extends Controller {
           "Success."
       );
     } catch (error) {
-      logger.error("getPatientReports get patient by ID 500 error: ", error);
+      logger.error("Get the Patient's reports by Patient ID has an error: ", error);
       return raiseServerError(res);
     }
   };
@@ -2797,7 +2791,7 @@ class PatientController extends Controller {
           res,
           500,
           {},
-          "please provide patient_ui as HIS Id."
+          "Please provide the Patient UID as HIS ID!"
         );
       }
 
@@ -2808,7 +2802,6 @@ class PatientController extends Controller {
         (await patientService.getPatientByData({ uid: patient_uid })) || [];
 
       // TODO: add check his value.
-
       let userData = null;
       let patientData = null;
       let patientOtherDetails = {};
