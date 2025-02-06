@@ -2,13 +2,13 @@ import Controller from "../index";
 
 import { createLogger } from "../../../libs/logger";
 import {
-  CHART_DETAILS,
-  NO_ACTION,
-  NO_APPOINTMENT,
-  NO_DIET,
-  NO_MEDICATION,
-  NO_WORKOUT,
-  USER_CATEGORY,
+    CHART_DETAILS,
+    NO_ACTION,
+    NO_APPOINTMENT,
+    NO_DIET,
+    NO_MEDICATION,
+    NO_WORKOUT,
+    USER_CATEGORY,
 } from "../../../constant";
 
 import userPreferenceService from "../../services/userPreferences/userPreference.service";

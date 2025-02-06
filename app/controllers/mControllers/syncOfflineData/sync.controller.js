@@ -2,10 +2,7 @@ import Controller from "../../index";
 import { createLogger } from "../../../../libs/logger";
 
 import { EVENT_TYPE, OFFLINE_SYNC_DATA_TASKS } from "../../../../constant";
-import {
-  syncMedicationReminderStatus,
-  syncVitalsResponseData,
-} from "./eventSync.helper";
+import { syncMedicationReminderStatus, syncVitalsResponseData, } from "./eventSync.helper";
 
 const logger = createLogger("MOBILE > SYNC > CONTROLLER");
 

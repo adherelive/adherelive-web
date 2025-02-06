@@ -8,6 +8,7 @@ import { TABLE_NAME as patientTableName } from "../../models/patients";
 import { TABLE_NAME as carePlanTableName } from "../../models/carePlan";
 
 import { createLogger } from "../../../libs/logger";
+
 const logger = createLogger("WEB > SYMPTOM > SERVICE");
 
 class SymptomService {

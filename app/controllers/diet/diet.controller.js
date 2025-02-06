@@ -23,12 +23,7 @@ import NotificationSdk from "../../notificationSdk";
 
 import { createLogger } from "../../../libs/logger";
 
-import {
-  DAYS,
-  EVENT_STATUS,
-  EVENT_TYPE,
-  PATIENT_MEAL_TIMINGS,
-} from "../../../constant";
+import { DAYS, EVENT_STATUS, EVENT_TYPE, PATIENT_MEAL_TIMINGS, } from "../../../constant";
 import carePlanService from "../../services/carePlan/carePlan.service";
 
 const logger = createLogger("WEB DIET CONTROLLER");

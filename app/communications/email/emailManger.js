@@ -14,15 +14,18 @@ const smtpTransport = require("nodemailer-sendgrid-transport");
 
 class EmailManger {
   constructor() {
-    // AWS.config.update({
-    //   accessKeyId: process.config.aws.access_key_id,
-    //   secretAccessKey: process.config.aws.access_key,
-    //   region: process.config.aws.region
-    // });
+    /**
+     * TODO: Why is this commented out?
+    AWS.config.update({
+      accessKeyId: process.config.aws.access_key_id,
+      secretAccessKey: process.config.aws.access_key,
+      region: process.config.aws.region
+    });
 
-    // this.ses = new AWS.SES({
-    //   apiVersion: "2010-12-01"
-    // });
+    this.ses = new AWS.SES({
+      apiVersion: "2010-12-01"
+    });
+     */
 
     this.smtpTransporter = nodemailer.createTransport(
       smtpTransport({
@@ -52,30 +55,30 @@ class EmailManger {
     if (!emailPayload.toAddress)
       return {
         error: 1,
-        message: "undefined or invalid to address",
+        message: "Undefined or invalid EMail To address",
       };
 
     if (!emailPayload.title)
       return {
         error: 1,
-        message: "undefined or invalid email title",
+        message: "Undefined or invalid Email title",
       };
 
     if (!emailPayload.templateName)
       return {
         error: 1,
-        message: "invalid  or undefined template name",
+        message: "Invalid  or undefined Email template name",
       };
 
     if (!emailPayload.templateData)
       return {
         error: 1,
-        message: "invalid or undefined template data",
+        message: "Invalid or undefined Email template data",
       };
 
     return {
       error: 0,
-      message: "valid payload",
+      message: "Valid Email payload",
     };
   }
 
@@ -265,7 +268,7 @@ class EmailManger {
         default:
           return {
             error: 1,
-            message: "invalid template name",
+            message: "Invalid Email template name!",
           };
       }
 
@@ -294,8 +297,8 @@ class EmailManger {
       );
       let isValid = this.emailPayloadValidator(emailPayload);
       if (isValid && isValid.error == 1) return isValid;
-      logger.success("email payload is valid!!");
-      logger.debug("Transforming email payload to aws payload!!");
+      logger.info("Email payload is valid in Email Manager!");
+      logger.debug("Transforming EMail payload to AWS payload!!");
 
       if (payload.error && payload.error == 1) return payload;
 

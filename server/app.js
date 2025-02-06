@@ -9,7 +9,6 @@ import Database from "../libs/mysql";
 import initMongo from "../libs/mongo";
 // WARN: do not enable this, except on the local development
 // import connection from "../libs/dbConnection";
-
 import ApiRouter from "../routes/api";
 import mApiRouter from "../routes/m-api";
 import EventObserver from "../app/proxySdk/eventObserver";
@@ -23,8 +22,7 @@ import RemoveDocuments from "../app/cronJobs/removeDocuments";
 // import RenewSubscription from "../app/cronJobs/renewSubscription";
 import LongTerm from "../app/cronJobs/longTerm";
 import RenewTxActivity from "../app/cronJobs/renewTxActivity";
-import ErrorBoundary from './ErrorBoundary';
-import { requestMiddleware, createLogger } from '../libs/logger';
+import { createLogger, requestMiddleware } from '../libs/logger';
 
 const logger = createLogger('app.js');
 

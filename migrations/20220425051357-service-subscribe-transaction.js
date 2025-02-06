@@ -5,12 +5,7 @@ import { TABLE_NAME as servicePlanTableName } from "../app/models/serviceUserMap
 import { TABLE_NAME as patientsTableName } from "../app/models/patients";
 import { TABLE_NAME as doctorsTableName } from "../app/models/doctors";
 import { TABLE_NAME as providersTableName } from "../app/models/providers";
-import {
-  BILLING_FREQUENCY,
-  CURRENCY,
-  USER_CATEGORY,
-  USER_STATUS,
-} from "../constant";
+import { BILLING_FREQUENCY, CURRENCY, USER_CATEGORY, USER_STATUS, } from "../constant";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {

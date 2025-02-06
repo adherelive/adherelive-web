@@ -18,12 +18,7 @@ import WorkoutJob from "../../../jobSdk/Workout/observer";
 import NotificationSdk from "../../../notificationSdk";
 
 import { createLogger } from "../../../../libs/logger";
-import {
-  EVENT_STATUS,
-  NOTIFICATION_STAGES,
-  USER_CATEGORY,
-  WORKOUT_RESPONSE_STATUS,
-} from "../../../../constant";
+import { EVENT_STATUS, NOTIFICATION_STAGES, USER_CATEGORY, WORKOUT_RESPONSE_STATUS, } from "../../../../constant";
 
 const logger = createLogger("MOBILE > WORKOUT_RESPONSE > CONTROLLER");
 

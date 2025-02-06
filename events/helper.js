@@ -14,23 +14,22 @@ import {
   EVENING,
   EVENT_TYPE,
   FEATURE_TYPE,
+  FRIDAY,
   LUNCH,
   MEDICATION_TIMING,
   MID_MORNING,
+  MONDAY,
   PATIENT_MEAL_TIMINGS,
   REPEAT_INTERVAL,
+  SATURDAY,
   SLEEP,
+  SUNDAY,
+  THURSDAY,
+  TUESDAY,
   WAKE_UP,
-  WITH_BREAKFAST,
+  WEDNESDAY,
   WITH_DINNER,
   WITH_LUNCH,
-  MONDAY,
-  TUESDAY,
-  WEDNESDAY,
-  THURSDAY,
-  FRIDAY,
-  SATURDAY,
-  SUNDAY,
 } from "../constant";
 
 import FeatureDetailWrapper from "../app/apiWrapper/web/featureDetails";
@@ -46,7 +45,6 @@ import appointmentService from "../app/services/appointment/appointment.service"
 import queueService from "../app/services/awsQueue/queue.service";
 
 // Wrappers
-import PatientWrapper from "../app/apiWrapper/mobile/patient";
 import MedicineWrapper from "../app/apiWrapper/mobile/medicine";
 import MedicationWrapper from "../app/apiWrapper/mobile/medicationReminder";
 import AppointmentWrapper from "../app/apiWrapper/mobile/appointments";

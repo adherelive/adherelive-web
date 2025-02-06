@@ -1,11 +1,7 @@
 const fs = require("fs");
 import { createLogger } from "../../libs/logger";
 
-import {
-  DOCUMENT_PARENT_TYPE,
-  PRESCRIPTION_PDF_FOLDER,
-  S3_DOWNLOAD_FOLDER,
-} from "../../constant";
+import { DOCUMENT_PARENT_TYPE, PRESCRIPTION_PDF_FOLDER, S3_DOWNLOAD_FOLDER, } from "../../constant";
 import * as UploadHelper from "./helper";
 
 // Services

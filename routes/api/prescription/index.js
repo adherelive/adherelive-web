@@ -1,6 +1,5 @@
 import express from "express";
 import Authenticated from "../middleware/auth";
-import PatientController from "../../../app/controllers/patients/patients.controller";
 import multer from "multer";
 import { createLogger } from "../../../libs/logger";
 
@@ -22,62 +21,45 @@ import WorkoutService from "../../../app/services/workouts/workout.service";
 import userPreferenceService from "../../../app/services/userPreferences/userPreference.service";
 
 // API Wrappers
-import ExerciseContentWrapper from "../../../app/apiWrapper/web/exerciseContents";
 import UserRolesWrapper from "../../../app/apiWrapper/web/userRoles";
-import VitalWrapper from "../../../app/apiWrapper/web/vitals";
 import UserWrapper from "../../../app/apiWrapper/web/user";
 import CarePlanWrapper from "../../../app/apiWrapper/web/carePlan";
 import AppointmentWrapper from "../../../app/apiWrapper/web/appointments";
 import MReminderWrapper from "../../../app/apiWrapper/web/medicationReminder";
 import MedicineApiWrapper from "../../../app/apiWrapper/mobile/medicine";
-import SymptomWrapper from "../../../app/apiWrapper/web/symptoms";
-import DoctorWrapper from "../../../app/apiWrapper/web/doctor";
-import ConsentWrapper from "../../../app/apiWrapper/web/consent";
 import PatientWrapper from "../../../app/apiWrapper/web/patient";
-import ReportWrapper from "../../../app/apiWrapper/web/reports";
 import ConditionWrapper from "../../../app/apiWrapper/web/conditions";
 import QualificationWrapper from "../../../app/apiWrapper/web/doctorQualification";
 import RegistrationWrapper from "../../../app/apiWrapper/web/doctorRegistration";
 import DegreeWrapper from "../../../app/apiWrapper/web/degree";
 import CouncilWrapper from "../../../app/apiWrapper/web/council";
-import TreatmentWrapper from "../../../app/apiWrapper/web/treatments";
-import DoctorPatientWatchlistWrapper from "../../../app/apiWrapper/web/doctorPatientWatchlist";
 import DietWrapper from "../../../app/apiWrapper/web/diet";
 import ProviderWrapper from "../../../app/apiWrapper/web/provider";
 import PortionWrapper from "../../../app/apiWrapper/web/portions";
 import WorkoutWrapper from "../../../app/apiWrapper/web/workouts";
 import UserPreferenceWrapper from "../../../app/apiWrapper/web/userPreference";
-import diet from "../../../app/apiWrapper/web/diet";
 
 import * as DietHelper from "../../../app/controllers/diet/diet.helper";
-import {downloadFileFromS3} from "../../../app/controllers/user/user.helper";
+import { downloadFileFromS3 } from "../../../app/controllers/user/user.helper";
 
 import moment from "moment";
 
 import {
-  APPOINTMENT_TYPE,
-  BODY_VIEW,
-  categories,
-  CONSENT_TYPE,
-  DIAGNOSIS_TYPE,
-  DOSE_UNIT,
-  EMAIL_TEMPLATE_NAME,
-  MEDICATION_TIMING,
-  ONBOARDING_STATUS,
-  PATIENT_MEAL_TIMINGS,
-  PRESCRIPTION_PDF_FOLDER,
-  S3_DOWNLOAD_FOLDER,
-  S3_DOWNLOAD_FOLDER_PROVIDER,
-  SIGN_IN_CATEGORY,
-  USER_CATEGORY,
-  WHEN_TO_TAKE_ABBREVATIONS,
+    APPOINTMENT_TYPE,
+    categories,
+    DOSE_UNIT,
+    MEDICATION_TIMING,
+    S3_DOWNLOAD_FOLDER,
+    S3_DOWNLOAD_FOLDER_PROVIDER,
+    USER_CATEGORY,
+    WHEN_TO_TAKE_ABBREVATIONS,
 } from "../../../constant";
 
-import {getFilePath} from "../../../app/helper/s3FilePath";
-import {checkAndCreateDirectory} from "../../../app/helper/common";
+import { getFilePath } from "../../../app/helper/s3FilePath";
+import { checkAndCreateDirectory } from "../../../app/helper/common";
 
-import {getDoctorCurrentTime} from "../../../app/helper/getUserTime";
-import {raiseServerError} from "../helper";
+import { getDoctorCurrentTime } from "../../../app/helper/getUserTime";
+import { raiseServerError } from "../helper";
 
 const fs = require("fs");
 const path = require("path");
@@ -124,6 +106,11 @@ async function html_to_pdf({templateHtml, dataBinding, options}) {
     handlebars.registerHelper("print", function (value) {
         return ++value;
     });
+
+    handlebars.registerHelper('or', function() {
+        return Array.prototype.slice.call(arguments, 0, -1).some(Boolean);
+    });
+
     const template = handlebars.compile(templateHtml);
     const finalHtml = encodeURIComponent(template(dataBinding));
 
@@ -136,9 +123,11 @@ async function html_to_pdf({templateHtml, dataBinding, options}) {
         waitUntil: "networkidle0",
     });
 
-    // based on = pdf(options?: PDFOptions): Promise<Buffer>;
-    // from https://pptr.dev/api/puppeteer.page.pdf
-    // pdfBuffer will store the PDF file Buffer content when "path is not provided"
+    /**
+     * based on = pdf(options?: PDFOptions): Promise<Buffer>;
+     * from https://pptr.dev/api/puppeteer.page.pdf
+     * pdfBuffer will store the PDF file Buffer content when "path is not provided"
+     */
     let pdfBuffer = await page.pdf(options);
     await browser.close();
     return pdfBuffer; // Returning the value when page.pdf promise gets resolved
@@ -165,10 +154,13 @@ router.get(
                 footerTemplate: "<p></p>",
                 displayHeaderFooter: false,
                 margin: {
-                    top: "40px",
-                    bottom: "100px",
+                    top: '5mm',
+                    bottom: '10mm',
+                    left: '5mm',
+                    right: '5mm'
                 },
                 printBackground: true,
+                preferCSSPageSize: true,
                 path: "invoice.pdf",
             };
             let pdf_buffer_value = await html_to_pdf({
@@ -565,7 +557,10 @@ function getLatestUpdateDate(medications) {
     return {date, isPrescriptionUpdated};
 }
 
-router.get("/details/:care_plan_id", Authenticated, async (req, res) => {
+router.get(
+    "/details/:care_plan_id",
+    Authenticated,
+    async (req, res) => {
     try {
         const {care_plan_id = null} = req.params;
         const {
@@ -594,7 +589,7 @@ router.get("/details/:care_plan_id", Authenticated, async (req, res) => {
         let medicinesArray = [];
         let nextAppointmentDuration = null;
         if (!care_plan_id) {
-            return raiseClientError(res, 422, {}, "Invalid Care Plan.");
+            return raiseClientError(res, 422, {}, "Invalid Care Plan!");
         }
         const carePlan = await carePlanService.getCarePlanById(care_plan_id);
         const carePlanData = await CarePlanWrapper(carePlan);
@@ -866,10 +861,7 @@ router.get("/details/:care_plan_id", Authenticated, async (req, res) => {
             }
         }
 
-        logger.debug("=========================");
-        logger.debug(JSON.stringify(dietList));
-        logger.debug({dietIds});
-        logger.debug("=========================");
+        logger.debug("Diet Lists and Diet IDs: ", JSON.stringify(dietList), {dietIds});
 
         for (const id of workout_ids) {
             const workout = await workoutService.findOne({id});
@@ -1075,16 +1067,9 @@ router.get("/details/:care_plan_id", Authenticated, async (req, res) => {
                 repetitionApiData[id] = {id, type};
             }
         }
-        logger.debug("============================");
-        logger.debug(" doctor id ", doctor_id);
-        logger.debug(doctors);
-        logger.debug({medicinesArray});
-        logger.debug({});
-        logger.debug("============================");
-
-        logger.debug("details before from a doctor start");
-        logger.debug({providerLogo});
-        logger.debug("details before from a doctor end");
+        logger.debug("Doctor ID: ", doctor_id);
+        logger.debug("Doctors: ", doctors);
+        logger.debug("Medicines Array Data: \n", {medicinesArray});
 
         const {
             name: doctorName = "",
@@ -1106,9 +1091,7 @@ router.get("/details/:care_plan_id", Authenticated, async (req, res) => {
             doctor_id
         );
 
-        logger.debug("details from a doctor start");
-        logger.debug({providerLogo});
-        logger.debug("details from a doctor end");
+        logger.debug("Provider logo: \n", {providerLogo});
 
         let patient_data = formatPatientData(
             {
@@ -1147,49 +1130,52 @@ router.get("/details/:care_plan_id", Authenticated, async (req, res) => {
             }
         }
 
-        // const stringSymptomArray = [];
-        // let stringSymptom = "";
-        //
-        // if (symptoms) {
-        //   try {
-        //     const parsedSymptoms = JSON.parse(symptoms);
-        //
-        //     if (Array.isArray(parsedSymptoms)) {
-        //       // Crucial check: Is it an array?
-        //       parsedSymptoms.forEach((element) => {
-        //         if (
-        //           typeof element === "object" &&
-        //           element !== null &&
-        //           element.symptomName &&
-        //           element.duration
-        //         ) {
-        //           // Check if element is an object and has required properties
-        //           const bodyPart =
-        //             Array.isArray(element.bodyParts) && element.bodyParts.length > 0
-        //               ? `(${element.bodyParts.join(", ")})` // Join array elements with commas
-        //               : "";
-        //           stringSymptomArray.push(
-        //             `${element.symptomName} ${bodyPart} for ${element.duration}`
-        //           );
-        //         } else {
-        //           logger.warn("Invalid symptom element: ", element); // Log invalid elements
-        //         }
-        //       });
-        //     } else {
-        //       logger.warn("Symptoms data is not an array: ", parsedSymptoms);
-        //       stringSymptom = symptoms;
-        //     }
-        //   } catch (e) {
-        //     logger.error("Error parsing symptoms: ", e);
-        //     stringSymptom = symptoms;
-        //   }
-        // }
-        //
-        // if (stringSymptomArray.length > 0) {
-        //     return stringSymptomArray;
-        // } else {
-        //     return stringSymptom;
-        // }
+        /**
+         * TODO: Why has this been commented out
+        const stringSymptomArray = [];
+        let stringSymptom = "";
+
+        if (symptoms) {
+          try {
+            const parsedSymptoms = JSON.parse(symptoms);
+
+            if (Array.isArray(parsedSymptoms)) {
+              // Crucial check: Is it an array?
+              parsedSymptoms.forEach((element) => {
+                if (
+                  typeof element === "object" &&
+                  element !== null &&
+                  element.symptomName &&
+                  element.duration
+                ) {
+                  // Check if element is an object and has required properties
+                  const bodyPart =
+                    Array.isArray(element.bodyParts) && element.bodyParts.length > 0
+                      ? `(${element.bodyParts.join(", ")})` // Join array elements with commas
+                      : "";
+                  stringSymptomArray.push(
+                    `${element.symptomName} ${bodyPart} for ${element.duration}`
+                  );
+                } else {
+                  logger.warn("Invalid symptom element: ", element); // Log invalid elements
+                }
+              });
+            } else {
+              logger.warn("Symptoms data is not an array: ", parsedSymptoms);
+              stringSymptom = symptoms;
+            }
+          } catch (e) {
+            logger.error("Error parsing symptoms: ", e);
+            stringSymptom = symptoms;
+          }
+        }
+
+        if (stringSymptomArray.length > 0) {
+            return stringSymptomArray;
+        } else {
+            return stringSymptom;
+        }
+         */
 
         let symptoms_final_value = "";
         if (stringSymptomArray.length < 1) {
@@ -1215,12 +1201,9 @@ router.get("/details/:care_plan_id", Authenticated, async (req, res) => {
         }
 
         const medicationsList = formatMedicationsData(medications, medicines);
-        logger.debug("================================");
-        logger.debug(JSON.stringify(medicationsList));
-        logger.debug("diet real data start==============");
-        logger.debug({data: JSON.stringify({...dietApiData})});
-        logger.debug("diet real data end================");
-        logger.debug("================================");
+        logger.debug("Medications List: \n", JSON.stringify(medicationsList));
+        logger.debug("Diet API Data: \n", {data: JSON.stringify({...dietApiData})});
+
         let diet_old_data = {...dietApiData};
         let diet_output = [];
 
@@ -1230,21 +1213,14 @@ router.get("/details/:care_plan_id", Authenticated, async (req, res) => {
             let formattedStartDate = "";
             let formattedEndDate = "";
             let diet_id = dietIds[i];
-            let start_date =
-                diet_old_data[diet_id]["diets"][diet_id]["basic_info"]["start_date"];
-            let end_date =
-                diet_old_data[diet_id]["diets"][diet_id]["basic_info"]["end_date"];
-            logger.debug(
-                "----------------get testing info-------------- start -------"
-            );
-            logger.debug(diet_old_data[diet_id]["diets"][diet_id]["basic_info"]);
-            if (start_date) formattedStartDate = moment(start_date);
+            let start_date = diet_old_data[diet_id]["diets"][diet_id]["basic_info"]["start_date"];
+            let end_date = diet_old_data[diet_id]["diets"][diet_id]["basic_info"]["end_date"];
 
+            logger.debug("Diet data + Basic Info: \n", diet_old_data[diet_id]["diets"][diet_id]["basic_info"]);
+
+            if (start_date) formattedStartDate = moment(start_date);
             if (end_date) formattedEndDate = moment(end_date);
 
-            logger.debug(
-                "----------------get testing info-------------- end ---------"
-            );
             let duration = null;
             let durationText = "";
             if (end_date) {
@@ -1315,13 +1291,7 @@ router.get("/details/:care_plan_id", Authenticated, async (req, res) => {
             // dietobj.food_item = diet_old_data[dietIds[i]]["food_items"]["food_item_detail_id"]
             diet_output.push(dietobj);
         }
-
-        logger.debug("============my latest diet object start===============");
-        logger.debug({diet_output});
-
-        logger.debug(JSON.stringify(diet_output));
-        logger.debug("============my latest diet object end===============");
-
+        logger.debug("Latest diet object: \n", JSON.stringify(diet_output));
         let {date: prescriptionDate} = getLatestUpdateDate(medications);
 
         // workout logic here
@@ -1436,14 +1406,15 @@ router.get("/details/:care_plan_id", Authenticated, async (req, res) => {
             diet_output,
             pre_workouts,
         };
-        logger.debug("diet real data start==============");
-        logger.debug({data: JSON.stringify({...dietApiData})});
-        logger.debug({timings});
-        logger.debug("diet real data end================");
+        logger.debug("Diet real data, with timings: \n",
+            {data: JSON.stringify({...dietApiData})}, {timings});
 
         dataForPdf = {
             users: {...usersData},
-            /*...(permissions.includes(PERMISSIONS.MEDICATIONS.VIEW) && {
+            /**
+             * TODO: Check why these have been commented, and remove
+             *      Some lines commented below also.
+            ...(permissions.includes(PERMISSIONS.MEDICATIONS.VIEW) && {
               medications,
             }),
             ...(permissions.includes(PERMISSIONS.MEDICATIONS.VIEW) && {
@@ -1453,7 +1424,8 @@ router.get("/details/:care_plan_id", Authenticated, async (req, res) => {
             clinical_notes,
             follow_up_advise,
             clinical_notes,
-            follow_up_advise,*/
+            follow_up_advise,
+             */
             medicines,
             care_plans: {
                 [carePlanData.getCarePlanId()]: {
@@ -1502,8 +1474,7 @@ router.get("/details/:care_plan_id", Authenticated, async (req, res) => {
             printBackground: true,
             path: "invoice.pdf",
         };
-        logger.debug("Pre Data: \n");
-        logger.debug({pre_data});
+        logger.debug("Prescription Data: \n", {pre_data});
 
         let pdf_buffer_value = await html_to_pdf({
             templateHtml,
@@ -1513,7 +1484,7 @@ router.get("/details/:care_plan_id", Authenticated, async (req, res) => {
         res.contentType("application/pdf");
         return res.send(pdf_buffer_value);
     } catch (err) {
-        logger.error("Error while generating the prescription: ", err);
+        logger.error("Error in Prescription API, while generating the prescription: ", err);
         return raiseServerError(res);
     }
 });

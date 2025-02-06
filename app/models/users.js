@@ -1,10 +1,7 @@
 "use strict";
 import { DataTypes } from "sequelize";
 import { TABLE_NAME as UserCategoryPermissionTableName } from "./userCategoryPermissions";
-import {
-  TABLE_NAME as providerTableName,
-  TABLE_NAME as hisTableName,
-} from "./providers";
+import { TABLE_NAME as providerTableName, TABLE_NAME as hisTableName, } from "./providers";
 import { SIGN_IN_CATEGORY, USER_CATEGORY } from "../../constant";
 
 export const TABLE_NAME = "users";

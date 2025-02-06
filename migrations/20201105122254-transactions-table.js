@@ -1,11 +1,6 @@
 "use strict";
 
-import {
-  STATUS,
-  TABLE_NAME,
-  TRANSACTION_MODES,
-  TRANSACTION_STATUS,
-} from "../app/models/transactions";
+import { STATUS, TABLE_NAME, TRANSACTION_MODES, TRANSACTION_STATUS, } from "../app/models/transactions";
 import { USER_CATEGORY_ARRAY } from "../app/models/users";
 import { DataTypes } from "sequelize";
 import { TABLE_NAME as paymentProductTableName } from "../app/models/paymentProducts";

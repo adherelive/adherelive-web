@@ -15,11 +15,7 @@ import DietJob from "../../../jobSdk/Diet/observer";
 import NotificationSdk from "../../../notificationSdk";
 
 import { createLogger } from "../../../../libs/logger";
-import {
-  DOCUMENT_PARENT_TYPE,
-  NOTIFICATION_STAGES,
-  USER_CATEGORY,
-} from "../../../../constant";
+import { DOCUMENT_PARENT_TYPE, NOTIFICATION_STAGES, USER_CATEGORY, } from "../../../../constant";
 
 const logger = createLogger("MOBILE > DIET_RESPONSE > CONTROLLER");
 

@@ -20,12 +20,7 @@ import WorkoutWrapper from "../../apiWrapper/web/workouts";
 import UserRoleWrapper from "../../apiWrapper/web/userRoles";
 
 import { createLogger } from "../../../libs/logger";
-import {
-  EVENT_LONG_TERM_VALUE,
-  EVENT_STATUS,
-  EVENT_TYPE,
-  USER_CATEGORY,
-} from "../../../constant";
+import { EVENT_LONG_TERM_VALUE, EVENT_STATUS, EVENT_TYPE, USER_CATEGORY, } from "../../../constant";
 import moment from "moment";
 
 const logger = createLogger("CARE_PLAN > HELPER");

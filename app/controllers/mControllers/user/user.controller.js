@@ -28,13 +28,12 @@ import doctorPatientWatchlistService from "../../../services/doctorPatientWatchl
 import { getServerSpecificConstants } from "./user.helper";
 import { v4 as uuidv4 } from "uuid";
 import {
-  DOCTOR_TYPE_PROFILES,
-  EMAIL_TEMPLATE_NAME,
-  NO_ACTION,
-  NO_APPOINTMENT,
-  NO_MEDICATION,
-  USER_CATEGORY,
-  VERIFICATION_TYPE,
+    EMAIL_TEMPLATE_NAME,
+    NO_ACTION,
+    NO_APPOINTMENT,
+    NO_MEDICATION,
+    USER_CATEGORY,
+    VERIFICATION_TYPE,
 } from "../../../../constant";
 import { EVENTS, Proxy_Sdk } from "../../../proxySdk";
 import treatmentService from "../../../services/treatment/treatment.service";
@@ -45,7 +44,6 @@ import conditionService from "../../../services/condition/condition.service";
 import MConditionWrapper from "../../../apiWrapper/mobile/conditions";
 import UserWrapper from "../../../apiWrapper/web/user";
 import UserRolesWrapper from "../../../apiWrapper/mobile/userRoles";
-import DoctorWrapper from "../../../apiWrapper/mobile/doctor";
 
 import generateOTP from "../../../helper/generateOtp";
 import AppNotification from "../../../notificationSdk/inApp";

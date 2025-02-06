@@ -17,7 +17,8 @@ import WorkoutService from "../../../services/workouts/workout.service";
 import RepetitionService from "../../../services/exerciseRepetitions/repetition.service";
 import PortionServiceService from "../../../services/portions/portions.service";
 import DietService from "../../../services/diet/diet.service";
-import carePlanSecondaryDrMapService from "../../../services/carePlanSecondaryDoctorMappings/carePlanSecondaryDoctorMappings.service";
+import carePlanSecondaryDrMapService
+  from "../../../services/carePlanSecondaryDoctorMappings/carePlanSecondaryDoctorMappings.service";
 // Wrappers
 import ExerciseContentWrapper from "../../../apiWrapper/mobile/exerciseContents";
 import VitalWrapper from "../../../apiWrapper/mobile/vitals";
@@ -52,7 +53,8 @@ import MedicineApiWrapper from "../../../apiWrapper/mobile/medicine";
 import carePlanService from "../../../services/carePlan/carePlan.service";
 
 import providerTermsMappingService from "../../../services/providerTermsMapping/providerTermsMappings.service";
-import patientPaymentConsentMappingService from "../../../services/patientPaymentConsentMapping/patientPaymentConsentMapping.service";
+import patientPaymentConsentMappingService
+  from "../../../services/patientPaymentConsentMapping/patientPaymentConsentMapping.service";
 
 import userRolesService from "../../../services/userRoles/userRoles.service";
 
@@ -87,10 +89,7 @@ import { EVENTS, Proxy_Sdk } from "../../../proxySdk";
 import generatePDF from "../../../helper/generateCarePlanPdf";
 import { downloadFileFromS3 } from "../user/user.helper";
 import { getFilePath } from "../../../helper/s3FilePath";
-import {
-  checkAndCreateDirectory,
-  getSeparateName,
-} from "../../../helper/common";
+import { checkAndCreateDirectory, getSeparateName, } from "../../../helper/common";
 import { getDoctorCurrentTime } from "../../../helper/getUserTime";
 import * as carePlanHelper from "../carePlans/carePlan.helper";
 
