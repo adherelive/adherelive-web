@@ -1,16 +1,8 @@
 // Common functionality of all Activity
 // import activityService from "../../services/activityLog/activitylogger.service";
-import { STAGES } from "../activityType";
-import schedulerService from "../../services/scheduleEvents/scheduleEvent.service";
 // import calendarService from "../../services/calendarService/calendar.service";
-import userService from "../../services/user/user.service";
 // import programService from "../../services/program/program.service";
-import {
-  ACTIVITY_LOG_STATUS,
-  DEFAULT,
-  EVENT_IS,
-  USER_CATEGORY,
-} from "../../../constant";
+import { ACTIVITY_LOG_STATUS, DEFAULT, } from "../../../constant";
 import { NotificationSdk } from "../../notificationSdk";
 import { createLogger } from "../../../libs/logger";
 

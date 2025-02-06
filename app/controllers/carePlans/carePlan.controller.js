@@ -1,11 +1,6 @@
 import Controller from "../index";
 
-import {
-  EVENT_LONG_TERM_VALUE,
-  EVENT_STATUS,
-  EVENT_TYPE,
-  USER_CATEGORY,
-} from "../../../constant";
+import { EVENT_LONG_TERM_VALUE, EVENT_STATUS, EVENT_TYPE, USER_CATEGORY, } from "../../../constant";
 import moment from "moment";
 import MedicationJob from "../../jobSdk/Medications/observer";
 import PERMISSIONS from "../../../config/permissions";
@@ -21,18 +16,15 @@ import templateMedicationService from "../../services/templateMedication/templat
 import templateAppointmentService from "../../services/templateAppointment/templateAppointment.service";
 import medicineService from "../../services/medicine/medicine.service";
 import userRoleService from "../../services/userRoles/userRoles.service";
-import carePlanSecondaryDrMapService from "../../services/carePlanSecondaryDoctorMappings/carePlanSecondaryDoctorMappings.service";
+import carePlanSecondaryDrMapService
+    from "../../services/carePlanSecondaryDoctorMappings/carePlanSecondaryDoctorMappings.service";
 import doctorService from "../../services/doctor/doctor.service";
 import carePlanTemplateService from "../../services/carePlanTemplate/carePlanTemplate.service";
 import queueService from "../../services/awsQueue/queue.service";
 
 // Helpers
 import * as carePlanHelper from "./carePlan.helper";
-import {
-  getCarePlanAppointmentIds,
-  getCarePlanMedicationIds,
-  getCarePlanSeverityDetails,
-} from "./carePlan.helper";
+import { getCarePlanAppointmentIds, getCarePlanMedicationIds, getCarePlanSeverityDetails } from "./carePlan.helper";
 import { raiseClientError } from "../../../routes/helper";
 
 // Wrappers

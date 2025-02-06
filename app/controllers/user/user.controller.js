@@ -28,15 +28,15 @@ import UserRolesWrapper from "../../apiWrapper/web/userRoles";
 import DoctorPatientWatchlistWrapper from "../../apiWrapper/web/doctorPatientWatchlist";
 import LinkVerificationWrapper from "../../apiWrapper/mobile/userVerification";
 
-import {createNewUser, uploadImageS3} from "./user.helper";
-import {v4 as uuidv4} from "uuid";
+import { createNewUser, uploadImageS3 } from "./user.helper";
+import { v4 as uuidv4 } from "uuid";
 import constants from "../../../config/constants";
-import {EMAIL_TEMPLATE_NAME, USER_CATEGORY, VERIFICATION_TYPE,} from "../../../constant";
-import {EVENTS, Proxy_Sdk} from "../../proxySdk";
+import { EMAIL_TEMPLATE_NAME, USER_CATEGORY, VERIFICATION_TYPE, } from "../../../constant";
+import { EVENTS, Proxy_Sdk } from "../../proxySdk";
 
 import AppNotification from "../../notificationSdk/inApp";
 import AdhocJob from "../../jobSdk/Adhoc/observer";
-import {getSeparateName} from "../../helper/common";
+import { getSeparateName } from "../../helper/common";
 
 const {OAuth2Client} = require("google-auth-library");
 const moment = require("moment");

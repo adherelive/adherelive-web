@@ -25,14 +25,12 @@ import userRolesService from "../../services/userRoles/userRoles.service";
 import DietService from "../../services/diet/diet.service";
 import PortionServiceService from "../../services/portions/portions.service";
 import RepetitionService from "../../services/exerciseRepetitions/repetition.service";
-import providerService from "../../services/provider/provider.service";
-import ExerciseContentService from "../../services/exerciseContents/exerciseContent.service";
 import WorkoutService from "../../services/workouts/workout.service";
 import userPreferenceService from "../../services/userPreferences/userPreference.service";
-import carePlanSecondaryDrMapService from "../../services/carePlanSecondaryDoctorMappings/carePlanSecondaryDoctorMappings.service";
+import carePlanSecondaryDrMapService
+  from "../../services/carePlanSecondaryDoctorMappings/carePlanSecondaryDoctorMappings.service";
 
 // Wrappers
-import ExerciseContentWrapper from "../../apiWrapper/web/exerciseContents";
 import UserRoleWrapper from "../../apiWrapper/web/userRoles";
 import UserRolesWrapper from "../../apiWrapper/web/userRoles";
 import VitalWrapper from "../../apiWrapper/web/vitals";
@@ -61,11 +59,7 @@ import WorkoutWrapper from "../../apiWrapper/web/workouts";
 import UserPreferenceWrapper from "../../apiWrapper/web/userPreference";
 
 // Helpers
-import {
-  checkAndCreateDirectory,
-  getRoomId,
-  getSeparateName,
-} from "../../helper/common";
+import { checkAndCreateDirectory, getRoomId, getSeparateName, } from "../../helper/common";
 import generateOTP from "../../helper/generateOtp";
 import { EVENTS, Proxy_Sdk } from "../../proxySdk";
 import generatePDF from "../../helper/generateCarePlanPdf";

@@ -1,12 +1,4 @@
-import {
-  onCancel,
-  onComplete,
-  onCreate,
-  onPassed,
-  onRescheduled,
-  onStart,
-  onUpdate,
-} from "../helper";
+import { onCancel, onComplete, onCreate, onPassed, onRescheduled, onStart, onUpdate, } from "../helper";
 import { ACTIVITIES } from "../activityType";
 
 // TODO: Going back to require, as the module export is used

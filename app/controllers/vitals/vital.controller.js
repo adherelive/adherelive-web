@@ -22,13 +22,7 @@ import CarePlanWrapper from "../../apiWrapper/web/carePlan";
 import DoctorWrapper from "../../apiWrapper/web/doctor";
 import PatientWrapper from "../../apiWrapper/web/patient";
 
-import {
-  DAYS,
-  EVENT_STATUS,
-  EVENT_TYPE,
-  FEATURE_TYPE,
-  NOTIFICATION_STAGES,
-} from "../../../constant";
+import { DAYS, EVENT_STATUS, EVENT_TYPE, FEATURE_TYPE, NOTIFICATION_STAGES, } from "../../../constant";
 import moment from "moment";
 
 import EventWrapper from "../../apiWrapper/common/scheduleEvents";

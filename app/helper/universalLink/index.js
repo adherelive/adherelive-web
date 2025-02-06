@@ -1,6 +1,5 @@
 import createLink from "../../../app/branch-io";
 import { EVENT_TYPE } from "../../../constant";
-import { VERIFICATION_TYPE } from "../../../constant";
 import { createLogger } from "../../../libs/logger";
 
 const logger = createLogger("Universal Link");

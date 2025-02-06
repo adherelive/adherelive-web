@@ -1,6 +1,7 @@
 //Services
 import BaseMealTemplateFoodItemMapping from "../../../services/mealTemplateFoodItemMapping/index";
-import MealTemplateFoodItemMappingService from "../../../services/mealTemplateFoodItemMapping/mealTemplateFoodItemMapping.service";
+import MealTemplateFoodItemMappingService
+    from "../../../services/mealTemplateFoodItemMapping/mealTemplateFoodItemMapping.service";
 
 //Wrappers
 import MealTemplateWrapper from "../mealTemplate";

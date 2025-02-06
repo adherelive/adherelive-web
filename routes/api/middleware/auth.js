@@ -1,9 +1,6 @@
 import jwt from "jsonwebtoken";
-import { OAuth2Client } from "google-auth-library";
-import userService from "../../../app/services/user/user.service";
 import { errMessages } from "../../../config/messages.json";
 import Response from "../../../app/controllers/helper/responseFormat";
-import doRequest from "../../../app/controllers/helper/doRequest";
 import { createLogger } from "../../../libs/logger";
 
 const logger = createLogger("MIDDLEWARE AUTH");

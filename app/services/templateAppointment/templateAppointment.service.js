@@ -2,6 +2,7 @@ import Database from "../../../libs/mysql";
 import { TABLE_NAME } from "../../models/templateAppointments";
 
 import { createLogger } from "../../../libs/logger";
+
 const logger = createLogger("WEB > APPOINTMENT TEMPLATE > SERVICES");
 
 class TemplateAppointmentService {

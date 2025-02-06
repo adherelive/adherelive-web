@@ -23,12 +23,12 @@ import PatientWrapper from "../../../apiWrapper/mobile/patient";
 import JobSdk from "../../../jobSdk";
 import NotificationSdk from "../../../notificationSdk";
 import {
-  DAYS,
-  EVENT_STATUS,
-  EVENT_TYPE,
-  FEATURE_TYPE,
-  NOTIFICATION_STAGES,
-  USER_CATEGORY,
+    DAYS,
+    EVENT_STATUS,
+    EVENT_TYPE,
+    FEATURE_TYPE,
+    NOTIFICATION_STAGES,
+    USER_CATEGORY,
 } from "../../../../constant";
 
 const logger = createLogger("MOBILE > VITALS > CONTROLLER");

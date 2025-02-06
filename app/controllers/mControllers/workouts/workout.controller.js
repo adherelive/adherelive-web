@@ -24,12 +24,7 @@ import EventWrapper from "../../../apiWrapper/common/scheduleEvents";
 import WorkoutJob from "../../../jobSdk/Workout/observer";
 import NotificationSdk from "../../../notificationSdk";
 
-import {
-  DAYS,
-  EVENT_STATUS,
-  EVENT_TYPE,
-  USER_CATEGORY,
-} from "../../../../constant";
+import { DAYS, EVENT_STATUS, EVENT_TYPE, USER_CATEGORY, } from "../../../../constant";
 
 const logger = createLogger("MOBILE > WORKOUT > CONTROLLER");
 

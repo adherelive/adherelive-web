@@ -2,7 +2,7 @@ import winston from 'winston';
 import 'winston-daily-rotate-file';
 import moment from 'moment';
 import os from 'os';
-import {AsyncLocalStorage} from 'async_hooks';
+import { AsyncLocalStorage } from 'async_hooks';
 
 // Trace context management
 class TraceContext {

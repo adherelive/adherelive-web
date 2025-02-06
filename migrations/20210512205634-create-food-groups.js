@@ -2,7 +2,6 @@
 
 import { TABLE_NAME } from "../app/models/foodGroups";
 import { TABLE_NAME as portionTableName } from "../app/models/portions";
-import { TABLE_NAME as foodItemTableName } from "../app/models/foodItems";
 import { TABLE_NAME as foodItemDetailsTableName } from "../app/models/foodItemDetails";
 
 module.exports = {

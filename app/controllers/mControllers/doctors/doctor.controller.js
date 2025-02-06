@@ -19,10 +19,12 @@ import registrationService from "../../../services/doctorRegistration/doctorRegi
 import uploadDocumentService from "../../../services/uploadDocuments/uploadDocuments.service";
 import documentService from "../../../services/uploadDocuments/uploadDocuments.service";
 import featuresService from "../../../services/features/features.service";
-import doctorPatientFeatureMappingService from "../../../services/doctorPatientFeatureMapping/doctorPatientFeatureMapping.service";
+import doctorPatientFeatureMappingService
+  from "../../../services/doctorPatientFeatureMapping/doctorPatientFeatureMapping.service";
 import userRolesService from "../../../services/userRoles/userRoles.service";
 import UserRoleService from "../../../services/userRoles/userRoles.service";
-import carePlanSecondaryDrMapService from "../../../services/carePlanSecondaryDoctorMappings/carePlanSecondaryDoctorMappings.service";
+import carePlanSecondaryDrMapService
+  from "../../../services/carePlanSecondaryDoctorMappings/carePlanSecondaryDoctorMappings.service";
 // m-api wrappers
 import PatientWrapper from "../../../apiWrapper/mobile/patient";
 import CarePlanTemplateWrapper from "../../../apiWrapper/mobile/carePlanTemplate";
