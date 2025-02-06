@@ -72,12 +72,12 @@
             break-inside: avoid;
         }
 
-        .medicine_table th,
+        /* .medicine_table th,
         .medicine_table td {
             border: 1px solid #000;
             padding: 4px;
             vertical-align: top;
-        }
+        } */
 
         .page-break {
             page-break-before: always;
@@ -411,10 +411,10 @@
             border: 1px solid black;
             padding: 5px;
             text-align: center;
+            align-self: center;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
-            vertical-align: top;
             word-wrap: break-word;
         }
 
@@ -424,7 +424,7 @@
         }
 
         .medicine_name_wrapper div {
-            padding: 25px 5px;
+            padding: 15px 5px;
             align-content: center;
         }
 
@@ -455,7 +455,7 @@
 
         .medicine_table th:nth-child(6),
         .medicine_table td:nth-child(9) {
-            width: 15%; /* Start Date / Duration */
+            width: 12%; /* Start Date / Duration */
             white-space: normal;
         }
 
@@ -825,7 +825,7 @@
                 </td>
                 <td colspan="2" style="padding: 0px">
                     <div class="medicine_name_wrapper">
-                        <div style="border-right: 1px solid;">
+                        <div style="border-right: 1px solid; width: 80%;">
                             <p>{{ medicineType }}</p>
                         </div>
                         <div style="text-align: justify;">
@@ -1084,13 +1084,13 @@
         </h3>
     </div>
 
-    {{#if pre_workouts.length}}
+    <!-- {{#if pre_workouts.length}} -->
     <div style="margin-top: 30px">
         <h3>Lifestyle Advice</h3>
     </div>
-    {{/if}}
+    <!-- {{/if}} -->
     <!-- DIET SECTION  -->
-    {{#if diet_output.length}}
+    <!-- {{#if diet_output.length}} -->
     <div class="diet_section_heading">
         <h3>Diet :</h3>
     </div>
@@ -1168,8 +1168,8 @@
             </table>
         </div>
     </div>
-    {{/if}}
-    {{#if pre_workouts.length}}
+    <!-- {{/if}} -->
+    <!-- {{#if pre_workouts.length}} -->
     <div class="workout_section_heading">
         <h3>Workout :</h3>
     </div>
@@ -1226,9 +1226,9 @@
             </table>
         </div>
     </div>
-    {{/if}}
+    <!-- {{/if}} -->
 </div>
->
+
 
 <!-- Footer Template -->
 <div class="footer">
