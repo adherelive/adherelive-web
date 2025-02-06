@@ -283,6 +283,12 @@
             display: none;
         }
 
+        .complaints_subsection > div:nth-child(1) .complaint_table tr:nth-child(2), /* BMI in the first table */
+        .complaints_subsection > div:nth-child(2) .complaint_table tr:nth-child(2), /* BP in the second table */
+        .complaints_subsection > div:nth-child(3) .complaint_table tr:nth-child(2) { /* Temperature in the third table */
+            display: none;
+        }
+
         /* Complaint Section */
         .complaints_section {
             border: 1px solid black;
@@ -302,7 +308,7 @@
         }
 
         /* Modified style to allow Height & Weight
-	.complaints_subsection {
+	    .complaints_subsection {
             grid-auto-rows: minmax(30px, auto);
             grid-template-columns: repeat(3, 3fr);
             display: grid;
