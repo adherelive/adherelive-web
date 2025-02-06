@@ -2,7 +2,16 @@
 <html>
 <head>
     <style>
-        /* Base styles remain the same */
+        /* Base Page Setup */
+        /* This CSS rule ensures that table headers (contained within the <thead> element)
+	   repeat at the top of each new page when the table spans multiple pages.
+	@media print {
+            thead {
+                display: table-header-group;
+            }
+        }
+	*/
+
         @page {
             size: A4;
             margin: 20mm 10mm; /* Increased margins for header/footer */
@@ -443,7 +452,7 @@
         .medicine_table td:nth-child(4),
         .medicine_table th:nth-child(4),
         .medicine_table td:nth-child(5) {
-            width: 4%; /* Dose and Qty */
+            width: auto; /* Dose and Qty */
         }
 
         .medicine_table th:nth-child(5),
@@ -500,10 +509,24 @@
             border-left: 1px solid black;
         }
 
-        /* DIET TABLE */
-        .diet_table > table,
-        th,
-        td {
+        /* Complaint Table Specific */
+        .complaint_table {
+            width: 100%;
+            height: auto; /* Adjust height as needed */
+            text-align: center;
+        }
+
+        .complaint_table th, .complaint_table td {
+            padding: 5px; /* Adjust padding as needed */
+        }
+
+        /* Hide BMI, BP, RBS, Temperature */
+        .complaint_table tr:nth-child(2) { /* Select the second row in each table */
+            display: none;
+        }
+
+        /* Complaint Section */
+        .complaints_section {
             border: 1px solid black;
             border-collapse: collapse;
             padding-left: 5px;
@@ -512,16 +535,36 @@
             border-left: 0px;
         }
 
-        .diet_table {
-            border-collapse: collapse;
-            border-left: 1px solid black;
+        .complaints_section_one {
+            padding: 10px;
+            width: 50%;
         }
 
-        /* WORKOUT TABLE */
+        .complaints_section_two {
+            width: 50%;
+        }
 
-        .workout_table > table,
-        th,
-        td {
+        /* Modified style to allow Height & Weight
+	    .complaints_subsection {
+            grid-auto-rows: minmax(30px, auto);
+            grid-template-columns: repeat(3, 3fr);
+            display: grid;
+        }
+	    */
+
+        /* Modified Styles */
+        .complaints_subsection {
+            display: flex; /* Use flexbox for layout */
+            width: 100%; /* Ensure it takes full width */
+        }
+
+        .complaints_subsection > div {
+            flex: 1; /* Equal width for each div */
+            padding: 10px; /* Add some padding around the tables */
+        }
+
+        /* Schedule Medicine */
+        .schedule_medicine_wrapper {
             border: 1px solid black;
             border-collapse: collapse;
             padding-left: 5px;
@@ -537,6 +580,17 @@
 
         .tick_image {
             display: flex;
+        }
+
+        /* Table Containers */
+        .medicine-table-container {
+            overflow: visible;
+            margin: 15px 0;
+        }
+
+        /* New Page for Lifestyle Advice */
+        .lifestyle-advice-page {
+            page-break-before: always; /* Start on a new page */
         }
     </style>
 </head>
@@ -628,7 +682,6 @@
 
     <!-- DIAGNOSIS  AND SYMPTOMS-->
     <div class="top_section_wrapper">
-        <!-- <h3>Diagnosis : </h3> -->
         <div
                 class="top_section_wrapper_one"
                 style="border-right: 1px solid; padding: 10px"
@@ -662,125 +715,46 @@
 
     <!-- COMPLAINTS SECTION -->
     <div class="complaints_section">
-        <!-- <div class="complaints_section_one">COMPLAINTS :</div> -->
-        <div class="complaints_section_two">
-            <div class="complaints_subsection">
-                <div class="complaints_subsection_three">
-                    <table
-                            class="complaint_table"
-                            style="width: 100%; height: 100%; text-align: center"
-                    >
-                        <tr>
-                            <th style="width: 50%; height: 30px">
-                                <h3>Height</h3>
-                            </th>
-                            <td style="width: 50%; height: 30px">
-                                <p>{{patient_data.height}} cm</p>
-                            </td>
-                        </tr>
-                        <!-- <tr>
-                          <th style="width: 50%; height: 30px" rowspan="2">
-                            <h3>Weight</h3>
-                          </th>
-                        </tr>
-                        <tr>
-                          <td style="width: 50%; height: 30px">
-                            <p>{{patient_data.weight}} kg</p>
-                          </td>
-                        </tr>
-                        <tr>
-                          <th style="width: 50%; height: 30px" rowspan="2">
-                            <h3>BMI</h3>
-                          </th>
-                        </tr>
-                        <tr>
-                          <td style="width: 50%; height: 30px">
-                            <p>___</p>
-                          </td>
-                        </tr> -->
-                    </table>
-                </div>
-
-                <div class="complaints_subsection_two">
-                    <table
-                            class="complaint_table"
-                            style="width: 100%; height: 100%; text-align: center"
-                    >
-                        <tr>
-                            <th style="width: 50%; height: 30px" rowspan="2">
-                                <h3>Weight</h3>
-                            </th>
-                        </tr>
-                        <tr>
-                            <td style="width: 50%; height: 30px">
-                                <p>{{patient_data.weight}} kg</p>
-                            </td>
-                        </tr>
-                        <!-- <tr>
-                          <th style="width: 50%; height: 30px">
-                            <h3>BP</h3>
-                          </th>
-                          <td style="width: 50%; height: 30px">
-                            <p>___</p>
-                          </td>
-                        </tr>
-                        <tr>
-                          <th style="width: 50%; height: 30px" rowspan="2">
-                            <h3>Pulse</h3>
-                          </th>
-                        </tr>
-                        <tr>
-                          <td style="width: 50%; height: 30px">
-                            <p>___</p>
-                          </td>
-                        </tr>
-                        <tr>
-                          <th style="width: 50%; height: 30px" rowspan="2">
-                            <h3>Temperature</h3>
-                          </th>
-                        </tr>
-                        <tr>
-                          <td style="width: 50%; height: 30px">
-                            <p>___</p>
-                          </td>
-                        </tr> -->
-                    </table>
-                </div>
-
-                <!-- <div class="complaints_subsection_one">
-                  <table
-                    class="complaint_table"
-                    style="width: 100%; height: 100%; text-align: center"
-                  >
+        <div class="complaints_subsection">
+            <div>
+                <table class="complaint_table">
                     <tr>
-                      <th style="width: 50%; height: 30px">
-                        <h3>Random Blood Sugar (RBS)</h3>
-                      </th>
-                      <td style="width: 50%; height: 30px">
-                        <p>___</p>
-                      </td>
+                        <th><h3>Height</h3></th>
+                        <td><p>{{patient_data.height}} cm</p></td>
                     </tr>
                     <tr>
-                      <th style="width: 50%; height: 30px" rowspan="2">
-                        <h3>Others</h3>
-                      </th>
+                        <th><h3>BMI</h3></th>
+                        <td><p>___</p></td>
+                    </tr>
+                </table>
+            </div>
+            <div>
+                <table class="complaint_table">
+                    <tr>
+                        <th><h3>Weight</h3></th>
+                        <td><p>{{patient_data.weight}} kg</p></td>
                     </tr>
                     <tr>
-                      <td style="width: 50%; height: 30px">
-                        <p>___</p>
-                      </td>
+                        <th><h3>BP</h3></th>
+                        <td><p>___</p></td>
+                    </tr>
+                </table>
+            </div>
+            <div>
+                <table class="complaint_table">
+                    <tr>
+                        <th><h3>Random Blood Sugar (RBS)</h3></th>
+                        <td><p>___</p></td>
                     </tr>
                     <tr>
-                      <th style="width: 50%; height: 30px" rowspan="2"></th>
+                        <th><h3>Temperature</h3></th>
+                        <td><p>___</p></td>
                     </tr>
-                    <tr>
-                      <td style="width: 50%; height: 30px"></td>
-                    </tr>
-                  </table>
-                </div> -->
+                </table>
             </div>
         </div>
     </div>
+
 
     <!-- MEDICINE  SECTION -->
     <div class="medicine_section avoid-break">
@@ -909,6 +883,7 @@
 
     <!-- INVESTIGATION SECTION -->
     <!-- style="page-break-before: always" -->
+    <!-- <div class="page-break"></div> -->
     <div class="investigation_section">
         <div class="investigation_section_heading">
             <h3>Investigation :</h3>
@@ -1088,7 +1063,13 @@
     <div style="margin-top: 30px">
         <h3>Lifestyle Advice</h3>
     </div>
-    <!-- {{/if}} -->
+    {{/if}}
+    {{#if diet_output.length}}
+    <div style="margin-top: 30px">
+        <h3>Lifestyle Advice</h3>
+    </div>
+    {{/if}}
+
     <!-- DIET SECTION  -->
     <!-- {{#if diet_output.length}} -->
     <div class="diet_section_heading">
