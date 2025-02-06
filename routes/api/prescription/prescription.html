@@ -14,7 +14,7 @@
 
         @page {
             size: A4;
-            margin: 20mm 10mm; /* Increased margins for header/footer */
+            margin: 10mm 5mm;
             @top-center {
                 content: element(header);
             }
@@ -23,90 +23,7 @@
             }
         }
 
-        /* Header and Footer Styles */
-        .header {
-            position: running(header);
-            width: 100%;
-            padding-bottom: 10px;
-            border-bottom: 1px solid black;
-        }
-
-        .footer {
-            position: running(footer);
-            width: 100%;
-            padding-top: 10px;
-            border-top: 1px solid black;
-            text-align: center;
-        }
-
-        /* Page Break Controls
-        .page-break {
-          page-break-before: always;
-        }*/
-
-        .avoid-break {
-            page-break-inside: avoid;
-        }
-
-        body {
-            margin: 0;
-            padding: 10px;
-            font-size: 10px;
-        }
-
-        .section-group {
-            page-break-inside: avoid;
-            break-inside: avoid-page;
-            margin-bottom: 15px;
-        }
-
-        .medicine-table-container {
-            overflow: visible;
-            margin: 15px 0;
-        }
-
-        .medicine_table {
-            width: 100%;
-            border-collapse: collapse;
-            table-layout: fixed;
-            page-break-inside: auto;
-        }
-
-        .medicine_table thead {
-            display: table-header-group;
-        }
-
-        .medicine_table tr {
-            page-break-inside: avoid;
-            break-inside: avoid;
-        }
-
-        .medicine_table th,
-        .medicine_table td {
-            border: 1px solid #000;
-            padding: 4px;
-            vertical-align: top;
-        }
-
-        .page-break {
-            page-break-before: always;
-        }
-
-        .signature-section {
-            margin-top: 20px;
-            page-break-inside: avoid;
-        }
-
-        .prescription-footer {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            padding: 10px;
-            background: white;
-            page-break-after: always;
-        }
-
+        /* Font Faces */
         @font-face {
             font-family: "PlusJakartaSans-Bold";
             src: url("https://res.cloudinary.com/myrltech/raw/upload/v1685442477/PlusJakartaSans-Bold.ttf");
@@ -149,303 +66,146 @@
             font-style: normal;
         }
 
-        .top_provider_section {
-            display: flex;
-            justify-content: space-around;
-            margin-bottom: 5px;
-            align-items: center;
-        }
-
-        .top_provider_section_two {
-            padding-left: 20px;
-            padding-right: 10px;
-        }
-
+        /* Global Styles */
         body {
-            /* font-family: "TiroDevanagariHindi-Regular"; */
-            /* padding-left: 5px;
-            padding-right: 5px; */
-            /* font-family: "PlusJakartaSans-Bold"; */
+            margin: 0;
+            padding: 10px;
+            font-size: 10px;
         }
 
-        /* Prevent orphaned headers */
+        /* Typography */
         h3, h4, h5 {
             page-break-after: avoid;
+            font-family: "PlusJakartaSans-Bold";
+            margin: 0;
         }
 
         h3 {
-            font-family: "PlusJakartaSans-Bold";
             font-size: 13px;
-            margin: 0px;
+        }
+
+        h4, h5 {
+            font-size: 10px;
         }
 
         p {
             font-family: "PlusJakartaSans-Medium";
             font-size: 10px;
-            margin: 0px;
+            margin: 0;
         }
 
-        h4 {
-            font-family: "PlusJakartaSans-Bold";
-            font-size: 10px;
-            margin: 0px;
+        /* Header and Footer */
+        .header {
+            position: running(header);
+            width: 100%;
+            padding-bottom: 10px;
+            border-bottom: 1px solid black;
         }
 
-        h5 {
-            margin: 0px;
-            font-family: "PlusJakartaSans-Bold";
-            font-size: 10px;
-            margin: 0px;
+        .footer {
+            position: running(footer);
+            width: 100%;
+            padding-top: 10px;
+            border-top: 1px solid black;
+            text-align: center;
         }
 
-        /* MEDICINE SECTION */
-        .schedule_medicine_wrapper {
-            border: 1px solid black;
-            border-left: 0px;
-            border-right: 0px;
-            border-bottom: none;
-            margin-top: 10px;
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            /* gap: 20px; */
-            grid-auto-rows: minmax(20px, auto);
-            padding: 10px;
-        }
-
-        .right_tick_div {
-            padding: 5px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-flow: column;
-        }
-
-        /* TOP SECTION */
-        .top_section_wrapper {
-            border: 1px solid black;
-            /* border-bottom: 0px; */
-            /* border-top: 0px; */
-            display: grid;
-            grid-template-columns: repeat(2, 3fr);
-            /* gap: 20px; */
-            grid-auto-rows: minmax(30px, auto);
-        }
-
-        .top_section_wrapper .top_section_wrapper_one {
-            /* border-right: 1px solid black; */
-            padding: 0px 10px;
-            /* border-bottom: 1px solid black; */
-            display: flex;
-            align-items: center;
-            /* border-top: 1px solid black; */
-        }
-
-        .top_section_wrapper .top_section_wrapper_two {
-            /* border-bottom: 1px solid black; */
-            padding: 0px 10px;
-            display: flex;
-            align-items: center;
-            /* border-top: 1px solid black; */
-        }
-
-        /* COMPLAINT SECTION */
-        .complaints_section {
-            border: 1px solid black;
-            border-right: 0px;
-            border-top: 0px;
-            border-bottom: 0px;
-            display: flex;
-        }
-
-        .complaints_section_one {
-            padding: 10px;
-            width: 40%;
-        }
-
-        .complaints_section_two {
-            width: 75%;
-        }
-
-        .complaints_subsection {
-            /* border: 1px solid black; */
-            /* min-height: 140px; */
-            grid-auto-rows: minmax(30px, auto);
-            grid-template-columns: repeat(3, 3fr);
-            display: grid;
-        }
-
-        /* DIAGNOSIS SECTION */
-        .diagnosis_section {
-            border: 1px solid black;
-            border-top: 0px;
-            padding: 10px;
-            /* height: 50px; */
-        }
-
-        /* CHIEF SECTION */
-        .chef-complaints-section {
-            border: 1px solid black;
-            border-top: 0px;
-            padding: 10px;
-            border-bottom: 0px;
-        }
-
-        /* Keep small related content together */
+        /* Page Break Controls */
+        .avoid-break,
         .treatment_advise_section,
-        .complaints_section {
+        .complaints_section,
+        .signature-section {
             page-break-inside: avoid;
         }
 
-        .treatment_advise_section {
-            border: 1px solid black;
-            border-top: 0px;
-            padding: 10px;
-            display: flex;
-            align-items: center;
-        }
-
-        .investigation_section .investigation_section_heading {
-            border: 1px solid black;
-            border-top: 0px;
-            padding: 10px;
-        }
-
-        .investigation_section .investigation_section_content {
-            /* border: 1px solid black; */
-            border-top: 0px;
-            /* padding: 10px; */
-            /* height: 50px; */
-        }
-
-        /* NEXT CONSULTATION SECTION */
-        .next_consultation_section_heading {
-            border: 1px solid black;
-            border-top: 0px;
-            padding: 10px;
-        }
-
-        .next_consultation_section {
-            border-top: 0px;
-            width: 100%;
-        }
-
-        /* SIGNATURE SECTION */
-        /* Keep signature section together */
-        .signature_section {
-            text-align: center;
-            margin-left: 600px;
-            margin-bottom: 20px;
-            margin-top: 30px;
-            display: flex;
-            align-items: end;
-            justify-content: end;
-            page-break-inside: avoid;
-            /*float: right; */
-        }
-
-        .signature_image {
-            /* width: 200px; */
-        }
-
-        .signature_section .signature_image_section {
-            align-items: center;
-            display: flex;
-            flex-flow: column;
-        }
-
-        /* DIET SECTION */
-        .diet_section_heading {
-            margin-top: 30px;
-            border: 1px solid black;
-            /* border-top: 0px; */
-            padding: 10px;
-        }
-
-        .diet_section_section {
-            border-top: 0px;
-            width: 100%;
-        }
-
-        /* WORKOUT SECTION */
-        .workout_section_heading {
-            /* margin-top: 30px; */
-            border: 1px solid black;
-            border-top: 0px;
-            padding: 10px;
-        }
-
-        .workout_section_section {
-            border-top: 0px;
-            width: 100%;
-        }
-
-        /* COMPLAINT TABLE CSS */
-        .complaint_table > table,
-        th,
-        td {
-            border: 1px solid black;
-            border-collapse: collapse;
-            padding-left: 5px;
-            padding-right: 5px;
-            border-top: 0px;
-            border-left: 0px;
-            /* border-right: 0px; */
-        }
-
-        .complaint_table {
-            border-collapse: collapse;
-        }
-
-        /* Force page breaks before major sections
-        .investigation_section,
-        .next_consultation_section_heading,
-        .diet_section_heading,
-        .workout_section_heading {
+        .page-break {
             page-break-before: always;
-        }*/
+        }
 
-        /* MEDICINE TABLE CSS */
-        .medicine_table {
+        .section-group {
+            page-break-inside: avoid;
+            break-inside: avoid-page;
+            margin-bottom: 15px;
+        }
+
+        /* Common Table Styles */
+        .medicine_table,
+        .investigation_table,
+        .consultation_table,
+        .diet_table,
+        .workout_table {
             width: 100%;
-            margin: auto;
             border-collapse: collapse;
-            text-align: center;
-            table-layout: fixed;
-            border: 1px solid black;
+            page-break-inside: auto;
+            border-left: 1px solid black;
+        }
+
+        /* Table Headers */
+        .medicine_table thead,
+        .investigation_table thead,
+        .consultation_table thead,
+        .diet_table thead,
+        .workout_table thead {
+            display: table-header-group;
+        }
+
+        /* Table Body */
+        .medicine_table tbody,
+        .investigation_table tbody,
+        .consultation_table tbody,
+        .diet_table tbody,
+        .workout_table tbody {
             page-break-inside: auto;
         }
 
+        /* Table Rows */
+        .medicine_table tr,
+        .investigation_table tr,
+        .consultation_table tr,
+        .diet_table tr,
+        .workout_table tr {
+            page-break-inside: avoid;
+            page-break-after: auto;
+        }
+
+        /* Table Headers and Cells */
         .medicine_table th,
-        .medicine_table td {
+        .investigation_table th,
+        .consultation_table th,
+        .diet_table th,
+        .workout_table th {
+            background-color: #fff;
+            position: sticky;
+            top: 0;
+            z-index: 2;
+            border-bottom: 2px solid #000;
+        }
+
+        table th,
+        table td {
             border: 1px solid black;
             padding: 5px;
-            align-content: center;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            vertical-align: top;
-            word-wrap: break-word;
+            border-top: 0;
+            border-left: 0;
         }
 
-        .medicine_name_wrapper {
-            display: grid; /* Use grid to control child sizes */
-            grid-template-columns: 30% 70%; /* First child smaller, second child larger */
+        /* Medicine Table Specific */
+        .medicine_table {
+            table-layout: fixed;
+            margin: auto;
+            text-align: center;
+            border: 1px solid black;
         }
 
-        .medicine_name_wrapper div {
-            padding: 15px 5px;
-            align-content: center;
+        .medicine_table td p {
+            font-size: 10px;
+            margin: 0;
+            white-space: normal;
         }
 
         .medicine_table th:nth-child(1),
         .medicine_table td:nth-child(1) {
             width: 5%; /* S.No */
-        }
-
-        /* Table Modifications for Better Pagination */
-        .medicine_table tr {
-            page-break-inside: avoid;
-            page-break-after: auto;
         }
 
         .medicine_table th:nth-child(3),
@@ -468,45 +228,43 @@
             white-space: normal;
         }
 
-        .medicine_table td p {
-            font-size: 10px; /* Smaller font size for cell content */
-            margin: 0;
-            white-space: normal;
+        /* Medicine Name Wrapper */
+        .medicine_name_wrapper {
+            display: grid;
+            grid-template-columns: 30% 70%;
         }
 
-        /* INVESTIGATION TABLE CSS */
-        .investigation_table > table,
-        th,
-        td {
+        .medicine_name_wrapper div {
+            padding: 15px 5px;
+            align-content: center;
+        }
+
+        /* Top Section Styles */
+        .top_provider_section {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 5px;
+            align-items: center;
+        }
+
+        .top_provider_section_two {
+            padding-left: 20px;
+            padding-right: 10px;
+        }
+
+        /* Section Wrappers */
+        .top_section_wrapper {
             border: 1px solid black;
-            border-collapse: collapse;
-            padding-left: 5px;
-            padding-right: 5px;
-            border-top: 0px;
-            border-left: 0px;
+            display: grid;
+            grid-template-columns: repeat(2, 3fr);
+            grid-auto-rows: minmax(30px, auto);
         }
 
-        .investigation_table {
-            border-collapse: collapse;
-
-            border-left: 1px solid black;
-        }
-
-        /* NEXT CONSULTATION SECTION */
-        .consultation_table > table,
-        th,
-        td {
-            border: 1px solid black;
-            border-collapse: collapse;
-            padding-left: 5px;
-            padding-right: 5px;
-            border-top: 0px;
-            border-left: 0px;
-        }
-
-        .consultation_table {
-            border-collapse: collapse;
-            border-left: 1px solid black;
+        .top_section_wrapper_one,
+        .top_section_wrapper_two {
+            padding: 0 10px;
+            display: flex;
+            align-items: center;
         }
 
         /* Complaint Table Specific */
@@ -528,11 +286,10 @@
         /* Complaint Section */
         .complaints_section {
             border: 1px solid black;
-            border-collapse: collapse;
-            padding-left: 5px;
-            padding-right: 5px;
-            border-top: 0px;
-            border-left: 0px;
+            border-right: 0;
+            border-top: 0;
+            border-bottom: 0;
+            display: flex;
         }
 
         .complaints_section_one {
@@ -545,12 +302,12 @@
         }
 
         /* Modified style to allow Height & Weight
-	    .complaints_subsection {
+	.complaints_subsection {
             grid-auto-rows: minmax(30px, auto);
             grid-template-columns: repeat(3, 3fr);
             display: grid;
         }
-	    */
+	 */
 
         /* Modified Styles */
         .complaints_subsection {
@@ -566,16 +323,57 @@
         /* Schedule Medicine */
         .schedule_medicine_wrapper {
             border: 1px solid black;
-            border-collapse: collapse;
-            padding-left: 5px;
-            padding-right: 5px;
-            border-top: 0px;
-            border-left: 0px;
+            border-left: 0;
+            border-right: 0;
+            border-bottom: 0;
+            margin-top: 10px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-auto-rows: minmax(20px, auto);
+            padding: 10px;
         }
 
-        .workout_table {
-            border-collapse: collapse;
-            border-left: 1px solid black;
+        .right_tick_div {
+            padding: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-flow: column;
+        }
+
+        /* Section Styles */
+        .diagnosis_section,
+        .chef-complaints-section,
+        .treatment_advise_section,
+        .investigation_section_heading,
+        .next_consultation_section_heading,
+        .workout_section_heading {
+            border: 1px solid black;
+            border-top: 0;
+            padding: 10px;
+        }
+
+        .diet_section_heading {
+            margin-top: 30px;
+            border: 1px solid black;
+            padding: 10px;
+        }
+
+        /* Signature Section */
+        .signature_section {
+            text-align: center;
+            margin-left: 600px;
+            margin-bottom: 20px;
+            margin-top: 30px;
+            display: flex;
+            align-items: end;
+            justify-content: end;
+        }
+
+        .signature_section .signature_image_section {
+            align-items: center;
+            display: flex;
+            flex-flow: column;
         }
 
         .tick_image {
@@ -759,6 +557,7 @@
     <!-- MEDICINE  SECTION -->
     <div class="medicine_section avoid-break">
         <table class="medicine_table">
+            <thead>
             <tr>
                 <th>
                     <h3>S.No</h3>
@@ -792,6 +591,8 @@
                     <h3>Start Date / Duration</h3>
                 </th>
             </tr>
+            </thead>
+            <tbody>
             {{#each medicationsList}}
             <tr>
                 <td>
@@ -799,7 +600,7 @@
                 </td>
                 <td colspan="2" style="padding: 0px">
                     <div class="medicine_name_wrapper">
-                        <div style="border-right: 1px solid;">
+                        <div style="border-right: 1px solid; width: 80%;">
                             <p>{{ medicineType }}</p>
                         </div>
                         <div style="text-align: justify;">
@@ -878,6 +679,7 @@
                 </td>
             </tr>
             {{/each}}
+            </tbody>
         </table>
     </div>
 
@@ -893,6 +695,7 @@
                     class="investigation_table"
                     style="width: 100%; text-align: center"
             >
+                <thead>
                 <tr>
                     <th style="width: 3%">
                         <h3>S. No</h3>
@@ -907,6 +710,8 @@
                         <h3>Purpose</h3>
                     </th>
                 </tr>
+                </thead>
+                <tbody>
                 {{#each investigations}}
                 <tr>
                     <td>
@@ -931,25 +736,11 @@
                     </td>
                 </tr>
                 {{/each}}
-                <!-- <tr>
-                      <td><p>1.</p></td>
-                      <td style="text-align: left">
-                        <p>
-                          CT SCAN-CECT HEAD(Radiology) <br />
-                          <span style="font-size: 8px">by Dr. Test</span>
-                          <br />
-                          Note:-
-                        </p>
-                      </td>
-                      <td><p>03 May '23</p></td>
-                      <td><p>test 2</p></td>
-                    </tr> -->
+                </tbody>
             </table>
         </div>
     </div>
-
     <!-- NEXT CONSULTATION SECTION -->
-
     <div class="next_consultation_section_heading">
         <h3>Next Consultation :</h3>
     </div>
@@ -959,6 +750,7 @@
                     class="consultation_table"
                     style="width: 100%; text-align: center"
             >
+                <thead>
                 <tr>
                     <th style="width: 3%">
                         <h3>S. No</h3>
@@ -973,6 +765,8 @@
                         <h3>Purpose</h3>
                     </th>
                 </tr>
+                </thead>
+                <tbody>
                 {{#each nextConsultation}}
                 <tr>
                     <td>
@@ -997,24 +791,7 @@
                     </td>
                 </tr>
                 {{/each}}
-
-                <!-- <tr>
-                        <td><p>1.</p></td>
-                          <td style="text-align: left">
-                            <p>
-                              CT SCAN-CECT HEAD(Radiology) <br />
-                              <span style="font-size: 8px">by Dr. Test</span>
-                              <br />
-                              Note:-
-                            </p>
-                          </td>
-                        <td>
-                          <p>03 May '23</p>
-                        </td>
-                        <td>
-                          <p>test 2</p>
-                        </td>
-                      </tr> -->
+                </tbody>
             </table>
         </div>
     </div>
@@ -1059,7 +836,7 @@
         </h3>
     </div>
 
-    <!-- {{#if pre_workouts.length}} -->
+    {{#if pre_workouts.length}}
     <div style="margin-top: 30px">
         <h3>Lifestyle Advice</h3>
     </div>
@@ -1071,13 +848,14 @@
     {{/if}}
 
     <!-- DIET SECTION  -->
-    <!-- {{#if diet_output.length}} -->
+    {{#if diet_output.length}}
     <div class="diet_section_heading">
         <h3>Diet :</h3>
     </div>
     <div class="diet_section_section">
         <div class="diet_section_section_one">
             <table class="diet_table" style="width: 100%; text-align: center">
+                <thead>
                 <tr>
                     <th style="width: 6%">
                         <h3>S. No</h3>
@@ -1092,6 +870,8 @@
                         <h3>Duration</h3>
                     </th>
                 </tr>
+                </thead>
+                <tbody>
                 {{#each diet_output }}
                 <tr>
                     <td>
@@ -1146,17 +926,20 @@
                     </td>
                 </tr>
                 {{/each }}
+                </tbody>
             </table>
         </div>
     </div>
-    <!-- {{/if}}
-    {{#if pre_workouts.length}} -->
+    {{/if}}
+
+    {{#if pre_workouts.length}}
     <div class="workout_section_heading">
         <h3>Workout :</h3>
     </div>
     <div class="workout_section_section">
         <div class="workout_section_section_one">
             <table class="workout_table" style="width: 100%; text-align: center">
+                <thead>
                 <tr>
                     <th style="width: 6%">
                         <h3>S. No</h3>
@@ -1174,6 +957,8 @@
                         <h3>Duration</h3>
                     </th>
                 </tr>
+                </thead>
+                <tbody>
                 {{#each pre_workouts }}
                 <tr>
                     <td>
@@ -1204,17 +989,17 @@
                     </td>
                 </tr>
                 {{/each }}
+                </tbody>
             </table>
         </div>
     </div>
-    <!-- {{/if}} -->
+    {{/if}}
 </div>
-
 
 <!-- Footer Template -->
 <div class="footer">
     <p>Page <span class="pageNumber"></span> of <span class="pageCount"></span></p>
-    <p>Generated via AdhereLive platform</p>
+    <p>Generated via the AdhereLive Platform</p>
 </div>
 </body>
 </html>
