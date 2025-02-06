@@ -150,9 +150,6 @@ router.get(
             logger.debug(path.join(process.cwd(), "prescription.html"));
             const options = {
                 format: "A4",
-                headerTemplate: "<p></p>",
-                footerTemplate: "<p></p>",
-                displayHeaderFooter: false,
                 margin: {
                     top: '5mm',
                     bottom: '10mm',
@@ -160,6 +157,9 @@ router.get(
                     right: '5mm'
                 },
                 printBackground: true,
+                displayHeaderFooter: false,
+                headerTemplate: '<div></div>', // Empty header since we have our own
+                footerTemplate: '<div></div>', // Empty footer since we have our own
                 preferCSSPageSize: true,
                 path: "invoice.pdf",
             };
