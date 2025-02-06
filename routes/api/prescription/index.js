@@ -129,6 +129,7 @@ async function html_to_pdf({templateHtml, dataBinding, options}) {
      * pdfBuffer will store the PDF file Buffer content when "path is not provided"
      */
     let pdfBuffer = await page.pdf(options);
+    logger.info('Conversion complete. PDF file generated successfully.');
     await browser.close();
     return pdfBuffer; // Returning the value when page.pdf promise gets resolved
 }
