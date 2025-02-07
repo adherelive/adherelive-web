@@ -1,10 +1,11 @@
-import { col, fn, literal, Op } from "sequelize";
+import { literal, Op } from "sequelize";
 import Database from "../../../libs/mysql";
 import moment from "moment";
 import { USER_CATEGORY } from "../../../constant";
 import { TABLE_NAME } from "../../models/appointments";
 
 import { createLogger } from "../../../libs/logger";
+
 const logger = createLogger("WEB > APPOINTMENT > SERVICE");
 
 /**

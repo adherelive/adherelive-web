@@ -2,7 +2,6 @@ import express from "express";
 import Authenticated from "../middleware/auth";
 import Report from "../../../app/controllers/reports/report.controller";
 import multer from "multer";
-import * as validate from "./validator";
 
 const storage = multer.memoryStorage();
 const upload = multer({ dest: "../../../app/public/", storage: storage });

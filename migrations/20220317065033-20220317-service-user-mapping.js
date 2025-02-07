@@ -1,11 +1,10 @@
 "use strict";
 import { TABLE_NAME } from "../app/models/serviceUserMapping";
-import { TABLE_NAME as subscribePlanTableName } from "../app/models/serviceSubscriptions";
 import { TABLE_NAME as serviceOfferingTableName } from "../app/models/serviceOffering";
 import { TABLE_NAME as patientsTableName } from "../app/models/patients";
 import { TABLE_NAME as doctorsTableName } from "../app/models/doctors";
 import { TABLE_NAME as providersTableName } from "../app/models/providers";
-import { PATIENT_STATUS, USER_CATEGORY, USER_STATUS } from "../constant";
+import { PATIENT_STATUS, USER_CATEGORY } from "../constant";
 
 module.exports = {
   up: (queryInterface, Sequelize) => {

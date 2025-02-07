@@ -9,21 +9,18 @@ import carePlanAppointmentService from "../../../services/carePlanAppointment/ca
 import templateMedicationService from "../../../services/templateMedication/templateMedication.service";
 import templateAppointmentService from "../../../services/templateAppointment/templateAppointment.service";
 import medicineService from "../../../services/medicine/medicine.service";
-import carePlanSecondaryDrMapService from "../../../services/carePlanSecondaryDoctorMappings/carePlanSecondaryDoctorMappings.service";
+import carePlanSecondaryDrMapService
+    from "../../../services/carePlanSecondaryDoctorMappings/carePlanSecondaryDoctorMappings.service";
 import twilioService from "../../../services/twilio/twilio.service";
 
 import * as carePlanHelper from "./carePlan.helper";
+import { getCarePlanAppointmentIds, getCarePlanMedicationIds, getCarePlanSeverityDetails } from "./carePlan.helper";
 import {
-  getCarePlanAppointmentIds,
-  getCarePlanMedicationIds,
-  getCarePlanSeverityDetails,
-} from "./carePlan.helper";
-import {
-  EVENT_LONG_TERM_VALUE,
-  EVENT_STATUS,
-  EVENT_TYPE,
-  USER_CATEGORY,
-  WHEN_TO_TAKE_ABBREVATIONS,
+    EVENT_LONG_TERM_VALUE,
+    EVENT_STATUS,
+    EVENT_TYPE,
+    USER_CATEGORY,
+    WHEN_TO_TAKE_ABBREVATIONS,
 } from "../../../../constant";
 import PatientWrapper from "../../../apiWrapper/mobile/patient";
 import AppointmentWrapper from "../../../apiWrapper/mobile/appointments";

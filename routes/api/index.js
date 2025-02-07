@@ -60,7 +60,6 @@ import TxActivitiesRouter from "./transactionActivity";
 import FlashCardRouter from "./flashCard";
 import reassignAudit from "./reassignAudit";
 import NotesRouter from "./notes";
-import { getTime } from "../../app/helper/timer";
 import prescriptionRouter from "./prescription";
 
 const logger = createLogger("API > INDEX");

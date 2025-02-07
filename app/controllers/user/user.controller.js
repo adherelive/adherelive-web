@@ -28,15 +28,15 @@ import UserRolesWrapper from "../../apiWrapper/web/userRoles";
 import DoctorPatientWatchlistWrapper from "../../apiWrapper/web/doctorPatientWatchlist";
 import LinkVerificationWrapper from "../../apiWrapper/mobile/userVerification";
 
-import {createNewUser, uploadImageS3} from "./user.helper";
-import {v4 as uuidv4} from "uuid";
+import { createNewUser, uploadImageS3 } from "./user.helper";
+import { v4 as uuidv4 } from "uuid";
 import constants from "../../../config/constants";
-import {EMAIL_TEMPLATE_NAME, USER_CATEGORY, VERIFICATION_TYPE,} from "../../../constant";
-import {EVENTS, Proxy_Sdk} from "../../proxySdk";
+import { EMAIL_TEMPLATE_NAME, USER_CATEGORY, VERIFICATION_TYPE, } from "../../../constant";
+import { EVENTS, Proxy_Sdk } from "../../proxySdk";
 
 import AppNotification from "../../notificationSdk/inApp";
 import AdhocJob from "../../jobSdk/Adhoc/observer";
-import {getSeparateName} from "../../helper/common";
+import { getSeparateName } from "../../helper/common";
 
 const {OAuth2Client} = require("google-auth-library");
 const moment = require("moment");
@@ -1084,17 +1084,27 @@ class UserController extends Controller {
     }
   };
 
+  /**
+   * This function handles the user logout and is linked to the /sign-out API
+   * Need to ensure that all cookies and sessions are destroyed
+   *
+   * @param req
+   * @param res
+   * @returns {Promise<*>}
+   */
   signOut = async (req, res) => {
     try {
       if (req.cookies.accessToken) {
         res.clearCookie("accessToken");
-
         return this.raiseSuccess(res, 200, {}, "Signed out successfully!");
       } else {
         return this.raiseServerError(res, 500, {}, constants.COOKIES_NOT_SET);
-        // let response = new Response(false, 500);
-        // response.setError(errMessage.INTERNAL_SERVER_ERROR);
-        // return res.status(500).json(response.getResponse());
+        /**
+         * TODO: Check why these are not used?
+        let response = new Response(false, 500);
+        response.setError(errMessage.INTERNAL_SERVER_ERROR);
+        return res.status(500).json(response.getResponse());
+         */
       }
     } catch (error) {
       return this.raiseServerError(res, 500, {}, `${error.message}`);

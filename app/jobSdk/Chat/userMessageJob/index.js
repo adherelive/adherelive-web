@@ -1,10 +1,6 @@
 import ChatJob from "../";
 import moment from "moment";
-import {
-  DEFAULT_PROVIDER,
-  MESSAGE_TYPES,
-  USER_CATEGORY,
-} from "../../../../constant";
+import { DEFAULT_PROVIDER, MESSAGE_TYPES, USER_CATEGORY, } from "../../../../constant";
 
 import UserRoleService from "../../../services/userRoles/userRoles.service";
 import ProviderService from "../../../services/provider/provider.service";

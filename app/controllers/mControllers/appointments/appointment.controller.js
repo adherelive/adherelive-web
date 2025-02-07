@@ -30,7 +30,6 @@ import ScheduleEventService from "../../../services/scheduleEvents/scheduleEvent
 import featureDetailService from "../../../services/featureDetails/featureDetails.service";
 
 // Wrappers
-
 import UploadDocumentWrapper from "../../../apiWrapper/mobile/uploadDocument";
 import MAppointmentWrapper from "../../../apiWrapper/mobile/appointments";
 import DoctorWrapper from "../../../apiWrapper/mobile/doctor";

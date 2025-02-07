@@ -20,10 +20,10 @@ class pnManger {
       //
       //
       let isValidData = this.validatePayload(payload);
-      logger.debug("validating payload");
+      logger.info("Validating the PN payload!");
       if (isValidData.error && isValidData.error == 1) return isValidData;
-      logger.success("payload valid!!");
-      logger.debug("creating endpointArn...!!");
+      logger.info("PN payload is valid!");
+      logger.info("Creating PN endpoint for ARN!");
       //
       let PNendpointData =
         payload.type == "android"
@@ -35,19 +35,19 @@ class pnManger {
               .promise()
           : payload.targetArn;
 
-      logger.success("endpointArn creation successfull!!");
+      logger.info("PN endpoint ARN creation successful!");
       let PNendpointArn =
         payload.type == "android" ? PNendpointData.EndpointArn : PNendpointData;
-      logger.debug("transforming payload to aws payload");
+      logger.info("Transforming PN payload to AWS payload");
       let payloadBuilder = new PNpayloadBuilder(payload);
-      logger.success("payload build successfull!!");
-      let tranformedPayload = payloadBuilder.getPayload();
-      logger.debug("sending push notification");
-      tranformedPayload = JSON.stringify(tranformedPayload);
-      //
+      logger.info("PN payload transformation to AWS payload successful!");
+      let transformedPayload = payloadBuilder.getPayload();
+      logger.info("Sending push notification for PN");
+      transformedPayload = JSON.stringify(transformedPayload);
+
       let PNpublishResponse = await this.sns
         .publish({
-          Message: tranformedPayload,
+          Message: transformedPayload,
           MessageStructure: "json",
           TargetArn: PNendpointArn,
         })

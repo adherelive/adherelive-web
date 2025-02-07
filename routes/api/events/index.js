@@ -1,10 +1,6 @@
 import Authenticate from "../middleware/auth";
 import EventController from "../../../app/controllers/scheduleEvents/event.controller";
 
-import Appointment from "../../../app/controllers/appointments/appointment.controller";
-import MedicationReminder from "../../../app/controllers/medicationReminder/mReminder.controller";
-import * as validator from "./validator";
-
 const express = require("express");
 const router = express.Router();
 

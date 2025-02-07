@@ -1,7 +1,6 @@
 "use strict";
 import { DataTypes } from "sequelize";
-import { CURRENCY, REPEAT_TYPE, USER_CATEGORY } from "../../constant";
-import { TABLE_NAME as serviceOfferingTable } from "./serviceOffering";
+import { CURRENCY, USER_CATEGORY } from "../../constant";
 
 export const TABLE_NAME = "service_subscriptions";
 

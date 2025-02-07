@@ -3,7 +3,8 @@ import Controller from "../index";
 import { createLogger } from "../../../libs/logger";
 
 // Services
-import ServiceSubscriptionUserMappingService from "../../services/serviceSubscriptionUserMapping/serviceSubscriptionUserMapping.service";
+import ServiceSubscriptionUserMappingService
+    from "../../services/serviceSubscriptionUserMapping/serviceSubscriptionUserMapping.service";
 import ServiceUserMappingService from "../../services/serviceUserMapping/serviceUserMapping.service";
 import ServiceSubscriptionService from "../../services/serviceSubscription/serviceSubscription.service";
 import ServiceSubscriptionMapping from "../../services/serviceSubscriptionMapping/serviceSubscritpionMapping.service";

@@ -1,7 +1,5 @@
 import express from "express";
 import ServiceOffering from "../../../app/controllers/serviceOffering/serviceOffering.controller";
-import isAllowed from "../../middlewares/permissions";
-import PERMISSIONS from "../../../config/permissions";
 
 import Authenticate from "../../commonmiddlewares/auth";
 import { isDoctor } from "../../commonmiddlewares/doctor";

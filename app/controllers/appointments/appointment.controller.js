@@ -54,7 +54,6 @@ import { downloadFileFromS3 } from "../mControllers/user/user.helper";
 
 // Helpers
 import * as AppointmentHelper from "./appointments.helper";
-import notificationSdk from "../../notificationSdk";
 
 const path = require("path");
 
