@@ -119,6 +119,14 @@ async function html_to_pdf({templateHtml, dataBinding, options}) {
         headless: true,
     });
     const page = await browser.newPage();
+
+    // Set viewport to A4 size
+    await page.setViewport({
+        width: 794, // A4 width in pixels at 96 DPI
+        height: 1123, // A4 height in pixels at 96 DPI
+        deviceScaleFactor: 2, // Higher resolution
+    });
+
     await page.goto(`data:text/html;charset=UTF-8,${finalHtml}`, {
         waitUntil: "networkidle0",
     });
@@ -158,11 +166,11 @@ router.get(
                     right: '5mm'
                 },
                 printBackground: true,
-                displayHeaderFooter: false,
+                displayHeaderFooter: true,
                 headerTemplate: '<div></div>', // Empty header since we have our own
                 footerTemplate: '<div></div>', // Empty footer since we have our own
                 preferCSSPageSize: true,
-                path: "invoice.pdf",
+                path: "prescription.pdf",
             };
             let pdf_buffer_value = await html_to_pdf({
                 templateHtml,
@@ -221,9 +229,7 @@ function formatDoctorsData(
     let mobileNumber = mobile_number;
     let prefixToShow = prefix;
 
-    logger.debug("========provider details start==================");
-    logger.debug(providers);
-    logger.debug("========provider details end====================");
+    logger.debug("Provider Details: ", providers);
 
     if (Object.keys(providers).length > 0) {
         const {
