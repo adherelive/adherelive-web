@@ -1,17 +1,67 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Patient Prescription</title>
     <style>
         /* Base Page Setup */
-        /*@media print {
+        /* This CSS rule ensures that table headers (contained within the <thead> element)
+           repeat at the top of each new page when the table spans multiple pages. */
+        @media print {
+            /* Force background colors and images to print */
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            /* Ensure page breaks don't occur within elements */
+            h1, h2, h3, h4, h5, h6 {
+                page-break-after: avoid;
+            }
+
+            @page {
+                size: letter portrait;
+            }
+
+            img {
+                /* Ensure images are rendered at their original quality */
+                print-color-adjust: exact;
+                max-width: 100%;
+                height: auto;
+                -webkit-backface-visibility: hidden;
+                -webkit-print-color-adjust: exact;
+                backface-visibility: hidden;
+                page-break-inside: avoid;
+            }
+
+            /* TODO: Preserve dimensions for specific images, future use
+            .top_provider_section img,
+            .top_provider_section_three img,
+            .tick_image img,
+            .signature_image {
+                max-width: none;
+                width: attr(width);
+                height: attr(height);
+            }
+             */
+            /* Ensure table headers repeat */
             thead {
                 display: table-header-group;
             }
-        }*/
 
+            /* Avoid breaking within table rows */
+            tr {
+                page-break-inside: avoid;
+            }
+        }
+
+        /* Add support for both A4 and Letter sizes */
         @page {
-            size: A4;
-            margin: 10mm 5mm;
+            size: A4 portrait;
+            margin: 10mm 5mm;  /* Reduced margins for better space utilization */
+            /* bleed: 0; */
             @top-center {
                 content: element(header);
             }
@@ -26,6 +76,7 @@
             src: url("https://res.cloudinary.com/myrltech/raw/upload/v1685442477/PlusJakartaSans-Bold.ttf");
             font-weight: normal;
             font-style: normal;
+            font-display: swap;
         }
 
         @font-face {
@@ -63,11 +114,84 @@
             font-style: normal;
         }
 
+        /* Specific rules for content breaking to existing styles */
+        .avoid-break {
+            break-inside: avoid-page;
+            page-break-inside: avoid;
+        }
+
+        .force-break {
+            break-before: page;
+            page-break-before: always;
+        }
+
+        .keep-together {
+            break-inside: avoid;
+            page-break-inside: avoid;
+        }
+
+        /* Container width constraints */
+        .main-content {
+            width: 100%;
+            max-width: 210mm; /* A4 width */
+            margin: 0 auto;
+        }
+
+        /* Maintains aspect ratio in the images */
+        img {
+            max-width: 100%;
+            height: auto;
+            object-fit: contain;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+        }
+
+        /* For images that need to maintain specific dimensions */
+        .fixed-dimension-img {
+            width: auto;
+            height: auto;
+            max-width: 100%;
+            object-fit: contain;
+        }
+
+        /* Logo images */
+        .top_provider_section img {
+            width: 60px;
+            height: 60px;
+            object-fit: contain;
+        }
+
+        /* QR code image */
+        .top_provider_section_three img {
+            width: 100px;
+            height: 100px;
+            object-fit: contain;
+        }
+
+        /* Tick images in medicine table */
+        .tick_image img {
+            width: 15px;
+            height: 15px;
+            object-fit: contain;
+        }
+
+        .tick_image {
+            display: flex;
+        }
+
+        /* Signature image */
+        .signature_image {
+            width: 120px;
+            height: 40px;
+            object-fit: contain;
+        }
+
         /* Global Styles */
         body {
             margin: 0;
             padding: 10px;
             font-size: 10px;
+            font-family: "PlusJakartaSans-Regular", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
         }
 
         /* Typography */
@@ -101,10 +225,30 @@
 
         .footer {
             position: running(footer);
+            bottom: 0;
             width: 100%;
-            padding-top: 10px;
+            padding: 10px 0;
+            background-color: #fff;
             border-top: 1px solid black;
             text-align: center;
+            font-family: "PlusJakartaSans-Regular";
+        }
+
+        /* Footer Styles */
+        .footer-content {
+            margin: 0 20px;
+            font-size: 10px;
+            color: #666;
+            text-align: center;
+        }
+
+        .page-info {
+            margin-bottom: 4px;
+        }
+
+        .generation-info {
+            font-size: 8px;
+            color: #888;
         }
 
         /* Page Break Controls */
@@ -132,16 +276,12 @@
         .diet_table,
         .workout_table {
             width: 100%;
+            table-layout: fixed;
             border-collapse: collapse;
+            border-spacing: 0;
+            empty-cells: show;
             page-break-inside: auto;
             border-left: 1px solid black;
-        }
-
-        .medicine_table {
-            table-layout: fixed;
-            margin: auto;
-            text-align: center;
-            border: 1px solid black;
         }
 
         /* Table Headers */
@@ -193,13 +333,59 @@
             border-left: 0;
         }
 
+        /* Medicine Table Specific */
+        .medicine_table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed; /* Keep columns aligned */
+        }
+
         .medicine_table td p {
             font-size: 10px;
             margin: 0;
             white-space: normal;
         }
 
-        /* Medicine Table Specific */
+        .medicine_table th, .medicine_table td {
+            border: 1px solid black;
+            padding: 5px;
+            text-align: left; /* Align text to the left within cells */
+            vertical-align: top; /* Align content to the top of cells */
+            page-break-inside: avoid; /* Prevent breaks inside cells */
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: normal;
+            word-wrap: break-word;
+        }
+
+        .medicine_table thead {
+            display: table-header-group; /* Ensure header repeats on new pages */
+        }
+
+        .medicine_table tfoot {
+            display: table-footer-group; /* For possible future use */
+        }
+
+        .medicine_table thead::after {
+            content: '';
+            display: block;
+            height: 5mm; /* Space after header */
+        }
+
+        .medicine_table tfoot::before {
+            content: '';
+            display: block;
+            height: 5mm; /* Space before footer */
+        }
+
+        .medicine_table tr {
+            page-break-inside: avoid; /* Prevent breaks within rows */
+        }
+
+        .medicine_table tbody tr {
+            page-break-before: auto; /* Allow page breaks before rows in the tbody */
+        }
+
         .medicine_table th:nth-child(1),
         .medicine_table td:nth-child(1) {
             width: 5%; /* S.No */
@@ -264,6 +450,44 @@
             align-items: center;
         }
 
+        .top_section_wrapper_one h3,
+        .top_section_wrapper_two h3 {
+            margin-right: 10px;
+            font-family: "PlusJakartaSans-Bold";
+            font-size: 13px;
+        }
+
+        .top_section_wrapper_one p,
+        .top_section_wrapper_two p {
+            font-family: "PlusJakartaSans-Medium";
+            font-size: 10px;
+            margin: 0;
+        }
+
+        /* Complaint Table Specific */
+        .complaint_table {
+            width: 100%;
+            table-layout: fixed; /* Important: Use fixed layout to keep columns aligned */
+            border-collapse: collapse; /* Collapse borders for a cleaner look */
+        }
+
+        .complaint_table th, .complaint_table td {
+            padding: 5px;
+            text-align: center; /* Center the content */
+            border: 1px solid black; /* Add borders back if needed */
+        }
+
+        /* Hide BMI, BP, RBS, Temperature */
+        .complaint_table tr:nth-child(2) { /* Select the second row in each table */
+            display: none;
+        }
+
+        .complaints_subsection > div:nth-child(1) .complaint_table tr:nth-child(2), /* BMI in the first table */
+        .complaints_subsection > div:nth-child(2) .complaint_table tr:nth-child(2), /* BP in the second table */
+        .complaints_subsection > div:nth-child(3) .complaint_table tr:nth-child(2) { /* Temperature in the third table */
+            display: none;
+        }
+
         /* Complaint Section */
         .complaints_section {
             border: 1px solid black;
@@ -275,17 +499,32 @@
 
         .complaints_section_one {
             padding: 10px;
-            width: 40%;
+            width: 50%;
         }
 
         .complaints_section_two {
-            width: 75%;
+            width: 50%;
         }
 
+        /* Modified style to allow Height & Weight
         .complaints_subsection {
-            grid-auto-rows: minmax(30px, auto);
-            grid-template-columns: repeat(3, 3fr);
-            display: grid;
+                grid-auto-rows: minmax(30px, auto);
+                grid-template-columns: repeat(3, 3fr);
+                display: grid;
+            }
+        */
+
+        /* Modified Styles */
+        .complaints_subsection {
+            display: table; /* Use table display for the container */
+            width: 100%;
+            table-layout: fixed; /* Crucial for consistent column widths */
+        }
+
+        .complaints_subsection > div {
+            display: table-cell; /* Use table cell display for the inner divs */
+            vertical-align: top; /* Align cells to the top */
+            padding: 10px;
         }
 
         /* Schedule Medicine */
@@ -342,10 +581,41 @@
             align-items: center;
             display: flex;
             flex-flow: column;
+            text-align: center;
         }
 
-        .tick_image {
-            display: flex;
+        .signature_image {
+            max-width: 120px;
+            height: auto;
+            /* Preserve aspect ratio while respecting height/width constraints */
+            object-fit: contain;
+        }
+
+        .signature-date {
+            margin: 10px 0;
+        }
+
+        .signature-stamp h3 {
+            margin: 10px 0;
+        }
+
+        .signature-details {
+            margin-top: 10px;
+        }
+
+        .signature-details p {
+            margin: 0;
+        }
+
+        /* Table Containers */
+        .medicine-table-container {
+            overflow: visible;
+            margin: 15px 0;
+        }
+
+        /* New Page for Lifestyle Advice */
+        .lifestyle-advice-page {
+            page-break-before: always; /* Start on a new page */
         }
 
         /* Table Containers */
@@ -362,7 +632,17 @@
 <div class="header">
     <div class="top_provider_section">
         <div class="top_provider_section_one">
-            <img src="{{ providerLogo }}" alt="adherelive" width="60" height="60"/>
+            <picture>
+                <!-- Primary source - hospital's actual logo -->
+                <source srcset="{{ providerLogo }}">
+                <!-- Fallback SVG logo -->
+                <img
+                        height="60"
+                        width="60"
+                        src="../../../other/medical-backup.svg"
+                        alt="AdhereLive - Hospital Logo"
+                />
+            </picture>
         </div>
         <div class="top_provider_section_two">
             <h3>
@@ -443,7 +723,6 @@
 
     <!-- DIAGNOSIS  AND SYMPTOMS-->
     <div class="top_section_wrapper">
-        <!-- <h3>Diagnosis : </h3> -->
         <div
                 class="top_section_wrapper_one"
                 style="border-right: 1px solid; padding: 10px"
@@ -476,79 +755,37 @@
     </div>
 
     <!-- COMPLAINTS SECTION -->
+    <!-- Grid style not to be used until we get BMI, BP, Temperature, etc.
     <div class="complaints_section">
-        <!-- <div class="complaints_section_one">COMPLAINTS :</div> -->
-        <div class="complaints_section_two">
-            <div class="complaints_subsection">
-                <div class="complaints_subsection_three">
-                    <table
-                            class="complaint_table"
-                            style="width: 100%; height: 100%; text-align: center"
-                    >
-                        <tr>
-                            <th style="width: 50%; height: 30px">
-                                <h3>Height</h3>
-                            </th>
-                            <td style="width: 50%; height: 30px">
-                                <p>{{patient_data.height}} cm</p>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th style="width: 50%; height: 30px">
-                                <h3>BMI</h3>
-                            </th>
-                            <td style="width: 50%; height: 30px">
-                                <p>___</p></td>
-                        </tr>
-                    </table>
-                </div>
-
-                <div class="complaints_subsection_two">
-                    <table
-                            class="complaint_table"
-                            style="width: 100%; height: 100%; text-align: center"
-                    >
-                        <tr>
-                            <th style="width: 50%; height: 30px">
-                                <h3>Weight</h3>
-                            </th>
-                            <td style="width: 50%; height: 30px">
-                                <p>{{patient_data.weight}} kg</p>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th style="width: 50%; height: 30px">
-                                <h3>BP</h3>
-                            </th>
-                            <td style="width: 50%; height: 30px">
-                                <p>___</p></td>
-                        </tr>
-                    </table>
-                </div>
-
-                <div class="complaints_subsection_one">
-                    <table
-                            class="complaint_table"
-                            style="width: 100%; height: 100%; text-align: center"
-                    >
-                        <tr>
-                            <th style="width: 50%; height: 30px">
-                                <h3>Random Blood Sugar (RBS)</h3>
-                            </th>
-                            <td style="width: 50%; height: 30px">
-                                <p>___</p>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th style="width: 50%; height: 30px">
-                                <h3>Temperature</h3>
-                            </th>
-                            <td style="width: 50%; height: 30px">
-                                <p>___</p></td>
-                        </tr>
-                    </table>
-                </div>
+        <div class="complaints_subsection">
+            <div>
+                <table class="complaint_table">
+                    <tr>
+                        <th><h3>Height</h3></th>
+                        <td><p>{{patient_data.height}} cm</p></td>
+                    </tr>
+                </table>
             </div>
+            <div>
+                <table class="complaint_table">
+                    <tr>
+                        <th><h3>Weight</h3></th>
+                        <td><p>{{patient_data.weight}} kg</p></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    -->
+    <!-- COMPLAINTS SECTION -->
+    <div class="top_section_wrapper">
+        <div class="top_section_wrapper_one" style="border-right: 1px solid; padding: 10px">
+            <h3>Height :</h3>
+            <p>{{patient_data.height}} cm</p>
+        </div>
+        <div class="top_section_wrapper_two" style="padding: 10px">
+            <h3>Weight :</h3>
+            <p>{{patient_data.weight}} kg</p>
         </div>
     </div>
 
@@ -571,7 +808,7 @@
                 </th>
                 <th colspan="3">
                     <div>
-                        <h3>Schedule Medicine</h3>
+                        <h3>Medicine Schedule</h3>
                     </div>
                     <div class="schedule_medicine_wrapper" style="display: flex; justify-content: space-around;">
                         <div>
@@ -681,7 +918,9 @@
         </table>
     </div>
 
-    <div class="page-break"></div>
+    <!-- INVESTIGATION SECTION -->
+    <!-- style="page-break-before: always" -->
+    <!-- <div class="page-break"></div> -->
     <div class="investigation_section">
         <div class="investigation_section_heading">
             <h3>Investigation :</h3>
@@ -794,20 +1033,25 @@
 
     <div class="signature_section">
         <div class="signature_image_section">
-            <img
-                    class="signature_image"
-                    height="40"
-                    width="120"
-                    src="{{ doctorSignImage }}"
-                    alt="adhere-doctor-signature"
-            />
-            <h3 style="margin-top: 10px; margin-bottom: 10px">
+            <picture>
+                <!-- Primary source - doctor's actual signature -->
+                <source srcset="{{ doctorSignImage }}" type="image/jpeg">
+                <!-- Fallback SVG signature -->
+                <img
+                        class="signature_image"
+                        height="40"
+                        width="120"
+                        src="../../../other/signature-default.svg"
+                        alt="AdhereLive - Doctor's Signature"
+                />
+            </picture>
+            <h3 class="signature-date">
                 {{ creationDate }}
             </h3>
-            <div style="margin-top: 10px">
+            <div class="signature-stamp">
                 <h3>SIGNATURE & STAMP</h3>
             </div>
-            <div style="margin-top: 10px">
+            <div class="signature-details">
                 <p>Reg.No. {{ registrationNumber }}, {{ city }}</p>
             </div>
         </div>
@@ -831,11 +1075,10 @@
         </h3>
     </div>
 
-    {{#if pre_workouts.length}}
+    {{#if (or diet_output.length pre_workouts.length) }}
     <div style="margin-top: 30px">
         <h3>Lifestyle Advice</h3>
     </div>
-    {{/if}}
 
     <!-- DIET SECTION  -->
     {{#if diet_output.length}}
@@ -984,13 +1227,15 @@
         </div>
     </div>
     {{/if}}
+    {{/if}}
 </div>
 
-
 <!-- Footer Template -->
-<div class="footer">
-    <p>Page <span class="pageNumber"></span> of <span class="pageCount"></span></p>
-    <p>Generated via AdhereLive platform</p>
+<div class="footer" id="pdf-footer">
+    <div class="footer-content">
+        <p class="page-info">Page <span id="page-num"></span> of <span id="page-count"></span></p>
+        <p class="generation-info">Generated via AdhereLive platform<br/>{{ generationTimestamp }}</p>
+    </div>
 </div>
 </body>
 </html>

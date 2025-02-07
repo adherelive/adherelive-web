@@ -70,6 +70,8 @@ const logger = createLogger("PRESCRIPTION API");
 
 let storage = multer.memoryStorage();
 let upload = multer({dest: "../app/public/", storage: storage});
+
+const generationTimestamp = moment().format('MMMM Do YYYY, h:mm:ss A'); // Format with Moment.js
 const dataBinding = {
     items: [
         {
@@ -87,6 +89,7 @@ const dataBinding = {
     ],
     total: 600,
     isWatermark: true,
+    generationTimestamp: generationTimestamp,
 };
 
 const getWhenToTakeText = (number) => {
@@ -119,6 +122,48 @@ async function html_to_pdf({templateHtml, dataBinding, options}) {
         headless: true,
     });
     const page = await browser.newPage();
+
+    // Inject page numbers using evaluateHandle
+    await page.evaluateHandle(() => {
+        const style = document.createElement('style');
+        style.textContent = `
+        @page {
+            size: A4; /* Ensure A4 size if not already set */
+            margin: 10mm 5mm; /* Set your margins */
+            @bottom-center { /* Footer content */
+                content: "Page " counter(page) " of " counter(pages);
+            }
+        }
+        .footer { /* Style your footer */
+            width: 100%;
+            text-align: center;
+            padding-top: 10px;
+            border-top: 1px solid black;
+        }`;
+        document.head.appendChild(style);
+
+        // Get the current timestamp (you can format this server-side)
+        const now = new Date();
+        const timestamp = now.toLocaleString(); // Or any format you prefer
+
+        // Add the timestamp to the footer
+        const footer = document.querySelector('.footer');
+        if (footer) {
+            const timestampElement = document.createElement('p');
+            timestampElement.textContent = `Generated via AdhereLive platform<br/>${timestamp}`;
+            footer.appendChild(timestampElement);
+        }
+    });
+
+    await page.setContent(finalHtml);
+
+    // Set viewport to A4 size
+    await page.setViewport({
+        width: 794, // A4 width in pixels at 96 DPI
+        height: 1123, // A4 height in pixels at 96 DPI
+        deviceScaleFactor: 2, // Higher resolution
+    });
+
     await page.goto(`data:text/html;charset=UTF-8,${finalHtml}`, {
         waitUntil: "networkidle0",
     });
@@ -143,12 +188,12 @@ router.get(
     async (req, res) => {
         try {
             logger.debug(path.join("./routes/api/prescription/prescription.html"));
-            logger.debug("./prescription.html");
+            // logger.debug("./prescription.html");
             const templateHtml = fs.readFileSync(
                 path.join("./routes/api/prescription/prescription.html"),
                 "utf8"
             );
-            logger.debug(path.join(process.cwd(), "prescription.html"));
+            // logger.debug(path.join(process.cwd(), "prescription.html"));
             const options = {
                 format: "A4",
                 margin: {
@@ -160,9 +205,21 @@ router.get(
                 printBackground: true,
                 displayHeaderFooter: false,
                 headerTemplate: '<div></div>', // Empty header since we have our own
-                footerTemplate: '<div></div>', // Empty footer since we have our own
+                footerTemplate: '<div></div>', // Empty header since we have our own
+                /*`
+                    <div style="width: 100%; font-size: 10px; padding: 10px 20px; color: #666; text-align: center;">
+                        <div>Page <span class="pageNumber"></span> of <span class="totalPages"></span></div>
+                        <div style="font-size: 8px; margin-top: 2px;">Generated via AdhereLive platform <br /> ${moment().format('MMMM Do YYYY, h:mm:ss A')}</div>
+                    </div>
+                `,*/
                 preferCSSPageSize: true,
-                path: "invoice.pdf",
+                path: "prescription.pdf",
+                // Add these settings for better image quality
+                viewport: {
+                    width: 1200,
+                    height: 1697,
+                    deviceScaleFactor: 2
+                }
             };
             let pdf_buffer_value = await html_to_pdf({
                 templateHtml,
@@ -221,9 +278,7 @@ function formatDoctorsData(
     let mobileNumber = mobile_number;
     let prefixToShow = prefix;
 
-    logger.debug("========provider details start==================");
-    logger.debug(providers);
-    logger.debug("========provider details end====================");
+    logger.debug("Provider Details: ", providers);
 
     if (Object.keys(providers).length > 0) {
         const {
@@ -861,8 +916,7 @@ router.get(
                 dietIds.push(id);
             }
         }
-
-        logger.debug("Diet Lists and Diet IDs: ", JSON.stringify(dietList), {dietIds});
+        //logger.debug("Diet Lists and Diet IDs: ", JSON.stringify(dietList), {dietIds});
 
         for (const id of workout_ids) {
             const workout = await workoutService.findOne({id});
@@ -1040,10 +1094,8 @@ router.get(
                     providerIcon
                 );
             }
-            logger.debug("provide details start ====================1 ");
             providerData = {...providers[provider_id]};
-            logger.debug({providerData});
-            logger.debug("provide details end ====================1 ");
+            // logger.debug("Providers Data: ", {providerData});
             usersData = {...usersData, ...users};
         }
 
@@ -1069,8 +1121,8 @@ router.get(
             }
         }
         logger.debug("Doctor ID: ", doctor_id);
-        logger.debug("Doctors: ", doctors);
-        logger.debug("Medicines Array Data: \n", {medicinesArray});
+        // logger.debug("Doctors: ", doctors);
+        // logger.debug("Medicines Array Data: \n", {medicinesArray});
 
         const {
             name: doctorName = "",
@@ -1202,8 +1254,8 @@ router.get(
         }
 
         const medicationsList = formatMedicationsData(medications, medicines);
-        logger.debug("Medications List: \n", JSON.stringify(medicationsList));
-        logger.debug("Diet API Data: \n", {data: JSON.stringify({...dietApiData})});
+        // logger.debug("Medications List: \n", JSON.stringify(medicationsList));
+        // logger.debug("Diet API Data: \n", {data: JSON.stringify({...dietApiData})});
 
         let diet_old_data = {...dietApiData};
         let diet_output = [];
@@ -1292,7 +1344,7 @@ router.get(
             // dietobj.food_item = diet_old_data[dietIds[i]]["food_items"]["food_item_detail_id"]
             diet_output.push(dietobj);
         }
-        logger.debug("Latest diet object: \n", JSON.stringify(diet_output));
+        // logger.debug("Latest diet object: \n", JSON.stringify(diet_output));
         let {date: prescriptionDate} = getLatestUpdateDate(medications);
 
         // workout logic here
@@ -1407,8 +1459,7 @@ router.get(
             diet_output,
             pre_workouts,
         };
-        logger.debug("Diet real data, with timings: \n",
-            {data: JSON.stringify({...dietApiData})}, {timings});
+        // logger.debug("Diet real data, with timings: \n", {data: JSON.stringify({...dietApiData})}, {timings});
 
         dataForPdf = {
             users: {...usersData},
@@ -1475,7 +1526,7 @@ router.get(
             printBackground: true,
             path: "invoice.pdf",
         };
-        logger.debug("Prescription Data: \n", {pre_data});
+        // logger.debug("Prescription Data: \n", {pre_data});
 
         let pdf_buffer_value = await html_to_pdf({
             templateHtml,
