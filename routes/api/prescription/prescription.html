@@ -70,6 +70,18 @@
             }
         }
 
+        /* Special classes for PDF page counting */
+        @page {
+            margin-bottom: 40px; /* Space for footer */
+        }
+
+        /* Running header/footer styles */
+        @page {
+            @bottom-center {
+                content: "Page " counter(page) " of " counter(pages);
+            }
+        }
+
         /* Font Faces */
         @font-face {
             font-family: "PlusJakartaSans-Bold";
@@ -225,10 +237,33 @@
 
         .footer {
             position: running(footer);
+            bottom: 0;
             width: 100%;
-            padding-top: 10px;
+            padding: 10px 0;
+            background-color: #fff;
             border-top: 1px solid black;
             text-align: center;
+        }
+
+        /* Footer Styles */
+        .footer-content {
+            margin: 0 20px;
+            font-size: 10px;
+            color: #666;
+            text-align: center;
+        }
+
+        .page-numbers {
+            margin: 0;
+        }
+
+        .generation-info {
+            margin: 2px 0 0 0;
+            font-size: 8px;
+        }
+
+        .generation-time {
+            color: #999;
         }
 
         /* Page Break Controls */
@@ -1186,8 +1221,15 @@
 
 <!-- Footer Template -->
 <div class="footer">
-    <p>Page <span class="pageNumber"></span> of <span class="pageCount"></span></p>
-    <p>Generated via the AdhereLive Platform</p>
+    <div class="footer-content">
+        <p class="page-numbers">
+            Page <span class="pageNumber"></span> of <span class="totalPages"></span>
+        </p>
+        <p class="generation-info">
+            Generated via the AdhereLive Platform
+            <span class="generation-time">2025-07-23 05:20:00 UTC</span>
+        </p>
+    </div>
 </div>
 </body>
 </html>

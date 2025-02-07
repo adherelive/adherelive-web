@@ -120,6 +120,29 @@ async function html_to_pdf({templateHtml, dataBinding, options}) {
     });
     const page = await browser.newPage();
 
+    // Inject page numbers using evaluateHandle
+    await page.evaluateHandle(() => {
+        // Create a style element
+        const style = document.createElement('style');
+        style.textContent = `
+            .pageNumber:before {
+                content: counter(page);
+            }
+            .totalPages:before {
+                content: counter(pages);
+            }
+            @page {
+                counter-increment: page;
+                @bottom-center {
+                    content: "Page " counter(page) " of " counter(pages);
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    });
+
+    await page.setContent(finalHtml);
+
     // Set viewport to A4 size
     await page.setViewport({
         width: 794, // A4 width in pixels at 96 DPI
@@ -166,7 +189,7 @@ router.get(
                     right: '5mm'
                 },
                 printBackground: true,
-                displayHeaderFooter: false,
+                displayHeaderFooter: true,
                 headerTemplate: '<div></div>', // Empty header since we have our own
                 footerTemplate: '<div></div>', // Empty footer since we have our own
                 preferCSSPageSize: true,
@@ -873,8 +896,7 @@ router.get(
                 dietIds.push(id);
             }
         }
-
-        logger.debug("Diet Lists and Diet IDs: ", JSON.stringify(dietList), {dietIds});
+        //logger.debug("Diet Lists and Diet IDs: ", JSON.stringify(dietList), {dietIds});
 
         for (const id of workout_ids) {
             const workout = await workoutService.findOne({id});
@@ -1052,10 +1074,8 @@ router.get(
                     providerIcon
                 );
             }
-            logger.debug("provide details start ====================1 ");
             providerData = {...providers[provider_id]};
-            logger.debug({providerData});
-            logger.debug("provide details end ====================1 ");
+            // logger.debug("Providers Data: ", {providerData});
             usersData = {...usersData, ...users};
         }
 
@@ -1081,8 +1101,8 @@ router.get(
             }
         }
         logger.debug("Doctor ID: ", doctor_id);
-        logger.debug("Doctors: ", doctors);
-        logger.debug("Medicines Array Data: \n", {medicinesArray});
+        // logger.debug("Doctors: ", doctors);
+        // logger.debug("Medicines Array Data: \n", {medicinesArray});
 
         const {
             name: doctorName = "",
@@ -1214,8 +1234,8 @@ router.get(
         }
 
         const medicationsList = formatMedicationsData(medications, medicines);
-        logger.debug("Medications List: \n", JSON.stringify(medicationsList));
-        logger.debug("Diet API Data: \n", {data: JSON.stringify({...dietApiData})});
+        // logger.debug("Medications List: \n", JSON.stringify(medicationsList));
+        // logger.debug("Diet API Data: \n", {data: JSON.stringify({...dietApiData})});
 
         let diet_old_data = {...dietApiData};
         let diet_output = [];
@@ -1304,7 +1324,7 @@ router.get(
             // dietobj.food_item = diet_old_data[dietIds[i]]["food_items"]["food_item_detail_id"]
             diet_output.push(dietobj);
         }
-        logger.debug("Latest diet object: \n", JSON.stringify(diet_output));
+        // logger.debug("Latest diet object: \n", JSON.stringify(diet_output));
         let {date: prescriptionDate} = getLatestUpdateDate(medications);
 
         // workout logic here
@@ -1419,8 +1439,7 @@ router.get(
             diet_output,
             pre_workouts,
         };
-        logger.debug("Diet real data, with timings: \n",
-            {data: JSON.stringify({...dietApiData})}, {timings});
+        // logger.debug("Diet real data, with timings: \n", {data: JSON.stringify({...dietApiData})}, {timings});
 
         dataForPdf = {
             users: {...usersData},
@@ -1487,7 +1506,7 @@ router.get(
             printBackground: true,
             path: "invoice.pdf",
         };
-        logger.debug("Prescription Data: \n", {pre_data});
+        // logger.debug("Prescription Data: \n", {pre_data});
 
         let pdf_buffer_value = await html_to_pdf({
             templateHtml,

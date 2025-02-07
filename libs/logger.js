@@ -704,13 +704,13 @@ export const requestMiddleware = (req, res, next) => {
                     const duration = seconds * 1000 + nanoseconds / 1000000; // Convert to milliseconds
 
                     const logger = new EnhancedWinstonLogger('request-logger');
-                    logger.info('Request completed', {
+                    logger.info('Request completed for Middleware', {
                         statusCode: res.statusCode,
                         duration,
                         ...context
                     });
                 } catch (error) {
-                    console.error('Error in request finish handler:', error);
+                    console.error('Error in request for Middleware finish handler:', error);
                 }
             });
 
