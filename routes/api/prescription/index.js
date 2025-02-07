@@ -206,6 +206,27 @@ async function html_to_pdf({templateHtml, dataBinding, options}) {
     }
 }
 
+// Add these utility functions before your route handler
+/**
+ * Converts when_to_take value to readable text
+ *
+ * @param {string|number} whenToTake The when_to_take value from medication
+ * @returns {string} Human readable text for when to take medication
+ */
+function getWhenToTakeText(whenToTake) {
+    if (!whenToTake) return '';
+
+    const whenToTakeMap = {
+        1: 'Before food',
+        2: 'After food',
+        3: 'With food',
+        4: 'Empty stomach',
+        5: 'As directed'
+    };
+
+    return whenToTakeMap[whenToTake] || 'As directed';
+}
+
 // formatting doctor data
 function formatDoctorsData(
     doctors,
@@ -423,6 +444,13 @@ function renderChiefComplaints({symptoms}) {
     }
 }
 
+/**
+ * Formats medications data for PDF generation
+ *
+ * @param medications
+ * @param medicines
+ * @returns {*[]}
+ */
 function formatMedicationsData(medications, medicines) {
     // have to send the list of objects containing instruction medicine name, medicine type, strength, frequency, duration,
     let medicationsList = [];
