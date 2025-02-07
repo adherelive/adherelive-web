@@ -75,24 +75,75 @@ let storage = multer.memoryStorage();
 let upload = multer({dest: "../app/public/", storage: storage});
 
 const generationTimestamp = moment().format('MMMM Do YYYY, h:mm:ss A'); // Format with Moment.js
-const dataBinding = {
-    generationTimestamp: generationTimestamp,
-    items: [
+// Construct the dataBinding object
+const dataForTranslation = {
+    patient_data: formatPatientData(
         {
-            name: "item 1",
-            price: 100,
+            ...{[patientData.getPatientId()]: patientData.getBasicInfo()},
         },
+        {...usersData}
+    ),
+    diagnosis: formatCarePlanData(
         {
-            name: "item 2",
-            price: 200,
+            [carePlanData.getCarePlanId()]: {
+                ...carePlanData.getBasicInfo(),
+            },
         },
+        conditions
+    ).diagnosis, // Extract diagnosis
+    condition: formatCarePlanData(
         {
-            name: "item 3",
-            price: 300,
+            [carePlanData.getCarePlanId()]: {
+                ...carePlanData.getBasicInfo(),
+            },
         },
-    ],
-    total: 600,
-    isWatermark: true,
+        conditions
+    ).condition, // Extract condition
+    symptoms: formatCarePlanData(
+        {
+            [carePlanData.getCarePlanId()]: {
+                ...carePlanData.getBasicInfo(),
+            },
+        },
+        conditions
+    ).symptoms, // Extract symptoms
+    clinicalNotes: formatCarePlanData(
+        {
+            [carePlanData.getCarePlanId()]: {
+                ...carePlanData.getBasicInfo(),
+            },
+        },
+        conditions
+    ).clinicalNotes, // Extract clinicalNotes
+    symptoms_final_value: symptoms_final_value, // Assuming this is already calculated
+    medicinesArray: medicinesArray,
+    clinical_notes: clinical_notes, // Assuming this is already defined
+    follow_up_advise: follow_up_advise, // Assuming this is already defined
+    registrations: registrationsData,
+    creationDate: moment(prescriptionDate)
+        .add(330, "minutes")
+        .format("Do MMMM YYYY, h:mm a"),
+    investigations: investigations,
+    nextConsultation: nextConsultation,
+    medicationsList: medicationsList,
+    diet_output: diet_output,
+    pre_workouts: pre_workouts,
+    doctor_id: doctor_id,
+    doctorName: doctorName,
+    city: city,
+    degree: degree,
+    registrationNumber: registrationNumber,
+    doctorEmail: doctorEmail,
+    doctorMobileNumber: doctorMobileNumber,
+    doctorSignImage: signature_pic, // Use the correct variable
+    prefix: prefix,
+    providerLogo: providerLogo,
+    providerName: providerName,
+    providerAddress: providerAddress,
+    providerPrescriptionDetails: providerPrescriptionDetails,
+    timings: timings,
+    currentTime: getDoctorCurrentTime(doctorUserId).format("Do MMMM YYYY, hh:mm a"),
+    providerIcon: providerIcon, // Add providerIcon
 };
 const getWhenToTakeText = (number) => {
     switch (number) {
@@ -255,6 +306,7 @@ const router = express.Router();
 router.get("/:care_plan_id", async (req, res) => {
     try {
         const templateHtml = fs.readFileSync(path.join("./routes/api/prescription/prescription.html"), "utf8");
+        const dataBinding = dataForTranslation;
         const targetLang = 'hi'; // Pass 'hi' for Hindi
         const pdfBuffer = await translateAndGeneratePDF({templateHtml, dataBinding, targetLang}, array); // Pass 'hi' for Hindi
 
@@ -1544,75 +1596,7 @@ router.get(
             };
 
             // Construct the dataBinding object
-            let dataForTranslation = {
-                patient_data: formatPatientData(
-                    {
-                        ...{[patientData.getPatientId()]: patientData.getBasicInfo()},
-                    },
-                    {...usersData}
-                ),
-                diagnosis: formatCarePlanData(
-                    {
-                        [carePlanData.getCarePlanId()]: {
-                            ...carePlanData.getBasicInfo(),
-                        },
-                    },
-                    conditions
-                ).diagnosis, // Extract diagnosis
-                condition: formatCarePlanData(
-                    {
-                        [carePlanData.getCarePlanId()]: {
-                            ...carePlanData.getBasicInfo(),
-                        },
-                    },
-                    conditions
-                ).condition, // Extract condition
-                symptoms: formatCarePlanData(
-                    {
-                        [carePlanData.getCarePlanId()]: {
-                            ...carePlanData.getBasicInfo(),
-                        },
-                    },
-                    conditions
-                ).symptoms, // Extract symptoms
-                clinicalNotes: formatCarePlanData(
-                    {
-                        [carePlanData.getCarePlanId()]: {
-                            ...carePlanData.getBasicInfo(),
-                        },
-                    },
-                    conditions
-                ).clinicalNotes, // Extract clinicalNotes
-                symptoms_final_value: symptoms_final_value, // Assuming this is already calculated
-                medicinesArray: medicinesArray,
-                clinical_notes: clinical_notes, // Assuming this is already defined
-                follow_up_advise: follow_up_advise, // Assuming this is already defined
-                registrations: registrationsData,
-                creationDate: moment(prescriptionDate)
-                    .add(330, "minutes")
-                    .format("Do MMMM YYYY, h:mm a"),
-                investigations: investigations,
-                nextConsultation: nextConsultation,
-                medicationsList: medicationsList,
-                diet_output: diet_output,
-                pre_workouts: pre_workouts,
-                doctor_id: doctor_id,
-                doctorName: doctorName,
-                city: city,
-                degree: degree,
-                registrationNumber: registrationNumber,
-                doctorEmail: doctorEmail,
-                doctorMobileNumber: doctorMobileNumber,
-                doctorSignImage: signature_pic, // Use the correct variable
-                prefix: prefix,
-                providerLogo: providerLogo,
-                providerName: providerName,
-                providerAddress: providerAddress,
-                providerPrescriptionDetails: providerPrescriptionDetails,
-                timings: timings,
-                currentTime: getDoctorCurrentTime(doctorUserId).format("Do MMMM YYYY, hh:mm a"),
-                providerIcon: providerIcon, // Add providerIcon
-            };
+            const dataBinding = dataForTranslation;
 
             const templateHtml = fs.readFileSync(
                 path.join("./routes/api/prescription/prescription.html"),
@@ -1635,7 +1619,7 @@ router.get(
 
             let pdf_buffer_value = await translateAndGeneratePDF({
                 templateHtml: templateHtml,
-                dataBinding: dataForTranslation,
+                dataBinding: dataBinding,
                 targetLang: "hi",
             });
 
