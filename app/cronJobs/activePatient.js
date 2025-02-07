@@ -173,7 +173,7 @@ class ActivePatient {
     try {
       await this.getEvents();
     } catch (error) {
-      logger.error("runObserver catch error: ", error);
+      logger.error("Active Patient runObserver has an error: ", error);
       throw error;
     }
   };

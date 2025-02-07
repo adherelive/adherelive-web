@@ -110,62 +110,56 @@ const getWhenToTakeText = (number) => {
 /**
  * Using Google Translate to create the Prescription PDF in Hindi
  *
- * @param templateHtml
- * @param dataBinding
- * @param targetLang
- * @param res
- * @returns {Promise<Buffer<ArrayBufferLike>>}
+ * @param {string} templateHtml - The HTML template to use
+ * @param {object} dataBinding - The data to bind to the template
+ * @param {string} targetLang - Target language for translation (default: 'hi')
+ * @param {object} res - Express response object
+ * @returns {Promise<Buffer>} PDF buffer
  */
 async function translateAndGeneratePDF(templateHtml, dataBinding, targetLang = 'hi', res) {
     try {
-        const translate = new Translate({ /* Your Google Cloud Translate config */});
+        const translate = new Translate({ /* Your Google Cloud Translate config */ });
 
-        /** Uncomment, if using the GOOGLE_API_KEY
-         const translate = new Translate({
-         key: process.env.GOOGLE_API_KEY,
-         });
-         */
+        // Create a deep copy of the data binding to avoid modifying the original
+        const translatedData = JSON.parse(JSON.stringify(dataBinding));
 
-            // Translate Data Binding Values
-        const translatedData = {};
-        for (const key in dataBinding) {
-            if (typeof dataBinding[ key ] === 'string') { // Only translate string values
+        // Translate all string values in the data
+        for (const key in translatedData) {
+            if (typeof translatedData[key] === 'string') {
                 try {
-                    const [translation] = await translate.translate(dataBinding[ key ], {
-                        from: 'en', // Assuming your original language is English
-                        to: targetLang,
-                        // glossary: '../scripts/hi.json' // If you have a glossary, uncomment this line
+                    const [translation] = await translate.translate(translatedData[key], {
+                        from: 'en',
+                        to: targetLang
                     });
-                    translatedData[ key ] = translation;
+                    translatedData[key] = translation;
                 } catch (err) {
                     logger.error(`Error translating ${key}:`, err);
-                    translatedData[ key ] = dataBinding[ key ]; // Fallback to original value
+                    // Keep original value if translation fails
+                    translatedData[key] = dataBinding[key];
                 }
-            } else if (typeof dataBinding[ key ] === 'object') { // Handle nested objects
-                translatedData[ key ] = {};
-                for (const nestedKey in dataBinding[ key ]) {
-                    if (typeof dataBinding[ key ][ nestedKey ] === 'string') {
-                        try {
-                            const [translation] = await translate.translate(dataBinding[ key ][ nestedKey ], {
-                                from: 'en',
-                                to: targetLang,
-                                // glossary: '../scripts/hi.json'
-                            });
-                            translatedData[ key ][ nestedKey ] = translation;
-                        } catch (error) {
-                            logger.error(`Error translating nested key ${nestedKey} in ${key}: `, error);
-                            translatedData[ key ][ nestedKey ] = dataBinding[ key ][ nestedKey ];
+            } else if (Array.isArray(translatedData[key])) {
+                // Handle arrays (like medicationsList)
+                for (let i = 0; i < translatedData[key].length; i++) {
+                    if (typeof translatedData[key][i] === 'object') {
+                        for (const subKey in translatedData[key][i]) {
+                            if (typeof translatedData[key][i][subKey] === 'string') {
+                                try {
+                                    const [translation] = await translate.translate(
+                                        translatedData[key][i][subKey],
+                                        { from: 'en', to: targetLang }
+                                    );
+                                    translatedData[key][i][subKey] = translation;
+                                } catch (err) {
+                                    logger.error(`Error translating array item ${key}[${i}].${subKey}:`, err);
+                                }
+                            }
                         }
-                    } else {
-                        translatedData[ key ][ nestedKey ] = dataBinding[ key ][ nestedKey ];
                     }
                 }
-            } else {
-                translatedData[ key ] = dataBinding[ key ]; // Keep non-string values as they are
             }
         }
 
-        // Compile and Render the Handlebars Template with translated data
+        // Register Handlebars helpers
         handlebars.registerHelper("print", function (value) {
             return ++value;
         });
@@ -174,66 +168,43 @@ async function translateAndGeneratePDF(templateHtml, dataBinding, targetLang = '
             return Array.prototype.slice.call(arguments, 0, -1).some(Boolean);
         });
 
+        // Compile template with translated data
         const template = handlebars.compile(templateHtml);
-        const finalHtml = template(translatedData); // Use the translated data
+        const finalHtml = template(translatedData);
 
-        // Launch Puppeteer and generate the PDF
-        const browser = await puppeteer.launch({args: ["--no-sandbox"], headless: true});
+        // Launch Puppeteer and generate PDF
+        const browser = await puppeteer.launch({
+            args: ['--no-sandbox'],
+            headless: true
+        });
+
         const page = await browser.newPage();
 
-        await page.evaluateHandle((targetLang) => {
-            const style = document.createElement('style');
-            let additionalStyles = '';
-            if (targetLang === 'hi') {
-                additionalStyles = 'direction: rtl; font-family: "TiroDevanagariHindi-Regular";'; // Apply RTL and Hindi font
-            }
-
-            style.textContent = `
-            @page {
-                size: A4;
-                margin: 10mm 5mm;
-                @bottom-center {
-                    content: "Page " counter(page) " of " counter(pages);
-                }
-            }
-            body {
-                ${additionalStyles}
-            }
-            .footer {
-                width: 100%;
-                text-align: center;
-                padding-top: 10px;
-                border-top: 1px solid black;
-            }
-        `;
-            document.head.appendChild(style);
-
-            const now = new Date();
-            const timestamp = now.toLocaleString();
-
-            const footer = document.querySelector('.footer');
-            if (footer) {
-                const timestampElement = document.createElement('p');
-                timestampElement.textContent = `Generated via AdhereLive platform<br/>${timestamp}`;
-                footer.appendChild(timestampElement);
-            }
-        }, targetLang); // Pass targetLang to evaluateHandle
-
+        // Add custom styles for the target language
+        await page.evaluateHandle('document.documentElement.lang = arguments[0]', targetLang);
         await page.setContent(finalHtml);
 
-        await page.setViewport({width: 794, height: 1123, deviceScaleFactor: 2}); // Set viewport
+        // Set viewport and generate PDF
+        await page.setViewport({ width: 794, height: 1123, deviceScaleFactor: 2 });
 
-        const pdfBuffer = await page.pdf({format: 'A4', printBackground: true}); // printBackground: true is important
+        const pdfBuffer = await page.pdf({
+            format: 'A4',
+            printBackground: true,
+            margin: {
+                top: "40px",
+                bottom: "100px"
+            }
+        });
 
         await browser.close();
         return pdfBuffer;
     } catch (error) {
-        logger.error("Error generating PDF:", error); // Log the full error object
-        logger.error("Error details:", error.message); // Log the error message
-        if (error.response) { // If it's a Google Cloud API error
-            logger.error("Google Cloud API Response:", error.response.data); // Log API response
+        logger.error("Error generating PDF:", error);
+        logger.error("Error details:", error.message);
+        if (error.response) {
+            logger.error("Google Cloud API Response:", error.response.data);
         }
-        res.status(500).send("Error generating PDF"); // Keep the user-facing message generic
+        throw error; // Let the route handler catch and handle the error
     }
 }
 
@@ -635,7 +606,8 @@ function getLatestUpdateDate(medications) {
 router.get(
     "/details/:care_plan_id",
     Authenticated,
-    async (templateHtml, dataBinding, targetLang = 'hi', req, res) => {
+    // templateHtml, dataBinding, targetLang = 'hi'
+    async (req, res) => {
         try {
             const {care_plan_id = null} = req.params;
             const {
@@ -1543,7 +1515,7 @@ router.get(
                     bottom: "100px",
                 },
                 printBackground: true,
-                path: "invoice.pdf",
+                path: "prescription.pdf",
             };
             // logger.debug("Prescription Data: \n", {pre_data});
 
@@ -1551,7 +1523,8 @@ router.get(
                 templateHtml,
                 dataBinding: pre_data,
                 options,
-            }, dataBinding, targetLang);
+                targetLang}
+            );
             res.contentType("application/pdf");
             return res.send(pdf_buffer_value);
         } catch (err) {
