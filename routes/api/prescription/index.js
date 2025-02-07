@@ -117,77 +117,78 @@ const getWhenToTakeText = (number) => {
  * @returns {Promise<Buffer<ArrayBufferLike>>}
  */
 async function translateAndGeneratePDF(templateHtml, dataBinding, targetLang = 'hi') {
-    const translate = new Translate({ /* Your Google Cloud Translate config */ });
-    
-    /** Uncomment, if using the GOOGLE_API_KEY
-    const translate = new Translate({
-        key: process.env.GOOGLE_API_KEY,
-    });
-    */
+    try {
+        const translate = new Translate({ /* Your Google Cloud Translate config */});
 
-    // Translate Data Binding Values
-    const translatedData = {};
-    for (const key in dataBinding) {
-        if (typeof dataBinding[key] === 'string') { // Only translate string values
-            try {
-                const [translation] = await translate.translate(dataBinding[key], {
-                    from: 'en', // Assuming your original language is English
-                    to: targetLang,
-                    // glossary: '../scripts/hi.json' // If you have a glossary, uncomment this line
-                });
-                translatedData[key] = translation;
-            } catch (err) {
-                logger.error(`Error translating ${key}:`, err);
-                translatedData[key] = dataBinding[key]; // Fallback to original value
-            }
-        } else if (typeof dataBinding[key] === 'object') { // Handle nested objects
-            translatedData[key] = {};
-            for (const nestedKey in dataBinding[key]) {
-                if(typeof dataBinding[key][nestedKey] === 'string'){
-                    try {
-                        const [translation] = await translate.translate(dataBinding[key][nestedKey], {
-                            from: 'en',
-                            to: targetLang,
-                            // glossary: '../scripts/hi.json'
-                        });
-                        translatedData[key][nestedKey] = translation;
-                    } catch (error) {
-                        logger.error(`Error translating nested key ${nestedKey} in ${key}: `, error);
-                        translatedData[key][nestedKey] = dataBinding[key][nestedKey];
-                    }
-                } else {
-                    translatedData[key][nestedKey] = dataBinding[key][nestedKey];
+        /** Uncomment, if using the GOOGLE_API_KEY
+         const translate = new Translate({
+         key: process.env.GOOGLE_API_KEY,
+         });
+         */
+
+            // Translate Data Binding Values
+        const translatedData = {};
+        for (const key in dataBinding) {
+            if (typeof dataBinding[ key ] === 'string') { // Only translate string values
+                try {
+                    const [translation] = await translate.translate(dataBinding[ key ], {
+                        from: 'en', // Assuming your original language is English
+                        to: targetLang,
+                        // glossary: '../scripts/hi.json' // If you have a glossary, uncomment this line
+                    });
+                    translatedData[ key ] = translation;
+                } catch (err) {
+                    logger.error(`Error translating ${key}:`, err);
+                    translatedData[ key ] = dataBinding[ key ]; // Fallback to original value
                 }
+            } else if (typeof dataBinding[ key ] === 'object') { // Handle nested objects
+                translatedData[ key ] = {};
+                for (const nestedKey in dataBinding[ key ]) {
+                    if (typeof dataBinding[ key ][ nestedKey ] === 'string') {
+                        try {
+                            const [translation] = await translate.translate(dataBinding[ key ][ nestedKey ], {
+                                from: 'en',
+                                to: targetLang,
+                                // glossary: '../scripts/hi.json'
+                            });
+                            translatedData[ key ][ nestedKey ] = translation;
+                        } catch (error) {
+                            logger.error(`Error translating nested key ${nestedKey} in ${key}: `, error);
+                            translatedData[ key ][ nestedKey ] = dataBinding[ key ][ nestedKey ];
+                        }
+                    } else {
+                        translatedData[ key ][ nestedKey ] = dataBinding[ key ][ nestedKey ];
+                    }
+                }
+            } else {
+                translatedData[ key ] = dataBinding[ key ]; // Keep non-string values as they are
             }
-        } else {
-            translatedData[key] = dataBinding[key]; // Keep non-string values as they are
-        }
-    }
-
-    // Compile and Render the Handlebars Template with translated data
-    handlebars.registerHelper("print", function (value) {
-        return ++value;
-    });
-
-    handlebars.registerHelper('or', function() {
-        return Array.prototype.slice.call(arguments, 0, -1).some(Boolean);
-    });
-
-    const template = handlebars.compile(templateHtml);
-    const finalHtml = template(translatedData); // Use the translated data
-
-    // Launch Puppeteer and generate the PDF
-    const browser = await puppeteer.launch({ args: ["--no-sandbox"], headless: true });
-    const page = await browser.newPage();
-
-    await page.evaluateHandle((targetLang) => {
-        const style = document.createElement('style');
-        let additionalStyles = '';
-        if (targetLang === 'hi') {
-            additionalStyles = 'direction: rtl; font-family: "TiroDevanagariHindi-Regular";'; // Apply RTL and Hindi font
         }
 
-        style.textContent = `
+        // Compile and Render the Handlebars Template with translated data
+        handlebars.registerHelper("print", function (value) {
+            return ++value;
+        });
+
+        handlebars.registerHelper('or', function () {
+            return Array.prototype.slice.call(arguments, 0, -1).some(Boolean);
+        });
+
+        const template = handlebars.compile(templateHtml);
+        const finalHtml = template(translatedData); // Use the translated data
+
+        // Launch Puppeteer and generate the PDF
+        const browser = await puppeteer.launch({args: ["--no-sandbox"], headless: true});
+        const page = await browser.newPage();
+
+        await page.evaluateHandle((targetLang) => {
+            const style = document.createElement('style');
+            let additionalStyles = '';
+            if (targetLang === 'hi') {
+                additionalStyles = 'direction: rtl; font-family: "TiroDevanagariHindi-Regular";'; // Apply RTL and Hindi font
+            }
+
+            style.textContent = `
             @page {
                 size: A4;
                 margin: 10mm 5mm;
@@ -205,27 +206,35 @@ async function translateAndGeneratePDF(templateHtml, dataBinding, targetLang = '
                 border-top: 1px solid black;
             }
         `;
-        document.head.appendChild(style);
+            document.head.appendChild(style);
 
-        const now = new Date();
-        const timestamp = now.toLocaleString();
+            const now = new Date();
+            const timestamp = now.toLocaleString();
 
-        const footer = document.querySelector('.footer');
-        if (footer) {
-            const timestampElement = document.createElement('p');
-            timestampElement.textContent = `Generated via AdhereLive platform<br/>${timestamp}`;
-            footer.appendChild(timestampElement);
+            const footer = document.querySelector('.footer');
+            if (footer) {
+                const timestampElement = document.createElement('p');
+                timestampElement.textContent = `Generated via AdhereLive platform<br/>${timestamp}`;
+                footer.appendChild(timestampElement);
+            }
+        }, targetLang); // Pass targetLang to evaluateHandle
+
+        await page.setContent(finalHtml);
+
+        await page.setViewport({width: 794, height: 1123, deviceScaleFactor: 2}); // Set viewport
+
+        const pdfBuffer = await page.pdf({format: 'A4', printBackground: true}); // printBackground: true is important
+
+        await browser.close();
+        return pdfBuffer;
+    } catch (error) {
+        logger.error("Error generating PDF:", error); // Log the full error object
+        logger.error("Error details:", error.message); // Log the error message
+        if (error.response) { // If it's a Google Cloud API error
+            logger.error("Google Cloud API Response:", error.response.data); // Log API response
         }
-    }, targetLang); // Pass targetLang to evaluateHandle
-
-    await page.setContent(finalHtml);
-
-    await page.setViewport({ width: 794, height: 1123, deviceScaleFactor: 2 }); // Set viewport
-
-    const pdfBuffer = await page.pdf({ format: 'A4', printBackground: true }); // printBackground: true is important
-
-    await browser.close();
-    return pdfBuffer;
+        //res.status(500).send("Error generating PDF"); // Keep the user-facing message generic
+    }
 }
 
 const router = express.Router();
@@ -626,7 +635,7 @@ function getLatestUpdateDate(medications) {
 router.get(
     "/details/:care_plan_id",
     Authenticated,
-    async (req, res) => {
+    async (templateHtml, dataBinding, targetLang = 'hi') => {
     try {
         const {care_plan_id = null} = req.params;
         const {
@@ -1538,11 +1547,11 @@ router.get(
         };
         // logger.debug("Prescription Data: \n", {pre_data});
 
-        let pdf_buffer_value = await html_to_pdf({
+        let pdf_buffer_value = await translateAndGeneratePDF({
             templateHtml,
             dataBinding: pre_data,
             options,
-        });
+        }, dataBinding, targetLang);
         res.contentType("application/pdf");
         return res.send(pdf_buffer_value);
     } catch (err) {
