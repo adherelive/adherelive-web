@@ -85,6 +85,7 @@ const fs = require("fs");
 const path = require("path");
 const puppeteer = require("puppeteer");
 const handlebars = require("handlebars");
+require('dotenv').config(); // Load environment variables from .env
 
 const logger = createLogger("PRESCRIPTION API");
 
@@ -125,48 +126,60 @@ const getWhenToTakeText = (number) => {
 /**
  * Using Google Translate to create the Prescription PDF in Hindi
  *
- * @param htmlTemplate
- * @param data
+ * @param templateHtml
+ * @param dataBinding
  * @param targetLang
  * @returns {Promise<Buffer<ArrayBufferLike>>}
  */
-async function translatePrescription(htmlTemplate, data, targetLang) {
-    // 1. Translate template content
-    const translate = new Translate({/* config */});
-
-    // Google Translate with glossary
-    const [translation] = await translate.translate(text, {
-        from: 'en',
-        to: 'hi',
-        glossary: '../scripts/hi.json'
+async function translateAndGeneratePDF(templateHtml, dataBinding, targetLang = 'hi') {
+    const translate = new Translate({ /* Your Google Cloud Translate config */ });
+    
+    /** Uncomment, if using the GOOGLE_API_KEY
+    const translate = new Translate({
+        key: process.env.GOOGLE_API_KEY,
     });
+    */
 
-    // Translate dynamic content
-    const translatedData = await Promise.all(
-        Object.entries(data).map(async ([key, value]) => ({
-            [key]: (await translate.translate(value, targetLang))[0]
-        }))
-    );
-
-    // 2. Generate translated HTML
-    let translatedHtml = yourTemplateEngine.render(htmlTemplate, translatedData);
-
-    // 3. Handle RTL languages
-    if (targetLang === 'hi') { // Hindi
-        translatedHtml = translatedHtml
-            .replace('<body>', '<body style="direction: rtl; font-family: TiroDevanagariHindi-Regular">');
+    // Translate Data Binding Values
+    const translatedData = {};
+    for (const key in dataBinding) {
+        if (typeof dataBinding[key] === 'string') { // Only translate string values
+            try {
+                const [translation] = await translate.translate(dataBinding[key], {
+                    from: 'en', // Assuming your original language is English
+                    to: targetLang,
+                    // glossary: '../scripts/hi.json' // If you have a glossary, uncomment this line
+                });
+                translatedData[key] = translation;
+            } catch (err) {
+                logger.error(`Error translating ${key}:`, err);
+                translatedData[key] = dataBinding[key]; // Fallback to original value
+            }
+        } else if (typeof dataBinding[key] === 'object') { // Handle nested objects
+            translatedData[key] = {};
+            for (const nestedKey in dataBinding[key]) {
+                if(typeof dataBinding[key][nestedKey] === 'string'){
+                    try {
+                        const [translation] = await translate.translate(dataBinding[key][nestedKey], {
+                            from: 'en',
+                            to: targetLang,
+                            // glossary: '../scripts/hi.json'
+                        });
+                        translatedData[key][nestedKey] = translation;
+                    } catch (error) {
+                        logger.error(`Error translating nested key ${nestedKey} in ${key}: `, error);
+                        translatedData[key][nestedKey] = dataBinding[key][nestedKey];
+                    }
+                } else {
+                    translatedData[key][nestedKey] = dataBinding[key][nestedKey];
+                }
+            }
+        } else {
+            translatedData[key] = dataBinding[key]; // Keep non-string values as they are
+        }
     }
 
-    // 4. Generate PDF
-    const browser = await puppeteer.launch();
-    const page = await browser.newPage();
-    await page.setContent(translatedHtml);
-    const pdf = await page.pdf({ format: 'A4' });
-    await browser.close();
-    return pdf;
-}
-
-async function html_to_pdf({templateHtml, dataBinding, options}) {
+    // Compile and Render the Handlebars Template with translated data
     handlebars.registerHelper("print", function (value) {
         return ++value;
     });
@@ -176,65 +189,76 @@ async function html_to_pdf({templateHtml, dataBinding, options}) {
     });
 
     const template = handlebars.compile(templateHtml);
-    const finalHtml = encodeURIComponent(template(dataBinding));
+    const finalHtml = template(translatedData); // Use the translated data
 
-    const browser = await puppeteer.launch({
-        args: ["--no-sandbox"],
-        headless: true,
-    });
+    // Launch Puppeteer and generate the PDF
+    const browser = await puppeteer.launch({ args: ["--no-sandbox"], headless: true });
     const page = await browser.newPage();
-    await page.goto(`data:text/html;charset=UTF-8,${finalHtml}`, {
-        waitUntil: "networkidle0",
-    });
 
-    // based on = pdf(options?: PDFOptions): Promise<Buffer>;
-    // from https://pptr.dev/api/puppeteer.page.pdf
-    // pdfBuffer will store the PDF file Buffer content when "path is not provided"
-    let pdfBuffer = await page.pdf(options);
+    await page.evaluateHandle((targetLang) => {
+        const style = document.createElement('style');
+        let additionalStyles = '';
+        if (targetLang === 'hi') {
+            additionalStyles = 'direction: rtl; font-family: "TiroDevanagariHindi-Regular";'; // Apply RTL and Hindi font
+        }
+
+        style.textContent = `
+            @page {
+                size: A4;
+                margin: 10mm 5mm;
+                @bottom-center {
+                    content: "Page " counter(page) " of " counter(pages);
+                }
+            }
+            body {
+                ${additionalStyles}
+            }
+            .footer {
+                width: 100%;
+                text-align: center;
+                padding-top: 10px;
+                border-top: 1px solid black;
+            }
+        `;
+        document.head.appendChild(style);
+
+        const now = new Date();
+        const timestamp = now.toLocaleString();
+
+        const footer = document.querySelector('.footer');
+        if (footer) {
+            const timestampElement = document.createElement('p');
+            timestampElement.textContent = `Generated via AdhereLive platform<br/>${timestamp}`;
+            footer.appendChild(timestampElement);
+        }
+    }, targetLang); // Pass targetLang to evaluateHandle
+
+    await page.setContent(finalHtml);
+
+    await page.setViewport({ width: 794, height: 1123, deviceScaleFactor: 2 }); // Set viewport
+
+    const pdfBuffer = await page.pdf({ format: 'A4', printBackground: true }); // printBackground: true is important
+
     await browser.close();
-    return pdfBuffer; // Returning the value when page.pdf promise gets resolved
+    return pdfBuffer;
 }
 
 const router = express.Router();
 
-router.get(
-    "/:care_plan_id",
-    // Authenticated,
-    // PatientController.generatePrescription,
-    async (req, res) => {
-        try {
-            logger.debug(path.join("./routes/api/prescription/prescription.html"));
-            logger.debug("./prescription.html");
-            const templateHtml = fs.readFileSync(
-                path.join("./routes/api/prescription/prescription.html"),
-                "utf8"
-            );
-            logger.debug(path.join(process.cwd(), "prescription.html"));
-            const options = {
-                format: "A4",
-                headerTemplate: "<p></p>",
-                footerTemplate: "<p></p>",
-                displayHeaderFooter: false,
-                margin: {
-                    top: "40px",
-                    bottom: "100px",
-                },
-                printBackground: true,
-                path: "invoice.pdf",
-            };
-            let pdf_buffer_value = await html_to_pdf({
-                templateHtml,
-                dataBinding,
-                options,
-            });
-            res.contentType("application/pdf");
-            return res.send(pdf_buffer_value);
-        } catch (err) {
-            logger.debug(err);
-            logger.debug("care_plan_id", req.params.care_plan_id);
-        }
+router.get("/:care_plan_id", async (req, res) => {
+    try {
+        const templateHtml = fs.readFileSync(path.join("./routes/api/prescription/prescription.html"), "utf8");
+        const dataBinding = { /* your data */ }; // Your original data
+        const pdfBuffer = await translateAndGeneratePDF(templateHtml, dataBinding, 'hi'); // Pass 'hi' for Hindi
+
+        res.contentType("application/pdf");
+        res.send(pdfBuffer);
+
+    } catch (error) {
+        console.error("Error generating PDF:", error);
+        res.status(500).send("Error generating PDF");
     }
-);
+});
 
 // formatting doctor data
 function formatDoctorsData(
