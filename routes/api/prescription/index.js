@@ -84,6 +84,9 @@ let upload = multer({dest: "../app/public/", storage: storage});
 
 const generationTimestamp = moment().format('MMMM Do YYYY, h:mm:ss A'); // Format with Moment.js
 
+// Created the router object using express.Router()
+const router = express.Router();
+
 // Initialize the translation client
 // Make sure you have set up Google Cloud credentials properly
 const translate = new Translate({
@@ -91,6 +94,12 @@ const translate = new Translate({
     // If using service account key file:
     // keyFilename: 'path/to/your/service-account-key.json'
 });
+
+// // Initialize translation client
+// const translate = new Translate({
+//     projectId: process.env.GOOGLE_CLOUD_PROJECT_ID,
+//     // keyFilename: process.env.GOOGLE_APPLICATION_CREDENTIALS
+// });
 
 /**
  * Translates text to Hindi
