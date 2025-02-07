@@ -70,6 +70,8 @@ const logger = createLogger("PRESCRIPTION API");
 
 let storage = multer.memoryStorage();
 let upload = multer({dest: "../app/public/", storage: storage});
+
+const generationTimestamp = moment().format('MMMM Do YYYY, h:mm:ss A'); // Format with Moment.js
 const dataBinding = {
     items: [
         {
@@ -87,6 +89,7 @@ const dataBinding = {
     ],
     total: 600,
     isWatermark: true,
+    generationTimestamp: generationTimestamp,
 };
 
 const getWhenToTakeText = (number) => {
@@ -122,23 +125,34 @@ async function html_to_pdf({templateHtml, dataBinding, options}) {
 
     // Inject page numbers using evaluateHandle
     await page.evaluateHandle(() => {
-        // Create a style element
         const style = document.createElement('style');
         style.textContent = `
-            .pageNumber:before {
-                content: counter(page);
+        @page {
+            size: A4; /* Ensure A4 size if not already set */
+            margin: 10mm 5mm; /* Set your margins */
+            @bottom-center { /* Footer content */
+                content: "Page " counter(page) " of " counter(pages);
             }
-            .totalPages:before {
-                content: counter(pages);
-            }
-            @page {
-                counter-increment: page;
-                @bottom-center {
-                    content: "Page " counter(page) " of " counter(pages);
-                }
-            }
-        `;
+        }
+        .footer { /* Style your footer */
+            width: 100%;
+            text-align: center;
+            padding-top: 10px;
+            border-top: 1px solid black;
+        }`;
         document.head.appendChild(style);
+
+        // Get the current timestamp (you can format this server-side)
+        const now = new Date();
+        const timestamp = now.toLocaleString(); // Or any format you prefer
+
+        // Add the timestamp to the footer
+        const footer = document.querySelector('.footer');
+        if (footer) {
+            const timestampElement = document.createElement('p');
+            timestampElement.textContent = `Generated via AdhereLive platform<br/>${timestamp}`;
+            footer.appendChild(timestampElement);
+        }
     });
 
     await page.setContent(finalHtml);
