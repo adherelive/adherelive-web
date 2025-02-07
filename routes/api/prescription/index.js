@@ -60,6 +60,7 @@ import { getDoctorCurrentTime } from "../../../app/helper/getUserTime";
 import { raiseServerError } from "../helper";
 
 import moment from "moment";
+import { array } from "joi";
 
 const {Translate} = require('@google-cloud/translate').v2;
 const fs = require("fs");
@@ -120,7 +121,7 @@ async function translateAndGeneratePDF(templateHtml, dataBinding, targetLang = '
         const translate = new Translate({ /* Your Google Cloud Translate config */});
 
         // Create a deep copy of the data binding to avoid modifying the original
-        const translatedData = JSON.parse(JSON.stringify(templateHtml));
+        const translatedData = JSON.parse(JSON.stringify(dataBinding));
 
         // Translate all string values in the data
         for (const key in translatedData) {
@@ -134,7 +135,7 @@ async function translateAndGeneratePDF(templateHtml, dataBinding, targetLang = '
                 } catch (err) {
                     logger.error(`Error translating ${key}:`, err);
                     // Keep original value if translation fails
-                    translatedData[ key ] = templateHtml[ key ];
+                    translatedData[ key ] = dataBinding[ key ];
                 }
             } else if (Array.isArray(translatedData[ key ])) {
                 // Handle arrays (like medicationsList)
@@ -255,7 +256,7 @@ router.get("/:care_plan_id", async (req, res) => {
     try {
         const templateHtml = fs.readFileSync(path.join("./routes/api/prescription/prescription.html"), "utf8");
         const targetLang = 'hi'; // Pass 'hi' for Hindi
-        const pdfBuffer = await translateAndGeneratePDF({templateHtml, dataBinding, targetLang}); // Pass 'hi' for Hindi
+        const pdfBuffer = await translateAndGeneratePDF({templateHtml, dataBinding, targetLang}, array); // Pass 'hi' for Hindi
 
         res.contentType("application/pdf");
         res.send(pdfBuffer);
@@ -1542,10 +1543,82 @@ router.get(
                 ),
             };
 
+            // Construct the dataBinding object
+            let dataForTranslation = {
+                patient_data: formatPatientData(
+                    {
+                        ...{[patientData.getPatientId()]: patientData.getBasicInfo()},
+                    },
+                    {...usersData}
+                ),
+                diagnosis: formatCarePlanData(
+                    {
+                        [carePlanData.getCarePlanId()]: {
+                            ...carePlanData.getBasicInfo(),
+                        },
+                    },
+                    conditions
+                ).diagnosis, // Extract diagnosis
+                condition: formatCarePlanData(
+                    {
+                        [carePlanData.getCarePlanId()]: {
+                            ...carePlanData.getBasicInfo(),
+                        },
+                    },
+                    conditions
+                ).condition, // Extract condition
+                symptoms: formatCarePlanData(
+                    {
+                        [carePlanData.getCarePlanId()]: {
+                            ...carePlanData.getBasicInfo(),
+                        },
+                    },
+                    conditions
+                ).symptoms, // Extract symptoms
+                clinicalNotes: formatCarePlanData(
+                    {
+                        [carePlanData.getCarePlanId()]: {
+                            ...carePlanData.getBasicInfo(),
+                        },
+                    },
+                    conditions
+                ).clinicalNotes, // Extract clinicalNotes
+                symptoms_final_value: symptoms_final_value, // Assuming this is already calculated
+                medicinesArray: medicinesArray,
+                clinical_notes: clinical_notes, // Assuming this is already defined
+                follow_up_advise: follow_up_advise, // Assuming this is already defined
+                registrations: registrationsData,
+                creationDate: moment(prescriptionDate)
+                    .add(330, "minutes")
+                    .format("Do MMMM YYYY, h:mm a"),
+                investigations: investigations,
+                nextConsultation: nextConsultation,
+                medicationsList: medicationsList,
+                diet_output: diet_output,
+                pre_workouts: pre_workouts,
+                doctor_id: doctor_id,
+                doctorName: doctorName,
+                city: city,
+                degree: degree,
+                registrationNumber: registrationNumber,
+                doctorEmail: doctorEmail,
+                doctorMobileNumber: doctorMobileNumber,
+                doctorSignImage: signature_pic, // Use the correct variable
+                prefix: prefix,
+                providerLogo: providerLogo,
+                providerName: providerName,
+                providerAddress: providerAddress,
+                providerPrescriptionDetails: providerPrescriptionDetails,
+                timings: timings,
+                currentTime: getDoctorCurrentTime(doctorUserId).format("Do MMMM YYYY, hh:mm a"),
+                providerIcon: providerIcon, // Add providerIcon
+            };
+
             const templateHtml = fs.readFileSync(
                 path.join("./routes/api/prescription/prescription.html"),
                 "utf8"
             );
+
             const options = {
                 format: "A4",
                 headerTemplate: "<p></p>",
@@ -1561,11 +1634,11 @@ router.get(
             // logger.debug("Prescription Data: \n", {pre_data});
 
             let pdf_buffer_value = await translateAndGeneratePDF({
-                templateHtml,
-                dataBinding: pre_data,
-                options,
+                templateHtml: templateHtml,
+                dataBinding: dataForTranslation,
                 targetLang: "hi",
             });
+
             res.contentType("application/pdf");
             return res.send(pdf_buffer_value);
         } catch (err) {
