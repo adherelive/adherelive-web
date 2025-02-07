@@ -61,7 +61,7 @@ import { raiseServerError } from "../helper";
 
 import moment from "moment";
 
-const { Translate } = require('@google-cloud/translate').v2;
+const {Translate} = require('@google-cloud/translate').v2;
 const fs = require("fs");
 const path = require("path");
 const puppeteer = require("puppeteer");
@@ -75,6 +75,7 @@ let upload = multer({dest: "../app/public/", storage: storage});
 
 const generationTimestamp = moment().format('MMMM Do YYYY, h:mm:ss A'); // Format with Moment.js
 const dataBinding = {
+    generationTimestamp: generationTimestamp,
     items: [
         {
             name: "item 1",
@@ -91,9 +92,7 @@ const dataBinding = {
     ],
     total: 600,
     isWatermark: true,
-    generationTimestamp: generationTimestamp,
 };
-
 const getWhenToTakeText = (number) => {
     switch (number) {
         case 1:
@@ -113,42 +112,42 @@ const getWhenToTakeText = (number) => {
  * @param {string} templateHtml - The HTML template to use
  * @param {object} dataBinding - The data to bind to the template
  * @param {string} targetLang - Target language for translation (default: 'hi')
- * @param {object} res - Express response object
+ *
  * @returns {Promise<Buffer>} PDF buffer
  */
-async function translateAndGeneratePDF(templateHtml, dataBinding, targetLang = 'hi', res) {
+async function translateAndGeneratePDF(templateHtml, dataBinding, targetLang = 'hi') {
     try {
-        const translate = new Translate({ /* Your Google Cloud Translate config */ });
+        const translate = new Translate({ /* Your Google Cloud Translate config */});
 
         // Create a deep copy of the data binding to avoid modifying the original
-        const translatedData = JSON.parse(JSON.stringify(dataBinding));
+        const translatedData = JSON.parse(JSON.stringify(templateHtml));
 
         // Translate all string values in the data
         for (const key in translatedData) {
-            if (typeof translatedData[key] === 'string') {
+            if (typeof translatedData[ key ] === 'string') {
                 try {
-                    const [translation] = await translate.translate(translatedData[key], {
+                    const [translation] = await translate.translate(translatedData[ key ], {
                         from: 'en',
                         to: targetLang
                     });
-                    translatedData[key] = translation;
+                    translatedData[ key ] = translation;
                 } catch (err) {
                     logger.error(`Error translating ${key}:`, err);
                     // Keep original value if translation fails
-                    translatedData[key] = dataBinding[key];
+                    translatedData[ key ] = templateHtml[ key ];
                 }
-            } else if (Array.isArray(translatedData[key])) {
+            } else if (Array.isArray(translatedData[ key ])) {
                 // Handle arrays (like medicationsList)
-                for (let i = 0; i < translatedData[key].length; i++) {
-                    if (typeof translatedData[key][i] === 'object') {
-                        for (const subKey in translatedData[key][i]) {
-                            if (typeof translatedData[key][i][subKey] === 'string') {
+                for (let i = 0; i < translatedData[ key ].length; i++) {
+                    if (typeof translatedData[ key ][ i ] === 'object') {
+                        for (const subKey in translatedData[ key ][ i ]) {
+                            if (typeof translatedData[ key ][ i ][ subKey ] === 'string') {
                                 try {
                                     const [translation] = await translate.translate(
-                                        translatedData[key][i][subKey],
-                                        { from: 'en', to: targetLang }
+                                        translatedData[ key ][ i ][ subKey ],
+                                        {from: 'en', to: targetLang}
                                     );
-                                    translatedData[key][i][subKey] = translation;
+                                    translatedData[ key ][ i ][ subKey ] = translation;
                                 } catch (err) {
                                     logger.error(`Error translating array item ${key}[${i}].${subKey}:`, err);
                                 }
@@ -210,8 +209,7 @@ async function translateAndGeneratePDF(templateHtml, dataBinding, targetLang = '
                 text-align: center;
                 padding-top: 10px;
                 border-top: 1px solid black;
-            }
-        `;
+            }`;
             document.head.appendChild(style);
 
             const now = new Date();
@@ -228,7 +226,7 @@ async function translateAndGeneratePDF(templateHtml, dataBinding, targetLang = '
         await page.setContent(finalHtml);
 
         // Set viewport and generate PDF
-        await page.setViewport({ width: 794, height: 1123, deviceScaleFactor: 2 });
+        await page.setViewport({width: 794, height: 1123, deviceScaleFactor: 2});
 
         const pdfBuffer = await page.pdf({
             format: 'A4',
@@ -256,14 +254,14 @@ const router = express.Router();
 router.get("/:care_plan_id", async (req, res) => {
     try {
         const templateHtml = fs.readFileSync(path.join("./routes/api/prescription/prescription.html"), "utf8");
-        const dataBinding = { /* your data */}; // Your original data
-        const pdfBuffer = await translateAndGeneratePDF(templateHtml, dataBinding, 'hi', res); // Pass 'hi' for Hindi
+        const targetLang = 'hi'; // Pass 'hi' for Hindi
+        const pdfBuffer = await translateAndGeneratePDF({templateHtml, dataBinding, targetLang}); // Pass 'hi' for Hindi
 
         res.contentType("application/pdf");
         res.send(pdfBuffer);
 
     } catch (error) {
-        console.error("Error generating PDF:", error);
+        logger.error("Error generating PDF:", error);
         res.status(500).send("Error generating PDF");
     }
 });
@@ -1566,8 +1564,8 @@ router.get(
                 templateHtml,
                 dataBinding: pre_data,
                 options,
-                targetLang: "hi"}
-            );
+                targetLang: "hi",
+            });
             res.contentType("application/pdf");
             return res.send(pdf_buffer_value);
         } catch (err) {
