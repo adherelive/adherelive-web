@@ -547,6 +547,30 @@
             align-items: center;
             display: flex;
             flex-flow: column;
+            text-align: center;
+        }
+
+        .signature_image {
+            max-width: 120px;
+            height: auto;
+            /* Preserve aspect ratio while respecting height/width constraints */
+            object-fit: contain;
+        }
+
+        .signature-date {
+            margin: 10px 0;
+        }
+
+        .signature-stamp h3 {
+            margin: 10px 0;
+        }
+
+        .signature-details {
+            margin-top: 10px;
+        }
+
+        .signature-details p {
+            margin: 0;
         }
 
         /* Table Containers */
@@ -574,7 +598,17 @@
 <div class="header">
     <div class="top_provider_section">
         <div class="top_provider_section_one">
-            <img src="{{ providerLogo }}" alt="adherelive" width="60" height="60"/>
+            <picture>
+                <!-- Primary source - hospital's actual logo -->
+                <source srcset="{{ providerLogo }}">
+                <!-- Fallback SVG logo -->
+                <img
+                        height="60"
+                        width="60"
+                        src="../../../other/medical-backup.svg"
+                        alt="AdhereLive - Hospital Logo"
+                />
+            </picture>
         </div>
         <div class="top_provider_section_two">
             <h3>
