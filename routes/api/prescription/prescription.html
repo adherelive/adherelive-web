@@ -70,19 +70,6 @@
             }
         }
 
-        /* Special classes for PDF page counting */
-        @page {
-            margin-bottom: 30mm; /* Space for footer */
-        }
-
-        /* Running header/footer styles
-        @page {
-            @bottom-center {
-                content: "Page " counter(page) " of " counter(pages);
-            }
-        }
-         */
-
         /* Font Faces */
         @font-face {
             font-family: "PlusJakartaSans-Bold";
@@ -1246,8 +1233,8 @@
 <!-- Footer Template -->
 <div class="footer" id="pdf-footer">
     <div class="footer-content">
-        <p class="page-info">Page <span id="page-num"></span> of <span id="page-count"></span></p>
-        <p class="generation-info">Generated via AdhereLive platform<br />{{ generationTimestamp }}</p>
+        <!-- <p class="page-info">Page <span id="page-num"></span> of <span id="page-count"></span></p> -->
+        <p class="generation-info">Generated via AdhereLive platform<br/>{{ generationTimestamp }}</p>
     </div>
 </div>
 </body>

@@ -189,14 +189,15 @@ router.get(
                     right: '5mm'
                 },
                 printBackground: true,
-                displayHeaderFooter: true,
+                displayHeaderFooter: false,
                 headerTemplate: '<div></div>', // Empty header since we have our own
-                footerTemplate: `
+                footerTemplate: '<div></div>', // Empty header since we have our own
+                /*`
                     <div style="width: 100%; font-size: 10px; padding: 10px 20px; color: #666; text-align: center;">
                         <div>Page <span class="pageNumber"></span> of <span class="totalPages"></span></div>
                         <div style="font-size: 8px; margin-top: 2px;">Generated via AdhereLive platform <br /> ${moment().format('MMMM Do YYYY, h:mm:ss A')}</div>
                     </div>
-                `,
+                `,*/
                 preferCSSPageSize: true,
                 path: "prescription.pdf",
                 // Add these settings for better image quality
