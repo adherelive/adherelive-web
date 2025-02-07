@@ -1,11 +1,12 @@
 <!DOCTYPE html>
-<html>
+<html lang="hi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Patient Prescription</title>
+    <title>{{translate prescriptionTitle}}</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari&display=swap');
+
         /* Base Page Setup */
         /* This CSS rule ensures that table headers (contained within the <thead> element)
            repeat at the top of each new page when the table spans multiple pages. */
@@ -188,10 +189,11 @@
 
         /* Global Styles */
         body {
+            direction: ltr; /* Hindi is written left-to-right */
             margin: 0;
             padding: 10px;
             font-size: 10px;
-            font-family: "PlusJakartaSans-Regular", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+            font-family: 'Noto Sans Devanagari', Arial, sans-serif;
         }
 
         /* Typography */

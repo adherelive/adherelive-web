@@ -1,5 +1,6 @@
 import express from "express";
 import Authenticated from "../middleware/auth";
+import PatientController from "../../../app/controllers/patients/patients.controller";
 import multer from "multer";
 import { createLogger } from "../../../libs/logger";
 
@@ -21,23 +22,32 @@ import WorkoutService from "../../../app/services/workouts/workout.service";
 import userPreferenceService from "../../../app/services/userPreferences/userPreference.service";
 
 // API Wrappers
+import ExerciseContentWrapper from "../../../app/apiWrapper/web/exerciseContents";
 import UserRolesWrapper from "../../../app/apiWrapper/web/userRoles";
+import VitalWrapper from "../../../app/apiWrapper/web/vitals";
 import UserWrapper from "../../../app/apiWrapper/web/user";
 import CarePlanWrapper from "../../../app/apiWrapper/web/carePlan";
 import AppointmentWrapper from "../../../app/apiWrapper/web/appointments";
 import MReminderWrapper from "../../../app/apiWrapper/web/medicationReminder";
 import MedicineApiWrapper from "../../../app/apiWrapper/mobile/medicine";
+import SymptomWrapper from "../../../app/apiWrapper/web/symptoms";
+import DoctorWrapper from "../../../app/apiWrapper/web/doctor";
+import ConsentWrapper from "../../../app/apiWrapper/web/consent";
 import PatientWrapper from "../../../app/apiWrapper/web/patient";
+import ReportWrapper from "../../../app/apiWrapper/web/reports";
 import ConditionWrapper from "../../../app/apiWrapper/web/conditions";
 import QualificationWrapper from "../../../app/apiWrapper/web/doctorQualification";
 import RegistrationWrapper from "../../../app/apiWrapper/web/doctorRegistration";
 import DegreeWrapper from "../../../app/apiWrapper/web/degree";
 import CouncilWrapper from "../../../app/apiWrapper/web/council";
+import TreatmentWrapper from "../../../app/apiWrapper/web/treatments";
+import DoctorPatientWatchlistWrapper from "../../../app/apiWrapper/web/doctorPatientWatchlist";
 import DietWrapper from "../../../app/apiWrapper/web/diet";
 import ProviderWrapper from "../../../app/apiWrapper/web/provider";
 import PortionWrapper from "../../../app/apiWrapper/web/portions";
 import WorkoutWrapper from "../../../app/apiWrapper/web/workouts";
 import UserPreferenceWrapper from "../../../app/apiWrapper/web/userPreference";
+import diet from "../../../app/apiWrapper/web/diet";
 
 import * as DietHelper from "../../../app/controllers/diet/diet.helper";
 import { downloadFileFromS3 } from "../../../app/controllers/user/user.helper";
@@ -60,14 +70,13 @@ import { getDoctorCurrentTime } from "../../../app/helper/getUserTime";
 import { raiseServerError } from "../helper";
 
 import moment from "moment";
-import { array } from "joi";
 
 const {Translate} = require('@google-cloud/translate').v2;
 const fs = require("fs");
 const path = require("path");
 const puppeteer = require("puppeteer");
 const handlebars = require("handlebars");
-require('dotenv').config(); // Load environment variables from .env
+const {raiseServerError} = require("../helper");
 
 const logger = createLogger("PRESCRIPTION API");
 
@@ -75,142 +84,56 @@ let storage = multer.memoryStorage();
 let upload = multer({dest: "../app/public/", storage: storage});
 
 const generationTimestamp = moment().format('MMMM Do YYYY, h:mm:ss A'); // Format with Moment.js
-// Construct the dataBinding object
-const dataForTranslation = {
-    patient_data: formatPatientData(
-        {
-            ...{[patientData.getPatientId()]: patientData.getBasicInfo()},
-        },
-        {...usersData}
-    ),
-    diagnosis: formatCarePlanData(
-        {
-            [carePlanData.getCarePlanId()]: {
-                ...carePlanData.getBasicInfo(),
-            },
-        },
-        conditions
-    ).diagnosis, // Extract diagnosis
-    condition: formatCarePlanData(
-        {
-            [carePlanData.getCarePlanId()]: {
-                ...carePlanData.getBasicInfo(),
-            },
-        },
-        conditions
-    ).condition, // Extract condition
-    symptoms: formatCarePlanData(
-        {
-            [carePlanData.getCarePlanId()]: {
-                ...carePlanData.getBasicInfo(),
-            },
-        },
-        conditions
-    ).symptoms, // Extract symptoms
-    clinicalNotes: formatCarePlanData(
-        {
-            [carePlanData.getCarePlanId()]: {
-                ...carePlanData.getBasicInfo(),
-            },
-        },
-        conditions
-    ).clinicalNotes, // Extract clinicalNotes
-    symptoms_final_value: symptoms_final_value, // Assuming this is already calculated
-    medicinesArray: medicinesArray,
-    clinical_notes: clinical_notes, // Assuming this is already defined
-    follow_up_advise: follow_up_advise, // Assuming this is already defined
-    registrations: registrationsData,
-    creationDate: moment(prescriptionDate)
-        .add(330, "minutes")
-        .format("Do MMMM YYYY, h:mm a"),
-    investigations: investigations,
-    nextConsultation: nextConsultation,
-    medicationsList: medicationsList,
-    diet_output: diet_output,
-    pre_workouts: pre_workouts,
-    doctor_id: doctor_id,
-    doctorName: doctorName,
-    city: city,
-    degree: degree,
-    registrationNumber: registrationNumber,
-    doctorEmail: doctorEmail,
-    doctorMobileNumber: doctorMobileNumber,
-    doctorSignImage: signature_pic, // Use the correct variable
-    prefix: prefix,
-    providerLogo: providerLogo,
-    providerName: providerName,
-    providerAddress: providerAddress,
-    providerPrescriptionDetails: providerPrescriptionDetails,
-    timings: timings,
-    currentTime: getDoctorCurrentTime(doctorUserId).format("Do MMMM YYYY, hh:mm a"),
-    providerIcon: providerIcon, // Add providerIcon
-};
-const getWhenToTakeText = (number) => {
-    switch (number) {
-        case 1:
-            return `Once a day`;
-        case 2:
-            return `Twice a day`;
-        case 3:
-            return `Thrice a day`;
-        default:
-            return "";
-    }
-};
+
+// Initialize the translation client
+// Make sure you have set up Google Cloud credentials properly
+const translate = new Translate({
+    projectId: 'adherelive-translate',
+    // If using service account key file:
+    // keyFilename: 'path/to/your/service-account-key.json'
+});
 
 /**
- * Using Google Translate to create the Prescription PDF in Hindi
- *
- * @param {string} templateHtml - The HTML template to use
- * @param {object} dataBinding - The data to bind to the template
- * @param {string} targetLang - Target language for translation (default: 'hi')
- *
- * @returns {Promise<Buffer>} PDF buffer
+ * Translates text to Hindi
+ * @param {string} text Text to translate
+ * @returns {Promise<string>} Translated text
  */
-async function translateAndGeneratePDF(templateHtml, dataBinding, targetLang = 'hi') {
+async function translateToHindi(text) {
     try {
-        const translate = new Translate({ /* Your Google Cloud Translate config */});
+        if (!text) return text;
+        const [translation] = await translate.translate(text, {
+            from: 'en',
+            to: 'hi'
+        });
+        return translation;
+    } catch (error) {
+        logger.error('Translation error: ', error);
+        return text; // Return original text if translation fails
+    }
+}
 
-        // Create a deep copy of the data binding to avoid modifying the original
-        const translatedData = JSON.parse(JSON.stringify(dataBinding));
+/**
+ * Translates an object's string values to Hindi
+ * @param {Object} obj Object containing strings to translate
+ * @returns {Promise<Object>} Object with translated strings
+ */
+async function translateObjectToHindi(obj) {
+    if (!obj) return obj;
 
-        // Translate all string values in the data
-        for (const key in translatedData) {
-            if (typeof translatedData[ key ] === 'string') {
-                try {
-                    const [translation] = await translate.translate(translatedData[ key ], {
-                        from: 'en',
-                        to: targetLang
-                    });
-                    translatedData[ key ] = translation;
-                } catch (err) {
-                    logger.error(`Error translating ${key}:`, err);
-                    // Keep original value if translation fails
-                    translatedData[ key ] = dataBinding[ key ];
-                }
-            } else if (Array.isArray(translatedData[ key ])) {
-                // Handle arrays (like medicationsList)
-                for (let i = 0; i < translatedData[ key ].length; i++) {
-                    if (typeof translatedData[ key ][ i ] === 'object') {
-                        for (const subKey in translatedData[ key ][ i ]) {
-                            if (typeof translatedData[ key ][ i ][ subKey ] === 'string') {
-                                try {
-                                    const [translation] = await translate.translate(
-                                        translatedData[ key ][ i ][ subKey ],
-                                        {from: 'en', to: targetLang}
-                                    );
-                                    translatedData[ key ][ i ][ subKey ] = translation;
-                                } catch (err) {
-                                    logger.error(`Error translating array item ${key}[${i}].${subKey}:`, err);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+    const translatedObj = {...obj};
+    for (let key in translatedObj) {
+        if (typeof translatedObj[ key ] === 'string') {
+            translatedObj[ key ] = await translateToHindi(translatedObj[ key ]);
+        } else if (typeof translatedObj[ key ] === 'object') {
+            translatedObj[ key ] = await translateObjectToHindi(translatedObj[ key ]);
         }
+    }
+    return translatedObj;
+}
 
-        // Register Handlebars helpers
+async function html_to_pdf({templateHtml, dataBinding, options}) {
+    try {
+        // Register handlebars helpers
         handlebars.registerHelper("print", function (value) {
             return ++value;
         });
@@ -219,105 +142,61 @@ async function translateAndGeneratePDF(templateHtml, dataBinding, targetLang = '
             return Array.prototype.slice.call(arguments, 0, -1).some(Boolean);
         });
 
+        // Add a new helper for inline translation
+        handlebars.registerHelper('translate', function (text) {
+            // This will be pre-translated in the data
+            return text;
+        });
+
+        // Translate the data binding object
+        const translatedDataBinding = await translateObjectToHindi(dataBinding);
+
         // Compile template with translated data
         const template = handlebars.compile(templateHtml);
-        const finalHtml = template(translatedData);
+        const finalHtml = encodeURIComponent(template(translatedDataBinding));
 
-        // Launch Puppeteer and generate PDF
         const browser = await puppeteer.launch({
-            args: ['--no-sandbox'],
-            headless: true
+            args: ["--no-sandbox"],
+            headless: true,
         });
-
         const page = await browser.newPage();
 
-        if (targetLang === 'hi') { // Now targetLang is defined here
-            let additionalStyles = 'direction: rtl; font-family: "TiroDevanagariHindi-Regular";';
-        }
-
-        // Add custom styles for the target language
-        //await page.evaluateHandle('document.documentElement.lang = arguments[0]', targetLang);
-        await page.evaluateHandle((targetLang) => { // Capture targetLang in the evaluateHandle function
+        // Set Hindi font support
+        await page.evaluateHandle(() => {
             const style = document.createElement('style');
-            let additionalStyles = '';
-
-            if (targetLang === 'hi') { // Now targetLang is defined here
-                additionalStyles = 'direction: rtl; font-family: "TiroDevanagariHindi-Regular";';
-            }
-
             style.textContent = `
-            @page {
-                size: A4;
-                margin: 10mm 5mm;
-                @bottom-center {
-                    content: "Page " counter(page) " of " counter(pages);
+                @font-face {
+                    font-family: 'Noto Sans Devanagari';
+                    src: url('https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari&display=swap');
                 }
-            }
-            body {
-                ${additionalStyles}
-            }
-            .footer {
-                width: 100%;
-                text-align: center;
-                padding-top: 10px;
-                border-top: 1px solid black;
-            }`;
+                body {
+                    font-family: 'Noto Sans Devanagari', Arial, sans-serif;
+                }
+                ${style.textContent}
+            `;
             document.head.appendChild(style);
-
-            const now = new Date();
-            const timestamp = now.toLocaleString();
-
-            const footer = document.querySelector('.footer');
-            if (footer) {
-                const timestampElement = document.createElement('p');
-                timestampElement.textContent = `Generated via AdhereLive platform<br/>${timestamp}`;
-                footer.appendChild(timestampElement);
-            }
-        }, targetLang); // Pass targetLang as an argument to evaluateHandle
-
-        await page.setContent(finalHtml);
-
-        // Set viewport and generate PDF
-        await page.setViewport({width: 794, height: 1123, deviceScaleFactor: 2});
-
-        const pdfBuffer = await page.pdf({
-            format: 'A4',
-            printBackground: true,
-            margin: {
-                top: "40px",
-                bottom: "100px"
-            }
         });
 
+        await page.setContent(finalHtml);
+        await page.setViewport({
+            width: 794,
+            height: 1123,
+            deviceScaleFactor: 2,
+        });
+
+        await page.goto(`data:text/html;charset=UTF-8,${finalHtml}`, {
+            waitUntil: "networkidle0",
+        });
+
+        let pdfBuffer = await page.pdf(options);
+        logger.info('Conversion complete. PDF file generated successfully.');
         await browser.close();
         return pdfBuffer;
     } catch (error) {
-        logger.error("Error generating PDF:", error);
-        logger.error("Error details:", error.message);
-        if (error.response) {
-            logger.error("Google Cloud API Response:", error.response.data);
-        }
-        throw error; // Let the route handler catch and handle the error
+        logger.error('Error in PDF generation:', error);
+        throw error;
     }
 }
-
-const router = express.Router();
-
-router.get("/:care_plan_id", async (req, res) => {
-    try {
-        const templateHtml = fs.readFileSync(path.join("./routes/api/prescription/prescription.html"), "utf8");
-        const dataBinding = dataForTranslation;
-        const targetLang = 'hi'; // Pass 'hi' for Hindi
-        const pdfBuffer = await translateAndGeneratePDF({templateHtml, dataBinding, targetLang}, array); // Pass 'hi' for Hindi
-
-        res.contentType("application/pdf");
-        res.send(pdfBuffer);
-
-    } catch (error) {
-        logger.error("Error generating PDF:", error);
-        res.status(500).send("Error generating PDF");
-    }
-});
 
 // formatting doctor data
 function formatDoctorsData(
@@ -700,7 +579,6 @@ function getLatestUpdateDate(medications) {
 router.get(
     "/details/:care_plan_id",
     Authenticated,
-    // templateHtml, dataBinding, targetLang = 'hi'
     async (req, res) => {
         try {
             const {care_plan_id = null} = req.params;
@@ -1268,53 +1146,6 @@ router.get(
                 }
             }
 
-            /**
-             * TODO: Why has this been commented out
-             const stringSymptomArray = [];
-             let stringSymptom = "";
-
-             if (symptoms) {
-             try {
-             const parsedSymptoms = JSON.parse(symptoms);
-
-             if (Array.isArray(parsedSymptoms)) {
-             // Crucial check: Is it an array?
-             parsedSymptoms.forEach((element) => {
-             if (
-             typeof element === "object" &&
-             element !== null &&
-             element.symptomName &&
-             element.duration
-             ) {
-             // Check if element is an object and has required properties
-             const bodyPart =
-             Array.isArray(element.bodyParts) && element.bodyParts.length > 0
-             ? `(${element.bodyParts.join(", ")})` // Join array elements with commas
-             : "";
-             stringSymptomArray.push(
-             `${element.symptomName} ${bodyPart} for ${element.duration}`
-             );
-             } else {
-             logger.warn("Invalid symptom element: ", element); // Log invalid elements
-             }
-             });
-             } else {
-             logger.warn("Symptoms data is not an array: ", parsedSymptoms);
-             stringSymptom = symptoms;
-             }
-             } catch (e) {
-             logger.error("Error parsing symptoms: ", e);
-             stringSymptom = symptoms;
-             }
-             }
-
-             if (stringSymptomArray.length > 0) {
-             return stringSymptomArray;
-             } else {
-             return stringSymptom;
-             }
-             */
-
             let symptoms_final_value = "";
             if (stringSymptomArray.length < 1) {
                 symptoms_final_value = `${renderChiefComplaints({
@@ -1595,8 +1426,8 @@ router.get(
                 ),
             };
 
-            // Construct the dataBinding object
-            const dataBinding = dataForTranslation;
+            // Translate the pre_data object
+            const translatedPreData = await translateObjectToHindi(pre_data);
 
             const templateHtml = fs.readFileSync(
                 path.join("./routes/api/prescription/prescription.html"),
@@ -1613,14 +1444,13 @@ router.get(
                     bottom: "100px",
                 },
                 printBackground: true,
-                path: "prescription.pdf",
+                path: "invoice.pdf",
             };
-            // logger.debug("Prescription Data: \n", {pre_data});
 
-            let pdf_buffer_value = await translateAndGeneratePDF({
-                templateHtml: templateHtml,
-                dataBinding: dataBinding,
-                targetLang: "hi",
+            let pdf_buffer_value = await html_to_pdf({
+                templateHtml,
+                dataBinding: translatedPreData,
+                options,
             });
 
             res.contentType("application/pdf");
@@ -1629,6 +1459,7 @@ router.get(
             logger.error("Error in Prescription API, while generating the prescription: ", err);
             return raiseServerError(res);
         }
-    });
+    }
+);
 
 module.exports = router;
