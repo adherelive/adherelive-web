@@ -515,7 +515,7 @@ const getAllDataForDoctorsCount = async ({
       { ...formattedData, patientCount }, // Add patientCount to the response
       "Missed events fetched successfully",
     ];
-    logger.debug("getAllDataForDoctorCount response for the Doctor/Patient: ", response);
+    // logger.debug("getAllDataForDoctorCount response for the Doctor/Patient: ", response);
 
     return response;
   } catch (error) {
