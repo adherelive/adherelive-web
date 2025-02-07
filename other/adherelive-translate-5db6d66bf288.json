@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "adherelive-translate",
+  "private_key_id": "5db6d66bf288873385af6e6a52874d29851ee747",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCWxcZJ3NjlDwdi\nlYjtJJfgQtwMjnMoONhwSmlaJmnBDnYj6rwQpfUFq8jxAUnUR4Qv8fAFvtVrT3G/\n/UxE/erW3QMmoT7iPTMYtBjWSESDl66zBt7D+dLTQJlz/8r0/ACJMUr/q1+UPSki\nf8laH/+xCidcV7cqEQu4zzVVlfTkAbUiPvLL3n8yCQqc7jU/q2q7F8kOHzTwzwcY\nHF+y+fWEHN75j7o+QglpCb1bQWY44JnbY6F7J6jzy4ZQgRG5VsmxHs1+5IT1Ou9k\n94s+ctMvcdIs+q0JqnK0xt2bPOxZ9avNOwTI3oVXgrKeBJ1d2KH2qVDBIyg3FAFj\njaWUjnObAgMBAAECggEAGKJWxrxhPx0IrAhaTMN1AczFbv3FU0s6aIUX7S/9M8Wy\nSCWzCutP+y25UVClvfEzaAaucgSJ5+nH4EJkDZpec4hn2o4aRqpmKKv1qj6OMeFS\nHL52HkIOurpsIsz73bGLlYmAGKw+RmuvHAu8m8+XnixWXbBCj9/PcPzWA4D9TVVj\n0bmJrWlRbxp8dysxwOJy/df8qbdDtAYKloccjOVUBuqQfQLbV3jYmMPjSxYkty2c\n6lUig+YT/aH2XmOOtobygSt6BvwUH9r3GK1vBHQ5Bg5R5THjRZZUFlvhfnB8kuCd\nSxh63JuuPC2ww+iZmbbNe+CYPRuBM4pwzu5g2ptpxQKBgQDN3jVUoVSuZXP5Ze9r\n595FCx4kbMuZ2tYRdepr3JPpvfReSIq9hxUuNzYbiyYH6DgTvNdIk+BE8j1tz9lJ\nKhQAgmqqT/cI7/X5VLeyfYY3usaYIKa9NL4Yw9DKjnBgq/hchQeLk7f5d/Y8tnq0\nRIAmwiV9oTmlMMRI9xhRUIxg/QKBgQC7fOvlF/leahu2xKcYRLrnk3pIT0LUGEst\n9F1+nBg0SrRYZKhshzIlauIC3OxHZljB6/16cvxGc3n9QVp9xS1MzsEhbEvZgmV0\n+WipFpiJR3mbf+xHF3CsJsc+IMhIIbDAyG+Dx9v+bjU39xHr4Xe1P7GkHwebtlg5\nJFgaZbg2dwKBgQChp6ltCTo7r4LABiFZNDu/L5m9tIi0CbkrANLRW+XyF606E/CO\nHvKs1cHxIvT8JIdUSGcsoKHsweMmxZ2z7AzE0aP8lMpBBFy8KqAM0rCANnQXpRwJ\nWs8jFzBuvibUYnWmAPgJzDcc9+wthIUZ5OhUhwN1gRKI+qBHQ3Ce+Ych6QKBgF2C\nxekilva3N5Fl7e1Vwl7kGJZeKfe9Eioeek8+rXfPVrnLopFWsPUmpQlGhPZrnpNC\nD8/178t3pv1gjjCympB3gq4X5JDcz5uTFddX9MZrhsS+/erLTyAdyzw6f4oye4T7\ns1rn4Nq6vwJl0WNzthAJb6Fq9JF+VexSKzsnRsSrAoGAHHB18WUpDZrWVybi5M2C\ns4l2k7B6XCdpllQuSi4Z9gx8JnaWWWknq6agCdlH1Eplja6K6jfY3WshWTDLO7iX\nPXJSVB/V962xnkBjIYE7WyzQsNlh06eeTIVtP3FEGDn09qjjZQQAonTSjnFrolwG\nbcULPRMQ7M7V7gPrYnCF1BY=\n-----END PRIVATE KEY-----\n",
+  "client_email": "translate-service-account@adherelive-translate.iam.gserviceaccount.com",
+  "client_id": "111581120519175965889",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/translate-service-account%40adherelive-translate.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
