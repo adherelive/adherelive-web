@@ -166,11 +166,17 @@ router.get(
                     right: '5mm'
                 },
                 printBackground: true,
-                displayHeaderFooter: true,
+                displayHeaderFooter: false,
                 headerTemplate: '<div></div>', // Empty header since we have our own
                 footerTemplate: '<div></div>', // Empty footer since we have our own
                 preferCSSPageSize: true,
                 path: "prescription.pdf",
+                // Add these settings for better image quality
+                viewport: {
+                    width: 1200,
+                    height: 1697,
+                    deviceScaleFactor: 2
+                }
             };
             let pdf_buffer_value = await html_to_pdf({
                 templateHtml,
