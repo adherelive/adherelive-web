@@ -180,8 +180,51 @@ async function translateAndGeneratePDF(templateHtml, dataBinding, targetLang = '
 
         const page = await browser.newPage();
 
+        if (targetLang === 'hi') { // Now targetLang is defined here
+            let additionalStyles = 'direction: rtl; font-family: "TiroDevanagariHindi-Regular";';
+        }
+
         // Add custom styles for the target language
-        await page.evaluateHandle('document.documentElement.lang = arguments[0]', targetLang);
+        //await page.evaluateHandle('document.documentElement.lang = arguments[0]', targetLang);
+        await page.evaluateHandle((targetLang) => { // Capture targetLang in the evaluateHandle function
+            const style = document.createElement('style');
+            let additionalStyles = '';
+
+            if (targetLang === 'hi') { // Now targetLang is defined here
+                additionalStyles = 'direction: rtl; font-family: "TiroDevanagariHindi-Regular";';
+            }
+
+            style.textContent = `
+            @page {
+                size: A4;
+                margin: 10mm 5mm;
+                @bottom-center {
+                    content: "Page " counter(page) " of " counter(pages);
+                }
+            }
+            body {
+                ${additionalStyles}
+            }
+            .footer {
+                width: 100%;
+                text-align: center;
+                padding-top: 10px;
+                border-top: 1px solid black;
+            }
+        `;
+            document.head.appendChild(style);
+
+            const now = new Date();
+            const timestamp = now.toLocaleString();
+
+            const footer = document.querySelector('.footer');
+            if (footer) {
+                const timestampElement = document.createElement('p');
+                timestampElement.textContent = `Generated via AdhereLive platform<br/>${timestamp}`;
+                footer.appendChild(timestampElement);
+            }
+        }, targetLang); // Pass targetLang as an argument to evaluateHandle
+
         await page.setContent(finalHtml);
 
         // Set viewport and generate PDF
@@ -1523,7 +1566,7 @@ router.get(
                 templateHtml,
                 dataBinding: pre_data,
                 options,
-                targetLang}
+                targetLang: "hi"}
             );
             res.contentType("application/pdf");
             return res.send(pdf_buffer_value);
