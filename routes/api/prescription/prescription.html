@@ -72,15 +72,16 @@
 
         /* Special classes for PDF page counting */
         @page {
-            margin-bottom: 40px; /* Space for footer */
+            margin-bottom: 30mm; /* Space for footer */
         }
 
-        /* Running header/footer styles */
+        /* Running header/footer styles
         @page {
             @bottom-center {
                 content: "Page " counter(page) " of " counter(pages);
             }
         }
+         */
 
         /* Font Faces */
         @font-face {
@@ -243,6 +244,7 @@
             background-color: #fff;
             border-top: 1px solid black;
             text-align: center;
+            font-family: "PlusJakartaSans-Regular";
         }
 
         /* Footer Styles */
@@ -253,17 +255,13 @@
             text-align: center;
         }
 
-        .page-numbers {
-            margin: 0;
+        .page-info {
+            margin-bottom: 4px;
         }
 
         .generation-info {
-            margin: 2px 0 0 0;
             font-size: 8px;
-        }
-
-        .generation-time {
-            color: #999;
+            color: #888;
         }
 
         /* Page Break Controls */
@@ -1220,15 +1218,10 @@
 </div>
 
 <!-- Footer Template -->
-<div class="footer">
+<div class="footer" id="pdf-footer">
     <div class="footer-content">
-        <p class="page-numbers">
-            Page <span class="pageNumber"></span> of <span class="totalPages"></span>
-        </p>
-        <p class="generation-info">
-            Generated via the AdhereLive Platform
-            <span class="generation-time">2025-07-23 05:20:00 UTC</span>
-        </p>
+        <p class="page-info">Page <span id="page-num"></span> of <span id="page-count"></span></p>
+        <p class="generation-info">Generated via AdhereLive platform<br />{{ generationTimestamp }}</p>
     </div>
 </div>
 </body>

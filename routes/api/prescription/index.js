@@ -174,12 +174,12 @@ router.get(
     async (req, res) => {
         try {
             logger.debug(path.join("./routes/api/prescription/prescription.html"));
-            logger.debug("./prescription.html");
+            // logger.debug("./prescription.html");
             const templateHtml = fs.readFileSync(
                 path.join("./routes/api/prescription/prescription.html"),
                 "utf8"
             );
-            logger.debug(path.join(process.cwd(), "prescription.html"));
+            // logger.debug(path.join(process.cwd(), "prescription.html"));
             const options = {
                 format: "A4",
                 margin: {
@@ -191,7 +191,12 @@ router.get(
                 printBackground: true,
                 displayHeaderFooter: true,
                 headerTemplate: '<div></div>', // Empty header since we have our own
-                footerTemplate: '<div></div>', // Empty footer since we have our own
+                footerTemplate: `
+                    <div style="width: 100%; font-size: 10px; padding: 10px 20px; color: #666; text-align: center;">
+                        <div>Page <span class="pageNumber"></span> of <span class="totalPages"></span></div>
+                        <div style="font-size: 8px; margin-top: 2px;">Generated via AdhereLive platform <br /> ${moment().format('MMMM Do YYYY, h:mm:ss A')}</div>
+                    </div>
+                `,
                 preferCSSPageSize: true,
                 path: "prescription.pdf",
                 // Add these settings for better image quality
