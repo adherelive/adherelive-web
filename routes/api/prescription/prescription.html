@@ -463,6 +463,20 @@
             align-items: center;
         }
 
+        .top_section_wrapper_one h3,
+        .top_section_wrapper_two h3 {
+            margin-right: 10px;
+            font-family: "PlusJakartaSans-Bold";
+            font-size: 13px;
+        }
+
+        .top_section_wrapper_one p,
+        .top_section_wrapper_two p {
+            font-family: "PlusJakartaSans-Medium";
+            font-size: 10px;
+            margin: 0;
+        }
+
         /* Complaint Table Specific */
         .complaint_table {
             width: 100%;
@@ -754,6 +768,7 @@
     </div>
 
     <!-- COMPLAINTS SECTION -->
+    <!-- Grid style not to be used until we get BMI, BP, Temperature, etc.
     <div class="complaints_section">
         <div class="complaints_subsection">
             <div>
@@ -774,7 +789,18 @@
             </div>
         </div>
     </div>
-
+    -->
+    <!-- COMPLAINTS SECTION -->
+    <div class="top_section_wrapper">
+        <div class="top_section_wrapper_one" style="border-right: 1px solid; padding: 10px">
+            <h3>Height :</h3>
+            <p>{{patient_data.height}} cm</p>
+        </div>
+        <div class="top_section_wrapper_two" style="padding: 10px">
+            <h3>Weight :</h3>
+            <p>{{patient_data.weight}} kg</p>
+        </div>
+    </div>
 
     <!-- MEDICINE  SECTION -->
     <div class="medicine_section avoid-break">
