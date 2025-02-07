@@ -953,20 +953,25 @@
 
     <div class="signature_section">
         <div class="signature_image_section">
-            <img
-                    class="signature_image"
-                    height="40"
-                    width="120"
-                    src="{{ doctorSignImage }}"
-                    alt="adhere-doctor-signature"
-            />
-            <h3 style="margin-top: 10px; margin-bottom: 10px">
+            <picture>
+                <!-- Primary source - doctor's actual signature -->
+                <source srcset="{{ doctorSignImage }}" type="image/jpeg">
+                <!-- Fallback SVG signature -->
+                <img
+                        class="signature_image"
+                        height="40"
+                        width="120"
+                        src="../../../other/signature-default.svg"
+                        alt="AdhereLive - Doctor's Signature"
+                />
+            </picture>
+            <h3 class="signature-date">
                 {{ creationDate }}
             </h3>
-            <div style="margin-top: 10px">
+            <div class="signature-stamp">
                 <h3>SIGNATURE & STAMP</h3>
             </div>
-            <div style="margin-top: 10px">
+            <div class="signature-details">
                 <p>Reg.No. {{ registrationNumber }}, {{ city }}</p>
             </div>
         </div>
