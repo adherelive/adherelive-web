@@ -67,7 +67,7 @@ import { getFilePath } from "../../../app/helper/s3FilePath";
 import { checkAndCreateDirectory } from "../../../app/helper/common";
 
 import { getDoctorCurrentTime } from "../../../app/helper/getUserTime";
-import { raiseServerError } from "../helper";
+import { raiseClientError, raiseServerError } from "../helper";
 
 import moment from "moment";
 
@@ -138,7 +138,7 @@ async function html_to_pdf({templateHtml, dataBinding, options}) {
         });
 
         // Translate the data binding object
-        const translatedDataBinding = await translateObjectToHindi(dataBinding);
+        // const translatedDataBinding = await translateObjectToHindi(dataBinding);
 
         // Compile template with translated data
         const template = handlebars.compile(templateHtml);
@@ -1453,7 +1453,7 @@ router.get(
             };
 
             // Translate the pre_data object
-            const translatedPreData = await translateObjectToHindi(pre_data);
+            //const translatedPreData = await translateObjectToHindi(pre_data);
 
             const templateHtml = fs.readFileSync(
                 path.join("./routes/api/prescription/prescription.html"),
