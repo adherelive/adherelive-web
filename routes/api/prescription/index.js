@@ -104,11 +104,11 @@ async function translateHTMLContent(html, targetLang = 'hi') {
         const chunks = chunkText(html);
         let translatedHtml = "";
 
-        console.log("Number of chunks:", chunks.length); // Log the number of chunks
+        logger.debug("Number of chunks:", chunks.length); // Log the number of chunks
 
         for (let i = 0; i < chunks.length; i++) {
             const chunk = chunks[i];
-            console.log(`Length of chunk ${i + 1}:`, chunk.length); // Log the length of each chunk
+            logger.debug(`Length of chunk ${i + 1}:`, chunk.length); // Log the length of each chunk
 
             const [response] = await translationClient.translateText({
                 parent: `projects/${PROJECT_ID}/locations/global`,
@@ -117,11 +117,11 @@ async function translateHTMLContent(html, targetLang = 'hi') {
                 targetLanguageCode: targetLang,
             });
 
-            console.log(`Length of translated chunk ${i + 1}:`, response.translations[0].translatedText.length); // Log length after translation
+            logger.debug(`Length of translated chunk ${i + 1}:`, response.translations[0].translatedText.length); // Log length after translation
             translatedHtml += response.translations[0].translatedText;
         }
 
-        console.log("Total length of translated HTML:", translatedHtml.length); // Log the total length
+        logger.debug("Total length of translated HTML:", translatedHtml.length); // Log the total length
 
         return translatedHtml;
 
@@ -178,7 +178,7 @@ async function html_to_pdf({templateHtml, dataBinding, options}) {
         });
         const page = await browser.newPage();
 
-        // Set Hindi font support (same as before)
+        // Set Hindi font support (Base64 encoded font - same as before)
         await page.evaluateHandle(() => {
             const style = document.createElement('style');
             style.textContent = `
@@ -194,17 +194,12 @@ async function html_to_pdf({templateHtml, dataBinding, options}) {
             document.head.appendChild(style);
         });
 
-        await page.setContent(finalHtml); // Load HTML directly
+        await page.setContent(finalHtml, { waitUntil: 'networkidle2' }); // <--- Load translated HTML with UTF-8 encoding
 
         await page.setViewport({
             width: 794,
             height: 1123,
             deviceScaleFactor: 2,
-        });
-
-        // Load the HTML content using data URL
-        await page.goto(`data:text/html;charset=UTF-8,${finalHtml}`, { // <--- Corrected
-            waitUntil: "networkidle0", // or "load"
         });
 
         let pdfBuffer = await page.pdf(options);
