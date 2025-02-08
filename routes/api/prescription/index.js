@@ -1,6 +1,5 @@
 import express from "express";
 import Authenticated from "../middleware/auth";
-import PatientController from "../../../app/controllers/patients/patients.controller";
 import multer from "multer";
 import { createLogger } from "../../../libs/logger";
 
@@ -22,32 +21,23 @@ import WorkoutService from "../../../app/services/workouts/workout.service";
 import userPreferenceService from "../../../app/services/userPreferences/userPreference.service";
 
 // API Wrappers
-import ExerciseContentWrapper from "../../../app/apiWrapper/web/exerciseContents";
 import UserRolesWrapper from "../../../app/apiWrapper/web/userRoles";
-import VitalWrapper from "../../../app/apiWrapper/web/vitals";
 import UserWrapper from "../../../app/apiWrapper/web/user";
 import CarePlanWrapper from "../../../app/apiWrapper/web/carePlan";
 import AppointmentWrapper from "../../../app/apiWrapper/web/appointments";
 import MReminderWrapper from "../../../app/apiWrapper/web/medicationReminder";
 import MedicineApiWrapper from "../../../app/apiWrapper/mobile/medicine";
-import SymptomWrapper from "../../../app/apiWrapper/web/symptoms";
-import DoctorWrapper from "../../../app/apiWrapper/web/doctor";
-import ConsentWrapper from "../../../app/apiWrapper/web/consent";
 import PatientWrapper from "../../../app/apiWrapper/web/patient";
-import ReportWrapper from "../../../app/apiWrapper/web/reports";
 import ConditionWrapper from "../../../app/apiWrapper/web/conditions";
 import QualificationWrapper from "../../../app/apiWrapper/web/doctorQualification";
 import RegistrationWrapper from "../../../app/apiWrapper/web/doctorRegistration";
 import DegreeWrapper from "../../../app/apiWrapper/web/degree";
 import CouncilWrapper from "../../../app/apiWrapper/web/council";
-import TreatmentWrapper from "../../../app/apiWrapper/web/treatments";
-import DoctorPatientWatchlistWrapper from "../../../app/apiWrapper/web/doctorPatientWatchlist";
 import DietWrapper from "../../../app/apiWrapper/web/diet";
 import ProviderWrapper from "../../../app/apiWrapper/web/provider";
 import PortionWrapper from "../../../app/apiWrapper/web/portions";
 import WorkoutWrapper from "../../../app/apiWrapper/web/workouts";
 import UserPreferenceWrapper from "../../../app/apiWrapper/web/userPreference";
-import diet from "../../../app/apiWrapper/web/diet";
 
 import * as DietHelper from "../../../app/controllers/diet/diet.helper";
 import { downloadFileFromS3 } from "../../../app/controllers/user/user.helper";
@@ -71,7 +61,7 @@ import { raiseClientError, raiseServerError } from "../helper";
 
 import moment from "moment";
 
-const { TranslationServiceClient } = require('@google-cloud/translate').v3beta1;
+const {TranslationServiceClient} = require('@google-cloud/translate').v3beta1;
 const fs = require("fs");
 const path = require("path");
 const puppeteer = require("puppeteer");
@@ -114,21 +104,34 @@ async function translateHTMLContent(html, targetLang = 'hi') {
         const chunks = chunkText(html);
         let translatedHtml = "";
 
-        for (const chunk of chunks) {
+        console.log("Number of chunks:", chunks.length); // Log the number of chunks
+
+        for (let i = 0; i < chunks.length; i++) {
+            const chunk = chunks[i];
+            console.log(`Length of chunk ${i + 1}:`, chunk.length); // Log the length of each chunk
+
             const [response] = await translationClient.translateText({
                 parent: `projects/${PROJECT_ID}/locations/global`,
                 contents: [chunk],
-                mimeType: 'text/html', // Crucial for preserving HTML structure
+                mimeType: 'text/html',
                 targetLanguageCode: targetLang,
             });
+
+            console.log(`Length of translated chunk ${i + 1}:`, response.translations[0].translatedText.length); // Log length after translation
             translatedHtml += response.translations[0].translatedText;
         }
+
+        console.log("Total length of translated HTML:", translatedHtml.length); // Log the total length
 
         return translatedHtml;
 
     } catch (error) {
-        console.error('Translation error:', error);
-        throw error;
+        logger.error('Translation error:', error); // Log the entire error object
+        logger.error('Translation error message:', error.message); // Log the error message
+        if (error.response) { // If it's a Google Cloud API error
+            logger.error('Translation error response:', error.response.data); // Log the response data
+        }
+        throw error; // Re-throw the error so it's handled by the route handler
     }
 }
 
@@ -156,14 +159,14 @@ async function html_to_pdf({templateHtml, dataBinding, options}) {
         const template = handlebars.compile(templateHtml);
         let finalHtml = template(dataBinding);
 
-        console.log("Length of HTML before translation:", finalHtml.length); // Log the total length
+        logger.debug("Length of HTML before translation:", finalHtml.length); // Log the total length
 
         // Log the length of individual sections (if applicable)
-        console.log("Length of patient_data.name:", dataBinding.patient_data.name ? dataBinding.patient_data.name.length : 0);
-        console.log("Length of diagnosis:", dataBinding.diagnosis ? dataBinding.diagnosis.length : 0);
-        console.log("Length of follow_up_advise:", dataBinding.follow_up_advise ? dataBinding.follow_up_advise.length : 0);
-        console.log("Length of medicinesArray (if stringified):", JSON.stringify(dataBinding.medicinesArray).length); // Important: stringify if it's an array/object
-        console.log("Length of investigations (if stringified):", JSON.stringify(dataBinding.investigations).length);
+        logger.debug("Length of patient_data.name:", dataBinding.patient_data.name ? dataBinding.patient_data.name.length : 0);
+        logger.debug("Length of diagnosis:", dataBinding.diagnosis ? dataBinding.diagnosis.length : 0);
+        logger.debug("Length of follow_up_advise:", dataBinding.follow_up_advise ? dataBinding.follow_up_advise.length : 0);
+        logger.debug("Length of medicinesArray (if stringified):", JSON.stringify(dataBinding.medicinesArray).length); // Important: stringify if it's an array/object
+        logger.debug("Length of investigations (if stringified):", JSON.stringify(dataBinding.investigations).length);
 
         if (options.translateTo === 'hi') {
             finalHtml = await translateHTMLContent(finalHtml, 'hi');
@@ -232,7 +235,7 @@ function getWhenToTakeText(whenToTake) {
         5: 'As directed'
     };
 
-    return whenToTakeMap[whenToTake] || 'As directed';
+    return whenToTakeMap[ whenToTake ] || 'As directed';
 }
 
 // formatting doctor data
