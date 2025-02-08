@@ -105,6 +105,17 @@ const getWhenToTakeText = (number) => {
     }
 };
 
+/**
+ * This function is used to convert HTML to PDF
+ *
+ *
+ * @param {String} templateHtml
+ * @param {Object} dataBinding
+ * @param {Object} options
+ *
+ * @returns {Promise<Buffer>}
+ * @throws {Error}
+ */
 async function html_to_pdf({templateHtml, dataBinding, options}) {
     handlebars.registerHelper("print", function (value) {
         return ++value;
