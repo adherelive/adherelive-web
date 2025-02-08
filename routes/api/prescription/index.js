@@ -144,6 +144,15 @@ async function html_to_pdf({templateHtml, dataBinding, options}) {
         const template = handlebars.compile(templateHtml);
         let finalHtml = template(dataBinding);
 
+        console.log("Length of HTML before translation:", finalHtml.length); // Log the total length
+
+        // Log the length of individual sections (if applicable)
+        console.log("Length of patient_data.name:", dataBinding.patient_data.name ? dataBinding.patient_data.name.length : 0);
+        console.log("Length of diagnosis:", dataBinding.diagnosis ? dataBinding.diagnosis.length : 0);
+        console.log("Length of follow_up_advise:", dataBinding.follow_up_advise ? dataBinding.follow_up_advise.length : 0);
+        console.log("Length of medicinesArray (if stringified):", JSON.stringify(dataBinding.medicinesArray).length); // Important: stringify if it's an array/object
+        console.log("Length of investigations (if stringified):", JSON.stringify(dataBinding.investigations).length);
+
         if (options.translateTo === 'hi') {
             finalHtml = await translateHTMLContent(finalHtml, 'hi');
         }
