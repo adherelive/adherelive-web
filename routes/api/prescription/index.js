@@ -92,11 +92,15 @@ const router = express.Router();
 const translationClient = new TranslationServiceClient();
 const PROJECT_ID = 'adherelive-translate';
 
-// // Initialize translation client
-// const translate = new Translate({
-//     projectId: process.env.GOOGLE_CLOUD_PROJECT_ID,
-//     // keyFilename: process.env.GOOGLE_APPLICATION_CREDENTIALS
-// });
+const MAX_TRANSLATION_LENGTH = 10000; // Replace with the actual API limit
+
+function chunkText(text) {
+    const chunks = [];
+    for (let i = 0; i < text.length; i += MAX_TRANSLATION_LENGTH) {
+        chunks.push(text.slice(i, i + MAX_TRANSLATION_LENGTH));
+    }
+    return chunks;
+}
 
 /**
  * Translate to Hindi
@@ -107,13 +111,21 @@ const PROJECT_ID = 'adherelive-translate';
  */
 async function translateHTMLContent(html, targetLang = 'hi') {
     try {
-        const [response] = await translationClient.translateText({
-            parent: `projects/${PROJECT_ID}/locations/global`,
-            contents: [html],
-            mimeType: 'text/html', // Crucial for preserving HTML structure
-            targetLanguageCode: targetLang,
-        });
-        return response.translations[0].translatedText;
+        const chunks = chunkText(html);
+        let translatedHtml = "";
+
+        for (const chunk of chunks) {
+            const [response] = await translationClient.translateText({
+                parent: `projects/${PROJECT_ID}/locations/global`,
+                contents: [chunk],
+                mimeType: 'text/html', // Crucial for preserving HTML structure
+                targetLanguageCode: targetLang,
+            });
+            translatedHtml += response.translations[0].translatedText;
+        }
+
+        return translatedHtml;
+
     } catch (error) {
         console.error('Translation error:', error);
         throw error;
