@@ -142,16 +142,11 @@ async function html_to_pdf({templateHtml, dataBinding, options}) {
 
         // Compile template with translated data
         const template = handlebars.compile(templateHtml);
-        let finalHtml = template(dataBinding); // Get raw HTML
+        let finalHtml = template(dataBinding);
 
-        // Add translation step here
         if (options.translateTo === 'hi') {
             finalHtml = await translateHTMLContent(finalHtml, 'hi');
         }
-
-        const encodedHtml = encodeURIComponent(finalHtml); // Encode for URL
-
-        //const finalHtml = encodeURIComponent(template(translatedDataBinding));
 
         const browser = await puppeteer.launch({
             args: ["--no-sandbox"],
@@ -159,7 +154,7 @@ async function html_to_pdf({templateHtml, dataBinding, options}) {
         });
         const page = await browser.newPage();
 
-        // Set Hindi font support
+        // Set Hindi font support (same as before)
         await page.evaluateHandle(() => {
             const style = document.createElement('style');
             style.textContent = `
@@ -175,15 +170,17 @@ async function html_to_pdf({templateHtml, dataBinding, options}) {
             document.head.appendChild(style);
         });
 
-        await page.setContent(finalHtml); // Use raw HTML
+        await page.setContent(finalHtml); // Load HTML directly
+
         await page.setViewport({
             width: 794,
             height: 1123,
             deviceScaleFactor: 2,
         });
 
-        await page.goto(`data:text/html;charset=UTF-8,${encodedHtml}`, {
-            waitUntil: "networkidle0",
+        // Load the HTML content using data URL
+        await page.goto(`data:text/html;charset=UTF-8,${finalHtml}`, { // <--- Corrected
+            waitUntil: "networkidle0", // or "load"
         });
 
         let pdfBuffer = await page.pdf(options);
