@@ -71,7 +71,7 @@ import { raiseServerError } from "../helper";
 
 import moment from "moment";
 
-const {Translate} = require('@google-cloud/translate').v3beta1;
+const { TranslationServiceClient } = require('@google-cloud/translate').v3beta1;
 const fs = require("fs");
 const path = require("path");
 const puppeteer = require("puppeteer");
