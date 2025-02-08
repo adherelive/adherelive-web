@@ -71,7 +71,7 @@ import { raiseServerError } from "../helper";
 
 import moment from "moment";
 
-const {Translate} = require('@google-cloud/translate').v2;
+const {Translate} = require('@google-cloud/translate').v3beta1;
 const fs = require("fs");
 const path = require("path");
 const puppeteer = require("puppeteer");
@@ -89,11 +89,8 @@ const router = express.Router();
 
 // Initialize the translation client
 // Make sure you have set up Google Cloud credentials properly
-const translate = new Translate({
-    projectId: 'adherelive-translate',
-    // If using service account key file:
-    // keyFilename: 'path/to/your/service-account-key.json'
-});
+const translationClient = new TranslationServiceClient();
+const PROJECT_ID = 'adherelive-translate';
 
 // // Initialize translation client
 // const translate = new Translate({
@@ -102,41 +99,25 @@ const translate = new Translate({
 // });
 
 /**
- * Translates text to Hindi
- * @param {string} text Text to translate
- * @returns {Promise<string>} Translated text
+ * Translate to Hindi
+ *
+ * @param html
+ * @param targetLang
+ * @returns {Promise<string>}
  */
-async function translateToHindi(text) {
+async function translateHTMLContent(html, targetLang = 'hi') {
     try {
-        if (!text) return text;
-        const [translation] = await translate.translate(text, {
-            from: 'en',
-            to: 'hi'
+        const [response] = await translationClient.translateText({
+            parent: `projects/${PROJECT_ID}/locations/global`,
+            contents: [html],
+            mimeType: 'text/html', // Crucial for preserving HTML structure
+            targetLanguageCode: targetLang,
         });
-        return translation;
+        return response.translations[0].translatedText;
     } catch (error) {
-        logger.error('Translation error: ', error);
-        return text; // Return original text if translation fails
+        console.error('Translation error:', error);
+        throw error;
     }
-}
-
-/**
- * Translates an object's string values to Hindi
- * @param {Object} obj Object containing strings to translate
- * @returns {Promise<Object>} Object with translated strings
- */
-async function translateObjectToHindi(obj) {
-    if (!obj) return obj;
-
-    const translatedObj = {...obj};
-    for (let key in translatedObj) {
-        if (typeof translatedObj[ key ] === 'string') {
-            translatedObj[ key ] = await translateToHindi(translatedObj[ key ]);
-        } else if (typeof translatedObj[ key ] === 'object') {
-            translatedObj[ key ] = await translateObjectToHindi(translatedObj[ key ]);
-        }
-    }
-    return translatedObj;
 }
 
 async function html_to_pdf({templateHtml, dataBinding, options}) {
@@ -161,7 +142,16 @@ async function html_to_pdf({templateHtml, dataBinding, options}) {
 
         // Compile template with translated data
         const template = handlebars.compile(templateHtml);
-        const finalHtml = encodeURIComponent(template(translatedDataBinding));
+        let finalHtml = template(dataBinding); // Get raw HTML
+
+        // Add translation step here
+        if (options.translateTo === 'hi') {
+            finalHtml = await translateHTMLContent(finalHtml, 'hi');
+        }
+
+        const encodedHtml = encodeURIComponent(finalHtml); // Encode for URL
+
+        //const finalHtml = encodeURIComponent(template(translatedDataBinding));
 
         const browser = await puppeteer.launch({
             args: ["--no-sandbox"],
@@ -185,14 +175,14 @@ async function html_to_pdf({templateHtml, dataBinding, options}) {
             document.head.appendChild(style);
         });
 
-        await page.setContent(finalHtml);
+        await page.setContent(finalHtml); // Use raw HTML
         await page.setViewport({
             width: 794,
             height: 1123,
             deviceScaleFactor: 2,
         });
 
-        await page.goto(`data:text/html;charset=UTF-8,${finalHtml}`, {
+        await page.goto(`data:text/html;charset=UTF-8,${encodedHtml}`, {
             waitUntil: "networkidle0",
         });
 
@@ -1470,6 +1460,19 @@ router.get(
                 "utf8"
             );
 
+            // Add language detection (query param or header)
+            const targetLang = req.query.lang || 'hi';
+
+            // In your route handler
+            if (targetLang === 'hi') {
+                moment.locale('hi'); // Set Hindi locale
+            }
+
+            // Format dates using moment
+            pre_data.creationDate = moment()
+                .locale(targetLang)
+                .format('LLL');
+
             const options = {
                 format: "A4",
                 headerTemplate: "<p></p>",
@@ -1480,12 +1483,14 @@ router.get(
                     bottom: "100px",
                 },
                 printBackground: true,
-                path: "invoice.pdf",
+                path: "prescription.pdf",
+                translateTo: targetLang // Pass to html_to_pdf
             };
 
+            // Generate PDF with translation
             let pdf_buffer_value = await html_to_pdf({
                 templateHtml,
-                dataBinding: translatedPreData,
+                dataBinding: pre_data,
                 options,
             });
 
