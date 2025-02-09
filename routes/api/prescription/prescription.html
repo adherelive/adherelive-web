@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{translatedLabels.prescriptionTitle}}</title>
     <style>
-        @import url('https://res.cloudinary.com/myrltech/raw/upload/v1686297287/TiroDevanagariHindi-Regular.ttf&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;700&display=swap');
 
         /* Base Page Setup */
         /* This CSS rule ensures that table headers (contained within the <thead> element)
@@ -73,7 +73,7 @@
 
         /* Global styles */
         * {
-            font-family: "TiroDevanagariHindi-Regular", sans-serif;
+            font-family: "NotoSansDevanagari", sans-serif;
             -webkit-font-smoothing: antialiased;
             text-rendering: optimizeLegibility;
         }
@@ -123,9 +123,17 @@
             font-display: swap; /* Optional: improve perceived performance */
         }
 
+        @font-face {
+            font-family: 'NotoSansDevanagari';
+            src: url('https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;700&display=swap');
+            font-weight: normal; /* Or specify font-weight if needed */
+            font-style: normal; /* Or specify font-style if needed */
+            font-display: swap; /* Optional: improve perceived performance */
+        }
+
         /* Hindi text specific styles */
         .hindi-text {
-            font-family: 'TiroDevanagariHindi-Regular', Arial, sans-serif !important;
+            font-family: 'NotoSansDevanagari', Arial, sans-serif !important;
         }
 
         /* Specific rules for content breaking to existing styles */
@@ -153,7 +161,7 @@
 
         /* Specific elements that should ALWAYS be in Hindi */
         .some-hindi-text {
-            font-family: "TiroDevanagariHindi-Regular", sans-serif; /* No fallbacks if it MUST be Hindi */
+            font-family: "NotoSansDevanagari", sans-serif; /* No fallbacks if it MUST be Hindi */
         }
 
         /* Maintains aspect ratio in the images */
@@ -211,13 +219,13 @@
             margin: 0;
             padding: 10px;
             font-size: 10px;
-            font-family: 'TiroDevanagariHindi-Regular', Arial, sans-serif;
+            font-family: 'NotoSansDevanagari', Arial, sans-serif;
         }
 
         /* Typography */
         h3, h4, h5 {
             page-break-after: avoid;
-            font-family: "PlusJakartaSans-Bold";
+            font-family: "PlusJakartaSans-Bold", Arial, sans-serif;
             margin: 0;
         }
 
@@ -230,7 +238,7 @@
         }
 
         p {
-            font-family: "PlusJakartaSans-Medium";
+            font-family: "PlusJakartaSans-Medium", Arial, sans-serif;
             font-size: 10px;
             margin: 0;
         }
@@ -760,7 +768,7 @@
     <div class="diagnosis_section">
         <div style="display: flex; align-items: center">
             <h3>General | Systematic Examination :</h3>
-            <p style="font-family: TiroDevanagariHindi-Regular">
+            <p style="font-family: NotoSansDevanagari, sans-serif">
                 {{ clinicalNotes }}
             </p>
         </div>
@@ -769,7 +777,7 @@
     <!-- TREATMENT ADVISE -->
     <div class="treatment_advise_section">
         <h3>Treatment And Follow-up Advice:</h3>
-        <p style="font-family: TiroDevanagariHindi-Regular">
+        <p style="font-family: TNotoSansDevanagari, sans-serif">
             <strong>{{ follow_up_advise }}</strong>
         </p>
     </div>
@@ -863,7 +871,7 @@
                                 <strong>{{ medicineName }}</strong><br/>
                                 {{ genericName }} {{ strength }}<br/>
                                 <span style="font-size: 10px;">by Dr. {{ organizer.name }}</span><br/>
-                                Note: - <span style="font-family: TiroDevanagariHindi-Regular;">{{ description }}</span>
+                                Note: - <span style="font-family: NotoSansDevanagari,sans-serif;">{{ description }}</span>
                             </p>
                         </div>
                     </div>
@@ -978,7 +986,7 @@
                             <span style="font-size: 8px">by Dr. {{ organizer.name }}</span>
                             <br/>
                             Note:-
-                            <span style="font-family: TiroDevanagariHindi-Regular"
+                            <span style="font-family: NotoSansDevanagari,sans-serif"
                             >{{ description }}</span
                             >
                         </p>
@@ -1033,7 +1041,7 @@
                             <span style="font-size: 8px">by Dr. {{ organizer.name }}</span>
                             <br/>
                             Note:-
-                            <span style="font-family: TiroDevanagariHindi-Regular"
+                            <span style="font-family: NotoSansDevanagari,sans-serif"
                             >{{ description }}</span
                             >
                         </p>
@@ -1087,7 +1095,7 @@
                 technical assistance.
             </p>
             <br />
-            <p style="font-weight: 100; font-family: TiroDevanagariHindi-Regular">
+            <p style="font-weight: 100; font-family: NotoSansDevanagari,sans-serif">
                 यह प्रिस्क्रिप्शन AdhereLive प्लेटफॉर्म पर तैयार किया गया है। अपने
                 डिजिटल प्रिस्क्रिप्शन देखने के लिए ऊपर दिए गए QR कोड का उपयोग करके
                 मोबाइल ऐप डाउनलोड करें। कृपया किसी तकनीकी सहायता के लिए
@@ -1152,7 +1160,7 @@
                                     <p>{{ this.details.name }}</p>
                                     <p>
                                         Instructions:
-                                        <span style="font-family: TiroDevanagariHindi-Regular"
+                                        <span style="font-family: NotoSansDevanagari,sans-serif"
                                         >{{ this.notes }}</span
                                         >
                                     </p>
@@ -1168,7 +1176,7 @@
                             </h5>
                             <h5>
                                 What Not to Do -
-                                <span style="font-family: TiroDevanagariHindi-Regular"
+                                <span style="font-family: NotoSansDevanagari, sans-serif"
                                 >{{this.not_to_do}}</span
                                 >
                             </h5>
