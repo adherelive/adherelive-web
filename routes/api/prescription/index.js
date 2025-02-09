@@ -102,21 +102,21 @@ function chunkText(text) {
 // Load local translations, using path.join and __dirname
 const localTranslations = JSON.parse(fs.readFileSync(path.join(__dirname, '../../../other/web-hi.json'), 'utf8'));
 
-// Cloud Translation API function
-// async function translateUsingCloudAPI(text, targetLang = 'hi') {
-//     const apiKey = 'YOUR_CLOUD_TRANSLATION_API_KEY';
-//     const url = `https://translation.googleapis.com/language/translate/v2?key=${apiKey}`;
-//     try {
-//         const response = await axios.post(url, {
-//             q: text,
-//             target: targetLang,
-//         });
-//         return response.data.data.translations[0].translatedText;
-//     } catch (error) {
-//         console.error('Error translating via Cloud API:', error);
-//         throw error;
-//     }
-// }
+/**
+ * Function to translate each of the labels, before they are sent to the HandleBars
+ *
+ * @param labels
+ * @param targetLang
+ * @returns {Promise<{}>}
+ */
+async function translateStaticLabels(labels, targetLang = 'hi') {
+    const translatedLabels = {};
+    for (const label of labels) {
+        translatedLabels[label] = await translateText(label, targetLang);
+    }
+    return translatedLabels;
+}
+
 
 /**
  * Translate to Hindi, using the Google Cloud Translation API
@@ -251,6 +251,31 @@ async function html_to_pdf({ templateHtml, dataBinding, options }) {
             }
             return await translateText(text, targetLang);
         });
+
+        // Call the 'translateStaticLabels' function with an array of all static labels in your HTML file
+        // This allows to pre-translate static labels
+        const staticLabels = [
+            "Patient Name",
+            "Registration date/time",
+            "Age/Gender",
+            "Mobile No.",
+            "Doctor Name",
+            "Address",
+            "Allergies",
+            "Comorbidities",
+            "Diagnosis",
+            "Symptoms",
+            "Treatment And Follow-up Advice",
+            "Investigation",
+            "Next Consultation",
+            "Lifestyle Advice",
+            "Diet",
+            "Workout"
+        ];
+        const translatedLabels = await translateStaticLabels(staticLabels, options.translateTo);
+
+        // Add translated labels to dataBinding
+        dataBinding.translatedLabels = translatedLabels;
 
         // Translate the data binding object
         const translatedDataBinding = await translateObjectToHindi(dataBinding, options.translateTo);
@@ -1566,6 +1591,11 @@ router.get(
                 currentTime: getDoctorCurrentTime(doctorUserId).format(
                     "Do MMMM YYYY, hh:mm a"
                 ),
+            };
+
+            pre_data = {
+                ...pre_data,
+                translatedLabels // Add translated labels here
             };
 
             // Translate the pre_data object
