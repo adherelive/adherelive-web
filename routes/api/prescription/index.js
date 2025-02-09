@@ -204,6 +204,7 @@ async function html_to_pdf({templateHtml, dataBinding, options}) {
 
         let pdfBuffer = await page.pdf(options);
         logger.info('Conversion complete. PDF file generated successfully.');
+        moment.locale('en'); // Set English locale
         await browser.close();
         return pdfBuffer;
     } catch (error) {
