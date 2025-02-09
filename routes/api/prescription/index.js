@@ -132,7 +132,7 @@ class PDFGenerator {
 
     async setupFonts() {
         performance.mark('setupFonts-start');
-        const fontPath = path.join(__dirname, './fonts/TiroDevanagariHindi-Regular.ttf');
+        const fontPath = path.join(__dirname, '../../../fonts/TiroDevanagariHindi-Regular.ttf');
         const fontBuffer = await fsp.readFile(fontPath);
         const base64Font = fontBuffer.toString('base64');
 
