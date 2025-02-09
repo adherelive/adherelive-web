@@ -71,8 +71,11 @@
             }
         }
 
+        /* Global styles */
         * {
             font-family: "TiroDevanagariHindi-Regular", sans-serif;
+            -webkit-font-smoothing: antialiased;
+            text-rendering: optimizeLegibility;
         }
 
         /* Font Faces */
@@ -118,6 +121,11 @@
             font-weight: normal; /* Or specify font-weight if needed */
             font-style: normal; /* Or specify font-style if needed */
             font-display: swap; /* Optional: improve perceived performance */
+        }
+
+        /* Hindi text specific styles */
+        .hindi-text {
+            font-family: 'TiroDevanagariHindi-Regular', Arial, sans-serif !important;
         }
 
         /* Specific rules for content breaking to existing styles */

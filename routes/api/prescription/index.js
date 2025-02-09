@@ -65,7 +65,7 @@ import { getDoctorCurrentTime } from "../../../app/helper/getUserTime";
 import { raiseClientError, raiseServerError } from "../helper";
 import currentJSON from "../../../other/web-hi.json";
 
-// FEtch the Google Translation API and 'puppeteer' along with 'handlebars' for the HTML to PDF conversion
+// Fetch the Google Translation API and 'puppeteer' along with 'handlebars' for the HTML to PDF conversion
 const {TranslationServiceClient} = require('@google-cloud/translate').v3beta1;
 const puppeteer = require("puppeteer");
 const handlebars = require("handlebars");
@@ -85,8 +85,35 @@ const router = express.Router();
 const translationClient = new TranslationServiceClient();
 const PROJECT_ID = 'adherelive-translate';
 
+// Cache configuration
+const CACHE_TTL = 3600000; // 1 hour in milliseconds
 const MAX_TRANSLATION_LENGTH = 5000; // Replace with the actual API limit
 const translationCache = new Map(); // In-memory cache
+
+// Load local translations, using path.join and __dirname
+const localTranslations = JSON.parse(fs.readFileSync(path.join(__dirname, '../../../other/web-hi.json'), 'utf8'));
+
+// Modify the HTML head to ensure proper font loading
+const htmlHead = `
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        @font-face {
+            font-family: "TiroDevanagariHindi-Regular";
+            src: url("https://res.cloudinary.com/myrltech/raw/upload/v1686297287/TiroDevanagariHindi-Regular.ttf");
+            font-weight: normal; /* Or specify font-weight if needed */
+            font-style: normal; /* Or specify font-style if needed */
+            font-display: swap; /* Optional: improve perceived performance */
+        }
+        
+        * {
+            font-family: 'TiroDevanagariHindi-Regular', Arial, sans-serif;
+        }
+    </style>
+    <title>AdhereLive - Prescription</title>
+</head>`;
+
 
 class PDFGenerator {
     constructor() {
@@ -327,30 +354,6 @@ function chunkText(text) {
     return chunks;
 }
 
-// Load local translations, using path.join and __dirname
-const localTranslations = JSON.parse(fs.readFileSync(path.join(__dirname, '../../../other/web-hi.json'), 'utf8'));
-
-// Modify the HTML head to ensure proper font loading
-const htmlHead = `
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-        @font-face {
-            font-family: 'NotoSansDevanagari';
-            src: url('https://fonts.gstatic.com/s/notosansdevanagari/v15/TuGOUUFzXI5FBtUq5a8bjKYTZjtRU6Sgv3NaV_SNmI0b8Q.woff2') format('woff2');
-            font-weight: normal;
-            font-style: normal;
-            font-display: swap;
-        }
-        
-        * {
-            font-family: 'NotoSansDevanagari', Arial, sans-serif;
-        }
-    </style>
-    <title>AdhereLive - Prescription</title>
-</head>`;
-
 /**
  * Function to translate each of the labels, before they are sent to the HandleBars
  *
@@ -413,6 +416,64 @@ async function translateHTMLContent(html, targetLang = 'hi') {
     }
 }
 
+// Optimize local translations loading
+let localTranslationsCache = null;
+function getLocalTranslations() {
+    if (!localTranslationsCache) {
+        localTranslationsCache = require('../../../other/web-hi.json');
+    }
+    return localTranslationsCache;
+}
+
+// Batch translation helper
+const translationQueue = new Map();
+const BATCH_TIMEOUT = 100; // ms
+const MAX_BATCH_SIZE = 128; // characters
+
+async function getGoogleTranslation(text, targetLang) {
+    const queueKey = targetLang;
+
+    if (!translationQueue.has(queueKey)) {
+        translationQueue.set(queueKey, {
+            texts: [],
+            promise: null
+        });
+
+        // Set up batch processing
+        setTimeout(async () => {
+            const batch = translationQueue.get(queueKey);
+            translationQueue.delete(queueKey);
+
+            if (batch.texts.length > 0) {
+                try {
+                    const [response] = await translationClient.translateText({
+                        parent: `projects/${PROJECT_ID}/locations/global`,
+                        contents: batch.texts,
+                        mimeType: 'text/plain',
+                        targetLanguageCode: targetLang,
+                    });
+
+                    batch.promise.resolve(response.translations.map(t => t.translatedText));
+                } catch (error) {
+                    batch.promise.reject(error);
+                }
+            }
+        }, BATCH_TIMEOUT);
+    }
+
+    const batch = translationQueue.get(queueKey);
+    const index = batch.texts.length;
+    batch.texts.push(text);
+
+    if (!batch.promise) {
+        batch.promise = new Promise((resolve, reject) => {
+            batch.promise = { resolve, reject };
+        });
+    }
+
+    return batch.promise.then(translations => translations[index]);
+}
+
 /**
  * A translation function that first checks the local JSON and then falls back to the cloud APIs.
  * This function should handle both single words and longer strings.
@@ -423,13 +484,49 @@ async function translateHTMLContent(html, targetLang = 'hi') {
  */
 async function translateText(text, targetLang = 'hi') {
     try {
-        const localTranslations = require('../../../other/web-hi.json'); // Load your JSON file
+        // const localTranslations = require('../../../other/web-hi.json'); // Load your JSON file
 
         // Check if the input text is valid
         if (!text || typeof text !== 'string' || text.trim() === '') {
             return ''; // Return empty string for invalid input
         }
 
+        // Generate cache key
+        const cacheKey = `${text}_${targetLang}`;
+
+        // Check cache first
+        const cachedResult = translationCache.get(cacheKey);
+        if (cachedResult && (Date.now() - cachedResult.timestamp < CACHE_TTL)) {
+            return cachedResult.translation;
+        }
+
+        // Load local translations (do this once and cache it)
+        const localTranslations = getLocalTranslations();
+
+        // Check local JSON first
+        if (targetLang === 'hi' && localTranslations[text]) {
+            const translation = localTranslations[text];
+            translationCache.set(cacheKey, {
+                translation,
+                timestamp: Date.now()
+            });
+            return translation;
+        }
+
+        // Batch translation for Google Cloud API
+        const translation = await getGoogleTranslation(text, targetLang);
+
+        // Cache the result
+        translationCache.set(cacheKey, {
+            translation,
+            timestamp: Date.now()
+        });
+
+        return translation;
+
+        /**
+         * Commented, as it will be shifted to a new function
+         *
         // Check local JSON first
         if (localTranslations[ text ]) {
             return localTranslations[ text ];
@@ -452,7 +549,7 @@ async function translateText(text, targetLang = 'hi') {
                 logger.error("Cloud Translation error: ", cloudError);
                 return text; // Fallback to original text if cloud translation fails
             }
-        }
+        }*/
     } catch (error) {
         logger.error("Translation error:", error);
         return text; // Fallback to original text if JSON loading fails
@@ -493,9 +590,12 @@ async function html_to_pdf({templateHtml, dataBinding, options}) {
         handlebars.registerHelper("print", function (value) {
             return ++value;
         });
+
+        // For the Diet/Workout data display, should only be shown if either exists
         handlebars.registerHelper('or', function () {
             return Array.prototype.slice.call(arguments, 0, -1).some(Boolean);
         });
+
         // Updated the {{translate}} helper to validate the input before calling translateText
         handlebars.registerHelper('translate', async function (text, targetLang = 'hi') {
             if (!text || typeof text !== 'string' || text.trim() === '') {
@@ -559,32 +659,37 @@ async function html_to_pdf({templateHtml, dataBinding, options}) {
         });
         const page = await browser.newPage();
 
-        // Set Hindi font support
+        // Set Hindi font support, and ensure proper font rendering
         await page.evaluateHandle((base64Font) => {
             const style = document.createElement('style');
+            document.fonts.ready.then(() => {
+                document.body.style.visibility = 'visible';
+            });
             style.textContent = `
                 @font-face {
                     font-family: 'TiroDevanagariHindi-Regular';
-                    src: url('data:font/ttf;base64,${base64Font}') format('ttf'); /* Correct format */
+                    src: url('data:font/ttf;base64,${base64Font}') format('ttf');
+                    font-display: swap;
                 }
-                body {
+                * {
                     font-family: 'TiroDevanagariHindi-Regular', sans-serif;
+                }
+                .hindi-text {
+                    font-family: 'TiroDevanagariHindi-Regular', Arial, sans-serif !important;
+                    -webkit-font-smoothing: antialiased;
+                    text-rendering: optimizeLegibility;
                 }
             `;
             document.head.appendChild(style);
         }, base64Font);
 
+        // Add font loading wait
+        await page.waitForFunction(() => document.fonts.ready);
+
         // Set the content and viewport
         // Wait for fonts to load
         await page.setContent(finalHtml, {
             waitUntil: ['networkidle0', 'load', 'domcontentloaded']
-        });
-
-        // Ensure proper font rendering
-        await page.evaluateHandle(() => {
-            document.fonts.ready.then(() => {
-                document.body.style.visibility = 'visible';
-            });
         });
 
         await page.setViewport({
@@ -1922,6 +2027,8 @@ router.get(
                 .locale(targetLang)
                 .format('LLL');
 
+            /**
+             * Not using this, as it gives errors
             // Enhanced PDF options
             const options = {
                 format: "A4",
@@ -1958,6 +2065,33 @@ router.get(
             });
 
             return res.send(pdfBuffer);
+            */
+
+            const options = {
+                format: "A4",
+                headerTemplate: "<p></p>",
+                footerTemplate: "<p></p>",
+                displayHeaderFooter: false,
+                scale: 1,
+                fontFaces: true,
+                margin: {
+                    top: "40px",
+                    bottom: "100px",
+                },
+                printBackground: true,
+                path: "prescription.pdf",
+                translateTo: targetLang // Pass to html_to_pdf
+            };
+
+            // Generate PDF with translation
+            let pdf_buffer_value = await html_to_pdf({
+                templateHtml,
+                dataBinding: pre_data,
+                options,
+            });
+
+            res.contentType("application/pdf");
+            return res.send(pdf_buffer_value);
         } catch (err) {
             logger.error("Error in Prescription API:", err);
             return raiseServerError(res);
