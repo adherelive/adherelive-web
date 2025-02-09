@@ -99,8 +99,8 @@ function chunkText(text) {
     return chunks;
 }
 
-// Load local translations
-const localTranslations = JSON.parse(fs.readFileSync('../../../other/web-hi.json', 'utf8'));
+// Load local translations, using path.join and __dirname
+const localTranslations = JSON.parse(fs.readFileSync(path.join(__dirname, '../../../other/web-hi.json'), 'utf8'));
 
 /**
  * Translate to Hindi, using the Google Cloud Translation API
