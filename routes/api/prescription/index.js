@@ -102,6 +102,22 @@ function chunkText(text) {
 // Load local translations, using path.join and __dirname
 const localTranslations = JSON.parse(fs.readFileSync(path.join(__dirname, '../../../other/web-hi.json'), 'utf8'));
 
+// Cloud Translation API function
+// async function translateUsingCloudAPI(text, targetLang = 'hi') {
+//     const apiKey = 'YOUR_CLOUD_TRANSLATION_API_KEY';
+//     const url = `https://translation.googleapis.com/language/translate/v2?key=${apiKey}`;
+//     try {
+//         const response = await axios.post(url, {
+//             q: text,
+//             target: targetLang,
+//         });
+//         return response.data.data.translations[0].translatedText;
+//     } catch (error) {
+//         console.error('Error translating via Cloud API:', error);
+//         throw error;
+//     }
+// }
+
 /**
  * Translate to Hindi, using the Google Cloud Translation API
  *
@@ -157,6 +173,11 @@ async function translateText(text, targetLang = 'hi') {
     try {
         const localTranslations = require('../../../other/web-hi.json'); // Load your JSON file
 
+        // Check if the input text is valid
+        if (!text || typeof text !== 'string' || text.trim() === '') {
+            return ''; // Return an empty string if input is invalid
+        }
+
         // Check local JSON first
         if (localTranslations[text]) {
             return localTranslations[text];
@@ -176,7 +197,7 @@ async function translateText(text, targetLang = 'hi') {
                 });
                 return cloudTranslation.translations[0].translatedText;
             } catch (cloudError) {
-                logger.error("Cloud Translation error:", cloudError);
+                logger.error("Cloud Translation error: ", cloudError);
                 return text; // Fallback to original text if cloud translation fails
             }
         }
@@ -196,8 +217,10 @@ async function translateText(text, targetLang = 'hi') {
 async function translateObjectToHindi(obj, targetLang = 'hi') {
     for (let key in obj) {
         if (typeof obj[key] === 'string') {
-            obj[key] = await translateText(obj[key], targetLang);
+            // Translate only non-empty strings
+            obj[key] = obj[key].trim() !== '' ? await translateText(obj[key], targetLang) : '';
         } else if (typeof obj[key] === 'object' && obj[key] !== null) {
+            // Recursively translate nested objects
             await translateObjectToHindi(obj[key], targetLang);
         }
     }
@@ -221,7 +244,11 @@ async function html_to_pdf({ templateHtml, dataBinding, options }) {
         handlebars.registerHelper('or', function () {
             return Array.prototype.slice.call(arguments, 0, -1).some(Boolean);
         });
+        // Updated the {{translate}} helper to validate the input before calling translateText
         handlebars.registerHelper('translate', async function (text, targetLang = 'hi') {
+            if (!text || typeof text !== 'string' || text.trim() === '') {
+                return ''; // Return an empty string for invalid inputs
+            }
             return await translateText(text, targetLang);
         });
 
