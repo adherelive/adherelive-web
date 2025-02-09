@@ -157,12 +157,18 @@ async function translateText(text, targetLang = 'hi') {
     try {
         const localTranslations = require('../../../other/web-hi.json'); // Load your JSON file
 
+        // Check local JSON first
+        if (localTranslations[text]) {
+            return localTranslations[text];
+        }
+
         if (targetLang === 'hi' && localTranslations[text]) { // Check if the text exists in the JSON
             return localTranslations[text]; // Return the Hindi translation from JSON
         } else {
             try {
                 // Fallback to Google Cloud Translation (or Azure) for any text not in JSON or if targetLang is not Hindi
-                const [cloudTranslation] = await googleTranslateClient.translateText({
+                // TODO: Use 'translateHTMLContent'
+                const [cloudTranslation] = await translationClient.translateText({
                     parent: `projects/${PROJECT_ID}/locations/global`,
                     contents: [text],
                     mimeType: 'text/plain',
@@ -170,14 +176,32 @@ async function translateText(text, targetLang = 'hi') {
                 });
                 return cloudTranslation.translations[0].translatedText;
             } catch (cloudError) {
-                console.error("Cloud Translation error:", cloudError);
+                logger.error("Cloud Translation error:", cloudError);
                 return text; // Fallback to original text if cloud translation fails
             }
         }
     } catch (error) {
-        console.error("Translation error:", error);
+        logger.error("Translation error:", error);
         return text; // Fallback to original text if JSON loading fails
     }
+}
+
+/**
+ * Before passing the dataBinding object to the Handlebars template, recursively translate all its string values.
+ *
+ * @param obj
+ * @param targetLang
+ * @returns {Promise<*>}
+ */
+async function translateObjectToHindi(obj, targetLang = 'hi') {
+    for (let key in obj) {
+        if (typeof obj[key] === 'string') {
+            obj[key] = await translateText(obj[key], targetLang);
+        } else if (typeof obj[key] === 'object' && obj[key] !== null) {
+            await translateObjectToHindi(obj[key], targetLang);
+        }
+    }
+    return obj;
 }
 
 /**
@@ -207,6 +231,20 @@ async function html_to_pdf({ templateHtml, dataBinding, options }) {
         // Compile template with translated data
         const template = handlebars.compile(templateHtml);
         let finalHtml = template(translatedDataBinding);
+
+        logger.debug("Length of HTML before translation:", finalHtml.length); // Log the total length
+
+        // Log the length of individual sections (if applicable)
+        logger.debug("Length of patient_data.name:", dataBinding.patient_data.name ? dataBinding.patient_data.name.length : 0);
+        logger.debug("Length of diagnosis:", dataBinding.diagnosis ? dataBinding.diagnosis.length : 0);
+        logger.debug("Length of follow_up_advise:", dataBinding.follow_up_advise ? dataBinding.follow_up_advise.length : 0);
+        logger.debug("Length of medicinesArray (if stringified):", JSON.stringify(dataBinding.medicinesArray).length); // Important: stringify if it's an array/object
+        logger.debug("Length of investigations (if stringified):", JSON.stringify(dataBinding.investigations).length);
+
+        // This is not required with the modified translator as above.
+        // if (options.translateTo === 'hi') {
+        //     finalHtml = await translateHTMLContent(finalHtml, 'hi');
+        // }
 
         // Launch Puppeteer and generate PDF
         const browser = await puppeteer.launch({
@@ -1504,7 +1542,7 @@ router.get(
             };
 
             // Translate the pre_data object
-            //const translatedPreData = await translateObjectToHindi(pre_data);
+            const translatedPreData = await translateObjectToHindi(pre_data);
 
             const templateHtml = fs.readFileSync(
                 path.join("./routes/api/prescription/prescription.html"),
