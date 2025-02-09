@@ -82,7 +82,8 @@ const router = express.Router();
 const translationClient = new TranslationServiceClient();
 const PROJECT_ID = 'adherelive-translate';
 
-const MAX_TRANSLATION_LENGTH = 10000; // Replace with the actual API limit
+const MAX_TRANSLATION_LENGTH = 5000; // Replace with the actual API limit
+const translationCache = new Map(); // In-memory cache
 
 function chunkText(text) {
     const chunks = [];
@@ -135,6 +136,68 @@ async function translateHTMLContent(html, targetLang = 'hi') {
     }
 }
 
+/**
+ * A translation function that first checks the local JSON and then falls back to the cloud APIs.
+ * This function should handle both single words and longer strings.
+ *
+ * @param text
+ * @param targetLang
+ * @returns {Promise<*|string>}
+ */
+async function translateText(text, targetLang = 'hi') {
+    try {
+        const localTranslations = require('../../../other/web-hi.json'); // Load your JSON file
+        const words = text.split(/\s+/); // Split text into words (or use a more sophisticated tokenizer if needed)
+        const wordsToTranslate = [];
+        const translatedWords = [];
+
+        for (const word of words) {
+            if (localTranslations[word] && localTranslations[word][targetLang]) {
+                translatedWords.push(localTranslations[word][targetLang]); // Use local translation
+            } else {
+                try {
+                    // Try Google Cloud Translation
+                    const [googleTranslation] = await googleTranslateClient.translateText({
+                        parent: `projects/${PROJECT_ID}/locations/global`,
+                        contents: [word],
+                        mimeType: 'text/plain', // Important: Use text/plain for single words
+                        targetLanguageCode: targetLang,
+                    });
+                    translatedWords.push(googleTranslation.translations[0].translatedText);
+
+                } catch (googleError) {
+                    console.error("Google Cloud Translation error:", googleError);
+                    try {
+                        // Try Azure Translator (if Google fails)
+                        const [azureTranslation] = await azureTranslateClient.translate({
+                            text: word,
+                            to: targetLang,
+                            from: 'en' // Or detect source language if needed
+                        });
+                        translatedWords.push(azureTranslation.translations[0].text);
+                    } catch (azureError) {
+                        console.error("Azure Translation error:", azureError);
+                        translatedWords.push(word); // Fallback to original word if both fail
+                    }
+                }
+            }
+        }
+        return translatedWords.join(' '); // Recombine the translated words
+
+    } catch (error) {
+        console.error("Translation error:", error);
+        return text; // Fallback to original text if everything fails
+    }
+}
+
+/**
+ * THis is the function which does the actual HTML to PDF conversion
+ *
+ * @param templateHtml
+ * @param dataBinding
+ * @param options
+ * @returns {Promise<Buffer<ArrayBufferLike>>}
+ */
 async function html_to_pdf({templateHtml, dataBinding, options}) {
     try {
         // Register handlebars helpers
@@ -147,9 +210,14 @@ async function html_to_pdf({templateHtml, dataBinding, options}) {
         });
 
         // Add a new helper for inline translation
-        handlebars.registerHelper('translate', function (text) {
-            // This will be pre-translated in the data
-            return text;
+        // handlebars.registerHelper('translate', function (text) {
+        //     // This will be pre-translated in the data
+        //     return text;
+        // });
+
+        // Modified the translate helper to use the new translation function
+        handlebars.registerHelper('translate', async function (text, targetLang = 'hi') {
+            return await translateText(text, targetLang);
         });
 
         // Translate the data binding object
