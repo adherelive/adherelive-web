@@ -935,11 +935,11 @@ function printAppointment({
   docYLevel,
 }) {
   try {
-    const labFindingsEndLevel = doc.y;
-    if (suggestedInvestigations.length > 0) {
-      addPageAndNumber(doc);
-      labFindingsEndLevel = DOC_MARGIN;
-    }
+    // const labFindingsEndLevel = doc.y;
+    // if (suggestedInvestigations.length > 0) {
+    //   addPageAndNumber(doc);
+    //   labFindingsEndLevel = DOC_MARGIN;
+    // }
 
     let medicationYLevel = doc.y;
 
@@ -1012,7 +1012,7 @@ function printAppointment({
         if (APPOINTMENT_TYPE[type].title === "Consultation") continue;
 
         let today = new moment();
-        let start = moment(start_date);
+        // let start = moment(start_date);
 
         let start = `${moment(new Date(start_date)).format("DD MMM 'YY")}`;
         // if (start.isSameOrAfter(today)) {

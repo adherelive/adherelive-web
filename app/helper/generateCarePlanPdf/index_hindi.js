@@ -934,11 +934,11 @@ function printAppointment({
   docYLevel,
 }) {
   try {
-    const labFindingsEndLevel = doc.y;
-    if (suggestedInvestigations.length > 0) {
-      addPageAndNumber(doc);
-      labFindingsEndLevel = DOC_MARGIN;
-    }
+    // const labFindingsEndLevel = doc.y;
+    // if (suggestedInvestigations.length > 0) {
+    //   addPageAndNumber(doc);
+    //   labFindingsEndLevel = DOC_MARGIN;
+    // }
 
     let medicationYLevel = doc.y;
 
