@@ -203,25 +203,25 @@ export default async (pdfData, signatureImage) => {
         Object.keys(diets_formatted_data).length ||
         Object.keys(workouts_formatted_data).length
       ) {
-        // addPageAndNumber(doc);
-        // doc
-        //   .font(BOLD_FONT)
-        //   .fontSize(BOLD_FONT_SIZE)
-        //   .text("ADVICE", DOC_MARGIN, DOC_MARGIN);
+        addPageAndNumber(doc);
+        doc
+          .font(BOLD_FONT)
+          .fontSize(BOLD_FONT_SIZE)
+          .text("ADVICE", DOC_MARGIN, DOC_MARGIN);
       }
 
-      // const dietStartLevel = doc.y + 10;
+      const dietStartLevel = doc.y + 10;
 
-      // const dietBlockLevelEnd = Object.keys(diets_formatted_data).length
-      //   ? printDiet(
-      //       doc,
-      //       dietStartLevel,
-      //       portions,
-      //       diets_formatted_data,
-      //       timings,
-      //       diet_ids
-      //     )
-      //   : null;
+      const dietBlockLevelEnd = Object.keys(diets_formatted_data).length
+        ? printDiet(
+            doc,
+            dietStartLevel,
+            portions,
+            diets_formatted_data,
+            timings,
+            diet_ids
+          )
+        : null;
 
       // const dietYLevel =
       // dietBlockLevelEnd
@@ -445,7 +445,7 @@ function printDiet(
         .format("hh:mm A");
       doc
         .fillColor("#212b36")
-        .font(HINDI_FONT)
+        .font(MEDIUM_FONT)
         .text(
           `${timeText}${" "}(${formattedTime})${" "}`,
           dietDetailsTimeXStart,
@@ -935,7 +935,7 @@ function printAppointment({
   docYLevel,
 }) {
   try {
-    let labFindingsEndLevel = doc.y;
+    const labFindingsEndLevel = doc.y;
     if (suggestedInvestigations.length > 0) {
       addPageAndNumber(doc);
       labFindingsEndLevel = DOC_MARGIN;
@@ -944,13 +944,13 @@ function printAppointment({
     let medicationYLevel = doc.y;
 
     // MEDICATIONS
-    // addPageFooter(doc, providerPrescriptionDetails);
+    addPageFooter(doc, providerPrescriptionDetails);
 
     if (suggestedInvestigations.length > 0) {
       doc
         .font(BOLD_FONT)
         .fontSize(BOLD_FONT_SIZE)
-        .text("Suggested Investigations", DOC_MARGIN, labFindingsEndLevel + 15);
+        .text("Suggested Investigations", DOC_MARGIN, docYLevel + 15);
 
       const rXLabelEndLevelY = doc.y;
 
@@ -973,7 +973,7 @@ function printAppointment({
         // .text("Provider Name", drXStart, rXLabelEndLevelY + 10)
         .text("Description", medicineXStart, rXLabelEndLevelY + 10)
         .text("Test Date", dosageXStart, rXLabelEndLevelY + 10)
-        // .text("Provider", quantityXStart, rXLabelEndLevelY + 10)
+        .text("Provider", quantityXStart, rXLabelEndLevelY + 10)
         .text("Purpose", frequencyXStart, rXLabelEndLevelY + 10);
       // .text("Time-Duration", timingFrequencyXStart, rXLabelEndLevelY + 10);
       //AKSHAY NEW CODE IMPLEMENTATIONS
@@ -1011,8 +1011,8 @@ function printAppointment({
 
         if (APPOINTMENT_TYPE[type].title === "Consultation") continue;
 
-        // let today = new moment();
-        // let start = moment(start_date);
+        let today = new moment();
+        let start = moment(start_date);
 
         let start = `${moment(new Date(start_date)).format("DD MMM 'YY")}`;
         // if (start.isSameOrAfter(today)) {
@@ -2198,9 +2198,7 @@ function printFooter(
     }
     addPageAndNumber(doc);
   }
-  logger.debug("\n\n\n\n\n\n\n\n\n\n\n================================");
-  logger.debug({ imageUrl });
-  logger.debug("================================\n\n\n\n\n\n\n\n\n\n\n");
+  logger.debug("The Image URL: ", { imageUrl });
   try {
     doc.image(`${imageUrl}`, 400, doc.y + 10, {
       width: 120,

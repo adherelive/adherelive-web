@@ -2,6 +2,11 @@ import express from "express";
 import Authenticated from "../middleware/auth";
 import multer from "multer";
 import { createLogger } from "../../../libs/logger";
+import { performance, PerformanceObserver } from 'perf_hooks';
+import fsp from "fs/promises";
+import fs from "fs";
+import path from "path";
+import moment from "moment";
 
 // Services
 import userService from "../../../app/services/user/user.service";
@@ -58,12 +63,10 @@ import { checkAndCreateDirectory } from "../../../app/helper/common";
 
 import { getDoctorCurrentTime } from "../../../app/helper/getUserTime";
 import { raiseClientError, raiseServerError } from "../helper";
+import currentJSON from "../../../other/web-hi.json";
 
-import moment from "moment";
-
+// FEtch the Google Translation API and 'puppeteer' along with 'handlebars' for the HTML to PDF conversion
 const {TranslationServiceClient} = require('@google-cloud/translate').v3beta1;
-const fs = require("fs");
-const path = require("path");
 const puppeteer = require("puppeteer");
 const handlebars = require("handlebars");
 
@@ -84,6 +87,231 @@ const PROJECT_ID = 'adherelive-translate';
 
 const MAX_TRANSLATION_LENGTH = 5000; // Replace with the actual API limit
 const translationCache = new Map(); // In-memory cache
+
+class PDFGenerator {
+    constructor() {
+        this.performanceMetrics = {};
+        this.translationCache = new Map();
+        this.localTranslations = null;
+        this.setupPerformanceMonitoring();
+    }
+
+    setupPerformanceMonitoring() {
+        const obs = new PerformanceObserver((list) => {
+            const entries = list.getEntries();
+            entries.forEach(entry => {
+                this.performanceMetrics[ entry.name ] = entry.duration;
+            });
+        });
+        obs.observe({entryTypes: ['measure'], buffered: true});
+    }
+
+    async loadLocalTranslations() {
+        performance.mark('loadLocalTranslations-start');
+        try {
+            // Pre-load and parse JSON at startup
+            const jsonPath = path.join(__dirname, '../../../other/web-hi.json');
+            const jsonContent = await fsp.readFile(jsonPath, 'utf8');
+            this.localTranslations = JSON.parse(jsonContent);
+
+            // Create reverse mappings for faster lookups
+            this.reverseTranslations = Object.entries(this.localTranslations).reduce((acc, [key, value]) => {
+                acc[ value.toLowerCase() ] = key;
+                return acc;
+            }, {});
+        } catch (error) {
+            logger.error('Error loading local translations:', error);
+            this.localTranslations = {};
+            this.reverseTranslations = {};
+        }
+        performance.mark('loadLocalTranslations-end');
+        performance.measure('Load Local Translations',
+            'loadLocalTranslations-start',
+            'loadLocalTranslations-end');
+    }
+
+    async setupFonts() {
+        performance.mark('setupFonts-start');
+        const fontPath = path.join(__dirname, './fonts/TiroDevanagariHindi-Regular.ttf');
+        const fontBuffer = await fsp.readFile(fontPath);
+        const base64Font = fontBuffer.toString('base64');
+
+        const fontFaceStyle = `
+            @font-face {
+                font-family: 'TiroDevanagariHindi-Regular';
+                src: url(data:font/ttf;base64,${base64Font}) format('truetype');
+                font-weight: normal;
+                font-style: normal;
+                font-display: swap;
+            }
+        `;
+        performance.mark('setupFonts-end');
+        performance.measure('Setup Fonts', 'setupFonts-start', 'setupFonts-end');
+        return fontFaceStyle;
+    }
+
+    async translate(text, targetLang = 'hi') {
+        performance.mark(`translate-${text}-start`);
+
+        // Skip translation for empty or non-string values
+        if (!text || typeof text !== 'string' || text.trim() === '') {
+            return '';
+        }
+
+        // Check cache first
+        const cacheKey = `${text}_${targetLang}`;
+        if (this.translationCache.has(cacheKey)) {
+            return this.translationCache.get(cacheKey);
+        }
+
+        // Check local translations (case-insensitive)
+        const lowerText = text.toLowerCase();
+        if (this.localTranslations[ text ] || this.localTranslations[ lowerText ]) {
+            const translation = this.localTranslations[ text ] || this.localTranslations[ lowerText ];
+            this.translationCache.set(cacheKey, translation);
+            return translation;
+        }
+
+        // Only use Google Translate for missing translations
+        try {
+            const [response] = await translationClient.translateText({
+                parent: `projects/${PROJECT_ID}/locations/global`,
+                contents: [text],
+                mimeType: 'text/plain',
+                targetLanguageCode: targetLang,
+            });
+            const translation = response.translations[ 0 ].translatedText;
+            this.translationCache.set(cacheKey, translation);
+
+            // Log missing translations for future JSON updates
+            logger.info('Missing local translation:', {original: text, translated: translation});
+
+            performance.mark(`translate-${text}-end`);
+            performance.measure(`Translate "${text}"`,
+                `translate-${text}-start`,
+                `translate-${text}-end`);
+
+            return translation;
+        } catch (error) {
+            logger.error('Translation error:', error);
+            return text;
+        }
+    }
+
+    async generatePDF(templateHtml, dataBinding, options) {
+        performance.mark('generatePDF-start');
+        try {
+            const browser = await puppeteer.launch({
+                args: ['--no-sandbox', '--font-render-hinting=medium'],
+                headless: true
+            });
+
+            const page = await browser.newPage();
+
+            // Inject font styles
+            const fontFaceStyle = await this.setupFonts();
+            const htmlWithFonts = templateHtml.replace('</head>',
+                `<style>${fontFaceStyle}</style></head>`);
+
+            // Configure page settings
+            await page.setViewport({
+                width: 794,
+                height: 1123,
+                deviceScaleFactor: 2
+            });
+
+            // Set content with proper font loading
+            await page.setContent(htmlWithFonts, {
+                waitUntil: ['networkidle0', 'load', 'domcontentloaded']
+            });
+
+            // Ensure fonts are loaded
+            await page.evaluateHandle(() => {
+                return document.fonts.ready.then(() => {
+                    document.body.style.opacity = '1';
+                    // Force re-render for better font display
+                    document.body.style.transform = 'scale(1)';
+                });
+            });
+
+            // Enhanced PDF options
+            const pdfOptions = {
+                format: 'A4',
+                printBackground: true,
+                preferCSSPageSize: true,
+                margin: {
+                    top: '40px',
+                    bottom: '100px',
+                    left: '20px',
+                    right: '20px'
+                },
+                scale: 1,
+                timeout: 60000, // Increased timeout for large documents
+            };
+
+            const pdfBuffer = await page.pdf(pdfOptions);
+            await browser.close();
+
+            performance.mark('generatePDF-end');
+            performance.measure('Generate PDF',
+                'generatePDF-start',
+                'generatePDF-end');
+
+            return {
+                buffer: pdfBuffer,
+                metrics: this.performanceMetrics
+            };
+        } catch (error) {
+            logger.error('PDF generation error:', error);
+            throw error;
+        }
+    }
+
+    getPerformanceReport() {
+        return {
+            metrics: this.performanceMetrics,
+            summary: {
+                totalTime: Object.values(this.performanceMetrics).reduce((a, b) => a + b, 0),
+                translationCount: this.translationCache.size,
+                googleTranslateUsage: this.performanceMetrics[ 'Google Translate API Calls' ] || 0
+            }
+        };
+    }
+}
+
+/**
+ * TODO: Will implement these aspects later
+// Monitor translation coverage
+const missingTranslations = {};
+pdfGenerator.on('missingTranslation', (text, translation) => {
+    missingTranslations[ text ] = translation;
+    // Periodically save to a file for updating local JSON
+});
+
+// Periodically analyze your logs to identify commonly translated strings
+const analyzeLogs = async () => {
+    const logs = await loadTranslationLogs();
+    const frequentTranslations = logs
+        .groupBy('text')
+        .filter(group => group.count > 10)
+        .map(group => ({
+            original: group.text,
+            translation: group.translation
+        }));
+    // Add these to your local JSON
+};
+
+// Script to update your local JSON
+const updateLocalJSON = async () => {
+    const currentJSON = require('../../../other/web-hi.json');
+    const newTranslations = await getFrequentTranslations();
+    const updatedJSON = {
+        ...currentJSON,
+        ...newTranslations
+    };
+    await fsp.writeFile(__dirname + '../../../other/web-hi.json', JSON.stringify(updatedJSON, null, 2));
+};
+ */
 
 /**
  * As the whole HTML file exceeds the maximum translation length, we need to split it into chunks
@@ -379,7 +607,7 @@ async function html_to_pdf({templateHtml, dataBinding, options}) {
         await browser.close();
 
         const endTime = process.hrtime(startTime);
-        logger.info(`PDF generation took ${endTime[0]}s ${endTime[1] / 1000000}ms`);
+        logger.info(`PDF generation took ${endTime[ 0 ]}s ${endTime[ 1 ] / 1000000}ms`);
 
         return pdfBuffer;
     } catch (error) {
@@ -794,10 +1022,15 @@ function getLatestUpdateDate(medications) {
     return {date, isPrescriptionUpdated};
 }
 
+// Usage in your route handler:
 router.get(
     "/details/:care_plan_id",
     Authenticated,
     async (req, res) => {
+
+        const pdfGenerator = new PDFGenerator();
+        await pdfGenerator.loadLocalTranslations();
+
         try {
             const {care_plan_id = null} = req.params;
             const {
@@ -1707,20 +1940,36 @@ router.get(
                 translateTo: targetLang // Pass to html_to_pdf
             };
 
-            // Generate PDF with translation
-            let pdf_buffer_value = await html_to_pdf({
+            const {buffer: pdfBuffer, metrics} = await pdfGenerator.generatePDF(
                 templateHtml,
-                dataBinding: pre_data,
-                options,
+                pre_data,
+                options
+            );
+
+            // Log performance metrics
+            logger.info('PDF Generation Performance:', pdfGenerator.getPerformanceReport());
+
+            // Set response headers
+            res.set({
+                'Content-Type': 'application/pdf',
+                'Content-Length': pdfBuffer.length,
+                'Cache-Control': 'public, max-age=300',
+                'X-Generation-Time': metrics[ 'Generate PDF' ]
             });
 
-            res.contentType("application/pdf");
-            return res.send(pdf_buffer_value);
+            return res.send(pdfBuffer);
         } catch (err) {
-            logger.error("Error in Prescription API, while generating the prescription: ", err);
+            logger.error("Error in Prescription API:", err);
             return raiseServerError(res);
         }
     }
 );
+
+router.get("/metrics", Authenticated, async (req, res) => {
+    const pdfGenerator = new PDFGenerator();
+
+    const metrics = pdfGenerator.getPerformanceReport();
+    res.json(metrics);
+});
 
 module.exports = router;
