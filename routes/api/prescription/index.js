@@ -314,16 +314,18 @@ async function html_to_pdf({templateHtml, dataBinding, options}) {
             const style = document.createElement('style');
             style.textContent = `
                 @font-face {
-                    font-family: 'Noto Sans Devanagari';
-                    src: url('https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari&display=swap');
+                    font-family: 'NotoSansDevanagari';
+                    src: url('https://fonts.gstatic.com/s/notosansdevanagari/v15/FeVfS0BTqbQvYX9w8E6z9xJU.woff2') format('woff2');
+                    unicode-range: U+0900-097F;
                 }
                 body {
-                    font-family: 'Noto Sans Devanagari', Arial, sans-serif;
+                    font-family: 'NotoSansDevanagari', sans-serif;
                 }
             `;
             document.head.appendChild(style);
         });
 
+        // Set the content and viewport
         await page.setContent(finalHtml, {waitUntil: 'networkidle2'});
         await page.setViewport({
             width: 794,
