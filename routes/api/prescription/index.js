@@ -102,6 +102,27 @@ function chunkText(text) {
 // Load local translations, using path.join and __dirname
 const localTranslations = JSON.parse(fs.readFileSync(path.join(__dirname, '../../../other/web-hi.json'), 'utf8'));
 
+// Modify the HTML head to ensure proper font loading
+const htmlHead = `
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        @font-face {
+            font-family: 'NotoSansDevanagari';
+            src: url('https://fonts.gstatic.com/s/notosansdevanagari/v15/TuGOUUFzXI5FBtUq5a8bjKYTZjtRU6Sgv3NaV_SNmI0b8Q.woff2') format('woff2');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+        
+        * {
+            font-family: 'NotoSansDevanagari', Arial, sans-serif;
+        }
+    </style>
+    <title>AdhereLive - Prescription</title>
+</head>`;
+
 /**
  * Function to translate each of the labels, before they are sent to the HandleBars
  *
@@ -255,6 +276,8 @@ async function html_to_pdf({templateHtml, dataBinding, options}) {
             return await translateText(text, targetLang);
         });
 
+        const startTime = process.hrtime();
+
         // Call the 'translateStaticLabels' function with an array of all static labels in your HTML file
         // This allows to pre-translate static labels
         const staticLabels = [
@@ -303,8 +326,8 @@ async function html_to_pdf({templateHtml, dataBinding, options}) {
 
         // Launch Puppeteer and generate PDF
         const browser = await puppeteer.launch({
-            args: ["--no-sandbox"],
-            headless: true,
+            args: ['--no-sandbox', '--font-render-hinting=medium'],
+            headless: true
         });
         const page = await browser.newPage();
 
@@ -324,14 +347,25 @@ async function html_to_pdf({templateHtml, dataBinding, options}) {
         }, base64Font);
 
         // Set the content and viewport
-        await page.setContent(finalHtml, {waitUntil: 'networkidle2'});
+        // Wait for fonts to load
+        await page.setContent(finalHtml, {
+            waitUntil: ['networkidle0', 'load', 'domcontentloaded']
+        });
+
+        // Ensure proper font rendering
+        await page.evaluateHandle(() => {
+            document.fonts.ready.then(() => {
+                document.body.style.visibility = 'visible';
+            });
+        });
+
         await page.setViewport({
             width: 794,
             height: 1123,
             deviceScaleFactor: 2,
         });
 
-        let pdfBuffer = await page.pdf(options);
+        const pdfBuffer = await page.pdf(options);
         logger.info('Conversion complete. PDF file generated successfully.');
 
         // Change the dates back to use 'English' locale
@@ -343,6 +377,10 @@ async function html_to_pdf({templateHtml, dataBinding, options}) {
             .format('LLL');
 
         await browser.close();
+
+        const endTime = process.hrtime(startTime);
+        logger.info(`PDF generation took ${endTime[0]}s ${endTime[1] / 1000000}ms`);
+
         return pdfBuffer;
     } catch (error) {
         logger.error('Error in PDF generation:', error);
@@ -1651,16 +1689,20 @@ router.get(
                 .locale(targetLang)
                 .format('LLL');
 
+            // Enhanced PDF options
             const options = {
                 format: "A4",
                 headerTemplate: "<p></p>",
                 footerTemplate: "<p></p>",
                 displayHeaderFooter: false,
+                scale: 1,
+                fontFaces: true,
                 margin: {
                     top: "40px",
                     bottom: "100px",
                 },
                 printBackground: true,
+                preferCSSPageSize: true,
                 path: "prescription.pdf",
                 translateTo: targetLang // Pass to html_to_pdf
             };
