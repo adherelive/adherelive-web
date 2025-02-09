@@ -1593,9 +1593,10 @@ router.get(
                 ),
             };
 
+            let translatedLabels = "";
             pre_data = {
                 ...pre_data,
-                translatedLabels // Add translated labels here
+                translatedLabels, // Add translated labels here
             };
 
             // Translate the pre_data object
