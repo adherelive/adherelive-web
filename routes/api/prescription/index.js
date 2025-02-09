@@ -112,7 +112,9 @@ const localTranslations = JSON.parse(fs.readFileSync(path.join(__dirname, '../..
 async function translateStaticLabels(labels, targetLang = 'hi') {
     const translatedLabels = {};
     for (const label of labels) {
-        translatedLabels[label] = await translateText(label, targetLang);
+        const translatedText = await translateText(label, targetLang);
+        logger.debug(`Label: ${label}, Translated: ${translatedText}`);
+        translatedLabels[label] = translatedText;
     }
     return translatedLabels;
 }
@@ -175,7 +177,7 @@ async function translateText(text, targetLang = 'hi') {
 
         // Check if the input text is valid
         if (!text || typeof text !== 'string' || text.trim() === '') {
-            return ''; // Return an empty string if input is invalid
+            return ''; // Return empty string for invalid input
         }
 
         // Check local JSON first
@@ -272,10 +274,11 @@ async function html_to_pdf({ templateHtml, dataBinding, options }) {
             "Diet",
             "Workout"
         ];
-        const translatedLabels = await translateStaticLabels(staticLabels, options.translateTo);
-
+        logger.debug('Translated Labels:', staticLabels);
         // Add translated labels to dataBinding
-        dataBinding.translatedLabels = translatedLabels;
+        dataBinding.translatedLabels = await translateStaticLabels(staticLabels, options.translateTo);
+
+        logger.debug('Final Data Binding:', dataBinding);
 
         // Translate the data binding object
         const translatedDataBinding = await translateObjectToHindi(dataBinding, options.translateTo);
@@ -1602,7 +1605,25 @@ router.get(
                 ),
             };
 
-            let translatedLabels = "";
+            const translatedLabels = [
+                "Patient Name",
+                "Registration date/time",
+                "Age/Gender",
+                "Mobile No.",
+                "Doctor Name",
+                "Address",
+                "Allergies",
+                "Comorbidities",
+                "Diagnosis",
+                "Symptoms",
+                "Treatment And Follow-up Advice",
+                "Investigation",
+                "Next Consultation",
+                "Lifestyle Advice",
+                "Diet",
+                "Workout"
+            ];
+
             pre_data = {
                 ...pre_data,
                 translatedLabels, // Add translated labels here
