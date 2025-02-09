@@ -146,47 +146,28 @@ async function translateHTMLContent(html, targetLang = 'hi') {
  */
 async function translateText(text, targetLang = 'hi') {
     try {
-        const localTranslations = require('../../../other/web-hi.json'); // Load your JSON file
-        const words = text.split(/\s+/); // Split text into words (or use a more sophisticated tokenizer if needed)
-        const wordsToTranslate = [];
-        const translatedWords = [];
+        const localTranslations = require('./translations.json'); // Load your JSON file
 
-        for (const word of words) {
-            if (localTranslations[word] && localTranslations[word][targetLang]) {
-                translatedWords.push(localTranslations[word][targetLang]); // Use local translation
-            } else {
-                try {
-                    // Try Google Cloud Translation
-                    const [googleTranslation] = await googleTranslateClient.translateText({
-                        parent: `projects/${PROJECT_ID}/locations/global`,
-                        contents: [word],
-                        mimeType: 'text/plain', // Important: Use text/plain for single words
-                        targetLanguageCode: targetLang,
-                    });
-                    translatedWords.push(googleTranslation.translations[0].translatedText);
-
-                } catch (googleError) {
-                    console.error("Google Cloud Translation error:", googleError);
-                    try {
-                        // Try Azure Translator (if Google fails)
-                        const [azureTranslation] = await azureTranslateClient.translate({
-                            text: word,
-                            to: targetLang,
-                            from: 'en' // Or detect source language if needed
-                        });
-                        translatedWords.push(azureTranslation.translations[0].text);
-                    } catch (azureError) {
-                        console.error("Azure Translation error:", azureError);
-                        translatedWords.push(word); // Fallback to original word if both fail
-                    }
-                }
+        if (targetLang === 'hi' && localTranslations[text]) { // Check if the text exists in the JSON
+            return localTranslations[text]; // Return the Hindi translation from JSON
+        } else {
+            try {
+                // Fallback to Google Cloud Translation (or Azure) for any text not in JSON or if targetLang is not Hindi
+                const [cloudTranslation] = await googleTranslateClient.translateText({
+                    parent: `projects/${PROJECT_ID}/locations/global`,
+                    contents: [text],
+                    mimeType: 'text/plain',
+                    targetLanguageCode: targetLang,
+                });
+                return cloudTranslation.translations[0].translatedText;
+            } catch (cloudError) {
+                console.error("Cloud Translation error:", cloudError);
+                return text; // Fallback to original text if cloud translation fails
             }
         }
-        return translatedWords.join(' '); // Recombine the translated words
-
     } catch (error) {
         console.error("Translation error:", error);
-        return text; // Fallback to original text if everything fails
+        return text; // Fallback to original text if JSON loading fails
     }
 }
 
@@ -210,12 +191,7 @@ async function html_to_pdf({templateHtml, dataBinding, options}) {
         });
 
         // Add a new helper for inline translation
-        // handlebars.registerHelper('translate', function (text) {
-        //     // This will be pre-translated in the data
-        //     return text;
-        // });
-
-        // Modified the translate helper to use the new translation function
+        // Modified the translation helper to use the new translation function
         handlebars.registerHelper('translate', async function (text, targetLang = 'hi') {
             return await translateText(text, targetLang);
         });
