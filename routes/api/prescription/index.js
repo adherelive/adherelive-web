@@ -85,6 +85,12 @@ const PROJECT_ID = 'adherelive-translate';
 const MAX_TRANSLATION_LENGTH = 5000; // Replace with the actual API limit
 const translationCache = new Map(); // In-memory cache
 
+/**
+ * As the whole HTML file exceeds the maximum translation length, we need to split it into chunks
+ *
+ * @param text
+ * @returns {*[]}
+ */
 function chunkText(text) {
     const chunks = [];
     for (let i = 0; i < text.length; i += MAX_TRANSLATION_LENGTH) {
@@ -93,8 +99,11 @@ function chunkText(text) {
     return chunks;
 }
 
+// Load local translations
+const localTranslations = JSON.parse(fs.readFileSync('../../../other/web-hi.json', 'utf8'));
+
 /**
- * Translate to Hindi
+ * Translate to Hindi, using the Google Cloud Translation API
  *
  * @param html
  * @param targetLang
@@ -146,7 +155,7 @@ async function translateHTMLContent(html, targetLang = 'hi') {
  */
 async function translateText(text, targetLang = 'hi') {
     try {
-        const localTranslations = require('./translations.json'); // Load your JSON file
+        const localTranslations = require('../../../other/web-hi.json'); // Load your JSON file
 
         if (targetLang === 'hi' && localTranslations[text]) { // Check if the text exists in the JSON
             return localTranslations[text]; // Return the Hindi translation from JSON
@@ -179,50 +188,34 @@ async function translateText(text, targetLang = 'hi') {
  * @param options
  * @returns {Promise<Buffer<ArrayBufferLike>>}
  */
-async function html_to_pdf({templateHtml, dataBinding, options}) {
+async function html_to_pdf({ templateHtml, dataBinding, options }) {
     try {
-        // Register handlebars helpers
+        // Register Handlebars helpers
         handlebars.registerHelper("print", function (value) {
             return ++value;
         });
-
         handlebars.registerHelper('or', function () {
             return Array.prototype.slice.call(arguments, 0, -1).some(Boolean);
         });
-
-        // Add a new helper for inline translation
-        // Modified the translation helper to use the new translation function
         handlebars.registerHelper('translate', async function (text, targetLang = 'hi') {
             return await translateText(text, targetLang);
         });
 
         // Translate the data binding object
-        // const translatedDataBinding = await translateObjectToHindi(dataBinding);
+        const translatedDataBinding = await translateObjectToHindi(dataBinding, options.translateTo);
 
         // Compile template with translated data
         const template = handlebars.compile(templateHtml);
-        let finalHtml = template(dataBinding);
+        let finalHtml = template(translatedDataBinding);
 
-        logger.debug("Length of HTML before translation:", finalHtml.length); // Log the total length
-
-        // Log the length of individual sections (if applicable)
-        logger.debug("Length of patient_data.name:", dataBinding.patient_data.name ? dataBinding.patient_data.name.length : 0);
-        logger.debug("Length of diagnosis:", dataBinding.diagnosis ? dataBinding.diagnosis.length : 0);
-        logger.debug("Length of follow_up_advise:", dataBinding.follow_up_advise ? dataBinding.follow_up_advise.length : 0);
-        logger.debug("Length of medicinesArray (if stringified):", JSON.stringify(dataBinding.medicinesArray).length); // Important: stringify if it's an array/object
-        logger.debug("Length of investigations (if stringified):", JSON.stringify(dataBinding.investigations).length);
-
-        if (options.translateTo === 'hi') {
-            finalHtml = await translateHTMLContent(finalHtml, 'hi');
-        }
-
+        // Launch Puppeteer and generate PDF
         const browser = await puppeteer.launch({
             args: ["--no-sandbox"],
             headless: true,
         });
         const page = await browser.newPage();
 
-        // Set Hindi font support (Base64 encoded font - same as before)
+        // Set Hindi font support
         await page.evaluateHandle(() => {
             const style = document.createElement('style');
             style.textContent = `
@@ -233,13 +226,11 @@ async function html_to_pdf({templateHtml, dataBinding, options}) {
                 body {
                     font-family: 'Noto Sans Devanagari', Arial, sans-serif;
                 }
-                ${style.textContent}
             `;
             document.head.appendChild(style);
         });
 
-        await page.setContent(finalHtml, { waitUntil: 'networkidle2' }); // <--- Load translated HTML with UTF-8 encoding
-
+        await page.setContent(finalHtml, { waitUntil: 'networkidle2' });
         await page.setViewport({
             width: 794,
             height: 1123,
@@ -248,7 +239,6 @@ async function html_to_pdf({templateHtml, dataBinding, options}) {
 
         let pdfBuffer = await page.pdf(options);
         logger.info('Conversion complete. PDF file generated successfully.');
-        moment.locale('en'); // Set English locale
         await browser.close();
         return pdfBuffer;
     } catch (error) {

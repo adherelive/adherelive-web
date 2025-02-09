@@ -1,4 +1,13 @@
 {
+  "Registration date/time": "पंजीकरण की तारीख/समय",
+  "Age/Gender": "आयु/लिंग",
+  "Mobile No.": "मोबाइल नंबर",
+  "Address": "पता",
+  "Allergies": "एलर्जी",
+  "Comorbidities": "सह-रोग",
+  "Diagnosis": "निदान",
+  "Symptoms": "लक्षण",
+  "Treatment And Follow-up Advice": "इलाज और पुनरावलोकन सलाह",
   "activity": "गतिविधि",
   "appointment": "अपॉइंटमेंट",
   "appointmentType": "अपॉइंटमेंट का प्रकार",
