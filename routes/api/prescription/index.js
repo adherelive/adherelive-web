@@ -309,7 +309,7 @@ async function html_to_pdf({templateHtml, dataBinding, options}) {
         const page = await browser.newPage();
 
         // Set Hindi font support
-        await page.evaluateHandle(() => {
+        await page.evaluateHandle((base64Font) => {
             const style = document.createElement('style');
             style.textContent = `
                 @font-face {
@@ -321,7 +321,7 @@ async function html_to_pdf({templateHtml, dataBinding, options}) {
                 }
             `;
             document.head.appendChild(style);
-        });
+        }, base64Font);
 
         // Set the content and viewport
         await page.setContent(finalHtml, {waitUntil: 'networkidle2'});
