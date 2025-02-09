@@ -416,7 +416,7 @@ async function translateHTMLContent(html, targetLang = 'hi') {
     }
 }
 
-// Optimize local translations loading
+// Helper function to optimize local translations loading
 let localTranslationsCache = null;
 function getLocalTranslations() {
     if (!localTranslationsCache) {
@@ -430,32 +430,49 @@ const translationQueue = new Map();
 const BATCH_TIMEOUT = 100; // ms
 const MAX_BATCH_SIZE = 128; // characters
 
+/**
+ * This is the function which will not do the batch translations for Google Cloud API
+ *
+ * @param text
+ * @param targetLang
+ * @returns {Promise<unknown>}
+ */
 async function getGoogleTranslation(text, targetLang) {
     const queueKey = targetLang;
 
     if (!translationQueue.has(queueKey)) {
         translationQueue.set(queueKey, {
             texts: [],
-            promise: null
+            resolvers: [], // Array to store resolve/reject pairs
+            timer: null
         });
 
         // Set up batch processing
-        setTimeout(async () => {
-            const batch = translationQueue.get(queueKey);
+        const batch = translationQueue.get(queueKey);
+        batch.timer = setTimeout(async () => {
+            // Get the current batch and clear it from the queue
+            const currentBatch = translationQueue.get(queueKey);
             translationQueue.delete(queueKey);
 
-            if (batch.texts.length > 0) {
+            if (currentBatch.texts.length > 0) {
                 try {
                     const [response] = await translationClient.translateText({
                         parent: `projects/${PROJECT_ID}/locations/global`,
-                        contents: batch.texts,
+                        contents: currentBatch.texts,
                         mimeType: 'text/plain',
                         targetLanguageCode: targetLang,
                     });
 
-                    batch.promise.resolve(response.translations.map(t => t.translatedText));
+                    // Resolve all promises with their respective translations
+                    const translations = response.translations.map(t => t.translatedText);
+                    currentBatch.resolvers.forEach((resolver, index) => {
+                        resolver.resolve(translations[index]);
+                    });
                 } catch (error) {
-                    batch.promise.reject(error);
+                    // Reject all promises if there's an error
+                    currentBatch.resolvers.forEach(resolver => {
+                        resolver.reject(error);
+                    });
                 }
             }
         }, BATCH_TIMEOUT);
@@ -465,13 +482,10 @@ async function getGoogleTranslation(text, targetLang) {
     const index = batch.texts.length;
     batch.texts.push(text);
 
-    if (!batch.promise) {
-        batch.promise = new Promise((resolve, reject) => {
-            batch.promise = { resolve, reject };
-        });
-    }
-
-    return batch.promise.then(translations => translations[index]);
+    // Create a new promise for this translation
+    return new Promise((resolve, reject) => {
+        batch.resolvers.push({ resolve, reject });
+    });
 }
 
 /**
@@ -513,7 +527,7 @@ async function translateText(text, targetLang = 'hi') {
             return translation;
         }
 
-        // Batch translation for Google Cloud API
+        // Use batch translation for Google Cloud API
         const translation = await getGoogleTranslation(text, targetLang);
 
         // Cache the result
@@ -527,29 +541,29 @@ async function translateText(text, targetLang = 'hi') {
         /**
          * Commented, as it will be shifted to a new function
          *
-        // Check local JSON first
-        if (localTranslations[ text ]) {
-            return localTranslations[ text ];
-        }
+         // Check local JSON first
+         if (localTranslations[ text ]) {
+         return localTranslations[ text ];
+         }
 
-        if (targetLang === 'hi' && localTranslations[ text ]) { // Check if the text exists in the JSON
-            return localTranslations[ text ]; // Return the Hindi translation from JSON
-        } else {
-            try {
-                // Fallback to Google Cloud Translation (or Azure) for any text not in JSON or if targetLang is not Hindi
-                // TODO: Use 'translateHTMLContent'
-                const [cloudTranslation] = await translationClient.translateText({
-                    parent: `projects/${PROJECT_ID}/locations/global`,
-                    contents: [text],
-                    mimeType: 'text/plain',
-                    targetLanguageCode: targetLang,
-                });
-                return cloudTranslation.translations[ 0 ].translatedText;
-            } catch (cloudError) {
-                logger.error("Cloud Translation error: ", cloudError);
-                return text; // Fallback to original text if cloud translation fails
-            }
-        }*/
+         if (targetLang === 'hi' && localTranslations[ text ]) { // Check if the text exists in the JSON
+         return localTranslations[ text ]; // Return the Hindi translation from JSON
+         } else {
+         try {
+         // Fallback to Google Cloud Translation (or Azure) for any text not in JSON or if targetLang is not Hindi
+         // TODO: Use 'translateHTMLContent'
+         const [cloudTranslation] = await translationClient.translateText({
+         parent: `projects/${PROJECT_ID}/locations/global`,
+         contents: [text],
+         mimeType: 'text/plain',
+         targetLanguageCode: targetLang,
+         });
+         return cloudTranslation.translations[ 0 ].translatedText;
+         } catch (cloudError) {
+         logger.error("Cloud Translation error: ", cloudError);
+         return text; // Fallback to original text if cloud translation fails
+         }
+         }*/
     } catch (error) {
         logger.error("Translation error:", error);
         return text; // Fallback to original text if JSON loading fails
