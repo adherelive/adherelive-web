@@ -112,13 +112,14 @@ const localTranslations = JSON.parse(fs.readFileSync(path.join(__dirname, '../..
 async function translateStaticLabels(labels, targetLang = 'hi') {
     const translatedLabels = {};
     for (const label of labels) {
-        const translatedText = await translateText(label, targetLang);
-        logger.debug(`Label: ${label}, Translated: ${translatedText}`);
-        translatedLabels[label] = translatedText;
+        // Replace spaces and special characters with underscores
+        const safeKey = label.replace(/[^a-zA-Z0-9]/g, '_');
+        logger.debug(`Label: ${label}, Translated: ${safeKey}`);
+
+        translatedLabels[ safeKey ] = await translateText(label, targetLang);
     }
     return translatedLabels;
 }
-
 
 /**
  * Translate to Hindi, using the Google Cloud Translation API
@@ -135,7 +136,7 @@ async function translateHTMLContent(html, targetLang = 'hi') {
         logger.debug("Number of chunks:", chunks.length); // Log the number of chunks
 
         for (let i = 0; i < chunks.length; i++) {
-            const chunk = chunks[i];
+            const chunk = chunks[ i ];
             logger.debug(`Length of chunk ${i + 1}:`, chunk.length); // Log the length of each chunk
 
             const [response] = await translationClient.translateText({
@@ -145,8 +146,8 @@ async function translateHTMLContent(html, targetLang = 'hi') {
                 targetLanguageCode: targetLang,
             });
 
-            logger.debug(`Length of translated chunk ${i + 1}:`, response.translations[0].translatedText.length); // Log length after translation
-            translatedHtml += response.translations[0].translatedText;
+            logger.debug(`Length of translated chunk ${i + 1}:`, response.translations[ 0 ].translatedText.length); // Log length after translation
+            translatedHtml += response.translations[ 0 ].translatedText;
         }
 
         logger.debug("Total length of translated HTML:", translatedHtml.length); // Log the total length
@@ -181,12 +182,12 @@ async function translateText(text, targetLang = 'hi') {
         }
 
         // Check local JSON first
-        if (localTranslations[text]) {
-            return localTranslations[text];
+        if (localTranslations[ text ]) {
+            return localTranslations[ text ];
         }
 
-        if (targetLang === 'hi' && localTranslations[text]) { // Check if the text exists in the JSON
-            return localTranslations[text]; // Return the Hindi translation from JSON
+        if (targetLang === 'hi' && localTranslations[ text ]) { // Check if the text exists in the JSON
+            return localTranslations[ text ]; // Return the Hindi translation from JSON
         } else {
             try {
                 // Fallback to Google Cloud Translation (or Azure) for any text not in JSON or if targetLang is not Hindi
@@ -197,7 +198,7 @@ async function translateText(text, targetLang = 'hi') {
                     mimeType: 'text/plain',
                     targetLanguageCode: targetLang,
                 });
-                return cloudTranslation.translations[0].translatedText;
+                return cloudTranslation.translations[ 0 ].translatedText;
             } catch (cloudError) {
                 logger.error("Cloud Translation error: ", cloudError);
                 return text; // Fallback to original text if cloud translation fails
@@ -218,12 +219,12 @@ async function translateText(text, targetLang = 'hi') {
  */
 async function translateObjectToHindi(obj, targetLang = 'hi') {
     for (let key in obj) {
-        if (typeof obj[key] === 'string') {
+        if (typeof obj[ key ] === 'string') {
             // Translate only non-empty strings
-            obj[key] = obj[key].trim() !== '' ? await translateText(obj[key], targetLang) : '';
-        } else if (typeof obj[key] === 'object' && obj[key] !== null) {
+            obj[ key ] = obj[ key ].trim() !== '' ? await translateText(obj[ key ], targetLang) : '';
+        } else if (typeof obj[ key ] === 'object' && obj[ key ] !== null) {
             // Recursively translate nested objects
-            await translateObjectToHindi(obj[key], targetLang);
+            await translateObjectToHindi(obj[ key ], targetLang);
         }
     }
     return obj;
@@ -237,7 +238,7 @@ async function translateObjectToHindi(obj, targetLang = 'hi') {
  * @param options
  * @returns {Promise<Buffer<ArrayBufferLike>>}
  */
-async function html_to_pdf({ templateHtml, dataBinding, options }) {
+async function html_to_pdf({templateHtml, dataBinding, options}) {
     try {
         // Register Handlebars helpers
         handlebars.registerHelper("print", function (value) {
@@ -323,7 +324,7 @@ async function html_to_pdf({ templateHtml, dataBinding, options }) {
             document.head.appendChild(style);
         });
 
-        await page.setContent(finalHtml, { waitUntil: 'networkidle2' });
+        await page.setContent(finalHtml, {waitUntil: 'networkidle2'});
         await page.setViewport({
             width: 794,
             height: 1123,
