@@ -297,10 +297,9 @@ async function html_to_pdf({templateHtml, dataBinding, options}) {
         logger.debug("Length of medicinesArray (if stringified):", JSON.stringify(dataBinding.medicinesArray).length); // Important: stringify if it's an array/object
         logger.debug("Length of investigations (if stringified):", JSON.stringify(dataBinding.investigations).length);
 
-        // This is not required with the modified translator as above.
-        // if (options.translateTo === 'hi') {
-        //     finalHtml = await translateHTMLContent(finalHtml, 'hi');
-        // }
+        const fontPath = path.join(__dirname, '../../../fonts/TiroDevanagariHindi-Regular.ttf'); // Correct Path
+        const fontBuffer = fs.readFileSync(fontPath);
+        const base64Font = fontBuffer.toString('base64');
 
         // Launch Puppeteer and generate PDF
         const browser = await puppeteer.launch({
@@ -314,12 +313,11 @@ async function html_to_pdf({templateHtml, dataBinding, options}) {
             const style = document.createElement('style');
             style.textContent = `
                 @font-face {
-                    font-family: 'NotoSansDevanagari';
-                    src: url('https://fonts.gstatic.com/s/notosansdevanagari/v15/FeVfS0BTqbQvYX9w8E6z9xJU.woff2') format('woff2');
-                    unicode-range: U+0900-097F;
+                    font-family: 'TiroDevanagariHindi-Regular';
+                    src: url('data:font/ttf;base64,${base64Font}') format('ttf'); /* Correct format */
                 }
                 body {
-                    font-family: 'NotoSansDevanagari', sans-serif;
+                    font-family: 'TiroDevanagariHindi-Regular', sans-serif;
                 }
             `;
             document.head.appendChild(style);

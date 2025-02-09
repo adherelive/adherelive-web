@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{translatedLabels.prescriptionTitle}}</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari&display=swap');
+        @import url('https://res.cloudinary.com/myrltech/raw/upload/v1686297287/TiroDevanagariHindi-Regular.ttf&display=swap');
 
         /* Base Page Setup */
         /* This CSS rule ensures that table headers (contained within the <thead> element)
@@ -111,14 +111,9 @@
         @font-face {
             font-family: "TiroDevanagariHindi-Regular";
             src: url("https://res.cloudinary.com/myrltech/raw/upload/v1686297287/TiroDevanagariHindi-Regular.ttf");
-            font-weight: normal;
-            font-style: normal;
-        }
-
-        @font-face {
-            font-family: 'NotoSansDevanagari';
-            src: url('https://fonts.gstatic.com/s/notosansdevanagari/v15/FeVfS0BTqbQvYX9w8E6z9xJU.woff2') format('woff2');
-            unicode-range: U+0900-097F;
+            font-weight: normal; /* Or specify font-weight if needed */
+            font-style: normal; /* Or specify font-style if needed */
+            font-display: swap; /* Optional: improve perceived performance */
         }
 
         /* Specific rules for content breaking to existing styles */
@@ -142,6 +137,11 @@
             width: 100%;
             max-width: 210mm; /* A4 width */
             margin: 0 auto;
+        }
+
+        /* Specific elements that should ALWAYS be in Hindi */
+        .some-hindi-text {
+            font-family: "TiroDevanagariHindi-Regular", sans-serif; /* No fallbacks if it MUST be Hindi */
         }
 
         /* Maintains aspect ratio in the images */
@@ -199,7 +199,7 @@
             margin: 0;
             padding: 10px;
             font-size: 10px;
-            font-family: 'Noto Sans Devanagari', 'NotoSansDevanagari', Arial, sans-serif;
+            font-family: 'TiroDevanagariHindi-Regular', Arial, sans-serif;
         }
 
         /* Typography */
