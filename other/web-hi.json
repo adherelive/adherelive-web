@@ -1,11 +1,18 @@
 {
+  "Patient Name": "मरीज का नाम",
   "Registration date/time": "पंजीकरण की तारीख/समय",
-  "Age/Gender": "आयु/लिंग",
+  "Age Gender": "आयु/लिंग",
   "Mobile No.": "मोबाइल नंबर",
+  "Doctor_Name": "डॉक्टर का नाम",
   "Address": "पता",
   "Allergies": "एलर्जी",
   "Comorbidities": "सह-रोग",
   "Diagnosis": "निदान",
   "Symptoms": "लक्षण",
-  "Treatment And Follow-up Advice": "इलाज और पुनरावलोकन सलाह"
+  "Treatment And Follow-up Advice": "इलाज और पुनरावलोकन सलाह",
+  "Investigation": "जाँच पड़ताल",
+  "Next Consultation": "अगला परामर्श",
+  "Lifestyle Advice": "जीवनशैली सलाह",
+  "Diet": "आहार",
+  "Workout": "कसरत करना"
 }

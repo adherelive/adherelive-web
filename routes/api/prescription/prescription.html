@@ -674,11 +674,11 @@
             <p>{{ patient_data.name }}</p>
         </div>
         <div class="top_section_wrapper_two">
-            <h3>{{translatedLabels.Registration_date/time}} :</h3>
+            <h3>{{translatedLabels.Registration_date_time}} :</h3>
             <p>{{ patient_data.created_at }}</p>
         </div>
         <div class="top_section_wrapper_one">
-            <h3>Patient Age/Gender :</h3>
+            <h3>{{translatedLabels.Patient_Age_Gender}} :</h3>
             <p>{{ patient_data.age }}/{{ patient_data.gender }}</p>
         </div>
 
@@ -695,7 +695,7 @@
             <p>Dr. {{ doctorName }} {{ degree }}</p>
         </div>
         <div class="top_section_wrapper_one">
-            <h3>Patient Address:</h3>
+            <h3>Patient {{translatedLabels.Address}}:</h3>
             <p>{{ patient_data.address }}</p>
         </div>
         <div class="top_section_wrapper_two">
@@ -712,12 +712,12 @@
           <br />
         </div> -->
         <div style="display: flex; align-items: center">
-            <h3>Allergies:</h3>
+            <h3>{{translatedLabels.Allergies}}:</h3>
             <p>{{ patient_data.allergies }}</p>
             <br/>
         </div>
         <div style="display: flex; align-items: center">
-            <h3>Comorbidities :</h3>
+            <h3>{{translatedLabels.Comorbidities}} :</h3>
             <p>{{ patient_data.comorbidities }}</p>
             <br/>
         </div>
@@ -1086,7 +1086,7 @@
     <!-- DIET SECTION  -->
     {{#if diet_output.length}}
     <div class="diet_section_heading">
-        <h3>Diet :</h3>
+        <h3>{{translatedLabels.Diet}} :</h3>
     </div>
     <div class="diet_section_section">
         <div class="diet_section_section_one">
@@ -1170,7 +1170,7 @@
 
     {{#if pre_workouts.length}}
     <div class="workout_section_heading">
-        <h3>Workout :</h3>
+        <h3>{{translatedLabels.Workout}} :</h3>
     </div>
     <div class="workout_section_section">
         <div class="workout_section_section_one">

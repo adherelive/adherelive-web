@@ -258,11 +258,11 @@ async function html_to_pdf({templateHtml, dataBinding, options}) {
         // Call the 'translateStaticLabels' function with an array of all static labels in your HTML file
         // This allows to pre-translate static labels
         const staticLabels = [
-            "Patient Name",
-            "Registration date/time",
+            "Patient_Name",
+            "Registration_date_time",
             "Age/Gender",
             "Mobile No.",
-            "Doctor Name",
+            "Doctor_Name",
             "Address",
             "Allergies",
             "Comorbidities",
@@ -270,7 +270,7 @@ async function html_to_pdf({templateHtml, dataBinding, options}) {
             "Symptoms",
             "Treatment And Follow-up Advice",
             "Investigation",
-            "Next Consultation",
+            "Next_Consultation",
             "Lifestyle Advice",
             "Diet",
             "Workout"
