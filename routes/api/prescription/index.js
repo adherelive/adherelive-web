@@ -329,6 +329,15 @@ async function html_to_pdf({ templateHtml, dataBinding, options }) {
 
         let pdfBuffer = await page.pdf(options);
         logger.info('Conversion complete. PDF file generated successfully.');
+
+        // Change the dates back to use 'English' locale
+        moment.locale('en'); // Get the date back to 'EN' locale
+
+        // Format dates using moment
+        dataBinding.creationDate = moment()
+            .locale('en')
+            .format('LLL');
+
         await browser.close();
         return pdfBuffer;
     } catch (error) {
@@ -1610,7 +1619,7 @@ router.get(
             // Add language detection (query param or header)
             const targetLang = req.query.lang || 'hi';
 
-            // In your route handler
+            // In your route handler, change the dates also to use 'Hindi' locale
             if (targetLang === 'hi') {
                 moment.locale('hi'); // Set Hindi locale
             }
