@@ -44,7 +44,6 @@ const swaggerUi = require('swagger-ui-express');
 const swaggerFile = require('../api-defn/adherelive-api-swagger.json');
 
 // Redis and Cache for PDF setup
-const cors = require('cors');
 const Redis = require('ioredis');
 const Bull = require('bull');
 const { TranslationService } = require('../routes/api/prescriptions/translation-service');
