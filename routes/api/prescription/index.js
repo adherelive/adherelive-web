@@ -598,7 +598,7 @@ async function translateObjectToHindi(obj, targetLang = 'hi') {
  * @param options
  * @returns {Promise<Buffer<ArrayBufferLike>>}
  */
-async function html_to_pdf({templateHtml, dataBinding, options}) {
+async function convertHTMLToPDF({templateHtml, dataBinding, options}) {
     try {
         // Register Handlebars helpers
         handlebars.registerHelper("print", function (value) {
@@ -623,8 +623,8 @@ async function html_to_pdf({templateHtml, dataBinding, options}) {
         // Call the 'translateStaticLabels' function with an array of all static labels in your HTML file
         // This allows to pre-translate static labels
         const staticLabels = [
-            "Patient_Name",
-            "Registration_date_time",
+            "Patient Name",
+            "Registration date/time",
             "Age/Gender",
             "Mobile No.",
             "Doctor_Name",
@@ -635,7 +635,7 @@ async function html_to_pdf({templateHtml, dataBinding, options}) {
             "Symptoms",
             "Treatment And Follow-up Advice",
             "Investigation",
-            "Next_Consultation",
+            "Next Consultation",
             "Lifestyle Advice",
             "Diet",
             "Workout"
@@ -2001,7 +2001,7 @@ router.get(
                 "Registration date/time",
                 "Age/Gender",
                 "Mobile No.",
-                "Doctor Name",
+                "Doctor_Name",
                 "Address",
                 "Allergies",
                 "Comorbidities",
@@ -2058,7 +2058,7 @@ router.get(
                 printBackground: true,
                 preferCSSPageSize: true,
                 path: "prescription.pdf",
-                translateTo: targetLang // Pass to html_to_pdf
+                translateTo: targetLang // Pass to convertHTMLToPDF
             };
 
             const {buffer: pdfBuffer, metrics} = await pdfGenerator.generatePDF(
@@ -2094,11 +2094,11 @@ router.get(
                 },
                 printBackground: true,
                 path: "prescription.pdf",
-                translateTo: targetLang // Pass to html_to_pdf
+                translateTo: targetLang // Pass to convertHTMLToPDF
             };
 
             // Generate PDF with translation
-            let pdf_buffer_value = await html_to_pdf({
+            let pdf_buffer_value = await convertHTMLToPDF({
                 templateHtml,
                 dataBinding: pre_data,
                 options,

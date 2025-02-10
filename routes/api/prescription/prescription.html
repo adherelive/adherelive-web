@@ -700,15 +700,15 @@
 <div class="main-content">
     <div class="top_section_wrapper">
         <div class="top_section_wrapper_one">
-            <h3>{{translatedLabels.Patient_Name}} :</h3>
+            <h3>{{translatedLabels.Patient Name}} :</h3>
             <p>{{ patient_data.name }}</p>
         </div>
         <div class="top_section_wrapper_two">
-            <h3>{{translatedLabels.Registration_date_time}} :</h3>
+            <h3>{{translatedLabels.Registration date/time}} :</h3>
             <p>{{ patient_data.created_at }}</p>
         </div>
         <div class="top_section_wrapper_one">
-            <h3>{{translatedLabels.Patient_Age_Gender}} :</h3>
+            <h3>{{translatedLabels.Age/Gender}} :</h3>
             <p>{{ patient_data.age }}/{{ patient_data.gender }}</p>
         </div>
 
@@ -721,7 +721,7 @@
             <p>+{{ patient_data.prefix }}-{{ patient_data.mobile_number }}</p>
         </div>
         <div class="top_section_wrapper_two">
-            <h3>{{translatedLabels.Doctor_Name}}:</h3>
+            <h3>{{translatedLabels.Doctor Name}}:</h3>
             <p>Dr. {{ doctorName }} {{ degree }}</p>
         </div>
         <div class="top_section_wrapper_one">
@@ -730,7 +730,7 @@
         </div>
         <div class="top_section_wrapper_two">
             <!-- Removed the Doctor Email -->
-            <!-- <h3>Doctor Email :</h3>
+            <!-- <h3>{{translatedLabels.Doctor Email}} :</h3>
           <p>{{ doctorEmail }}</p> -->
         </div>
     </div>
@@ -738,7 +738,7 @@
     <!-- Chief Complaints:  -->
     <div class="chef-complaints-section">
         <!-- <div style="display: flex; align-items: center">
-          <h3>Relevant History :</h3>
+          <h3>{{translatedLabels.Relevant History}} :</h3>
           <br />
         </div> -->
         <div style="display: flex; align-items: center">
@@ -759,11 +759,11 @@
                 class="top_section_wrapper_one"
                 style="border-right: 1px solid; padding: 10px"
         >
-            <h3>Diagnosis :</h3>
+            <h3>{{translatedLabels.Diagnosis}} :</h3>
             <p>{{ diagnosis }}</p>
         </div>
         <div class="top_section_wrapper_two" style="padding: 10px">
-            <h3>Symptoms :</h3>
+            <h3>{{translatedLabels.Symptoms}} :</h3>
             <p style="width: 250px">{{ symptoms_final_value }}</p>
         </div>
     </div>
@@ -771,7 +771,7 @@
     <!-- General | Systemic Examination: -->
     <div class="diagnosis_section">
         <div style="display: flex; align-items: center">
-            <h3>General | Systematic Examination :</h3>
+            <h3>{{translatedLabels.General | Systematic Examination}} :</h3>
             <p style="font-family: TiroDevanagariHindi-Regular, NotoSansDevanagari, Arial, sans-serif">
                 {{ clinicalNotes }}
             </p>
@@ -780,7 +780,7 @@
 
     <!-- TREATMENT ADVISE -->
     <div class="treatment_advise_section">
-        <h3>Treatment And Follow-up Advice:</h3>
+        <h3>{{translatedLabels.Treatment And Follow-up Advice}}:</h3>
         <p style="font-family: TiroDevanagariHindi-Regular, NotoSansDevanagari, Arial, sans-serif">
             <strong>{{ follow_up_advise }}</strong>
         </p>
@@ -812,11 +812,11 @@
     <!-- COMPLAINTS SECTION -->
     <div class="top_section_wrapper">
         <div class="top_section_wrapper_one" style="border-right: 1px solid; padding: 10px">
-            <h3>Height :</h3>
+            <h3>{{translatedLabels.Height}} :</h3>
             <p>{{patient_data.height}} cm</p>
         </div>
         <div class="top_section_wrapper_two" style="padding: 10px">
-            <h3>Weight :</h3>
+            <h3>{{translatedLabels.Weight}} :</h3>
             <p>{{patient_data.weight}} kg</p>
         </div>
     </div>
@@ -830,32 +830,32 @@
                     <h3>S.No</h3>
                 </th>
                 <th style="width: 30%" colspan="2">
-                    <h3>Name of Medicine</h3>
+                    <h3>{{translatedLabels.Name of Medicine}}</h3>
                 </th>
                 <th>
-                    <h3>Dose</h3>
+                    <h3>{{translatedLabels.Dose}}</h3>
                 </th>
                 <th>
-                    <h3>Qty</h3>
+                    <h3>{{translatedLabels.Qty}}</h3>
                 </th>
                 <th colspan="3">
                     <div>
-                        <h3>Medicine Schedule</h3>
+                        <h3>{{translatedLabels.Medicine Schedule}}</h3>
                     </div>
                     <div class="schedule_medicine_wrapper" style="display: flex; justify-content: space-around;">
                         <div>
-                            <h4>Morning</h4>
+                            <h4>{{translatedLabels.Morning}}</h4>
                         </div>
                         <div>
-                            <h4>Afternoon</h4>
+                            <h4>{{translatedLabels.Afternoon}}</h4>
                         </div>
                         <div>
-                            <h4>Night</h4>
+                            <h4>{{translatedLabels.Night}}</h4>
                         </div>
                     </div>
                 </th>
                 <th>
-                    <h3>Start Date / Duration</h3>
+                    <h3>{{translatedLabels.Start Date / Duration}}</h3>
                 </th>
             </tr>
             </thead>
