@@ -100,15 +100,15 @@ const htmlHead = `
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         @font-face {
-            font-family: "NotoSansDevanagari";
-            src: url("https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;700&display=swap");
+            font-family: "TiroDevanagariHindi-Regular";
+            src: url("https://res.cloudinary.com/myrltech/raw/upload/v1686297287/TiroDevanagariHindi-Regular.ttf");
             font-weight: normal; /* Or specify font-weight if needed */
             font-style: normal; /* Or specify font-style if needed */
             font-display: swap; /* Optional: improve perceived performance */
         }
         
         * {
-            font-family: 'NotoSansDevanagari', Arial, sans-serif;
+            font-family: 'TiroDevanagariHindi-Regular', 'NotoSansDevanagari', Arial, sans-serif;
         }
     </style>
     <title>AdhereLive - Prescription</title>
@@ -159,14 +159,14 @@ class PDFGenerator {
 
     async setupFonts() {
         performance.mark('setupFonts-start');
-        const fontPath = path.join(__dirname, '../../../fonts/NotoSansDevanagari.woff2');
+        const fontPath = path.join(__dirname, '../../../fonts/TiroDevanagariHindi-Regular.ttf');
         const fontBuffer = await fsp.readFile(fontPath);
         const base64Font = fontBuffer.toString('base64');
 
         const fontFaceStyle = `
             @font-face {
-                font-family: 'NotoSansDevanagari';
-                src: url(data:font/woff2;base64,${base64Font}) format('woff2');
+                font-family: 'TiroDevanagariHindi-Regular';
+                src: url(data:font/ttf;base64,${base64Font}) format('ttf');
                 font-weight: normal;
                 font-style: normal;
                 font-display: swap;
@@ -662,7 +662,7 @@ async function html_to_pdf({templateHtml, dataBinding, options}) {
         logger.debug("Length of medicinesArray (if stringified):", JSON.stringify(dataBinding.medicinesArray).length); // Important: stringify if it's an array/object
         logger.debug("Length of investigations (if stringified):", JSON.stringify(dataBinding.investigations).length);
 
-        const fontPath = path.join(__dirname, '../../../fonts/NotoSansDevanagari.woff2'); // Correct Path
+        const fontPath = path.join(__dirname, '../../../fonts/TiroDevanagariHindi-Regular.ttf'); // Correct Path
         const fontBuffer = fs.readFileSync(fontPath);
         const base64Font = fontBuffer.toString('base64');
 
@@ -681,15 +681,15 @@ async function html_to_pdf({templateHtml, dataBinding, options}) {
             });
             style.textContent = `
                 @font-face {
-                    font-family: 'NotoSansDevanagari';
-                    src: url('data:font/woff2;base64,${base64Font}') format('woff2');
+                    font-family: 'TiroDevanagariHindi-Regular';
+                    src: url('data:font/ttf;base64,${base64Font}') format('ttf');
                     font-display: swap;
                 }
                 * {
-                    font-family: 'NotoSansDevanagari', Arial, sans-serif;
+                    font-family: 'TiroDevanagariHindi-Regular', 'NotoSansDevanagari', Arial, sans-serif !important;
                 }
                 .hindi-text {
-                    font-family: 'NotoSansDevanagari', Arial, sans-serif !important;
+                    font-family: 'TiroDevanagariHindi-Regular', 'NotoSansDevanagari', Arial, sans-serif !important;
                     -webkit-font-smoothing: antialiased;
                     text-rendering: optimizeLegibility;
                 }
