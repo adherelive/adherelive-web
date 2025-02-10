@@ -34,9 +34,9 @@ const Events = import("../events")
     });
 
 // Create the App as an Express() app
-// const app = express();
+const app = express();
 // Create and start the application
-const app = new Application();
+//const app = new Application();
 
 // Swagger setup
 const swaggerJsDoc = require('swagger-jsdoc');
