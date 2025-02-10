@@ -34,12 +34,62 @@ const Events = import("../events")
     });
 
 // Create the App as an Express() app
-const app = express();
+// const app = express();
+// Create and start the application
+const app = new Application();
 
 // Swagger setup
 const swaggerJsDoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
 const swaggerFile = require('../api-defn/adherelive-api-swagger.json');
+
+// Redis and Cache for PDF setup
+const cors = require('cors');
+const Redis = require('ioredis');
+const Bull = require('bull');
+const { TranslationService } = require('../routes/api/prescriptions/translation-service');
+const { PDFService } = require('../routes/api/prescriptions/pdf-service');
+const { QueueService } = require('../routes/api/prescriptions/queue-service');
+const { CacheService } = require('../routes/api/prescriptions/cache-service');
+
+class Application {
+    constructor() {
+        this.app = express();
+        this.setupServices();
+        this.setupRoutes();
+    }
+
+    setupServices() {
+        // Initialize services in the correct order
+        this.cacheService = new CacheService();
+        this.translationService = new TranslationService(this.cacheService);
+        this.pdfService = new PDFService(this.translationService);
+        this.queueService = new QueueService(this.pdfService);
+    }
+
+    setupRoutes() {
+        // Set up your API routes with access to all services
+        const router = express.Router();
+
+        router.post('/generate-pdf', async (req, res) => {
+            try {
+                const { templateName, data, language } = req.body;
+                // Use the queueService to add the job
+                const job = await this.queueService.addPDFJob(
+                    templateName,
+                    data,
+                    language
+                );
+                res.json({ jobId: job.id });
+            } catch (error) {
+                res.status(500).json({ error: error.message });
+            }
+        });
+
+        // Add more routes as needed
+        this.app.use('/api', router);
+    }
+}
 
 /**
  * Schedule jobs
@@ -96,6 +146,33 @@ schedule.scheduleJob("0 0 */2 * * *", async () => {
         console.error("Error during initialization: ", err);
     }
 })();
+
+// Configure Redis connection for containerized environment
+const redisConfig = {
+    host: process.env.REDIS_HOST || 'redis-service',
+    port: process.env.REDIS_PORT || 6379,
+    // Add retry strategy for container startup order
+    retryStrategy: (times) => {
+        const delay = Math.min(times * 50, 2000);
+        return delay;
+    }
+};
+
+// Update Redis client configuration
+const redis = new Redis(redisConfig);
+
+// Update Bull queue configuration
+const pdfQueue = new Bull('pdf-generation', {
+    redis: redisConfig,
+    // Add settings for containerized environment
+    settings: {
+        stalledInterval: 30000, // Handle container restarts
+        maxStalledCount: 3
+    }
+});
+
+// Temperature files handling in container
+const TEMP_DIR = process.env.TEMP_DIR || '/tmp/pdfs';
 
 // Middleware setup
 app.use(express.json({limit: "50mb"}));
@@ -158,6 +235,12 @@ app.use(
 // Serve static files
 app.use(express.static(path.join(__dirname, "../public")));
 
+// Configure CORS for your React service
+app.use(cors({
+    origin: process.env.REACT_APP_URL || 'http://localhost:3000',
+    credentials: true
+}));
+
 // Setup API routes
 app.use("/api", ApiRouter);
 app.use("/m-api", mApiRouter);
@@ -200,4 +283,5 @@ app.get("/*", (req, res) => {
     res.sendFile(path.resolve("public/index.html"));
 });
 
+// Start the server
 module.exports = app;
