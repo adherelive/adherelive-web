@@ -2,6 +2,8 @@ import puppeteer from 'puppeteer';
 import Handlebars from 'handlebars';
 import NodeCache from 'node-cache';
 
+import prescriptionsController from "../../../app/controllers/prescriptions/prescriptions.controller";
+
 const fs = require('fs').promises;
 const { Translate } = require('@google-cloud/translate').v2;
 
