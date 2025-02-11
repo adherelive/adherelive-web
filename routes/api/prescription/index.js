@@ -623,10 +623,10 @@ async function convertHTMLToPDF({templateHtml, dataBinding, options}) {
         // Call the 'translateStaticLabels' function with an array of all static labels in your HTML file
         // This allows to pre-translate static labels
         const staticLabels = [
-            "Patient_Name",
+            "Patient Name",
             "Registration date/time",
             "Age/Gender",
-            "Doctor_Name",
+            "Doctor Name",
             "Patient",
             "Address",
             "Doctor Email",
@@ -683,6 +683,8 @@ async function convertHTMLToPDF({templateHtml, dataBinding, options}) {
         // Compile template with translated data
         const template = handlebars.compile(templateHtml);
         let finalHtml = template(translatedDataBinding);
+
+        logger.debug('The Final HTML with translated labels', finalHtml);
 
         logger.debug("Length of HTML before translation:", finalHtml.length); // Log the total length
 
@@ -2028,14 +2030,14 @@ router.get(
             };
 
             const translatedLabels = [
-                "Patient_Name",
+                "Patient Name",
                 "Registration date/time",
                 "Age/Gender",
-                "Doctor_Name",
+                "Doctor Name",
                 "Patient",
                 "Address",
                 "Doctor Email",
-                "Relevant_History",
+                "Relevant History",
                 "Allergies",
                 "Comorbidities",
                 "Diagnosis",
@@ -2044,7 +2046,7 @@ router.get(
                 "Treatment And Follow-up Advice",
                 "Height",
                 "Weight",
-                "Name_of_Medicine",
+                "Name of Medicine",
                 "Dose",
                 "Qty",
                 "Medicine_Schedule",
@@ -2055,7 +2057,7 @@ router.get(
                 "Diet",
                 "Workout",
                 "Patient Mobile No.",
-                "Patient_ID ",
+                "Patient ID ",
                 "From",
                 "Investigation",
                 "Next Consultation",
@@ -2082,8 +2084,10 @@ router.get(
                 translatedLabels, // Add translated labels here
             };
 
+            logger.debug('Pre Load the data sent to PDF conversion: \n', pre_data);
+
             // Translate the pre_data object
-            const translatedPreData = await translateObjectToHindi(pre_data);
+            // const translatedPreData = await translateObjectToHindi(pre_data);
 
             const templateHtml = fs.readFileSync(
                 path.join("./routes/api/prescription/prescription.html"),

@@ -12,35 +12,6 @@ const tasks = new Map(); // Using Map for better performance
 
 const { translateText, generatePDF } = new PdfService();
 
-// router.post('/generate-pdf/:care_plan_id', Authenticated, async (req, res) => {
-//     const { lang, data } = req.body;
-//     const taskId = uuidv4();
-//
-//     const {care_plan_id = null} = req.params;
-//     if (!care_plan_id) {
-//         return raiseClientError(res, 422, {}, "Invalid Care Plan!");
-//     }
-//
-//     // Store task in progress
-//     tasks[taskId] = { status: 'processing', progress: 0 };
-//
-//     // Async processing
-//     setTimeout(async () => {
-//         try {
-//             const translatedData = await translateData(data, lang, (progress) => {
-//                 tasks[taskId].progress = progress;
-//             });
-//             const html = compileTemplate(translatedData);
-//             const pdf = await generatePDF(html);
-//             tasks[taskId] = { status: 'completed', pdf };
-//         } catch (error) {
-//             tasks[taskId] = { status: 'failed', error };
-//         }
-//     }, 0);
-//
-//     res.json({ taskId });
-// });
-
 // backend/routes.js
 router.post('/generate_pdf/:care_plan_id', Authenticated, async (req, res) => {
     try {
