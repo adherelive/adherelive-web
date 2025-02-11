@@ -110,6 +110,7 @@ GETSTREAM_FEED_GROUP=notification
 GOOGLE_CLIENT_ID=398277517704-eqh1lvm3872s2a5t916kua18gp60steu.apps.googleusercontent.com
 GOOGLE_CLIENT_SECRET=KszeHfBloxPaTayEXB_y6WQg
 GOOGLE_REDIRECT_URI=postmessage
+GOOGLE_CLOUD_PROJECT_ID=adherelive-translate
 GOOGLE_APPLICATION_CREDENTIALS="./other/adherelive-translate-google-cloud.json"
 
 # Firebase Keys

@@ -1,6 +1,8 @@
 // pdf-service.js
 import translationService from './translation-service';
 
+// services/pdfService.js
+const redisClient = require('./config/redis');
 const puppeteer = require('puppeteer');
 const Handlebars = require('handlebars');
 const fs = require('fs').promises;
@@ -9,11 +11,47 @@ const path = require('path');
 
 class PDFService {
     constructor(translationService) {
+        this.initializeRedis();
         // Ensure temp directory exists in container
         this.tempDir = process.env.TEMP_DIR || '/tmp/pdfs';
         fsx.ensureDirSync(this.tempDir);
 
         this.translationService = translationService;
+    }
+
+    async initializeRedis() {
+        try {
+            await redisClient.connect();
+        } catch (error) {
+            console.error('Failed to initialize Redis:', error);
+        }
+    }
+
+    async translateText(text, targetLanguage, retryCount = 3) {
+        const cacheKey = `translation:${text}:${targetLanguage}`;
+
+        try {
+            // Try to get translation from cache
+            const cachedTranslation = await redisClient.get(cacheKey);
+            if (cachedTranslation) {
+                return cachedTranslation;
+            }
+
+            // If not in cache, translate and store
+            for (let attempt = 1; attempt <= retryCount; attempt++) {
+                try {
+                    const [translation] = await this.translate.translate(text, targetLanguage);
+                    await redisClient.set(cacheKey, translation);
+                    return translation;
+                } catch (error) {
+                    if (attempt === retryCount) throw error;
+                    await new Promise(resolve => setTimeout(resolve, 1000 * attempt));
+                }
+            }
+        } catch (error) {
+            console.error('Translation error:', error);
+            throw error;
+        }
     }
 
     async generatePDF(templateName, data, language = 'en') {
