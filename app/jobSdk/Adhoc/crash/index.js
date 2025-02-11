@@ -4,8 +4,10 @@ import { createLogger } from "../../../../libs/logger";
 
 const logger = createLogger("JOB SDK ADHOC CRASH");
 
-var Config = require("../../../config/config");
+var Config = require("../../../../config/config");
+
 Config();
+
 
 export default class CrashJob extends AdhocJob {
   constructor(data) {
