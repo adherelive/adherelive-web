@@ -689,6 +689,7 @@ async function convertHTMLToPDF({templateHtml, dataBinding, options}) {
             "Purpose",
             "Description",
             "Date",
+            "Take whenever required",
         ];
         // logger.debug('Translated Labels:', staticLabels);
         // Add translated labels to dataBinding
@@ -2054,8 +2055,11 @@ router.get(
 
             const translatedLabels = [
                 "Patient Name",
-                "Registration date/time",
-                "Age/Gender",
+                "Registration",
+                "date",
+                "time",
+                "Age",
+                "Gender",
                 "Doctor Name",
                 "Patient",
                 "Address",
@@ -2065,7 +2069,8 @@ router.get(
                 "Comorbidities",
                 "Diagnosis",
                 "Symptoms",
-                "General | Systematic Examination",
+                "General",
+                "Systematic Examination",
                 "Treatment And Follow-up Advice",
                 "Height",
                 "Weight",
@@ -2076,30 +2081,32 @@ router.get(
                 "Morning",
                 "Afternoon",
                 "Night",
-                "Start Date / Duration",
+                "Start Date",
+                "Duration",
                 "Diet",
                 "Workout",
                 "Patient Mobile No.",
-                "Patient ID ",
+                "ID",
                 "From",
                 "Investigation",
                 "Next Consultation",
                 "Diet Name",
-                "Time & Details",
-                "Duration",
+                "TimeDetails",
                 "Repeat Days",
-                "What not to do",
+                "What Not to Do",
                 "Total Calories",
                 "Workout Name",
                 "Time",
                 "Details",
                 "repetitions",
-                "Page of",
+                "Page",
                 "Generated via AdhereLive platform",
-                "Signature & Stamp",
+                "Signature",
+                "Stamp",
                 "Purpose",
                 "Description",
                 "Date",
+                "Take whenever required",
             ];
 
             pre_data = {
@@ -2113,7 +2120,7 @@ router.get(
             // const translatedPreData = await translateObjectToHindi(pre_data);
 
             const templateHtml = fs.readFileSync(
-                path.join("./routes/api/prescription/prescription.html"),
+                path.join("./routes/api/prescription/prescription-hindi.html"),
                 "utf8"
             );
 
