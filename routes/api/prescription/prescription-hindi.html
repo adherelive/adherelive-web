@@ -138,18 +138,18 @@
 
         /* Specific rules for content breaking to existing styles */
         .avoid-break {
-            break-inside: avoid-page;
-            page-break-inside: avoid;
+            break-inside: auto;
+            page-break-inside: auto;
         }
 
         .force-break {
             break-before: page;
-            page-break-before: always;
+            page-break-before: auto;
         }
 
         .keep-together {
-            break-inside: avoid;
-            page-break-inside: avoid;
+            break-inside: auto;
+            page-break-inside: auto;
         }
 
         /* Container width constraints */
@@ -681,7 +681,8 @@
                 {{ providerName }} <br/>
                 {{ providerAddress }} +91-8411042323 <br/>
             </h3>
-            <p>{{translatedLabels.Patient}}: {{ patient_data.name }} - {{translatedLabels.ID}}: {{ patient_data.uid }}</p>
+            <p>{{translatedLabels.Patient}}: {{ patient_data.name }} - {{translatedLabels.ID}}: {{ patient_data.uid
+                }}</p>
         </div>
         <div class="top_provider_section_three">
             <img
@@ -822,7 +823,7 @@
     </div>
 
     <!-- MEDICINE  SECTION -->
-    <div class="medicine_section avoid-break">
+    <div class="medicine_section avoid-break force-break">
         <table class="medicine_table">
             <thead>
             <tr>
@@ -1268,7 +1269,8 @@
 <div class="footer" id="pdf-footer">
     <div class="footer-content">
         <p class="page-info">{{translatedLabels.Page}} <span id="page-num"></span> <span id="page-count"></span></p>
-        <p class="generation-info">{{translatedLabels.Generated_via_AdhereLive_platform}}<br/>{{ generationTimestamp }}</p>
+        <p class="generation-info">{{translatedLabels.Generated_via_AdhereLive_platform}}<br/>{{ generationTimestamp }}
+        </p>
     </div>
 </div>
 </body>
