@@ -12,7 +12,7 @@ const moment = require("moment/moment");
 
 const pdfService = new PdfService();
 
-router.post('/generate-pdf/:care_plan_id', Authenticated, async (req, res) => {
+router.get('/generate-pdf/:care_plan_id', Authenticated, async (req, res) => {
     try {
         const {language} = req.body;
 
@@ -48,7 +48,8 @@ router.post('/generate-pdf/:care_plan_id', Authenticated, async (req, res) => {
 
         res.setHeader('Content-Type', 'application/pdf');
         res.setHeader('Content-Disposition', `attachment; filename=document_${language}.pdf`);
-        res.send(pdf);
+        res.contentType("application/pdf");
+        return res.send(pdf);
     } catch (error) {
         console.error('Error in PDF generation route:', error);
         res.status(500).json({error: 'Failed to generate PDF'});
