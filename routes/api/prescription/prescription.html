@@ -713,24 +713,24 @@
         </div>
 
         <div class="top_section_wrapper_two">
-            <h3>{{translatedLabels.['Patient ID']}} :</h3>
+            <h3>{{translatedLabels.Patient_ID}} :</h3>
             <p>{{ patient_data.uid }}</p>
         </div>
         <div class="top_section_wrapper_one">
-            <h3>{{translatedLabels.['Patient Mobile No.']}} :</h3>
+            <h3>{{translatedLabels.Patient_Mobile_No_']}} :</h3>
             <p>+{{ patient_data.prefix }}-{{ patient_data.mobile_number }}</p>
         </div>
         <div class="top_section_wrapper_two">
-            <h3>{{translatedLabels.['Doctor Name']}}:</h3>
+            <h3>{{translatedLabels.Doctor_Name}}:</h3>
             <p>Dr. {{ doctorName }} {{ degree }}</p>
         </div>
         <div class="top_section_wrapper_one">
-            <h3>{{translatedLabels.['Patient Address']}}:</h3>
+            <h3>{{translatedLabels.Patient_Address}}:</h3>
             <p>{{ patient_data.address }}</p>
         </div>
         <div class="top_section_wrapper_two">
             <!-- Removed the Doctor Email -->
-            <!-- <h3>{{translatedLabels.['Doctor Email']}} :</h3>
+            <!-- <h3>{{translatedLabels.Doctor_Email}} :</h3>
           <p>{{ doctorEmail }}</p> -->
         </div>
     </div>
@@ -738,7 +738,7 @@
     <!-- Chief Complaints:  -->
     <div class="chef-complaints-section">
         <!-- <div style="display: flex; align-items: center">
-          <h3>{{translatedLabels.['Relevant History']}} :</h3>
+          <h3>{{translatedLabels.Relevant_History}} :</h3>
           <br />
         </div> -->
         <div style="display: flex; align-items: center">
@@ -771,7 +771,7 @@
     <!-- General | Systemic Examination: -->
     <div class="diagnosis_section">
         <div style="display: flex; align-items: center">
-            <h3>{{translatedLabels.['General | Systematic Examination']}} :</h3>
+            <h3>{{translatedLabels.General___Systematic_Examination}} :</h3>
             <p style="font-family: TiroDevanagariHindi-Regular, NotoSansDevanagari, Arial, sans-serif">
                 {{ clinicalNotes }}
             </p>
@@ -780,7 +780,7 @@
 
     <!-- TREATMENT ADVISE -->
     <div class="treatment_advise_section">
-        <h3>{{translatedLabels.['Treatment And Follow-up Advice']}}:</h3>
+        <h3>{{translatedLabels.Treatment_And_Follow_up_Advice}}:</h3>
         <p style="font-family: TiroDevanagariHindi-Regular, NotoSansDevanagari, Arial, sans-serif">
             <strong>{{ follow_up_advise }}</strong>
         </p>
@@ -830,7 +830,7 @@
                     <h3>S.No</h3>
                 </th>
                 <th style="width: 30%" colspan="2">
-                    <h3>{{translatedLabels.['Name of Medicine']}}</h3>
+                    <h3>{{translatedLabels.Name_of_Medicine}}</h3>
                 </th>
                 <th>
                     <h3>{{translatedLabels.Dose}}</h3>
@@ -840,7 +840,7 @@
                 </th>
                 <th colspan="3">
                     <div>
-                        <h3>{{translatedLabels.['Medicine Schedule']}}</h3>
+                        <h3>{{translatedLabels.Medicine_Schedule}}</h3>
                     </div>
                     <div class="schedule_medicine_wrapper" style="display: flex; justify-content: space-around;">
                         <div>
@@ -855,7 +855,7 @@
                     </div>
                 </th>
                 <th>
-                    <h3>{{translatedLabels.['Start Date / Duration']}}</h3>
+                    <h3>{{translatedLabels.Start_Date___Duration}}</h3>
                 </th>
             </tr>
             </thead>
@@ -940,7 +940,7 @@
                 </td>
                 <td>
                     {{#if isSOS}}
-                    <p>{{translatedLabels.['Take whenever required']}}</p>
+                    <p>{{translatedLabels.Take_whenever_required}}</p>
                     {{else}}
                     <p>From {{ startDate }} for {{ duration }} day(s)</p>
                     {{/if}}
@@ -1010,7 +1010,7 @@
     </div>
     <!-- NEXT CONSULTATION SECTION -->
     <div class="next_consultation_section_heading">
-        <h3>{{translatedLabels.['Next Consultation']}} :</h3>
+        <h3>{{translatedLabels.Next_Consultation}} :</h3>
     </div>
     <div class="next_consultation_section">
         <div class="next_consultation_section_one">
@@ -1082,10 +1082,10 @@
                 {{ creationDate }}
             </h3>
             <div class="signature-stamp">
-                <h3>{{translatedLabels.['SIGNATURE & STAMP']}}</h3>
+                <h3>{{translatedLabels.SIGNATURE___STAMP}}</h3>
             </div>
             <div class="signature-details">
-                <p>{{translatedLabels.['Reg.No.']}} {{ registrationNumber }}, {{ city }}</p>
+                <p>{{translatedLabels.Reg_No_}} {{ registrationNumber }}, {{ city }}</p>
             </div>
         </div>
     </div>
@@ -1111,7 +1111,7 @@
 
     {{#if (or diet_output.length pre_workouts.length) }}
     <div style="margin-top: 30px">
-        <h3>{{translatedLabels.['Lifestyle Advice']}}</h3>
+        <h3>{{translatedLabels.Lifestyle_Advice}}</h3>
     </div>
 
     <!-- DIET SECTION  -->
@@ -1128,10 +1128,10 @@
                         <h3>S. No</h3>
                     </th>
                     <th>
-                        <h3>{{translatedLabels.['Diet Name']}}</h3>
+                        <h3>{{translatedLabels.Diet_Name}}</h3>
                     </th>
                     <th style="width: 40%">
-                        <h3>{{translatedLabels.['Time and details']}}</h3>
+                        <h3>{{translatedLabels.Time_and_details}}</h3>
                     </th>
                     <th style="width: 30%">
                         <h3>{{translatedLabels.Duration}}</h3>
@@ -1176,16 +1176,16 @@
                         {{/each}}
                         <div style="margin-top: 20px">
                             <h5>
-                                {{translatedLabels.['Repeat Days']}} - {{#each
+                                {{translatedLabels.Repeat_Days}} - {{#each
                                 this.repeat_days}}<span>{{this}},</span>{{/each}}
                             </h5>
                             <h5>
-                                {{translatedLabels.['What Not to Do']}} -
+                                {{translatedLabels.What_Not_to_Do}} -
                                 <span style="font-family: TiroDevanagariHindi-Regular, NotoSansDevanagari, Arial, sans-serif"
                                 >{{this.not_to_do}}</span
                                 >
                             </h5>
-                            <h5>{{translatedLabels.['Total Calories']}} - <span>{{ this.total_calories }}</span></h5>
+                            <h5>{{translatedLabels.Total_Calories}} - <span>{{ this.total_calories }}</span></h5>
                         </div>
                     </td>
                     <td>
@@ -1212,7 +1212,7 @@
                         <h3>S. No</h3>
                     </th>
                     <th>
-                        <h3>{{translatedLabels.['Workout Name']}}</h3>
+                        <h3>{{translatedLabels.Workout_Name}}</h3>
                     </th>
                     <th style="width: 30%">
                         <h3>{{translatedLabels.Time}}</h3>
@@ -1245,11 +1245,11 @@
                         </p>
                         {{/each}}
                         <h5>
-                            {{translatedLabels.['Repeat Days']}} - {{#each repeat_days}}<span>{{ this }}, </span
+                            {{translatedLabels.Repeat_Days}} - {{#each repeat_days}}<span>{{ this }}, </span
                         >{{/each }}
                         </h5>
-                        <h5>{{translatedLabels.['What Not to Do']}} - <span>{{ not_to_do }}</span></h5>
-                        <h5>{{translatedLabels.['Total Calories']}} - <span>{{ total_cal }} Cal</span></h5>
+                        <h5>{{translatedLabels.What_Not_to_Do}} - <span>{{ not_to_do }}</span></h5>
+                        <h5>{{translatedLabels.Total_Calories}} - <span>{{ total_cal }} Cal</span></h5>
                     </td>
                     <td>
                         <p>{{ durationText }}</p>

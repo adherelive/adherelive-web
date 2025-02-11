@@ -1,6 +1,6 @@
 {
   "Patient_Name": "रोगी का नाम",
-  "Registration_date_time": "पंजीकरण तिथि/समय ",
+  "Registration_date_time": "पंजीकरण तिथि/समय",
   "Age_Gender": "आयु/लिंग",
   "Doctor_Name": "डॉक्टर का नाम",
   "Patient_Address": "रोगी का पता",
@@ -36,7 +36,6 @@
   "Duration": "अवधि",
   "Repeat_Days": "दोहराने के दिन",
   "What_Not_to_Do": "क्या नहीं करना है",
-  "What_not_to_do": "क्या नहीं करना है",
   "Total_Calories": "कुल कैलोरी",
   "Workout_Name": "कसरत का नाम",
   "Time": "समय",
@@ -46,6 +45,7 @@
   "Page": "पृष्ठ का",
   "Generated via AdhereLive platform": "AdhereLive प्लेटफॉर्म के माध्यम से जेनरेट किया गया",
   "SIGNATURE___STAMP": "हस्ताक्षर और मुहर",
+  "Reg_No_": "पंजीकरण",
   "Purpose": "उद्देश्य",
   "Lifestyle_Advice": "उद्देश्य",
   "Description": "विवरण"
