@@ -681,7 +681,7 @@
                 {{ providerName }} <br/>
                 {{ providerAddress }} +91-8411042323 <br/>
             </h3>
-            <p>Patient: {{ patient_data.name }} - ID: {{ patient_data.uid }}</p>
+            <p>{{translatedLabels.Patient}}: {{ patient_data.name }} - {{translatedLabels.ID}}: {{ patient_data.uid }}</p>
         </div>
         <div class="top_provider_section_three">
             <img
@@ -704,16 +704,16 @@
             <p>{{ patient_data.name }}</p>
         </div>
         <div class="top_section_wrapper_two">
-            <h3>{{translatedLabels.Registration_date_time}} :</h3>
+            <h3>{{translatedLabels.Registration}} {{translatedLabels.date}}/{{translatedLabels.time}} :</h3>
             <p>{{ patient_data.created_at }}</p>
         </div>
         <div class="top_section_wrapper_one">
-            <h3>{{translatedLabels.Age_Gender}} :</h3>
+            <h3>{{translatedLabels.Age}}/{{translatedLabels.Gender}} :</h3>
             <p>{{ patient_data.age }}/{{ patient_data.gender }}</p>
         </div>
 
         <div class="top_section_wrapper_two">
-            <h3>{{translatedLabels.Patient_ID}} :</h3>
+            <h3>{{translatedLabels.Patient}} {{translatedLabels.ID}} :</h3>
             <p>{{ patient_data.uid }}</p>
         </div>
         <div class="top_section_wrapper_one">
@@ -725,7 +725,7 @@
             <p>Dr. {{ doctorName }} {{ degree }}</p>
         </div>
         <div class="top_section_wrapper_one">
-            <h3>{{translatedLabels.Patient_Address}}:</h3>
+            <h3>{{translatedLabels.Patient}} {{translatedLabels.Address}}:</h3>
             <p>{{ patient_data.address }}</p>
         </div>
         <div class="top_section_wrapper_two">
@@ -1082,10 +1082,10 @@
                 {{ creationDate }}
             </h3>
             <div class="signature-stamp">
-                <h3>{{translatedLabels.SIGNATURE___STAMP}}</h3>
+                <h3>{{translatedLabels.SIGNATURE}}{{translatedLabels.STAMP}}</h3>
             </div>
             <div class="signature-details">
-                <p>{{translatedLabels.Reg_No_}} {{ registrationNumber }}, {{ city }}</p>
+                <p>{{translatedLabels.RegNo}} {{ registrationNumber }}, {{ city }}</p>
             </div>
         </div>
     </div>
@@ -1111,7 +1111,7 @@
 
     {{#if (or diet_output.length pre_workouts.length) }}
     <div style="margin-top: 30px">
-        <h3>{{translatedLabels.Lifestyle_Advice}}</h3>
+        <h3>{{translatedLabels.LifestyleAdvice}}</h3>
     </div>
 
     <!-- DIET SECTION  -->
@@ -1185,7 +1185,7 @@
                                 >{{this.not_to_do}}</span
                                 >
                             </h5>
-                            <h5>{{translatedLabels.Total_Calories}} - <span>{{ this.total_calories }}</span></h5>
+                            <h5>{{translatedLabels.TotalCalories}} - <span>{{ this.total_calories }}</span></h5>
                         </div>
                     </td>
                     <td>
@@ -1212,7 +1212,7 @@
                         <h3>S. No</h3>
                     </th>
                     <th>
-                        <h3>{{translatedLabels.Workout_Name}}</h3>
+                        <h3>{{translatedLabels.WorkoutName}}</h3>
                     </th>
                     <th style="width: 30%">
                         <h3>{{translatedLabels.Time}}</h3>
@@ -1268,7 +1268,7 @@
 <div class="footer" id="pdf-footer">
     <div class="footer-content">
         <p class="page-info">{{translatedLabels.Page}} <span id="page-num"></span> <span id="page-count"></span></p>
-        <p class="generation-info">{{translatedLabels.['Generated via AdhereLive platform']}}<br/>{{ generationTimestamp }}</p>
+        <p class="generation-info">{{translatedLabels.Generated_via_AdhereLive_platform']}}<br/>{{ generationTimestamp }}</p>
     </div>
 </div>
 </body>

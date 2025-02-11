@@ -589,9 +589,6 @@ async function translateText(text, targetLang = 'hi') {
             timestamp: Date.now()
         });
 
-        // After processing:
-        logger.info('Untranslated labels: \n', missingTranslations);
-
         return translation;
     } catch (error) {
         logger.error("Translation error:", error);
@@ -641,8 +638,11 @@ async function convertHTMLToPDF({templateHtml, dataBinding, options}) {
         // This allows to pre-translate static labels
         const staticLabels = [
             "Patient Name",
-            "Registration date/time",
-            "Age/Gender",
+            "Registration",
+            "date",
+            "time",
+            "Age",
+            "Gender",
             "Doctor Name",
             "Patient",
             "Address",
@@ -652,7 +652,8 @@ async function convertHTMLToPDF({templateHtml, dataBinding, options}) {
             "Comorbidities",
             "Diagnosis",
             "Symptoms",
-            "General | Systematic Examination",
+            "General",
+            "Systematic Examination",
             "Treatment And Follow-up Advice",
             "Height",
             "Weight",
@@ -667,7 +668,7 @@ async function convertHTMLToPDF({templateHtml, dataBinding, options}) {
             "Diet",
             "Workout",
             "Patient Mobile No.",
-            "Patient ID ",
+            "ID",
             "From",
             "Investigation",
             "Next Consultation",
@@ -676,23 +677,24 @@ async function convertHTMLToPDF({templateHtml, dataBinding, options}) {
             "Duration",
             "Repeat Days",
             "What not to do",
-            "Total Calories",
-            "Workout Name",
+            "TotalCalories",
+            "WorkoutName",
             "Time",
             "Details",
             "repetitions",
-            "Page of",
+            "Page",
             "Generated via AdhereLive platform",
-            "Signature & Stamp",
+            "Signature",
+            "Stamp",
             "Purpose",
             "Description",
             "Date",
         ];
-        logger.debug('Translated Labels:', staticLabels);
+        // logger.debug('Translated Labels:', staticLabels);
         // Add translated labels to dataBinding
         dataBinding.translatedLabels = await translateStaticLabels(staticLabels, options.translateTo);
 
-        logger.debug('Final Data Binding:', dataBinding);
+        // logger.debug('Final Data Binding:', dataBinding);
 
         // Translate the data binding object
         const translatedDataBinding = await translateObjectToHindi(dataBinding, options.translateTo);
@@ -701,16 +703,16 @@ async function convertHTMLToPDF({templateHtml, dataBinding, options}) {
         const template = handlebars.compile(templateHtml);
         let finalHtml = template(translatedDataBinding);
 
-        logger.debug('The Final HTML with translated labels', finalHtml);
+        // logger.debug('The Final HTML with translated labels', finalHtml);
 
         logger.debug("Length of HTML before translation:", finalHtml.length); // Log the total length
 
         // Log the length of individual sections (if applicable)
-        logger.debug("Length of patient_data.name:", dataBinding.patient_data.name ? dataBinding.patient_data.name.length : 0);
-        logger.debug("Length of diagnosis:", dataBinding.diagnosis ? dataBinding.diagnosis.length : 0);
-        logger.debug("Length of follow_up_advise:", dataBinding.follow_up_advise ? dataBinding.follow_up_advise.length : 0);
-        logger.debug("Length of medicinesArray (if stringified):", JSON.stringify(dataBinding.medicinesArray).length); // Important: stringify if it's an array/object
-        logger.debug("Length of investigations (if stringified):", JSON.stringify(dataBinding.investigations).length);
+        // logger.debug("Length of patient_data.name:", dataBinding.patient_data.name ? dataBinding.patient_data.name.length : 0);
+        // logger.debug("Length of diagnosis:", dataBinding.diagnosis ? dataBinding.diagnosis.length : 0);
+        // logger.debug("Length of follow_up_advise:", dataBinding.follow_up_advise ? dataBinding.follow_up_advise.length : 0);
+        // logger.debug("Length of medicinesArray (if stringified):", JSON.stringify(dataBinding.medicinesArray).length); // Important: stringify if it's an array/object
+        // logger.debug("Length of investigations (if stringified):", JSON.stringify(dataBinding.investigations).length);
 
         const fontPath = path.join(__dirname, '../../../fonts/TiroDevanagariHindi-Regular.ttf'); // Correct Path
         const fontBuffer = fs.readFileSync(fontPath);
@@ -765,6 +767,9 @@ async function convertHTMLToPDF({templateHtml, dataBinding, options}) {
 
         const pdfBuffer = await page.pdf(options);
         logger.info('Conversion complete. PDF file generated successfully.');
+
+        // After processing:
+        logger.info('Untranslated labels: \n', missingTranslations);
 
         // Change the dates back to use 'English' locale
         moment.locale('en'); // Get the date back to 'EN' locale
@@ -1728,7 +1733,7 @@ router.get(
                 doctor_id
             );
 
-            logger.debug("Provider logo: \n", {providerLogo});
+            // logger.debug("Provider logo: \n", {providerLogo});
 
             let patient_data = formatPatientData(
                 {
@@ -1806,7 +1811,7 @@ router.get(
                 let start_date = diet_old_data[ diet_id ][ "diets" ][ diet_id ][ "basic_info" ][ "start_date" ];
                 let end_date = diet_old_data[ diet_id ][ "diets" ][ diet_id ][ "basic_info" ][ "end_date" ];
 
-                logger.debug("Diet data + Basic Info: \n", diet_old_data[ diet_id ][ "diets" ][ diet_id ][ "basic_info" ]);
+                // logger.debug("Diet data + Basic Info: \n", diet_old_data[ diet_id ][ "diets" ][ diet_id ][ "basic_info" ]);
 
                 if (start_date) formattedStartDate = moment(start_date);
                 if (end_date) formattedEndDate = moment(end_date);
@@ -1843,10 +1848,10 @@ router.get(
                 // for food groups
 
                 for (let key in diet_old_data[ dietIds[ i ] ][ "diet_food_groups" ]) {
-                    logger.debug({
-                        key,
-                        old_time: diet_old_data[ dietIds[ i ] ][ "diet_food_groups" ],
-                    });
+                    // logger.debug({
+                    //     key,
+                    //     old_time: diet_old_data[ dietIds[ i ] ][ "diet_food_groups" ],
+                    // });
                     let food_group_obj = {};
                     food_group_obj.time = timings[ key ];
                     food_group_obj.food_group_details_array =
@@ -2102,7 +2107,7 @@ router.get(
                 translatedLabels, // Add translated labels here
             };
 
-            logger.debug('Pre Load the data sent to PDF conversion: \n', pre_data);
+            // logger.debug('Pre Load the data sent to PDF conversion: \n', pre_data);
 
             // Translate the pre_data object
             // const translatedPreData = await translateObjectToHindi(pre_data);
