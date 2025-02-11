@@ -66,7 +66,7 @@ const cron = schedule.scheduleJob("0 0 */1 * * *", async () => {
 const removeDocumentPerDayCron = schedule.scheduleJob(
     perDayUtcRule,
     async () => {
-      await RemoveDocuments.runObserver();
+        await RemoveDocuments.runObserver();
     }
 );
 
@@ -100,10 +100,10 @@ schedule.scheduleJob("0 0 */2 * * *", async () => {
 // Middleware setup
 app.use(express.json({limit: "50mb"}));
 app.use(
-  express.urlencoded({
-    extended: true,
-    limit: "50mb",
-  })
+    express.urlencoded({
+        extended: true,
+        limit: "50mb",
+    })
 );
 app.use(cookieParser());
 app.use(cors());
@@ -158,12 +158,6 @@ app.use(
 // Serve static files
 app.use(express.static(path.join(__dirname, "../public")));
 
-// Configure CORS for your React service
-app.use(cors({
-    origin: process.env.REACT_APP_URL || 'http://localhost:3000',
-    credentials: true
-}));
-
 // Setup API routes
 app.use("/api", ApiRouter);
 app.use("/m-api", mApiRouter);
@@ -206,5 +200,4 @@ app.get("/*", (req, res) => {
     res.sendFile(path.resolve("public/index.html"));
 });
 
-// Start the server
 module.exports = app;
