@@ -1,8 +1,10 @@
-const puppeteer = require('puppeteer');
-const Handlebars = require('handlebars');
+import puppeteer from 'puppeteer';
+import Handlebars from 'handlebars';
+import NodeCache from 'node-cache';
+
 const fs = require('fs').promises;
 const { Translate } = require('@google-cloud/translate').v2;
-const NodeCache = require('node-cache');
+
 
 // Initialize cache with 1 hour TTL
 const translationCache = new NodeCache({ stdTTL: 3600 });
@@ -108,4 +110,4 @@ class PdfService {
     }
 }
 
-module.exports = PdfService;
+export default PdfService;

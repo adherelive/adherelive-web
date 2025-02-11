@@ -1,4 +1,6 @@
 import carePlanService from "../../../app/services/carePlan/carePlan.service";
+import Authenticated from "../middleware/auth";
+import prescriptionsController from "../../../app/controllers/prescriptions/prescriptions.controller";
 
 const express = require('express');
 const router = express.Router();
@@ -10,30 +12,7 @@ const moment = require("moment/moment");
 
 const pdfService = new PdfService();
 
-function getLatestUpdateDate(medications) {
-    const medicationIds = Object.keys(medications);
-    let date = null;
-    let isPrescriptionUpdated = false;
-    for (const medicationId of medicationIds) {
-        const {
-            [ medicationId ]: {
-                basic_info: {updated_at} = {},
-                details: mobileDetails = null,
-            },
-        } = medications;
-        let newDate = new Date(updated_at);
-
-        if (date == null) {
-            date = newDate;
-        } else if (newDate > date) {
-            date = newDate;
-            isPrescriptionUpdated = true;
-        }
-    }
-    return {date, isPrescriptionUpdated};
-}
-
-router.post('/generate-pdf/:care_plan_id', async (req, res) => {
+router.post('/generate-pdf/:care_plan_id', Authenticated, async (req, res) => {
     try {
         const {language} = req.body;
 
@@ -47,7 +26,7 @@ router.post('/generate-pdf/:care_plan_id', async (req, res) => {
         const carePlanCreatedDate = carePlanData.getCreatedAt();
         const {clinical_notes, follow_up_advise} =
         ( await carePlanData.getCarePlanDetails() ) || {};
-        let {date: prescriptionDate} = getLatestUpdateDate(medications);
+        let {date: prescriptionDate} = prescriptionsController.getLatestUpdateDate(medications);
         prescriptionDate = prescriptionDate || carePlanCreatedDate;
         let pre_data = {
             clinical_notes,
