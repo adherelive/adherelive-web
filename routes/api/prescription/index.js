@@ -1550,14 +1550,23 @@ router.get(
                 }
             }
 
+            // Changed to avoid warning from moment:
+            // Deprecation warning: value provided is not in a recognized RFC2822 or ISO format.
+            // moment construction falls back to js Date()
             const sortedInvestigations = suggestedInvestigations.sort((a, b) => {
                 const {start_date: aStartDate} = a || {};
                 const {start_date: bStartDate} = b || {};
-                if (moment(bStartDate).diff(moment(aStartDate), "minutes") > 0) {
-                    return 1;
-                } else {
-                    return -1;
+
+                const momentA = moment(aStartDate, 'DD MMM YY');
+                const momentB = moment(bStartDate, 'DD MMM YY');
+
+                if (!momentA.isValid() || !momentB.isValid()) {
+                    // Handle invalid dates.  What should the sort order be if a date is bad?
+                    // Example: Put invalid dates at the end
+                    return momentA.isValid() ? -1 : 1; // Or return 0 to keep original order
                 }
+
+                return momentB.diff(momentA, "minutes");
             });
 
             if (nextAppointment) {
