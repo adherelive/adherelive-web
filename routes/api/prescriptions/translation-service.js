@@ -1,4 +1,6 @@
 // translation-service.js
+import path from "path";
+
 const { Translate } = require('@google-cloud/translate').v2;
 const fs = require('fs').promises;
 

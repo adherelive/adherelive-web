@@ -24,7 +24,7 @@ class QueueService {
 
             try {
                 // Update progress as we go
-                job.progress(10);
+                await job.progress(10);
 
                 const pdf = await this.pdfService.generatePDF(
                     templateName,

@@ -1,6 +1,7 @@
 // routes/pdf.js
 import queueService from './queue-service';
 import pdfService from './pdf-service';
+import path from "path";
 const express = require('express');
 const router = express.Router();
 
