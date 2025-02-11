@@ -42,7 +42,7 @@ const { translateText, generatePDF } = new PdfService();
 // });
 
 // backend/routes.js
-router.post('/generate-pdf/:care_plan_id', Authenticated, async (req, res) => {
+router.post('/generate_pdf/:care_plan_id', Authenticated, async (req, res) => {
     try {
         const {lang, templateName, data} = req.body;
         const taskId = uuidv4();
