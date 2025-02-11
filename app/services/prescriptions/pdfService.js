@@ -2,7 +2,9 @@ import puppeteer from 'puppeteer';
 import Handlebars from 'handlebars';
 import NodeCache from 'node-cache';
 
-import prescriptionsController from "../../../app/controllers/prescriptions/prescriptions.controller";
+import { createLogger, logger } from "../../../libs/logger";
+
+const logger = createLogger("WEB > PRESCRIPTIONS > SERVICE");
 
 const fs = require('fs').promises;
 const { Translate } = require('@google-cloud/translate').v2;
@@ -53,6 +55,7 @@ class PdfService {
                 await new Promise(resolve => setTimeout(resolve, 1000 * attempt));
             }
         }
+        logger.debug('Text translated successfully from cache!')
     }
 
     async translateTemplate(template, data, targetLanguage) {
@@ -69,7 +72,7 @@ class PdfService {
                 translatedData[fieldName] = await this.translateText(data[fieldName], targetLanguage);
             }
         }
-
+        logger.debug('Special characters handled correctly!')
         return translatedData;
     }
 
@@ -104,6 +107,7 @@ class PdfService {
             });
 
             await browser.close();
+            logger.debug('PDF has been generated and returned successfully!')
             return pdf;
         } catch (error) {
             console.error('Error generating PDF:', error);
