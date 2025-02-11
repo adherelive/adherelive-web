@@ -63,7 +63,6 @@ import { checkAndCreateDirectory } from "../../../app/helper/common";
 
 import { getDoctorCurrentTime } from "../../../app/helper/getUserTime";
 import { raiseClientError, raiseServerError } from "../helper";
-import currentJSON from "../../../other/web-hi.json";
 
 // Fetch the Google Translation API and 'puppeteer' along with 'handlebars' for the HTML to PDF conversion
 const {TranslationServiceClient} = require('@google-cloud/translate').v3beta1;
@@ -89,6 +88,29 @@ const PROJECT_ID = 'adherelive-translate';
 const CACHE_TTL = 3600000; // 1 hour in milliseconds
 const MAX_TRANSLATION_LENGTH = 5000; // Replace with the actual API limit
 const translationCache = new Map(); // In-memory cache
+
+// Register Handlebars helpers
+handlebars.registerHelper("print", function (value) {
+    return ++value;
+});
+
+// For the Diet/Workout data display, should only be shown if either exists
+handlebars.registerHelper('or', function () {
+    return Array.prototype.slice.call(arguments, 0, -1).some(Boolean);
+});
+
+// Updated the {{translate}} helper to validate the input before calling translateText
+handlebars.registerHelper('translate', async function (text, targetLang = 'hi') {
+    if (!text || typeof text !== 'string' || text.trim() === '') {
+        return ''; // Return an empty string for invalid inputs
+    }
+    return await translateText(text, targetLang);
+});
+
+// Register Handlebars helper:
+handlebars.registerHelper('safe', function(content) {
+    return new handlebars.SafeString(content);
+});
 
 // Load local translations, using path.join and __dirname
 const localTranslations = JSON.parse(fs.readFileSync(path.join(__dirname, '../../../other/web-hi.json'), 'utf8'));
@@ -354,6 +376,17 @@ function chunkText(text) {
     return chunks;
 }
 
+// Utility function for consistent key handling
+function normalizeKey(key) {
+    return key
+        .trim()
+        .replace(/\s*\/\s*/g, '/') // Handle "Age / Gender" → "Age/Gender"
+        .replace(/[^a-zA-Z0-9\u0900-\u097F/]/g, '_') // Preserve Devanagari chars
+        .replace(/_+/g, '_');
+}
+
+let missingTranslations = [];
+
 /**
  * Function to translate each of the labels, before they are sent to the HandleBars
  *
@@ -362,28 +395,35 @@ function chunkText(text) {
  * @returns {Promise<{}>}
  */
 async function translateStaticLabels(labels, targetLang = 'hi') {
-    const localTranslations = getLocalTranslations();
-    const translatedLabels = {};
+    const local = getLocalTranslations();
+    const translations = {};
 
     for (const label of labels) {
-        // 1. Try exact match first
-        if (localTranslations[label]) {
-            translatedLabels[label] = localTranslations[label];
+        const normalized = normalizeKey(label);
+
+        // Check & try exact match first
+        if (local[normalized]) {
+            translations[normalized] = local[normalized];
             continue;
         }
 
-        // 2. Try normalized key match
-        const normalizedKey = label.replace(/\s*\/\s*/g, '/').trim();
-        if (localTranslations[normalizedKey]) {
-            translatedLabels[label] = localTranslations[normalizedKey];
+        if (!local[normalized]) {
+            missingTranslations.push(label);
+            logger.warn(`Missing translation for: ${label}`);
+        }
+
+        // Check and try original (normalized) key match next
+        if (local[label]) {
+            translations[normalized] = local[label];
             continue;
         }
 
-        // 3. Fallback to Google Translate
-        translatedLabels[label] = await translateText(label, targetLang);
+        // Use Google Cloud Translation API as fallback
+        translations[normalized] = await translateText(label, targetLang);
+        logger.debug(`Original Label: ${label}, Translation: ${translations[label]}`);
     }
 
-    return translatedLabels;
+    return translations;
 }
 
 /**
@@ -549,34 +589,10 @@ async function translateText(text, targetLang = 'hi') {
             timestamp: Date.now()
         });
 
+        // After processing:
+        logger.info('Untranslated labels: \n', missingTranslations);
+
         return translation;
-
-        /**
-         * Commented, as it will be shifted to a new function
-         *
-         // Check local JSON first
-         if (localTranslations[ text ]) {
-         return localTranslations[ text ];
-         }
-
-         if (targetLang === 'hi' && localTranslations[ text ]) { // Check if the text exists in the JSON
-         return localTranslations[ text ]; // Return the Hindi translation from JSON
-         } else {
-         try {
-         // Fallback to Google Cloud Translation (or Azure) for any text not in JSON or if targetLang is not Hindi
-         // TODO: Use 'translateHTMLContent'
-         const [cloudTranslation] = await translationClient.translateText({
-         parent: `projects/${PROJECT_ID}/locations/global`,
-         contents: [text],
-         mimeType: 'text/plain',
-         targetLanguageCode: targetLang,
-         });
-         return cloudTranslation.translations[ 0 ].translatedText;
-         } catch (cloudError) {
-         logger.error("Cloud Translation error: ", cloudError);
-         return text; // Fallback to original text if cloud translation fails
-         }
-         }*/
     } catch (error) {
         logger.error("Translation error:", error);
         return text; // Fallback to original text if JSON loading fails
@@ -619,24 +635,6 @@ async function translateObjectToHindi(obj, targetLang = 'hi') {
  */
 async function convertHTMLToPDF({templateHtml, dataBinding, options}) {
     try {
-        // Register Handlebars helpers
-        handlebars.registerHelper("print", function (value) {
-            return ++value;
-        });
-
-        // For the Diet/Workout data display, should only be shown if either exists
-        handlebars.registerHelper('or', function () {
-            return Array.prototype.slice.call(arguments, 0, -1).some(Boolean);
-        });
-
-        // Updated the {{translate}} helper to validate the input before calling translateText
-        handlebars.registerHelper('translate', async function (text, targetLang = 'hi') {
-            if (!text || typeof text !== 'string' || text.trim() === '') {
-                return ''; // Return an empty string for invalid inputs
-            }
-            return await translateText(text, targetLang);
-        });
-
         const startTime = process.hrtime();
 
         // Call the 'translateStaticLabels' function with an array of all static labels in your HTML file
@@ -755,7 +753,8 @@ async function convertHTMLToPDF({templateHtml, dataBinding, options}) {
         // Set the content and viewport
         // Wait for fonts to load
         await page.setContent(finalHtml, {
-            waitUntil: ['networkidle0', 'load', 'domcontentloaded']
+            waitUntil: ['networkidle0', 'load', 'domcontentloaded'],
+            encoding: 'utf-8'
         });
 
         await page.setViewport({
