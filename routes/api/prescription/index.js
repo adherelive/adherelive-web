@@ -362,14 +362,27 @@ function chunkText(text) {
  * @returns {Promise<{}>}
  */
 async function translateStaticLabels(labels, targetLang = 'hi') {
+    const localTranslations = getLocalTranslations();
     const translatedLabels = {};
-    for (const label of labels) {
-        // Replace spaces and special characters with underscores
-        const safeKey = label.replace(/[^a-zA-Z0-9]/g, '_');
-        logger.debug(`Label: ${label}, Translated: ${safeKey}`);
 
-        translatedLabels[ safeKey ] = await translateText(label, targetLang);
+    for (const label of labels) {
+        // 1. Try exact match first
+        if (localTranslations[label]) {
+            translatedLabels[label] = localTranslations[label];
+            continue;
+        }
+
+        // 2. Try normalized key match
+        const normalizedKey = label.replace(/\s*\/\s*/g, '/').trim();
+        if (localTranslations[normalizedKey]) {
+            translatedLabels[label] = localTranslations[normalizedKey];
+            continue;
+        }
+
+        // 3. Fallback to Google Translate
+        translatedLabels[label] = await translateText(label, targetLang);
     }
+
     return translatedLabels;
 }
 
@@ -589,6 +602,12 @@ async function translateObjectToHindi(obj, targetLang = 'hi') {
     }
     return obj;
 }
+
+// Add date translation logic
+// function localizeDates(dateString) {
+//     // Convert "2023-08-20" to Hindi numerals
+//     return convertToDevanagariNumerals(dateString);
+// }
 
 /**
  * THis is the function which does the actual HTML to PDF conversion
@@ -2030,26 +2049,26 @@ router.get(
             };
 
             const translatedLabels = [
-                "Patient_Name",
-                "Registration_date_time",
-                "Age_Gender",
-                "Doctor_Name",
+                "Patient Name",
+                "Registration date/time",
+                "Age/Gender",
+                "Doctor Name",
                 "Patient",
                 "Address",
-                "Doctor_Email",
-                "Relevant_History",
+                "Doctor Email",
+                "Relevant History",
                 "Allergies",
                 "Comorbidities",
                 "Diagnosis",
                 "Symptoms",
-                "General___Systematic Examination",
-                "Treatment_And_Follow_up_Advice",
+                "General | Systematic Examination",
+                "Treatment And Follow-up Advice",
                 "Height",
                 "Weight",
                 "Name of Medicine",
                 "Dose",
                 "Qty",
-                "Medicine_Schedule",
+                "Medicine Schedule",
                 "Morning",
                 "Afternoon",
                 "Night",

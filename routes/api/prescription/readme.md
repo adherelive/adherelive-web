@@ -164,3 +164,21 @@ call the API for static content, only dynamic.
 ### Shared Resources (Optional but Recommended):
 - A separate repository or shared storage for the HTML template (.html file) and the translation JSON (.json file). This makes it easier to update these resources without redeploying the backend.
 
+## sequenceDiagram
+- participant Frontend
+- participant Backend
+- participant Redis
+- participant GoogleTranslate
+
+- Further details sequence
+  - Frontend->>Backend: POST /generate-pdf (lang=hi)
+  - Backend->>Backend: translateStaticLabels() 
+  - Backend->>Redis: Check cache for "Patient Name"
+  - Redis-->>Backend: Not found
+  - Backend->>GoogleTranslate: Translate "Patient Name"
+  - GoogleTranslate-->>Backend: "रोगी का नाम"
+  - Backend->>Redis: Cache translation
+  - Backend->>Backend: translateObjectToHindi(patient_data)
+  - Backend->>Puppeteer: Generate PDF
+  - Backend-->>Frontend: PDF download URL
+

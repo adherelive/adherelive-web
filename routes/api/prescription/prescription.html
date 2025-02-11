@@ -742,12 +742,12 @@
           <br />
         </div> -->
         <div style="display: flex; align-items: center">
-            <h3>{{translatedLabels.['Allergies']}}:</h3>
+            <h3>{{translatedLabels.Allergies}}:</h3>
             <p>{{ patient_data.allergies }}</p>
             <br/>
         </div>
         <div style="display: flex; align-items: center">
-            <h3>{{translatedLabels.['Comorbidities']}} :</h3>
+            <h3>{{translatedLabels.Comorbidities}} :</h3>
             <p>{{ patient_data.comorbidities }}</p>
             <br/>
         </div>
@@ -759,11 +759,11 @@
                 class="top_section_wrapper_one"
                 style="border-right: 1px solid; padding: 10px"
         >
-            <h3>{{translatedLabels.['Diagnosis']}} :</h3>
+            <h3>{{translatedLabels.Diagnosis}} :</h3>
             <p>{{ diagnosis }}</p>
         </div>
         <div class="top_section_wrapper_two" style="padding: 10px">
-            <h3>{{translatedLabels.['Symptoms']}} :</h3>
+            <h3>{{translatedLabels.Symptoms}} :</h3>
             <p style="width: 250px">{{ symptoms_final_value }}</p>
         </div>
     </div>
@@ -840,7 +840,7 @@
                 </th>
                 <th colspan="3">
                     <div>
-                        <h3>{{translatedLabels.['Medicine_Schedule']}}</h3>
+                        <h3>{{translatedLabels.['Medicine Schedule']}}</h3>
                     </div>
                     <div class="schedule_medicine_wrapper" style="display: flex; justify-content: space-around;">
                         <div>
@@ -956,7 +956,7 @@
     <!-- <div class="page-break"></div> -->
     <div class="investigation_section">
         <div class="investigation_section_heading">
-            <h3>{{translatedLabels.['Investigation']}} :</h3>
+            <h3>{{translatedLabels.Investigation}} :</h3>
         </div>
         <div class="investigation_section_content">
             <table
@@ -969,13 +969,13 @@
                         <h3>S. No</h3>
                     </th>
                     <th style="width: 20%">
-                        <h3>{{translatedLabels.['Description']}}</h3>
+                        <h3>{{translatedLabels.Description}}</h3>
                     </th>
                     <th style="width: 10%">
-                        <h3>{{translatedLabels.['Date']}}</h3>
+                        <h3>{{translatedLabels.Date}}</h3>
                     </th>
                     <th style="width: 20%">
-                        <h3>{{translatedLabels.['Purpose']}}</h3>
+                        <h3>{{translatedLabels.Purpose}}</h3>
                     </th>
                 </tr>
                 </thead>
@@ -1024,13 +1024,13 @@
                         <h3>S. No</h3>
                     </th>
                     <th style="width: 20%">
-                        <h3>Description</h3>
+                        <h3>{{translatedLabels.Description}}</h3>
                     </th>
                     <th style="width: 10%">
-                        <h3>Date</h3>
+                        <h3>{{translatedLabels.Date}}</h3>
                     </th>
                     <th style="width: 20%">
-                        <h3>Purpose</h3>
+                        <h3>{{translatedLabels.Purpose}}</h3>
                     </th>
                 </tr>
                 </thead>
@@ -1134,7 +1134,7 @@
                         <h3>{{translatedLabels.['Time and details']}}</h3>
                     </th>
                     <th style="width: 30%">
-                        <h3>{{translatedLabels.['Duration']}}</h3>
+                        <h3>{{translatedLabels.Duration}}</h3>
                     </th>
                 </tr>
                 </thead>
@@ -1164,7 +1164,7 @@
                                 <div style="width: 120px">
                                     <p>{{ this.details.name }}</p>
                                     <p>
-                                        {{translatedLabels.['Instructions']}}:
+                                        {{translatedLabels.Instructions}}:
                                         <span style="font-family: TiroDevanagariHindi-Regular, NotoSansDevanagari, Arial, sans-serif"
                                         >{{ this.notes }}</span
                                         >
@@ -1215,13 +1215,13 @@
                         <h3>{{translatedLabels.['Workout Name']}}</h3>
                     </th>
                     <th style="width: 30%">
-                        <h3>{{translatedLabels.['Time']}}</h3>
+                        <h3>{{translatedLabels.Time}}</h3>
                     </th>
                     <th style="width: 30%">
-                        <h3>{{translatedLabels.['Details']}}</h3>
+                        <h3>{{translatedLabels.Details}}</h3>
                     </th>
                     <th style="width: 20%">
-                        <h3>{{translatedLabels.['Duration']}}</h3>
+                        <h3>{{translatedLabels.Duration}}</h3>
                     </th>
                 </tr>
                 </thead>
@@ -1240,7 +1240,7 @@
                     <td style="text-align: left">
                         {{#each ex}}
                         <p>
-                            {{ ex_group.set }} {{translatedLabels.['set']}} x {{ repetition_value }}
+                            {{ ex_group.set }} {{translatedLabels.set}} x {{ repetition_value }}
                             {{ repetitions.type }} {{ exercises.basic_info.name }}
                         </p>
                         {{/each}}
@@ -1267,7 +1267,7 @@
 <!-- Footer Template -->
 <div class="footer" id="pdf-footer">
     <div class="footer-content">
-        <p class="page-info">{{translatedLabels.['Page']}} <span id="page-num"></span> <span id="page-count"></span></p>
+        <p class="page-info">{{translatedLabels.Page}} <span id="page-num"></span> <span id="page-count"></span></p>
         <p class="generation-info">{{translatedLabels.['Generated via AdhereLive platform']}}<br/>{{ generationTimestamp }}</p>
     </div>
 </div>

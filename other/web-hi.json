@@ -1,7 +1,7 @@
 {
-  "Patient_Name": "रोगी का नाम",
-  "Registration_date_time": "पंजीकरण तिथि/समय ",
-  "Age_Gender": "आयु/लिंग",
+  "Patient Name": "रोगी का नाम",
+  "Registration date/time": "पंजीकरण तिथि/समय ",
+  "Age/Gender": "आयु/लिंग",
   "Doctor Name": "डॉक्टर का नाम",
   "Patient Address": "रोगी का पता",
   "Address": "तता",
