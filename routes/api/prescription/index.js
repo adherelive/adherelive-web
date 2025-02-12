@@ -1036,7 +1036,7 @@ router.get(
         // await pdfGenerator.loadLocalTranslations();
 
         try {
-            const {care_plan_id = null} = req.params.care_plan_id;
+            const { care_plan_id = null, language = 'en' } = req.params; // Destructure both parameters
             logger.debug("Care Plan ID: ", care_plan_id);
 
             const {
@@ -1953,7 +1953,7 @@ router.get(
              */
 
             // Add language detection (query param or header)
-            const targetLang = req.params.language === 'hi' ? 'hi' : 'en'; // Ternary operator
+            const targetLang = language; // Ternary operator
             logger.debug("Target Language: ", targetLang);
 
             // In your route handler, change the dates also to use 'Hindi' locale
