@@ -66,7 +66,7 @@ const cron = schedule.scheduleJob("0 0 */1 * * *", async () => {
 const removeDocumentPerDayCron = schedule.scheduleJob(
     perDayUtcRule,
     async () => {
-      await RemoveDocuments.runObserver();
+        await RemoveDocuments.runObserver();
     }
 );
 
@@ -100,10 +100,10 @@ schedule.scheduleJob("0 0 */2 * * *", async () => {
 // Middleware setup
 app.use(express.json({limit: "50mb"}));
 app.use(
-  express.urlencoded({
-    extended: true,
-    limit: "50mb",
-  })
+    express.urlencoded({
+        extended: true,
+        limit: "50mb",
+    })
 );
 app.use(cookieParser());
 app.use(cors());

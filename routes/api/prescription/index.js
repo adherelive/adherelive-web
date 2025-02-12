@@ -63,12 +63,13 @@ import { checkAndCreateDirectory } from "../../../app/helper/common";
 
 import { getDoctorCurrentTime } from "../../../app/helper/getUserTime";
 import { raiseClientError, raiseServerError } from "../helper";
-import currentJSON from "../../../other/web-hi.json";
+
 
 // Fetch the Google Translation API and 'puppeteer' along with 'handlebars' for the HTML to PDF conversion
 const {TranslationServiceClient} = require('@google-cloud/translate').v3beta1;
 const puppeteer = require("puppeteer");
 const handlebars = require("handlebars");
+
 
 const logger = createLogger("PRESCRIPTION API");
 
@@ -83,12 +84,35 @@ const router = express.Router();
 // Initialize the translation client
 // Make sure you have set up Google Cloud credentials properly
 const translationClient = new TranslationServiceClient();
-const PROJECT_ID = 'adherelive-translate';
+const PROJECT_ID = process.config.google_keys.GOOGLE_CLOUD_PROJECT_ID;
 
 // Cache configuration
 const CACHE_TTL = 3600000; // 1 hour in milliseconds
 const MAX_TRANSLATION_LENGTH = 5000; // Replace with the actual API limit
 const translationCache = new Map(); // In-memory cache
+
+// Register Handlebars helpers
+handlebars.registerHelper("print", function (value) {
+    return ++value;
+});
+
+// For the Diet/Workout data display, should only be shown if either exists
+handlebars.registerHelper('or', function () {
+    return Array.prototype.slice.call(arguments, 0, -1).some(Boolean);
+});
+
+// Updated the {{translate}} helper to validate the input before calling translateText
+handlebars.registerHelper('translate', async function (text, targetLang = 'hi') {
+    if (!text || typeof text !== 'string' || text.trim() === '') {
+        return ''; // Return an empty string for invalid inputs
+    }
+    return await translateText(text, targetLang);
+});
+
+// Register Handlebars helper:
+handlebars.registerHelper('safe', function (content) {
+    return new handlebars.SafeString(content);
+});
 
 // Load local translations, using path.join and __dirname
 const localTranslations = JSON.parse(fs.readFileSync(path.join(__dirname, '../../../other/web-hi.json'), 'utf8'));
@@ -114,7 +138,12 @@ const htmlHead = `
     <title>AdhereLive - Prescription</title>
 </head>`;
 
-
+/**
+ * TODO: IGNORE the CLASS for now, will work out a way to use this later
+ *
+ * @class PDFGenerator
+ * @description This class is used to generate PDFs from HTML templates, with support for translations and performance monitoring.
+ */
 class PDFGenerator {
     constructor() {
         this.performanceMetrics = {};
@@ -308,36 +337,36 @@ class PDFGenerator {
 
 /**
  * TODO: Will implement these aspects later
-// Monitor translation coverage
-const missingTranslations = {};
-pdfGenerator.on('missingTranslation', (text, translation) => {
-    missingTranslations[ text ] = translation;
-    // Periodically save to a file for updating local JSON
-});
+ // Monitor translation coverage
+ const missingTranslations = {};
+ pdfGenerator.on('missingTranslation', (text, translation) => {
+ missingTranslations[ text ] = translation;
+ // Periodically save to a file for updating local JSON
+ });
 
-// Periodically analyze your logs to identify commonly translated strings
-const analyzeLogs = async () => {
-    const logs = await loadTranslationLogs();
-    const frequentTranslations = logs
-        .groupBy('text')
-        .filter(group => group.count > 10)
-        .map(group => ({
-            original: group.text,
-            translation: group.translation
-        }));
-    // Add these to your local JSON
-};
+ // Periodically analyze your logs to identify commonly translated strings
+ const analyzeLogs = async () => {
+ const logs = await loadTranslationLogs();
+ const frequentTranslations = logs
+ .groupBy('text')
+ .filter(group => group.count > 10)
+ .map(group => ({
+ original: group.text,
+ translation: group.translation
+ }));
+ // Add these to your local JSON
+ };
 
-// Script to update your local JSON
-const updateLocalJSON = async () => {
-    const currentJSON = require('../../../other/web-hi.json');
-    const newTranslations = await getFrequentTranslations();
-    const updatedJSON = {
-        ...currentJSON,
-        ...newTranslations
-    };
-    await fsp.writeFile(__dirname + '../../../other/web-hi.json', JSON.stringify(updatedJSON, null, 2));
-};
+ // Script to update your local JSON
+ const updateLocalJSON = async () => {
+ const currentJSON = require('../../../other/web-hi.json');
+ const newTranslations = await getFrequentTranslations();
+ const updatedJSON = {
+ ...currentJSON,
+ ...newTranslations
+ };
+ await fsp.writeFile(__dirname + '../../../other/web-hi.json', JSON.stringify(updatedJSON, null, 2));
+ };
  */
 
 /**
@@ -355,6 +384,23 @@ function chunkText(text) {
 }
 
 /**
+ * This function will normalize the key by removing special characters and replacing spaces with underscores
+ * Utility function for consistent key handling
+ *
+ * @param key
+ * @returns {*}
+ */
+function normalizeKey(key) {
+    return key
+        .trim()
+        .replace(/\s*\/\s*/g, '/') // Handle "Age / Gender" → "Age/Gender"
+        .replace(/[^a-zA-Z0-9\u0900-\u097F/]/g, '_') // Preserve Devanagari chars
+        .replace(/[_\s]+/g, '_'); // Replace spaces with underscores
+}
+
+let missingTranslations = [];
+
+/**
  * Function to translate each of the labels, before they are sent to the HandleBars
  *
  * @param labels
@@ -362,15 +408,35 @@ function chunkText(text) {
  * @returns {Promise<{}>}
  */
 async function translateStaticLabels(labels, targetLang = 'hi') {
-    const translatedLabels = {};
-    for (const label of labels) {
-        // Replace spaces and special characters with underscores
-        const safeKey = label.replace(/[^a-zA-Z0-9]/g, '_');
-        logger.debug(`Label: ${label}, Translated: ${safeKey}`);
+    const local = getLocalTranslations();
+    const translations = {};
 
-        translatedLabels[ safeKey ] = await translateText(label, targetLang);
+    for (const label of labels) {
+        const normalized = normalizeKey(label);
+
+        // Check & try exact match first
+        if (local[ normalized ]) {
+            translations[ normalized ] = local[ normalized ];
+            continue;
+        }
+
+        if (!local[ normalized ]) {
+            missingTranslations.push(label);
+            logger.warn(`Missing translation for: ${label}`);
+        }
+
+        // Check and try original (normalized) key match next
+        if (local[ label ]) {
+            translations[ normalized ] = local[ label ];
+            continue;
+        }
+
+        // Use Google Cloud Translation API as fallback
+        translations[ normalized ] = await translateText(label, targetLang);
+        logger.debug(`Original Label: ${label}, Translation: ${translations[ label ]}`);
     }
-    return translatedLabels;
+
+    return translations;
 }
 
 /**
@@ -385,11 +451,11 @@ async function translateHTMLContent(html, targetLang = 'hi') {
         const chunks = chunkText(html);
         let translatedHtml = "";
 
-        logger.debug("Number of chunks:", chunks.length); // Log the number of chunks
+        // logger.debug("Number of chunks:", chunks.length); // Log the number of chunks
 
         for (let i = 0; i < chunks.length; i++) {
             const chunk = chunks[ i ];
-            logger.debug(`Length of chunk ${i + 1}:`, chunk.length); // Log the length of each chunk
+            // logger.debug(`Length of chunk ${i + 1}:`, chunk.length); // Log the length of each chunk
 
             const [response] = await translationClient.translateText({
                 parent: `projects/${PROJECT_ID}/locations/global`,
@@ -402,7 +468,7 @@ async function translateHTMLContent(html, targetLang = 'hi') {
             translatedHtml += response.translations[ 0 ].translatedText;
         }
 
-        logger.debug("Total length of translated HTML:", translatedHtml.length); // Log the total length
+        // logger.debug("Total length of translated HTML:", translatedHtml.length); // Log the total length
 
         return translatedHtml;
 
@@ -418,6 +484,7 @@ async function translateHTMLContent(html, targetLang = 'hi') {
 
 // Helper function to optimize local translations loading
 let localTranslationsCache = null;
+
 function getLocalTranslations() {
     if (!localTranslationsCache) {
         localTranslationsCache = require('../../../other/web-hi.json');
@@ -466,7 +533,7 @@ async function getGoogleTranslation(text, targetLang) {
                     // Resolve all promises with their respective translations
                     const translations = response.translations.map(t => t.translatedText);
                     currentBatch.resolvers.forEach((resolver, index) => {
-                        resolver.resolve(translations[index]);
+                        resolver.resolve(translations[ index ]);
                     });
                 } catch (error) {
                     // Reject all promises if there's an error
@@ -484,7 +551,7 @@ async function getGoogleTranslation(text, targetLang) {
 
     // Create a new promise for this translation
     return new Promise((resolve, reject) => {
-        batch.resolvers.push({ resolve, reject });
+        batch.resolvers.push({resolve, reject});
     });
 }
 
@@ -510,7 +577,7 @@ async function translateText(text, targetLang = 'hi') {
 
         // Check cache first
         const cachedResult = translationCache.get(cacheKey);
-        if (cachedResult && (Date.now() - cachedResult.timestamp < CACHE_TTL)) {
+        if (cachedResult && ( Date.now() - cachedResult.timestamp < CACHE_TTL )) {
             return cachedResult.translation;
         }
 
@@ -518,8 +585,8 @@ async function translateText(text, targetLang = 'hi') {
         const localTranslations = getLocalTranslations();
 
         // Check local JSON first
-        if (targetLang === 'hi' && localTranslations[text]) {
-            const translation = localTranslations[text];
+        if (targetLang === 'hi' && localTranslations[ text ]) {
+            const translation = localTranslations[ text ];
             translationCache.set(cacheKey, {
                 translation,
                 timestamp: Date.now()
@@ -537,35 +604,8 @@ async function translateText(text, targetLang = 'hi') {
         });
 
         return translation;
-
-        /**
-         * Commented, as it will be shifted to a new function
-         *
-         // Check local JSON first
-         if (localTranslations[ text ]) {
-         return localTranslations[ text ];
-         }
-
-         if (targetLang === 'hi' && localTranslations[ text ]) { // Check if the text exists in the JSON
-         return localTranslations[ text ]; // Return the Hindi translation from JSON
-         } else {
-         try {
-         // Fallback to Google Cloud Translation (or Azure) for any text not in JSON or if targetLang is not Hindi
-         // TODO: Use 'translateHTMLContent'
-         const [cloudTranslation] = await translationClient.translateText({
-         parent: `projects/${PROJECT_ID}/locations/global`,
-         contents: [text],
-         mimeType: 'text/plain',
-         targetLanguageCode: targetLang,
-         });
-         return cloudTranslation.translations[ 0 ].translatedText;
-         } catch (cloudError) {
-         logger.error("Cloud Translation error: ", cloudError);
-         return text; // Fallback to original text if cloud translation fails
-         }
-         }*/
     } catch (error) {
-        logger.error("Translation error:", error);
+        logger.error("Translation error: ", error);
         return text; // Fallback to original text if JSON loading fails
     }
 }
@@ -590,77 +630,188 @@ async function translateObjectToHindi(obj, targetLang = 'hi') {
     return obj;
 }
 
+// Add date translation logic
+// function localizeDates(dateString) {
+//     // Convert "2023-08-20" to Hindi numerals
+//     return convertToDevanagariNumerals(dateString);
+// }
+
 /**
- * THis is the function which does the actual HTML to PDF conversion
+ * This function is used to convert HTML to PDF in English
+ *
+ *
+ * @param {String} templateHtml
+ * @param {Object} dataBinding
+ * @param {Object} options
+ *
+ * @returns {Promise<Buffer>}
+ * @throws {Error}
+ */
+async function convertHTMLToPDFEn({templateHtml, dataBinding, options}) {
+    handlebars.registerHelper("print", function (value) {
+        return ++value;
+    });
+
+    handlebars.registerHelper('or', function () {
+        return Array.prototype.slice.call(arguments, 0, -1).some(Boolean);
+    });
+
+    const template = handlebars.compile(templateHtml);
+    const finalHtml = encodeURIComponent(template(dataBinding));
+
+    const browser = await puppeteer.launch({
+        args: ["--no-sandbox"],
+        headless: true,
+    });
+    const page = await browser.newPage();
+
+    // Inject page numbers using evaluateHandle
+    await page.evaluateHandle(() => {
+        const style = document.createElement('style');
+        style.textContent = `
+        @page {
+            size: A4; /* Ensure A4 size if not already set */
+            margin: 10mm 5mm; /* Set your margins */
+            @bottom-center { /* Footer content */
+                content: "Page " counter(page) " of " counter(pages);
+            }
+        }
+        .footer { /* Style your footer */
+            width: 100%;
+            text-align: center;
+            padding-top: 10px;
+            border-top: 1px solid black;
+        }`;
+        document.head.appendChild(style);
+
+        // Get the current timestamp (you can format this server-side)
+        const now = new Date();
+        const timestamp = now.toLocaleString(); // Or any format you prefer
+
+        // Add the timestamp to the footer
+        const footer = document.querySelector('.footer');
+        if (footer) {
+            const timestampElement = document.createElement('p');
+            timestampElement.textContent = `Generated via AdhereLive platform<br/>${timestamp}`;
+            footer.appendChild(timestampElement);
+        }
+    });
+
+    await page.setContent(finalHtml);
+
+    // Set viewport to A4 size
+    await page.setViewport({
+        width: 794, // A4 width in pixels at 96 DPI
+        height: 1123, // A4 height in pixels at 96 DPI
+        deviceScaleFactor: 2, // Higher resolution
+    });
+
+    await page.goto(`data:text/html;charset=UTF-8,${finalHtml}`, {
+        waitUntil: "networkidle0",
+    });
+
+    /**
+     * based on = pdf(options?: PDFOptions): Promise<Buffer>;
+     * from https://pptr.dev/api/puppeteer.page.pdf
+     * pdfBuffer will store the PDF file Buffer content when "path is not provided"
+     */
+    let pdfBuffer = await page.pdf(options);
+    logger.info('Conversion complete. PDF file generated successfully.');
+    await browser.close();
+    return pdfBuffer; // Returning the value when page.pdf promise gets resolved
+}
+
+/**
+ * This is the function which does the actual HTML to PDF conversion in Hindi
  *
  * @param templateHtml
  * @param dataBinding
  * @param options
  * @returns {Promise<Buffer<ArrayBufferLike>>}
  */
-async function convertHTMLToPDF({templateHtml, dataBinding, options}) {
+async function convertHTMLToPDFHi({templateHtml, dataBinding, options}) {
     try {
-        // Register Handlebars helpers
-        handlebars.registerHelper("print", function (value) {
-            return ++value;
-        });
-
-        // For the Diet/Workout data display, should only be shown if either exists
-        handlebars.registerHelper('or', function () {
-            return Array.prototype.slice.call(arguments, 0, -1).some(Boolean);
-        });
-
-        // Updated the {{translate}} helper to validate the input before calling translateText
-        handlebars.registerHelper('translate', async function (text, targetLang = 'hi') {
-            if (!text || typeof text !== 'string' || text.trim() === '') {
-                return ''; // Return an empty string for invalid inputs
-            }
-            return await translateText(text, targetLang);
-        });
-
         const startTime = process.hrtime();
 
         // Call the 'translateStaticLabels' function with an array of all static labels in your HTML file
         // This allows to pre-translate static labels
         const staticLabels = [
             "Patient Name",
-            "Registration date/time",
-            "Age/Gender",
-            "Mobile No.",
-            "Doctor_Name",
+            "Registration",
+            "date",
+            "time",
+            "Age",
+            "Gender",
+            "Doctor Name",
+            "Patient",
             "Address",
+            "Doctor Email",
+            "Relevant History",
             "Allergies",
             "Comorbidities",
             "Diagnosis",
             "Symptoms",
+            "General",
+            "Systematic Examination",
             "Treatment And Follow-up Advice",
+            "Height",
+            "Weight",
+            "Name of Medicine",
+            "Dose",
+            "Qty",
+            "Medicine Schedule",
+            "Morning",
+            "Afternoon",
+            "Night",
+            "Start Date",
+            "Duration",
+            "Diet",
+            "Workout",
+            "Patient Mobile No.",
+            "ID",
+            "From",
             "Investigation",
             "Next Consultation",
-            "Lifestyle Advice",
-            "Diet",
-            "Workout"
+            "Diet Name",
+            "TimeDetails",
+            "Repeat Days",
+            "What Not to Do",
+            "Total Calories",
+            "Workout Name",
+            "Time",
+            "Details",
+            "repetitions",
+            "Page",
+            "Generated via AdhereLive platform",
+            "Signature",
+            "Stamp",
+            "Purpose",
+            "Description",
+            "Date",
+            "Take whenever required",
+            "Cal",
         ];
-        logger.debug('Translated Labels:', staticLabels);
         // Add translated labels to dataBinding
         dataBinding.translatedLabels = await translateStaticLabels(staticLabels, options.translateTo);
-
-        logger.debug('Final Data Binding:', dataBinding);
+        logger.debug('Translated Labels: ', dataBinding.translatedLabels);
 
         // Translate the data binding object
         const translatedDataBinding = await translateObjectToHindi(dataBinding, options.translateTo);
+        logger.debug('Translated Data Binding: ', translatedDataBinding);
 
         // Compile template with translated data
         const template = handlebars.compile(templateHtml);
         let finalHtml = template(translatedDataBinding);
 
-        logger.debug("Length of HTML before translation:", finalHtml.length); // Log the total length
+        // logger.debug('The Final HTML with translated labels', finalHtml);
 
         // Log the length of individual sections (if applicable)
-        logger.debug("Length of patient_data.name:", dataBinding.patient_data.name ? dataBinding.patient_data.name.length : 0);
-        logger.debug("Length of diagnosis:", dataBinding.diagnosis ? dataBinding.diagnosis.length : 0);
-        logger.debug("Length of follow_up_advise:", dataBinding.follow_up_advise ? dataBinding.follow_up_advise.length : 0);
-        logger.debug("Length of medicinesArray (if stringified):", JSON.stringify(dataBinding.medicinesArray).length); // Important: stringify if it's an array/object
-        logger.debug("Length of investigations (if stringified):", JSON.stringify(dataBinding.investigations).length);
+        logger.debug("Length of HTML before translation: ", finalHtml.length); // Log the total length
+        // logger.debug("Length of patient_data.name:", dataBinding.patient_data.name ? dataBinding.patient_data.name.length : 0);
+        // logger.debug("Length of diagnosis:", dataBinding.diagnosis ? dataBinding.diagnosis.length : 0);
+        // logger.debug("Length of follow_up_advise:", dataBinding.follow_up_advise ? dataBinding.follow_up_advise.length : 0);
+        // logger.debug("Length of medicinesArray (if stringified):", JSON.stringify(dataBinding.medicinesArray).length); // Important: stringify if it's an array/object
+        // logger.debug("Length of investigations (if stringified):", JSON.stringify(dataBinding.investigations).length);
 
         const fontPath = path.join(__dirname, '../../../fonts/TiroDevanagariHindi-Regular.ttf'); // Correct Path
         const fontBuffer = fs.readFileSync(fontPath);
@@ -703,7 +854,8 @@ async function convertHTMLToPDF({templateHtml, dataBinding, options}) {
         // Set the content and viewport
         // Wait for fonts to load
         await page.setContent(finalHtml, {
-            waitUntil: ['networkidle0', 'load', 'domcontentloaded']
+            waitUntil: ['networkidle0', 'load', 'domcontentloaded'],
+            encoding: 'utf-8'
         });
 
         await page.setViewport({
@@ -712,8 +864,35 @@ async function convertHTMLToPDF({templateHtml, dataBinding, options}) {
             deviceScaleFactor: 2,
         });
 
+        // Add a page evaluate to ensure that the page breaks and split within a table are being done correctly
+        // This should ensure that the medicine table section breaks are being done correctly
+        await page.evaluate(() => {
+            const tables = document.querySelectorAll('.medicine_table');
+
+            tables.forEach(table => {
+                const rows = table.querySelectorAll('tbody tr');
+                let currentPageHeight = 0;
+                const pageHeight = 1123; // ADJUST THIS VALUE!
+
+                rows.forEach(row => {
+                    currentPageHeight += row.offsetHeight;
+
+                    if (currentPageHeight > pageHeight) {
+                        const pageBreak = document.createElement('tr');
+                        pageBreak.style.pageBreakBefore = 'always';
+                        row.parentNode.insertBefore(pageBreak, row);
+
+                        currentPageHeight = row.offsetHeight;
+                    }
+                });
+            });
+        });
+
         const pdfBuffer = await page.pdf(options);
         logger.info('Conversion complete. PDF file generated successfully.');
+
+        // After processing:
+        logger.info('Untranslated labels: \n', missingTranslations);
 
         // Change the dates back to use 'English' locale
         moment.locale('en'); // Get the date back to 'EN' locale
@@ -745,15 +924,18 @@ async function convertHTMLToPDF({templateHtml, dataBinding, options}) {
 function getWhenToTakeText(whenToTake) {
     if (!whenToTake) return '';
 
-    const whenToTakeMap = {
-        1: 'Before food',
-        2: 'After food',
-        3: 'With food',
-        4: 'Empty stomach',
-        5: 'As directed'
-    };
+    switch (whenToTake) {
+        case 1:
+            return `Once a day`;
+        case 2:
+            return `Twice a day`;
+        case 3:
+            return `Thrice a day`;
+        default:
+            return "";
+    }
 
-    return whenToTakeMap[ whenToTake ] || 'As directed';
+    return whenToTake || 'As directed';
 }
 
 // formatting doctor data
@@ -1141,14 +1323,16 @@ function getLatestUpdateDate(medications) {
     return {date, isPrescriptionUpdated};
 }
 
-// Usage in your route handler:
+/**
+ * @swagger
+ */
 router.get(
     "/details/:care_plan_id",
     Authenticated,
     async (req, res) => {
 
-        const pdfGenerator = new PDFGenerator();
-        await pdfGenerator.loadLocalTranslations();
+        // const pdfGenerator = new PDFGenerator();
+        // await pdfGenerator.loadLocalTranslations();
 
         try {
             const {care_plan_id = null} = req.params;
@@ -1449,7 +1633,7 @@ router.get(
                     dietIds.push(id);
                 }
             }
-            //logger.debug("Diet Lists and Diet IDs: ", JSON.stringify(dietList), {dietIds});
+            // logger.debug("Diet Lists and Diet IDs: ", JSON.stringify(dietList), {dietIds});
 
             for (const id of workout_ids) {
                 const workout = await workoutService.findOne({id});
@@ -1493,14 +1677,35 @@ router.get(
                 }
             }
 
+            // Changed to avoid warning from moment:
+            // Deprecation warning: value provided is not in a recognized RFC2822 or ISO format.
+            // moment construction falls back to js Date()
+            /**
+             * TODO: Check if the below new function returns correct date, or revert to the original one
+             const sortedInvestigations = suggestedInvestigations.sort((a, b) => {
+             const {start_date: aStartDate} = a || {};
+             const {start_date: bStartDate} = b || {};
+             if (moment(bStartDate).diff(moment(aStartDate), "minutes") > 0) {
+             return 1;
+             } else {
+             return -1;
+             }
+             });
+             */
             const sortedInvestigations = suggestedInvestigations.sort((a, b) => {
                 const {start_date: aStartDate} = a || {};
                 const {start_date: bStartDate} = b || {};
-                if (moment(bStartDate).diff(moment(aStartDate), "minutes") > 0) {
-                    return 1;
-                } else {
-                    return -1;
+
+                const momentA = moment(aStartDate, 'Do MMM YY');
+                const momentB = moment(bStartDate, 'Do MMM YY');
+
+                if (!momentA.isValid() || !momentB.isValid()) {
+                    // Handle invalid dates.  What should the sort order be if a date is bad?
+                    // Example: Put invalid dates at the end
+                    return momentA.isValid() ? -1 : 1; // Or return 0 to keep original order
                 }
+
+                return momentB.diff(momentA, "minutes");
             });
 
             if (nextAppointment) {
@@ -1677,7 +1882,7 @@ router.get(
                 doctor_id
             );
 
-            logger.debug("Provider logo: \n", {providerLogo});
+            // logger.debug("Provider logo: \n", {providerLogo});
 
             let patient_data = formatPatientData(
                 {
@@ -1755,7 +1960,7 @@ router.get(
                 let start_date = diet_old_data[ diet_id ][ "diets" ][ diet_id ][ "basic_info" ][ "start_date" ];
                 let end_date = diet_old_data[ diet_id ][ "diets" ][ diet_id ][ "basic_info" ][ "end_date" ];
 
-                logger.debug("Diet data + Basic Info: \n", diet_old_data[ diet_id ][ "diets" ][ diet_id ][ "basic_info" ]);
+                // logger.debug("Diet data + Basic Info: \n", diet_old_data[ diet_id ][ "diets" ][ diet_id ][ "basic_info" ]);
 
                 if (start_date) formattedStartDate = moment(start_date);
                 if (end_date) formattedEndDate = moment(end_date);
@@ -1792,10 +1997,10 @@ router.get(
                 // for food groups
 
                 for (let key in diet_old_data[ dietIds[ i ] ][ "diet_food_groups" ]) {
-                    logger.debug({
-                        key,
-                        old_time: diet_old_data[ dietIds[ i ] ][ "diet_food_groups" ],
-                    });
+                    // logger.debug({
+                    //     key,
+                    //     old_time: diet_old_data[ dietIds[ i ] ][ "diet_food_groups" ],
+                    // });
                     let food_group_obj = {};
                     food_group_obj.time = timings[ key ];
                     food_group_obj.food_group_details_array =
@@ -1996,39 +2201,64 @@ router.get(
                 ),
             };
 
-            const translatedLabels = [
-                "Patient Name",
-                "Registration date/time",
-                "Age/Gender",
-                "Mobile No.",
-                "Doctor_Name",
-                "Address",
-                "Allergies",
-                "Comorbidities",
-                "Diagnosis",
-                "Symptoms",
-                "Treatment And Follow-up Advice",
-                "Investigation",
-                "Next Consultation",
-                "Lifestyle Advice",
-                "Diet",
-                "Workout"
-            ];
+            const translatedLabels = [];
 
             pre_data = {
                 ...pre_data,
                 translatedLabels, // Add translated labels here
             };
 
+            // logger.debug('Pre Load the data sent to PDF conversion: \n', pre_data);
+
             // Translate the pre_data object
-            const translatedPreData = await translateObjectToHindi(pre_data);
+            // const translatedPreData = await translateObjectToHindi(pre_data);
 
             const templateHtml = fs.readFileSync(
-                path.join("./routes/api/prescription/prescription.html"),
+                path.join("./routes/api/prescription/prescription-hindi.html"),
                 "utf8"
             );
 
-            // Add language detection (query param or header)
+            /**
+             * TODO: Not using this, as it gives errors
+             // Enhanced PDF options
+             const options = {
+             format: "A4",
+             headerTemplate: "<p></p>",
+             footerTemplate: "<p></p>",
+             displayHeaderFooter: false,
+             scale: 1,
+             fontFaces: true,
+             margin: {
+             top: "40px",
+             bottom: "100px",
+             },
+             printBackground: true,
+             preferCSSPageSize: true,
+             path: "prescription.pdf",
+             translateTo: targetLang // Pass to convertHTMLToPDFHi
+             };
+
+             const {buffer: pdfBuffer, metrics} = await pdfGenerator.generatePDF(
+             templateHtml,
+             pre_data,
+             options
+             );
+
+             // Log performance metrics
+             logger.info('PDF Generation Performance:', pdfGenerator.getPerformanceReport());
+
+             // Set response headers
+             res.set({
+             'Content-Type': 'application/pdf',
+             'Content-Length': pdfBuffer.length,
+             'Cache-Control': 'public, max-age=300',
+             'X-Generation-Time': metrics[ 'Generate PDF' ]
+             });
+
+             return res.send(pdfBuffer);
+             */
+
+                // Add language detection (query param or header)
             const targetLang = req.query.lang || 'hi';
 
             // In your route handler, change the dates also to use 'Hindi' locale
@@ -2041,46 +2271,6 @@ router.get(
                 .locale(targetLang)
                 .format('LLL');
 
-            /**
-             * Not using this, as it gives errors
-            // Enhanced PDF options
-            const options = {
-                format: "A4",
-                headerTemplate: "<p></p>",
-                footerTemplate: "<p></p>",
-                displayHeaderFooter: false,
-                scale: 1,
-                fontFaces: true,
-                margin: {
-                    top: "40px",
-                    bottom: "100px",
-                },
-                printBackground: true,
-                preferCSSPageSize: true,
-                path: "prescription.pdf",
-                translateTo: targetLang // Pass to convertHTMLToPDF
-            };
-
-            const {buffer: pdfBuffer, metrics} = await pdfGenerator.generatePDF(
-                templateHtml,
-                pre_data,
-                options
-            );
-
-            // Log performance metrics
-            logger.info('PDF Generation Performance:', pdfGenerator.getPerformanceReport());
-
-            // Set response headers
-            res.set({
-                'Content-Type': 'application/pdf',
-                'Content-Length': pdfBuffer.length,
-                'Cache-Control': 'public, max-age=300',
-                'X-Generation-Time': metrics[ 'Generate PDF' ]
-            });
-
-            return res.send(pdfBuffer);
-            */
-
             const options = {
                 format: "A4",
                 headerTemplate: "<p></p>",
@@ -2094,11 +2284,12 @@ router.get(
                 },
                 printBackground: true,
                 path: "prescription.pdf",
-                translateTo: targetLang // Pass to convertHTMLToPDF
+                translateTo: targetLang // Pass to convertHTMLToPDFHi
             };
 
             // Generate PDF with translation
-            let pdf_buffer_value = await convertHTMLToPDF({
+            // TODO: Add a language option here, to use the HINDI or EN function to generate the PDF
+            let pdf_buffer_value = await convertHTMLToPDFHi({
                 templateHtml,
                 dataBinding: pre_data,
                 options,
@@ -2113,6 +2304,9 @@ router.get(
     }
 );
 
+/**
+ * @swagger
+ */
 router.get("/metrics", Authenticated, async (req, res) => {
     const pdfGenerator = new PDFGenerator();
 

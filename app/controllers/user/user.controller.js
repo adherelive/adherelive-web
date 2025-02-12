@@ -420,9 +420,9 @@ class UserController extends Controller {
 
   async signInGoogle(req, res) {
     const authCode = req.body.tokenId;
-    const CLIENT_ID = process.config.GOOGLE_KEYS.CLIENT_ID;
-    const CLIENT_SECRET = process.config.GOOGLE_KEYS.CLIENT_SECRET;
-    const REDIRECT_URI = process.config.GOOGLE_KEYS.REDIRECT_URI;
+    const CLIENT_ID = process.config.google_keys.CLIENT_ID;
+    const CLIENT_SECRET = process.config.google_keys.CLIENT_SECRET;
+    const REDIRECT_URI = process.config.google_keys.REDIRECT_URI;
     try {
       const client = new OAuth2Client(CLIENT_ID, CLIENT_SECRET, REDIRECT_URI);
 
@@ -476,8 +476,8 @@ class UserController extends Controller {
     const { accessToken } = req.body;
 
         try {
-            const clientId = process.config.FACEBOOK_KEYS.APP_TOKEN;
-            const clientSecret = process.config.FACEBOOK_KEYS.SECRET_TOKEN;
+            const clientId = process.config.facebook_keys.APP_TOKEN;
+            const clientSecret = process.config.facebook_keys.SECRET_TOKEN;
             const expiresIn = process.config.TOKEN_EXPIRE_TIME;
             const secret = process.config.TOKEN_SECRET_KEY;
             const userId = "4"; // TODO: seeder for FB sign-in, replace with logic to get user ID from Facebook
