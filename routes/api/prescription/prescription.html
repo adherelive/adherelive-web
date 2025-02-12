@@ -57,10 +57,11 @@
             }
         }
 
+        /* Page Setup and Print Styles */
         /* Add support for both A4 and Letter sizes */
         @page {
             size: A4 portrait;
-            margin: 10mm 5mm;  /* Reduced margins for better space utilization */
+            margin: 10mm 5mm; /* Use CSS variable. Reduced margins for better space utilization */
             /* bleed: 0; */
             @top-center {
                 content: element(header);
@@ -103,13 +104,6 @@
         @font-face {
             font-family: "PlusJakartaSans-Light";
             src: url("https://res.cloudinary.com/myrltech/raw/upload/v1685509841/PlusJakartaSans-Light.ttf");
-            font-weight: normal;
-            font-style: normal;
-        }
-
-        @font-face {
-            font-family: "TiroDevanagariHindi-Regular";
-            src: url("https://res.cloudinary.com/myrltech/raw/upload/v1686297287/TiroDevanagariHindi-Regular.ttf");
             font-weight: normal;
             font-style: normal;
         }
@@ -323,6 +317,12 @@
             top: 0;
             z-index: 2;
             border-bottom: 2px solid #000;
+        }
+
+        /* Table Containers */
+        .medicine-table-container {
+            overflow: visible;
+            margin: 15px 0;
         }
 
         table th,
@@ -607,21 +607,9 @@
             margin: 0;
         }
 
-        /* Table Containers */
-        .medicine-table-container {
-            overflow: visible;
-            margin: 15px 0;
-        }
-
         /* New Page for Lifestyle Advice */
         .lifestyle-advice-page {
             page-break-before: always; /* Start on a new page */
-        }
-
-        /* Table Containers */
-        .medicine-table-container {
-            overflow: visible;
-            margin: 15px 0;
         }
     </style>
 </head>

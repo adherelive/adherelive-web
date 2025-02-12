@@ -1,6 +1,5 @@
 import express from "express";
 import Authenticated from "../middleware/auth";
-import multer from "multer";
 import { createLogger } from "../../../libs/logger";
 import fs from "fs";
 import path from "path";
@@ -82,6 +81,9 @@ const CACHE_TTL = 3600000; // 1 hour in milliseconds
 const MAX_TRANSLATION_LENGTH = 5000; // Replace with the actual API limit
 const translationCache = new Map(); // In-memory cache
 
+// Global array to store and show the Labels which need to be translated via the Cloud API
+let missingTranslations = [];
+
 // Register Handlebars helpers
 handlebars.registerHelper("print", function (value) {
     return ++value;
@@ -116,13 +118,13 @@ handlebars.registerHelper('safe', function (content) {
 
  // Script to update your local JSON
  const updateLocalJSON = async () => {
-     const currentJSON = require('../../../other/web-hi.json');
-     const newTranslations = await getFrequentTranslations();
-     const updatedJSON = {
-         ...currentJSON,
-         ...newTranslations
-    };
-    await fsp.writeFile(__dirname + '../../../other/web-hi.json', JSON.stringify(updatedJSON, null, 2));
+ const currentJSON = require('../../../other/web-hi.json');
+ const newTranslations = await getFrequentTranslations();
+ const updatedJSON = {
+ ...currentJSON,
+ ...newTranslations
+ };
+ await fsp.writeFile(__dirname + '../../../other/web-hi.json', JSON.stringify(updatedJSON, null, 2));
  };
  */
 
@@ -140,8 +142,6 @@ function normalizeKey(key) {
         .replace(/[^a-zA-Z0-9\u0900-\u097F/]/g, '_') // Preserve Devanagari chars
         .replace(/[_\s]+/g, '_'); // Replace spaces with underscores
 }
-
-let missingTranslations = [];
 
 /**
  * Function to translate each of the labels, before they are sent to the HandleBars
@@ -185,6 +185,11 @@ async function translateStaticLabels(labels, targetLang = 'hi') {
 // Helper function to optimize local translations loading
 let localTranslationsCache = null;
 
+/**
+ * This function is used to get the local translations from the JSON file
+ *
+ * @returns {*}
+ */
 function getLocalTranslations() {
     if (!localTranslationsCache) {
         localTranslationsCache = require('../../../other/web-hi.json');
@@ -348,13 +353,24 @@ async function translateObjectToHindi(obj, targetLang = 'hi') {
  * @throws {Error}
  */
 async function convertHTMLToPDFEn({templateHtml, dataBinding, options}) {
-
     try {
+        const startTime = process.hrtime();
+
         const template = handlebars.compile(templateHtml);
         const finalHtml = encodeURIComponent(template(dataBinding));
 
+        // logger.debug('The Final HTML with translated labels', finalHtml);
+
+        // Log the length of individual sections (if applicable)
+        logger.debug("Length of HTML before translation: ", finalHtml.length); // Log the total length
+        // logger.debug("Length of patient_data.name:", dataBinding.patient_data.name ? dataBinding.patient_data.name.length : 0);
+        // logger.debug("Length of diagnosis:", dataBinding.diagnosis ? dataBinding.diagnosis.length : 0);
+        // logger.debug("Length of follow_up_advise:", dataBinding.follow_up_advise ? dataBinding.follow_up_advise.length : 0);
+        // logger.debug("Length of medicinesArray (if stringified):", JSON.stringify(dataBinding.medicinesArray).length); // Important: stringify if it's an array/object
+        // logger.debug("Length of investigations (if stringified):", JSON.stringify(dataBinding.investigations).length);
+
         const browser = await puppeteer.launch({
-            args: ["--no-sandbox"],
+            args: ['--no-sandbox'],
             headless: true,
         });
         const page = await browser.newPage();
@@ -363,19 +379,19 @@ async function convertHTMLToPDFEn({templateHtml, dataBinding, options}) {
         await page.evaluateHandle(() => {
             const style = document.createElement('style');
             style.textContent = `
-        @page {
-            size: A4; /* Ensure A4 size if not already set */
-            margin: 10mm 5mm; /* Set your margins */
-            @bottom-center { /* Footer content */
-                content: "Page " counter(page) " of " counter(pages);
-            }
-        }
-        .footer { /* Style your footer */
-            width: 100%;
-            text-align: center;
-            padding-top: 10px;
-            border-top: 1px solid black;
-        }`;
+	        @page {
+	            size: A4; /* Ensure A4 size if not already set */
+	            margin: 10mm 5mm; /* Set your margins */
+	            @bottom-center { /* Footer content */
+	                content: "Page " counter(page) " of " counter(pages);
+	            }
+	        }
+	        .footer { /* Style your footer */
+	            width: 100%;
+	            text-align: center;
+	            padding-top: 10px;
+	            border-top: 1px solid black;
+	        }`;
             document.head.appendChild(style);
 
             // Get the current timestamp (you can format this server-side)
@@ -414,12 +430,74 @@ async function convertHTMLToPDFEn({templateHtml, dataBinding, options}) {
 
 
         await browser.close();
+
+        const endTime = process.hrtime(startTime);
+        logger.info(`PDF generation took ${endTime[ 0 ]}s ${endTime[ 1 ] / 1000000}ms`);
+
         return pdfBuffer; // Returning the value when page.pdf promise gets resolved
     } catch (error) {
         logger.error('Error in generating prescription PDF:', error);
         throw error;
     }
 }
+
+// TODO: Move these out of the file and to a different file for data
+const staticLabels = [
+    "Patient Name",
+    "Registration",
+    "date",
+    "time",
+    "Age",
+    "Gender",
+    "Doctor Name",
+    "Patient",
+    "Address",
+    "Doctor Email",
+    "Relevant History",
+    "Allergies",
+    "Comorbidities",
+    "Diagnosis",
+    "Symptoms",
+    "General",
+    "Systematic Examination",
+    "Treatment And Follow-up Advice",
+    "Height",
+    "Weight",
+    "Name of Medicine",
+    "Dose",
+    "Qty",
+    "Medicine Schedule",
+    "Morning",
+    "Afternoon",
+    "Night",
+    "Start Date",
+    "Duration",
+    "Diet",
+    "Workout",
+    "Patient Mobile No.",
+    "ID",
+    "From",
+    "Investigation",
+    "Next Consultation",
+    "Diet Name",
+    "TimeDetails",
+    "Repeat Days",
+    "What Not to Do",
+    "Total Calories",
+    "Workout Name",
+    "Time",
+    "Details",
+    "repetitions",
+    "Page",
+    "Generated via AdhereLive platform",
+    "Signature",
+    "Stamp",
+    "Purpose",
+    "Description",
+    "Date",
+    "Take whenever required",
+    "Cal",
+];
 
 /**
  * This is the function which does the actual HTML to PDF conversion in Hindi
@@ -433,76 +511,18 @@ async function convertHTMLToPDFHi({templateHtml, dataBinding, options}) {
     try {
         const startTime = process.hrtime();
 
-        // Call the 'translateStaticLabels' function with an array of all static labels in your HTML file
-        // This allows to pre-translate static labels
-        const staticLabels = [
-            "Patient Name",
-            "Registration",
-            "date",
-            "time",
-            "Age",
-            "Gender",
-            "Doctor Name",
-            "Patient",
-            "Address",
-            "Doctor Email",
-            "Relevant History",
-            "Allergies",
-            "Comorbidities",
-            "Diagnosis",
-            "Symptoms",
-            "General",
-            "Systematic Examination",
-            "Treatment And Follow-up Advice",
-            "Height",
-            "Weight",
-            "Name of Medicine",
-            "Dose",
-            "Qty",
-            "Medicine Schedule",
-            "Morning",
-            "Afternoon",
-            "Night",
-            "Start Date",
-            "Duration",
-            "Diet",
-            "Workout",
-            "Patient Mobile No.",
-            "ID",
-            "From",
-            "Investigation",
-            "Next Consultation",
-            "Diet Name",
-            "TimeDetails",
-            "Repeat Days",
-            "What Not to Do",
-            "Total Calories",
-            "Workout Name",
-            "Time",
-            "Details",
-            "repetitions",
-            "Page",
-            "Generated via AdhereLive platform",
-            "Signature",
-            "Stamp",
-            "Purpose",
-            "Description",
-            "Date",
-            "Take whenever required",
-            "Cal",
-        ];
-        // Add translated labels to dataBinding
+        // Add translated labels to dataBinding, calling the 'translateStaticLabels' function with
+        // an array of all static labels in your HTML file. This allows to pre-translate static labels
         dataBinding.translatedLabels = await translateStaticLabels(staticLabels, options.translateTo);
         logger.debug('Translated Labels: ', dataBinding.translatedLabels);
 
         // Translate the data binding object
         const translatedDataBinding = await translateObjectToHindi(dataBinding, options.translateTo);
-        logger.debug('Translated Data Binding: ', translatedDataBinding);
+        // logger.debug('Translated Data Binding: ', translatedDataBinding);
 
         // Compile template with translated data
         const template = handlebars.compile(templateHtml);
         let finalHtml = template(translatedDataBinding);
-
         // logger.debug('The Final HTML with translated labels', finalHtml);
 
         // Log the length of individual sections (if applicable)
@@ -520,7 +540,7 @@ async function convertHTMLToPDFHi({templateHtml, dataBinding, options}) {
         // Launch Puppeteer and generate PDF
         const browser = await puppeteer.launch({
             args: ['--no-sandbox', '--font-render-hinting=medium'],
-            headless: true
+            headless: true,
         });
         const page = await browser.newPage();
 
@@ -558,10 +578,11 @@ async function convertHTMLToPDFHi({templateHtml, dataBinding, options}) {
             encoding: 'utf-8'
         });
 
+        // Set viewport to A4 size
         await page.setViewport({
-            width: 794,
-            height: 1123,
-            deviceScaleFactor: 2,
+            width: 794, // A4 width in pixels at 96 DPI
+            height: 1123, // A4 height in pixels at 96 DPI
+            deviceScaleFactor: 2, // Higher resolution
         });
 
         // Add a page evaluate to ensure that the page breaks and split within a table are being done correctly
@@ -588,6 +609,11 @@ async function convertHTMLToPDFHi({templateHtml, dataBinding, options}) {
             });
         });
 
+        /**
+         * based on = pdf(options?: PDFOptions): Promise<Buffer>;
+         * from https://pptr.dev/api/puppeteer.page.pdf
+         * pdfBuffer will store the PDF file Buffer content when "path is not provided"
+         */
         const pdfBuffer = await page.pdf(options);
         logger.info('Conversion complete. PDF file generated successfully.');
 
@@ -609,7 +635,7 @@ async function convertHTMLToPDFHi({templateHtml, dataBinding, options}) {
 
         return pdfBuffer;
     } catch (error) {
-        logger.error('Error in PDF generation:', error);
+        logger.error('Error in generating Hindi prescription PDF:', error);
         throw error;
     }
 }
@@ -1030,13 +1056,9 @@ router.get(
     "/details/:care_plan_id/:language",
     Authenticated,
     async (req, res) => {
-
-        // const pdfGenerator = new PDFGenerator();
-        // await pdfGenerator.loadLocalTranslations();
-
         try {
-            const { care_plan_id = null, language = 'en' } = req.params; // Destructure both parameters
-            logger.debug("Care Plan ID: ", care_plan_id);
+            const {care_plan_id = null, language = 'en'} = req.params; // Destructure both parameters
+            // logger.debug("Care Plan ID: ", care_plan_id);
 
             const {
                 userDetails: {
@@ -1911,46 +1933,6 @@ router.get(
             // Translate the pre_data object
             // const translatedPreData = await translateObjectToHindi(pre_data);
 
-            /**
-             * TODO: Not using this, as it gives errors
-             // Enhanced PDF options
-             const options = {
-             format: "A4",
-             headerTemplate: "<p></p>",
-             footerTemplate: "<p></p>",
-             displayHeaderFooter: false,
-             scale: 1,
-             fontFaces: true,
-             margin: {
-             top: "40px",
-             bottom: "100px",
-             },
-             printBackground: true,
-             preferCSSPageSize: true,
-             path: "prescription.pdf",
-             translateTo: targetLang // Pass to convertHTMLToPDFHi
-             };
-
-             const {buffer: pdfBuffer, metrics} = await pdfGenerator.generatePDF(
-             templateHtml,
-             pre_data,
-             options
-             );
-
-             // Log performance metrics
-             logger.info('PDF Generation Performance:', pdfGenerator.getPerformanceReport());
-
-             // Set response headers
-             res.set({
-             'Content-Type': 'application/pdf',
-             'Content-Length': pdfBuffer.length,
-             'Cache-Control': 'public, max-age=300',
-             'X-Generation-Time': metrics[ 'Generate PDF' ]
-             });
-
-             return res.send(pdfBuffer);
-             */
-
             // Add language detection (query param or header)
             const targetLang = language; // Ternary operator
             logger.debug("Target Language: ", targetLang);
@@ -1981,7 +1963,7 @@ router.get(
                 translateTo: targetLang // Pass to convertHTMLToPDFHi
             };
 
-            let pdf_buffer_value = null;
+            let pdfBufferValue = null;
 
             // Generate PDF with translation
             // TODO: Add a language option here, to use the HINDI or EN function to generate the PDF
@@ -1990,27 +1972,27 @@ router.get(
                     path.join(__dirname + "/prescription-hindi.html"),
                     "utf8"
                 );
-                pdf_buffer_value = await convertHTMLToPDFHi({
+                pdfBufferValue = await convertHTMLToPDFHi({
                     templateHtml,
                     dataBinding: pre_data,
                     options,
                 });
-            } else if(targetLang === 'en') {
+            } else if (targetLang === 'en') {
                 const templateHtml = fs.readFileSync(
                     path.join(__dirname + "/prescription.html"),
                     "utf8"
                 );
-                pdf_buffer_value = await convertHTMLToPDFEn({
+                pdfBufferValue = await convertHTMLToPDFEn({
                     templateHtml,
                     dataBinding: pre_data,
                     options,
                 });
             }
 
-            logger.debug("PDF Buffer Value:", pdf_buffer_value); // Log before sending!
+            // logger.debug("PDF Buffer Value:", pdfBufferValue); // Log before sending!
             res.contentType("application/pdf");
-            if (pdf_buffer_value) { // Check if it's not null or undefined
-                return res.send(pdf_buffer_value);
+            if (pdfBufferValue) { // Check if it's not null or undefined
+                return res.send(pdfBufferValue);
             } else {
                 logger.error("PDF buffer is empty. Check PDF generation process.");
                 return res.status(500).send("Error generating PDF"); // Send an error response
