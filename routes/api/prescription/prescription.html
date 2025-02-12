@@ -1,30 +1,14 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>{{ translatedLabels.prescriptionTitle }}</title>
+    <title>Patient Prescription</title>
     <style>
-        @import url('https://res.cloudinary.com/myrltech/raw/upload/v1686297287/TiroDevanagariHindi-Regular.ttf');
-
         /* Base Page Setup */
         /* This CSS rule ensures that table headers (contained within the <thead> element)
            repeat at the top of each new page when the table spans multiple pages. */
-        /* CSS Variables for easier theming and maintainability */
-        :root {
-            --font-family-base: "TiroDevanagariHindi-Regular", "NotoSansDevanagari", Arial, sans-serif;
-            --font-family-bold: "PlusJakartaSans-Bold", var(--font-family-base);
-            --font-family-medium: "PlusJakartaSans-Medium", var(--font-family-base);
-            --font-family-regular: "PlusJakartaSans-Regular", var(--font-family-base);
-            --font-family-light: "PlusJakartaSans-Light", var(--font-family-base);
-            --color-text: #000;
-            --color-gray-light: #666;
-            --color-gray-medium: #888;
-            --border-color: #000;
-            --page-margin: 10mm 5mm; /* Combined margin */
-        }
-
         @media print {
             /* Force background colors and images to print */
             * {
@@ -34,7 +18,7 @@
 
             /* Ensure page breaks don't occur within elements */
             h1, h2, h3, h4, h5, h6 {
-                page-break-after: auto;
+                page-break-after: avoid;
             }
 
             @page {
@@ -49,7 +33,7 @@
                 -webkit-backface-visibility: hidden;
                 -webkit-print-color-adjust: exact;
                 backface-visibility: hidden;
-                page-break-inside: auto;
+                page-break-inside: avoid;
             }
 
             /* TODO: Preserve dimensions for specific images, future use
@@ -69,15 +53,14 @@
 
             /* Avoid breaking within table rows */
             tr {
-                page-break-inside: auto;
+                page-break-inside: avoid;
             }
         }
 
-        /* Page Setup and Print Styles */
         /* Add support for both A4 and Letter sizes */
         @page {
             size: A4 portrait;
-            margin: 10mm 5mm; /* Use CSS variable. Reduced margins for better space utilization */
+            margin: 10mm 5mm;  /* Reduced margins for better space utilization */
             /* bleed: 0; */
             @top-center {
                 content: element(header);
@@ -87,32 +70,7 @@
             }
         }
 
-        /* Global styles */
-        * { /* Apply to all elements by default */
-            font-family: var(--font-family-base),sans-serif;
-            -webkit-font-smoothing: antialiased;
-            text-rendering: optimizeLegibility;
-            box-sizing: border-box; /* Include padding and border in element's total width and height */
-        }
-
-        /* Font Faces (Optimize loading - preload critical fonts) */
         /* Font Faces */
-        @font-face {
-            font-family: "TiroDevanagariHindi-Regular";
-            src: url("https://res.cloudinary.com/myrltech/raw/upload/v1686297287/TiroDevanagariHindi-Regular.ttf");
-            font-weight: normal; /* Or specify font-weight if needed */
-            font-style: normal; /* Or specify font-style if needed */
-            font-display: swap; /* Optional: improve perceived performance */
-        }
-
-        @font-face {
-            font-family: 'NotoSansDevanagari';
-            src: url('https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;700&display=swap');
-            font-weight: normal; /* Or specify font-weight if needed */
-            font-style: normal; /* Or specify font-style if needed */
-            font-display: swap; /* Optional: improve perceived performance */
-        }
-
         @font-face {
             font-family: "PlusJakartaSans-Bold";
             src: url("https://res.cloudinary.com/myrltech/raw/upload/v1685442477/PlusJakartaSans-Bold.ttf");
@@ -149,60 +107,11 @@
             font-style: normal;
         }
 
-        /* General Styles */
-        body {
-            direction: ltr; /* Hindi is written left-to-right */
-            margin: 0;
-            padding: 10mm 5mm; /* Use CSS variable */
-            font-size: 10px;
-            font-family: var(--font-family-base),sans-serif;
-            color: var(--color-text); /* Use CSS variable */
-        }
-
-        /* Maintains aspect ratio in the images */
-        img {
-            max-width: 100%;
-            height: auto;
-            object-fit: contain; /* Default object-fit */
-            -webkit-backface-visibility: hidden;
-            backface-visibility: hidden;
-        }
-
-        /* Typography */
-        h3, h4, h5 {
-            font-family: var(--font-family-bold),sans-serif;
-            margin: 0;
-            page-break-after: avoid;
-        }
-
-        h3 {
-            font-size: 13px;
-        }
-
-        h4, h5 {
-            font-size: 10px;
-        }
-
-        p {
-            font-family: var(--font-family-medium),sans-serif;
-            font-size: 10px;
-            margin: 0;
-        }
-
-        span { /* If you need this style, keep it */
-            font-family: var(--font-family-base),sans-serif;
-        }
-
-        /* Container width constraints */
-        .main-content {
-            width: 100%;
-            max-width: 210mm; /* A4 width */
-            margin: 0 auto;
-        }
-
-        /* Hindi text specific styles */
-        .hindi-text {
-            font-family: 'TiroDevanagariHindi-Regular', 'NotoSansDevanagari', Arial, sans-serif !important;
+        @font-face {
+            font-family: "TiroDevanagariHindi-Regular";
+            src: url("https://res.cloudinary.com/myrltech/raw/upload/v1686297287/TiroDevanagariHindi-Regular.ttf");
+            font-weight: normal;
+            font-style: normal;
         }
 
         /* Specific rules for content breaking to existing styles */
@@ -221,9 +130,20 @@
             page-break-inside: avoid;
         }
 
-        /* Specific elements that should ALWAYS be in Hindi */
-        .some-hindi-text {
-            font-family: "TiroDevanagariHindi-Regular", "NotoSansDevanagari", sans-serif; /* No fallbacks if it MUST be Hindi */
+        /* Container width constraints */
+        .main-content {
+            width: 100%;
+            max-width: 210mm; /* A4 width */
+            margin: 0 auto;
+        }
+
+        /* Maintains aspect ratio in the images */
+        img {
+            max-width: 100%;
+            height: auto;
+            object-fit: contain;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
         }
 
         /* For images that need to maintain specific dimensions */
@@ -266,63 +186,60 @@
             object-fit: contain;
         }
 
-        /* Header and Footer */
-        .header, .footer { /* Combined styles */
-            position: running(header); /* or running(footer) */
-            width: 100%;
-            padding: 10px 0; /* Consistent padding */
-            border-top: 1px solid var(--border-color); /* or border-bottom */
-            background-color: #fff; /* Consistent background */
+        /* Global Styles */
+        body {
+            margin: 0;
+            padding: 10px;
+            font-size: 10px;
+            font-family: "PlusJakartaSans-Regular", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
         }
 
+        /* Typography */
+        h3, h4, h5 {
+            page-break-after: avoid;
+            font-family: "PlusJakartaSans-Bold";
+            margin: 0;
+        }
+
+        h3 {
+            font-size: 13px;
+        }
+
+        h4, h5 {
+            font-size: 10px;
+        }
+
+        p {
+            font-family: "PlusJakartaSans-Medium";
+            font-size: 10px;
+            margin: 0;
+        }
+
+        /* Header and Footer */
         .header {
-            border-bottom: 1px solid var(--border-color);
+            position: running(header);
+            width: 100%;
+            padding-bottom: 10px;
+            border-bottom: 1px solid black;
         }
 
         .footer {
             position: running(footer);
-            text-align: center;
-        }
-
-        /* Table attributes */
-        .table {
+            bottom: 0;
             width: 100%;
-            border-collapse: collapse;
-        }
-
-        .table tr {
-            page-break-inside: avoid;
-            break-inside: avoid;
-        }
-
-        .table-wrapper {
-            page-break-before: auto;
-            break-before: auto;
-        }
-
-        .table th,
-        .table td {
-            border: 1px solid black;
-            padding: 5px;
-            border-top: 0;
-            border-left: 0;
-            page-break-inside: avoid;
-            break-inside: avoid;
-        }
-
-        .table th { /* Table header specific styles */
+            padding: 10px 0;
             background-color: #fff;
-            position: sticky;
-            top: 0;
-            z-index: 2;
-            border-bottom: 2px solid var(--border-color);
+            border-top: 1px solid black;
+            text-align: center;
+            font-family: "PlusJakartaSans-Regular";
         }
 
         /* Footer Styles */
         .footer-content {
             margin: 0 20px;
             font-size: 10px;
-            color: var(--color-gray-light);
+            color: #666;
+            text-align: center;
         }
 
         .page-info {
@@ -331,7 +248,7 @@
 
         .generation-info {
             font-size: 8px;
-            color: var(--color-gray-medium);
+            color: #888;
         }
 
         /* Page Break Controls */
@@ -346,7 +263,6 @@
             page-break-before: always;
         }
 
-        /* Section Grouping and Page Breaks */
         .section-group {
             page-break-inside: avoid;
             break-inside: avoid-page;
@@ -354,18 +270,18 @@
         }
 
         /* Common Table Styles */
-        /* Remove ALL instances of table-layout: fixed from .medicine_table, .investigation_table, etc. */
         .medicine_table,
         .investigation_table,
         .consultation_table,
         .diet_table,
         .workout_table {
             width: 100%;
+            table-layout: fixed;
             border-collapse: collapse;
-            /* Remove table-layout: fixed; */ /* This is CRUCIAL */
             border-spacing: 0;
             empty-cells: show;
-            border-left: 1px solid var(--border-color); /* Consistent border */
+            page-break-inside: auto;
+            border-left: 1px solid black;
         }
 
         /* Table Headers */
@@ -392,8 +308,8 @@
         .consultation_table tr,
         .diet_table tr,
         .workout_table tr {
-            page-break-inside: avoid; /* Keep rows together as much as possible */
-            page-break-after: auto; /* Allow page breaks *after* rows */
+            page-break-inside: avoid;
+            page-break-after: auto;
         }
 
         /* Table Headers and Cells */
@@ -401,7 +317,6 @@
         .investigation_table th,
         .consultation_table th,
         .diet_table th,
-        .complaint_table th,
         .workout_table th {
             background-color: #fff;
             position: sticky;
@@ -410,16 +325,19 @@
             border-bottom: 2px solid #000;
         }
 
-        /* Medicine Table Specific */
-        /* Remove page-break-inside: avoid from the parent section */
-        .medicine_section {
-            /* Remove page-break-inside: avoid; */
+        table th,
+        table td {
+            border: 1px solid black;
+            padding: 5px;
+            border-top: 0;
+            border-left: 0;
         }
-		
+
+        /* Medicine Table Specific */
         .medicine_table {
             width: 100%;
             border-collapse: collapse;
-            /* Remove table-layout: fixed;  This is the KEY change */
+            table-layout: fixed; /* Keep columns aligned */
         }
 
         .medicine_table td p {
@@ -428,21 +346,20 @@
             white-space: normal;
         }
 
-        .medicine_table th,
-        .medicine_table td {
-            border: 1px solid var(--border-color);
+        .medicine_table th, .medicine_table td {
+            border: 1px solid black;
             padding: 5px;
-            text-align: left;
-            vertical-align: top;
-            /* Remove page-break-inside: avoid; */ /* This is CRUCIAL */
+            text-align: left; /* Align text to the left within cells */
+            vertical-align: top; /* Align content to the top of cells */
+            page-break-inside: avoid; /* Prevent breaks inside cells */
             overflow: hidden;
             text-overflow: ellipsis;
-            white-space: normal; /* Allow wrapping within cells */
-            word-wrap: break-word; /* Allow words to break */
+            white-space: normal;
+            word-wrap: break-word;
         }
 
         .medicine_table thead {
-            display: table-header-group; /* Essential for header repetition */
+            display: table-header-group; /* Ensure header repeats on new pages */
         }
 
         .medicine_table tfoot {
@@ -455,25 +372,18 @@
             height: 5mm; /* Space after header */
         }
 
-        /* Optional but recommended:  Improve header spacing */
-        .medicine_table thead tr th { /* Target the THs inside the header row */
-            padding-bottom: 8px; /* Add some bottom padding to the header */
-        }
-
         .medicine_table tfoot::before {
             content: '';
             display: block;
             height: 5mm; /* Space before footer */
         }
 
-        /* Optional: Add a small space between rows */
-        .medicine_table tbody tr {
-            page-break-before: auto; /* Allow page breaks before rows in the tbody */
-            border-bottom: 1px solid #eee; /* Light separator */
+        .medicine_table tr {
+            page-break-inside: avoid; /* Prevent breaks within rows */
         }
 
-        .medicine_table tbody tr:last-child {
-            border-bottom: none; /* Remove separator on last row */
+        .medicine_table tbody tr {
+            page-break-before: auto; /* Allow page breaks before rows in the tbody */
         }
 
         .medicine_table th:nth-child(1),
@@ -492,7 +402,7 @@
         .medicine_table td:nth-child(6),
         .medicine_table td:nth-child(7),
         .medicine_table td:nth-child(8) {
-            width: 30%; /* Medicine Schedule */
+            width: 30%; /* Schedule Medicine */
         }
 
         .medicine_table th:nth-child(6),
@@ -510,37 +420,6 @@
         .medicine_name_wrapper div {
             padding: 15px 5px;
             align-content: center;
-        }
-
-        /* Table Containers */
-        .medicine_table_container {
-            overflow: visible;
-            margin: 15px 0;
-        }
-
-        /* Image Styles (Consolidated & Improved) */
-        .top_provider_section img {
-            width: 60px;
-            height: 60px;
-            object-fit: contain;
-        }
-
-        .top_provider_section_three img {
-            width: 100px;
-            height: 100px;
-            object-fit: contain;
-        }
-
-        .tick_image img {
-            width: 15px;
-            height: 15px;
-            object-fit: contain;
-        }
-
-        .signature_image {
-            width: 120px;
-            height: 40px;
-            object-fit: contain;
         }
 
         /* Top Section Styles */
@@ -561,7 +440,7 @@
             border: 1px solid black;
             display: grid;
             grid-template-columns: repeat(2, 3fr);
-            grid-auto-rows: minmax(35px, auto);
+            grid-auto-rows: minmax(30px, auto);
         }
 
         .top_section_wrapper_one,
@@ -574,13 +453,13 @@
         .top_section_wrapper_one h3,
         .top_section_wrapper_two h3 {
             margin-right: 10px;
-            font-family: 'TiroDevanagariHindi-Regular', 'NotoSansDevanagari', "PlusJakartaSans-Bold", Arial, sans-serif;
+            font-family: "PlusJakartaSans-Bold";
             font-size: 13px;
         }
 
         .top_section_wrapper_one p,
         .top_section_wrapper_two p {
-            font-family: 'TiroDevanagariHindi-Regular', 'NotoSansDevanagari', "PlusJakartaSans-Medium", Arial, sans-serif;
+            font-family: "PlusJakartaSans-Medium";
             font-size: 10px;
             margin: 0;
         }
@@ -596,18 +475,6 @@
             padding: 5px;
             text-align: center; /* Center the content */
             border: 1px solid black; /* Add borders back if needed */
-        }
-
-        .complaint_table td { /* Added complaint_table */
-            border: 1px solid var(--border-color); /* Consistent border */
-            padding: 5px;
-            text-align: left; /* Default left alignment */
-            vertical-align: top;
-            page-break-inside: avoid;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: normal;
-            word-wrap: break-word;
         }
 
         /* Hide BMI, BP, RBS, Temperature */
@@ -639,7 +506,7 @@
             width: 50%;
         }
 
-        /* TODO: Modified style to allow Height & Weight only,a nd not the Grid
+        /* Modified style to allow Height & Weight
         .complaints_subsection {
                 grid-auto-rows: minmax(30px, auto);
                 grid-template-columns: repeat(3, 3fr);
@@ -660,7 +527,7 @@
             padding: 10px;
         }
 
-        /* Medicine Schedule */
+        /* Schedule Medicine */
         .schedule_medicine_wrapper {
             border: 1px solid black;
             border-left: 0;
@@ -740,9 +607,21 @@
             margin: 0;
         }
 
+        /* Table Containers */
+        .medicine-table-container {
+            overflow: visible;
+            margin: 15px 0;
+        }
+
         /* New Page for Lifestyle Advice */
         .lifestyle-advice-page {
             page-break-before: always; /* Start on a new page */
+        }
+
+        /* Table Containers */
+        .medicine-table-container {
+            overflow: visible;
+            margin: 15px 0;
         }
     </style>
 </head>
@@ -770,7 +649,7 @@
                 {{ providerName }} <br/>
                 {{ providerAddress }} +91-8411042323 <br/>
             </h3>
-            <p>{{translatedLabels.Patient}}: {{ patient_data.name }} - {{translatedLabels.ID}}: {{ patient_data.uid }}</p>
+            <p>Patient: {{ patient_data.name }} - ID: {{ patient_data.uid }}</p>
         </div>
         <div class="top_provider_section_three">
             <img
@@ -789,37 +668,37 @@
 <div class="main-content">
     <div class="top_section_wrapper">
         <div class="top_section_wrapper_one">
-            <h3>{{translatedLabels.Patient_Name}}:</h3>
+            <h3>Patient Name :</h3>
             <p>{{ patient_data.name }}</p>
         </div>
         <div class="top_section_wrapper_two">
-            <h3>{{translatedLabels.Registration}} {{translatedLabels.date}}/{{translatedLabels.time}}:</h3>
+            <h3>Registration date/time :</h3>
             <p>{{ patient_data.created_at }}</p>
         </div>
         <div class="top_section_wrapper_one">
-            <h3>{{translatedLabels.Age}}/{{translatedLabels.Gender}}:</h3>
+            <h3>Patient Age/Gender :</h3>
             <p>{{ patient_data.age }}/{{ patient_data.gender }}</p>
         </div>
 
         <div class="top_section_wrapper_two">
-            <h3>{{translatedLabels.Patient}} {{translatedLabels.ID}}:</h3>
+            <h3>Patient ID :</h3>
             <p>{{ patient_data.uid }}</p>
         </div>
         <div class="top_section_wrapper_one">
-            <h3>{{translatedLabels.Patient_Mobile_No_}}:</h3>
+            <h3>Patient Mobile No. :</h3>
             <p>+{{ patient_data.prefix }}-{{ patient_data.mobile_number }}</p>
         </div>
         <div class="top_section_wrapper_two">
-            <h3>{{translatedLabels.Doctor_Name}}:</h3>
+            <h3>Doctor Name:</h3>
             <p>Dr. {{ doctorName }} {{ degree }}</p>
         </div>
         <div class="top_section_wrapper_one">
-            <h3>{{translatedLabels.Patient}} {{translatedLabels.Address}}:</h3>
+            <h3>Patient Address:</h3>
             <p>{{ patient_data.address }}</p>
         </div>
         <div class="top_section_wrapper_two">
             <!-- Removed the Doctor Email -->
-            <!-- <h3>{{translatedLabels.Doctor_Email}}:</h3>
+            <!-- <h3>Doctor Email :</h3>
           <p>{{ doctorEmail }}</p> -->
         </div>
     </div>
@@ -827,16 +706,16 @@
     <!-- Chief Complaints:  -->
     <div class="chef-complaints-section">
         <!-- <div style="display: flex; align-items: center">
-          <h3>{{translatedLabels.Relevant_History}}:</h3>
+          <h3>Relevant History :</h3>
           <br />
         </div> -->
         <div style="display: flex; align-items: center">
-            <h3>{{translatedLabels.Allergies}}:</h3>
+            <h3>Allergies:</h3>
             <p>{{ patient_data.allergies }}</p>
             <br/>
         </div>
         <div style="display: flex; align-items: center">
-            <h3>{{translatedLabels.Comorbidities}}:</h3>
+            <h3>Comorbidities :</h3>
             <p>{{ patient_data.comorbidities }}</p>
             <br/>
         </div>
@@ -848,11 +727,11 @@
                 class="top_section_wrapper_one"
                 style="border-right: 1px solid; padding: 10px"
         >
-            <h3>{{translatedLabels.Diagnosis}}:</h3>
+            <h3>Diagnosis :</h3>
             <p>{{ diagnosis }}</p>
         </div>
         <div class="top_section_wrapper_two" style="padding: 10px">
-            <h3>{{translatedLabels.Symptoms}}:</h3>
+            <h3>Symptoms :</h3>
             <p style="width: 250px">{{ symptoms_final_value }}</p>
         </div>
     </div>
@@ -860,8 +739,8 @@
     <!-- General | Systemic Examination: -->
     <div class="diagnosis_section">
         <div style="display: flex; align-items: center">
-            <h3>{{translatedLabels.General}} | {{translatedLabels.Systematic_Examination}}:</h3>
-            <p style="font-family: TiroDevanagariHindi-Regular, NotoSansDevanagari, Arial, sans-serif">
+            <h3>General | Systematic Examination :</h3>
+            <p style="font-family: TiroDevanagariHindi-Regular">
                 {{ clinicalNotes }}
             </p>
         </div>
@@ -869,8 +748,8 @@
 
     <!-- TREATMENT ADVISE -->
     <div class="treatment_advise_section">
-        <h3>{{translatedLabels.Treatment_And_Follow_up_Advice}}:</h3>
-        <p style="font-family: TiroDevanagariHindi-Regular, NotoSansDevanagari, Arial, sans-serif">
+        <h3>Treatment And Follow-up Advice:</h3>
+        <p style="font-family: TiroDevanagariHindi-Regular">
             <strong>{{ follow_up_advise }}</strong>
         </p>
     </div>
@@ -901,17 +780,17 @@
     <!-- COMPLAINTS SECTION -->
     <div class="top_section_wrapper">
         <div class="top_section_wrapper_one" style="border-right: 1px solid; padding: 10px">
-            <h3>{{translatedLabels.Height}}:</h3>
+            <h3>Height :</h3>
             <p>{{patient_data.height}} cm</p>
         </div>
         <div class="top_section_wrapper_two" style="padding: 10px">
-            <h3>{{translatedLabels.Weight}}:</h3>
+            <h3>Weight :</h3>
             <p>{{patient_data.weight}} kg</p>
         </div>
     </div>
 
     <!-- MEDICINE  SECTION -->
-    <div class="medicine_section">
+    <div class="medicine_section avoid-break">
         <table class="medicine_table">
             <thead>
             <tr>
@@ -919,32 +798,32 @@
                     <h3>S.No</h3>
                 </th>
                 <th style="width: 30%" colspan="2">
-                    <h3>{{translatedLabels.Name_of_Medicine}}</h3>
+                    <h3>Name of Medicine</h3>
                 </th>
                 <th>
-                    <h3>{{translatedLabels.Dose}}</h3>
+                    <h3>Dose</h3>
                 </th>
                 <th>
-                    <h3>{{translatedLabels.Qty}}</h3>
+                    <h3>Qty</h3>
                 </th>
                 <th colspan="3">
                     <div>
-                        <h3>{{translatedLabels.Medicine_Schedule}}</h3>
+                        <h3>Medicine Schedule</h3>
                     </div>
                     <div class="schedule_medicine_wrapper" style="display: flex; justify-content: space-around;">
                         <div>
-                            <h4>{{translatedLabels.Morning}}</h4>
+                            <h4>Morning</h4>
                         </div>
                         <div>
-                            <h4>{{translatedLabels.Afternoon}}</h4>
+                            <h4>Afternoon</h4>
                         </div>
                         <div>
-                            <h4>{{translatedLabels.Night}}</h4>
+                            <h4>Night</h4>
                         </div>
                     </div>
                 </th>
                 <th>
-                    <h3>{{translatedLabels.Start_Date}} / {{translatedLabels.Duration}}</h3>
+                    <h3>Start Date / Duration</h3>
                 </th>
             </tr>
             </thead>
@@ -954,7 +833,7 @@
                 <td>
                     <p>{{print @index }}</p>
                 </td>
-                <td colspan="2" style="padding: 0">
+                <td colspan="2" style="padding: 0px">
                     <div class="medicine_name_wrapper">
                         <div style="border-right: 1px solid; width: 80%;">
                             <p>{{ medicineType }}</p>
@@ -964,8 +843,7 @@
                                 <strong>{{ medicineName }}</strong><br/>
                                 {{ genericName }} {{ strength }}<br/>
                                 <span style="font-size: 10px;">by Dr. {{ organizer.name }}</span><br/>
-                                {{translatedLabels.Note}}: - <span
-                                    style="font-family: TiroDevanagariHindi-Regular, NotoSansDevanagari, Arial, sans-serif;">{{ description }}</span>
+                                Note: - <span style="font-family: TiroDevanagariHindi-Regular;">{{ description }}</span>
                             </p>
                         </div>
                     </div>
@@ -1029,9 +907,9 @@
                 </td>
                 <td>
                     {{#if isSOS}}
-                    <p>{{translatedLabels.Take_whenever_required}}</p>
+                    <p>Take whenever required</p>
                     {{else}}
-                    <p>{{ duration }} {{translatedLabels.From}} {{ startDate }}</p>
+                    <p>From {{ startDate }} for {{ duration }} day(s)</p>
                     {{/if}}
                 </td>
             </tr>
@@ -1045,7 +923,7 @@
     <!-- <div class="page-break"></div> -->
     <div class="investigation_section">
         <div class="investigation_section_heading">
-            <h3>{{translatedLabels.Investigation}}:</h3>
+            <h3>Investigation :</h3>
         </div>
         <div class="investigation_section_content">
             <table
@@ -1058,13 +936,13 @@
                         <h3>S. No</h3>
                     </th>
                     <th style="width: 20%">
-                        <h3>{{translatedLabels.Description}}</h3>
+                        <h3>Description</h3>
                     </th>
                     <th style="width: 10%">
-                        <h3>{{translatedLabels.Date}}</h3>
+                        <h3>Date</h3>
                     </th>
                     <th style="width: 20%">
-                        <h3>{{translatedLabels.Purpose}}</h3>
+                        <h3>Purpose</h3>
                     </th>
                 </tr>
                 </thead>
@@ -1080,7 +958,7 @@
                             <span style="font-size: 8px">by Dr. {{ organizer.name }}</span>
                             <br/>
                             Note:-
-                            <span style="font-family: TiroDevanagariHindi-Regular, NotoSansDevanagari, Arial, sans-serif"
+                            <span style="font-family: TiroDevanagariHindi-Regular"
                             >{{ description }}</span
                             >
                         </p>
@@ -1099,7 +977,7 @@
     </div>
     <!-- NEXT CONSULTATION SECTION -->
     <div class="next_consultation_section_heading">
-        <h3>{{translatedLabels.Next_Consultation}}:</h3>
+        <h3>Next Consultation :</h3>
     </div>
     <div class="next_consultation_section">
         <div class="next_consultation_section_one">
@@ -1113,13 +991,13 @@
                         <h3>S. No</h3>
                     </th>
                     <th style="width: 20%">
-                        <h3>{{translatedLabels.Description}}</h3>
+                        <h3>Description</h3>
                     </th>
                     <th style="width: 10%">
-                        <h3>{{translatedLabels.Date}}</h3>
+                        <h3>Date</h3>
                     </th>
                     <th style="width: 20%">
-                        <h3>{{translatedLabels.Purpose}}</h3>
+                        <h3>Purpose</h3>
                     </th>
                 </tr>
                 </thead>
@@ -1135,7 +1013,7 @@
                             <span style="font-size: 8px">by Dr. {{ organizer.name }}</span>
                             <br/>
                             Note:-
-                            <span style="font-family: TiroDevanagariHindi-Regular, NotoSansDevanagari, Arial, sans-serif"
+                            <span style="font-family: TiroDevanagariHindi-Regular"
                             >{{ description }}</span
                             >
                         </p>
@@ -1171,10 +1049,10 @@
                 {{ creationDate }}
             </h3>
             <div class="signature-stamp">
-                <h3>{{translatedLabels.Signature}}{{translatedLabels.Stamp}}</h3>
+                <h3>SIGNATURE & STAMP</h3>
             </div>
             <div class="signature-details">
-                <p>{{translatedLabels.RegNo}} {{ registrationNumber }}, {{ city }}</p>
+                <p>Reg.No. {{ registrationNumber }}, {{ city }}</p>
             </div>
         </div>
     </div>
@@ -1182,14 +1060,13 @@
     <div>
         <h3>
             Note:
-            <p style="font-family: PlusJakartaSans-Regular,sans-serif">
+            <p style="font-family: PlusJakartaSans-Regular">
                 This prescription is generated on the AdhereLive platform. To access
                 your digital prescription download the mobile app using the QR code at
                 the top. Please write to "customersupport@adhere.live" for any
                 technical assistance.
             </p>
-            <br/>
-            <p style="font-weight: 100; font-family: TiroDevanagariHindi-Regular, NotoSansDevanagari, Arial, sans-serif">
+            <p style="font-weight: 100; font-family: TiroDevanagariHindi-Regular">
                 यह प्रिस्क्रिप्शन AdhereLive प्लेटफॉर्म पर तैयार किया गया है। अपने
                 डिजिटल प्रिस्क्रिप्शन देखने के लिए ऊपर दिए गए QR कोड का उपयोग करके
                 मोबाइल ऐप डाउनलोड करें। कृपया किसी तकनीकी सहायता के लिए
@@ -1200,13 +1077,13 @@
 
     {{#if (or diet_output.length pre_workouts.length) }}
     <div style="margin-top: 30px">
-        <h3>{{translatedLabels.LifestyleAdvice}}</h3>
+        <h3>Lifestyle Advice</h3>
     </div>
 
     <!-- DIET SECTION  -->
     {{#if diet_output.length}}
     <div class="diet_section_heading">
-        <h3>{{translatedLabels.Diet}}:</h3>
+        <h3>Diet :</h3>
     </div>
     <div class="diet_section_section">
         <div class="diet_section_section_one">
@@ -1217,13 +1094,13 @@
                         <h3>S. No</h3>
                     </th>
                     <th>
-                        <h3>{{translatedLabels.Diet_Name}}</h3>
+                        <h3>Diet Name</h3>
                     </th>
                     <th style="width: 40%">
-                        <h3>{{translatedLabels.TimeDetails}}</h3>
+                        <h3>Time and details</h3>
                     </th>
                     <th style="width: 30%">
-                        <h3>{{translatedLabels.Duration}}</h3>
+                        <h3>Duration</h3>
                     </th>
                 </tr>
                 </thead>
@@ -1253,8 +1130,8 @@
                                 <div style="width: 120px">
                                     <p>{{ this.details.name }}</p>
                                     <p>
-                                        {{translatedLabels.Instructions}}:
-                                        <span style="font-family: TiroDevanagariHindi-Regular, NotoSansDevanagari, Arial, sans-serif"
+                                        Instructions:
+                                        <span style="font-family: TiroDevanagariHindi-Regular"
                                         >{{ this.notes }}</span
                                         >
                                     </p>
@@ -1265,16 +1142,16 @@
                         {{/each}}
                         <div style="margin-top: 20px">
                             <h5>
-                                {{translatedLabels.Repeat_Days}} - {{#each
+                                Repeat Days - {{#each
                                 this.repeat_days}}<span>{{this}},</span>{{/each}}
                             </h5>
                             <h5>
-                                {{translatedLabels.What_Not_to_Do}} -
-                                <span style="font-family: TiroDevanagariHindi-Regular, NotoSansDevanagari, Arial, sans-serif"
+                                What Not to Do -
+                                <span style="font-family: TiroDevanagariHindi-Regular"
                                 >{{this.not_to_do}}</span
                                 >
                             </h5>
-                            <h5>{{translatedLabels.Total_Calories}} - <span>{{ this.total_calories }}</span></h5>
+                            <h5>Total Calories - <span>{{ this.total_calories }}</span></h5>
                         </div>
                     </td>
                     <td>
@@ -1290,7 +1167,7 @@
 
     {{#if pre_workouts.length}}
     <div class="workout_section_heading">
-        <h3>{{translatedLabels.Workout}}:</h3>
+        <h3>Workout :</h3>
     </div>
     <div class="workout_section_section">
         <div class="workout_section_section_one">
@@ -1301,16 +1178,16 @@
                         <h3>S. No</h3>
                     </th>
                     <th>
-                        <h3>{{translatedLabels.Workout_Name}}</h3>
+                        <h3>Workout Name</h3>
                     </th>
                     <th style="width: 30%">
-                        <h3>{{translatedLabels.Time}}</h3>
+                        <h3>Time</h3>
                     </th>
                     <th style="width: 30%">
-                        <h3>{{translatedLabels.Details}}</h3>
+                        <h3>Details</h3>
                     </th>
                     <th style="width: 20%">
-                        <h3>{{translatedLabels.Duration}}</h3>
+                        <h3>Duration</h3>
                     </th>
                 </tr>
                 </thead>
@@ -1329,16 +1206,16 @@
                     <td style="text-align: left">
                         {{#each ex}}
                         <p>
-                            {{ ex_group.set }} {{translatedLabels.repetitions}} x {{ repetition_value }}
-                            {{ repetitions.type }} {{ exercises.basic_info.name }}
+                            {{ ex_group.set }} set x {{ repetition_value }} {{
+                            repetitions.type }} {{ exercises.basic_info.name }}
                         </p>
                         {{/each}}
                         <h5>
-                            {{translatedLabels.Repeat_Days}} - {{#each repeat_days}}<span>{{ this }}, </span
+                            Repeat Days - {{#each repeat_days}}<span>{{ this }}, </span
                         >{{/each }}
                         </h5>
-                        <h5>{{translatedLabels.What_Not_to_Do}} - <span>{{ not_to_do }}</span></h5>
-                        <h5>{{translatedLabels.Total_Calories}} - <span>{{ total_cal }} {{translatedLabels.Cal}}</span></h5>
+                        <h5>What Not to Do - <span>{{ not_to_do }}</span></h5>
+                        <h5>Total Calories - <span>{{ total_cal }} Cal</span></h5>
                     </td>
                     <td>
                         <p>{{ durationText }}</p>
@@ -1356,8 +1233,8 @@
 <!-- Footer Template -->
 <div class="footer" id="pdf-footer">
     <div class="footer-content">
-        <p class="page-info">{{translatedLabels.Page}} <span id="page-num"></span> <span id="page-count"></span></p>
-        <p class="generation-info">{{translatedLabels.Generated_via_AdhereLive_platform}}<br/>{{ generationTimestamp }}</p>
+        <p class="page-info">Page <span id="page-num"></span> of <span id="page-count"></span></p>
+        <p class="generation-info">Generated via AdhereLive platform<br/>{{ generationTimestamp }}</p>
     </div>
 </div>
 </body>
