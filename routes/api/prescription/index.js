@@ -2,8 +2,6 @@ import express from "express";
 import Authenticated from "../middleware/auth";
 import multer from "multer";
 import { createLogger } from "../../../libs/logger";
-import { performance, PerformanceObserver } from 'perf_hooks';
-import fsp from "fs/promises";
 import fs from "fs";
 import path from "path";
 import moment from "moment";
@@ -60,7 +58,6 @@ import {
 
 import { getFilePath } from "../../../app/helper/s3FilePath";
 import { checkAndCreateDirectory } from "../../../app/helper/common";
-
 import { getDoctorCurrentTime } from "../../../app/helper/getUserTime";
 import { raiseClientError, raiseServerError } from "../helper";
 
@@ -70,14 +67,8 @@ const {TranslationServiceClient} = require('@google-cloud/translate').v3beta1;
 const puppeteer = require("puppeteer");
 const handlebars = require("handlebars");
 
-
 const logger = createLogger("PRESCRIPTION API");
-
-let storage = multer.memoryStorage();
-let upload = multer({dest: "../app/public/", storage: storage});
-
 const generationTimestamp = moment().format('MMMM Do YYYY, h:mm:ss A'); // Format with Moment.js
-
 // Created the router object using express.Router()
 const router = express.Router();
 
@@ -114,274 +105,27 @@ handlebars.registerHelper('safe', function (content) {
     return new handlebars.SafeString(content);
 });
 
-// Load local translations, using path.join and __dirname
-const localTranslations = JSON.parse(fs.readFileSync(path.join(__dirname, '../../../other/web-hi.json'), 'utf8'));
-
-// Modify the HTML head to ensure proper font loading
-const htmlHead = `
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-        @font-face {
-            font-family: "TiroDevanagariHindi-Regular";
-            src: url("https://res.cloudinary.com/myrltech/raw/upload/v1686297287/TiroDevanagariHindi-Regular.ttf");
-            font-weight: normal; /* Or specify font-weight if needed */
-            font-style: normal; /* Or specify font-style if needed */
-            font-display: swap; /* Optional: improve perceived performance */
-        }
-        
-        * {
-            font-family: 'TiroDevanagariHindi-Regular', 'NotoSansDevanagari', Arial, sans-serif;
-        }
-    </style>
-    <title>AdhereLive - Prescription</title>
-</head>`;
-
-/**
- * TODO: IGNORE the CLASS for now, will work out a way to use this later
- *
- * @class PDFGenerator
- * @description This class is used to generate PDFs from HTML templates, with support for translations and performance monitoring.
- */
-class PDFGenerator {
-    constructor() {
-        this.performanceMetrics = {};
-        this.translationCache = new Map();
-        this.localTranslations = null;
-        this.setupPerformanceMonitoring();
-    }
-
-    setupPerformanceMonitoring() {
-        const obs = new PerformanceObserver((list) => {
-            const entries = list.getEntries();
-            entries.forEach(entry => {
-                this.performanceMetrics[ entry.name ] = entry.duration;
-            });
-        });
-        obs.observe({entryTypes: ['measure'], buffered: true});
-    }
-
-    async loadLocalTranslations() {
-        performance.mark('loadLocalTranslations-start');
-        try {
-            // Pre-load and parse JSON at startup
-            const jsonPath = path.join(__dirname, '../../../other/web-hi.json');
-            const jsonContent = await fsp.readFile(jsonPath, 'utf8');
-            this.localTranslations = JSON.parse(jsonContent);
-
-            // Create reverse mappings for faster lookups
-            this.reverseTranslations = Object.entries(this.localTranslations).reduce((acc, [key, value]) => {
-                acc[ value.toLowerCase() ] = key;
-                return acc;
-            }, {});
-        } catch (error) {
-            logger.error('Error loading local translations:', error);
-            this.localTranslations = {};
-            this.reverseTranslations = {};
-        }
-        performance.mark('loadLocalTranslations-end');
-        performance.measure('Load Local Translations',
-            'loadLocalTranslations-start',
-            'loadLocalTranslations-end');
-    }
-
-    async setupFonts() {
-        performance.mark('setupFonts-start');
-        const fontPath = path.join(__dirname, '../../../fonts/TiroDevanagariHindi-Regular.ttf');
-        const fontBuffer = await fsp.readFile(fontPath);
-        const base64Font = fontBuffer.toString('base64');
-
-        const fontFaceStyle = `
-            @font-face {
-                font-family: 'TiroDevanagariHindi-Regular';
-                src: url(data:font/ttf;base64,${base64Font}) format('ttf');
-                font-weight: normal;
-                font-style: normal;
-                font-display: swap;
-            }
-        `;
-        performance.mark('setupFonts-end');
-        performance.measure('Setup Fonts', 'setupFonts-start', 'setupFonts-end');
-        return fontFaceStyle;
-    }
-
-    async translate(text, targetLang = 'hi') {
-        performance.mark(`translate-${text}-start`);
-
-        // Skip translation for empty or non-string values
-        if (!text || typeof text !== 'string' || text.trim() === '') {
-            return '';
-        }
-
-        // Check cache first
-        const cacheKey = `${text}_${targetLang}`;
-        if (this.translationCache.has(cacheKey)) {
-            return this.translationCache.get(cacheKey);
-        }
-
-        // Check local translations (case-insensitive)
-        const lowerText = text.toLowerCase();
-        if (this.localTranslations[ text ] || this.localTranslations[ lowerText ]) {
-            const translation = this.localTranslations[ text ] || this.localTranslations[ lowerText ];
-            this.translationCache.set(cacheKey, translation);
-            return translation;
-        }
-
-        // Only use Google Translate for missing translations
-        try {
-            const [response] = await translationClient.translateText({
-                parent: `projects/${PROJECT_ID}/locations/global`,
-                contents: [text],
-                mimeType: 'text/plain',
-                targetLanguageCode: targetLang,
-            });
-            const translation = response.translations[ 0 ].translatedText;
-            this.translationCache.set(cacheKey, translation);
-
-            // Log missing translations for future JSON updates
-            logger.info('Missing local translation:', {original: text, translated: translation});
-
-            performance.mark(`translate-${text}-end`);
-            performance.measure(`Translate "${text}"`,
-                `translate-${text}-start`,
-                `translate-${text}-end`);
-
-            return translation;
-        } catch (error) {
-            logger.error('Translation error:', error);
-            return text;
-        }
-    }
-
-    async generatePDF(templateHtml, dataBinding, options) {
-        performance.mark('generatePDF-start');
-        try {
-            const browser = await puppeteer.launch({
-                args: ['--no-sandbox', '--font-render-hinting=medium'],
-                headless: true
-            });
-
-            const page = await browser.newPage();
-
-            // Inject font styles
-            const fontFaceStyle = await this.setupFonts();
-            const htmlWithFonts = templateHtml.replace('</head>',
-                `<style>${fontFaceStyle}</style></head>`);
-
-            // Configure page settings
-            await page.setViewport({
-                width: 794,
-                height: 1123,
-                deviceScaleFactor: 2
-            });
-
-            // Set content with proper font loading
-            await page.setContent(htmlWithFonts, {
-                waitUntil: ['networkidle0', 'load', 'domcontentloaded']
-            });
-
-            // Ensure fonts are loaded
-            await page.evaluateHandle(() => {
-                return document.fonts.ready.then(() => {
-                    document.body.style.opacity = '1';
-                    // Force re-render for better font display
-                    document.body.style.transform = 'scale(1)';
-                });
-            });
-
-            // Enhanced PDF options
-            const pdfOptions = {
-                format: 'A4',
-                printBackground: true,
-                preferCSSPageSize: true,
-                margin: {
-                    top: '40px',
-                    bottom: '100px',
-                    left: '20px',
-                    right: '20px'
-                },
-                scale: 1,
-                timeout: 60000, // Increased timeout for large documents
-            };
-
-            const pdfBuffer = await page.pdf(pdfOptions);
-            await browser.close();
-
-            performance.mark('generatePDF-end');
-            performance.measure('Generate PDF',
-                'generatePDF-start',
-                'generatePDF-end');
-
-            return {
-                buffer: pdfBuffer,
-                metrics: this.performanceMetrics
-            };
-        } catch (error) {
-            logger.error('PDF generation error:', error);
-            throw error;
-        }
-    }
-
-    getPerformanceReport() {
-        return {
-            metrics: this.performanceMetrics,
-            summary: {
-                totalTime: Object.values(this.performanceMetrics).reduce((a, b) => a + b, 0),
-                translationCount: this.translationCache.size,
-                googleTranslateUsage: this.performanceMetrics[ 'Google Translate API Calls' ] || 0
-            }
-        };
-    }
-}
 
 /**
  * TODO: Will implement these aspects later
  // Monitor translation coverage
  const missingTranslations = {};
- pdfGenerator.on('missingTranslation', (text, translation) => {
- missingTranslations[ text ] = translation;
- // Periodically save to a file for updating local JSON
- });
 
  // Periodically analyze your logs to identify commonly translated strings
  const analyzeLogs = async () => {
- const logs = await loadTranslationLogs();
- const frequentTranslations = logs
- .groupBy('text')
- .filter(group => group.count > 10)
- .map(group => ({
- original: group.text,
- translation: group.translation
- }));
- // Add these to your local JSON
  };
 
  // Script to update your local JSON
  const updateLocalJSON = async () => {
- const currentJSON = require('../../../other/web-hi.json');
- const newTranslations = await getFrequentTranslations();
- const updatedJSON = {
- ...currentJSON,
- ...newTranslations
- };
- await fsp.writeFile(__dirname + '../../../other/web-hi.json', JSON.stringify(updatedJSON, null, 2));
+     const currentJSON = require('../../../other/web-hi.json');
+     const newTranslations = await getFrequentTranslations();
+     const updatedJSON = {
+         ...currentJSON,
+         ...newTranslations
+    };
+    await fsp.writeFile(__dirname + '../../../other/web-hi.json', JSON.stringify(updatedJSON, null, 2));
  };
  */
-
-/**
- * As the whole HTML file exceeds the maximum translation length, we need to split it into chunks
- *
- * @param text
- * @returns {*[]}
- */
-function chunkText(text) {
-    const chunks = [];
-    for (let i = 0; i < text.length; i += MAX_TRANSLATION_LENGTH) {
-        chunks.push(text.slice(i, i + MAX_TRANSLATION_LENGTH));
-    }
-    return chunks;
-}
 
 /**
  * This function will normalize the key by removing special characters and replacing spaces with underscores
@@ -437,49 +181,6 @@ async function translateStaticLabels(labels, targetLang = 'hi') {
     }
 
     return translations;
-}
-
-/**
- * Translate to Hindi, using the Google Cloud Translation API
- *
- * @param html
- * @param targetLang
- * @returns {Promise<string>}
- */
-async function translateHTMLContent(html, targetLang = 'hi') {
-    try {
-        const chunks = chunkText(html);
-        let translatedHtml = "";
-
-        // logger.debug("Number of chunks:", chunks.length); // Log the number of chunks
-
-        for (let i = 0; i < chunks.length; i++) {
-            const chunk = chunks[ i ];
-            // logger.debug(`Length of chunk ${i + 1}:`, chunk.length); // Log the length of each chunk
-
-            const [response] = await translationClient.translateText({
-                parent: `projects/${PROJECT_ID}/locations/global`,
-                contents: [chunk],
-                mimeType: 'text/html',
-                targetLanguageCode: targetLang,
-            });
-
-            logger.debug(`Length of translated chunk ${i + 1}:`, response.translations[ 0 ].translatedText.length); // Log length after translation
-            translatedHtml += response.translations[ 0 ].translatedText;
-        }
-
-        // logger.debug("Total length of translated HTML:", translatedHtml.length); // Log the total length
-
-        return translatedHtml;
-
-    } catch (error) {
-        logger.error('Translation error:', error); // Log the entire error object
-        logger.error('Translation error message:', error.message); // Log the error message
-        if (error.response) { // If it's a Google Cloud API error
-            logger.error('Translation error response:', error.response.data); // Log the response data
-        }
-        throw error; // Re-throw the error so it's handled by the route handler
-    }
 }
 
 // Helper function to optimize local translations loading
@@ -648,27 +349,21 @@ async function translateObjectToHindi(obj, targetLang = 'hi') {
  * @throws {Error}
  */
 async function convertHTMLToPDFEn({templateHtml, dataBinding, options}) {
-    handlebars.registerHelper("print", function (value) {
-        return ++value;
-    });
 
-    handlebars.registerHelper('or', function () {
-        return Array.prototype.slice.call(arguments, 0, -1).some(Boolean);
-    });
+    try {
+        const template = handlebars.compile(templateHtml);
+        const finalHtml = encodeURIComponent(template(dataBinding));
 
-    const template = handlebars.compile(templateHtml);
-    const finalHtml = encodeURIComponent(template(dataBinding));
+        const browser = await puppeteer.launch({
+            args: ["--no-sandbox"],
+            headless: true,
+        });
+        const page = await browser.newPage();
 
-    const browser = await puppeteer.launch({
-        args: ["--no-sandbox"],
-        headless: true,
-    });
-    const page = await browser.newPage();
-
-    // Inject page numbers using evaluateHandle
-    await page.evaluateHandle(() => {
-        const style = document.createElement('style');
-        style.textContent = `
+        // Inject page numbers using evaluateHandle
+        await page.evaluateHandle(() => {
+            const style = document.createElement('style');
+            style.textContent = `
         @page {
             size: A4; /* Ensure A4 size if not already set */
             margin: 10mm 5mm; /* Set your margins */
@@ -682,43 +377,49 @@ async function convertHTMLToPDFEn({templateHtml, dataBinding, options}) {
             padding-top: 10px;
             border-top: 1px solid black;
         }`;
-        document.head.appendChild(style);
+            document.head.appendChild(style);
 
-        // Get the current timestamp (you can format this server-side)
-        const now = new Date();
-        const timestamp = now.toLocaleString(); // Or any format you prefer
+            // Get the current timestamp (you can format this server-side)
+            const now = new Date();
+            const timestamp = now.toLocaleString(); // Or any format you prefer
 
-        // Add the timestamp to the footer
-        const footer = document.querySelector('.footer');
-        if (footer) {
-            const timestampElement = document.createElement('p');
-            timestampElement.textContent = `Generated via AdhereLive platform<br/>${timestamp}`;
-            footer.appendChild(timestampElement);
-        }
-    });
+            // Add the timestamp to the footer
+            const footer = document.querySelector('.footer');
+            if (footer) {
+                const timestampElement = document.createElement('p');
+                timestampElement.textContent = `Generated via AdhereLive platform<br/>${timestamp}`;
+                footer.appendChild(timestampElement);
+            }
+        });
 
-    await page.setContent(finalHtml);
+        await page.setContent(finalHtml);
 
-    // Set viewport to A4 size
-    await page.setViewport({
-        width: 794, // A4 width in pixels at 96 DPI
-        height: 1123, // A4 height in pixels at 96 DPI
-        deviceScaleFactor: 2, // Higher resolution
-    });
+        // Set viewport to A4 size
+        await page.setViewport({
+            width: 794, // A4 width in pixels at 96 DPI
+            height: 1123, // A4 height in pixels at 96 DPI
+            deviceScaleFactor: 2, // Higher resolution
+        });
 
-    await page.goto(`data:text/html;charset=UTF-8,${finalHtml}`, {
-        waitUntil: "networkidle0",
-    });
+        await page.goto(`data:text/html;charset=UTF-8,${finalHtml}`, {
+            waitUntil: "networkidle0",
+        });
 
-    /**
-     * based on = pdf(options?: PDFOptions): Promise<Buffer>;
-     * from https://pptr.dev/api/puppeteer.page.pdf
-     * pdfBuffer will store the PDF file Buffer content when "path is not provided"
-     */
-    let pdfBuffer = await page.pdf(options);
-    logger.info('Conversion complete. PDF file generated successfully.');
-    await browser.close();
-    return pdfBuffer; // Returning the value when page.pdf promise gets resolved
+        /**
+         * based on = pdf(options?: PDFOptions): Promise<Buffer>;
+         * from https://pptr.dev/api/puppeteer.page.pdf
+         * pdfBuffer will store the PDF file Buffer content when "path is not provided"
+         */
+        let pdfBuffer = await page.pdf(options);
+        logger.info('Prescription PDF file generated successfully!');
+
+
+        await browser.close();
+        return pdfBuffer; // Returning the value when page.pdf promise gets resolved
+    } catch (error) {
+        logger.error('Error in generating prescription PDF:', error);
+        throw error;
+    }
 }
 
 /**
@@ -1335,7 +1036,7 @@ router.get(
         // await pdfGenerator.loadLocalTranslations();
 
         try {
-            const {care_plan_id = null} = req.params;
+            const {care_plan_id = null} = req.params.care_plan_id;
             const {
                 userDetails: {
                     userId,
@@ -2157,12 +1858,8 @@ router.get(
                 /**
                  * TODO: Check why these have been commented, and remove
                  *      Some lines commented below also.
-                 ...(permissions.includes(PERMISSIONS.MEDICATIONS.VIEW) && {
-                 medications,
-                 }),
-                 ...(permissions.includes(PERMISSIONS.MEDICATIONS.VIEW) && {
-                 medicines,
-                 }),
+                 ...(permissions.includes(PERMISSIONS.MEDICATIONS.VIEW) && {medications,}),
+                 ...(permissions.includes(PERMISSIONS.MEDICATIONS.VIEW) && {medicines,}),
                  medications,
                  clinical_notes,
                  follow_up_advise,
@@ -2254,7 +1951,7 @@ router.get(
              */
 
             // Add language detection (query param or header)
-            const {targetLang = null} = req.params || 'hi';
+            const targetLang = req.params.language === 'hi' ? 'hi' : 'en'; // Ternary operator
             //const targetLang = req.query.lang || 'hi';
 
             // In your route handler, change the dates also to use 'Hindi' locale
@@ -2289,7 +1986,7 @@ router.get(
             // TODO: Add a language option here, to use the HINDI or EN function to generate the PDF
             if (targetLang === 'hi') {
                 const templateHtml = fs.readFileSync(
-                    path.join("./routes/api/prescription/prescription-hindi.html"),
+                    path.join(__dirname + "/prescription-hindi.html"),
                     "utf8"
                 );
                 pdf_buffer_value = await convertHTMLToPDFHi({
@@ -2299,7 +1996,7 @@ router.get(
                 });
             } else if(targetLang === 'en') {
                 const templateHtml = fs.readFileSync(
-                    path.join("./routes/api/prescription/prescription.html"),
+                    path.join(__dirname + "/prescription.html"),
                     "utf8"
                 );
                 pdf_buffer_value = await convertHTMLToPDFEn({
@@ -2309,8 +2006,14 @@ router.get(
                 });
             }
 
+            logger.debug("PDF Buffer Value:", pdf_buffer_value); // Log before sending!
             res.contentType("application/pdf");
-            return res.send(pdf_buffer_value);
+            if (pdf_buffer_value) { // Check if it's not null or undefined
+                return res.send(pdf_buffer_value);
+            } else {
+                logger.error("PDF buffer is empty. Check PDF generation process.");
+                return res.status(500).send("Error generating PDF"); // Send an error response
+            }
         } catch (err) {
             logger.error("Error in Prescription API:", err);
             return raiseServerError(res);
