@@ -778,6 +778,30 @@ async function convertHTMLToPDF({templateHtml, dataBinding, options}) {
             deviceScaleFactor: 2,
         });
 
+        // Add a page evaluate to ensure that the page breaks and split within a table are being done correctly
+        // This should ensure that the medicine table section breaks are being done correctly
+        await page.evaluate(() => {
+            const tables = document.querySelectorAll('.medicine_table');
+
+            tables.forEach(table => {
+                const rows = table.querySelectorAll('tbody tr');
+                let currentPageHeight = 0;
+                const pageHeight = 800; // ADJUST THIS VALUE!
+
+                rows.forEach(row => {
+                    currentPageHeight += row.offsetHeight;
+
+                    if (currentPageHeight > pageHeight) {
+                        const pageBreak = document.createElement('tr');
+                        pageBreak.style.pageBreakBefore = 'always';
+                        row.parentNode.insertBefore(pageBreak, row);
+
+                        currentPageHeight = row.offsetHeight;
+                    }
+                });
+            });
+        });
+
         const pdfBuffer = await page.pdf(options);
         logger.info('Conversion complete. PDF file generated successfully.');
 
