@@ -419,12 +419,6 @@
             /* Remove page-break-inside: avoid; */
         }
 
-        .medicine_table {
-            width: 100%;
-            border-collapse: collapse;
-            /* Remove table-layout: fixed;  This is the KEY change */
-        }
-
         .medicine_table td p {
             font-size: 10px;
             margin: 0;
@@ -491,14 +485,17 @@
             width: 4%; /* Dose and Qty */
         }
 
-        .medicine_table th:nth-child(5),
+        /* Medicine Schedule Columns - Make them equal and flexible */
+        .medicine_table th:nth-child(5), /* Morning */
         .medicine_table td:nth-child(6),
+        .medicine_table th:nth-child(6), /* Afternoon */
         .medicine_table td:nth-child(7),
+        .medicine_table th:nth-child(7), /* Night */
         .medicine_table td:nth-child(8) {
             width: 30%; /* Medicine Schedule */
         }
 
-        .medicine_table th:nth-child(6),
+        .medicine_table th:nth-child(8),
         .medicine_table td:nth-child(9) {
             width: 12%; /* Start Date / Duration */
             white-space: normal;
@@ -694,6 +691,12 @@
         }
 
         /* Section Styles */
+        .investigation_section {
+            border: 1px solid black;
+            border-top: 0;
+            padding: 8px;
+        }
+
         .diagnosis_section,
         .chef-complaints-section,
         .treatment_advise_section,
@@ -710,9 +713,6 @@
             border: 1px solid black;
             padding: 10px;
         }
-
-        /*.investigation_section {
-        }*/
 
         /* Signature Section */
         .signature_section {
