@@ -90,7 +90,7 @@
 
         /* Global styles */
         * { /* Apply to all elements by default */
-            font-family: var(--font-family-base),sans-serif;
+            font-family: var(--font-family-base), sans-serif;
             -webkit-font-smoothing: antialiased;
             text-rendering: optimizeLegibility;
             box-sizing: border-box; /* Include padding and border in element's total width and height */
@@ -156,7 +156,7 @@
             margin: 0;
             padding: 10mm 5mm; /* Use CSS variable */
             font-size: 10px;
-            font-family: var(--font-family-base),sans-serif;
+            font-family: var(--font-family-base), sans-serif;
             color: var(--color-text); /* Use CSS variable */
         }
 
@@ -171,7 +171,7 @@
 
         /* Typography */
         h3, h4, h5 {
-            font-family: var(--font-family-bold),sans-serif;
+            font-family: var(--font-family-bold), sans-serif;
             margin: 0;
             page-break-after: avoid;
         }
@@ -185,13 +185,13 @@
         }
 
         p {
-            font-family: var(--font-family-medium),sans-serif;
+            font-family: var(--font-family-medium), sans-serif;
             font-size: 10px;
             margin: 0;
         }
 
         span { /* If you need this style, keep it */
-            font-family: var(--font-family-base),sans-serif;
+            font-family: var(--font-family-base), sans-serif;
         }
 
         /* Container width constraints */
@@ -785,7 +785,8 @@
                 {{ providerName }} <br/>
                 {{ providerAddress }} +91-8411042323 <br/>
             </h3>
-            <p>{{translatedLabels.Patient}}: {{ patient_data.name }} - {{translatedLabels.ID}}: {{ patient_data.uid }}</p>
+            <p>{{translatedLabels.Patient}}: {{ patient_data.name }} - {{translatedLabels.ID}}: {{ patient_data.uid
+                }}</p>
         </div>
         <div class="top_provider_section_three">
             <img
@@ -1353,7 +1354,17 @@
                         >{{/each }}
                         </h5>
                         <h5>{{translatedLabels.What_Not_to_Do}} - <span>{{ not_to_do }}</span></h5>
-                        <h5>{{translatedLabels.Total_Calories}} - <span>{{ total_cal }} {{translatedLabels.Cal}}</span></h5>
+                        <h5>
+                            {{translatedLabels.['Total_Calories']}} -
+                            <span>
+                                {{total_cal}}
+                                {{#if translatedLabels.Cal}}
+                                    {{translatedLabels.Cal}}
+                                {{else}}
+                                    Cal  <!-- Fallback text -->
+                                {{/if}}
+                            </span>
+                        </h5>
                     </td>
                     <td>
                         <p>{{ durationText }}</p>
@@ -1372,7 +1383,8 @@
 <div class="footer" id="pdf-footer">
     <div class="footer-content">
         <p class="page-info">{{translatedLabels.Page}} <span id="page-num"></span> <span id="page-count"></span></p>
-        <p class="generation-info">{{translatedLabels.Generated_via_AdhereLive_platform}}<br/>{{ generationTimestamp }}</p>
+        <p class="generation-info">{{translatedLabels.Generated_via_AdhereLive_platform}}<br/>{{ generationTimestamp }}
+        </p>
     </div>
 </div>
 </body>
