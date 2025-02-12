@@ -112,12 +112,13 @@ module.exports = () => {
       EXPIRY_TIME: process.env.EXPIRY_TIME,
       BUCKET_NAME: process.env.S3_BUCKET_NAME,
     },
-    GOOGLE_KEYS: {
+    google_keys: {
       CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
       CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
       REDIRECT_URI: process.env.GOOGLE_REDIRECT_URI,
+      GOOGLE_CLOUD_PROJECT_ID: process.env.GOOGLE_CLOUD_PROJECT_ID,
     },
-    FACEBOOK_KEYS: {
+    facebook_keys: {
       APP_TOKEN: process.env.FACEBOOK_APP_TOKEN,
       SECRET_TOKEN: process.env.FACEBOOK_SECRET_TOKEN,
     },
