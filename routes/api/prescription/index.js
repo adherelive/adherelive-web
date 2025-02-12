@@ -497,6 +497,15 @@ const staticLabels = [
     "Date",
     "Take whenever required",
     "Cal",
+    "m",
+    "f",
+    "o",
+    "y",
+    "day(s)",
+    "Note",
+    "cm",
+    "kg",
+    "Dr.",
 ];
 
 /**
