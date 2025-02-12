@@ -1037,6 +1037,8 @@ router.get(
 
         try {
             const {care_plan_id = null} = req.params.care_plan_id;
+            logger.debug("Care Plan ID: ", care_plan_id);
+
             const {
                 userDetails: {
                     userId,
@@ -1952,7 +1954,7 @@ router.get(
 
             // Add language detection (query param or header)
             const targetLang = req.params.language === 'hi' ? 'hi' : 'en'; // Ternary operator
-            //const targetLang = req.query.lang || 'hi';
+            logger.debug("Target Language: ", targetLang);
 
             // In your route handler, change the dates also to use 'Hindi' locale
             if (targetLang === 'hi') {
