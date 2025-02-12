@@ -353,17 +353,17 @@
         }
 
         /* Common Table Styles */
+        /* Remove ALL instances of table-layout: fixed from .medicine_table, .investigation_table, etc. */
         .medicine_table,
         .investigation_table,
         .consultation_table,
         .diet_table,
         .workout_table {
             width: 100%;
-            table-layout: fixed; /* Keep columns aligned */
             border-collapse: collapse;
+            /* Remove table-layout: fixed; */ /* This is CRUCIAL */
             border-spacing: 0;
             empty-cells: show;
-            page-break-inside: auto;
             border-left: 1px solid var(--border-color); /* Consistent border */
         }
 
@@ -391,8 +391,8 @@
         .consultation_table tr,
         .diet_table tr,
         .workout_table tr {
-            page-break-inside: avoid;
-            page-break-after: auto;
+            page-break-inside: avoid; /* Keep rows together as much as possible */
+            page-break-after: auto; /* Allow page breaks *after* rows */
         }
 
         /* Table Headers and Cells */
@@ -413,7 +413,7 @@
         .medicine_table {
             width: 100%;
             border-collapse: collapse;
-            table-layout: fixed; /* Keep columns aligned */
+            /* Remove table-layout: fixed;  This is the KEY change */
         }
 
         .medicine_table td p {
@@ -422,20 +422,21 @@
             white-space: normal;
         }
 
-        .medicine_table th, .medicine_table td {
-            border: 1px solid black;
+        .medicine_table th,
+        .medicine_table td {
+            border: 1px solid var(--border-color);
             padding: 5px;
-            text-align: left; /* Align text to the left within cells */
-            vertical-align: top; /* Align content to the top of cells */
-            page-break-inside: avoid; /* Prevent breaks inside cells */
+            text-align: left;
+            vertical-align: top;
+            /* Remove page-break-inside: avoid; */ /* This is CRUCIAL */
             overflow: hidden;
             text-overflow: ellipsis;
-            white-space: normal;
-            word-wrap: break-word;
+            white-space: normal; /* Allow wrapping within cells */
+            word-wrap: break-word; /* Allow words to break */
         }
 
         .medicine_table thead {
-            display: table-header-group; /* Ensure header repeats on new pages */
+            display: table-header-group; /* Essential for header repetition */
         }
 
         .medicine_table tfoot {
@@ -448,18 +449,25 @@
             height: 5mm; /* Space after header */
         }
 
+        /* Optional but recommended:  Improve header spacing */
+        .medicine_table thead tr th { /* Target the THs inside the header row */
+            padding-bottom: 8px; /* Add some bottom padding to the header */
+        }
+
         .medicine_table tfoot::before {
             content: '';
             display: block;
             height: 5mm; /* Space before footer */
         }
 
-        .medicine_table tr {
-            page-break-inside: avoid; /* Prevent breaks within rows */
-        }
-
+        /* Optional: Add a small space between rows */
         .medicine_table tbody tr {
             page-break-before: auto; /* Allow page breaks before rows in the tbody */
+            border-bottom: 1px solid #eee; /* Light separator */
+        }
+
+        .medicine_table tbody tr:last-child {
+            border-bottom: none; /* Remove separator on last row */
         }
 
         .medicine_table th:nth-child(1),
@@ -487,6 +495,12 @@
             white-space: normal;
         }
 
+        /* Optional: If you need more control, target specific columns:
+        .medicine_table th:nth-child(1), .medicine_table td:nth-child(1) { width: 5%; }
+        .medicine_table th:nth-child(3), .medicine_table td:nth-child(4),
+        .medicine_table th:nth-child(4), .medicine_table td:nth-child(5) { width: 4%; }
+        ... other column widths ... */
+
         /* Medicine Name Wrapper */
         .medicine_name_wrapper {
             display: grid;
@@ -498,8 +512,13 @@
             align-content: center;
         }
 
+        /* Remove page-break-inside: avoid from the parent section */
+        .medicine_section {
+            /* Remove page-break-inside: avoid; */
+        }
+
         /* Table Containers */
-        .medicine-table-container {
+        .medicine_table_container {
             overflow: visible;
             margin: 15px 0;
         }
@@ -1324,7 +1343,7 @@
                         >{{/each }}
                         </h5>
                         <h5>{{translatedLabels.What_Not_to_Do}} - <span>{{ not_to_do }}</span></h5>
-                        <h5>{{translatedLabels.Total_Calories}} - <span>{{ total_cal }} Cal</span></h5>
+                        <h5>{{translatedLabels.Total_Calories}} - <span>{{ total_cal }} {{translatedLabels.Cal}}</span></h5>
                     </td>
                     <td>
                         <p>{{ durationText }}</p>

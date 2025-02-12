@@ -703,6 +703,7 @@ async function convertHTMLToPDF({templateHtml, dataBinding, options}) {
             "Description",
             "Date",
             "Take whenever required",
+            "Cal",
         ];
         // Add translated labels to dataBinding
         dataBinding.translatedLabels = await translateStaticLabels(staticLabels, options.translateTo);
