@@ -1,8 +1,12 @@
 import express from "express";
 import Authenticated from "../middleware/auth";
-import PatientController from "../../../app/controllers/patients/patients.controller";
 import multer from "multer";
 import { createLogger } from "../../../libs/logger";
+import { performance, PerformanceObserver } from 'perf_hooks';
+import fsp from "fs/promises";
+import fs from "fs";
+import path from "path";
+import moment from "moment";
 
 // Services
 import userService from "../../../app/services/user/user.service";
@@ -22,32 +26,23 @@ import WorkoutService from "../../../app/services/workouts/workout.service";
 import userPreferenceService from "../../../app/services/userPreferences/userPreference.service";
 
 // API Wrappers
-import ExerciseContentWrapper from "../../../app/apiWrapper/web/exerciseContents";
 import UserRolesWrapper from "../../../app/apiWrapper/web/userRoles";
-import VitalWrapper from "../../../app/apiWrapper/web/vitals";
 import UserWrapper from "../../../app/apiWrapper/web/user";
 import CarePlanWrapper from "../../../app/apiWrapper/web/carePlan";
 import AppointmentWrapper from "../../../app/apiWrapper/web/appointments";
 import MReminderWrapper from "../../../app/apiWrapper/web/medicationReminder";
 import MedicineApiWrapper from "../../../app/apiWrapper/mobile/medicine";
-import SymptomWrapper from "../../../app/apiWrapper/web/symptoms";
-import DoctorWrapper from "../../../app/apiWrapper/web/doctor";
-import ConsentWrapper from "../../../app/apiWrapper/web/consent";
 import PatientWrapper from "../../../app/apiWrapper/web/patient";
-import ReportWrapper from "../../../app/apiWrapper/web/reports";
 import ConditionWrapper from "../../../app/apiWrapper/web/conditions";
 import QualificationWrapper from "../../../app/apiWrapper/web/doctorQualification";
 import RegistrationWrapper from "../../../app/apiWrapper/web/doctorRegistration";
 import DegreeWrapper from "../../../app/apiWrapper/web/degree";
 import CouncilWrapper from "../../../app/apiWrapper/web/council";
-import TreatmentWrapper from "../../../app/apiWrapper/web/treatments";
-import DoctorPatientWatchlistWrapper from "../../../app/apiWrapper/web/doctorPatientWatchlist";
 import DietWrapper from "../../../app/apiWrapper/web/diet";
 import ProviderWrapper from "../../../app/apiWrapper/web/provider";
 import PortionWrapper from "../../../app/apiWrapper/web/portions";
 import WorkoutWrapper from "../../../app/apiWrapper/web/workouts";
 import UserPreferenceWrapper from "../../../app/apiWrapper/web/userPreference";
-import diet from "../../../app/apiWrapper/web/diet";
 
 import * as DietHelper from "../../../app/controllers/diet/diet.helper";
 import { downloadFileFromS3 } from "../../../app/controllers/user/user.helper";
@@ -67,15 +62,14 @@ import { getFilePath } from "../../../app/helper/s3FilePath";
 import { checkAndCreateDirectory } from "../../../app/helper/common";
 
 import { getDoctorCurrentTime } from "../../../app/helper/getUserTime";
-import { raiseServerError } from "../helper";
+import { raiseClientError, raiseServerError } from "../helper";
 
-import moment from "moment";
 
-const {Translate} = require('@google-cloud/translate').v2;
-const fs = require("fs");
-const path = require("path");
+// Fetch the Google Translation API and 'puppeteer' along with 'handlebars' for the HTML to PDF conversion
+const {TranslationServiceClient} = require('@google-cloud/translate').v3beta1;
 const puppeteer = require("puppeteer");
 const handlebars = require("handlebars");
+
 
 const logger = createLogger("PRESCRIPTION API");
 
@@ -89,116 +83,830 @@ const router = express.Router();
 
 // Initialize the translation client
 // Make sure you have set up Google Cloud credentials properly
-const translate = new Translate({
-    projectId: 'adherelive-translate',
-    // If using service account key file:
-    // keyFilename: 'path/to/your/service-account-key.json'
+const translationClient = new TranslationServiceClient();
+const PROJECT_ID = process.config.google_keys.GOOGLE_CLOUD_PROJECT_ID;
+
+// Cache configuration
+const CACHE_TTL = 3600000; // 1 hour in milliseconds
+const MAX_TRANSLATION_LENGTH = 5000; // Replace with the actual API limit
+const translationCache = new Map(); // In-memory cache
+
+// Register Handlebars helpers
+handlebars.registerHelper("print", function (value) {
+    return ++value;
 });
 
-// // Initialize translation client
-// const translate = new Translate({
-//     projectId: process.env.GOOGLE_CLOUD_PROJECT_ID,
-//     // keyFilename: process.env.GOOGLE_APPLICATION_CREDENTIALS
-// });
+// For the Diet/Workout data display, should only be shown if either exists
+handlebars.registerHelper('or', function () {
+    return Array.prototype.slice.call(arguments, 0, -1).some(Boolean);
+});
 
-/**
- * Translates text to Hindi
- * @param {string} text Text to translate
- * @returns {Promise<string>} Translated text
- */
-async function translateToHindi(text) {
-    try {
-        if (!text) return text;
-        const [translation] = await translate.translate(text, {
-            from: 'en',
-            to: 'hi'
-        });
-        return translation;
-    } catch (error) {
-        logger.error('Translation error: ', error);
-        return text; // Return original text if translation fails
+// Updated the {{translate}} helper to validate the input before calling translateText
+handlebars.registerHelper('translate', async function (text, targetLang = 'hi') {
+    if (!text || typeof text !== 'string' || text.trim() === '') {
+        return ''; // Return an empty string for invalid inputs
     }
-}
+    return await translateText(text, targetLang);
+});
+
+// Register Handlebars helper:
+handlebars.registerHelper('safe', function (content) {
+    return new handlebars.SafeString(content);
+});
+
+// Load local translations, using path.join and __dirname
+const localTranslations = JSON.parse(fs.readFileSync(path.join(__dirname, '../../../other/web-hi.json'), 'utf8'));
+
+// Modify the HTML head to ensure proper font loading
+const htmlHead = `
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        @font-face {
+            font-family: "TiroDevanagariHindi-Regular";
+            src: url("https://res.cloudinary.com/myrltech/raw/upload/v1686297287/TiroDevanagariHindi-Regular.ttf");
+            font-weight: normal; /* Or specify font-weight if needed */
+            font-style: normal; /* Or specify font-style if needed */
+            font-display: swap; /* Optional: improve perceived performance */
+        }
+        
+        * {
+            font-family: 'TiroDevanagariHindi-Regular', 'NotoSansDevanagari', Arial, sans-serif;
+        }
+    </style>
+    <title>AdhereLive - Prescription</title>
+</head>`;
 
 /**
- * Translates an object's string values to Hindi
- * @param {Object} obj Object containing strings to translate
- * @returns {Promise<Object>} Object with translated strings
+ * TODO: IGNORE the CLASS for now, will work out a way to use this later
+ *
+ * @class PDFGenerator
+ * @description This class is used to generate PDFs from HTML templates, with support for translations and performance monitoring.
  */
-async function translateObjectToHindi(obj) {
-    if (!obj) return obj;
+class PDFGenerator {
+    constructor() {
+        this.performanceMetrics = {};
+        this.translationCache = new Map();
+        this.localTranslations = null;
+        this.setupPerformanceMonitoring();
+    }
 
-    const translatedObj = {...obj};
-    for (let key in translatedObj) {
-        if (typeof translatedObj[ key ] === 'string') {
-            translatedObj[ key ] = await translateToHindi(translatedObj[ key ]);
-        } else if (typeof translatedObj[ key ] === 'object') {
-            translatedObj[ key ] = await translateObjectToHindi(translatedObj[ key ]);
+    setupPerformanceMonitoring() {
+        const obs = new PerformanceObserver((list) => {
+            const entries = list.getEntries();
+            entries.forEach(entry => {
+                this.performanceMetrics[ entry.name ] = entry.duration;
+            });
+        });
+        obs.observe({entryTypes: ['measure'], buffered: true});
+    }
+
+    async loadLocalTranslations() {
+        performance.mark('loadLocalTranslations-start');
+        try {
+            // Pre-load and parse JSON at startup
+            const jsonPath = path.join(__dirname, '../../../other/web-hi.json');
+            const jsonContent = await fsp.readFile(jsonPath, 'utf8');
+            this.localTranslations = JSON.parse(jsonContent);
+
+            // Create reverse mappings for faster lookups
+            this.reverseTranslations = Object.entries(this.localTranslations).reduce((acc, [key, value]) => {
+                acc[ value.toLowerCase() ] = key;
+                return acc;
+            }, {});
+        } catch (error) {
+            logger.error('Error loading local translations:', error);
+            this.localTranslations = {};
+            this.reverseTranslations = {};
+        }
+        performance.mark('loadLocalTranslations-end');
+        performance.measure('Load Local Translations',
+            'loadLocalTranslations-start',
+            'loadLocalTranslations-end');
+    }
+
+    async setupFonts() {
+        performance.mark('setupFonts-start');
+        const fontPath = path.join(__dirname, '../../../fonts/TiroDevanagariHindi-Regular.ttf');
+        const fontBuffer = await fsp.readFile(fontPath);
+        const base64Font = fontBuffer.toString('base64');
+
+        const fontFaceStyle = `
+            @font-face {
+                font-family: 'TiroDevanagariHindi-Regular';
+                src: url(data:font/ttf;base64,${base64Font}) format('ttf');
+                font-weight: normal;
+                font-style: normal;
+                font-display: swap;
+            }
+        `;
+        performance.mark('setupFonts-end');
+        performance.measure('Setup Fonts', 'setupFonts-start', 'setupFonts-end');
+        return fontFaceStyle;
+    }
+
+    async translate(text, targetLang = 'hi') {
+        performance.mark(`translate-${text}-start`);
+
+        // Skip translation for empty or non-string values
+        if (!text || typeof text !== 'string' || text.trim() === '') {
+            return '';
+        }
+
+        // Check cache first
+        const cacheKey = `${text}_${targetLang}`;
+        if (this.translationCache.has(cacheKey)) {
+            return this.translationCache.get(cacheKey);
+        }
+
+        // Check local translations (case-insensitive)
+        const lowerText = text.toLowerCase();
+        if (this.localTranslations[ text ] || this.localTranslations[ lowerText ]) {
+            const translation = this.localTranslations[ text ] || this.localTranslations[ lowerText ];
+            this.translationCache.set(cacheKey, translation);
+            return translation;
+        }
+
+        // Only use Google Translate for missing translations
+        try {
+            const [response] = await translationClient.translateText({
+                parent: `projects/${PROJECT_ID}/locations/global`,
+                contents: [text],
+                mimeType: 'text/plain',
+                targetLanguageCode: targetLang,
+            });
+            const translation = response.translations[ 0 ].translatedText;
+            this.translationCache.set(cacheKey, translation);
+
+            // Log missing translations for future JSON updates
+            logger.info('Missing local translation:', {original: text, translated: translation});
+
+            performance.mark(`translate-${text}-end`);
+            performance.measure(`Translate "${text}"`,
+                `translate-${text}-start`,
+                `translate-${text}-end`);
+
+            return translation;
+        } catch (error) {
+            logger.error('Translation error:', error);
+            return text;
         }
     }
-    return translatedObj;
+
+    async generatePDF(templateHtml, dataBinding, options) {
+        performance.mark('generatePDF-start');
+        try {
+            const browser = await puppeteer.launch({
+                args: ['--no-sandbox', '--font-render-hinting=medium'],
+                headless: true
+            });
+
+            const page = await browser.newPage();
+
+            // Inject font styles
+            const fontFaceStyle = await this.setupFonts();
+            const htmlWithFonts = templateHtml.replace('</head>',
+                `<style>${fontFaceStyle}</style></head>`);
+
+            // Configure page settings
+            await page.setViewport({
+                width: 794,
+                height: 1123,
+                deviceScaleFactor: 2
+            });
+
+            // Set content with proper font loading
+            await page.setContent(htmlWithFonts, {
+                waitUntil: ['networkidle0', 'load', 'domcontentloaded']
+            });
+
+            // Ensure fonts are loaded
+            await page.evaluateHandle(() => {
+                return document.fonts.ready.then(() => {
+                    document.body.style.opacity = '1';
+                    // Force re-render for better font display
+                    document.body.style.transform = 'scale(1)';
+                });
+            });
+
+            // Enhanced PDF options
+            const pdfOptions = {
+                format: 'A4',
+                printBackground: true,
+                preferCSSPageSize: true,
+                margin: {
+                    top: '40px',
+                    bottom: '100px',
+                    left: '20px',
+                    right: '20px'
+                },
+                scale: 1,
+                timeout: 60000, // Increased timeout for large documents
+            };
+
+            const pdfBuffer = await page.pdf(pdfOptions);
+            await browser.close();
+
+            performance.mark('generatePDF-end');
+            performance.measure('Generate PDF',
+                'generatePDF-start',
+                'generatePDF-end');
+
+            return {
+                buffer: pdfBuffer,
+                metrics: this.performanceMetrics
+            };
+        } catch (error) {
+            logger.error('PDF generation error:', error);
+            throw error;
+        }
+    }
+
+    getPerformanceReport() {
+        return {
+            metrics: this.performanceMetrics,
+            summary: {
+                totalTime: Object.values(this.performanceMetrics).reduce((a, b) => a + b, 0),
+                translationCount: this.translationCache.size,
+                googleTranslateUsage: this.performanceMetrics[ 'Google Translate API Calls' ] || 0
+            }
+        };
+    }
 }
 
-async function html_to_pdf({templateHtml, dataBinding, options}) {
+/**
+ * TODO: Will implement these aspects later
+ // Monitor translation coverage
+ const missingTranslations = {};
+ pdfGenerator.on('missingTranslation', (text, translation) => {
+ missingTranslations[ text ] = translation;
+ // Periodically save to a file for updating local JSON
+ });
+
+ // Periodically analyze your logs to identify commonly translated strings
+ const analyzeLogs = async () => {
+ const logs = await loadTranslationLogs();
+ const frequentTranslations = logs
+ .groupBy('text')
+ .filter(group => group.count > 10)
+ .map(group => ({
+ original: group.text,
+ translation: group.translation
+ }));
+ // Add these to your local JSON
+ };
+
+ // Script to update your local JSON
+ const updateLocalJSON = async () => {
+ const currentJSON = require('../../../other/web-hi.json');
+ const newTranslations = await getFrequentTranslations();
+ const updatedJSON = {
+ ...currentJSON,
+ ...newTranslations
+ };
+ await fsp.writeFile(__dirname + '../../../other/web-hi.json', JSON.stringify(updatedJSON, null, 2));
+ };
+ */
+
+/**
+ * As the whole HTML file exceeds the maximum translation length, we need to split it into chunks
+ *
+ * @param text
+ * @returns {*[]}
+ */
+function chunkText(text) {
+    const chunks = [];
+    for (let i = 0; i < text.length; i += MAX_TRANSLATION_LENGTH) {
+        chunks.push(text.slice(i, i + MAX_TRANSLATION_LENGTH));
+    }
+    return chunks;
+}
+
+/**
+ * This function will normalize the key by removing special characters and replacing spaces with underscores
+ * Utility function for consistent key handling
+ *
+ * @param key
+ * @returns {*}
+ */
+function normalizeKey(key) {
+    return key
+        .trim()
+        .replace(/\s*\/\s*/g, '/') // Handle "Age / Gender" → "Age/Gender"
+        .replace(/[^a-zA-Z0-9\u0900-\u097F/]/g, '_') // Preserve Devanagari chars
+        .replace(/[_\s]+/g, '_'); // Replace spaces with underscores
+}
+
+let missingTranslations = [];
+
+/**
+ * Function to translate each of the labels, before they are sent to the HandleBars
+ *
+ * @param labels
+ * @param targetLang
+ * @returns {Promise<{}>}
+ */
+async function translateStaticLabels(labels, targetLang = 'hi') {
+    const local = getLocalTranslations();
+    const translations = {};
+
+    for (const label of labels) {
+        const normalized = normalizeKey(label);
+
+        // Check & try exact match first
+        if (local[ normalized ]) {
+            translations[ normalized ] = local[ normalized ];
+            continue;
+        }
+
+        if (!local[ normalized ]) {
+            missingTranslations.push(label);
+            logger.warn(`Missing translation for: ${label}`);
+        }
+
+        // Check and try original (normalized) key match next
+        if (local[ label ]) {
+            translations[ normalized ] = local[ label ];
+            continue;
+        }
+
+        // Use Google Cloud Translation API as fallback
+        translations[ normalized ] = await translateText(label, targetLang);
+        logger.debug(`Original Label: ${label}, Translation: ${translations[ label ]}`);
+    }
+
+    return translations;
+}
+
+/**
+ * Translate to Hindi, using the Google Cloud Translation API
+ *
+ * @param html
+ * @param targetLang
+ * @returns {Promise<string>}
+ */
+async function translateHTMLContent(html, targetLang = 'hi') {
     try {
-        // Register handlebars helpers
-        handlebars.registerHelper("print", function (value) {
-            return ++value;
+        const chunks = chunkText(html);
+        let translatedHtml = "";
+
+        // logger.debug("Number of chunks:", chunks.length); // Log the number of chunks
+
+        for (let i = 0; i < chunks.length; i++) {
+            const chunk = chunks[ i ];
+            // logger.debug(`Length of chunk ${i + 1}:`, chunk.length); // Log the length of each chunk
+
+            const [response] = await translationClient.translateText({
+                parent: `projects/${PROJECT_ID}/locations/global`,
+                contents: [chunk],
+                mimeType: 'text/html',
+                targetLanguageCode: targetLang,
+            });
+
+            logger.debug(`Length of translated chunk ${i + 1}:`, response.translations[ 0 ].translatedText.length); // Log length after translation
+            translatedHtml += response.translations[ 0 ].translatedText;
+        }
+
+        // logger.debug("Total length of translated HTML:", translatedHtml.length); // Log the total length
+
+        return translatedHtml;
+
+    } catch (error) {
+        logger.error('Translation error:', error); // Log the entire error object
+        logger.error('Translation error message:', error.message); // Log the error message
+        if (error.response) { // If it's a Google Cloud API error
+            logger.error('Translation error response:', error.response.data); // Log the response data
+        }
+        throw error; // Re-throw the error so it's handled by the route handler
+    }
+}
+
+// Helper function to optimize local translations loading
+let localTranslationsCache = null;
+
+function getLocalTranslations() {
+    if (!localTranslationsCache) {
+        localTranslationsCache = require('../../../other/web-hi.json');
+    }
+    return localTranslationsCache;
+}
+
+// Batch translation helper
+const translationQueue = new Map();
+const BATCH_TIMEOUT = 100; // ms
+const MAX_BATCH_SIZE = 128; // characters
+
+/**
+ * This is the function which will not do the batch translations for Google Cloud API
+ *
+ * @param text
+ * @param targetLang
+ * @returns {Promise<unknown>}
+ */
+async function getGoogleTranslation(text, targetLang) {
+    const queueKey = targetLang;
+
+    if (!translationQueue.has(queueKey)) {
+        translationQueue.set(queueKey, {
+            texts: [],
+            resolvers: [], // Array to store resolve/reject pairs
+            timer: null
         });
 
-        handlebars.registerHelper('or', function () {
-            return Array.prototype.slice.call(arguments, 0, -1).some(Boolean);
+        // Set up batch processing
+        const batch = translationQueue.get(queueKey);
+        batch.timer = setTimeout(async () => {
+            // Get the current batch and clear it from the queue
+            const currentBatch = translationQueue.get(queueKey);
+            translationQueue.delete(queueKey);
+
+            if (currentBatch.texts.length > 0) {
+                try {
+                    const [response] = await translationClient.translateText({
+                        parent: `projects/${PROJECT_ID}/locations/global`,
+                        contents: currentBatch.texts,
+                        mimeType: 'text/plain',
+                        targetLanguageCode: targetLang,
+                    });
+
+                    // Resolve all promises with their respective translations
+                    const translations = response.translations.map(t => t.translatedText);
+                    currentBatch.resolvers.forEach((resolver, index) => {
+                        resolver.resolve(translations[ index ]);
+                    });
+                } catch (error) {
+                    // Reject all promises if there's an error
+                    currentBatch.resolvers.forEach(resolver => {
+                        resolver.reject(error);
+                    });
+                }
+            }
+        }, BATCH_TIMEOUT);
+    }
+
+    const batch = translationQueue.get(queueKey);
+    const index = batch.texts.length;
+    batch.texts.push(text);
+
+    // Create a new promise for this translation
+    return new Promise((resolve, reject) => {
+        batch.resolvers.push({resolve, reject});
+    });
+}
+
+/**
+ * A translation function that first checks the local JSON and then falls back to the cloud APIs.
+ * This function should handle both single words and longer strings.
+ *
+ * @param text
+ * @param targetLang
+ * @returns {Promise<*|string>}
+ */
+async function translateText(text, targetLang = 'hi') {
+    try {
+        // const localTranslations = require('../../../other/web-hi.json'); // Load your JSON file
+
+        // Check if the input text is valid
+        if (!text || typeof text !== 'string' || text.trim() === '') {
+            return ''; // Return empty string for invalid input
+        }
+
+        // Generate cache key
+        const cacheKey = `${text}_${targetLang}`;
+
+        // Check cache first
+        const cachedResult = translationCache.get(cacheKey);
+        if (cachedResult && ( Date.now() - cachedResult.timestamp < CACHE_TTL )) {
+            return cachedResult.translation;
+        }
+
+        // Load local translations (do this once and cache it)
+        const localTranslations = getLocalTranslations();
+
+        // Check local JSON first
+        if (targetLang === 'hi' && localTranslations[ text ]) {
+            const translation = localTranslations[ text ];
+            translationCache.set(cacheKey, {
+                translation,
+                timestamp: Date.now()
+            });
+            return translation;
+        }
+
+        // Use batch translation for Google Cloud API
+        const translation = await getGoogleTranslation(text, targetLang);
+
+        // Cache the result
+        translationCache.set(cacheKey, {
+            translation,
+            timestamp: Date.now()
         });
 
-        // Add a new helper for inline translation
-        handlebars.registerHelper('translate', function (text) {
-            // This will be pre-translated in the data
-            return text;
-        });
+        return translation;
+    } catch (error) {
+        logger.error("Translation error: ", error);
+        return text; // Fallback to original text if JSON loading fails
+    }
+}
+
+/**
+ * Before passing the dataBinding object to the Handlebars template, recursively translate all its string values.
+ *
+ * @param obj
+ * @param targetLang
+ * @returns {Promise<*>}
+ */
+async function translateObjectToHindi(obj, targetLang = 'hi') {
+    for (let key in obj) {
+        if (typeof obj[ key ] === 'string') {
+            // Translate only non-empty strings
+            obj[ key ] = obj[ key ].trim() !== '' ? await translateText(obj[ key ], targetLang) : '';
+        } else if (typeof obj[ key ] === 'object' && obj[ key ] !== null) {
+            // Recursively translate nested objects
+            await translateObjectToHindi(obj[ key ], targetLang);
+        }
+    }
+    return obj;
+}
+
+// Add date translation logic
+// function localizeDates(dateString) {
+//     // Convert "2023-08-20" to Hindi numerals
+//     return convertToDevanagariNumerals(dateString);
+// }
+
+/**
+ * This function is used to convert HTML to PDF in English
+ *
+ *
+ * @param {String} templateHtml
+ * @param {Object} dataBinding
+ * @param {Object} options
+ *
+ * @returns {Promise<Buffer>}
+ * @throws {Error}
+ */
+async function convertHTMLToPDFEn({templateHtml, dataBinding, options}) {
+    handlebars.registerHelper("print", function (value) {
+        return ++value;
+    });
+
+    handlebars.registerHelper('or', function () {
+        return Array.prototype.slice.call(arguments, 0, -1).some(Boolean);
+    });
+
+    const template = handlebars.compile(templateHtml);
+    const finalHtml = encodeURIComponent(template(dataBinding));
+
+    const browser = await puppeteer.launch({
+        args: ["--no-sandbox"],
+        headless: true,
+    });
+    const page = await browser.newPage();
+
+    // Inject page numbers using evaluateHandle
+    await page.evaluateHandle(() => {
+        const style = document.createElement('style');
+        style.textContent = `
+        @page {
+            size: A4; /* Ensure A4 size if not already set */
+            margin: 10mm 5mm; /* Set your margins */
+            @bottom-center { /* Footer content */
+                content: "Page " counter(page) " of " counter(pages);
+            }
+        }
+        .footer { /* Style your footer */
+            width: 100%;
+            text-align: center;
+            padding-top: 10px;
+            border-top: 1px solid black;
+        }`;
+        document.head.appendChild(style);
+
+        // Get the current timestamp (you can format this server-side)
+        const now = new Date();
+        const timestamp = now.toLocaleString(); // Or any format you prefer
+
+        // Add the timestamp to the footer
+        const footer = document.querySelector('.footer');
+        if (footer) {
+            const timestampElement = document.createElement('p');
+            timestampElement.textContent = `Generated via AdhereLive platform<br/>${timestamp}`;
+            footer.appendChild(timestampElement);
+        }
+    });
+
+    await page.setContent(finalHtml);
+
+    // Set viewport to A4 size
+    await page.setViewport({
+        width: 794, // A4 width in pixels at 96 DPI
+        height: 1123, // A4 height in pixels at 96 DPI
+        deviceScaleFactor: 2, // Higher resolution
+    });
+
+    await page.goto(`data:text/html;charset=UTF-8,${finalHtml}`, {
+        waitUntil: "networkidle0",
+    });
+
+    /**
+     * based on = pdf(options?: PDFOptions): Promise<Buffer>;
+     * from https://pptr.dev/api/puppeteer.page.pdf
+     * pdfBuffer will store the PDF file Buffer content when "path is not provided"
+     */
+    let pdfBuffer = await page.pdf(options);
+    logger.info('Conversion complete. PDF file generated successfully.');
+    await browser.close();
+    return pdfBuffer; // Returning the value when page.pdf promise gets resolved
+}
+
+/**
+ * This is the function which does the actual HTML to PDF conversion in Hindi
+ *
+ * @param templateHtml
+ * @param dataBinding
+ * @param options
+ * @returns {Promise<Buffer<ArrayBufferLike>>}
+ */
+async function convertHTMLToPDFHi({templateHtml, dataBinding, options}) {
+    try {
+        const startTime = process.hrtime();
+
+        // Call the 'translateStaticLabels' function with an array of all static labels in your HTML file
+        // This allows to pre-translate static labels
+        const staticLabels = [
+            "Patient Name",
+            "Registration",
+            "date",
+            "time",
+            "Age",
+            "Gender",
+            "Doctor Name",
+            "Patient",
+            "Address",
+            "Doctor Email",
+            "Relevant History",
+            "Allergies",
+            "Comorbidities",
+            "Diagnosis",
+            "Symptoms",
+            "General",
+            "Systematic Examination",
+            "Treatment And Follow-up Advice",
+            "Height",
+            "Weight",
+            "Name of Medicine",
+            "Dose",
+            "Qty",
+            "Medicine Schedule",
+            "Morning",
+            "Afternoon",
+            "Night",
+            "Start Date",
+            "Duration",
+            "Diet",
+            "Workout",
+            "Patient Mobile No.",
+            "ID",
+            "From",
+            "Investigation",
+            "Next Consultation",
+            "Diet Name",
+            "TimeDetails",
+            "Repeat Days",
+            "What Not to Do",
+            "Total Calories",
+            "Workout Name",
+            "Time",
+            "Details",
+            "repetitions",
+            "Page",
+            "Generated via AdhereLive platform",
+            "Signature",
+            "Stamp",
+            "Purpose",
+            "Description",
+            "Date",
+            "Take whenever required",
+            "Cal",
+        ];
+        // Add translated labels to dataBinding
+        dataBinding.translatedLabels = await translateStaticLabels(staticLabels, options.translateTo);
+        logger.debug('Translated Labels: ', dataBinding.translatedLabels);
 
         // Translate the data binding object
-        const translatedDataBinding = await translateObjectToHindi(dataBinding);
+        const translatedDataBinding = await translateObjectToHindi(dataBinding, options.translateTo);
+        logger.debug('Translated Data Binding: ', translatedDataBinding);
 
         // Compile template with translated data
         const template = handlebars.compile(templateHtml);
-        const finalHtml = encodeURIComponent(template(translatedDataBinding));
+        let finalHtml = template(translatedDataBinding);
 
+        // logger.debug('The Final HTML with translated labels', finalHtml);
+
+        // Log the length of individual sections (if applicable)
+        logger.debug("Length of HTML before translation: ", finalHtml.length); // Log the total length
+        // logger.debug("Length of patient_data.name:", dataBinding.patient_data.name ? dataBinding.patient_data.name.length : 0);
+        // logger.debug("Length of diagnosis:", dataBinding.diagnosis ? dataBinding.diagnosis.length : 0);
+        // logger.debug("Length of follow_up_advise:", dataBinding.follow_up_advise ? dataBinding.follow_up_advise.length : 0);
+        // logger.debug("Length of medicinesArray (if stringified):", JSON.stringify(dataBinding.medicinesArray).length); // Important: stringify if it's an array/object
+        // logger.debug("Length of investigations (if stringified):", JSON.stringify(dataBinding.investigations).length);
+
+        const fontPath = path.join(__dirname, '../../../fonts/TiroDevanagariHindi-Regular.ttf'); // Correct Path
+        const fontBuffer = fs.readFileSync(fontPath);
+        const base64Font = fontBuffer.toString('base64');
+
+        // Launch Puppeteer and generate PDF
         const browser = await puppeteer.launch({
-            args: ["--no-sandbox"],
-            headless: true,
+            args: ['--no-sandbox', '--font-render-hinting=medium'],
+            headless: true
         });
         const page = await browser.newPage();
 
-        // Set Hindi font support
-        await page.evaluateHandle(() => {
+        // Set Hindi font support, and ensure proper font rendering
+        await page.evaluateHandle((base64Font) => {
             const style = document.createElement('style');
+            document.fonts.ready.then(() => {
+                document.body.style.visibility = 'visible';
+            });
             style.textContent = `
                 @font-face {
-                    font-family: 'Noto Sans Devanagari';
-                    src: url('https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari&display=swap');
+                    font-family: 'TiroDevanagariHindi-Regular';
+                    src: url('data:font/ttf;base64,${base64Font}') format('ttf');
+                    font-display: swap;
                 }
-                body {
-                    font-family: 'Noto Sans Devanagari', Arial, sans-serif;
+                * {
+                    font-family: 'TiroDevanagariHindi-Regular', 'NotoSansDevanagari', Arial, sans-serif !important;
                 }
-                ${style.textContent}
+                .hindi-text {
+                    font-family: 'TiroDevanagariHindi-Regular', 'NotoSansDevanagari', Arial, sans-serif !important;
+                    -webkit-font-smoothing: antialiased;
+                    text-rendering: optimizeLegibility;
+                }
             `;
             document.head.appendChild(style);
+        }, base64Font);
+
+        // Add font loading wait
+        await page.waitForFunction(() => document.fonts.ready);
+
+        // Set the content and viewport
+        // Wait for fonts to load
+        await page.setContent(finalHtml, {
+            waitUntil: ['networkidle0', 'load', 'domcontentloaded'],
+            encoding: 'utf-8'
         });
 
-        await page.setContent(finalHtml);
         await page.setViewport({
             width: 794,
             height: 1123,
             deviceScaleFactor: 2,
         });
 
-        await page.goto(`data:text/html;charset=UTF-8,${finalHtml}`, {
-            waitUntil: "networkidle0",
+        // Add a page evaluate to ensure that the page breaks and split within a table are being done correctly
+        // This should ensure that the medicine table section breaks are being done correctly
+        await page.evaluate(() => {
+            const tables = document.querySelectorAll('.medicine_table');
+
+            tables.forEach(table => {
+                const rows = table.querySelectorAll('tbody tr');
+                let currentPageHeight = 0;
+                const pageHeight = 1123; // ADJUST THIS VALUE!
+
+                rows.forEach(row => {
+                    currentPageHeight += row.offsetHeight;
+
+                    if (currentPageHeight > pageHeight) {
+                        const pageBreak = document.createElement('tr');
+                        pageBreak.style.pageBreakBefore = 'always';
+                        row.parentNode.insertBefore(pageBreak, row);
+
+                        currentPageHeight = row.offsetHeight;
+                    }
+                });
+            });
         });
 
-        let pdfBuffer = await page.pdf(options);
+        const pdfBuffer = await page.pdf(options);
         logger.info('Conversion complete. PDF file generated successfully.');
+
+        // After processing:
+        logger.info('Untranslated labels: \n', missingTranslations);
+
+        // Change the dates back to use 'English' locale
+        moment.locale('en'); // Get the date back to 'EN' locale
+
+        // Format dates using moment
+        dataBinding.creationDate = moment()
+            .locale('en')
+            .format('LLL');
+
         await browser.close();
+
+        const endTime = process.hrtime(startTime);
+        logger.info(`PDF generation took ${endTime[ 0 ]}s ${endTime[ 1 ] / 1000000}ms`);
+
         return pdfBuffer;
     } catch (error) {
         logger.error('Error in PDF generation:', error);
@@ -216,15 +924,18 @@ async function html_to_pdf({templateHtml, dataBinding, options}) {
 function getWhenToTakeText(whenToTake) {
     if (!whenToTake) return '';
 
-    const whenToTakeMap = {
-        1: 'Before food',
-        2: 'After food',
-        3: 'With food',
-        4: 'Empty stomach',
-        5: 'As directed'
-    };
+    switch (whenToTake) {
+        case 1:
+            return `Once a day`;
+        case 2:
+            return `Twice a day`;
+        case 3:
+            return `Thrice a day`;
+        default:
+            return "";
+    }
 
-    return whenToTakeMap[whenToTake] || 'As directed';
+    return whenToTake || 'As directed';
 }
 
 // formatting doctor data
@@ -612,10 +1323,17 @@ function getLatestUpdateDate(medications) {
     return {date, isPrescriptionUpdated};
 }
 
+/**
+ * @swagger
+ */
 router.get(
     "/details/:care_plan_id",
     Authenticated,
     async (req, res) => {
+
+        // const pdfGenerator = new PDFGenerator();
+        // await pdfGenerator.loadLocalTranslations();
+
         try {
             const {care_plan_id = null} = req.params;
             const {
@@ -915,7 +1633,7 @@ router.get(
                     dietIds.push(id);
                 }
             }
-            //logger.debug("Diet Lists and Diet IDs: ", JSON.stringify(dietList), {dietIds});
+            // logger.debug("Diet Lists and Diet IDs: ", JSON.stringify(dietList), {dietIds});
 
             for (const id of workout_ids) {
                 const workout = await workoutService.findOne({id});
@@ -959,14 +1677,35 @@ router.get(
                 }
             }
 
+            // Changed to avoid warning from moment:
+            // Deprecation warning: value provided is not in a recognized RFC2822 or ISO format.
+            // moment construction falls back to js Date()
+            /**
+             * TODO: Check if the below new function returns correct date, or revert to the original one
+             const sortedInvestigations = suggestedInvestigations.sort((a, b) => {
+             const {start_date: aStartDate} = a || {};
+             const {start_date: bStartDate} = b || {};
+             if (moment(bStartDate).diff(moment(aStartDate), "minutes") > 0) {
+             return 1;
+             } else {
+             return -1;
+             }
+             });
+             */
             const sortedInvestigations = suggestedInvestigations.sort((a, b) => {
                 const {start_date: aStartDate} = a || {};
                 const {start_date: bStartDate} = b || {};
-                if (moment(bStartDate).diff(moment(aStartDate), "minutes") > 0) {
-                    return 1;
-                } else {
-                    return -1;
+
+                const momentA = moment(aStartDate, 'Do MMM YY');
+                const momentB = moment(bStartDate, 'Do MMM YY');
+
+                if (!momentA.isValid() || !momentB.isValid()) {
+                    // Handle invalid dates.  What should the sort order be if a date is bad?
+                    // Example: Put invalid dates at the end
+                    return momentA.isValid() ? -1 : 1; // Or return 0 to keep original order
                 }
+
+                return momentB.diff(momentA, "minutes");
             });
 
             if (nextAppointment) {
@@ -1143,7 +1882,7 @@ router.get(
                 doctor_id
             );
 
-            logger.debug("Provider logo: \n", {providerLogo});
+            // logger.debug("Provider logo: \n", {providerLogo});
 
             let patient_data = formatPatientData(
                 {
@@ -1221,7 +1960,7 @@ router.get(
                 let start_date = diet_old_data[ diet_id ][ "diets" ][ diet_id ][ "basic_info" ][ "start_date" ];
                 let end_date = diet_old_data[ diet_id ][ "diets" ][ diet_id ][ "basic_info" ][ "end_date" ];
 
-                logger.debug("Diet data + Basic Info: \n", diet_old_data[ diet_id ][ "diets" ][ diet_id ][ "basic_info" ]);
+                // logger.debug("Diet data + Basic Info: \n", diet_old_data[ diet_id ][ "diets" ][ diet_id ][ "basic_info" ]);
 
                 if (start_date) formattedStartDate = moment(start_date);
                 if (end_date) formattedEndDate = moment(end_date);
@@ -1258,10 +1997,10 @@ router.get(
                 // for food groups
 
                 for (let key in diet_old_data[ dietIds[ i ] ][ "diet_food_groups" ]) {
-                    logger.debug({
-                        key,
-                        old_time: diet_old_data[ dietIds[ i ] ][ "diet_food_groups" ],
-                    });
+                    // logger.debug({
+                    //     key,
+                    //     old_time: diet_old_data[ dietIds[ i ] ][ "diet_food_groups" ],
+                    // });
                     let food_group_obj = {};
                     food_group_obj.time = timings[ key ];
                     food_group_obj.food_group_details_array =
@@ -1462,40 +2201,117 @@ router.get(
                 ),
             };
 
+            const translatedLabels = [];
+
+            pre_data = {
+                ...pre_data,
+                translatedLabels, // Add translated labels here
+            };
+
+            // logger.debug('Pre Load the data sent to PDF conversion: \n', pre_data);
+
             // Translate the pre_data object
-            const translatedPreData = await translateObjectToHindi(pre_data);
+            // const translatedPreData = await translateObjectToHindi(pre_data);
 
             const templateHtml = fs.readFileSync(
-                path.join("./routes/api/prescription/prescription.html"),
+                path.join("./routes/api/prescription/prescription-hindi.html"),
                 "utf8"
             );
+
+            /**
+             * TODO: Not using this, as it gives errors
+             // Enhanced PDF options
+             const options = {
+             format: "A4",
+             headerTemplate: "<p></p>",
+             footerTemplate: "<p></p>",
+             displayHeaderFooter: false,
+             scale: 1,
+             fontFaces: true,
+             margin: {
+             top: "40px",
+             bottom: "100px",
+             },
+             printBackground: true,
+             preferCSSPageSize: true,
+             path: "prescription.pdf",
+             translateTo: targetLang // Pass to convertHTMLToPDFHi
+             };
+
+             const {buffer: pdfBuffer, metrics} = await pdfGenerator.generatePDF(
+             templateHtml,
+             pre_data,
+             options
+             );
+
+             // Log performance metrics
+             logger.info('PDF Generation Performance:', pdfGenerator.getPerformanceReport());
+
+             // Set response headers
+             res.set({
+             'Content-Type': 'application/pdf',
+             'Content-Length': pdfBuffer.length,
+             'Cache-Control': 'public, max-age=300',
+             'X-Generation-Time': metrics[ 'Generate PDF' ]
+             });
+
+             return res.send(pdfBuffer);
+             */
+
+                // Add language detection (query param or header)
+            const targetLang = req.query.lang || 'hi';
+
+            // In your route handler, change the dates also to use 'Hindi' locale
+            if (targetLang === 'hi') {
+                moment.locale('hi'); // Set Hindi locale
+            }
+
+            // Format dates using moment
+            pre_data.creationDate = moment()
+                .locale(targetLang)
+                .format('LLL');
 
             const options = {
                 format: "A4",
                 headerTemplate: "<p></p>",
                 footerTemplate: "<p></p>",
                 displayHeaderFooter: false,
+                scale: 1,
+                fontFaces: true,
                 margin: {
                     top: "40px",
                     bottom: "100px",
                 },
                 printBackground: true,
-                path: "invoice.pdf",
+                path: "prescription.pdf",
+                translateTo: targetLang // Pass to convertHTMLToPDFHi
             };
 
-            let pdf_buffer_value = await html_to_pdf({
+            // Generate PDF with translation
+            // TODO: Add a language option here, to use the HINDI or EN function to generate the PDF
+            let pdf_buffer_value = await convertHTMLToPDFHi({
                 templateHtml,
-                dataBinding: translatedPreData,
+                dataBinding: pre_data,
                 options,
             });
 
             res.contentType("application/pdf");
             return res.send(pdf_buffer_value);
         } catch (err) {
-            logger.error("Error in Prescription API, while generating the prescription: ", err);
+            logger.error("Error in Prescription API:", err);
             return raiseServerError(res);
         }
     }
 );
+
+/**
+ * @swagger
+ */
+router.get("/metrics", Authenticated, async (req, res) => {
+    const pdfGenerator = new PDFGenerator();
+
+    const metrics = pdfGenerator.getPerformanceReport();
+    res.json(metrics);
+});
 
 module.exports = router;
