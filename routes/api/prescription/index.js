@@ -105,7 +105,6 @@ handlebars.registerHelper('safe', function (content) {
     return new handlebars.SafeString(content);
 });
 
-
 /**
  * TODO: Will implement these aspects later
  // Monitor translation coverage
