@@ -1327,7 +1327,7 @@ function getLatestUpdateDate(medications) {
  * @swagger
  */
 router.get(
-    "/details/:care_plan_id",
+    "/details/:care_plan_id/:language",
     Authenticated,
     async (req, res) => {
 
@@ -2213,11 +2213,6 @@ router.get(
             // Translate the pre_data object
             // const translatedPreData = await translateObjectToHindi(pre_data);
 
-            const templateHtml = fs.readFileSync(
-                path.join("./routes/api/prescription/prescription-hindi.html"),
-                "utf8"
-            );
-
             /**
              * TODO: Not using this, as it gives errors
              // Enhanced PDF options
@@ -2258,8 +2253,9 @@ router.get(
              return res.send(pdfBuffer);
              */
 
-                // Add language detection (query param or header)
-            const targetLang = req.query.lang || 'hi';
+            // Add language detection (query param or header)
+            const {targetLang = null} = req.params || 'hi';
+            //const targetLang = req.query.lang || 'hi';
 
             // In your route handler, change the dates also to use 'Hindi' locale
             if (targetLang === 'hi') {
@@ -2287,13 +2283,31 @@ router.get(
                 translateTo: targetLang // Pass to convertHTMLToPDFHi
             };
 
+            let pdf_buffer_value = null;
+
             // Generate PDF with translation
             // TODO: Add a language option here, to use the HINDI or EN function to generate the PDF
-            let pdf_buffer_value = await convertHTMLToPDFHi({
-                templateHtml,
-                dataBinding: pre_data,
-                options,
-            });
+            if (targetLang === 'hi') {
+                const templateHtml = fs.readFileSync(
+                    path.join("./routes/api/prescription/prescription-hindi.html"),
+                    "utf8"
+                );
+                pdf_buffer_value = await convertHTMLToPDFHi({
+                    templateHtml,
+                    dataBinding: pre_data,
+                    options,
+                });
+            } else if(targetLang === 'en') {
+                const templateHtml = fs.readFileSync(
+                    path.join("./routes/api/prescription/prescription.html"),
+                    "utf8"
+                );
+                pdf_buffer_value = await convertHTMLToPDFEn({
+                    templateHtml,
+                    dataBinding: pre_data,
+                    options,
+                });
+            }
 
             res.contentType("application/pdf");
             return res.send(pdf_buffer_value);
