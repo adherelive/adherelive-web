@@ -3,13 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{translatedLabels.prescriptionTitle}}</title>
+    <title>{{ translatedLabels.prescriptionTitle }}</title>
     <style>
         @import url('https://res.cloudinary.com/myrltech/raw/upload/v1686297287/TiroDevanagariHindi-Regular.ttf');
 
         /* Base Page Setup */
         /* This CSS rule ensures that table headers (contained within the <thead> element)
            repeat at the top of each new page when the table spans multiple pages. */
+        /* CSS Variables for easier theming and maintainability */
+        :root {
+            --font-family-base: "TiroDevanagariHindi-Regular", "NotoSansDevanagari", Arial, sans-serif;
+            --font-family-bold: "PlusJakartaSans-Bold", var(--font-family-base);
+            --font-family-medium: "PlusJakartaSans-Medium", var(--font-family-base);
+            --font-family-regular: "PlusJakartaSans-Regular", var(--font-family-base);
+            --font-family-light: "PlusJakartaSans-Light", var(--font-family-base);
+            --color-text: #000;
+            --color-gray-light: #666;
+            --color-gray-medium: #888;
+            --border-color: #000;
+            --page-margin: 10mm 5mm; /* Combined margin */
+        }
+
         @media print {
             /* Force background colors and images to print */
             * {
@@ -58,10 +72,11 @@
             }
         }
 
+        /* Page Setup and Print Styles */
         /* Add support for both A4 and Letter sizes */
         @page {
             size: A4 portrait;
-            margin: 10mm 5mm;  /* Reduced margins for better space utilization */
+            margin: var(--page-margin); /* Use CSS variable. Reduced margins for better space utilization */
             /* bleed: 0; */
             @top-center {
                 content: element(header);
@@ -72,13 +87,31 @@
         }
 
         /* Global styles */
-        * {
-            font-family: "TiroDevanagariHindi-Regular", "NotoSansDevanagari", Arial, sans-serif;
+        * { /* Apply to all elements by default */
+            font-family: var(--font-family-base),sans-serif;
             -webkit-font-smoothing: antialiased;
             text-rendering: optimizeLegibility;
+            box-sizing: border-box; /* Include padding and border in element's total width and height */
         }
 
+        /* Font Faces (Optimize loading - preload critical fonts) */
         /* Font Faces */
+        @font-face {
+            font-family: "TiroDevanagariHindi-Regular";
+            src: url("https://res.cloudinary.com/myrltech/raw/upload/v1686297287/TiroDevanagariHindi-Regular.ttf");
+            font-weight: normal; /* Or specify font-weight if needed */
+            font-style: normal; /* Or specify font-style if needed */
+            font-display: swap; /* Optional: improve perceived performance */
+        }
+
+        @font-face {
+            font-family: 'NotoSansDevanagari';
+            src: url('https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;700&display=swap');
+            font-weight: normal; /* Or specify font-weight if needed */
+            font-style: normal; /* Or specify font-style if needed */
+            font-display: swap; /* Optional: improve perceived performance */
+        }
+
         @font-face {
             font-family: "PlusJakartaSans-Bold";
             src: url("https://res.cloudinary.com/myrltech/raw/upload/v1685442477/PlusJakartaSans-Bold.ttf");
@@ -115,41 +148,48 @@
             font-style: normal;
         }
 
-        @font-face {
-            font-family: "TiroDevanagariHindi-Regular";
-            src: url("https://res.cloudinary.com/myrltech/raw/upload/v1686297287/TiroDevanagariHindi-Regular.ttf");
-            font-weight: normal; /* Or specify font-weight if needed */
-            font-style: normal; /* Or specify font-style if needed */
-            font-display: swap; /* Optional: improve perceived performance */
+        /* General Styles */
+        body {
+            direction: ltr; /* Hindi is written left-to-right */
+            margin: 0;
+            padding: var(--page-margin); /* Use CSS variable */
+            font-size: 10px;
+            font-family: var(--font-family-base),sans-serif;
+            color: var(--color-text); /* Use CSS variable */
         }
 
-        @font-face {
-            font-family: 'NotoSansDevanagari';
-            src: url('https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;700&display=swap');
-            font-weight: normal; /* Or specify font-weight if needed */
-            font-style: normal; /* Or specify font-style if needed */
-            font-display: swap; /* Optional: improve perceived performance */
+        /* Maintains aspect ratio in the images */
+        img {
+            max-width: 100%;
+            height: auto;
+            object-fit: contain; /* Default object-fit */
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
         }
 
-        /* Hindi text specific styles */
-        .hindi-text {
-            font-family: 'TiroDevanagariHindi-Regular', 'NotoSansDevanagari', Arial, sans-serif !important;
+        /* Typography */
+        h3, h4, h5 {
+            font-family: var(--font-family-bold),sans-serif;
+            margin: 0;
+            page-break-after: avoid;
         }
 
-        /* Specific rules for content breaking to existing styles */
-        .avoid-break {
-            break-inside: auto;
-            page-break-inside: auto;
+        h3 {
+            font-size: 13px;
         }
 
-        .force-break {
-            break-before: page;
-            page-break-before: auto;
+        h4, h5 {
+            font-size: 10px;
         }
 
-        .keep-together {
-            break-inside: auto;
-            page-break-inside: auto;
+        p {
+            font-family: var(--font-family-medium),sans-serif;
+            font-size: 10px;
+            margin: 0;
+        }
+
+        span { /* If you need this style, keep it */
+            font-family: var(--font-family-base),sans-serif;
         }
 
         /* Container width constraints */
@@ -159,18 +199,30 @@
             margin: 0 auto;
         }
 
+        /* Hindi text specific styles */
+        .hindi-text {
+            font-family: 'TiroDevanagariHindi-Regular', 'NotoSansDevanagari', Arial, sans-serif !important;
+        }
+
+        /* Specific rules for content breaking to existing styles */
+        .avoid-break {
+            break-inside: avoid-page;
+            page-break-inside: avoid;
+        }
+
+        .force-break {
+            break-before: page;
+            page-break-before: always;
+        }
+
+        .keep-together {
+            break-inside: avoid;
+            page-break-inside: avoid;
+        }
+
         /* Specific elements that should ALWAYS be in Hindi */
         .some-hindi-text {
             font-family: "TiroDevanagariHindi-Regular", "NotoSansDevanagari", sans-serif; /* No fallbacks if it MUST be Hindi */
-        }
-
-        /* Maintains aspect ratio in the images */
-        img {
-            max-width: 100%;
-            height: auto;
-            object-fit: contain;
-            -webkit-backface-visibility: hidden;
-            backface-visibility: hidden;
         }
 
         /* For images that need to maintain specific dimensions */
@@ -179,10 +231,6 @@
             height: auto;
             max-width: 100%;
             object-fit: contain;
-        }
-
-        span {
-            font-family: "TiroDevanagariHindi-Regular", "NotoSansDevanagari", Arial, sans-serif;
         }
 
         /* Logo images */
@@ -217,61 +265,63 @@
             object-fit: contain;
         }
 
-        /* Global Styles */
-        body {
-            direction: ltr; /* Hindi is written left-to-right */
-            margin: 0;
-            padding: 10px;
-            font-size: 10px;
-            font-family: 'TiroDevanagariHindi-Regular', 'NotoSansDevanagari', Arial, sans-serif;
-        }
-
-        /* Typography */
-        h3, h4, h5 {
-            page-break-after: avoid;
-            font-family: 'TiroDevanagariHindi-Regular', 'NotoSansDevanagari', "PlusJakartaSans-Bold", Arial, sans-serif;
-            margin: 0;
-        }
-
-        h3 {
-            font-size: 13px;
-        }
-
-        h4, h5 {
-            font-size: 10px;
-        }
-
-        p {
-            font-family: 'TiroDevanagariHindi-Regular', 'NotoSansDevanagari', "PlusJakartaSans-Medium", Arial, sans-serif;
-            font-size: 10px;
-            margin: 0;
-        }
-
         /* Header and Footer */
-        .header {
-            position: running(header);
+        .header, .footer { /* Combined styles */
+            position: running(header); /* or running(footer) */
             width: 100%;
-            padding-bottom: 10px;
-            border-bottom: 1px solid black;
+            padding: 10px 0; /* Consistent padding */
+            border-top: 1px solid var(--border-color); /* or border-bottom */
+            background-color: #fff; /* Consistent background */
+        }
+
+        .header {
+            border-bottom: 1px solid var(--border-color);
         }
 
         .footer {
             position: running(footer);
-            bottom: 0;
-            width: 100%;
-            padding: 10px 0;
-            background-color: #fff;
-            border-top: 1px solid black;
             text-align: center;
-            font-family: 'TiroDevanagariHindi-Regular', 'NotoSansDevanagari', "PlusJakartaSans-Regular", Arial, sans-serif;
+        }
+
+        /* Table attributes */
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table tr {
+            page-break-inside: avoid;
+            break-inside: avoid;
+        }
+
+        .table-wrapper {
+            page-break-before: auto;
+            break-before: auto;
+        }
+
+        .table th,
+        .table td {
+            border: 1px solid black;
+            padding: 5px;
+            border-top: 0;
+            border-left: 0;
+            page-break-inside: avoid;
+            break-inside: avoid;
+        }
+
+        .table th { /* Table header specific styles */
+            background-color: #fff;
+            position: sticky;
+            top: 0;
+            z-index: 2;
+            border-bottom: 2px solid var(--border-color);
         }
 
         /* Footer Styles */
         .footer-content {
             margin: 0 20px;
             font-size: 10px;
-            color: #666;
-            text-align: center;
+            color: var(--color-gray-light);
         }
 
         .page-info {
@@ -280,7 +330,7 @@
 
         .generation-info {
             font-size: 8px;
-            color: #888;
+            color: var(--color-gray-medium);
         }
 
         /* Page Break Controls */
@@ -295,6 +345,7 @@
             page-break-before: always;
         }
 
+        /* Section Grouping and Page Breaks */
         .section-group {
             page-break-inside: avoid;
             break-inside: avoid-page;
@@ -308,12 +359,12 @@
         .diet_table,
         .workout_table {
             width: 100%;
-            table-layout: fixed;
+            table-layout: fixed; /* Keep columns aligned */
             border-collapse: collapse;
             border-spacing: 0;
             empty-cells: show;
             page-break-inside: auto;
-            border-left: 1px solid black;
+            border-left: 1px solid var(--border-color); /* Consistent border */
         }
 
         /* Table Headers */
@@ -349,20 +400,13 @@
         .investigation_table th,
         .consultation_table th,
         .diet_table th,
+        .complaint_table th,
         .workout_table th {
             background-color: #fff;
             position: sticky;
             top: 0;
             z-index: 2;
             border-bottom: 2px solid #000;
-        }
-
-        table th,
-        table td {
-            border: 1px solid black;
-            padding: 5px;
-            border-top: 0;
-            border-left: 0;
         }
 
         /* Medicine Table Specific */
@@ -454,6 +498,37 @@
             align-content: center;
         }
 
+        /* Table Containers */
+        .medicine-table-container {
+            overflow: visible;
+            margin: 15px 0;
+        }
+
+        /* Image Styles (Consolidated & Improved) */
+        .top_provider_section img {
+            width: 60px;
+            height: 60px;
+            object-fit: contain;
+        }
+
+        .top_provider_section_three img {
+            width: 100px;
+            height: 100px;
+            object-fit: contain;
+        }
+
+        .tick_image img {
+            width: 15px;
+            height: 15px;
+            object-fit: contain;
+        }
+
+        .signature_image {
+            width: 120px;
+            height: 40px;
+            object-fit: contain;
+        }
+
         /* Top Section Styles */
         .top_provider_section {
             display: flex;
@@ -509,6 +584,18 @@
             border: 1px solid black; /* Add borders back if needed */
         }
 
+        .complaint_table td { /* Added complaint_table */
+            border: 1px solid var(--border-color); /* Consistent border */
+            padding: 5px;
+            text-align: left; /* Default left alignment */
+            vertical-align: top;
+            page-break-inside: avoid;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: normal;
+            word-wrap: break-word;
+        }
+
         /* Hide BMI, BP, RBS, Temperature */
         .complaint_table tr:nth-child(2) { /* Select the second row in each table */
             display: none;
@@ -538,7 +625,7 @@
             width: 50%;
         }
 
-        /* Modified style to allow Height & Weight
+        /* TODO: Modified style to allow Height & Weight only,a nd not the Grid
         .complaints_subsection {
                 grid-auto-rows: minmax(30px, auto);
                 grid-template-columns: repeat(3, 3fr);
@@ -639,21 +726,9 @@
             margin: 0;
         }
 
-        /* Table Containers */
-        .medicine-table-container {
-            overflow: visible;
-            margin: 15px 0;
-        }
-
         /* New Page for Lifestyle Advice */
         .lifestyle-advice-page {
             page-break-before: always; /* Start on a new page */
-        }
-
-        /* Table Containers */
-        .medicine-table-container {
-            overflow: visible;
-            margin: 15px 0;
         }
     </style>
 </head>
@@ -681,8 +756,7 @@
                 {{ providerName }} <br/>
                 {{ providerAddress }} +91-8411042323 <br/>
             </h3>
-            <p>{{translatedLabels.Patient}}: {{ patient_data.name }} - {{translatedLabels.ID}}: {{ patient_data.uid
-                }}</p>
+            <p>{{translatedLabels.Patient}}: {{ patient_data.name }} - {{translatedLabels.ID}}: {{ patient_data.uid }}</p>
         </div>
         <div class="top_provider_section_three">
             <img
@@ -823,7 +897,7 @@
     </div>
 
     <!-- MEDICINE  SECTION -->
-    <div class="medicine_section avoid-break force-break">
+    <div class="medicine_section force-break">
         <table class="medicine_table">
             <thead>
             <tr>
@@ -866,7 +940,7 @@
                 <td>
                     <p>{{print @index }}</p>
                 </td>
-                <td colspan="2" style="padding: 0px">
+                <td colspan="2" style="padding: 0">
                     <div class="medicine_name_wrapper">
                         <div style="border-right: 1px solid; width: 80%;">
                             <p>{{ medicineType }}</p>
@@ -1094,7 +1168,7 @@
     <div>
         <h3>
             Note:
-            <p style="font-family: PlusJakartaSans-Regular">
+            <p style="font-family: PlusJakartaSans-Regular,sans-serif">
                 This prescription is generated on the AdhereLive platform. To access
                 your digital prescription download the mobile app using the QR code at
                 the top. Please write to "customersupport@adhere.live" for any
@@ -1269,8 +1343,7 @@
 <div class="footer" id="pdf-footer">
     <div class="footer-content">
         <p class="page-info">{{translatedLabels.Page}} <span id="page-num"></span> <span id="page-count"></span></p>
-        <p class="generation-info">{{translatedLabels.Generated_via_AdhereLive_platform}}<br/>{{ generationTimestamp }}
-        </p>
+        <p class="generation-info">{{translatedLabels.Generated_via_AdhereLive_platform}}<br/>{{ generationTimestamp }}</p>
     </div>
 </div>
 </body>

@@ -64,10 +64,12 @@ import { checkAndCreateDirectory } from "../../../app/helper/common";
 import { getDoctorCurrentTime } from "../../../app/helper/getUserTime";
 import { raiseClientError, raiseServerError } from "../helper";
 
+
 // Fetch the Google Translation API and 'puppeteer' along with 'handlebars' for the HTML to PDF conversion
 const {TranslationServiceClient} = require('@google-cloud/translate').v3beta1;
 const puppeteer = require("puppeteer");
 const handlebars = require("handlebars");
+
 
 const logger = createLogger("PRESCRIPTION API");
 
@@ -82,7 +84,7 @@ const router = express.Router();
 // Initialize the translation client
 // Make sure you have set up Google Cloud credentials properly
 const translationClient = new TranslationServiceClient();
-const PROJECT_ID = 'adherelive-translate';
+const PROJECT_ID = process.config.google_keys.GOOGLE_CLOUD_PROJECT_ID;
 
 // Cache configuration
 const CACHE_TTL = 3600000; // 1 hour in milliseconds
@@ -136,7 +138,12 @@ const htmlHead = `
     <title>AdhereLive - Prescription</title>
 </head>`;
 
-
+/**
+ * TODO: IGNORE the CLASS for now, will work out a way to use this later
+ *
+ * @class PDFGenerator
+ * @description This class is used to generate PDFs from HTML templates, with support for translations and performance monitoring.
+ */
 class PDFGenerator {
     constructor() {
         this.performanceMetrics = {};
@@ -376,13 +383,19 @@ function chunkText(text) {
     return chunks;
 }
 
-// Utility function for consistent key handling
+/**
+ * This function will normalize the key by removing special characters and replacing spaces with underscores
+ * Utility function for consistent key handling
+ *
+ * @param key
+ * @returns {*}
+ */
 function normalizeKey(key) {
     return key
         .trim()
         .replace(/\s*\/\s*/g, '/') // Handle "Age / Gender" → "Age/Gender"
         .replace(/[^a-zA-Z0-9\u0900-\u097F/]/g, '_') // Preserve Devanagari chars
-        .replace(/_+/g, '_');
+        .replace(/[_\s]+/g, '_'); // Replace spaces with underscores
 }
 
 let missingTranslations = [];
@@ -591,7 +604,7 @@ async function translateText(text, targetLang = 'hi') {
 
         return translation;
     } catch (error) {
-        logger.error("Translation error:", error);
+        logger.error("Translation error: ", error);
         return text; // Fallback to original text if JSON loading fails
     }
 }
@@ -1198,7 +1211,9 @@ function getLatestUpdateDate(medications) {
     return {date, isPrescriptionUpdated};
 }
 
-// Usage in your route handler:
+/**
+ * @swagger
+ */
 router.get(
     "/details/:care_plan_id",
     Authenticated,
@@ -2063,59 +2078,6 @@ router.get(
             };
 
             const translatedLabels = [
-                "Patient Name",
-                "Registration",
-                "date",
-                "time",
-                "Age",
-                "Gender",
-                "Doctor Name",
-                "Patient",
-                "Address",
-                "Doctor Email",
-                "Relevant History",
-                "Allergies",
-                "Comorbidities",
-                "Diagnosis",
-                "Symptoms",
-                "General",
-                "Systematic Examination",
-                "Treatment And Follow-up Advice",
-                "Height",
-                "Weight",
-                "Name of Medicine",
-                "Dose",
-                "Qty",
-                "Medicine Schedule",
-                "Morning",
-                "Afternoon",
-                "Night",
-                "Start Date",
-                "Duration",
-                "Diet",
-                "Workout",
-                "Patient Mobile No.",
-                "ID",
-                "From",
-                "Investigation",
-                "Next Consultation",
-                "Diet Name",
-                "TimeDetails",
-                "Repeat Days",
-                "What Not to Do",
-                "Total Calories",
-                "Workout Name",
-                "Time",
-                "Details",
-                "repetitions",
-                "Page",
-                "Generated via AdhereLive platform",
-                "Signature",
-                "Stamp",
-                "Purpose",
-                "Description",
-                "Date",
-                "Take whenever required",
             ];
 
             pre_data = {
@@ -2147,7 +2109,7 @@ router.get(
                 .format('LLL');
 
             /**
-             * Not using this, as it gives errors
+             * TODO: Not using this, as it gives errors
             // Enhanced PDF options
             const options = {
                 format: "A4",
@@ -2218,6 +2180,9 @@ router.get(
     }
 );
 
+/**
+ * @swagger
+ */
 router.get("/metrics", Authenticated, async (req, res) => {
     const pdfGenerator = new PDFGenerator();
 
