@@ -68,7 +68,7 @@ class ActivePatient {
         carePlanData[carePlan.getCarePlanId()] = await carePlan.getAllInfo();
         carePlanIds.push(carePlan.getCarePlanId());
       }
-      logger.debug("Care Plan IDs: ", carePlanIds);
+      // logger.debug("Care Plan IDs: ", carePlanIds);
       return { carePlanData, carePlanIds };
     } catch (error) {
       logger.error("getAllCarePlans catch error: ", error);
@@ -114,10 +114,8 @@ class ActivePatient {
               event_type: EVENT_TYPE.WORKOUT,
             },
           })) || [];
-        logger.debug(
-          `Total events :: ${events.length} :: for Care Plan ID :: ${id}`
-        );
-        logger.debug("Status of the events: ", events);
+        logger.debug(`Total events :: ${events.length} :: for Care Plan ID :: ${id}`);
+        // logger.debug("Status of the events: ", events);
 
         let passedEventCount = 0;
 
@@ -173,7 +171,7 @@ class ActivePatient {
     try {
       await this.getEvents();
     } catch (error) {
-      logger.error("runObserver catch error: ", error);
+      logger.error("Active Patient runObserver has an error: ", error);
       throw error;
     }
   };

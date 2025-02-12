@@ -11,12 +11,9 @@ import moment from "moment";
 import PDFDocument from "pdfkit";
 import { getConvertedTime } from "../getUserTime/index";
 import { createLogger } from "../../../libs/logger";
+import * as fs from 'fs';
 
-// const PDFDocument = require("pdfkit");
-const fs = require("fs");
-// const moment = require("moment");
-
-const logger = createLogger("INDEX FOR HINDI");
+const logger = createLogger("GENERATE CARE PLAN PDF FOR HINDI");
 
 const DOC_MARGIN = 30;
 const DOC_WIDTH_MARGIN = 550;
@@ -447,7 +444,7 @@ function printDiet(
         .format("hh:mm A");
       doc
         .fillColor("#212b36")
-        .font(MEDIUM_FONT)
+        .font(HINDI_FONT)
         .text(
           `${timeText}${" "}(${formattedTime})${" "}`,
           dietDetailsTimeXStart,
@@ -937,7 +934,12 @@ function printAppointment({
   docYLevel,
 }) {
   try {
-    const labFindingsEndLevel = doc.y;
+    // const labFindingsEndLevel = doc.y;
+    // if (suggestedInvestigations.length > 0) {
+    //   addPageAndNumber(doc);
+    //   labFindingsEndLevel = DOC_MARGIN;
+    // }
+
     let medicationYLevel = doc.y;
 
     // MEDICATIONS
@@ -947,7 +949,7 @@ function printAppointment({
       doc
         .font(BOLD_FONT)
         .fontSize(BOLD_FONT_SIZE)
-        .text("Suggested Investigations", DOC_MARGIN, docYLevel + 15);
+        .text("Suggested Investigations", DOC_MARGIN, labFindingsEndLevel + 15);
 
       const rXLabelEndLevelY = doc.y;
 
@@ -993,8 +995,10 @@ function printAppointment({
           radiology_type,
           start_date,
           organizer,
+          description,
+          reason,
+          provider_id,
         } = suggestedInvestigations[each] || {};
-
         // code implementation after phase 1 - start
         if (doc.y + 3 * SHORT_FONT_SIZE > PAGE_END_LIMIT) {
           if (pageCount === 1) {
