@@ -76,7 +76,7 @@
         /* Add support for both A4 and Letter sizes */
         @page {
             size: A4 portrait;
-            margin: var(--page-margin); /* Use CSS variable. Reduced margins for better space utilization */
+            margin: 10mm 5mm; /* Use CSS variable. Reduced margins for better space utilization */
             /* bleed: 0; */
             @top-center {
                 content: element(header);
@@ -152,7 +152,7 @@
         body {
             direction: ltr; /* Hindi is written left-to-right */
             margin: 0;
-            padding: var(--page-margin); /* Use CSS variable */
+            padding: 10mm 5mm; /* Use CSS variable */
             font-size: 10px;
             font-family: var(--font-family-base),sans-serif;
             color: var(--color-text); /* Use CSS variable */
@@ -547,7 +547,7 @@
             border: 1px solid black;
             display: grid;
             grid-template-columns: repeat(2, 3fr);
-            grid-auto-rows: minmax(30px, auto);
+            grid-auto-rows: minmax(35px, auto);
         }
 
         .top_section_wrapper_one,
@@ -775,24 +775,24 @@
 <div class="main-content">
     <div class="top_section_wrapper">
         <div class="top_section_wrapper_one">
-            <h3>{{translatedLabels.Patient_Name}} :</h3>
+            <h3>{{translatedLabels.Patient_Name}}:</h3>
             <p>{{ patient_data.name }}</p>
         </div>
         <div class="top_section_wrapper_two">
-            <h3>{{translatedLabels.Registration}} {{translatedLabels.date}}/{{translatedLabels.time}} :</h3>
+            <h3>{{translatedLabels.Registration}} {{translatedLabels.date}}/{{translatedLabels.time}}:</h3>
             <p>{{ patient_data.created_at }}</p>
         </div>
         <div class="top_section_wrapper_one">
-            <h3>{{translatedLabels.Age}}/{{translatedLabels.Gender}} :</h3>
+            <h3>{{translatedLabels.Age}}/{{translatedLabels.Gender}}:</h3>
             <p>{{ patient_data.age }}/{{ patient_data.gender }}</p>
         </div>
 
         <div class="top_section_wrapper_two">
-            <h3>{{translatedLabels.Patient}} {{translatedLabels.ID}} :</h3>
+            <h3>{{translatedLabels.Patient}} {{translatedLabels.ID}}:</h3>
             <p>{{ patient_data.uid }}</p>
         </div>
         <div class="top_section_wrapper_one">
-            <h3>{{translatedLabels.Patient_Mobile_No_}} :</h3>
+            <h3>{{translatedLabels.Patient_Mobile_No_}}:</h3>
             <p>+{{ patient_data.prefix }}-{{ patient_data.mobile_number }}</p>
         </div>
         <div class="top_section_wrapper_two">
@@ -805,7 +805,7 @@
         </div>
         <div class="top_section_wrapper_two">
             <!-- Removed the Doctor Email -->
-            <!-- <h3>{{translatedLabels.Doctor_Email}} :</h3>
+            <!-- <h3>{{translatedLabels.Doctor_Email}}:</h3>
           <p>{{ doctorEmail }}</p> -->
         </div>
     </div>
@@ -813,7 +813,7 @@
     <!-- Chief Complaints:  -->
     <div class="chef-complaints-section">
         <!-- <div style="display: flex; align-items: center">
-          <h3>{{translatedLabels.Relevant_History}} :</h3>
+          <h3>{{translatedLabels.Relevant_History}}:</h3>
           <br />
         </div> -->
         <div style="display: flex; align-items: center">
@@ -822,7 +822,7 @@
             <br/>
         </div>
         <div style="display: flex; align-items: center">
-            <h3>{{translatedLabels.Comorbidities}} :</h3>
+            <h3>{{translatedLabels.Comorbidities}}:</h3>
             <p>{{ patient_data.comorbidities }}</p>
             <br/>
         </div>
@@ -834,11 +834,11 @@
                 class="top_section_wrapper_one"
                 style="border-right: 1px solid; padding: 10px"
         >
-            <h3>{{translatedLabels.Diagnosis}} :</h3>
+            <h3>{{translatedLabels.Diagnosis}}:</h3>
             <p>{{ diagnosis }}</p>
         </div>
         <div class="top_section_wrapper_two" style="padding: 10px">
-            <h3>{{translatedLabels.Symptoms}} :</h3>
+            <h3>{{translatedLabels.Symptoms}}:</h3>
             <p style="width: 250px">{{ symptoms_final_value }}</p>
         </div>
     </div>
@@ -846,7 +846,7 @@
     <!-- General | Systemic Examination: -->
     <div class="diagnosis_section">
         <div style="display: flex; align-items: center">
-            <h3>{{translatedLabels.General}} | {{translatedLabels.Systematic_Examination}} :</h3>
+            <h3>{{translatedLabels.General}} | {{translatedLabels.Systematic_Examination}}:</h3>
             <p style="font-family: TiroDevanagariHindi-Regular, NotoSansDevanagari, Arial, sans-serif">
                 {{ clinicalNotes }}
             </p>
@@ -887,11 +887,11 @@
     <!-- COMPLAINTS SECTION -->
     <div class="top_section_wrapper">
         <div class="top_section_wrapper_one" style="border-right: 1px solid; padding: 10px">
-            <h3>{{translatedLabels.Height}} :</h3>
+            <h3>{{translatedLabels.Height}}:</h3>
             <p>{{patient_data.height}} cm</p>
         </div>
         <div class="top_section_wrapper_two" style="padding: 10px">
-            <h3>{{translatedLabels.Weight}} :</h3>
+            <h3>{{translatedLabels.Weight}}:</h3>
             <p>{{patient_data.weight}} kg</p>
         </div>
     </div>
@@ -1031,7 +1031,7 @@
     <!-- <div class="page-break"></div> -->
     <div class="investigation_section">
         <div class="investigation_section_heading">
-            <h3>{{translatedLabels.Investigation}} :</h3>
+            <h3>{{translatedLabels.Investigation}}:</h3>
         </div>
         <div class="investigation_section_content">
             <table
@@ -1085,7 +1085,7 @@
     </div>
     <!-- NEXT CONSULTATION SECTION -->
     <div class="next_consultation_section_heading">
-        <h3>{{translatedLabels.Next_Consultation}} :</h3>
+        <h3>{{translatedLabels.Next_Consultation}}:</h3>
     </div>
     <div class="next_consultation_section">
         <div class="next_consultation_section_one">
@@ -1192,7 +1192,7 @@
     <!-- DIET SECTION  -->
     {{#if diet_output.length}}
     <div class="diet_section_heading">
-        <h3>{{translatedLabels.Diet}} :</h3>
+        <h3>{{translatedLabels.Diet}}:</h3>
     </div>
     <div class="diet_section_section">
         <div class="diet_section_section_one">
@@ -1276,7 +1276,7 @@
 
     {{#if pre_workouts.length}}
     <div class="workout_section_heading">
-        <h3>{{translatedLabels.Workout}} :</h3>
+        <h3>{{translatedLabels.Workout}}:</h3>
     </div>
     <div class="workout_section_section">
         <div class="workout_section_section_one">

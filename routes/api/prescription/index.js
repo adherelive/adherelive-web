@@ -451,11 +451,11 @@ async function translateHTMLContent(html, targetLang = 'hi') {
         const chunks = chunkText(html);
         let translatedHtml = "";
 
-        logger.debug("Number of chunks:", chunks.length); // Log the number of chunks
+        // logger.debug("Number of chunks:", chunks.length); // Log the number of chunks
 
         for (let i = 0; i < chunks.length; i++) {
             const chunk = chunks[ i ];
-            logger.debug(`Length of chunk ${i + 1}:`, chunk.length); // Log the length of each chunk
+            // logger.debug(`Length of chunk ${i + 1}:`, chunk.length); // Log the length of each chunk
 
             const [response] = await translationClient.translateText({
                 parent: `projects/${PROJECT_ID}/locations/global`,
@@ -468,7 +468,7 @@ async function translateHTMLContent(html, targetLang = 'hi') {
             translatedHtml += response.translations[ 0 ].translatedText;
         }
 
-        logger.debug("Total length of translated HTML:", translatedHtml.length); // Log the total length
+        // logger.debug("Total length of translated HTML:", translatedHtml.length); // Log the total length
 
         return translatedHtml;
 
@@ -704,14 +704,13 @@ async function convertHTMLToPDF({templateHtml, dataBinding, options}) {
             "Date",
             "Take whenever required",
         ];
-        // logger.debug('Translated Labels:', staticLabels);
         // Add translated labels to dataBinding
         dataBinding.translatedLabels = await translateStaticLabels(staticLabels, options.translateTo);
-
-        // logger.debug('Final Data Binding:', dataBinding);
+        logger.debug('Translated Labels: ', dataBinding.translatedLabels);
 
         // Translate the data binding object
         const translatedDataBinding = await translateObjectToHindi(dataBinding, options.translateTo);
+        logger.debug('Translated Data Binding: ', translatedDataBinding);
 
         // Compile template with translated data
         const template = handlebars.compile(templateHtml);
@@ -719,9 +718,8 @@ async function convertHTMLToPDF({templateHtml, dataBinding, options}) {
 
         // logger.debug('The Final HTML with translated labels', finalHtml);
 
-        logger.debug("Length of HTML before translation:", finalHtml.length); // Log the total length
-
         // Log the length of individual sections (if applicable)
+        logger.debug("Length of HTML before translation: ", finalHtml.length); // Log the total length
         // logger.debug("Length of patient_data.name:", dataBinding.patient_data.name ? dataBinding.patient_data.name.length : 0);
         // logger.debug("Length of diagnosis:", dataBinding.diagnosis ? dataBinding.diagnosis.length : 0);
         // logger.debug("Length of follow_up_advise:", dataBinding.follow_up_advise ? dataBinding.follow_up_advise.length : 0);
@@ -1521,7 +1519,7 @@ router.get(
                     dietIds.push(id);
                 }
             }
-            //logger.debug("Diet Lists and Diet IDs: ", JSON.stringify(dietList), {dietIds});
+            // logger.debug("Diet Lists and Diet IDs: ", JSON.stringify(dietList), {dietIds});
 
             for (const id of workout_ids) {
                 const workout = await workoutService.findOne({id});
