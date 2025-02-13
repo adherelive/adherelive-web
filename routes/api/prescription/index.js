@@ -300,7 +300,7 @@ async function getGoogleTranslation(text, targetLanguage) {
                         parent: `projects/${PROJECT_ID}/locations/global`,
                         contents: currentBatch.texts,
                         mimeType: 'text/plain',
-                        targetLanguageCode: targetLang,
+                        targetLanguageCode: targetLanguage,
                     });
 
                     // Resolve all promises with their respective translations
@@ -332,17 +332,17 @@ async function getGoogleTranslation(text, targetLanguage) {
  * Before passing the dataBinding object to the Handlebars template, recursively translate all its string values.
  *
  * @param obj
- * @param targetLang
+ * @param targetLanguage
  * @returns {Promise<*>}
  */
-async function translateObjectToHindi(obj, targetLang = 'hi') {
+async function translateObjectToHindi(obj, targetLanguage) {
     for (let key in obj) {
         if (typeof obj[ key ] === 'string') {
             // Translate only non-empty strings
-            obj[ key ] = obj[ key ].trim() !== '' ? await translateText(obj[ key ], targetLang) : '';
+            obj[ key ] = obj[ key ].trim() !== '' ? await translateText(obj[ key ], targetLanguage) : '';
         } else if (typeof obj[ key ] === 'object' && obj[ key ] !== null) {
             // Recursively translate nested objects
-            await translateObjectToHindi(obj[ key ], targetLang);
+            await translateObjectToHindi(obj[ key ], targetLanguage);
         }
         logger.debug('Keyword and its translation: ', key, obj[ key ]);
     }
@@ -1006,7 +1006,7 @@ function formatMedicationsData(medications, medicines) {
             description: description || detailDescription,
             medicineName: name ? name.toUpperCase() : name,
             genericName: generic_name,
-            medicineType: categories.items.find((x) => x.id == medicine_type).name,
+            medicineType: categories.items.find((x) => x.id === medicine_type).name,
             // strength,
             strength: `${`${strength} ${unitToShow.toUpperCase()}`}`,
             quantity,
@@ -2051,11 +2051,11 @@ router.get(
 /**
  * @swagger
  */
-router.get("/metrics", Authenticated, async (req, res) => {
-    const pdfGenerator = new PDFGenerator();
-
-    const metrics = pdfGenerator.getPerformanceReport();
-    res.json(metrics);
-});
+// router.get("/metrics", Authenticated, async (req, res) => {
+//     const pdfGenerator = new PDFGenerator();
+//
+//     const metrics = pdfGenerator.getPerformanceReport();
+//     res.json(metrics);
+// });
 
 module.exports = router;
