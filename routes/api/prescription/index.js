@@ -821,7 +821,7 @@ function formatPatientData(patients, users) {
     const patientIds = Object.keys(patients);
 
     const patientId = patientIds[ 0 ];
-    logger.debug(JSON.stringify({patients, users}));
+    logger.debug('Format Patient Details JSON stringify: ', JSON.stringify({patients, users}));
     const {
         [ patientId ]: {
             basic_info: {
@@ -1006,7 +1006,7 @@ function formatMedicationsData(medications, medicines) {
             description: description || detailDescription,
             medicineName: name ? name.toUpperCase() : name,
             genericName: generic_name,
-            medicineType: categories.items.find((x) => x.id === medicine_type).name,
+            medicineType: categories.items.find((x) => x.id == medicine_type).name,
             // strength,
             strength: `${`${strength} ${unitToShow.toUpperCase()}`}`,
             quantity,
