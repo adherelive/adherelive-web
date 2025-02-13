@@ -139,8 +139,8 @@ function normalizeKey(key) {
     return key
         .trim()
         .replace(/\s*\/\s*/g, '/') // Handle "Age / Gender" → "Age/Gender"
-        .replace(/[^a-zA-Z0-9\u0900-\u097F/]/g, '_') // Preserve Devanagari chars
-        .replace(/[_\s]+/g, '_'); // Replace spaces with underscores
+        .replace(/[_\s]+/g, '_')   // Replace spaces and existing underscores with a single underscore
+        .replace(/[^a-zA-Z0-9\u0900-\u097F/]/g, '_'); // Preserve Devanagari chars, replace other special chars
 }
 
 /**
@@ -162,7 +162,9 @@ async function translateStaticLabels(labels, targetLang = 'hi') {
             translations[ normalized ] = local[ normalized ];
             continue;
         }
+        logger.debug(`${label} => ${normalized}`);
 
+        // Check and try original (normalized) key match next
         if (!local[ normalized ]) {
             missingTranslations.push(label);
             logger.warn(`Missing translation for: ${label}`);
@@ -528,7 +530,7 @@ async function convertHTMLToPDFHi({templateHtml, dataBinding, options}) {
         // Add translated labels to dataBinding, calling the 'translateStaticLabels' function with
         // an array of all static labels in your HTML file. This allows to pre-translate static labels
         dataBinding.translatedLabels = await translateStaticLabels(staticLabels, options.translateTo);
-        logger.debug('Translated Labels: ', dataBinding.translatedLabels);
+        // logger.debug('Translated Labels: ', dataBinding.translatedLabels);
 
         // Translate the data binding object
         const translatedDataBinding = await translateObjectToHindi(dataBinding, options.translateTo);
