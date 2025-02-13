@@ -183,7 +183,7 @@ async function translateStaticLabels(labels, targetLanguage) {
         // Basically, it converts the staticLabels value to lowercase
         // with '_' in the place of any special characters or spaces
         const normalized = normalizeKey(label);
-        logger.debug('The static label word to compare with the JSON file word: ', normalized);
+        logger.debug('The static normalized word to compare with the JSON file word: ', normalized);
 
         // Check & try exact match first
         if (local[ normalized ]) {
@@ -344,8 +344,8 @@ async function translateObjectToHindi(obj, targetLanguage) {
             // Recursively translate nested objects
             await translateObjectToHindi(obj[ key ], targetLanguage);
         }
-        logger.debug('Keyword and its translation: ', key, obj[ key ]);
     }
+    logger.debug('The translated object: ', obj);
     return obj;
 }
 
