@@ -81,6 +81,11 @@ const CACHE_TTL = 3600000; // 1 hour in milliseconds
 const MAX_TRANSLATION_LENGTH = 5000; // Replace with the actual API limit
 const translationCache = new Map(); // In-memory cache
 
+// Batch translation helper
+const translationQueue = new Map();
+const BATCH_TIMEOUT = 100; // ms
+const MAX_BATCH_SIZE = 128; // characters
+
 // Global array to store and show the Labels which need to be translated via the Cloud API
 let missingTranslations = [];
 
@@ -128,6 +133,22 @@ handlebars.registerHelper('safe', function (content) {
  };
  */
 
+// Helper function to optimize local translations loading
+let localTranslationsCache = null;
+
+/**
+ * This function is used to get the local translations from the existing JSON file
+ * The JSON file contains the field names which are used with the 'translatedLabels' in the HTML
+ *
+ * @returns {*}
+ */
+function getLocalTranslations() {
+    if (!localTranslationsCache) {
+        localTranslationsCache = require('../../../other/web-hi.json');
+    }
+    return localTranslationsCache;
+}
+
 /**
  * This function will normalize the key by removing special characters and replacing spaces with underscores
  * Utility function for consistent key handling
@@ -147,15 +168,22 @@ function normalizeKey(key) {
  * Function to translate each of the labels, before they are sent to the HandleBars
  *
  * @param labels
- * @param targetLang
+ * @param targetLanguage
  * @returns {Promise<{}>}
  */
-async function translateStaticLabels(labels, targetLang = 'hi') {
+async function translateStaticLabels(labels, targetLanguage) {
+    // This gets all the values from the local JSON file
+    // This will get the value:key pair... how will it compare then?
     const local = getLocalTranslations();
+    logger.debug('Local JSON file values: \n', local);
     const translations = {};
 
     for (const label of labels) {
+        // Get the first label from the staticLabels array and normalize it
+        // Basically, it converts the staticLabels value to lowercase
+        // with '_' in the place of any special characters or spaces
         const normalized = normalizeKey(label);
+        logger.debug('The static label word to compare with the JSON file word: ', normalized);
 
         // Check & try exact match first
         if (local[ normalized ]) {
@@ -163,11 +191,13 @@ async function translateStaticLabels(labels, targetLang = 'hi') {
             continue;
         }
         logger.debug(`${label} => ${normalized}`);
+        logger.debug('Check if the label matches anything in the normalised JSON file value',
+            `${translations[ normalized ]} => ${local[ normalized ]}`);
 
         // Check and try original (normalized) key match next
         if (!local[ normalized ]) {
             missingTranslations.push(label);
-            logger.warn(`Missing translation for: ${label}`);
+            logger.warn(`Missing translation for static label, not in JSON: ${label}`);
         }
 
         // Check and try original (normalized) key match next
@@ -177,42 +207,78 @@ async function translateStaticLabels(labels, targetLang = 'hi') {
         }
 
         // Use Google Cloud Translation API as fallback
-        translations[ normalized ] = await translateText(label, targetLang);
+        translations[ normalized ] = await translateText(label, targetLanguage);
         logger.debug(`Original Label: ${label}, Translation: ${translations[ label ]}`);
     }
 
     return translations;
 }
 
-// Helper function to optimize local translations loading
-let localTranslationsCache = null;
-
 /**
- * This function is used to get the local translations from the JSON file
+ * A translation function that first checks the local JSON and then falls back to the cloud APIs.
+ * This function should handle both single words and longer strings.
  *
- * @returns {*}
+ * @param text (This is the value of the Static Label sent from 'translateStaticLabels')
+ * @param targetLanguage
+ * @returns {Promise<*|string>}
  */
-function getLocalTranslations() {
-    if (!localTranslationsCache) {
-        localTranslationsCache = require('../../../other/web-hi.json');
-    }
-    return localTranslationsCache;
-}
+async function translateText(text, targetLanguage) {
+    try {
+        // Check if the input text is valid
+        if (!text || typeof text !== 'string' || text.trim() === '') {
+            return ''; // Return empty string for invalid input
+        }
 
-// Batch translation helper
-const translationQueue = new Map();
-const BATCH_TIMEOUT = 100; // ms
-const MAX_BATCH_SIZE = 128; // characters
+        // Generate cache key
+        const cacheKey = `${text}_${targetLanguage}`;
+        logger.debug('Cached Key Value is [label]_hi: ', cacheKey)
+
+        // Check cache first
+        const cachedResult = translationCache.get(cacheKey);
+        if (cachedResult && ( Date.now() - cachedResult.timestamp < CACHE_TTL )) {
+            return cachedResult.translation;
+        }
+
+        // Load local translations (do this once and cache it)
+        // Getting the actual local JSON translation of the static label here
+        const localTranslations = getLocalTranslations();
+
+        // Check local JSON first
+        if (targetLanguage === 'hi' && localTranslations[ text ]) {
+            const translation = localTranslations[ text ];
+            translationCache.set(cacheKey, {
+                translation,
+                timestamp: Date.now()
+            });
+            return translation;
+        }
+
+        // Use batch translation for Google Cloud API, if the static label is not found in the local JSON
+        // What happens with any other text that is present in the HTML as the dynamic data?
+        const translation = await getGoogleTranslation(text, targetLanguage);
+
+        // Cache the result
+        translationCache.set(cacheKey, {
+            translation,
+            timestamp: Date.now()
+        });
+
+        return translation;
+    } catch (error) {
+        logger.error("Translation error: ", error);
+        return text; // Fallback to original text if JSON loading fails
+    }
+}
 
 /**
  * This is the function which will not do the batch translations for Google Cloud API
  *
  * @param text
- * @param targetLang
+ * @param targetLanguage
  * @returns {Promise<unknown>}
  */
-async function getGoogleTranslation(text, targetLang) {
-    const queueKey = targetLang;
+async function getGoogleTranslation(text, targetLanguage) {
+    const queueKey = targetLanguage;
 
     if (!translationQueue.has(queueKey)) {
         translationQueue.set(queueKey, {
@@ -263,61 +329,6 @@ async function getGoogleTranslation(text, targetLang) {
 }
 
 /**
- * A translation function that first checks the local JSON and then falls back to the cloud APIs.
- * This function should handle both single words and longer strings.
- *
- * @param text
- * @param targetLang
- * @returns {Promise<*|string>}
- */
-async function translateText(text, targetLang = 'hi') {
-    try {
-        // const localTranslations = require('../../../other/web-hi.json'); // Load your JSON file
-
-        // Check if the input text is valid
-        if (!text || typeof text !== 'string' || text.trim() === '') {
-            return ''; // Return empty string for invalid input
-        }
-
-        // Generate cache key
-        const cacheKey = `${text}_${targetLang}`;
-
-        // Check cache first
-        const cachedResult = translationCache.get(cacheKey);
-        if (cachedResult && ( Date.now() - cachedResult.timestamp < CACHE_TTL )) {
-            return cachedResult.translation;
-        }
-
-        // Load local translations (do this once and cache it)
-        const localTranslations = getLocalTranslations();
-
-        // Check local JSON first
-        if (targetLang === 'hi' && localTranslations[ text ]) {
-            const translation = localTranslations[ text ];
-            translationCache.set(cacheKey, {
-                translation,
-                timestamp: Date.now()
-            });
-            return translation;
-        }
-
-        // Use batch translation for Google Cloud API
-        const translation = await getGoogleTranslation(text, targetLang);
-
-        // Cache the result
-        translationCache.set(cacheKey, {
-            translation,
-            timestamp: Date.now()
-        });
-
-        return translation;
-    } catch (error) {
-        logger.error("Translation error: ", error);
-        return text; // Fallback to original text if JSON loading fails
-    }
-}
-
-/**
  * Before passing the dataBinding object to the Handlebars template, recursively translate all its string values.
  *
  * @param obj
@@ -333,6 +344,7 @@ async function translateObjectToHindi(obj, targetLang = 'hi') {
             // Recursively translate nested objects
             await translateObjectToHindi(obj[ key ], targetLang);
         }
+        logger.debug('Keyword and its translation: ', key, obj[ key ]);
     }
     return obj;
 }
@@ -361,7 +373,7 @@ async function convertHTMLToPDFEn({templateHtml, dataBinding, options}) {
         const template = handlebars.compile(templateHtml);
         const finalHtml = encodeURIComponent(template(dataBinding));
 
-        // logger.debug('The Final HTML with translated labels', finalHtml);
+        logger.debug('What all is being passed by the pre_data/dataBinding: \n', dataBinding);
 
         // Log the length of individual sections (if applicable)
         logger.debug("Length of HTML before translation: ", finalHtml.length); // Log the total length
@@ -530,7 +542,7 @@ async function convertHTMLToPDFHi({templateHtml, dataBinding, options}) {
         // Add translated labels to dataBinding, calling the 'translateStaticLabels' function with
         // an array of all static labels in your HTML file. This allows to pre-translate static labels
         dataBinding.translatedLabels = await translateStaticLabels(staticLabels, options.translateTo);
-        // logger.debug('Translated Labels: ', dataBinding.translatedLabels);
+        logger.debug('All the data coming from the route in pre_data/dataBinding: \n', dataBinding);
 
         // Translate the data binding object
         const translatedDataBinding = await translateObjectToHindi(dataBinding, options.translateTo);
