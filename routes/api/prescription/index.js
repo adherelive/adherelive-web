@@ -506,7 +506,7 @@ const staticLabels = [
     "f",
     "o",
     "y",
-    "days(s)",
+    "day(s)",
     "Note",
     "cm",
     "kg",

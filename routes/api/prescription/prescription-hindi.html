@@ -2,7 +2,6 @@
 <html lang="hi">
 <head>
     <meta charset="UTF-8">
-    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>{{ translatedLabels.prescriptionTitle }}</title>
@@ -10,8 +9,6 @@
         @import url('https://res.cloudinary.com/myrltech/raw/upload/v1686297287/TiroDevanagariHindi-Regular.ttf');
 
         /* Base Page Setup */
-        /* This CSS rule ensures that table headers (contained within the <thead> element)
-           repeat at the top of each new page when the table spans multiple pages. */
         /* CSS Variables for easier theming and maintainability */
         :root {
             --font-family-base: "TiroDevanagariHindi-Regular", "NotoSansDevanagari", Arial, sans-serif;
@@ -33,7 +30,7 @@
                 print-color-adjust: exact !important;
             }
 
-            /* Ensure page breaks don't occur within elements */
+            /* Ensure page breaks don't occur within header elements */
             h1, h2, h3, h4, h5, h6 {
                 page-break-after: auto;
             }
@@ -63,6 +60,9 @@
                 height: attr(height);
             }
              */
+			 
+		    /* This CSS rule ensures that table headers (contained within the <thead> element)
+               repeat at the top of each new page when the table spans multiple pages. */
             /* Ensure table headers repeat */
             thead {
                 display: table-header-group;
@@ -70,7 +70,7 @@
 
             /* Avoid breaking within table rows */
             tr {
-                page-break-inside: auto;
+                page-break-inside: avoid;
             }
         }
 
@@ -154,7 +154,7 @@
         body {
             direction: ltr; /* Hindi is written left-to-right */
             margin: 0;
-            padding: 10mm 5mm; /* Use CSS variable */
+            padding: 10px; /* Use CSS variable */
             font-size: 10px;
             font-family: var(--font-family-base), sans-serif;
             color: var(--color-text); /* Use CSS variable */
@@ -191,7 +191,32 @@
         }
 
         span { /* If you need this style, keep it */
-            font-family: var(--font-family-base), sans-serif;
+            font-family: var(--font-family-base);
+        }
+
+        /* Image Styles (Consolidated & Improved) */
+        .top_provider_section img {
+            width: 60px;
+            height: 60px;
+            object-fit: contain;
+        }
+
+        .top_provider_section_three img {
+            width: 100px;
+            height: 100px;
+            object-fit: contain;
+        }
+
+        .tick_image img {
+            width: 15px;
+            height: 15px;
+            object-fit: contain;
+        }
+
+        .signature_image {
+            width: 120px;
+            height: 40px;
+            object-fit: contain;
         }
 
         /* Container width constraints */
@@ -202,10 +227,11 @@
         }
 
         /* Hindi text specific styles */
+        /* Specific elements that should ALWAYS be in Hindi */
         .hindi-text {
-            font-family: 'TiroDevanagariHindi-Regular', 'NotoSansDevanagari', Arial, sans-serif !important;
+            font-family: "TiroDevanagariHindi-Regular", "NotoSansDevanagari"; /* No fallbacks if it MUST be Hindi */
         }
-
+		
         /* Specific rules for content breaking to existing styles */
         .avoid-break {
             break-inside: avoid-page;
@@ -220,11 +246,6 @@
         .keep-together {
             break-inside: avoid;
             page-break-inside: avoid;
-        }
-
-        /* Specific elements that should ALWAYS be in Hindi */
-        .some-hindi-text {
-            font-family: "TiroDevanagariHindi-Regular", "NotoSansDevanagari", sans-serif; /* No fallbacks if it MUST be Hindi */
         }
 
         /* For images that need to maintain specific dimensions */
@@ -324,6 +345,7 @@
             margin: 0 20px;
             font-size: 10px;
             color: var(--color-gray-light);
+            text-align: center;
         }
 
         .page-info {
@@ -362,8 +384,8 @@
         .diet_table,
         .workout_table {
             width: 100%;
-            border-collapse: collapse;
             /* Remove table-layout: fixed; */ /* This is CRUCIAL */
+            border-collapse: collapse;
             border-spacing: 0;
             empty-cells: show;
             border: 1px solid var(--border-color); /* Consistent border */
@@ -419,6 +441,12 @@
             /* Remove page-break-inside: avoid; */
         }
 
+        .medicine_table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed; /* Keep columns aligned */
+        }
+		
         .medicine_table td p {
             font-size: 10px;
             margin: 0;
@@ -429,8 +457,8 @@
         .medicine_table td {
             border: 1px solid var(--border-color);
             padding: 5px;
-            text-align: left;
-            vertical-align: top;
+            text-align: left; /* Align text to the left within cells */
+            vertical-align: top; /* Align content to the top of cells */
             /* Remove page-break-inside: avoid; */ /* This is CRUCIAL */
             overflow: hidden;
             text-overflow: ellipsis;
@@ -488,14 +516,14 @@
         /* Medicine Schedule Columns - Make them equal and flexible */
         .medicine_table th:nth-child(5), /* Morning */
         .medicine_table td:nth-child(6),
-        .medicine_table th:nth-child(6), /* Afternoon */
+        /*.medicine_table th:nth-child(6),*/ /* Afternoon */
         .medicine_table td:nth-child(7),
-        .medicine_table th:nth-child(7), /* Night */
+        /*.medicine_table th:nth-child(7),*/ /* Night */
         .medicine_table td:nth-child(8) {
-            width: auto; /* Medicine Schedule */
+            width: 30%; /* Medicine Schedule */
         }
 
-        .medicine_table th:nth-child(8),
+        .medicine_table th:nth-child(6),
         .medicine_table td:nth-child(9) {
             width: 12%; /* Start Date / Duration */
             white-space: normal;
@@ -518,31 +546,6 @@
             margin: 15px 0;
         }
 
-        /* Image Styles (Consolidated & Improved) */
-        .top_provider_section img {
-            width: 60px;
-            height: 60px;
-            object-fit: contain;
-        }
-
-        .top_provider_section_three img {
-            width: 100px;
-            height: 100px;
-            object-fit: contain;
-        }
-
-        .tick_image img {
-            width: 15px;
-            height: 15px;
-            object-fit: contain;
-        }
-
-        .signature_image {
-            width: 120px;
-            height: 40px;
-            object-fit: contain;
-        }
-
         /* Top Section Styles */
         .top_provider_section {
             display: flex;
@@ -561,7 +564,7 @@
             border: 1px solid black;
             display: grid;
             grid-template-columns: repeat(2, 3fr);
-            grid-auto-rows: minmax(35px, auto);
+            grid-auto-rows: minmax(30px, auto);
         }
 
         .top_section_wrapper_one,
@@ -691,9 +694,9 @@
         }
 
         /* Section Styles */
-        .investigation_section {
+        /*.investigation_section {
             padding: 8px;
-        }
+        }*/
 
         .diagnosis_section,
         .chef-complaints-section,
@@ -783,8 +786,7 @@
                 {{ providerName }} <br/>
                 {{ providerAddress }} +91-8411042323 <br/>
             </h3>
-            <p>{{translatedLabels.Patient}}: {{ patient_data.name }} - {{translatedLabels.ID}}: {{ patient_data.uid
-                }}</p>
+            <p>{{translatedLabels.Patient}}: {{ patient_data.name }} - {{translatedLabels.ID}}: {{ patient_data.uid}}</p>
         </div>
         <div class="top_provider_section_three">
             <img
@@ -811,7 +813,7 @@
             <p>{{ patient_data.created_at }}</p>
         </div>
         <div class="top_section_wrapper_one">
-            <h3>{{translatedLabels.Age}}/{{translatedLabels.Gender}}:</h3>
+            <h3>{{translatedLabels.Patient}} {{translatedLabels.Age}}/{{translatedLabels.Gender}}:</h3>
             <p>{{ patient_data.age }}/{{ patient_data.gender }}</p>
         </div>
 
@@ -979,7 +981,7 @@
                                 {{ genericName }} {{ strength }}<br/>
                                 <span style="font-size: 10px;">{{translatedLabels.by}} {{translatedLabels.Dr_}} {{ organizer.name }}</span><br/>
                                 {{translatedLabels.Note}}: - <span
-                                    style="font-family: TiroDevanagariHindi-Regular, NotoSansDevanagari, Arial, sans-serif;">{{ description }}</span>
+                                    style="font-family: var(--font-family-base);">{{ description }}</span>
                             </p>
                         </div>
                     </div>
@@ -1045,7 +1047,7 @@
                     {{#if isSOS}}
                     <p>{{translatedLabels.Take_whenever_required}}</p>
                     {{else}}
-                    <p>{{ startDate }} {{translatedLabels.From}} {{ duration }} {{translatedLabels.Days}}</p>
+                    <p>{{ startDate }} {{translatedLabels.From}} {{ duration }} {{translatedLabels.day_s_}}</p>
                     {{/if}}
                 </td>
             </tr>
@@ -1093,9 +1095,8 @@
                             {{ type_description }} <br/>
                             <span style="font-size: 8px">{{translatedLabels.by}} {{translatedLabels.Dr_}} {{ organizer.name }}</span>
                             <br/>
-                            Note:-
-                            <span style="font-family: TiroDevanagariHindi-Regular, NotoSansDevanagari, Arial, sans-serif"
-                            >{{ description }}</span
+                            {{translatedLabels.Note}}:-
+                            <span style="font-family: var(--font-family-base);">{{ description }}</span
                             >
                         </p>
                     </td>
@@ -1148,9 +1149,8 @@
                             {{ type_description }} <br/>
                             <span style="font-size: 8px">{{translatedLabels.by}} {{translatedLabels.Dr_}} {{ organizer.name }}</span>
                             <br/>
-                            Note:-
-                            <span style="font-family: TiroDevanagariHindi-Regular, NotoSansDevanagari, Arial, sans-serif"
-                            >{{ description }}</span
+                            {{translatedLabels.Note}}:-
+                            <span style="font-family: var(--font-family-base);">{{ description }}</span
                             >
                         </p>
                     </td>
@@ -1203,7 +1203,7 @@
                 technical assistance.
             </p>
             <br/>
-            <p style="font-weight: 100; font-family: TiroDevanagariHindi-Regular, NotoSansDevanagari, Arial, sans-serif">
+            <p style="font-weight: 100; font-family: var(--font-family-base);">
                 यह प्रिस्क्रिप्शन AdhereLive प्लेटफॉर्म पर तैयार किया गया है। अपने
                 डिजिटल प्रिस्क्रिप्शन देखने के लिए ऊपर दिए गए QR कोड का उपयोग करके
                 मोबाइल ऐप डाउनलोड करें। कृपया किसी तकनीकी सहायता के लिए
@@ -1268,9 +1268,7 @@
                                     <p>{{ this.details.name }}</p>
                                     <p>
                                         {{translatedLabels.Instructions}}:
-                                        <span style="font-family: TiroDevanagariHindi-Regular, NotoSansDevanagari, Arial, sans-serif"
-                                        >{{ this.notes }}</span
-                                        >
+                                        <span style="font-family: var(--font-family-base);">{{ this.notes }}</span>
                                     </p>
                                 </div>
                                 {{/each}}
@@ -1279,14 +1277,12 @@
                         {{/each}}
                         <div style="margin-top: 20px">
                             <h5>
-                                {{translatedLabels.Repeat_Days}} - {{#each
-                                this.repeat_days}}<span>{{this}},</span>{{/each}}
+                                {{translatedLabels.Repeat_Days}} - 
+								{{#each this.repeat_days}}<span>{{this}},</span>{{/each}}
                             </h5>
                             <h5>
                                 {{translatedLabels.What_Not_to_Do}} -
-                                <span style="font-family: TiroDevanagariHindi-Regular, NotoSansDevanagari, Arial, sans-serif"
-                                >{{this.not_to_do}}</span
-                                >
+                                <span style="font-family: var(--font-family-base);">{{this.not_to_do}}</span>
                             </h5>
                             <h5>{{translatedLabels.Total_Calories}} - <span>{{ this.total_calories }}</span></h5>
                         </div>
@@ -1348,8 +1344,7 @@
                         </p>
                         {{/each}}
                         <h5>
-                            {{translatedLabels.Repeat_Days}} - {{#each repeat_days}}<span>{{ this }}, </span
-                        >{{/each }}
+                            {{translatedLabels.Repeat_Days}} - {{#each repeat_days}}<span>{{ this }}, </span>{{/each }}
                         </h5>
                         <h5>{{translatedLabels.What_Not_to_Do}} - <span>{{ not_to_do }}</span></h5>
                         <h5>
