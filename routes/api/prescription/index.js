@@ -610,6 +610,8 @@ async function convertHTMLToPDFHi({templateHtml, dataBinding, options}) {
                 const pageHeight = 1123; // ADJUST THIS VALUE!
 
                 rows.forEach(row => {
+                    // 1. Reset row height to auto to allow content to reflow
+                    row.style.height = 'auto'; // Important!
                     currentPageHeight += row.offsetHeight;
 
                     if (currentPageHeight > pageHeight) {
@@ -619,6 +621,20 @@ async function convertHTMLToPDFHi({templateHtml, dataBinding, options}) {
 
                         currentPageHeight = row.offsetHeight;
                     }
+                });
+
+                // Distribute height equally among cells in each row.
+                rows.forEach(row => {
+                    const cells = row.querySelectorAll('td');
+                    let maxHeight = 0;
+
+                    cells.forEach(cell => {
+                        maxHeight = Math.max(maxHeight, cell.offsetHeight);
+                    });
+
+                    cells.forEach(cell => {
+                        cell.style.height = `${maxHeight}px`;
+                    });
                 });
             });
         });
