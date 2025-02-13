@@ -263,6 +263,7 @@ async function translateText(text, targetLanguage) {
             timestamp: Date.now()
         });
 
+        logger.debug('The translation of the text: ', translation);
         return translation;
     } catch (error) {
         logger.error("Translation error: ", error);
