@@ -36,15 +36,15 @@ const {Translate} = require('@google-cloud/translate').v2;
 
 // MongoDB Schema for translations
 const TranslationSchema = new mongoose.Schema({
-    key: {type: String, required: true},
-    sourceLanguage: {type: String, required: true},
-    targetLanguage: {type: String, required: true},
-    sourceText: {type: String, required: true},
-    translatedText: {type: String, required: true},
-    context: {type: String, default: 'static'}, // 'static' or 'dynamic'
-    lastUsed: {type: Date, default: Date.now},
-    createdAt: {type: Date, default: Date.now},
-    updatedAt: {type: Date, default: Date.now}
+    key: { type: String, required: true },
+    sourceLanguage: { type: String, required: true },
+    targetLanguage: { type: String, required: true },
+    sourceText: { type: String, required: true },
+    translatedText: { type: String, required: true },
+    context: { type: String, default: 'static' }, // 'static' or 'dynamic'
+    lastUsed: { type: Date, default: Date.now },
+    createdAt: { type: Date, default: Date.now },
+    updatedAt: { type: Date, default: Date.now }
 });
 
 // Create a compound index for efficient lookups
@@ -52,7 +52,7 @@ TranslationSchema.index({
     key: 1,
     sourceLanguage: 1,
     targetLanguage: 1
-}, {unique: true});
+}, { unique: true });
 
 const Translation = mongoose.model('Translation', TranslationSchema);
 
@@ -150,8 +150,8 @@ async function getStoredTranslation(key, sourceLanguage, targetLanguage) {
         if (storedTranslation) {
             // Update last used timestamp
             await Translation.updateOne(
-                {_id: storedTranslation._id},
-                {$set: {lastUsed: new Date()}}
+                { _id: storedTranslation._id },
+                { $set: { lastUsed: new Date() } }
             );
             return storedTranslation.translatedText;
         }
@@ -201,7 +201,6 @@ async function translateWithDetection(text, targetLanguage) {
         };
     }
 }
-
 
 // Function to store translation in MongoDB
 async function storeTranslation(key, sourceLanguage, targetLanguage, sourceText, translatedText, context = 'static') {
@@ -301,25 +300,26 @@ async function handleContentTranslation(content, targetLanguage) {
 }
 
 // Helper function to handle dynamic content translation with MongoDB
-async function translateDynamicContent(content, targetLanguage) {
+async function translateDynamicContent(content, sourceLanguage, targetLanguage) {
     if (typeof content === 'string') {
         try {
             // Generate a unique key for dynamic content
             const contentKey = `dynamic_${Buffer.from(content).toString('base64')}`;
 
             // Check MongoDB first
-            const storedTranslation = await Translation.findOne({
-                key: contentKey,
+            const storedTranslation = await getStoredTranslation(
+                contentKey,
+                sourceLanguage,
                 targetLanguage
-            });
+            );
 
             if (storedTranslation) {
                 return storedTranslation.translatedText;
             }
 
             // If not found, detect language and translate
-            const {sourceLanguage, sourceText, translatedText} =
-                await translateWithDetection(content, targetLanguage);
+            const {sourceText, sourceLanguage, translatedText} =
+                await translateWithDetection(content, sourceLanguage, targetLanguage);
 
             // Store the translation
             await storeTranslation(
@@ -341,7 +341,7 @@ async function translateDynamicContent(content, targetLanguage) {
     // Handle arrays and objects recursively
     if (Array.isArray(content)) {
         return Promise.all(content.map(item =>
-            translateDynamicContent(item, targetLanguage)
+            translateDynamicContent(item, sourceLanguage, targetLanguage)
         ));
     }
 
@@ -690,7 +690,7 @@ async function getTranslations(sourceLanguage, targetLanguage, strings) {
             const {
                 sourceLanguage: detectedSource,
                 translatedText
-            } = await translateWithDetection(sourceText, targetLanguage);
+            } = await translateWithDetection(sourceText, sourceLanguage, targetLanguage);
 
             const [translation] = await translate.translate(sourceText, targetLanguage);
 
