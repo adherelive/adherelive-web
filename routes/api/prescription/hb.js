@@ -47,6 +47,15 @@ const logger = createLogger("NEW TEST PRESCRIPTION API");
 const template = fs.readFileSync(__dirname + '/p.html', 'utf-8');
 const compiledTemplate = Handlebars.compile(template);
 
+export const localeMap = {
+    'hi': 'hi-IN',   // Hindi (India)
+    'es': 'es-ES',   // Spanish (Spain)
+    'ja': 'ja-JP',   // Japanese
+    'zh': 'zh-CN',   // Chinese (Simplified)
+    'ar': 'ar-SA',   // Arabic (Saudi Arabia)
+    // Add more mappings as needed
+};
+
 // Language strings (can be loaded from JSON files)
 const languages = {
     en: {
@@ -84,107 +93,225 @@ const languages = {
 };
 
 /**
- * Function for translating individual data values which are known
- * E.g.: await translateDataValue("User Dashboard", targetLanguage),
  *
- * @param value
- * @param targetLanguage
- * @returns {Promise<*|string>}
- */
-async function translateDataValue(value, targetLanguage) {
-    try {
-        const [translation] = await translate.translate(value, targetLanguage);
-        return translation;
-    } catch (error) {
-        logger.error(`Failed to translate data value "${value}":`, error);
-        return value; // Fallback to original value
-    }
-}
-
-/**
- * Function to translate numerical values of an International language
- * We are using JavaScript for this, as Google and Local translations do not do number translations
  *
- * @param number
- * @param targetLanguage
- * @returns {string}
- */
-function formatNumber(number, targetLanguage) {
-    const options = {
-        style: 'decimal', // Or 'decimal' if you don't need currency formatting
-        currency: 'USD' // Set the appropriate currency if needed, can be dynamic
-    };
-
-    let localTargetLang = null;
-
-    if(targetLanguage === 'hi') {
-        localTargetLang = targetLanguage + '-IN';
-    }
-
-    try {
-        const formatter = new Intl.NumberFormat(localTargetLang, options);
-        logger.debug('Formatted Number: ', formatter.format(number));
-        return formatter.format(number);
-    } catch (error) {
-        console.error(`Error formatting number ${number}: `, error);
-        return number.toString(); // Fallback to string conversion
-    }
-}
-
-/**
- * Function to translate date values of an International language
- * We are using JavaScript for this, as Google and Local translations do not do date values translations
- *
- * @param dateString
- * @param targetLanguage
- * @returns {string}
- */
-function formatDate(dateString, targetLanguage) {
-    const date = new Date(dateString); // Parse the date string
-
-    const options = {
-        year: 'numeric',
-        month: 'numeric', // Or 'short', 'numeric', etc.
-        day: 'numeric'
-    };
-
-    try {
-        const formatter = new Intl.DateTimeFormat(targetLanguage, options);
-        logger.debug('Formatted Date: ', formatter.format(data));
-        return formatter.format(date);
-    } catch (error) {
-        console.error(`Error formatting date ${dateString}:`, error);
-        return dateString; // Fallback to original date string
-    }
-}
-
-/**
- * Function to extract and translate the individual numbers in any string
- *
- * @param inputString
- * @param targetLanguage
+ * @param language
  * @returns {*}
  */
-function updateStringWithNumbers(inputString, targetLanguage) {
-    // Regex to match strings that contain numbers but not dates
-    const numberRegex = /[^\d]*\d+(\.\d+)?[^\d]*/;
-    const dateRegex = /\b(\d{4}-\d{2}-\d{2})|(\d{1,2}[-\/]\d{1,2}[-\/]\d{2,4})\b/;
+const getLocale = (language) => {
+    try {
+        // If a full locale is provided (e.g., 'hi-IN'), return it as is
+        if (language.includes('-')) {
+            return language;
+        }
 
-    if (dateRegex.test(inputString)) {
-        console.error("Input string contains a date.");
-        return inputString; // Return the original string if a date is found
+        // If only language code is provided, get the mapped locale
+        return localeMap[language] || language;
+    } catch (error) {
+        logger.error(`Error getting locale for language ${language}:`, error);
+        return language;
     }
+};
 
-    // Replace the number in the string with the updated number
-    const updatedString = inputString.replace(numberRegex, (match, number) => {
-        const numericValue = parseFloat(number); // Extract the numeric part and convert to a number
-        const updatedNumber = numericValue + 1; // Increment the number by 1 (or any other calculation)
-        return match.replace(number, formatNumber(updatedNumber, targetLanguage)); // Replace the number in the match with the updated number
+/**
+ *
+ *
+ * @param language
+ * @returns {{format: ((function(*): (*|undefined))|*)}}
+ */
+export const createNumberFormatter = (language) => {
+    const locale = getLocale(language);
+    logger.debug(`Creating number formatter for locale: ${locale}`);
+
+    const formatter = new Intl.NumberFormat(locale, {
+        maximumFractionDigits: 20
     });
 
-    logger.debug('String which has been updated with the latest numbers: ', updatedString);
-    return updatedString;
-}
+    return {
+        format: (number) => {
+            try {
+                return formatter.format(number);
+            } catch (error) {
+                logger.error(`Error formatting number ${number} for locale ${locale}:`, error);
+                return number.toString();
+            }
+        }
+    };
+};
+
+/**
+ *
+ *
+ * @param language
+ * @returns {{format: ((function(*): (*|undefined))|*)}}
+ */
+export const createDateFormatter = (language) => {
+    const locale = getLocale(language);
+    logger.debug(`Creating date formatter for locale: ${locale}`);
+
+    const formatter = new Intl.DateTimeFormat(locale, {
+        year: 'numeric',
+        month: 'numeric',
+        day: 'numeric'
+    });
+
+    return {
+        format: (dateString) => {
+            try {
+                const date = new Date(dateString);
+                if (isNaN(date.getTime())) {
+                    return dateString;
+                }
+                return formatter.format(date);
+            } catch (error) {
+                logger.error(`Error formatting date ${dateString} for locale ${locale}:`, error);
+                return dateString;
+            }
+        }
+    };
+};
+
+
+/**
+ *
+ *
+ * @param locale
+ * @returns {{format: ((function(*): (*|string|undefined))|*)}}
+ */
+const createCurrencyFormatter = (locale) => {
+    const numberFormatter = createNumberFormatter(locale);
+
+    return {
+        format: (value) => {
+            try {
+                const match = value.match(/^([^\d\s]+)\s*(\d+(\.\d{2})?)$/);
+                if (!match) return value;
+
+                const [, symbol, amount] = match;
+                const number = parseFloat(amount);
+                return `${symbol}${numberFormatter.format(number)}`;
+            } catch (error) {
+                logger.error(`Error formatting currency ${value}:`, error);
+                return value;
+            }
+        }
+    };
+};
+
+/**
+ * Just for Strings, which are not taken up and converted by any of the other translators
+ *
+ * @param locale
+ * @returns {{translate: ((function(*): (*|string|undefined))|*)}}
+ */
+const createStringTranslator = (locale) => {
+    const numberFormatter = createNumberFormatter(locale);
+    const dateFormatter = createDateFormatter(locale);
+    const currencyFormatter = createCurrencyFormatter(locale);
+
+    const patterns = {
+        orderId: /^([A-Z]+-)\d+$/i,
+        date: /^\d{4}-\d{2}-\d{2}$/,
+        currency: /^[^\d\s]+\s*\d+(\.\d{2})?$/,
+        number: /\d+/
+    };
+
+    return {
+        translate: (value) => {
+            try {
+                // Skip translation for email addresses
+                if (value.includes('@')) return value;
+
+                // Handle order IDs (ORD-001, etc.)
+                if (patterns.orderId.test(value)) {
+                    const [, prefix] = value.match(/^([A-Z]+-)/i);
+                    const numbers = value.match(/\d+/)[0];
+                    return `${prefix}${numberFormatter.format(parseInt(numbers, 10))}`;
+                }
+
+                // Handle dates
+                if (patterns.date.test(value)) {
+                    return dateFormatter.format(value);
+                }
+
+                // Handle currency values
+                if (patterns.currency.test(value)) {
+                    return currencyFormatter.format(value);
+                }
+
+                // Handle plain numbers within text
+                if (patterns.number.test(value)) {
+                    return value.replace(/\d+/g, match =>
+                        numberFormatter.format(parseInt(match, 10))
+                    );
+                }
+
+                return value;
+            } catch (error) {
+                logger.error(`Error translating string ${value}:`, error);
+                return value;
+            }
+        }
+    };
+};
+
+/**
+ *
+ *
+ * @param locale
+ * @returns {{translate: ((function(*): Promise<*|Awaited<unknown>[]|{}|undefined>)|*)}}
+ */
+const createDataTranslator = (locale) => {
+    const numberFormatter = createNumberFormatter(locale);
+    const stringTranslator = createStringTranslator(locale);
+
+    const translateValue = async (value) => {
+        try {
+            if (typeof value === 'string') {
+                return stringTranslator.translate(value);
+            }
+
+            if (typeof value === 'number') {
+                return numberFormatter.format(value);
+            }
+
+            if (Array.isArray(value)) {
+                return Promise.all(value.map(item => translateValue(item)));
+            }
+
+            if (value && typeof value === 'object') {
+                const translatedObj = {};
+                for (const key in value) {
+                    if (value.hasOwnProperty(key)) {
+                        // Skip translation for specific fields
+                        if (key === 'strings' || key === 'email' || key === 'status') {
+                            translatedObj[key] = value[key];
+                        } else {
+                            translatedObj[key] = await translateValue(value[key]);
+                        }
+                    }
+                }
+                return translatedObj;
+            }
+
+            return value;
+        } catch (error) {
+            logger.error('Error in translateValue:', error);
+            return value;
+        }
+    };
+
+    return {
+        translate: async (data) => {
+            try {
+                return await translateValue(data);
+            } catch (error) {
+                logger.error('Error in translateData:', error);
+                return data;
+            }
+        }
+    };
+};
 
 /**
  * Function to translate the data when the structure and data is not known beforehand
@@ -193,43 +320,12 @@ function updateStringWithNumbers(inputString, targetLanguage) {
  * @param targetLanguage
  * @returns {Promise<Awaited<unknown>[]|{}|*|string>}
  */
-async function translateData(data, targetLanguage) {
-    // Improved regex for strings that contain numbers or numbers with decimals, not base character strings
-    const numberRegex = /[^\d]*\d+(\.\d+)?[^\d]*/;
-    // Check for valid dates ONLY if the string does NOT contain other characters
-    const dateRegex = /^\d{4}-\d{2}-\d{2}$/; // ISO 8601 date format
+export async function translateData(data, targetLanguage) {
+    const locale = getLocale(targetLanguage);
+    logger.debug(`Translating data using locale: ${locale}`);
 
-    logger.debug('Raw data received: ', data);
-    if (typeof data === 'number') {
-        return formatNumber(data, targetLanguage);
-    } else if (data instanceof Date) {
-        return formatDate(data, targetLanguage);
-    } else if (typeof data === 'string') {
-        if (numberRegex.test(data)) {
-            logger.debug('Does it come here for strings with a $?');
-            return updateStringWithNumbers(data, targetLanguage);
-        } else {
-            if (dateRegex.test(data)) {
-                return formatDate(data, targetLanguage);
-            } else {
-                return translateDataValue(data, targetLanguage);
-            }
-        }
-    } else if (Array.isArray(data)) {
-        return Promise.all(
-            data.map(async (item) => await translateData(item, targetLanguage))
-        );
-    } else if (typeof data === 'object' && data !== null) {
-        const translatedObject = {};
-        for (const key in data) {
-            if (data.hasOwnProperty(key)) {
-                translatedObject[ key ] = await translateData(data[ key ], targetLanguage);
-            }
-        }
-        return translatedObject;
-    } else {
-        return data;
-    }
+    const translator = createDataTranslator(locale);
+    return translator.translate(data);
 }
 
 /**
