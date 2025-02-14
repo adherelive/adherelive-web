@@ -76,7 +76,7 @@ const getLocale = (language) => {
         }
 
         // If only language code is provided, get the mapped locale
-        return localeMap[language] || language;
+        return localeMap[ language ] || language;
     } catch (error) {
         logger.error(`Error getting locale for language ${language}:`, error);
         return language;
@@ -93,11 +93,11 @@ function convertNumberToDevanagari(number) {
     const numStr = number.toString();
     let devanagariStr = '';
     for (let i = 0; i < numStr.length; i++) {
-        const digit = parseInt(numStr[i]);
+        const digit = parseInt(numStr[ i ]);
         if (!isNaN(digit)) {
-            devanagariStr += devanagariDigits[digit];
+            devanagariStr += devanagariDigits[ digit ];
         } else {
-            devanagariStr += numStr[i]; // Keep non-digit characters as is
+            devanagariStr += numStr[ i ]; // Keep non-digit characters as is
         }
     }
     return devanagariStr;
@@ -111,7 +111,6 @@ function convertNumberToDevanagari(number) {
  */
 export const createNumberFormatter = (language) => {
     const locale = getLocale(language);
-    logger.debug(`Creating number formatter for locale: ${locale}`);
 
     const formatter = new Intl.NumberFormat(locale, {
         maximumFractionDigits: 20
@@ -119,7 +118,9 @@ export const createNumberFormatter = (language) => {
 
     return {
         format: (number) => {
+            logger.debug('Number I get is: ', number);
             try {
+                logger.debug('Number I return is: ', formatter.format(number));
                 return formatter.format(number);
             } catch (error) {
                 logger.error(`Error formatting number ${number} for locale ${locale}, using local translation:`, error);
@@ -137,7 +138,6 @@ export const createNumberFormatter = (language) => {
  */
 export const createDateFormatter = (language) => {
     const locale = getLocale(language);
-    logger.debug(`Creating date formatter for locale: ${locale}`);
 
     const formatter = new Intl.DateTimeFormat(locale, {
         year: 'numeric',
@@ -200,7 +200,6 @@ const createStringTranslator = (locale) => {
     const currencyFormatter = createCurrencyFormatter(locale);
 
     const patterns = {
-        orderId: /^([A-Z]+-)\d+$/i,
         date: /^\d{4}-\d{2}-\d{2}$/,
         currency: /^[^\d\s]+\s*\d+(\.\d{2})?$/,
         number: /\d+/
@@ -212,12 +211,8 @@ const createStringTranslator = (locale) => {
                 // Skip translation for email addresses
                 if (value.includes('@')) return value;
 
-                // Handle order IDs (ORD-001, etc.)
-                if (patterns.orderId.test(value)) {
-                    const [, prefix] = value.match(/^([A-Z]+-)/i);
-                    const numbers = value.match(/\d+/)[0];
-                    return `${prefix}${numberFormatter.format(parseInt(numbers, 10))}`;
-                }
+                const parts = value.split(/([A-Za-z]+[/-]?)/); // Split by identifiers
+                logger.debug('Parts of the String: ', parts);
 
                 // Handle dates
                 if (patterns.date.test(value)) {
@@ -229,14 +224,26 @@ const createStringTranslator = (locale) => {
                     return currencyFormatter.format(value);
                 }
 
+
                 // Handle plain numbers within text
                 if (patterns.number.test(value)) {
-                    return value.replace(/\d+/g, match =>
-                        numberFormatter.format(parseInt(match, 10))
-                    );
+                    return value.replace(/\d+/g, match => {
+                        const formatted = numberFormatter.format(parseInt(match, 10));
+                        return formatted.padStart(match.length, '0');
+                    });
                 }
 
-                return value;
+                // If no number pattern is found, process parts and join them
+                const translatedParts = parts.map(part => {
+                    const numMatch = part.match(/^\d+$/);
+                    if (numMatch) {
+                        const formatted = numberFormatter.format(parseInt(numMatch[ 0 ], 10));
+                        return formatted.padStart(numMatch[ 0 ].length, '0');
+                    }
+                    return part;
+                });
+                return translatedParts.join('');
+
             } catch (error) {
                 logger.error(`Error translating string ${value}:`, error);
                 return value;
@@ -275,9 +282,9 @@ const createDataTranslator = (locale) => {
                     if (value.hasOwnProperty(key)) {
                         // Skip translation for specific fields
                         if (key === 'strings' || key === 'email' || key === 'status') {
-                            translatedObj[key] = value[key];
+                            translatedObj[ key ] = value[ key ];
                         } else {
-                            translatedObj[key] = await translateValue(value[key]);
+                            translatedObj[ key ] = await translateValue(value[ key ]);
                         }
                     }
                 }
@@ -416,14 +423,30 @@ async function renderTemplate(targetLanguage) {
             },
             orders: [
                 {id: "ORD-001", date: "2024-02-14", amount: "$100", status: "Completed"},
-                {id: "ORD-002", date: "2024-02-13", amount: "$75", status: "Processing"}
+                {id: "ORD-002", date: "2024-02-02", amount: "$75.00", status: "Processing"},
+                {id: "ORD-300", date: "15/02/2024", amount: "$0.05", status: "Pending"},
+                {id: "ORD-042", date: "14-02-2024", amount: "$01.25", status: "Processing"}
             ],
             products: [
                 {
                     name: "Product A",
                     variants: [
-                        {name: "Small", price: "$10", stock: 5},
-                        {name: "Large", price: "$15", stock: 3}
+                        {name: "Small", price: "$10.98", stock: 5},
+                        {name: "Large", price: "$15.91", stock: 3}
+                    ]
+                },
+                {
+                    name: "Product B",
+                    variants: [
+                        {name: "Small", price: "102.95", stock: 5.5},
+                        {name: "Large", price: "$0.02", stock: 0.034}
+                    ]
+                },
+                {
+                    name: "Product C",
+                    variants: [
+                        {name: "Small", price: "$1000", stock: 5},
+                        {name: "Large", price: "$150", stock: 3}
                     ]
                 }
             ]
