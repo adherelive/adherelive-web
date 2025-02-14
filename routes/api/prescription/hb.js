@@ -118,9 +118,7 @@ export const createNumberFormatter = (language) => {
 
     return {
         format: (number) => {
-            logger.debug('Number I get is: ', number);
             try {
-                logger.debug('Number I return is: ', formatter.format(number));
                 return formatter.format(number);
             } catch (error) {
                 logger.error(`Error formatting number ${number} for locale ${locale}, using local translation:`, error);
@@ -211,9 +209,6 @@ const createStringTranslator = (locale) => {
                 // Skip translation for email addresses
                 if (value.includes('@')) return value;
 
-                const parts = value.split(/([A-Za-z]+[/-]?)/); // Split by identifiers
-                logger.debug('Parts of the String: ', parts);
-
                 // Handle dates
                 if (patterns.date.test(value)) {
                     return dateFormatter.format(value);
@@ -224,7 +219,6 @@ const createStringTranslator = (locale) => {
                     return currencyFormatter.format(value);
                 }
 
-
                 // Handle plain numbers within text
                 if (patterns.number.test(value)) {
                     return value.replace(/\d+/g, match => {
@@ -233,11 +227,13 @@ const createStringTranslator = (locale) => {
                     });
                 }
 
+                const parts = value.split(/([A-Za-z]+[/-]?)/); // Split by identifiers
+
                 // If no number pattern is found, process parts and join them
                 const translatedParts = parts.map(part => {
                     const numMatch = part.match(/^\d+$/);
                     if (numMatch) {
-                        const formatted = numberFormatter.format(parseInt(numMatch[ 0 ], 10));
+                        const formatted = numberFormatter.format(Number(numMatch[ 0 ])); //Format as number
                         return formatted.padStart(numMatch[ 0 ].length, '0');
                     }
                     return part;
@@ -541,7 +537,7 @@ const translationLimiter = rateLimit({
  *
  * @returns HTML data
  */
-router.get('/details/:care_plan_id/:language', Authenticated, async (req, res) => {
+router.get('/test/:language', Authenticated, async (req, res) => {
     try {
         const html = await renderTemplate(req.params.language);
         return res.send(html);
