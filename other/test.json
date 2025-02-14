@@ -1,0 +1,34 @@
+{
+  "en": {
+    "welcome": "Welcome to Our Platform",
+    "description": "View your account information below",
+    "userInfo": "User Information",
+    "name": "Name",
+    "email": "Email",
+    "orderHistory": "Order History",
+    "orderId": "Order ID",
+    "date": "Date",
+    "amount": "Amount",
+    "status": "Status",
+    "productDetails": "Product Details",
+    "variant": "Variant",
+    "price": "Price",
+    "stock": "Stock"
+  },
+  "hi": {
+    "welcome": "हमारे मंच में आपका स्वागत है",
+    "description": "नीचे अपनी खाता जानकारी देखें",
+    "userInfo": "उपयोगकर्ता जानकारी",
+    "name": "नाम",
+    "email": "ईमेल",
+    "orderHistory": "ऑर्डर इतिहास",
+    "orderId": "ऑर्डर आईडी",
+    "date": "तारीख",
+    "amount": "राशि",
+    "status": "स्थिति",
+    "productDetails": "उत्पाद विवरण",
+    "variant": "संस्करण",
+    "price": "मूल्य",
+    "stock": "स्टॉक"
+  }
+}

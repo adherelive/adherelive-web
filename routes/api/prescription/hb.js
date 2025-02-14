@@ -57,43 +57,13 @@ export const localeMap = {
 };
 
 // Language strings (can be loaded from JSON files)
-const languages = {
-    en: {
-        welcome: "Welcome to Our Platform",
-        description: "View your account information below",
-        userInfo: "User Information",
-        name: "Name",
-        email: "Email",
-        orderHistory: "Order History",
-        orderId: "Order ID",
-        date: "Date",
-        amount: "Amount",
-        status: "Status",
-        productDetails: "Product Details",
-        variant: "Variant",
-        price: "Price",
-        stock: "Stock"
-    },
-    hi: {
-        welcome: "हमारे मंच में आपका स्वागत है",
-        description: "नीचे अपनी खाता जानकारी देखें",
-        userInfo: "उपयोगकर्ता जानकारी",
-        name: "नाम",
-        email: "ईमेल",
-        orderHistory: "ऑर्डर इतिहास",
-        orderId: "ऑर्डर आईडी",
-        date: "तारीख",
-        amount: "राशि",
-        status: "स्थिति",
-        productDetails: "उत्पाद विवरण",
-        variant: "संस्करण",
-        price: "मूल्य",
-        stock: "स्टॉक"
-    }
-};
+const languages = require('../../../other/test.json');
+
+// As the browsers and Google Translate does not do this
+const devanagariDigits = ['०', '१', '२', '३', '४', '५', '६', '७', '८', '९'];
 
 /**
- *
+ * For getting and converting the target language to a locale
  *
  * @param language
  * @returns {*}
@@ -114,7 +84,27 @@ const getLocale = (language) => {
 };
 
 /**
+ * Manually converting numbers to Devanagari/Hindi
  *
+ * @param number
+ * @returns {string}
+ */
+function convertNumberToDevanagari(number) {
+    const numStr = number.toString();
+    let devanagariStr = '';
+    for (let i = 0; i < numStr.length; i++) {
+        const digit = parseInt(numStr[i]);
+        if (!isNaN(digit)) {
+            devanagariStr += devanagariDigits[digit];
+        } else {
+            devanagariStr += numStr[i]; // Keep non-digit characters as is
+        }
+    }
+    return devanagariStr;
+}
+
+/**
+ * Number formatter for the HTML data
  *
  * @param language
  * @returns {{format: ((function(*): (*|undefined))|*)}}
@@ -132,15 +122,15 @@ export const createNumberFormatter = (language) => {
             try {
                 return formatter.format(number);
             } catch (error) {
-                logger.error(`Error formatting number ${number} for locale ${locale}:`, error);
-                return number.toString();
+                logger.error(`Error formatting number ${number} for locale ${locale}, using local translation:`, error);
+                return convertNumberToDevanagari(number.toString()); // Manual conversion
             }
         }
     };
 };
 
 /**
- *
+ * Date formatter for the HTML data
  *
  * @param language
  * @returns {{format: ((function(*): (*|undefined))|*)}}
@@ -173,7 +163,7 @@ export const createDateFormatter = (language) => {
 
 
 /**
- *
+ * Currency values formatter for the HTML data
  *
  * @param locale
  * @returns {{format: ((function(*): (*|string|undefined))|*)}}
@@ -192,7 +182,7 @@ const createCurrencyFormatter = (locale) => {
                 return `${symbol}${numberFormatter.format(number)}`;
             } catch (error) {
                 logger.error(`Error formatting currency ${value}:`, error);
-                return value;
+                return convertNumberToDevanagari(value); // Manual conversion
             }
         }
     };
@@ -256,7 +246,7 @@ const createStringTranslator = (locale) => {
 };
 
 /**
- *
+ * Main conversion and translation function which controls and sends data across for the locale
  *
  * @param locale
  * @returns {{translate: ((function(*): Promise<*|Awaited<unknown>[]|{}|undefined>)|*)}}
@@ -528,7 +518,7 @@ const translationLimiter = rateLimit({
  *
  * @returns HTML data
  */
-router.get('/test/:language', Authenticated, async (req, res) => {
+router.get('/details/:care_plan_id/:language', Authenticated, async (req, res) => {
     try {
         const html = await renderTemplate(req.params.language);
         return res.send(html);
