@@ -399,11 +399,10 @@ function extractKeysFromTemplate(templatePath) {
 /**
  * Function to replace all values in the dynamic data and HTML fields using handlebars
  *
- *
  * @param targetLanguage
  * @returns {Promise<string>}
  */
-async function renderTemplate(targetLanguage) {
+export async function renderTemplate(targetLanguage) {
     try {
         // Get translations, falling back to Google Translate if needed
         const strings = await getTranslations('en', targetLanguage, languages);
@@ -525,10 +524,10 @@ function validateTranslation(original, translated, language) {
 }
 
 // API calls rate limiter, Set up rate limiter
-const translationLimiter = rateLimit({
+export const translationLimiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
     max: 100, // limit each IP to 100 requests per windowMs
     message: 'Too many translation requests, please try again later'
 });
 
-module.exports = router;
+module.exports = { renderTemplate };

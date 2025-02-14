@@ -62,10 +62,10 @@ import { raiseClientError, raiseServerError } from "../helper";
 
 
 // Fetch the Google Translation API and 'puppeteer' along with 'handlebars' for the HTML to PDF conversion
-const {TranslationServiceClient} = require('@google-cloud/translate').v3beta1;
+const { TranslationServiceClient } = require('@google-cloud/translate').v3beta1;
 const puppeteer = require("puppeteer");
 const handlebars = require("handlebars");
-const renderTemplate = require('./hb')
+const { renderTemplate } = require('./hb')
 
 const logger = createLogger("PRESCRIPTION API");
 const generationTimestamp = moment().format('MMMM Do YYYY, h:mm:ss A'); // Format with Moment.js
