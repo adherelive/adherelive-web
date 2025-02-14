@@ -414,9 +414,9 @@ const getAllDataForDoctors = async ({
       return [[], "No schedule events found"];
     }
 
-    logger.debug("Retrieved schedule events: ", scheduleEvents);
+    // logger.debug("Retrieved schedule events: ", scheduleEvents);
     const formattedData = await getFormattedData(scheduleEvents, category);
-    logger.debug("Formatted data: ", formattedData);
+    // logger.debug("Formatted data: ", formattedData);
 
     return [
       { ...formattedData, patientCount: patientIds.size }, // Include patientCount
@@ -515,7 +515,7 @@ const getAllDataForDoctorsCount = async ({
       { ...formattedData, patientCount }, // Add patientCount to the response
       "Missed events fetched successfully",
     ];
-    logger.debug("getAllDataForDoctorCount response for the Doctor/Patient: ", response);
+    // logger.debug("getAllDataForDoctorCount response for the Doctor/Patient: ", response);
 
     return response;
   } catch (error) {

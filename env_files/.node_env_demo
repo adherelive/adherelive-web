@@ -53,8 +53,9 @@ DB_DIALECT=mysql
 MONGO_DB_URI=mongodb://mongouser:password@mongodb:27017/adhere?authSource=admin
 
 # Redis Credentials, not used currently
-REDIS_HOST=
-REDIS_PORT=
+REDIS_URL=redis://localhost:6379
+REDIS_HOST=localhost
+REDIS_PORT=6379
 REDIS_USERNAME=
 REDIS_PASSWORD=
 
@@ -110,6 +111,8 @@ GETSTREAM_FEED_GROUP=notification
 GOOGLE_CLIENT_ID=398277517704-eqh1lvm3872s2a5t916kua18gp60steu.apps.googleusercontent.com
 GOOGLE_CLIENT_SECRET=KszeHfBloxPaTayEXB_y6WQg
 GOOGLE_REDIRECT_URI=postmessage
+GOOGLE_CLOUD_PROJECT_ID=adherelive-translate
+GOOGLE_APPLICATION_CREDENTIALS="./other/adherelive-translate-google-cloud.json"
 
 # Firebase Keys
 FIREBASE_PROJECT_ID=onesignal-6b0c6
@@ -188,6 +191,7 @@ PATIENT_LIST_SIZE_LIMIT=10
 WORKOUT_PRIOR_NOTIFY_MINUTES=30
 WORKOUT_START_HOURS=6
 WORKOUT_START_MINUTES=0
+MEDICINE_INSTANCE=SUBHARTI
 
 # Infrastructure related variables for time outs
 COMPOSE_HTTP_TIMEOUT=120
