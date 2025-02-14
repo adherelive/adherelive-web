@@ -27,7 +27,6 @@
  *
  */
 import express from "express";
-import Authenticated from "../middleware/auth";
 import { createLogger } from "../../../libs/logger";
 import fs from "fs";
 
