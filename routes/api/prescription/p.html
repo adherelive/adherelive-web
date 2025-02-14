@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{{title}}</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+        .section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #eee;
+        }
+    </style>
+</head>
+<body>
+<div class="section">
+    <!-- Static content with i18n support -->
+    <h1>{{strings.welcome}}</h1>
+    <p>{{strings.description}}</p>
+</div>
+
+<div class="section">
+    <!-- Dynamic single values -->
+    <h2>{{strings.userInfo}}</h2>
+    <p>{{strings.name}}: {{userData.name}}</p>
+    <p>{{strings.email}}: {{userData.email}}</p>
+</div>
+
+<div class="section">
+    <!-- Dynamic array data in table -->
+    <h2>{{strings.orderHistory}}</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>{{strings.orderId}}</th>
+            <th>{{strings.date}}</th>
+            <th>{{strings.amount}}</th>
+            <th>{{strings.status}}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{#each orders}}
+            <tr>
+                <td>{{this.id}}</td>
+                <td>{{this.date}}</td>
+                <td>{{this.amount}}</td>
+                <td>{{this.status}}</td>
+            </tr>
+        {{/each}}
+        </tbody>
+    </table>
+</div>
+
+<div class="section">
+    <!-- Nested dynamic data -->
+    <h2>{{strings.productDetails}}</h2>
+    {{#each products}}
+        <div class="product">
+            <h3>{{this.name}}</h3>
+            <table>
+                <thead>
+                <tr>
+                    <th>{{../strings.variant}}</th>
+                    <th>{{../strings.price}}</th>
+                    <th>{{../strings.stock}}</th>
+                </tr>
+                </thead>
+                <tbody>
+                {{#each this.variants}}
+                    <tr>
+                        <td>{{this.name}}</td>
+                        <td>{{this.price}}</td>
+                        <td>{{this.stock}}</td>
+                    </tr>
+                {{/each}}
+                </tbody>
+            </table>
+        </div>
+    {{/each}}
+</div>
+</body>
+</html>

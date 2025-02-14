@@ -552,7 +552,8 @@ async function convertHTMLToPDFHi({templateHtml, dataBinding, options}) {
         // Compile template with translated data
         const template = handlebars.compile(templateHtml);
         let finalHtml = template(translatedDataBinding);
-        // logger.debug('The Final HTML with translated labels', finalHtml);
+        logger.debug('The handlebar values translated? \n', template);
+        logger.debug('The Final HTML with translated labels \n', finalHtml);
 
         // Log the length of individual sections (if applicable)
         logger.debug("Length of HTML before translation: ", finalHtml.length); // Log the total length
