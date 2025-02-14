@@ -26,25 +26,50 @@
  * Maintains clean separation between structure and content
  *
  */
-import express from "express";
 import { createLogger } from "../../../libs/logger";
 import fs from "fs";
+import mongoose from "mongoose";
 
 const Handlebars = require('handlebars');
-const router = express.Router();
 const rateLimit = require('express-rate-limit');
 const {Translate} = require('@google-cloud/translate').v2;
 
+// MongoDB Schema for translations
+const TranslationSchema = new mongoose.Schema({
+    key: { type: String, required: true },
+    sourceLanguage: { type: String, required: true },
+    targetLanguage: { type: String, required: true },
+    sourceText: { type: String, required: true },
+    translatedText: { type: String, required: true },
+    context: { type: String, default: 'static' }, // 'static' or 'dynamic'
+    lastUsed: { type: Date, default: Date.now },
+    createdAt: { type: Date, default: Date.now },
+    updatedAt: { type: Date, default: Date.now }
+});
+
+// Create a compound index for efficient lookups
+TranslationSchema.index({
+    key: 1,
+    sourceLanguage: 1,
+    targetLanguage: 1
+}, { unique: true });
+
+const Translation = mongoose.model('Translation', TranslationSchema);
+
+// Translation service setup
 const translate = new Translate({
     projectId: process.config.google_keys.GOOGLE_CLOUD_PROJECT_ID,
     keyFilename: process.config.google_keys.GOOGLE_APPLICATION_CREDENTIALS,
 });
 
-const logger = createLogger("NEW TEST PRESCRIPTION API");
+const logger = createLogger("ENHANCED TRANSLATION API");
 
 // Read and compile template
 const template = fs.readFileSync(__dirname + '/p.html', 'utf-8');
 const compiledTemplate = Handlebars.compile(template);
+
+// Cache for translations to reduce API calls
+const translationCache = new Map();
 
 export const localeMap = {
     'hi': 'hi-IN',   // Hindi (India)
@@ -100,6 +125,255 @@ function convertNumberToDevanagari(number) {
         }
     }
     return devanagariStr;
+}
+
+// Function to check and retrieve translation from MongoDB
+async function getStoredTranslation(key, sourceLanguage, targetLanguage) {
+    try {
+        const storedTranslation = await Translation.findOne({
+            key,
+            sourceLanguage,
+            targetLanguage
+        });
+
+        if (storedTranslation) {
+            // Update last used timestamp
+            await Translation.updateOne(
+                { _id: storedTranslation._id },
+                { $set: { lastUsed: new Date() } }
+            );
+            return storedTranslation.translatedText;
+        }
+
+        return null;
+    } catch (error) {
+        logger.error('Error retrieving translation from MongoDB:', error);
+        return null;
+    }
+}
+
+// Function to store translation in MongoDB
+async function storeTranslation(key, sourceLanguage, targetLanguage, sourceText, translatedText, context = 'static') {
+    try {
+        await Translation.findOneAndUpdate(
+            {
+                key,
+                sourceLanguage,
+                targetLanguage
+            },
+            {
+                sourceText,
+                translatedText,
+                context,
+                updatedAt: new Date(),
+                lastUsed: new Date()
+            },
+            {
+                upsert: true,
+                new: true
+            }
+        );
+    } catch (error) {
+        logger.error('Error storing translation in MongoDB:', error);
+    }
+}
+
+// Enhanced function to handle both static and dynamic translations
+async function translateContent(content, sourceLanguage, targetLanguage) {
+    try {
+        // Skip translation if content is empty or target language is English
+        if (!content || targetLanguage === 'en') {
+            return content;
+        }
+
+        // Generate cache key
+        const cacheKey = `${content}_${targetLanguage}`;
+
+        // Check cache first
+        if (translationCache.has(cacheKey)) {
+            return translationCache.get(cacheKey);
+        }
+
+        // Handle different content types
+        const translatedContent = await handleContentTranslation(content, targetLanguage);
+
+        // Cache the result
+        translationCache.set(cacheKey, translatedContent);
+
+        return translatedContent;
+    } catch (error) {
+        logger.error(`Translation failed for content: ${content}`, error);
+        return content; // Fallback to original content
+    }
+}
+
+async function handleContentTranslation(content, targetLanguage) {
+    // Handle different types of content
+    if (typeof content === 'number') {
+        return content; // Numbers don't need translation
+    }
+
+    if (typeof content === 'string') {
+        // Skip translation for special cases
+        if (shouldSkipTranslation(content)) {
+            return content;
+        }
+
+        try {
+            const [translation] = await translate.translate(content, targetLanguage);
+            return translation;
+        } catch (error) {
+            logger.error(`Failed to translate string: ${content}`, error);
+            return content;
+        }
+    }
+
+    if (Array.isArray(content)) {
+        return Promise.all(content.map(item => handleContentTranslation(item, targetLanguage)));
+    }
+
+    if (content && typeof content === 'object') {
+        const translatedObj = {};
+        for (const [key, value] of Object.entries(content)) {
+            translatedObj[key] = await handleContentTranslation(value, targetLanguage);
+        }
+        return translatedObj;
+    }
+
+    return content;
+}
+
+// Helper function to handle dynamic content translation with MongoDB
+async function translateDynamicContent(content, sourceLanguage, targetLanguage) {
+    if (typeof content === 'string') {
+        try {
+            // Generate a unique key for dynamic content
+            const contentKey = `dynamic_${Buffer.from(content).toString('base64')}`;
+
+            // Check MongoDB first
+            const storedTranslation = await getStoredTranslation(
+                contentKey,
+                sourceLanguage,
+                targetLanguage
+            );
+
+            if (storedTranslation) {
+                return storedTranslation;
+            }
+
+            // If not found, translate and store
+            const [translation] = await translate.translate(content, targetLanguage);
+
+            await storeTranslation(
+                contentKey,
+                sourceLanguage,
+                targetLanguage,
+                content,
+                translation,
+                'dynamic'
+            );
+
+            return translation;
+        } catch (error) {
+            logger.error('Dynamic translation failed:', error);
+            return content;
+        }
+    }
+
+    // Handle arrays and objects recursively
+    if (Array.isArray(content)) {
+        return Promise.all(content.map(item =>
+            translateDynamicContent(item, sourceLanguage, targetLanguage)
+        ));
+    }
+
+    if (content && typeof content === 'object') {
+        const translatedObj = {};
+        for (const [key, value] of Object.entries(content)) {
+            translatedObj[key] = await translateDynamicContent(
+                value,
+                sourceLanguage,
+                targetLanguage
+            );
+        }
+        return translatedObj;
+    }
+
+    return content;
+}
+
+function shouldSkipTranslation(content) {
+    // Skip translation for these cases
+    return (
+        !content || // Empty content
+        content.includes('@') || // Email addresses
+        /^[0-9]+$/.test(content) || // Pure numbers
+        /^(https?:\/\/)/.test(content) || // URLs
+        /{{\s*[\w.]+\s*}}/.test(content) // Handlebars expressions
+    );
+}
+
+
+// Utility function to clean up old translations
+export async function cleanupOldTranslations(daysOld = 30) {
+    const cutoffDate = new Date();
+    cutoffDate.setDate(cutoffDate.getDate() - daysOld);
+
+    try {
+        const result = await Translation.deleteMany({
+            lastUsed: { $lt: cutoffDate }
+        });
+        logger.info(`Cleaned up ${result.deletedCount} old translations`);
+    } catch (error) {
+        logger.error('Error cleaning up old translations:', error);
+    }
+}
+
+// Translation Validations
+function validateTranslation(original, translated, language) {
+    // Basic validation
+    if (!translated || typeof translated !== 'string') {
+        throw new Error('Invalid translation: Empty or not a string');
+    }
+
+    // Check for template markers
+    if (translated.includes('{{') || translated.includes('}}')) {
+        throw new Error('Translation contains template markers');
+    }
+
+    // Language-specific validations
+    const validations = {
+        hi: {
+            regex: /[\u0900-\u097F]/,
+            message: 'Hindi translation must contain Hindi characters'
+        },
+        ar: {
+            regex: /[\u0600-\u06FF]/,
+            message: 'Arabic translation must contain Arabic characters'
+        },
+        zh: {
+            regex: /[\u4E00-\u9FFF]/,
+            message: 'Chinese translation must contain Chinese characters'
+        },
+        ja: {
+            regex: /[\u3040-\u309F\u30A0-\u30FF]/,
+            message: 'Japanese translation must contain Japanese characters'
+        }
+    };
+
+    if (validations[ language ]) {
+        if (!validations[ language ].regex.test(translated)) {
+            throw new Error(validations[ language ].message);
+        }
+    }
+
+    // Length validation (translation shouldn't be extremely longer/shorter than original)
+    const lengthRatio = translated.length / original.length;
+    if (lengthRatio < 0.2 || lengthRatio > 3) {
+        throw new Error('Translation length seems unusual');
+    }
+
+    return true;
 }
 
 /**
@@ -336,38 +610,53 @@ async function getTranslations(sourceLanguage, targetLanguage, strings) {
     const templateKeys = extractKeysFromTemplate(__dirname + '/p.html');
 
     for (const key of templateKeys) {
-        if (strings[ targetLanguage ]?.[ key ]) {
-            // Use existing translation if available
-            translatedStrings[ key ] = strings[ targetLanguage ][ key ];
-        } else {
-            try {
-                // Get source text
-                const sourceText = strings[ sourceLanguage ][ key ] || key;
-
-                // Translate using Google API
-                const [translation] = await translate.translate(sourceText, targetLanguage);
-
-                // Validate translation
-                try {
-                    validateTranslation(sourceText, translation, targetLanguage);
-                } catch (validationError) {
-                    logger.warn(`Validation failed for ${key}:`, validationError);
-                    // Fall back to source text if validation fails
-                    translatedStrings[ key ] = sourceText;
-                    continue;
-                }
-
-                // Store translation
-                translatedStrings[ key ] = translation;
-
-                // Optionally, save to your translation files for future use
-                if (!strings[ targetLanguage ]) strings[ targetLanguage ] = {};
-                strings[ targetLanguage ][ key ] = translation;
-            } catch (error) {
-                logger.error(`Failed to translate ${key}:`, error);
-                // Fallback to source language
-                translatedStrings[ key ] = strings[ sourceLanguage ][ key ] || key;
+        try {
+            // Check if translation exists in JSON file
+            if (strings[targetLanguage]?.[key]) {
+                translatedStrings[key] = strings[targetLanguage][key];
+                continue;
             }
+
+            // Check if translation exists in MongoDB
+            const storedTranslation = await getStoredTranslation(key, sourceLanguage, targetLanguage);
+            if (storedTranslation) {
+                translatedStrings[key] = storedTranslation;
+                continue;
+            }
+
+            // If not found, get source text and translate
+            const sourceText = strings[sourceLanguage]?.[key] || key;
+            const [translation] = await translate.translate(sourceText, targetLanguage);
+
+            // TODO: Translate missing content, already being done with the above, so this is not required
+            // const translatedContent = await translateContent(sourceText, sourceLanguage, targetLanguage);
+            // translatedStrings[key] = translatedContent;
+
+            // Store new translation in MongoDB
+            await storeTranslation(
+                key,
+                sourceLanguage,
+                targetLanguage,
+                sourceText,
+                translation
+            );
+
+            translatedStrings[key] = translation;
+
+            // Update in-memory strings object
+            if (!strings[targetLanguage]) {
+                strings[targetLanguage] = {};
+            }
+            strings[targetLanguage][key] = translation;
+            // strings[targetLanguage][key] = translatedContent;
+
+            // Save to database for future reference
+            // await saveTranslation(key, targetLanguage, translatedContent);
+
+        } catch (error) {
+            logger.error(`Failed to translate ${key}: `, error);
+            // Fallback to source language
+            translatedStrings[ key ] = strings[ sourceLanguage ]?.[ key ] || key;
         }
     }
 
@@ -403,11 +692,11 @@ function extractKeysFromTemplate(templatePath) {
  */
 export async function renderTemplate(targetLanguage) {
     try {
-        // Get translations, falling back to Google Translate if needed
+        // Get translations for static content
         const strings = await getTranslations('en', targetLanguage, languages);
 
         // Update data object with translations
-        // Sample dynamic data
+        // Prepare dynamic data
         const dynamicData = {
             strings, // Switch language here
             title: "User Dashboard",
@@ -446,8 +735,15 @@ export async function renderTemplate(targetLanguage) {
             ]
         };
 
-        // Translate data recursively
-        const translatedDynamicData = await translateData(dynamicData, targetLanguage);
+        // Translate dynamic content
+        // const translatedDynamicData = await handleContentTranslation(dynamicData, targetLanguage);
+
+        // Translate dynamic content recursively
+        const translatedDynamicData = await translateDynamicContent(
+            dynamicData,
+            'en',
+            targetLanguage
+        );
 
         // Merge strings and translated data
         const data = {
@@ -458,9 +754,9 @@ export async function renderTemplate(targetLanguage) {
         // Render template
         return compiledTemplate(data);
     } catch (error) {
-        logger.error('Translation error:', error);
+        logger.error('Template rendering failed:', error);
         // Fallback to English
-        return compiledTemplate({...data, strings: languages.en});
+        return compiledTemplate({ ...data, strings: languages.en });
     }
 }
 
@@ -473,53 +769,6 @@ async function saveTranslation(key, language, text) {
         source: 'google-translate',
         timestamp: new Date()
     });
-}
-
-// Translation Validations
-function validateTranslation(original, translated, language) {
-    // Basic validation
-    if (!translated || typeof translated !== 'string') {
-        throw new Error('Invalid translation: Empty or not a string');
-    }
-
-    // Check for template markers
-    if (translated.includes('{{') || translated.includes('}}')) {
-        throw new Error('Translation contains template markers');
-    }
-
-    // Language-specific validations
-    const validations = {
-        hi: {
-            regex: /[\u0900-\u097F]/,
-            message: 'Hindi translation must contain Hindi characters'
-        },
-        ar: {
-            regex: /[\u0600-\u06FF]/,
-            message: 'Arabic translation must contain Arabic characters'
-        },
-        zh: {
-            regex: /[\u4E00-\u9FFF]/,
-            message: 'Chinese translation must contain Chinese characters'
-        },
-        ja: {
-            regex: /[\u3040-\u309F\u30A0-\u30FF]/,
-            message: 'Japanese translation must contain Japanese characters'
-        }
-    };
-
-    if (validations[ language ]) {
-        if (!validations[ language ].regex.test(translated)) {
-            throw new Error(validations[ language ].message);
-        }
-    }
-
-    // Length validation (translation shouldn't be extremely longer/shorter than original)
-    const lengthRatio = translated.length / original.length;
-    if (lengthRatio < 0.2 || lengthRatio > 3) {
-        throw new Error('Translation length seems unusual');
-    }
-
-    return true;
 }
 
 // API calls rate limiter, Set up rate limiter
