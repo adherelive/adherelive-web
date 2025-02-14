@@ -531,20 +531,4 @@ const translationLimiter = rateLimit({
     message: 'Too many translation requests, please try again later'
 });
 
-/**
- * This is the API call in the node.js call to test if the HTML conversion works as expected
- * Can add details of what all needs to be done in the p.html for further experiments
- *
- * @returns HTML data
- */
-router.get('/test/:language', Authenticated, async (req, res) => {
-    try {
-        const html = await renderTemplate(req.params.language);
-        return res.send(html);
-    } catch (error) {
-        logger.error('Error rendering template:', error);
-        return res.status(500).send('Error generating page');
-    }
-});
-
 module.exports = router;

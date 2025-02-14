@@ -65,6 +65,7 @@ import { raiseClientError, raiseServerError } from "../helper";
 const {TranslationServiceClient} = require('@google-cloud/translate').v3beta1;
 const puppeteer = require("puppeteer");
 const handlebars = require("handlebars");
+const renderTemplate = require('./hb')
 
 const logger = createLogger("PRESCRIPTION API");
 const generationTimestamp = moment().format('MMMM Do YYYY, h:mm:ss A'); // Format with Moment.js
@@ -2049,6 +2050,23 @@ router.get(
         }
     }
 );
+
+/**
+ * @swagger
+ * This is the API call in the node.js call to test if the HTML conversion works as expected
+ * Can add details of what all needs to be done in the p.html for further experiments
+ *
+ * @returns HTML data
+ */
+router.get('/test/:language', Authenticated, async (req, res) => {
+    try {
+        const html = await renderTemplate(req.params.language);
+        return res.send(html);
+    } catch (error) {
+        logger.error('Error rendering template:', error);
+        return res.status(500).send('Error generating page');
+    }
+});
 
 /**
  * @swagger
