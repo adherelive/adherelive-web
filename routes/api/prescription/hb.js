@@ -81,7 +81,7 @@ export const localeMap = {
 };
 
 // Language strings (can be loaded from JSON files)
-const languages = require('../../../other/test.json');
+const staticTranslatedDataStrings = require('../../../other/test.json');
 
 // As the browsers and Google Translate does not do this
 const devanagariDigits = ['०', '१', '२', '३', '४', '५', '६', '७', '८', '९'];
@@ -113,7 +113,7 @@ async function detectLanguage(text) {
         const [detection] = await translate.detect(text);
         return detection.language;
     } catch (error) {
-        logger.error('Language detection failed:', error);
+        logger.error(`Language detection failed for ${text}: `, error);
         return null;
     }
 }
@@ -138,7 +138,15 @@ function convertNumberToDevanagari(number) {
     return devanagariStr;
 }
 
-// Function to check and retrieve translation from MongoDB
+/**
+ * Function to check and retrieve translation from MongoDB.
+ * This fetches all the previously translated [missing] words, that were stored in the DB from previous runs
+ *
+ * @param key
+ * @param sourceLanguage
+ * @param targetLanguage
+ * @returns {Promise<*|null>}
+ */
 async function getStoredTranslation(key, sourceLanguage, targetLanguage) {
     try {
         const storedTranslation = await Translation.findOne({
@@ -147,11 +155,14 @@ async function getStoredTranslation(key, sourceLanguage, targetLanguage) {
             targetLanguage
         });
 
+        logger.debug(`getST Source Language with stored Text '${storedTranslation}': `, sourceLanguage);
+        logger.debug(`getST Target Language with stored Text '${storedTranslation}': `, targetLanguage);
+
         if (storedTranslation) {
             // Update last used timestamp
             await Translation.updateOne(
-                { _id: storedTranslation._id },
-                { $set: { lastUsed: new Date() } }
+                {_id: storedTranslation._id},
+                {$set: {lastUsed: new Date()}}
             );
             return storedTranslation.translatedText;
         }
@@ -163,8 +174,18 @@ async function getStoredTranslation(key, sourceLanguage, targetLanguage) {
     }
 }
 
-// Enhanced translation function with language detection
-async function translateWithDetection(text, targetLanguage) {
+/**
+ * Enhanced translation function with language detection
+ *
+ * @param text
+ * @param sourceLanguage
+ * @param targetLanguage
+ * @returns {Promise<{sourceLanguage: (string|string), sourceText, translatedText: string}|{sourceLanguage, sourceText, translatedText}|{sourceLanguage: (string|string), sourceText, translatedText}>}
+ */
+async function translateWithDetection(text, sourceLanguage, targetLanguage) {
+    if (!text) {
+        throw new Error(`Invalid source text or null: ${text}`);
+    }
     try {
         // Detect the language of the input text
         const detectedLanguage = await detectLanguage(text);
@@ -181,11 +202,13 @@ async function translateWithDetection(text, targetLanguage) {
             };
         }
 
-        // Translate the text
+        // If the text was not in the DB, then translate the text
         const [translation] = await translate.translate(text, {
             from: sourceLanguage,
             to: targetLanguage
         });
+        logger.debug(`tWD Source Language with Text '${text}': `, sourceLanguage);
+        logger.debug(`tWD Target Language with Text '${text}': `, targetLanguage);
 
         return {
             sourceLanguage,
@@ -193,21 +216,31 @@ async function translateWithDetection(text, targetLanguage) {
             translatedText: translation
         };
     } catch (error) {
-        logger.error('Translation with detection failed:', error);
+        logger.error(`Translation with detection failed for '${sourceLanguage}', '${targetLanguage}', & '${text}':`, error);
         return {
-            sourceLanguage: 'en',
+            sourceLanguage: sourceLanguage,
             sourceText: text,
             translatedText: text
         };
     }
 }
 
-// Function to store translation in MongoDB
+/**
+ * Function to store translation in MongoDB
+ *
+ * @param key
+ * @param sourceLanguage
+ * @param targetLanguage
+ * @param sourceText
+ * @param translatedText
+ * @param context
+ * @returns {Promise<void>}
+ */
 async function storeTranslation(key, sourceLanguage, targetLanguage, sourceText, translatedText, context = 'static') {
     try {
         // Ensure we're not storing identical source and translated text when languages differ
         if (sourceLanguage !== targetLanguage && sourceText === translatedText) {
-            logger.warn(`Attempted to store identical source and translated text for different languages: ${sourceLanguage} -> ${targetLanguage}`);
+            logger.warn(`Attempt to store identical [${sourceText}|${translatedText}] text: ${sourceLanguage} -> ${targetLanguage}`);
             return;
         }
 
@@ -230,11 +263,18 @@ async function storeTranslation(key, sourceLanguage, targetLanguage, sourceText,
             }
         );
     } catch (error) {
-        logger.error('Error storing translation in MongoDB:', error);
+        logger.error('Error storing translation in MongoDB: ', error);
     }
 }
 
-// Enhanced function to handle both static and dynamic translations
+/**
+ * Enhanced function to handle both static and dynamic translations
+ *
+ * @param content
+ * @param sourceLanguage
+ * @param targetLanguage
+ * @returns {Promise<*|Awaited<*>[]|{}|number|string>}
+ */
 async function translateContent(content, sourceLanguage, targetLanguage) {
     try {
         // Skip translation if content is empty or target language is English
@@ -263,6 +303,13 @@ async function translateContent(content, sourceLanguage, targetLanguage) {
     }
 }
 
+/**
+ *
+ *
+ * @param content
+ * @param targetLanguage
+ * @returns {Promise<*|Awaited<unknown>[]|{}|number|string>}
+ */
 async function handleContentTranslation(content, targetLanguage) {
     // Handle different types of content
     if (typeof content === 'number') {
@@ -299,12 +346,26 @@ async function handleContentTranslation(content, targetLanguage) {
     return content;
 }
 
-// Helper function to handle dynamic content translation with MongoDB
+/**
+ * Helper function to handle dynamic content translation with MongoDB
+ *
+ * @param content
+ * @param sourceLanguage
+ * @param targetLanguage
+ * @returns {Promise<Awaited<unknown>[]|{}|*|string>}
+ */
 async function translateDynamicContent(content, sourceLanguage, targetLanguage) {
+    logger.debug(`Initial tDC Source Language with Text '${content}': `, sourceLanguage);
+    logger.debug(`Initial tDC Target Language with Text '${content}': `, targetLanguage);
     if (typeof content === 'string') {
+        logger.debug(`tDC before try Source Language with Text '${content}': `, sourceLanguage);
+        logger.debug(`tDC before try Target Language with Text '${content}': `, targetLanguage);
         try {
             // Generate a unique key for dynamic content
             const contentKey = `dynamic_${Buffer.from(content).toString('base64')}`;
+
+            logger.debug(`tDC after try Source Language with Text '${content}': `, sourceLanguage);
+            logger.debug(`tDC after try Target Language with Text '${content}': `, targetLanguage);
 
             // Check MongoDB first
             const storedTranslation = await getStoredTranslation(
@@ -313,12 +374,17 @@ async function translateDynamicContent(content, sourceLanguage, targetLanguage) 
                 targetLanguage
             );
 
+            logger.debug(`tDC after stored text '${storedTranslation}' Source Language '${content}': `, sourceLanguage);
+            logger.debug(`tDC after stored text '${storedTranslation}' Target Language '${content}': `, targetLanguage);
+
             if (storedTranslation) {
                 return storedTranslation.translatedText;
             }
+            logger.debug(`tDC Source Language with Text '${content}': `, sourceLanguage);
+            logger.debug(`tDC Target Language with Text '${content}': `, targetLanguage);
 
             // If not found, detect language and translate
-            const {sourceText, sourceLanguage, translatedText} =
+            const {sourceLanguage, sourceText, translatedText} =
                 await translateWithDetection(content, sourceLanguage, targetLanguage);
 
             // Store the translation
@@ -340,12 +406,16 @@ async function translateDynamicContent(content, sourceLanguage, targetLanguage) 
 
     // Handle arrays and objects recursively
     if (Array.isArray(content)) {
+        logger.debug(`Array Source Language with Text '${content}': `, sourceLanguage);
+        logger.debug(`Array Target Language with Text '${content}': `, targetLanguage);
         return Promise.all(content.map(item =>
             translateDynamicContent(item, sourceLanguage, targetLanguage)
         ));
     }
 
     if (content && typeof content === 'object') {
+        logger.debug(`Object Source Language with Text '${content}': `, sourceLanguage);
+        logger.debug(`Object Target Language with Text '${content}': `, targetLanguage);
         const translatedObj = {};
         for (const [key, value] of Object.entries(content)) {
             translatedObj[ key ] = await translateDynamicContent(
@@ -387,7 +457,14 @@ export async function cleanupOldTranslations(daysOld = 30) {
     }
 }
 
-// Translation Validations
+/**
+ * Translation validations with UNICODE for the language used
+ *
+ * @param original
+ * @param translated
+ * @param language
+ * @returns {boolean}
+ */
 function validateTranslation(original, translated, language) {
     // Basic validation
     if (!translated || typeof translated !== 'string') {
@@ -653,14 +730,14 @@ export async function translateData(data, targetLanguage) {
 }
 
 /**
- * Function to get the translations from local ot the translation API
+ * Function to get the translations from local strings only, which are stored in the web.json file
  *
  * @param sourceLanguage
  * @param targetLanguage
- * @param strings
+ * @param staticTranslatedDataStrings
  * @returns {Promise<{}>}
  */
-async function getTranslations(sourceLanguage, targetLanguage, strings) {
+async function getTranslations(sourceLanguage, targetLanguage, staticTranslatedDataStrings) {
     // Create a complete strings object with fallback to translation API
     const translatedStrings = {};
 
@@ -670,8 +747,8 @@ async function getTranslations(sourceLanguage, targetLanguage, strings) {
     for (const key of templateKeys) {
         try {
             // Check if translation exists in JSON file
-            if (strings[ targetLanguage ]?.[ key ]) {
-                translatedStrings[ key ] = strings[ targetLanguage ][ key ];
+            if (staticTranslatedDataStrings[ targetLanguage ]?.[ key ]) {
+                translatedStrings[ key ] = staticTranslatedDataStrings[ targetLanguage ][ key ];
                 continue;
             }
 
@@ -682,23 +759,28 @@ async function getTranslations(sourceLanguage, targetLanguage, strings) {
                 continue;
             }
 
-            // If not found, get source text and translate
-            const sourceText = strings[ sourceLanguage ]?.[ key ] || key;
+            // If not found, Get source text from source langauge static data (e.g., English)
+            const sourceText = staticTranslatedDataStrings[ sourceLanguage ]?.[ key ] || key;
 
+            // Skip translation for numeric/currency values (e.g., "$1000")
+            // if (typeof sourceText !== 'string' || /^[\d$€£¥]+$/.test(sourceText)) {
+            //    translatedStrings[key] = sourceText; // Use the value as-is
+            //    continue;
+            // }
 
-            // Translate with language detection
+            logger.debug(`getT Source Language with Text '${storedTranslation}': `, sourceLanguage);
+            logger.debug(`getT Target Language with Text '${storedTranslation}': `, targetLanguage);
+
+            // Translate with language detection, sourceLanguage value returned becomes the detectedSource
             const {
-                sourceLanguage: detectedSource,
+                sourceLang: detectedSource,
+                sourceTranslate,
                 translatedText
             } = await translateWithDetection(sourceText, sourceLanguage, targetLanguage);
 
             const [translation] = await translate.translate(sourceText, targetLanguage);
 
-            // TODO: Translate missing content, already being done with the above, so this is not required
-            // const translatedContent = await translateContent(sourceText, sourceLanguage, targetLanguage);
-            // translatedStrings[key] = translatedContent;
-
-            // Store new translation in MongoDB
+            // Store the new translation in MongoDB
             await storeTranslation(
                 key,
                 detectedSource,
@@ -710,22 +792,18 @@ async function getTranslations(sourceLanguage, targetLanguage, strings) {
             translatedStrings[ key ] = translatedText;
 
             // Update in-memory strings object
-            if (!strings[ targetLanguage ]) {
-                strings[ targetLanguage ] = {};
+            if (!staticTranslatedDataStrings[ targetLanguage ]) {
+               staticTranslatedDataStrings[ targetLanguage ] = {};
             }
-            strings[ targetLanguage ][ key ] = translation;
-            // strings[targetLanguage][key] = translatedContent;
-
-            // Save to database for future reference
-            // await saveTranslation(key, targetLanguage, translatedContent);
+            staticTranslatedDataStrings[ targetLanguage ][ key ] = translation;
 
         } catch (error) {
             logger.error(`Failed to translate ${key}: `, error);
-            // Fallback to source language
-            translatedStrings[ key ] = strings[ sourceLanguage ]?.[ key ] || key;
+            // Fallback to source language text or the key itself
+            translatedStrings[ key ] = staticTranslatedDataStrings[ sourceLanguage ]?.[ key ] || key;
         }
     }
-
+    logger.debug(`Get Translated Strings: \n ${translatedStrings}`)
     return translatedStrings;
 }
 
@@ -758,8 +836,11 @@ function extractKeysFromTemplate(templatePath) {
  */
 export async function renderTemplate(targetLanguage) {
     try {
+        // Store the source language
+        let sourceLangauge = 'en';
+
         // Get translations for static content
-        const strings = await getTranslations('en', targetLanguage, languages);
+        const strings = await getTranslations(sourceLangauge, targetLanguage, staticTranslatedDataStrings);
 
         // Update data object with translations
         // Prepare dynamic data
@@ -807,7 +888,7 @@ export async function renderTemplate(targetLanguage) {
         // Translate dynamic content recursively
         const translatedDynamicData = await translateDynamicContent(
             dynamicData,
-            'en',
+            sourceLangauge,
             targetLanguage
         );
 
@@ -822,7 +903,7 @@ export async function renderTemplate(targetLanguage) {
     } catch (error) {
         logger.error('Template rendering failed:', error);
         // Fallback to English
-        return compiledTemplate({...data, strings: languages.en});
+        return compiledTemplate({...data, strings: staticTranslatedDataStrings.en});
     }
 }
 
