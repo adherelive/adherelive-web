@@ -1,0 +1,47 @@
+version: "3.0"
+
+services:
+  #TODO: My Dockerfile name is DockerfileDev
+  #TODO: need to install nodemon in Dev Dockerimage
+  node:
+    build:
+      context: .
+      dockerfile: docker/DockerfileDev
+    restart: always
+    command:
+      - npm
+      - run
+      - dev
+    ports:
+      - 5000:5000
+    logging:
+      options:
+        max-size: 150m
+        max-file: "3"
+    volumes:
+      - ./:/usr/src/app
+      - ./env_files/.node_env_demo:/usr/src/app/.env
+    links:
+      - mysql
+      - mongo
+  mysql:
+    image: mysql:5.7
+    volumes:
+      - mysql:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_DATABASE=adhere
+      - MYSQL_USER=adhere
+      - MYSQL_PASSWORD=password
+
+  mongo:
+    image: mongo:4.4
+    restart: always
+    volumes:
+      - adhere_mongo:/data/db
+
+volumes:
+  mysql:
+    driver: local
+  adhere_mongo:
+    driver: local

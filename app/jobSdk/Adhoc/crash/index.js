@@ -4,6 +4,11 @@ import { createLogger } from "../../../../libs/logger";
 
 const logger = createLogger("JOB SDK ADHOC CRASH");
 
+var Config = require("../../../../config/config");
+
+Config();
+
+
 export default class CrashJob extends AdhocJob {
   constructor(data) {
     super(data);
@@ -11,9 +16,9 @@ export default class CrashJob extends AdhocJob {
 
   getEmailTemplate = () => {
     const { apiName } = this.getData();
-
+    console.log(process)
     return {
-      title: process.env.app.env + " server issue",
+      title: process.config.app.env + " server issue",
       toAddress: process.config.app.developer_email,
       templateName: EMAIL_TEMPLATE_NAME.SERVER_CRASH,
       templateData: {

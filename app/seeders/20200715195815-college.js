@@ -3176,7 +3176,7 @@ module.exports = {
         updated_at: new Date(),
       },
       {
-        name: "Vinayaka Mission�s Sankarachariyar Dental College, Salem",
+        name: "Vinayaka Mission's Sankarachariyar Dental College, Salem",
         created_at: new Date(),
         updated_at: new Date(),
       },
