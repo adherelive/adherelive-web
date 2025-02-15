@@ -2,29 +2,27 @@
  * README:
  *
  * Structure:
- * The template uses {{strings.xxx}} for all static text, making it easy to switch languages
- * Dynamic data uses simple {{variable}} syntax for single values
- * {{#each}} blocks for arrays and nested data
- * Maintained semantic HTML structure with proper sections
- *
+ * - The template uses {{strings.xxx}} for all static text, making it easy to switch languages
+ * - Dynamic data uses simple {{variable}} syntax for single values
+ * - {{#each}} blocks for arrays and nested data
+ * - Maintained semantic HTML structure with proper sections
  *
  * Key features of this approach:
- * Language Switching:
- * All static text is referenced through strings object
- * Change language by switching the strings property in the data object
- * Can load language files dynamically from JSON
+ * - Language Switching:
+ * - All static text is referenced through strings object
+ * - Change language by switching the strings property in the data object
+ * - Can load language files dynamically from JSON
  *
  * Dynamic Data:
- * Supports single values ({{userData.name}})
- * Arrays with {{#each}} loops
- * Nested data structures (products with variants)
- * Table generation from arrays
+ * - Supports single values ({{userData.name}})
+ * - Arrays with {{#each}} loops
+ * - Nested data structures (products with variants)
+ * - Table generation from arrays
  *
  * Flexibility:
- * Easy to add new sections
- * Can handle different data types
- * Maintains clean separation between structure and content
- *
+ * - Easy to add new sections
+ * - Can handle different data types
+ * - Maintains clean separation between structure and content
  */
 import { createLogger } from "../../../libs/logger";
 import fs from "fs";
@@ -102,7 +100,7 @@ const getLocale = (language) => {
         // If only language code is provided, get the mapped locale
         return localeMap[ language ] || language;
     } catch (error) {
-        logger.error(`Error getting locale for language ${language}:`, error);
+        logger.error(`Error getting locale for language '${language}': `, error);
         return language;
     }
 };
@@ -113,7 +111,7 @@ async function detectLanguage(text) {
         const [detection] = await translate.detect(text);
         return detection.language;
     } catch (error) {
-        logger.error(`Language detection failed for ${text}: `, error);
+        logger.error(`Language detection failed for '${text}': `, error);
         return null;
     }
 }
@@ -155,9 +153,6 @@ async function getStoredTranslation(key, sourceLanguage, targetLanguage) {
             targetLanguage
         });
 
-        logger.debug(`getST Source Language with stored Text '${storedTranslation}': `, sourceLanguage);
-        logger.debug(`getST Target Language with stored Text '${storedTranslation}': `, targetLanguage);
-
         if (storedTranslation) {
             // Update last used timestamp
             await Translation.updateOne(
@@ -169,7 +164,7 @@ async function getStoredTranslation(key, sourceLanguage, targetLanguage) {
 
         return null;
     } catch (error) {
-        logger.error('Error retrieving translation from MongoDB:', error);
+        logger.error(`Error retrieving translation using findOne '${key}' from MongoDB: `, error);
         return null;
     }
 }
@@ -207,8 +202,6 @@ async function translateWithDetection(text, sourceLanguage, targetLanguage) {
             from: sourceLanguage,
             to: targetLanguage
         });
-        logger.debug(`tWD Source Language with Text '${text}': `, sourceLanguage);
-        logger.debug(`tWD Target Language with Text '${text}': `, targetLanguage);
 
         return {
             sourceLanguage,
@@ -216,7 +209,7 @@ async function translateWithDetection(text, sourceLanguage, targetLanguage) {
             translatedText: translation
         };
     } catch (error) {
-        logger.error(`Translation with detection failed for '${sourceLanguage}', '${targetLanguage}', & '${text}':`, error);
+        logger.error(`Translation with detection failed - '${sourceLanguage}', '${targetLanguage}', & '${text}': `, error);
         return {
             sourceLanguage: sourceLanguage,
             sourceText: text,
@@ -263,7 +256,7 @@ async function storeTranslation(key, sourceLanguage, targetLanguage, sourceText,
             }
         );
     } catch (error) {
-        logger.error('Error storing translation in MongoDB: ', error);
+        logger.error(`Error storing translation '${translatedText}' in MongoDB: `, error);
     }
 }
 
@@ -298,7 +291,7 @@ async function translateContent(content, sourceLanguage, targetLanguage) {
 
         return translatedContent;
     } catch (error) {
-        logger.error(`Translation failed for content: ${content}`, error);
+        logger.error(`Translation failed for content '${content}': `, error);
         return content; // Fallback to original content
     }
 }
@@ -326,7 +319,7 @@ async function handleContentTranslation(content, targetLanguage) {
             const [translation] = await translate.translate(content, targetLanguage);
             return translation;
         } catch (error) {
-            logger.error(`Failed to translate string: ${content}`, error);
+            logger.error(`Failed to translate string '${content}': `, error);
             return content;
         }
     }
@@ -355,17 +348,10 @@ async function handleContentTranslation(content, targetLanguage) {
  * @returns {Promise<Awaited<unknown>[]|{}|*|string>}
  */
 async function translateDynamicContent(content, sourceLanguage, targetLanguage) {
-    logger.debug(`Initial tDC Source Language with Text '${content}': `, sourceLanguage);
-    logger.debug(`Initial tDC Target Language with Text '${content}': `, targetLanguage);
     if (typeof content === 'string') {
-        logger.debug(`tDC before try Source Language with Text '${content}': `, sourceLanguage);
-        logger.debug(`tDC before try Target Language with Text '${content}': `, targetLanguage);
         try {
             // Generate a unique key for dynamic content
             const contentKey = `dynamic_${Buffer.from(content).toString('base64')}`;
-
-            logger.debug(`tDC after try Source Language with Text '${content}': `, sourceLanguage);
-            logger.debug(`tDC after try Target Language with Text '${content}': `, targetLanguage);
 
             // Check MongoDB first
             const storedTranslation = await getStoredTranslation(
@@ -374,14 +360,9 @@ async function translateDynamicContent(content, sourceLanguage, targetLanguage) 
                 targetLanguage
             );
 
-            logger.debug(`tDC after stored text '${storedTranslation}' Source Language '${content}': `, sourceLanguage);
-            logger.debug(`tDC after stored text '${storedTranslation}' Target Language '${content}': `, targetLanguage);
-
             if (storedTranslation) {
                 return storedTranslation.translatedText;
             }
-            logger.debug(`tDC Source Language with Text '${content}': `, sourceLanguage);
-            logger.debug(`tDC Target Language with Text '${content}': `, targetLanguage);
 
             // If not found, detect language and translate
             const {sourceLanguage, sourceText, translatedText} =
@@ -399,23 +380,19 @@ async function translateDynamicContent(content, sourceLanguage, targetLanguage) 
 
             return translatedText;
         } catch (error) {
-            logger.error('Dynamic translation failed:', error);
+            logger.error(`Dynamic translation failed '${content}': `, error);
             return content;
         }
     }
 
     // Handle arrays and objects recursively
     if (Array.isArray(content)) {
-        logger.debug(`Array Source Language with Text '${content}': `, sourceLanguage);
-        logger.debug(`Array Target Language with Text '${content}': `, targetLanguage);
         return Promise.all(content.map(item =>
             translateDynamicContent(item, sourceLanguage, targetLanguage)
         ));
     }
 
     if (content && typeof content === 'object') {
-        logger.debug(`Object Source Language with Text '${content}': `, sourceLanguage);
-        logger.debug(`Object Target Language with Text '${content}': `, targetLanguage);
         const translatedObj = {};
         for (const [key, value] of Object.entries(content)) {
             translatedObj[ key ] = await translateDynamicContent(
@@ -451,9 +428,9 @@ export async function cleanupOldTranslations(daysOld = 30) {
         const result = await Translation.deleteMany({
             lastUsed: {$lt: cutoffDate}
         });
-        logger.info(`Cleaned up ${result.deletedCount} old translations`);
+        logger.info(`Cleaned up '${result.deletedCount}' old translations`);
     } catch (error) {
-        logger.error('Error cleaning up old translations:', error);
+        logger.error('Error cleaning up old translations: ', error);
     }
 }
 
@@ -529,7 +506,7 @@ export const createNumberFormatter = (language) => {
             try {
                 return formatter.format(number);
             } catch (error) {
-                logger.error(`Error formatting number ${number} for locale ${locale}, using local translation:`, error);
+                logger.error(`Error formatting number '${number}' for locale '${locale}', using local translation: `, error);
                 return convertNumberToDevanagari(number.toString()); // Manual conversion
             }
         }
@@ -560,7 +537,7 @@ export const createDateFormatter = (language) => {
                 }
                 return formatter.format(date);
             } catch (error) {
-                logger.error(`Error formatting date ${dateString} for locale ${locale}:`, error);
+                logger.error(`Error formatting date '${dateString}' for locale '${locale}': `, error);
                 return dateString;
             }
         }
@@ -587,7 +564,7 @@ const createCurrencyFormatter = (locale) => {
                 const number = parseFloat(amount);
                 return `${symbol}${numberFormatter.format(number)}`;
             } catch (error) {
-                logger.error(`Error formatting currency ${value}:`, error);
+                logger.error(`Error formatting currency '${value}': `, error);
                 return convertNumberToDevanagari(value); // Manual conversion
             }
         }
@@ -649,7 +626,7 @@ const createStringTranslator = (locale) => {
                 return translatedParts.join('');
 
             } catch (error) {
-                logger.error(`Error translating string ${value}:`, error);
+                logger.error(`Error translating string '${value}': `, error);
                 return value;
             }
         }
@@ -697,7 +674,7 @@ const createDataTranslator = (locale) => {
 
             return value;
         } catch (error) {
-            logger.error('Error in translateValue:', error);
+            logger.error(`Error in translateValue using '${locale}': `, error);
             return value;
         }
     };
@@ -707,7 +684,7 @@ const createDataTranslator = (locale) => {
             try {
                 return await translateValue(data);
             } catch (error) {
-                logger.error('Error in translateData:', error);
+                logger.error(`Error in translateData using '${locale}': `, error);
                 return data;
             }
         }
@@ -723,7 +700,6 @@ const createDataTranslator = (locale) => {
  */
 export async function translateData(data, targetLanguage) {
     const locale = getLocale(targetLanguage);
-    logger.debug(`Translating data using locale: ${locale}`);
 
     const translator = createDataTranslator(locale);
     return translator.translate(data);
@@ -768,9 +744,6 @@ async function getTranslations(sourceLanguage, targetLanguage, staticTranslatedD
             //    continue;
             // }
 
-            logger.debug(`getT Source Language with Text '${storedTranslation}': `, sourceLanguage);
-            logger.debug(`getT Target Language with Text '${storedTranslation}': `, targetLanguage);
-
             // Translate with language detection, sourceLanguage value returned becomes the detectedSource
             const {
                 sourceLang: detectedSource,
@@ -798,12 +771,12 @@ async function getTranslations(sourceLanguage, targetLanguage, staticTranslatedD
             staticTranslatedDataStrings[ targetLanguage ][ key ] = translation;
 
         } catch (error) {
-            logger.error(`Failed to translate ${key}: `, error);
+            logger.error(`Failed to translate '${key}': `, error);
             // Fallback to source language text or the key itself
             translatedStrings[ key ] = staticTranslatedDataStrings[ sourceLanguage ]?.[ key ] || key;
         }
     }
-    logger.debug(`Get Translated Strings: \n ${translatedStrings}`)
+    logger.debug(`Get Translated Strings: \n ${translatedStrings}`);
     return translatedStrings;
 }
 
@@ -901,7 +874,7 @@ export async function renderTemplate(targetLanguage) {
         // Render template
         return compiledTemplate(data);
     } catch (error) {
-        logger.error('Template rendering failed:', error);
+        logger.error('Template rendering failed: ', error);
         // Fallback to English
         return compiledTemplate({...data, strings: staticTranslatedDataStrings.en});
     }
