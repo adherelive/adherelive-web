@@ -1015,7 +1015,7 @@ function formatMedicationsData(medications, medicines) {
             quantity,
             organizer,
             frequency: getWhenToTakeText(when_to_take.length),
-            startDate,
+            startDate:moment(startDate).format("Do-MM-YY"),
             endDate,
             timings: getWhenToTakeTimings(when_to_take),
             timings_new: getWhenToTakeTimingsNew(when_to_take),

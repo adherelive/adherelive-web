@@ -64,6 +64,8 @@ const logger = createLogger("ENHANCED TRANSLATION API");
 
 // Read and compile template
 const template = fs.readFileSync(__dirname + '/p.html', 'utf-8');
+// Read and parse the JSON file
+const medicalData = JSON.parse(fs.readFileSync(__dirname + '/patient.json', 'utf-8'));
 const compiledTemplate = Handlebars.compile(template);
 
 // Cache for translations to reduce API calls
@@ -83,6 +85,11 @@ const staticTranslatedDataStrings = require('../../../other/test.json');
 
 // As the browsers and Google Translate does not do this
 const devanagariDigits = ['०', '१', '२', '३', '४', '५', '६', '७', '८', '९'];
+
+// Register the print helper
+Handlebars.registerHelper('print', function(value) {
+    return value + 1;
+});
 
 /**
  * For getting and converting the target language to a locale
@@ -802,6 +809,55 @@ function extractKeysFromTemplate(templatePath) {
 }
 
 /**
+ * Function to sanitize circular references
+ *
+ * @param obj
+ * @returns {any}
+ */
+function sanitizeData(obj) {
+    const seen = new WeakSet();
+    return JSON.parse(JSON.stringify(obj, (key, value) => {
+        if (typeof value === 'object' && value !== null) {
+            if (seen.has(value)) {
+                return '[Circular Reference]';
+            }
+            seen.add(value);
+        }
+        return value;
+    }));
+}
+
+/**
+ * Function to flatten the medical data structure
+ *
+ * @param medicalDataFromJSON
+ * @param strings
+ * @returns {{strings, medicalData: *}}
+ */
+function prepareTemplateData(medicalDataFromJSON, strings) {
+    // Sanitize the medical data
+    const sanitizedData = sanitizeData(medicalDataFromJSON);
+
+    // Create the base dynamic data object with all top-level properties
+    const dynamicData = {
+        strings,
+        // Spread all top-level properties
+        ...sanitizedData,
+        // Keep the full medical data structure for reference
+        medicalData: sanitizedData
+    };
+
+    // Automatically add all array properties from medical data to the top level
+    // Object.entries(sanitizedData).forEach(([key, value]) => {
+    //     if (Array.isArray(value)) {
+    //         dynamicData[key] = value;
+    //     }
+    // });
+
+    return dynamicData;
+}
+
+/**
  * Function to replace all values in the dynamic data and HTML fields using handlebars
  *
  * @param targetLanguage
@@ -812,48 +868,23 @@ export async function renderTemplate(targetLanguage) {
         // Store the source language
         let sourceLangauge = 'en';
 
+        // Sanitize the medical data to handle circular references
+        // const finalMedicalData = sanitizeData(medicalData);
+
         // Get translations for static content
         const strings = await getTranslations(sourceLangauge, targetLanguage, staticTranslatedDataStrings);
 
         // Update data object with translations
         // Prepare dynamic data
-        const dynamicData = {
-            strings, // Switch language here
-            title: "User Dashboard",
-            userData: {
-                name: "John Doe",
-                email: "john@example.com"
-            },
-            orders: [
-                {id: "ORD-001", date: "2024-02-14", amount: "$100", status: "Completed"},
-                {id: "ORD-002", date: "2024-02-02", amount: "$75.00", status: "Processing"},
-                {id: "ORD-300", date: "15/02/2024", amount: "$0.05", status: "Pending"},
-                {id: "ORD-042", date: "14-02-2024", amount: "$01.25", status: "Processing"}
-            ],
-            products: [
-                {
-                    name: "Product A",
-                    variants: [
-                        {name: "Small", price: "$10.98", stock: 5},
-                        {name: "Large", price: "$15.91", stock: 3}
-                    ]
-                },
-                {
-                    name: "Product B",
-                    variants: [
-                        {name: "Small", price: "102.95", stock: 5.5},
-                        {name: "Large", price: "$0.02", stock: 0.034}
-                    ]
-                },
-                {
-                    name: "Product C",
-                    variants: [
-                        {name: "Small", price: "$1000", stock: 5},
-                        {name: "Large", price: "$150", stock: 3}
-                    ]
-                }
-            ]
-        };
+        // const dynamicData = {
+        //     strings, // Switch language here
+        //     medicalData: finalMedicalData,
+        //     diet_output: medicalData.diet_output, // Ensure this is directly accessible
+        //     pre_workouts: medicalData.pre_workouts,
+        // };
+
+        // Prepare data with automatic flattening of arrays
+        const dynamicData = prepareTemplateData(medicalData, strings);
 
         // Translate dynamic content
         // const translatedDynamicData = await handleContentTranslation(dynamicData, targetLanguage);
@@ -871,10 +902,11 @@ export async function renderTemplate(targetLanguage) {
             ...translatedDynamicData // Spread the translated data into the main data object
         };
 
+        logger.info(`Data Conversion completed. PDF has been generated and displayed in ${targetLanguage}`)
         // Render template
         return compiledTemplate(data);
     } catch (error) {
-        logger.error('Template rendering failed: ', error);
+        logger.error(`Template rendering failed for language ${targetLanguage}: `, error);
         // Fallback to English
         return compiledTemplate({...data, strings: staticTranslatedDataStrings.en});
     }
