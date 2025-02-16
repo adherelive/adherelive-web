@@ -113,6 +113,7 @@
     "google-auth-library": "^7.10.0",
     "got": "^14.4.5",
     "handlebars": "^4.7.7",
+    "ioredis": "^5.5.0",
     "joi": "^17.4.2",
     "js-base64": "^3.7.2",
     "js-md5": "^0.7.3",

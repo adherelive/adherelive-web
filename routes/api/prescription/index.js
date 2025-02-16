@@ -4,6 +4,7 @@ import { createLogger } from "../../../libs/logger";
 import fs from "fs";
 import path from "path";
 import moment from "moment";
+import rateLimit from 'express-rate-limit';
 
 // Services
 import userService from "../../../app/services/user/user.service";
@@ -89,6 +90,29 @@ const MAX_BATCH_SIZE = 128; // characters
 
 // Global array to store and show the Labels which need to be translated via the Cloud API
 let missingTranslations = [];
+
+/**
+ * API calls rate limiter, set up rate limiter
+ *
+ * @type {RateLimitRequestHandler}
+ */
+const translationLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100, // limit each IP to 100 requests per windowMs
+    message: 'Too many translation requests, please try again later',
+    handler: (req, res) => {
+        logger.warn(`Rate limit exceeded for IP: ${req.ip}`);
+        res.status(429).json({
+            error: 'Too many requests',
+            retryAfter: Math.ceil(this.windowMs / 1000),
+            message: 'Please try again later'
+        });
+    },
+    skip: (req) => {
+        // Skip rate limiting for certain conditions if needed
+        return false; // Implement your skip logic here
+    }
+});
 
 // Register Handlebars helpers
 handlebars.registerHelper("print", function (value) {
