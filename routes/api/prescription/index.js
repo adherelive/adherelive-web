@@ -66,7 +66,7 @@ import { raiseClientError, raiseServerError } from "../helper";
 const { TranslationServiceClient } = require('@google-cloud/translate').v3beta1;
 const puppeteer = require("puppeteer");
 const handlebars = require("handlebars");
-const { renderTemplate } = require('../../../app/helper/prescriptions/hb')
+const { renderTemplate } = require('../../../app/helper/prescriptions/translate_handlebars')
 
 const logger = createLogger("PRESCRIPTION API");
 const generationTimestamp = moment().format('MMMM Do YYYY, h:mm:ss A'); // Format with Moment.js
@@ -2078,7 +2078,7 @@ router.get(
 /**
  * @swagger
  * This is the API call in the node.js call to test if the HTML conversion works as expected
- * Can add details of what all needs to be done in the p.html for further experiments
+ * Can add details of what all needs to be done in the prescription_with_handlebars.html for further experiments
  *
  * @returns HTML data
  */

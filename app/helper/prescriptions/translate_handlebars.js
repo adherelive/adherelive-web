@@ -64,9 +64,9 @@ const translate = new Translate({
 const logger = createLogger("ENHANCED TRANSLATION API");
 
 // Read and compile template
-const template = fs.readFileSync(__dirname + '/p.html', 'utf-8');
+const template = fs.readFileSync(__dirname + '/prescription_with_handlebars.html', 'utf-8');
 // Read and parse the JSON file
-const medicalData = JSON.parse(fs.readFileSync(__dirname + '/patient.json', 'utf-8'));
+const medicalData = JSON.parse(fs.readFileSync(__dirname + '/prescription_patient_data.json', 'utf-8'));
 const compiledTemplate = Handlebars.compile(template);
 
 // Cache for translations to reduce API calls
@@ -880,7 +880,7 @@ async function getTranslations(sourceLanguage, targetLanguage, staticTranslatedD
     const [translation] = [];
 
     // Get all string keys from HTML template
-    const templateKeys = extractKeysFromTemplate(__dirname + '/p.html');
+    const templateKeys = extractKeysFromTemplate(__dirname + '/prescription_with_handlebars.html');
 
     for (const key of templateKeys) {
         try {
