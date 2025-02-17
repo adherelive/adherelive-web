@@ -5,7 +5,761 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>{{ translatedLabels.prescriptionTitle }}</title>
-    <link rel="stylesheet" type="text/css" href="prescription.css">
+    <style>
+        @import url('https://res.cloudinary.com/myrltech/raw/upload/v1686297287/TiroDevanagariHindi-Regular.ttf');
+
+        /* Base Page Setup */
+        /* CSS Variables for easier theming and maintainability */
+        :root {
+            --font-family-base: "TiroDevanagariHindi-Regular", "NotoSansDevanagari", Arial, sans-serif;
+            --font-family-bold: "PlusJakartaSans-Bold", var(--font-family-base);
+            --font-family-medium: "PlusJakartaSans-Medium", var(--font-family-base);
+            --font-family-regular: "PlusJakartaSans-Regular", var(--font-family-base);
+            --font-family-light: "PlusJakartaSans-Light", var(--font-family-base);
+            --color-text: #000;
+            --color-gray-light: #666;
+            --color-gray-medium: #888;
+            --border-color: #000;
+            --page-margin: 10mm 5mm; /* Combined margin */
+        }
+
+        @media print {
+            /* Force background colors and images to print */
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            /* Ensure page breaks don't occur within header elements */
+            h1, h2, h3, h4, h5, h6 {
+                page-break-after: auto;
+            }
+
+            @page {
+                size: letter portrait;
+            }
+
+            img {
+                /* Ensure images are rendered at their original quality */
+                print-color-adjust: exact;
+                max-width: 100%;
+                height: auto;
+                -webkit-backface-visibility: hidden;
+                -webkit-print-color-adjust: exact;
+                backface-visibility: hidden;
+                page-break-inside: auto;
+            }
+
+            /* TODO: Preserve dimensions for specific images, future use
+            .top_provider_section img,
+            .top_provider_section_three img,
+            .tick_image img,
+            .signature_image {
+                max-width: none;
+                width: attr(width);
+                height: attr(height);
+            }
+             */
+            /* This CSS rule ensures that table headers (contained within the <thead> element)
+               repeat at the top of each new page when the table spans multiple pages. */
+            /* Ensure table headers repeat */
+            thead {
+                display: table-header-group;
+            }
+
+            /* Avoid breaking within table rows */
+            tr {
+                page-break-inside: avoid;
+            }
+        }
+
+        /* Page Setup and Print Styles */
+        /* Add support for both A4 and Letter sizes */
+        @page {
+            size: A4 portrait;
+            margin: 10mm 5mm; /* Use CSS variable. Reduced margins for better space utilization */
+            /* bleed: 0; */
+            @top-center {
+                content: element(header);
+            }
+            @bottom-center {
+                content: element(footer);
+            }
+        }
+
+        /* Global styles */
+        * { /* Apply to all elements by default */
+            font-family: var(--font-family-base), sans-serif;
+            -webkit-font-smoothing: antialiased;
+            text-rendering: optimizeLegibility;
+            box-sizing: border-box; /* Include padding and border in element's total width and height */
+        }
+
+        /* Font Faces (Optimize loading - preload critical fonts) */
+        /* Font Faces */
+        @font-face {
+            font-family: "TiroDevanagariHindi-Regular";
+            src: url("https://res.cloudinary.com/myrltech/raw/upload/v1686297287/TiroDevanagariHindi-Regular.ttf");
+            font-weight: normal; /* Or specify font-weight if needed */
+            font-style: normal; /* Or specify font-style if needed */
+            font-display: swap; /* Optional: improve perceived performance */
+        }
+
+        @font-face {
+            font-family: 'NotoSansDevanagari';
+            src: url('https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;700&display=swap');
+            font-weight: normal; /* Or specify font-weight if needed */
+            font-style: normal; /* Or specify font-style if needed */
+            font-display: swap; /* Optional: improve perceived performance */
+        }
+
+        @font-face {
+            font-family: "PlusJakartaSans-Bold";
+            src: url("https://res.cloudinary.com/myrltech/raw/upload/v1685442477/PlusJakartaSans-Bold.ttf");
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: "PlusJakartaSans-Regular";
+            src: url("https://res.cloudinary.com/myrltech/raw/upload/v1685442477/PlusJakartaSans-Regular.ttf");
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: "PlusJakartaSans-Medium";
+            src: url("https://res.cloudinary.com/myrltech/raw/upload/v1685509873/PlusJakartaSans-Medium.ttf");
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: "PlusJakartaSans-ExtraBold";
+            src: url("https://res.cloudinary.com/myrltech/raw/upload/v1685509841/PlusJakartaSans-ExtraBold.ttf");
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: "PlusJakartaSans-Light";
+            src: url("https://res.cloudinary.com/myrltech/raw/upload/v1685509841/PlusJakartaSans-Light.ttf");
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        /* General Styles */
+        body {
+            direction: ltr; /* Hindi is written left-to-right */
+            margin: 0;
+            padding: 10px; /* Use CSS variable */
+            font-size: 10px;
+            font-family: var(--font-family-base), sans-serif;
+            color: var(--color-text); /* Use CSS variable */
+        }
+
+        /* Maintains aspect ratio in the images */
+        img {
+            max-width: 100%;
+            height: auto;
+            object-fit: contain; /* Default object-fit */
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+        }
+
+        /* Typography */
+        h3, h4, h5 {
+            font-family: var(--font-family-bold), sans-serif;
+            margin: 0;
+            page-break-after: avoid;
+        }
+
+        h3 {
+            font-size: 13px;
+        }
+
+        h4, h5 {
+            font-size: 10px;
+        }
+
+        p {
+            font-family: var(--font-family-medium), sans-serif;
+            font-size: 10px;
+            margin: 0;
+        }
+
+        span { /* If you need this style, keep it */
+            font-family: var(--font-family-base);
+        }
+
+        /* Image Styles (Consolidated & Improved) */
+        .top_provider_section img {
+            width: 60px;
+            height: 60px;
+            object-fit: contain;
+        }
+
+        .top_provider_section_three img {
+            width: 100px;
+            height: 100px;
+            object-fit: contain;
+        }
+
+        .tick_image img {
+            width: 15px;
+            height: 15px;
+            object-fit: contain;
+        }
+
+        .signature_image {
+            width: 120px;
+            height: 40px;
+            object-fit: contain;
+        }
+
+        /* Container width constraints */
+        .main-content {
+            width: 100%;
+            max-width: 210mm; /* A4 width */
+            margin: 0 auto;
+        }
+
+        /* Hindi text specific styles */
+        /* Specific elements that should ALWAYS be in Hindi */
+        .hindi-text {
+            font-family: "TiroDevanagariHindi-Regular", "NotoSansDevanagari"; /* No fallbacks if it MUST be Hindi */
+        }
+
+        /* Specific rules for content breaking to existing styles */
+        .avoid-break {
+            break-inside: avoid-page;
+            page-break-inside: avoid;
+        }
+
+        .force-break {
+            break-before: page;
+            page-break-before: always;
+        }
+
+        .keep-together {
+            break-inside: avoid;
+            page-break-inside: avoid;
+        }
+
+        /* For images that need to maintain specific dimensions */
+        .fixed-dimension-img {
+            width: auto;
+            height: auto;
+            max-width: 100%;
+            object-fit: contain;
+        }
+
+        /* Logo images */
+        .top_provider_section img {
+            width: 60px;
+            height: 60px;
+            object-fit: contain;
+        }
+
+        /* QR code image */
+        .top_provider_section_three img {
+            width: 100px;
+            height: 100px;
+            object-fit: contain;
+        }
+
+        /* Tick images in medicine table */
+        .tick_image img {
+            width: 15px;
+            height: 15px;
+            object-fit: contain;
+        }
+
+        .tick_image {
+            display: flex;
+        }
+
+        /* Signature image */
+        .signature_image {
+            width: 120px;
+            height: 40px;
+            object-fit: contain;
+        }
+
+        /* Header and Footer */
+        .header, .footer { /* Combined styles */
+            position: running(header); /* or running(footer) */
+            width: 100%;
+            padding: 10px 0; /* Consistent padding */
+            border-top: 1px solid var(--border-color); /* or border-bottom */
+            background-color: #fff; /* Consistent background */
+        }
+
+        .header {
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .footer {
+            position: running(footer);
+            text-align: center;
+        }
+
+        /* Table attributes */
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table tr {
+            page-break-inside: avoid;
+            break-inside: avoid;
+        }
+
+        .table-wrapper {
+            page-break-before: auto;
+            break-before: auto;
+        }
+
+        .table th,
+        .table td {
+            border: 1px solid black;
+            padding: 5px;
+            border-top: 0;
+            border-left: 0;
+            page-break-inside: avoid;
+            break-inside: avoid;
+        }
+
+        .table th { /* Table header specific styles */
+            background-color: #fff;
+            position: sticky;
+            top: 0;
+            z-index: 2;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        /* Footer Styles */
+        .footer-content {
+            margin: 0 20px;
+            font-size: 10px;
+            color: var(--color-gray-light);
+            text-align: center;
+        }
+
+        .page-info {
+            margin-bottom: 4px;
+        }
+
+        .generation-info {
+            font-size: 8px;
+            color: var(--color-gray-medium);
+        }
+
+        /* Page Break Controls */
+        .avoid-break,
+        .treatment_advise_section,
+        .complaints_section,
+        .signature-section {
+            page-break-inside: avoid;
+        }
+
+        .page-break {
+            page-break-before: always;
+        }
+
+        /* Section Grouping and Page Breaks */
+        .section-group {
+            page-break-inside: avoid;
+            break-inside: avoid-page;
+            margin-bottom: 15px;
+        }
+
+        /* Common Table Styles */
+        /* Remove ALL instances of table-layout: fixed from .medicine_table, .investigation_table, etc. */
+        .medicine_table,
+        .investigation_table,
+        .consultation_table,
+        .diet_table,
+        .workout_table {
+            width: 100%;
+            /* Remove table-layout: fixed; */ /* This is CRUCIAL */
+            border-collapse: collapse;
+            border-spacing: 0;
+            empty-cells: show;
+            border: 1px solid var(--border-color); /* Consistent border */
+        }
+
+        /* Table Headers */
+        .medicine_table thead,
+        .investigation_table thead,
+        .consultation_table thead,
+        .diet_table thead,
+        .workout_table thead {
+            display: table-header-group;
+        }
+
+        /* Table Body */
+        .medicine_table tbody,
+        .investigation_table tbody,
+        .consultation_table tbody,
+        .diet_table tbody,
+        .workout_table tbody {
+            page-break-inside: auto;
+        }
+
+        /* Table Rows */
+        .medicine_table tr,
+        .investigation_table tr,
+        .consultation_table tr,
+        .diet_table tr,
+        .workout_table tr {
+            page-break-inside: avoid; /* Keep rows together as much as possible */
+            page-break-after: auto; /* Allow page breaks *after* rows */
+        }
+
+        /* Table Headers and Cells */
+        .medicine_table th,
+        .investigation_table th,
+        .consultation_table th,
+        .diet_table th,
+        .complaint_table th,
+        .workout_table th {
+            background-color: #fff;
+            position: sticky;
+            top: 0;
+            z-index: 2;
+            border: 1px solid var(--border-color);
+            border-bottom: 2px solid #000;
+            padding: 8px; /* Add padding for better spacing */
+        }
+
+        /* Medicine Table Specific */
+        /* Remove page-break-inside: avoid from the parent section */
+        .medicine_section {
+            /* Remove page-break-inside: avoid; */
+        }
+
+        .medicine_table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed; /* Keep columns aligned */
+        }
+
+        .medicine_table td p {
+            font-size: 10px;
+            margin: 0;
+            white-space: normal;
+        }
+
+        .medicine_table th,
+        .medicine_table td {
+            border: 1px solid var(--border-color);
+            padding: 5px;
+            text-align: left; /* Align text to the left within cells */
+            vertical-align: top; /* Align content to the top of cells */
+            /* Remove page-break-inside: avoid; */ /* This is CRUCIAL */
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: normal; /* Allow wrapping within cells */
+            word-wrap: break-word; /* Allow words to break */
+        }
+
+        .medicine_table thead {
+            display: table-header-group; /* Essential for header repetition */
+        }
+
+        .medicine_table tfoot {
+            display: table-footer-group; /* For possible future use */
+        }
+
+        .medicine_table thead::after {
+            content: '';
+            display: block;
+            height: 5mm; /* Space after header */
+        }
+
+        /* Optional but recommended:  Improve header spacing */
+        .medicine_table thead tr th { /* Target the THs inside the header row */
+            padding-bottom: 8px; /* Add some bottom padding to the header */
+        }
+
+        .medicine_table tfoot::before {
+            content: '';
+            display: block;
+            height: 5mm; /* Space before footer */
+        }
+
+        /* Optional: Add a small space between rows */
+        .medicine_table tbody tr {
+            page-break-before: auto; /* Allow page breaks before rows in the tbody */
+            border-bottom: 1px solid #eee; /* Light separator */
+        }
+
+        .medicine_table tbody tr:last-child {
+            border-bottom: none; /* Remove separator on last row */
+        }
+
+        .medicine_table th:nth-child(1),
+        .medicine_table td:nth-child(1) {
+            width: 5%; /* S.No */
+        }
+
+        .medicine_table th:nth-child(3),
+        .medicine_table td:nth-child(4),
+        .medicine_table th:nth-child(4),
+        .medicine_table td:nth-child(5) {
+            width: 4%; /* Dose and Qty */
+        }
+
+        /* Medicine Schedule Columns - Make them equal and flexible */
+        .medicine_table th:nth-child(5), /* Morning */
+        .medicine_table td:nth-child(6),
+            /*.medicine_table th:nth-child(6),*/ /* Afternoon */
+        .medicine_table td:nth-child(7),
+            /*.medicine_table th:nth-child(7),*/ /* Night */
+        .medicine_table td:nth-child(8) {
+            width: 30%; /* Medicine Schedule */
+        }
+
+        .medicine_table th:nth-child(6),
+        .medicine_table td:nth-child(9) {
+            width: 12%; /* Start Date / Duration */
+            white-space: normal;
+        }
+
+        /* Medicine Name Wrapper */
+        .medicine_name_wrapper {
+            display: grid;
+            grid-template-columns: 30% 70%;
+        }
+
+        .medicine_name_wrapper div {
+            padding: 15px 5px;
+            align-content: center;
+        }
+
+        /* Table Containers */
+        .medicine_table_container {
+            overflow: visible;
+            margin: 15px 0;
+        }
+
+        /* Top Section Styles */
+        .top_provider_section {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 5px;
+            align-items: center;
+        }
+
+        .top_provider_section_two {
+            padding-left: 20px;
+            padding-right: 10px;
+        }
+
+        /* Section Wrappers */
+        .top_section_wrapper {
+            border: 1px solid black;
+            display: grid;
+            grid-template-columns: repeat(2, 3fr);
+            grid-auto-rows: minmax(30px, auto);
+        }
+
+        .top_section_wrapper_one,
+        .top_section_wrapper_two {
+            padding: 0 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .top_section_wrapper_one h3,
+        .top_section_wrapper_two h3 {
+            margin-right: 10px;
+            font-family: 'TiroDevanagariHindi-Regular', 'NotoSansDevanagari', "PlusJakartaSans-Bold", Arial, sans-serif;
+            font-size: 13px;
+        }
+
+        .top_section_wrapper_one p,
+        .top_section_wrapper_two p {
+            font-family: 'TiroDevanagariHindi-Regular', 'NotoSansDevanagari', "PlusJakartaSans-Medium", Arial, sans-serif;
+            font-size: 10px;
+            margin: 0;
+        }
+
+        /* Complaint Table Specific */
+        .complaint_table {
+            width: 100%;
+            table-layout: fixed; /* Important: Use fixed layout to keep columns aligned */
+            border-collapse: collapse; /* Collapse borders for a cleaner look */
+        }
+
+        .complaint_table th, .complaint_table td {
+            padding: 5px;
+            text-align: center; /* Center the content */
+            border: 1px solid black; /* Add borders back if needed */
+        }
+
+        .complaint_table td { /* Added complaint_table */
+            border: 1px solid var(--border-color); /* Consistent border */
+            padding: 5px;
+            text-align: left; /* Default left alignment */
+            vertical-align: top;
+            page-break-inside: avoid;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: normal;
+            word-wrap: break-word;
+        }
+
+        /* Hide BMI, BP, RBS, Temperature */
+        .complaint_table tr:nth-child(2) { /* Select the second row in each table */
+            display: none;
+        }
+
+        .complaints_subsection > div:nth-child(1) .complaint_table tr:nth-child(2), /* BMI in the first table */
+        .complaints_subsection > div:nth-child(2) .complaint_table tr:nth-child(2), /* BP in the second table */
+        .complaints_subsection > div:nth-child(3) .complaint_table tr:nth-child(2) { /* Temperature in the third table */
+            display: none;
+        }
+
+        /* Complaint Section */
+        .complaints_section {
+            border: 1px solid black;
+            border-right: 0;
+            border-top: 0;
+            border-bottom: 0;
+            display: flex;
+        }
+
+        .complaints_section_one {
+            padding: 10px;
+            width: 50%;
+        }
+
+        .complaints_section_two {
+            width: 50%;
+        }
+
+        /* TODO: Modified style to allow Height & Weight only,a nd not the Grid
+        .complaints_subsection {
+                grid-auto-rows: minmax(30px, auto);
+                grid-template-columns: repeat(3, 3fr);
+                display: grid;
+            }
+        */
+
+        /* Modified Styles */
+        .complaints_subsection {
+            display: table; /* Use table display for the container */
+            width: 100%;
+            table-layout: fixed; /* Crucial for consistent column widths */
+        }
+
+        .complaints_subsection > div {
+            display: table-cell; /* Use table cell display for the inner divs */
+            vertical-align: top; /* Align cells to the top */
+            padding: 10px;
+        }
+
+        /* Medicine Schedule */
+        .schedule_medicine_wrapper {
+            border: 1px solid black;
+            border-left: 0;
+            border-right: 0;
+            border-bottom: 0;
+            margin-top: 10px;
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr)); /* Key fix */
+            grid-auto-rows: minmax(20px, auto);
+            padding: 10px;
+            align-items: center; /* Vertical alignment */
+            justify-items: center; /* Horizontal alignment */
+        }
+
+        /* Optional: Handle content in grid items */
+        .schedule_medicine_wrapper > * {
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis; /* For text truncation */
+        }
+
+        .right_tick_div {
+            padding: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-flow: column;
+        }
+
+        /* Section Styles */
+        /*.investigation_section {
+            padding: 8px;
+        }*/
+
+        .diagnosis_section,
+        .chef-complaints-section,
+        .treatment_advise_section,
+        .investigation_section_heading,
+        .next_consultation_section_heading,
+        .workout_section_heading {
+            border: 1px solid black;
+            border-top: 0;
+            padding: 10px;
+        }
+
+        .diet_section_heading {
+            margin-top: 30px;
+            border: 1px solid black;
+            padding: 10px;
+        }
+
+        /* Signature Section */
+        .signature_section {
+            text-align: center;
+            margin-left: 600px;
+            margin-bottom: 20px;
+            margin-top: 30px;
+            display: flex;
+            align-items: end;
+            justify-content: end;
+        }
+
+        .signature_section .signature_image_section {
+            align-items: center;
+            display: flex;
+            flex-flow: column;
+            text-align: center;
+        }
+
+        .signature_image {
+            max-width: 120px;
+            height: auto;
+            /* Preserve aspect ratio while respecting height/width constraints */
+            object-fit: contain;
+        }
+
+        .signature-date {
+            margin: 10px 0;
+        }
+
+        .signature-stamp h3 {
+            margin: 10px 0;
+        }
+
+        .signature-details {
+            margin-top: 10px;
+        }
+
+        .signature-details p {
+            margin: 0;
+        }
+
+        /* New Page for Lifestyle Advice */
+        .lifestyle-advice-page {
+            page-break-before: always; /* Start on a new page */
+        }
+    </style>
 </head>
 
 <body>
@@ -31,7 +785,8 @@
                 {{ providerName }} <br/>
                 {{ providerAddress }} +91-8411042323 <br/>
             </h3>
-            <p>{{translatedLabels.Patient}}: {{ patient_data.name }} - {{translatedLabels.ID}}: {{ patient_data.uid}}</p>
+            <p>{{translatedLabels.Patient}}: {{ patient_data.name }} - {{translatedLabels.ID}}: {{
+                patient_data.uid}}</p>
         </div>
         <div class="top_provider_section_three">
             <img
@@ -522,8 +1277,8 @@
                         {{/each}}
                         <div style="margin-top: 20px">
                             <h5>
-                                {{translatedLabels.Repeat_Days}} - 
-								{{#each this.repeat_days}}<span>{{this}},</span>{{/each}}
+                                {{translatedLabels.Repeat_Days}} -
+                                {{#each this.repeat_days}}<span>{{this}},</span>{{/each}}
                             </h5>
                             <h5>
                                 {{translatedLabels.What_Not_to_Do}} -
