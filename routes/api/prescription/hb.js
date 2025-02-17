@@ -83,7 +83,7 @@ export const localeMap = {
 };
 
 // Language strings (can be loaded from JSON files)
-const staticTranslatedDataStrings = require('../../../other/test.json');
+const staticTranslatedDataStrings = require('../../../other/prescriptions/test.json');
 
 // As the browsers and Google Translate does not do this
 const devanagariDigits = ['०', '१', '२', '३', '४', '५', '६', '७', '८', '९'];

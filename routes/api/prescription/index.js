@@ -169,7 +169,7 @@ let localTranslationsCache = null;
  */
 function getLocalTranslations() {
     if (!localTranslationsCache) {
-        localTranslationsCache = require('../../../other/web-hi.json');
+        localTranslationsCache = require('../../../other/prescriptions/web-hi.json');
     }
     return localTranslationsCache;
 }
