@@ -66,7 +66,7 @@ import { raiseClientError, raiseServerError } from "../helper";
 const { TranslationServiceClient } = require('@google-cloud/translate').v3beta1;
 const puppeteer = require("puppeteer");
 const handlebars = require("handlebars");
-const { renderTemplate } = require('./hb')
+const { renderTemplate } = require('../../../app/helper/prescriptions/hb')
 
 const logger = createLogger("PRESCRIPTION API");
 const generationTimestamp = moment().format('MMMM Do YYYY, h:mm:ss A'); // Format with Moment.js
