@@ -117,6 +117,7 @@ module.exports = () => {
       CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
       REDIRECT_URI: process.env.GOOGLE_REDIRECT_URI,
       GOOGLE_CLOUD_PROJECT_ID: process.env.GOOGLE_CLOUD_PROJECT_ID,
+      GOOGLE_APPLICATION_CREDENTIALS: process.env.GOOGLE_APPLICATION_CREDENTIALS,
     },
     facebook_keys: {
       APP_TOKEN: process.env.FACEBOOK_APP_TOKEN,

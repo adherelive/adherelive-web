@@ -1,0 +1,837 @@
+{
+  "doctor_id": 1,
+  "doctorName": "Sparsh Jaiswal",
+  "city": "New Delhi",
+  "degree": "",
+  "registrationNumber": "",
+  "doctorEmail": "test-doctor@mail.com",
+  "doctorMobileNumber": "9876543215",
+  "doctorSignImage": null,
+  "prefix": "91",
+  "providerLogo": "https://adherelive-demo.s3.ap-south-1.amazonaws.com/other/4/8cd98f00b204e9800998ecf8427e/b1fd44ce9f3b250e01026ebd5a018357/HealthCA-logo.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA4DR6HU5GRD73D46P%2F20250214%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Date=20250214T101856Z&X-Amz-Expires=1800&X-Amz-Signature=331d0bf491afeb38d8cac9c4c1edc64a0f9a8f3c52881e60a43973ee85f37934&X-Amz-SignedHeaders=host",
+  "providerName": "Provider Hospital",
+  "providerAddress": "Meerut Highway",
+  "patient_data": {
+    "name": "Akash Takaski",
+    "age": "35 y",
+    "gender": "m",
+    "address": "Moradabad, UP",
+    "height": "174",
+    "weight": "98",
+    "allergies": "Hay Fever Allergies",
+    "comorbidities": "None which have been noticed",
+    "mobile_number": "9123498765",
+    "prefix": "91",
+    "uid": "ADH/2025/0007",
+    "created_at": "16 Jan '25, 06:13 AM"
+  },
+  "diagnosis": "Hay Fever Allergies",
+  "condition": "Scarlet fever, uncomplicated",
+  "symptoms": "[{\"symptomName\":\"Fever With Chills\",\"bodyParts\":[\"Generalised\"],\"duration\":\"2 Days\"},{\"symptomName\":\"Eye Irritation\",\"bodyParts\":[\"Generalised\",\"Left Eye\"],\"duration\":\"4 Days\"},{\"symptomName\":\"Running Nose\",\"bodyParts\":[\"Generalised\",\"Nose\"],\"duration\":\"4 Days\"}]",
+  "clinicalNotes": "Clinical Notes, Clinical notes for Hay fever, Clinical Notes for the BP",
+  "data": "{\"name\":\"Akash Takaski\",\"age\":\"35 y\",\"gender\":\"m\",\"address\":\"Moradabad, UP\",\"height\":\"174\",\"weight\":\"98\",\"allergies\":\"Hay Fever Allergies\",\"comorbidities\":\"None which have been noticed\",\"mobile_number\":\"9123498765\",\"prefix\":\"91\",\"uid\":\"ADH/2025/0007\",\"created_at\":\"16 Jan '25, 06:13 AM\"}",
+  "symptoms_final_value": "Fever With Chills (Generalised) for 2 Days. Eye Irritation (Generalised,Left Eye) for 4 Days. Running Nose (Generalised,Nose) for 4 Days.",
+  "medicinesArray": [
+    {
+      "basic_info": {
+        "id": 7,
+        "description": null,
+        "details": {
+          "unit": "mg",
+          "repeat": "weekly",
+          "critical": false,
+          "end_time": "2025-01-16T10:22:03.389Z",
+          "quantity": 20,
+          "strength": 2,
+          "start_time": "2025-01-16T10:22:03.389Z",
+          "description": "Don't eat for 30 minutes after taking this medication",
+          "medicine_id": 1,
+          "repeat_days": [
+            "Mon",
+            "Fri"
+          ],
+          "when_to_take": [
+            "1",
+            "2"
+          ],
+          "medicine_type": "2",
+          "repeat_interval": 0,
+          "medication_stage": "",
+          "when_to_take_abbr": "2"
+        },
+        "start_date": "2025-01-16T00:44:11.000Z",
+        "end_date": "2025-01-21T00:44:11.000Z",
+        "updated_at": "2025-01-16T10:22:03.000Z",
+        "created_at": "2025-01-16T00:44:12.000Z"
+      },
+      "organizer": {
+        "id": 1,
+        "category": "doctor",
+        "name": "Sparsh Jaiswal"
+      },
+      "participant_id": 7,
+      "rr_rule": null
+    },
+    {
+      "basic_info": {
+        "id": 8,
+        "description": null,
+        "details": {
+          "unit": "ml",
+          "repeat": "weekly",
+          "critical": false,
+          "end_time": "2025-01-17T04:23:47.499Z",
+          "quantity": 5,
+          "strength": 5,
+          "start_time": "2025-01-17T04:23:47.499Z",
+          "description": "Take after eating something",
+          "medicine_id": 2,
+          "repeat_days": [
+            "Sun",
+            "Thu",
+            "Tue"
+          ],
+          "when_to_take": [
+            "4"
+          ],
+          "medicine_type": "2",
+          "repeat_interval": 0,
+          "medication_stage": "",
+          "when_to_take_abbr": "1"
+        },
+        "start_date": "2025-01-16T00:44:11.000Z",
+        "end_date": "2025-01-22T00:44:11.000Z",
+        "updated_at": "2025-01-17T04:23:47.000Z",
+        "created_at": "2025-01-16T00:44:12.000Z"
+      },
+      "organizer": {
+        "id": 1,
+        "category": "doctor",
+        "name": "Sparsh Jaiswal"
+      },
+      "participant_id": 7,
+      "rr_rule": null
+    },
+    {
+      "basic_info": {
+        "id": 9,
+        "description": null,
+        "details": {
+          "unit": "3",
+          "repeat": "weekly",
+          "critical": true,
+          "end_time": "2025-01-17T05:25:49.621Z",
+          "quantity": 4,
+          "strength": 1,
+          "start_time": "2025-01-17T05:25:49.621Z",
+          "description": "Take once during these days. Then report symptoms",
+          "medicine_id": 9999,
+          "repeat_days": [
+            "Thu"
+          ],
+          "when_to_take": [
+            "3",
+            "6"
+          ],
+          "medicine_type": "4",
+          "repeat_interval": 0,
+          "medication_stage": "",
+          "when_to_take_abbr": "2"
+        },
+        "start_date": "2025-01-21T04:22:16.000Z",
+        "end_date": "2025-01-24T04:22:35.000Z",
+        "updated_at": "2025-01-17T05:25:49.000Z",
+        "created_at": "2025-01-17T04:23:18.000Z"
+      },
+      "organizer": {
+        "id": 1,
+        "category": "doctor",
+        "name": "Sparsh Jaiswal"
+      },
+      "participant_id": 7,
+      "rr_rule": null
+    },
+    {
+      "basic_info": {
+        "id": 10,
+        "description": null,
+        "details": {
+          "unit": "mg",
+          "repeat": "weekly",
+          "critical": false,
+          "end_time": "2025-01-17T05:26:09.761Z",
+          "quantity": 12,
+          "strength": 3,
+          "start_time": "2025-01-17T05:26:09.761Z",
+          "description": "Don't eat for 30 minutes after taking this medication",
+          "medicine_id": 1,
+          "repeat_days": [
+            "Mon",
+            "Fri"
+          ],
+          "when_to_take": [
+            "1",
+            "2"
+          ],
+          "medicine_type": "2",
+          "repeat_interval": 0,
+          "medication_stage": "",
+          "when_to_take_abbr": "2"
+        },
+        "start_date": "2025-01-17T05:25:15.000Z",
+        "end_date": "2025-01-22T05:25:15.000Z",
+        "updated_at": "2025-01-17T05:26:09.000Z",
+        "created_at": "2025-01-17T05:25:16.000Z"
+      },
+      "organizer": {
+        "id": 1,
+        "category": "doctor",
+        "name": "Sparsh Jaiswal"
+      },
+      "participant_id": 7,
+      "rr_rule": null
+    }
+  ],
+  "clinical_notes": "Clinical Notes, Clinical notes for Hay fever, Clinical Notes for the BP",
+  "follow_up_advise": "Follow-up advice is to use Dymista. Call immediately if the BP goes over 150 or under 50",
+  "registrations": {},
+  "creationDate": "February 14, 2025 10:18 AM",
+  "investigations": [
+    {
+      "type": "1",
+      "description": "We will do a checkup in the morning of the Surgery",
+      "type_description": "Blood Test",
+      "radiology_type": "",
+      "provider_id": 2,
+      "start_date": "04 Feb '25",
+      "organizer": {
+        "id": 1,
+        "category": "doctor",
+        "name": "Sparsh Jaiswal"
+      },
+      "reason": "Surgery"
+    },
+    {
+      "type": "1",
+      "description": "We will do a checkup in the morning of the Surgery",
+      "type_description": "Blood Test",
+      "radiology_type": "",
+      "provider_id": 2,
+      "start_date": "03 Feb '25",
+      "organizer": {
+        "id": 1,
+        "category": "doctor",
+        "name": "Sparsh Jaiswal"
+      },
+      "reason": "Surgery"
+    },
+    {
+      "type": "1",
+      "description": "Please fast for 12 hours before the test",
+      "type_description": "Blood Test",
+      "radiology_type": "",
+      "provider_id": 1,
+      "start_date": "23 Jan '25",
+      "organizer": {
+        "id": 1,
+        "category": "doctor",
+        "name": "Sparsh Jaiswal"
+      },
+      "reason": "Checking of Vitals"
+    },
+    {
+      "type": "1",
+      "description": "Please fast for 12 hours before the test",
+      "type_description": "Blood Test",
+      "radiology_type": "",
+      "provider_id": 1,
+      "start_date": "23 Jan '25",
+      "organizer": {
+        "id": 1,
+        "category": "doctor",
+        "name": "Sparsh Jaiswal"
+      },
+      "reason": "Checking of Vitals"
+    }
+  ],
+  "nextConsultation": [],
+  "medicationsList": [
+    {
+      "description": "Don't eat for 30 minutes after taking this medication",
+      "medicineName": "VERZENIO",
+      "genericName": "Abemaciclib",
+      "medicineType": "SYRUP",
+      "strength": "2 MG",
+      "quantity": 20,
+      "organizer": {
+        "id": 1,
+        "category": "doctor",
+        "name": "Sparsh Jaiswal"
+      },
+      "frequency": "Twice a day",
+      "startDate": "January 16, 2025",
+      "endDate": "2025-01-21T00:44:11.000Z",
+      "timings": "After Wake Up, Before Breakfast",
+      "timings_new": {
+        "morning": [
+          "After Wake Up",
+          "Before Breakfast"
+        ],
+        "afternoon": [],
+        "night": []
+      },
+      "dosage": "Twice a day",
+      "duration": 6,
+      "repeat_days": "[Circular]",
+      "unit": "2 MG",
+      "isSOS": false
+    },
+    {
+      "description": "Take after eating something",
+      "medicineName": "REOPRO",
+      "genericName": "Abciximab",
+      "medicineType": "SYRUP",
+      "strength": "5 ML",
+      "quantity": 5,
+      "organizer": {
+        "id": 1,
+        "category": "doctor",
+        "name": "Sparsh Jaiswal"
+      },
+      "frequency": "Once a day",
+      "startDate": "January 16, 2025",
+      "endDate": "2025-01-22T00:44:11.000Z",
+      "timings": "Before Lunch",
+      "timings_new": {
+        "morning": [],
+        "afternoon": [
+          "Before Lunch"
+        ],
+        "night": []
+      },
+      "dosage": "Once a day",
+      "duration": 7,
+      "repeat_days": "[Circular]",
+      "unit": "5 ML",
+      "isSOS": false
+    },
+    {
+      "description": "Take once during these days. Then report symptoms",
+      "medicineName": "BANDRONE (50 MG)",
+      "genericName": "Ibandronate",
+      "medicineType": "SUSPENSION",
+      "strength": "1 3",
+      "quantity": 4,
+      "organizer": {
+        "id": 1,
+        "category": "doctor",
+        "name": "Sparsh Jaiswal"
+      },
+      "frequency": "Twice a day",
+      "startDate": "January 21, 2025",
+      "endDate": "2025-01-24T04:22:35.000Z",
+      "timings": "After Breakfast, After Lunch",
+      "timings_new": {
+        "morning": [
+          "After Breakfast"
+        ],
+        "afternoon": [
+          "After Lunch"
+        ],
+        "night": []
+      },
+      "dosage": "Twice a day",
+      "duration": 4,
+      "repeat_days": "[Circular]",
+      "unit": "One",
+      "isSOS": false
+    },
+    {
+      "description": "Don't eat for 30 minutes after taking this medication",
+      "medicineName": "VERZENIO",
+      "genericName": "Abemaciclib",
+      "medicineType": "SYRUP",
+      "strength": "3 MG",
+      "quantity": 12,
+      "organizer": {
+        "id": 1,
+        "category": "doctor",
+        "name": "Sparsh Jaiswal"
+      },
+      "frequency": "Twice a day",
+      "startDate": "January 17, 2025",
+      "endDate": "2025-01-22T05:25:15.000Z",
+      "timings": "After Wake Up, Before Breakfast",
+      "timings_new": {
+        "morning": [
+          "After Wake Up",
+          "Before Breakfast"
+        ],
+        "afternoon": [],
+        "night": []
+      },
+      "dosage": "Twice a day",
+      "duration": 6,
+      "repeat_days": "[Circular]",
+      "unit": "3 MG",
+      "isSOS": false
+    }
+  ],
+  "dietFormattedData": {
+    "4": {
+      "diets": {
+        "4": {
+          "basic_info": {
+            "id": 4,
+            "name": "Next Test Diet",
+            "total_calories": 1000,
+            "start_date": "2025-01-16T00:43:31.000Z",
+            "end_date": "2025-03-31T00:43:31.000Z",
+            "care_plan_id": 8
+          },
+          "details": {
+            "not_to_do": null,
+            "repeat_days": [
+              "Sun",
+              "Mon",
+              "Thu",
+              "Sat"
+            ]
+          },
+          "expired_on": null
+        }
+      },
+      "diet_food_groups": {
+        "1": [
+          {
+            "serving": 1,
+            "portion_id": 1,
+            "food_group_id": 7,
+            "notes": "",
+            "food_item_detail_id": 2,
+            "similar": [],
+            "details": {
+              "id": 2,
+              "name": "Banana",
+              "creator_id": null,
+              "creator_type": "admin",
+              "basic_info": {
+                "id": 2,
+                "food_item_id": 2,
+                "calorific_value": 200,
+                "carbs": 200,
+                "proteins": 200,
+                "fats": 200,
+                "fibers": 200,
+                "portion_id": 1,
+                "portion_size": 0.5,
+                "creator_id": null,
+                "creator_type": "admin"
+              },
+              "details": null
+            },
+            "portion": {
+              "basic_info": {
+                "id": 1,
+                "name": "Cup"
+              }
+            }
+          }
+        ],
+        "2": [
+          {
+            "serving": 2,
+            "portion_id": 1,
+            "food_group_id": 8,
+            "notes": "",
+            "food_item_detail_id": 4,
+            "similar": [],
+            "details": {
+              "id": 4,
+              "name": "Watermelon",
+              "creator_id": null,
+              "creator_type": "admin",
+              "basic_info": {
+                "id": 4,
+                "food_item_id": 4,
+                "calorific_value": 400,
+                "carbs": 400,
+                "proteins": 400,
+                "fats": 400,
+                "fibers": 400,
+                "portion_id": 1,
+                "portion_size": 4,
+                "creator_id": null,
+                "creator_type": "admin"
+              },
+              "details": null
+            },
+            "portion": "[Circular]"
+          }
+        ]
+      },
+      "food_items": {
+        "2": {
+          "basic_info": {
+            "id": 2,
+            "name": "Banana",
+            "creator_id": null,
+            "creator_type": "admin"
+          }
+        },
+        "4": {
+          "basic_info": {
+            "id": 4,
+            "name": "Watermelon",
+            "creator_id": null,
+            "creator_type": "admin"
+          }
+        }
+      },
+      "food_item_details": {
+        "2": {
+          "basic_info": "[Circular]",
+          "details": null
+        },
+        "4": {
+          "basic_info": "[Circular]",
+          "details": null
+        }
+      }
+    },
+    "5": {
+      "diets": {
+        "5": {
+          "basic_info": {
+            "id": 5,
+            "name": "My Test Diet",
+            "total_calories": 1000,
+            "start_date": "2025-01-17T05:23:43.000Z",
+            "end_date": "2025-02-28T05:23:43.000Z",
+            "care_plan_id": 8
+          },
+          "details": {
+            "not_to_do": "Diet needs to be taken through the day",
+            "repeat_days": [
+              "Sun",
+              "Mon",
+              "Thu",
+              "Fri",
+              "Sat"
+            ]
+          },
+          "expired_on": null
+        }
+      },
+      "diet_food_groups": {
+        "1": [
+          {
+            "serving": 1,
+            "portion_id": 1,
+            "food_group_id": 9,
+            "notes": "",
+            "food_item_detail_id": 2,
+            "similar": [],
+            "details": {
+              "id": 2,
+              "name": "Banana",
+              "creator_id": null,
+              "creator_type": "admin",
+              "basic_info": {
+                "id": 2,
+                "food_item_id": 2,
+                "calorific_value": 200,
+                "carbs": 200,
+                "proteins": 200,
+                "fats": 200,
+                "fibers": 200,
+                "portion_id": 1,
+                "portion_size": 0.5,
+                "creator_id": null,
+                "creator_type": "admin"
+              },
+              "details": null
+            },
+            "portion": "[Circular]"
+          }
+        ],
+        "2": [
+          {
+            "serving": 2,
+            "portion_id": 1,
+            "food_group_id": 10,
+            "notes": "",
+            "food_item_detail_id": 4,
+            "similar": [],
+            "details": {
+              "id": 4,
+              "name": "Watermelon",
+              "creator_id": null,
+              "creator_type": "admin",
+              "basic_info": {
+                "id": 4,
+                "food_item_id": 4,
+                "calorific_value": 400,
+                "carbs": 400,
+                "proteins": 400,
+                "fats": 400,
+                "fibers": 400,
+                "portion_id": 1,
+                "portion_size": 4,
+                "creator_id": null,
+                "creator_type": "admin"
+              },
+              "details": null
+            },
+            "portion": "[Circular]"
+          }
+        ]
+      },
+      "food_items": {
+        "2": {
+          "basic_info": {
+            "id": 2,
+            "name": "Banana",
+            "creator_id": null,
+            "creator_type": "admin"
+          }
+        },
+        "4": {
+          "basic_info": {
+            "id": 4,
+            "name": "Watermelon",
+            "creator_id": null,
+            "creator_type": "admin"
+          }
+        }
+      },
+      "food_item_details": {
+        "2": {
+          "basic_info": "[Circular]",
+          "details": null
+        },
+        "4": {
+          "basic_info": "[Circular]",
+          "details": null
+        }
+      }
+    }
+  },
+  "dietIds": [
+    5,
+    4
+  ],
+  "diet_output": [
+    {
+      "name": "My Test Diet",
+      "total_calories": 1000,
+      "not_to_do": "Diet needs to be taken through the day",
+      "repeat_days": "[Circular]",
+      "durationText": "6 weeks  ",
+      "food_group": [
+        {
+          "time": {
+            "text": "Immediately After Wakeup",
+            "time": "2020-09-24T08:00:00+05:30"
+          },
+          "food_group_details_array": "[Circular]"
+        },
+        {
+          "time": {
+            "text": "Breakfast",
+            "time": "2020-09-24T09:00:00+05:30"
+          },
+          "food_group_details_array": "[Circular]"
+        }
+      ]
+    },
+    {
+      "name": "Next Test Diet",
+      "total_calories": 1000,
+      "not_to_do": null,
+      "repeat_days": "[Circular]",
+      "durationText": "10 weeks 4 days ",
+      "food_group": [
+        {
+          "time": "[Circular]",
+          "food_group_details_array": "[Circular]"
+        },
+        {
+          "time": "[Circular]",
+          "food_group_details_array": "[Circular]"
+        }
+      ]
+    }
+  ],
+  "pre_workouts": [
+    {
+      "ex": [
+        {
+          "ex_group": {
+            "basic_info": {
+              "id": 9,
+              "exercise_detail_id": 1
+            },
+            "sets": 1,
+            "details": {
+              "notes": ""
+            }
+          },
+          "ex_details": {
+            "basic_info": {
+              "id": 1,
+              "exercise_id": 1,
+              "repetition_id": 6,
+              "repetition_value": 1
+            },
+            "creator_id": null,
+            "creator_type": "admin",
+            "calorific_value": 100
+          },
+          "exercises": {
+            "basic_info": {
+              "id": 1,
+              "name": "Push Ups"
+            },
+            "exercise_detail_ids": []
+          },
+          "repetitions": {
+            "type": "repetitions"
+          },
+          "repetition_value": 1
+        },
+        {
+          "ex_group": {
+            "basic_info": {
+              "id": 10,
+              "exercise_detail_id": 2
+            },
+            "sets": 2,
+            "details": {
+              "notes": ""
+            }
+          },
+          "ex_details": {
+            "basic_info": {
+              "id": 2,
+              "exercise_id": 2,
+              "repetition_id": 6,
+              "repetition_value": 1
+            },
+            "creator_id": null,
+            "creator_type": "admin",
+            "calorific_value": 100
+          },
+          "exercises": {
+            "basic_info": {
+              "id": 2,
+              "name": "Pull Ups"
+            },
+            "exercise_detail_ids": []
+          },
+          "repetitions": "[Circular]",
+          "repetition_value": 1
+        }
+      ],
+      "total_cal": 200,
+      "durationText": "8 weeks  ",
+      "duration": 56,
+      "name": "My Test Workout",
+      "end_date": "2025-03-14T05:23:43.000Z",
+      "start_date": "2025-01-17T05:23:43.000Z",
+      "formattedTime": "12:00 AM",
+      "not_to_do": "Do not over work",
+      "repeat_days": [
+        "Sun",
+        "Mon",
+        "Thu",
+        "Sat"
+      ]
+    },
+    {
+      "ex": [
+        {
+          "ex_group": {
+            "basic_info": {
+              "id": 7,
+              "exercise_detail_id": 1
+            },
+            "sets": 1,
+            "details": {
+              "notes": ""
+            }
+          },
+          "ex_details": {
+            "basic_info": {
+              "id": 1,
+              "exercise_id": 1,
+              "repetition_id": 6,
+              "repetition_value": 1
+            },
+            "creator_id": null,
+            "creator_type": "admin",
+            "calorific_value": 100
+          },
+          "exercises": {
+            "basic_info": {
+              "id": 1,
+              "name": "Push Ups"
+            },
+            "exercise_detail_ids": []
+          },
+          "repetitions": {
+            "type": "repetitions"
+          },
+          "repetition_value": 1
+        },
+        {
+          "ex_group": {
+            "basic_info": {
+              "id": 8,
+              "exercise_detail_id": 2
+            },
+            "sets": 2,
+            "details": {
+              "notes": ""
+            }
+          },
+          "ex_details": {
+            "basic_info": {
+              "id": 2,
+              "exercise_id": 2,
+              "repetition_id": 6,
+              "repetition_value": 1
+            },
+            "creator_id": null,
+            "creator_type": "admin",
+            "calorific_value": 100
+          },
+          "exercises": {
+            "basic_info": {
+              "id": 2,
+              "name": "Pull Ups"
+            },
+            "exercise_detail_ids": []
+          },
+          "repetitions": "[Circular]",
+          "repetition_value": 1
+        }
+      ],
+      "total_cal": 200,
+      "durationText": "4 weeks 2 days ",
+      "duration": 30,
+      "name": "Test Workout",
+      "end_date": "2025-02-15T00:43:31.000Z",
+      "start_date": "2025-01-16T00:43:31.000Z",
+      "formattedTime": "01:00 PM",
+      "not_to_do": "Workout",
+      "repeat_days": [
+        "Sun",
+        "Tue",
+        "Thu",
+        "Sat"
+      ]
+    }
+  ],
+  "translatedLabels": []
+}

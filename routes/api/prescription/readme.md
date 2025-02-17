@@ -182,3 +182,24 @@ call the API for static content, only dynamic.
   - Backend->>Puppeteer: Generate PDF
   - Backend-->>Frontend: PDF download URL
 
+## Key Optimizations for the Hindi HTML
+1. Print-Specific Improvements:
+   - Added comprehensive @page rules for both A4 and Letter sizes
+   - Enhanced print color adjustments with vendor prefixes
+   - Improved page break controls
+   - Used point (pt) units for more precise print measurements
+
+2. Performance Optimizations:
+    - Streamlined font loading with local() fallbacks
+    - Removed redundant font declarations
+    - Simplified CSS variables structure
+
+3. Layout Stability:
+    - Added fixed column widths for tables
+    - Improved image size constraints using print-friendly units
+    - Enhanced grid layouts with better break control
+
+4. Additional Enhancements:
+    - Added word-wrap and hyphenation for better text flow
+    - Improved header/footer positioning
+    - Enhanced typography scaling for print

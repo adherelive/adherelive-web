@@ -49,6 +49,7 @@ services:
         parallelism: 1
         delay: 10s
     secrets:
+      - mongodb_password
       - mysql_user_password
     env_file:
       - .env
