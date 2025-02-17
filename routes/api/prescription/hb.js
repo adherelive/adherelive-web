@@ -28,8 +28,10 @@ import { createLogger } from "../../../libs/logger";
 import fs from "fs";
 import mongoose from "mongoose";
 import Handlebars from 'handlebars';
+import Redis from 'ioredis'
 
 const {Translate} = require('@google-cloud/translate').v2;
+const redis = new Redis();
 
 // MongoDB Schema for translations
 const TranslationSchema = new mongoose.Schema({
@@ -88,7 +90,7 @@ const devanagariDigits = ['०', '१', '२', '३', '४', '५', '६', '७'
 
 /**
  * Register the print helper
- *
+ * This helps in the 'print' statements in the handlebars for the HTML file
  */
 Handlebars.registerHelper('print', function(value) {
     return value + 1;
@@ -119,6 +121,54 @@ const getLocale = (language) => {
     }
 };
 
+// TODO: Use Redis, To fetch the cached data from Redis
+async function getCachedTranslation(key, targetLang) {
+    const cacheKey = `translation:${targetLang}:${key}`;
+    const cached = await redis.get(cacheKey);
+    return cached ? JSON.parse(cached) : null;
+}
+
+// TODO: Use Redis, To cache data in the local Redis
+async function cacheTranslation(key, targetLang, value) {
+    const cacheKey = `translation:${targetLang}:${key}`;
+    await redis.set(cacheKey, JSON.stringify(value), 'EX', 86400); // 24h cache
+}
+
+/**
+ * Helper function for language code normalization
+ *
+ * @param langCode
+ * @returns {*}
+ */
+function normalizeLanguageCode(langCode) {
+    const languageMap = {
+        'hi-Latn': 'en', 	// Map Latin script Hindi to English
+        'und': 'en',     	// Map undefined language to English
+        'undefined': 'en',	// Map undefined language to English
+        'mr': 'hi'       	// Map Marathi to Hindi if needed
+    };
+
+    return languageMap[ langCode ] || langCode;
+}
+
+/**
+ * Helper function for detecting incompatible language pairs
+ *
+ * @param source
+ * @param target
+ * @returns {boolean}
+ */
+function isIncompatibleLanguagePair(source, target) {
+    const incompatiblePairs = [
+        ['hi-Latn', 'hi'],
+        ['und', 'hi']
+    ];
+
+    return incompatiblePairs.some(([s, t]) =>
+        s === source && t === target
+    );
+}
+
 /**
  * Function to detect the language being used for a specific content/data
  *
@@ -136,7 +186,9 @@ async function detectLanguage(text) {
     while (attempt < maxRetries) {
         try {
             const [detection] = await translate.detect(text);
-            return (detection.language);
+            return ( detection.language );
+            // TODO: Do I need to normalize the language here also?
+            // return normalizeLanguageCode(detection.language);
         } catch (error) {
             attempt++;
 
@@ -152,6 +204,32 @@ async function detectLanguage(text) {
     }
 
     return null;
+}
+
+/**
+ * Enhanced language detection with fallback
+ *
+ * @param text
+ * @returns {Promise<string|null>}
+ */
+async function detectLanguageWithFallback(text) {
+    try {
+        const [detection] = await translate.detect(text);
+
+        // Validate the detected language
+        if (!detection || !detection.language) {
+            logger.warn(`Invalid language detection result for: ${text}`);
+            return null;
+        }
+
+        // Log the detected language for debugging
+        logger.debug(`Detected language: ${detection.language} (confidence: ${detection.confidence})`);
+
+        return detection.language;
+    } catch (error) {
+        logger.error(`Language detection failed: ${error.message}`);
+        return null;
+    }
 }
 
 /**
@@ -226,12 +304,21 @@ async function translateWithDetection(text, sourceLanguage, targetLanguage) {
         };
     }
 
+    // Skip translation for numbers, identifiers, etc.
+    if (shouldSkipTranslation(text)) {
+        return {
+            sourceLanguage: sourceLanguage || 'en',
+            sourceText: text,
+            translatedText: text
+        };
+    }
+
     try {
-        // Detect the language of the input text
-        const detectedLanguage = await detectLanguage(text);
+        // Detect the language of the input text, with validation
+        const detectedLanguage = await detectLanguageWithFallback(text);
 
         // Use provided sourceLanguage as fallback if detection fails
-        const confirmedSourceLang = detectedLanguage || sourceLanguage || 'en';
+        const confirmedSourceLang = normalizeLanguageCode(detectedLanguage || sourceLanguage || 'en');
 
         // If text is already in target language, return as is
         if (confirmedSourceLang === targetLanguage) {
@@ -242,46 +329,45 @@ async function translateWithDetection(text, sourceLanguage, targetLanguage) {
             };
         }
 
-        // Implement retry logic with exponential backoff
-        const maxRetries = 2;
-        let attempt = 0;
-        let lastError;
-
-        while (attempt < maxRetries) {
-            try {
-                const [translation] = await translate.translate(text, {
-                    from: confirmedSourceLang,
-                    to: targetLanguage
-                });
-
-                return {
-                    sourceLanguage: confirmedSourceLang,
-                    sourceText: text,
-                    translatedText: translation
-                };
-            } catch (error) {
-                lastError = error;
-                attempt++;
-
-                // Check if it's a rate limit error
-                if (error.code === 429) {
-                    const delay = Math.pow(2, attempt) * 1000; // Exponential backoff
-                    await new Promise(resolve => setTimeout(resolve, delay));
-                    continue;
-                }
-
-                // For other errors, break the retry loop
-                break;
-            }
+        // Check for incompatible language pairs
+        if (isIncompatibleLanguagePair(confirmedSourceLang, targetLanguage)) {
+            logger.warn(`Incompatible language pair detected: ${confirmedSourceLang} -> ${targetLanguage}`);
+            return {
+                sourceLanguage: confirmedSourceLang,
+                sourceText: text,
+                translatedText: text // Return original text for incompatible pairs
+            };
         }
 
-        // If all retries failed, log error and return original text
-        logger.error(`Translation failed after '${maxRetries}' attempts - '${confirmedSourceLang}', '${targetLanguage}', & '${text}': `, lastError);
+        // Enhanced retry logic with rate limiting
+        let result;
+        try {
+            result = await retryWithRateLimit(
+                async () => {
+                    const [translation] = await translate.translate(text, {
+                            from: confirmedSourceLang,
+                            to: targetLanguage
+                        }
+                    );
+                    return translation;
+                },
+                {
+                    maxRetries: 2,
+                    baseDelay: 1000,
+                    maxDelay: 5000
+                }
+            );
+        } catch (error) {
+            // If all retries failed, log error and return original text
+            logger.error(`Translation failed after '2' attempts - '${confirmedSourceLang}', '${targetLanguage}', & '${text}': `, error);
+            result = text; // Fallback to original text
+        }
         return {
             sourceLanguage: confirmedSourceLang,
             sourceText: text,
-            translatedText: text // Fallback to original text
+            translatedText: result || text // Fallback to original text if translation fails
         };
+
     } catch (error) {
         logger.error(`Translation with detection failed - '${sourceLanguage}', '${targetLanguage}', & '${text}': `, error);
         return {
@@ -308,30 +394,78 @@ async function storeTranslation(key, sourceLanguage, targetLanguage, sourceText,
         // Ensure we're not storing identical source and translated text when languages differ
         if (sourceLanguage !== targetLanguage && sourceText === translatedText) {
             logger.warn(`Attempt to store identical [${sourceText}|${translatedText}] text: ${sourceLanguage} -> ${targetLanguage}`);
+            logger.warn(`Skipping storage of identical texts: ${sourceText}`);
             return;
         }
 
-        await Translation.findOneAndUpdate(
-            {
-                key,
-                sourceLanguage,
-                targetLanguage
-            },
-            {
-                sourceText,
-                translatedText,
-                context,
-                updatedAt: new Date(),
-                lastUsed: new Date()
-            },
-            {
-                upsert: true,
-                new: true
-            }
-        );
+        try {
+            await Translation.findOneAndUpdate(
+                {
+                    key,
+                    sourceLanguage,
+                    targetLanguage
+                },
+                {
+                    sourceText,
+                    translatedText,
+                    context,
+                    updatedAt: new Date(),
+                    lastUsed: new Date()
+                },
+                {
+                    upsert: true,
+                    new: true
+                }
+            );
+        } catch (error) {
+            logger.error(`MongoDB storage error: ${error.message}`);
+        }
     } catch (error) {
         logger.error(`Error storing translation '${translatedText}' in MongoDB: `, error);
     }
+}
+
+/**
+ * Handle the content translation
+ *
+ * @param content
+ * @param targetLanguage
+ * @returns {Promise<*|Awaited<unknown>[]|{}|number|string>}
+ */
+async function handleContentTranslation(content, targetLanguage) {
+    // Handle different types of content
+    if (typeof content === 'number') {
+        return content; // Numbers don't need translation
+    }
+
+    if (typeof content === 'string') {
+        // Skip translation for special cases
+        if (shouldSkipTranslation(content)) {
+            return content;
+        }
+
+        try {
+            const [translation] = await translate.translate(content, targetLanguage);
+            return translation;
+        } catch (error) {
+            logger.error(`Failed to translate string '${content}': `, error);
+            return content;
+        }
+    }
+
+    if (Array.isArray(content)) {
+        return Promise.all(content.map(item => handleContentTranslation(item, targetLanguage)));
+    }
+
+    if (content && typeof content === 'object') {
+        const translatedObj = {};
+        for (const [key, value] of Object.entries(content)) {
+            translatedObj[ key ] = await handleContentTranslation(value, targetLanguage);
+        }
+        return translatedObj;
+    }
+
+    return content;
 }
 
 /**
@@ -419,19 +553,27 @@ async function translateDynamicContent(content, sourceLanguage, targetLanguage) 
     return content;
 }
 
-// Skip translation for these cases
+/**
+ * Skip translation for these cases, with enhancements
+ *
+ * @param content
+ * @returns {boolean}
+ */
 function shouldSkipTranslation(content) {
     if (!content || typeof content !== 'string') return true;
 
-    return (
-        content.trim().length === 0 || // Empty or whitespace
-        content.includes('@') || // Email addresses
-        // /^[0-9]+$/.test(content) || // Pure numbers
-        /^((http|https)?:\/\/)/.test(content) || // URLs
-        /{{\s*[\w.]+\s*}}/.test(content) || // Handlebars expressions
-        /^[A-F0-9-]{36}$/i.test(content) || // UUIDs
-        /^[A-Z0-9]{8,}$/i.test(content) // IDs and other codes
-    );
+    const skipPatterns = {
+        empty: /^\s*$/,  // Empty or whitespace
+        email: /@/, // Email addresses
+        url: /^(https?:\/\/)/i, //URLs
+        uuid: /^[A-F0-9-]{36}$/i, //UUIDs
+        identifier: /^[A-Z0-9_-]{8,}$/i, // IDs and other codes
+        handlebars: /{{\s*[\w.]+\s*}}/, // Handlebars expressions
+        // pureNumber: /^\d+$/, // Pure numbers
+        specialCharacters: /^[^a-zA-Z\u0900-\u097F\u0600-\u06FF\u4E00-\u9FFF\u3040-\u30FF]+$/
+    };
+
+    return Object.values(skipPatterns).some(pattern => pattern.test(content));
 }
 
 /**
@@ -563,7 +705,6 @@ export const createDateFormatter = (language) => {
         }
     };
 };
-
 
 /**
  * Currency values formatter for the HTML data
@@ -718,7 +859,7 @@ const createDataTranslator = (locale) => {
  * @param targetLanguage
  * @returns {Promise<Awaited<unknown>[]|{}|*|string>}
  */
-export async function translateData(data, targetLanguage) {
+async function translateData(data, targetLanguage) {
     const locale = getLocale(targetLanguage);
 
     const translator = createDataTranslator(locale);
@@ -743,6 +884,13 @@ async function getTranslations(sourceLanguage, targetLanguage, staticTranslatedD
 
     for (const key of templateKeys) {
         try {
+            // TODO: Redis, Check cache first
+            // const cached = await getCachedTranslation(key, targetLang);
+            // if (cached) {
+            //   translatedStrings[key] = cached;
+            //   continue;
+            // }
+
             // Check if any of the translations exists in local JSON file of pre-created translations
             if (staticTranslatedDataStrings[ targetLanguage ]?.[ key ]) {
                 translatedStrings[ key ] = staticTranslatedDataStrings[ targetLanguage ][ key ];
@@ -786,6 +934,12 @@ async function getTranslations(sourceLanguage, targetLanguage, staticTranslatedD
                 staticTranslatedDataStrings[ targetLanguage ] = {};
             }
             staticTranslatedDataStrings[ targetLanguage ][ key ] = translation;
+
+            // TODO: Redis, Cache result
+            // if (translatedText !== sourceText) {
+            //   await cacheTranslation(key, targetLang, translatedText);
+            // }
+
         } catch (error) {
             logger.error(`Translation failed for key '${key}': `, {
                 error,
@@ -864,6 +1018,46 @@ function prepareTemplateData(medicalDataFromJSON, strings) {
 }
 
 /**
+ * Retry function with rate limiting for the Google API
+ *
+ * @param fn
+ * @param options
+ * @returns {Promise<*>}
+ */
+async function retryWithRateLimit(fn, options) {
+    const {maxRetries = 3, baseDelay = 1000, maxDelay = 5000} = options;
+    let attempt = 0;
+    let delay = baseDelay;
+
+    while (attempt < maxRetries) {
+        try {
+            return await fn();
+        } catch (error) {
+            attempt++;
+
+            if (error.code === 429 || error.message.includes('RESOURCE_EXHAUSTED')) {
+                // Exponential backoff for rate limits
+                delay = Math.min(delay * 2, maxDelay);
+                logger.warn(`Rate limit hit, retrying in ${delay}ms (attempt ${attempt}/${maxRetries})`);
+                await new Promise(resolve => setTimeout(resolve, delay));
+                continue;
+            }
+
+            // For other errors, throw if it's the last attempt
+            if (attempt === maxRetries) {
+                throw error;
+            }
+
+            // Linear backoff for other errors
+            delay = baseDelay;
+            await new Promise(resolve => setTimeout(resolve, delay));
+        }
+    }
+
+    throw new Error(`Failed after ${maxRetries} attempts`);
+}
+
+/**
  * Function to replace all values in the dynamic data and HTML fields using handlebars
  *
  * @param targetLanguage
@@ -879,6 +1073,10 @@ export async function renderTemplate(targetLanguage) {
 
         // Prepare data with automatic flattening of arrays
         const dynamicData = prepareTemplateData(medicalData, strings);
+
+        // TODO: this is the other method used to segregate the string and numbers. Remove it.
+        // Translate dynamic content
+        // const translatedDynamicData = await handleContentTranslation(dynamicData, targetLanguage);
 
         // Translate dynamic content recursively
         const translatedDynamicData = await translateDynamicContent(
@@ -896,6 +1094,7 @@ export async function renderTemplate(targetLanguage) {
         logger.info(`Data Conversion completed. PDF has been generated and displayed in ${targetLanguage}`);
         // TODO: Clean-up the mongoDB of translations older than 45 days!
         await cleanupOldTranslations(45);
+
         // Render template
         return compiledTemplate(data);
     } catch (error) {
@@ -905,4 +1104,5 @@ export async function renderTemplate(targetLanguage) {
     }
 }
 
-module.exports = {renderTemplate};
+// Export the enhanced functions
+module.exports = { renderTemplate };
