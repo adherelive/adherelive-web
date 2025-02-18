@@ -28,20 +28,56 @@ import { createLogger } from "../../../libs/logger";
 import fs from "fs";
 import mongoose from "mongoose";
 import Handlebars from 'handlebars';
+import Redis from "ioredis";
 
 const {Translate} = require('@google-cloud/translate').v2;
 
+// Get the Redis URL or assign one
+const redis = new Redis(process.env.REDIS_URL || "redis://redis_service:6379", {
+    connectTimeout: 10000,
+    maxRetriesPerRequest: 20,
+    retryStrategy(times) {
+        const delay = Math.min(times * 200, 2000);
+        logger.info(`[Redis] Retrying connection in ${delay}ms (attempt ${times})`);
+        return delay;
+    },
+    reconnectOnError(err) {
+        const targetError = 'READONLY';
+        if (err.message.includes(targetError)) {
+            return true;
+        }
+        return false;
+    }
+});
+
+redis.on("connect", () => {
+    logger.info("[Redis] Connected successfully.");
+});
+
+redis.on("error", (err) => {
+    logger.error("[Redis] Connection Error:", err);
+});
+
+redis.on("ready", () => {
+    logger.info("[Redis] Client is ready");
+});
+
+redis.on("reconnecting", () => {
+    logger.info("[Redis] Client is reconnecting");
+});
+
+
 // MongoDB Schema for translations
 const TranslationSchema = new mongoose.Schema({
-    key: { type: String, required: true },
-    sourceLanguage: { type: String, required: true },
-    targetLanguage: { type: String, required: true },
-    sourceText: { type: String, required: true },
-    translatedText: { type: String, required: true },
-    context: { type: String, default: 'static' }, // 'static' or 'dynamic'
-    lastUsed: { type: Date, default: Date.now },
-    createdAt: { type: Date, default: Date.now },
-    updatedAt: { type: Date, default: Date.now }
+    key: {type: String, required: true},
+    sourceLanguage: {type: String, required: true},
+    targetLanguage: {type: String, required: true},
+    sourceText: {type: String, required: true},
+    translatedText: {type: String, required: true},
+    context: {type: String, default: 'static'}, // 'static' or 'dynamic'
+    lastUsed: {type: Date, default: Date.now},
+    createdAt: {type: Date, default: Date.now},
+    updatedAt: {type: Date, default: Date.now}
 });
 
 // Create a compound index for efficient lookups
@@ -49,7 +85,7 @@ TranslationSchema.index({
     key: 1,
     sourceLanguage: 1,
     targetLanguage: 1
-}, { unique: true });
+}, {unique: true});
 
 const Translation = mongoose.model('Translation', TranslationSchema);
 
@@ -65,6 +101,7 @@ const logger = createLogger("ENHANCED TRANSLATION API");
 const template = fs.readFileSync(__dirname + '/prescription_with_handlebars.html', 'utf-8');
 // Read and parse the JSON file
 const medicalData = JSON.parse(fs.readFileSync(__dirname + '/prescription_patient_data.json', 'utf-8'));
+// For generating the HTML file with the translated handlebars
 const compiledTemplate = Handlebars.compile(template);
 
 // Cache for translations to reduce API calls
@@ -81,11 +118,45 @@ const staticTranslatedDataStrings = require('../../../other/prescriptions/test.j
  * Register the print helper
  * This helps in the 'print' statements in the handlebars for the HTML file
  */
-Handlebars.registerHelper('print', function(value) {
+Handlebars.registerHelper('print', function (value) {
     return value + 1;
 });
 
 // TODO: Use Redis, To cache & fetch the cached data from Redis
+/**
+ * Fetch cached translation from Redis
+ *
+ * @param key
+ * @returns {Promise<awaited ResultTypes<string, Context>[Context["type"]]|null>}
+ */
+async function getCachedTranslation(key) {
+    try {
+        const cachedTranslation = await redis.get(key);
+        if (cachedTranslation) {
+            logger.info(`Cache hit for ${key}`);
+            return cachedTranslation;
+        }
+    } catch (error) {
+        logger.error(`Redis error: ${error.message}`);
+    }
+    return null;
+}
+
+/**
+ * Store translation in Redis with expiration (7 days)
+ *
+ * @param key
+ * @param translatedText
+ * @returns {Promise<void>}
+ */
+async function cacheTranslation(key, translatedText) {
+    try {
+        await redis.setex(key, 604800, translatedText); // 7 days expiration
+        logger.info(`Cached translation for ${key}`);
+    } catch (error) {
+        logger.error(`Redis caching failed: ${error.message}`);
+    }
+}
 
 /**
  * Helper function for language code normalization
@@ -158,6 +229,11 @@ async function detectLanguageWithFallback(text) {
  * @returns {Promise<*|null>}
  */
 async function getStoredTranslation(key, sourceLanguage, targetLanguage) {
+    // Check Redis cache first
+    const cachedTranslation = await getCachedTranslation(key);
+    if (cachedTranslation) return cachedTranslation;
+
+    // Check MongoDB if translation is not in Redis
     try {
         const storedTranslation = await Translation.findOne({
             key,
@@ -166,6 +242,9 @@ async function getStoredTranslation(key, sourceLanguage, targetLanguage) {
         });
 
         if (storedTranslation) {
+            // Store in Redis for future use
+            await cacheTranslation(key, storedTranslation.translatedText);
+
             // Update last used timestamp
             await Translation.updateOne(
                 {_id: storedTranslation._id},
@@ -173,7 +252,6 @@ async function getStoredTranslation(key, sourceLanguage, targetLanguage) {
             );
             return storedTranslation.translatedText;
         }
-
         return null;
     } catch (error) {
         logger.error(`Error retrieving translation using findOne '${key}' from MongoDB: `, error);
@@ -200,12 +278,25 @@ async function translateWithDetection(text, sourceLanguage, targetLanguage) {
         };
     }
 
+    // Generate a unique cache key
+    const cacheKey = `translation:${sourceLanguage}:${targetLanguage}:${Buffer.from(text).toString("base64")}`;
+
     // Skip translation for numbers, identifiers, etc.
     if (shouldSkipTranslation(text)) {
         return {
             sourceLanguage: sourceLanguage || 'en',
             sourceText: text,
             translatedText: text
+        };
+    }
+
+    // Check Redis cache or MongoDB
+    const cachedTranslation = await getStoredTranslation(cacheKey, sourceLanguage, targetLanguage);
+    if (cachedTranslation) {
+        return {
+            sourceLanguage,
+            sourceText: text,
+            translatedText: cachedTranslation
         };
     }
 
@@ -236,11 +327,11 @@ async function translateWithDetection(text, sourceLanguage, targetLanguage) {
         }
 
         // Enhanced retry logic with rate limiting
-        let result;
+        let result, [ translation ] = [];
         try {
             result = await retryWithRateLimit(
                 async () => {
-                    const [translation] = await translate.translate(text, {
+                    [translation] = await translate.translate(text, {
                             from: confirmedSourceLang,
                             to: targetLanguage
                         }
@@ -253,6 +344,10 @@ async function translateWithDetection(text, sourceLanguage, targetLanguage) {
                     maxDelay: 5000
                 }
             );
+
+            // Store translation in Redis & MongoDB
+            await storeTranslation(cacheKey, sourceLanguage, targetLanguage, text, translation);
+
         } catch (error) {
             // If all retries failed, log error and return original text
             logger.error(`Translation failed after '2' attempts - '${confirmedSourceLang}', '${targetLanguage}', & '${text}': `, error);
@@ -313,6 +408,9 @@ async function storeTranslation(key, sourceLanguage, targetLanguage, sourceText,
                     new: true
                 }
             );
+            // Also store in Redis
+            await cacheTranslation(key, translatedText);
+
         } catch (error) {
             logger.error(`MongoDB storage error: ${error.message}`);
         }
@@ -745,4 +843,4 @@ export async function renderTemplate(targetLanguage) {
 }
 
 // Export the enhanced functions
-module.exports = { renderTemplate };
+module.exports = {renderTemplate};

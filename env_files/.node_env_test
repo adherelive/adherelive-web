@@ -53,8 +53,9 @@ DB_DIALECT=mysql
 MONGO_DB_URI=mongodb://mongouser:password@mongodb:27017/adhere?authSource=admin
 
 # Redis Credentials, not used currently
-REDIS_HOST=
-REDIS_PORT=
+REDIS_URL=redis://redis_service:6379
+REDIS_HOST=localhost
+REDIS_PORT=6379
 REDIS_USERNAME=
 REDIS_PASSWORD=
 
