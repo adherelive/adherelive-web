@@ -28,10 +28,8 @@ import { createLogger } from "../../../libs/logger";
 import fs from "fs";
 import mongoose from "mongoose";
 import Handlebars from 'handlebars';
-import Redis from 'ioredis'
 
 const {Translate} = require('@google-cloud/translate').v2;
-const redis = new Redis();
 
 // MongoDB Schema for translations
 const TranslationSchema = new mongoose.Schema({
@@ -121,18 +119,7 @@ const getLocale = (language) => {
     }
 };
 
-// TODO: Use Redis, To fetch the cached data from Redis
-async function getCachedTranslation(key, targetLang) {
-    const cacheKey = `translation:${targetLang}:${key}`;
-    const cached = await redis.get(cacheKey);
-    return cached ? JSON.parse(cached) : null;
-}
-
-// TODO: Use Redis, To cache data in the local Redis
-async function cacheTranslation(key, targetLang, value) {
-    const cacheKey = `translation:${targetLang}:${key}`;
-    await redis.set(cacheKey, JSON.stringify(value), 'EX', 86400); // 24h cache
-}
+// TODO: Use Redis, To cache & fetch the cached data from Redis
 
 /**
  * Helper function for language code normalization
@@ -884,12 +871,7 @@ async function getTranslations(sourceLanguage, targetLanguage, staticTranslatedD
 
     for (const key of templateKeys) {
         try {
-            // TODO: Redis, Check cache first
-            // const cached = await getCachedTranslation(key, targetLang);
-            // if (cached) {
-            //   translatedStrings[key] = cached;
-            //   continue;
-            // }
+            // TODO: Use Redis, Check cache first
 
             // Check if any of the translations exists in local JSON file of pre-created translations
             if (staticTranslatedDataStrings[ targetLanguage ]?.[ key ]) {
@@ -935,10 +917,7 @@ async function getTranslations(sourceLanguage, targetLanguage, staticTranslatedD
             }
             staticTranslatedDataStrings[ targetLanguage ][ key ] = translation;
 
-            // TODO: Redis, Cache result
-            // if (translatedText !== sourceText) {
-            //   await cacheTranslation(key, targetLang, translatedText);
-            // }
+            // TODO: Use Redis, Cache result
 
         } catch (error) {
             logger.error(`Translation failed for key '${key}': `, {
