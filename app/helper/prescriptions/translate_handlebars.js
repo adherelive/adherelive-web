@@ -139,7 +139,7 @@ async function detectLanguageWithFallback(text) {
         }
 
         // Log the detected language for debugging
-        logger.debug(`Detected language: ${detection.language} (confidence: ${detection.confidence})`);
+        // logger.info(`Detected language: ${detection.language} (confidence: ${detection.confidence})`);
 
         return detection.language;
     } catch (error) {
@@ -359,7 +359,7 @@ async function translateDynamicContent(content, sourceLanguage, targetLanguage) 
                 sourceLanguage,
                 targetLanguage
             );
-            logger.debug(`Source text obtained is: ${sourceText}`);
+            // logger.debug(`Source text obtained is: ${sourceText}`);
 
             // Store successful translation
             if (translatedText !== content) {
@@ -580,7 +580,7 @@ async function getTranslations(sourceLanguage, targetLanguage, staticTranslatedD
             translatedStrings[ key ] = staticTranslatedDataStrings[ sourceLanguage ]?.[ key ] || key;
         }
     }
-    logger.debug(`Get Translated Strings: \n ${translatedStrings}`);
+    // logger.debug(`Get Translated Strings: \n ${translatedStrings}`);
     return translatedStrings;
 }
 
@@ -694,6 +694,9 @@ async function retryWithRateLimit(fn, options) {
  */
 export async function renderTemplate(targetLanguage) {
     try {
+        // Note the time taken to generate the translated file
+        const startTime = process.hrtime();
+
         // Store the source language
         let sourceLangauge = 'en';
 
@@ -724,9 +727,13 @@ export async function renderTemplate(targetLanguage) {
         //const validLangaugeData = validateTranslation(dynamicData, data, sourceLangauge);
         // return the compiled data, if the above response is true
 
-        logger.info(`Data Conversion completed. PDF has been generated and displayed in ${targetLanguage}`);
+        logger.info(`Data Conversion completed. HTML has been generated and displayed in ${targetLanguage}`);
         // TODO: Clean-up the mongoDB of translations older than 45 days!
         await cleanupOldTranslations(45);
+
+        // Provide the total time it took to render the document after translation
+        const endTime = process.hrtime(startTime);
+        logger.info(`Translated file generation took ${endTime[ 0 ]}s ${endTime[ 1 ] / 1000000}ms`);
 
         // Render template
         return compiledTemplate(data);
