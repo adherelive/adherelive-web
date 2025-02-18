@@ -55,8 +55,8 @@ const Translation = mongoose.model('Translation', TranslationSchema);
 
 // Translation service setup
 const translate = new Translate({
-    projectId: process.config.google_keys.GOOGLE_CLOUD_PROJECT_ID,
-    keyFilename: process.config.google_keys.GOOGLE_APPLICATION_CREDENTIALS,
+    projectId: process.env.GOOGLE_CLOUD_PROJECT_ID,
+    keyFilename: process.env.GOOGLE_APPLICATION_CREDENTIALS,
 });
 
 const logger = createLogger("ENHANCED TRANSLATION API");
@@ -71,20 +71,11 @@ const compiledTemplate = Handlebars.compile(template);
 const translationCache = new Map();
 logger.info(`Translation Cache has data: ${translationCache}`);
 
-export const localeMap = {
-    'hi': 'hi-IN',   // Hindi (India)
-    'es': 'es-ES',   // Spanish (Spain)
-    'ja': 'ja-JP',   // Japanese
-    'zh': 'zh-CN',   // Chinese (Simplified)
-    'ar': 'ar-SA',   // Arabic (Saudi Arabia)
-    // Add more mappings as needed
-};
-
 // Language strings (can be loaded from JSON files)
 const staticTranslatedDataStrings = require('../../../other/prescriptions/test.json');
 
 // As the browsers and Google Translate does not do this
-const devanagariDigits = ['०', '१', '२', '३', '४', '५', '६', '७', '८', '९'];
+// const devanagariDigits = ['०', '१', '२', '३', '४', '५', '६', '७', '८', '९'];
 
 /**
  * Register the print helper
@@ -93,31 +84,6 @@ const devanagariDigits = ['०', '१', '२', '३', '४', '५', '६', '७'
 Handlebars.registerHelper('print', function(value) {
     return value + 1;
 });
-
-/**
- * For getting and converting the target language to a locale, for use with Google Translation API
- *
- * @param language
- * @returns {*}
- */
-const getLocale = (language) => {
-    try {
-        // If a full locale is provided (e.g., 'hi-IN'), return it as is
-        if (language.includes('-')) {
-            let baseLang = language.split('-')[ 0 ].split('_')[ 0 ];
-            if (baseLang === 'hi') {
-                language = 'hi-IN';
-            }
-            return language;
-        }
-
-        // If only language code is provided, get the mapped locale
-        return localeMap[ language ] || language;
-    } catch (error) {
-        logger.error(`Error getting locale for language '${language}': `, error);
-        return language;
-    }
-};
 
 // TODO: Use Redis, To cache & fetch the cached data from Redis
 
@@ -157,43 +123,6 @@ function isIncompatibleLanguagePair(source, target) {
 }
 
 /**
- * Function to detect the language being used for a specific content/data
- *
- * @param text
- * @returns {Promise<string|null>}
- */
-async function detectLanguage(text) {
-    if (!text || typeof text !== 'string' || text.trim().length === 0) {
-        return null;
-    }
-
-    const maxRetries = 2;
-    let attempt = 0;
-
-    while (attempt < maxRetries) {
-        try {
-            const [detection] = await translate.detect(text);
-            return ( detection.language );
-            // TODO: Do I need to normalize the language here also?
-            // return normalizeLanguageCode(detection.language);
-        } catch (error) {
-            attempt++;
-
-            if (error.code === 429) {
-                const delay = Math.pow(2, attempt) * 1000;
-                await new Promise(resolve => setTimeout(resolve, delay));
-                continue;
-            }
-
-            logger.error(`Language detection failed for '${text}': `, error);
-            return null;
-        }
-    }
-
-    return null;
-}
-
-/**
  * Enhanced language detection with fallback
  *
  * @param text
@@ -217,26 +146,6 @@ async function detectLanguageWithFallback(text) {
         logger.error(`Language detection failed: ${error.message}`);
         return null;
     }
-}
-
-/**
- * Manually converting numbers to Devanagari/Hindi
- *
- * @param number
- * @returns {string}
- */
-function convertNumberToDevanagari(number) {
-    const numStr = number.toString();
-    let devanagariStr = '';
-    for (let i = 0; i < numStr.length; i++) {
-        const digit = parseInt(numStr[ i ]);
-        if (!isNaN(digit)) {
-            devanagariStr += devanagariDigits[ digit ];
-        } else {
-            devanagariStr += numStr[ i ]; // Keep non-digit characters as is
-        }
-    }
-    return devanagariStr;
 }
 
 /**
@@ -413,49 +322,6 @@ async function storeTranslation(key, sourceLanguage, targetLanguage, sourceText,
 }
 
 /**
- * Handle the content translation
- *
- * @param content
- * @param targetLanguage
- * @returns {Promise<*|Awaited<unknown>[]|{}|number|string>}
- */
-async function handleContentTranslation(content, targetLanguage) {
-    // Handle different types of content
-    if (typeof content === 'number') {
-        return content; // Numbers don't need translation
-    }
-
-    if (typeof content === 'string') {
-        // Skip translation for special cases
-        if (shouldSkipTranslation(content)) {
-            return content;
-        }
-
-        try {
-            const [translation] = await translate.translate(content, targetLanguage);
-            return translation;
-        } catch (error) {
-            logger.error(`Failed to translate string '${content}': `, error);
-            return content;
-        }
-    }
-
-    if (Array.isArray(content)) {
-        return Promise.all(content.map(item => handleContentTranslation(item, targetLanguage)));
-    }
-
-    if (content && typeof content === 'object') {
-        const translatedObj = {};
-        for (const [key, value] of Object.entries(content)) {
-            translatedObj[ key ] = await handleContentTranslation(value, targetLanguage);
-        }
-        return translatedObj;
-    }
-
-    return content;
-}
-
-/**
  * Helper function to handle dynamic content translation with MongoDB
  *
  * @param content
@@ -599,7 +465,7 @@ function validateTranslation(original, translated, language) {
 
     // Check for template markers
     if (translated.includes('{{') || translated.includes('}}')) {
-        throw new Error('Translation contains template markers');
+        throw new Error('Translation still contains the template markers');
     }
 
     // Language-specific validations
@@ -635,222 +501,6 @@ function validateTranslation(original, translated, language) {
     }
 
     return true;
-}
-
-/**
- * Number formatter for the HTML data
- *
- * @param language
- * @returns {{format: ((function(*): (*|undefined))|*)}}
- */
-export const createNumberFormatter = (language) => {
-    const locale = getLocale(language);
-
-    const formatter = new Intl.NumberFormat(locale, {
-        maximumFractionDigits: 20
-    });
-
-    return {
-        format: (number) => {
-            try {
-                return formatter.format(number);
-            } catch (error) {
-                logger.error(`Error formatting number '${number}' for locale '${locale}', using local translation: `, error);
-                return convertNumberToDevanagari(number.toString()); // Manual conversion
-            }
-        }
-    };
-};
-
-/**
- * Date formatter for the HTML data
- *
- * @param language
- * @returns {{format: ((function(*): (*|undefined))|*)}}
- */
-export const createDateFormatter = (language) => {
-    const locale = getLocale(language);
-
-    const formatter = new Intl.DateTimeFormat(locale, {
-        year: 'numeric',
-        month: 'numeric',
-        day: 'numeric'
-    });
-
-    return {
-        format: (dateString) => {
-            try {
-                const date = new Date(dateString);
-                if (isNaN(date.getTime())) {
-                    return dateString;
-                }
-                return formatter.format(date);
-            } catch (error) {
-                logger.error(`Error formatting date '${dateString}' for locale '${locale}': `, error);
-                return dateString;
-            }
-        }
-    };
-};
-
-/**
- * Currency values formatter for the HTML data
- *
- * @param locale
- * @returns {{format: ((function(*): (*|string|undefined))|*)}}
- */
-const createCurrencyFormatter = (locale) => {
-    const numberFormatter = createNumberFormatter(locale);
-
-    return {
-        format: (value) => {
-            try {
-                const match = value.match(/^([^\d\s]+)\s*(\d+(\.\d{2})?)$/);
-                if (!match) return value;
-
-                const [, symbol, amount] = match;
-                const number = parseFloat(amount);
-                return `${symbol}${numberFormatter.format(number)}`;
-            } catch (error) {
-                logger.error(`Error formatting currency '${value}': `, error);
-                return convertNumberToDevanagari(value); // Manual conversion
-            }
-        }
-    };
-};
-
-/**
- * Just for Strings, which are not taken up and converted by any of the other translators
- *
- * @param locale
- * @returns {{translate: ((function(*): (*|string|undefined))|*)}}
- */
-const createStringTranslator = (locale) => {
-    const numberFormatter = createNumberFormatter(locale);
-    const dateFormatter = createDateFormatter(locale);
-    const currencyFormatter = createCurrencyFormatter(locale);
-
-    const patterns = {
-        date: /^\d{4}-\d{2}-\d{2}$/,
-        currency: /^[^\d\s]+\s*\d+(\.\d{2})?$/,
-        number: /\d+/
-    };
-
-    return {
-        translate: (value) => {
-            try {
-                // Skip translation for email addresses
-                if (value.includes('@')) return value;
-
-                // Handle dates
-                if (patterns.date.test(value)) {
-                    return dateFormatter.format(value);
-                }
-
-                // Handle currency values
-                if (patterns.currency.test(value)) {
-                    return currencyFormatter.format(value);
-                }
-
-                // Handle plain numbers within text
-                if (patterns.number.test(value)) {
-                    return value.replace(/\d+/g, match => {
-                        const formatted = numberFormatter.format(parseInt(match, 10));
-                        return formatted.padStart(match.length, '0');
-                    });
-                }
-
-                const parts = value.split(/([A-Za-z]+[/-]?)/); // Split by identifiers
-
-                // If no number pattern is found, process parts and join them
-                const translatedParts = parts.map(part => {
-                    const numMatch = part.match(/^\d+$/);
-                    if (numMatch) {
-                        const formatted = numberFormatter.format(Number(numMatch[ 0 ])); //Format as number
-                        return formatted.padStart(numMatch[ 0 ].length, '0');
-                    }
-                    return part;
-                });
-                return translatedParts.join('');
-
-            } catch (error) {
-                logger.error(`Error translating string '${value}': `, error);
-                return value;
-            }
-        }
-    };
-};
-
-/**
- * Main conversion and translation function which controls and sends data across for the locale
- *
- * @param locale
- * @returns {{translate: ((function(*): Promise<*|Awaited<unknown>[]|{}|undefined>)|*)}}
- */
-const createDataTranslator = (locale) => {
-    const numberFormatter = createNumberFormatter(locale);
-    const stringTranslator = createStringTranslator(locale);
-
-    const translateValue = async (value) => {
-        try {
-            if (typeof value === 'string') {
-                return stringTranslator.translate(value);
-            }
-
-            if (typeof value === 'number') {
-                return numberFormatter.format(value);
-            }
-
-            if (Array.isArray(value)) {
-                return Promise.all(value.map(item => translateValue(item)));
-            }
-
-            if (value && typeof value === 'object') {
-                const translatedObj = {};
-                for (const key in value) {
-                    if (value.hasOwnProperty(key)) {
-                        // Skip translation for specific fields
-                        if (key === 'strings' || key === 'email' || key === 'status') {
-                            translatedObj[ key ] = value[ key ];
-                        } else {
-                            translatedObj[ key ] = await translateValue(value[ key ]);
-                        }
-                    }
-                }
-                return translatedObj;
-            }
-
-            return value;
-        } catch (error) {
-            logger.error(`Error in translateValue using '${locale}': `, error);
-            return value;
-        }
-    };
-
-    return {
-        translate: async (data) => {
-            try {
-                return await translateValue(data);
-            } catch (error) {
-                logger.error(`Error in translateData using '${locale}': `, error);
-                return data;
-            }
-        }
-    };
-};
-
-/**
- * Function to translate the data when the structure and data is not known beforehand
- *
- * @param data
- * @param targetLanguage
- * @returns {Promise<Awaited<unknown>[]|{}|*|string>}
- */
-async function translateData(data, targetLanguage) {
-    const locale = getLocale(targetLanguage);
-
-    const translator = createDataTranslator(locale);
-    return translator.translate(data);
 }
 
 /**
@@ -1069,6 +719,10 @@ export async function renderTemplate(targetLanguage) {
             strings,
             ...translatedDynamicData // Spread the translated data into the main data object
         };
+
+        // Validate that the handlebars have been properly translated
+        //const validLangaugeData = validateTranslation(dynamicData, data, sourceLangauge);
+        // return the compiled data, if the above response is true
 
         logger.info(`Data Conversion completed. PDF has been generated and displayed in ${targetLanguage}`);
         // TODO: Clean-up the mongoDB of translations older than 45 days!

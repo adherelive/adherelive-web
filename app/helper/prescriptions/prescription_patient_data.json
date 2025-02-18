@@ -1,6 +1,6 @@
 {
   "doctor_id": 1,
-  "doctorName": "Sparsh Jaiswal",
+  "doctorName": "Aakaash Sehgal",
   "city": "New Delhi",
   "degree": "",
   "registrationNumber": "",
@@ -10,7 +10,7 @@
   "prefix": "91",
   "providerLogo": "https://adherelive-demo.s3.ap-south-1.amazonaws.com/other/4/8cd98f00b204e9800998ecf8427e/b1fd44ce9f3b250e01026ebd5a018357/HealthCA-logo.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA4DR6HU5GRD73D46P%2F20250214%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Date=20250214T101856Z&X-Amz-Expires=1800&X-Amz-Signature=331d0bf491afeb38d8cac9c4c1edc64a0f9a8f3c52881e60a43973ee85f37934&X-Amz-SignedHeaders=host",
   "providerName": "Provider Hospital",
-  "providerAddress": "Meerut Highway",
+  "providerAddress": "Chandigarh Highway",
   "patient_data": {
     "name": "Akash Takaski",
     "age": "35 y",
@@ -67,7 +67,7 @@
       "organizer": {
         "id": 1,
         "category": "doctor",
-        "name": "Sparsh Jaiswal"
+        "name": "Aakaash Sehgal"
       },
       "participant_id": 7,
       "rr_rule": null
@@ -107,7 +107,7 @@
       "organizer": {
         "id": 1,
         "category": "doctor",
-        "name": "Sparsh Jaiswal"
+        "name": "Aakaash Sehgal"
       },
       "participant_id": 7,
       "rr_rule": null
@@ -146,7 +146,7 @@
       "organizer": {
         "id": 1,
         "category": "doctor",
-        "name": "Sparsh Jaiswal"
+        "name": "Aakaash Sehgal"
       },
       "participant_id": 7,
       "rr_rule": null
@@ -186,7 +186,7 @@
       "organizer": {
         "id": 1,
         "category": "doctor",
-        "name": "Sparsh Jaiswal"
+        "name": "Aakaash Sehgal"
       },
       "participant_id": 7,
       "rr_rule": null
@@ -207,7 +207,7 @@
       "organizer": {
         "id": 1,
         "category": "doctor",
-        "name": "Sparsh Jaiswal"
+        "name": "Aakaash Sehgal"
       },
       "reason": "Surgery"
     },
@@ -221,7 +221,7 @@
       "organizer": {
         "id": 1,
         "category": "doctor",
-        "name": "Sparsh Jaiswal"
+        "name": "Aakaash Sehgal"
       },
       "reason": "Surgery"
     },
@@ -235,7 +235,7 @@
       "organizer": {
         "id": 1,
         "category": "doctor",
-        "name": "Sparsh Jaiswal"
+        "name": "Aakaash Sehgal"
       },
       "reason": "Checking of Vitals"
     },
@@ -249,7 +249,7 @@
       "organizer": {
         "id": 1,
         "category": "doctor",
-        "name": "Sparsh Jaiswal"
+        "name": "Aakaash Sehgal"
       },
       "reason": "Checking of Vitals"
     }
@@ -266,7 +266,7 @@
       "organizer": {
         "id": 1,
         "category": "doctor",
-        "name": "Sparsh Jaiswal"
+        "name": "Aakaash Sehgal"
       },
       "frequency": "Twice a day",
       "startDate": "January 16, 2025",
@@ -296,7 +296,7 @@
       "organizer": {
         "id": 1,
         "category": "doctor",
-        "name": "Sparsh Jaiswal"
+        "name": "Aakaash Sehgal"
       },
       "frequency": "Once a day",
       "startDate": "January 16, 2025",
@@ -325,7 +325,7 @@
       "organizer": {
         "id": 1,
         "category": "doctor",
-        "name": "Sparsh Jaiswal"
+        "name": "Aakaash Sehgal"
       },
       "frequency": "Twice a day",
       "startDate": "January 21, 2025",
@@ -356,7 +356,7 @@
       "organizer": {
         "id": 1,
         "category": "doctor",
-        "name": "Sparsh Jaiswal"
+        "name": "Aakaash Sehgal"
       },
       "frequency": "Twice a day",
       "startDate": "January 17, 2025",
