@@ -708,6 +708,9 @@
     <!-- SECTION TWO -->
     <!-- Content sections with your existing HTML, but with page break controls -->
     <!-- Main content starts -->
+    <div style="width:100%;display:flex; justify-content: center; align-items: center; margin-bottom: 5px;">
+        <h3>OUT PATIENT CARD</h3>
+    </div>
     <div class="main-content">
         <div class="top_section_wrapper">
             <div class="top_section_wrapper_one">
@@ -740,29 +743,90 @@
                 <p>{{ patient_data.address }}</p>
             </div>
             <div class="top_section_wrapper_two">
-                <!-- Removed the Doctor Email -->
-                <!-- <h3>Doctor Email :</h3>
-          <p>{{ doctorEmail }}</p> -->
+                <h3>Departmont Name :</h3>
+                <p></p>
+            </div>
+            <div class="top_section_wrapper_two">
+                <h3>Next to Kin :</h3>
+                <p></p>
+            </div>
+            <div class="top_section_wrapper_two">
+                <h3>Visit Id :</h3>
+                <p></p>
+            </div>
+            <div class="top_section_wrapper_two">
+                <h3>Sponsor :</h3>
+                <p></p>
+            </div>
+            <div class="top_section_wrapper_two">
+                <h3>Unit :</h3>
+                <p></p>
+            </div>
+            <div class="top_section_wrapper_two">
+                <h3>MR No :</h3>
+                <p></p>
             </div>
         </div>
 
         <!-- Chief Complaints:  -->
-        <div class="chef-complaints-section">
-            <!-- <div style="display: flex; align-items: center">
-          <h3>Relevant History :</h3>
-          <br />
-        </div> -->
-            <div style="display: flex; align-items: center">
-                <h3>Allergies:</h3>
-                <p>{{ patient_data.allergies }}</p>
-                <br />
+        <div style="display: flex; width: 100%; border-left: 1px solid; border-right: 1px solid;">
+            <!-- Left Section -->
+            <div style="width: 50%; border-right: 1px solid; padding: 5px; text-align: center;">
+                <div style="display: flex; align-items: center">
+                    <h3>Allergies:</h3>
+                    <p>{{ patient_data.allergies }}</p>
+                    <br />
+                </div>
+                <div style="display: flex; align-items: center">
+                    <h3>Comorbidities :</h3>
+                    <p>{{ patient_data.comorbidities }}</p>
+                    <br />
+                </div>
             </div>
-            <div style="display: flex; align-items: center">
-                <h3>Comorbidities :</h3>
-                <p>{{ patient_data.comorbidities }}</p>
-                <br />
+
+            <!-- Right Section -->
+            <div style="width: 50%; padding: 5px;">
+                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px;">
+                    <!-- 12 Boxes with Label and Value -->
+                    <div
+                        style="border: 1px solid black; height: 25px; text-align: center; line-height: 25px; font-weight: bold;">
+                        HEIGHT</div>
+                    <div style="border: 1px solid black; height: 25px; text-align: center; line-height: 25px;">
+                        {{patient_data.height}} cm</div>
+
+                    <div
+                        style="border: 1px solid black; height: 25px; text-align: center; line-height: 25px; font-weight: bold;">
+                        WEIGHT</div>
+                    <div style="border: 1px solid black; height: 25px; text-align: center; line-height: 25px;">
+                        {{patient_data.weight}} kg</div>
+
+                    <div
+                        style="border: 1px solid black; height: 25px; text-align: center; line-height: 25px; font-weight: bold;">
+                        PULSE</div>
+                    <div style="border: 1px solid black; height: 25px; text-align: center; line-height: 25px;">
+                    </div>
+
+                    <div
+                        style="border: 1px solid black; height: 25px; text-align: center; line-height: 25px; font-weight: bold;">
+                        TEMP</div>
+                    <div style="border: 1px solid black; height: 25px; text-align: center; line-height: 25px;">
+                    </div>
+
+                    <div
+                        style="border: 1px solid black; height: 25px; text-align: center; line-height: 25px; font-weight: bold;">
+                        BMI</div>
+                    <div style="border: 1px solid black; height: 25px; text-align: center; line-height: 25px;">
+                    </div>
+
+                    <div
+                        style="border: 1px solid black; height: 25px; text-align: center; line-height: 25px; font-weight: bold;">
+                        BP</div>
+                    <div style="border: 1px solid black; height: 25px; text-align: center; line-height: 25px;">
+                    </div>
+                </div>
             </div>
         </div>
+
 
         <!-- DIAGNOSIS  AND SYMPTOMS-->
         <div class="top_section_wrapper">
@@ -794,69 +858,10 @@
             </p>
         </div>
 
-        <!-- COMPLAINTS SECTION -->
-        <!-- Grid style not to be used until we get BMI, BP, Temperature, etc. -->
-        <!-- <div class="complaints_section">
-        <div class="complaints_subsection">
-            <div>
-                <table class="complaint_table">
-                    <tr>
-                        <th><h3>Height</h3></th>
-                        <td><p>{{patient_data.height}} cm</p></td>
-                    </tr>
-                </table>
-            </div>
-            <div>
-                <table class="complaint_table">
-                    <tr>
-                        <th><h3>Weight</h3></th>
-                        <td><p>{{patient_data.weight}} kg</p></td>
-                    </tr>
-                </table>
-            </div>
-        </div>
-    </div> -->
-        <div style="display: flex; width: 100%; border: 1px solid black;">
-            <!-- Left Section -->
-            <div style="width: 40%; border-right: 1px solid black; padding: 10px; text-align: center;">
-                <b>COMPLAINTS</b><br>
-                <span
-                    style="display: inline-block; border: 1px solid black; border-radius: 50%; width: 40px; height: 40px; line-height: 40px; text-align: center; font-weight: bold;">
-                    119
-                </span>
-                <br><br>
-                <b>MBBs. MD.</b><br>
-                Dept. of General Professor Medicine<br>
-                <small>J.C. Stribh? Reg. No: 9532 Mo.cpita</small>
-            </div>
 
-            <!-- Right Section -->
-            <div style="width: 60%; padding: 5px;">
-                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; margin-top: 5px;">
-                    <!-- 12 Boxes with Label and Value -->
-                    <div style="border: 1px solid black; height: 40px; text-align: center; line-height: 40px; font-weight: bold;">HEIGHT</div>
-                    <div style="border: 1px solid black; height: 40px; text-align: center; line-height: 40px;">160</div>
-                
-                    <div style="border: 1px solid black; height: 40px; text-align: center; line-height: 40px; font-weight: bold;">WEIGHT</div>
-                    <div style="border: 1px solid black; height: 40px; text-align: center; line-height: 40px;">70 kg</div>
-                
-                    <div style="border: 1px solid black; height: 40px; text-align: center; line-height: 40px; font-weight: bold;">PULSE</div>
-                    <div style="border: 1px solid black; height: 40px; text-align: center; line-height: 40px;">72 bpm</div>
-                
-                    <div style="border: 1px solid black; height: 40px; text-align: center; line-height: 40px; font-weight: bold;">TEMP</div>
-                    <div style="border: 1px solid black; height: 40px; text-align: center; line-height: 40px;">98.5<sup>o</sup></div>
-                
-                    <div style="border: 1px solid black; height: 40px; text-align: center; line-height: 40px; font-weight: bold;">BMI</div>
-                    <div style="border: 1px solid black; height: 40px; text-align: center; line-height: 40px;">24.5</div>
-                
-                    <div style="border: 1px solid black; height: 40px; text-align: center; line-height: 40px; font-weight: bold;">BP</div>
-                    <div style="border: 1px solid black; height: 40px; text-align: center; line-height: 40px;">120/80</div>
-                </div>
-            </div>
-        </div>
 
         <!-- COMPLAINTS SECTION -->
-        <div class="top_section_wrapper">
+        <!-- <div class="top_section_wrapper">
             <div class="top_section_wrapper_one" style="border-right: 1px solid; padding: 10px">
                 <h3>Height :</h3>
                 <p>{{patient_data.height}} cm</p>
@@ -865,7 +870,7 @@
                 <h3>Weight :</h3>
                 <p>{{patient_data.weight}} kg</p>
             </div>
-        </div>
+        </div> -->
 
         <!-- MEDICINE  SECTION -->
         <div class="medicine_section avoid-break">

@@ -530,10 +530,10 @@
         }
 
         /* Medicine Name Wrapper */
-        .medicine_name_wrapper {
+        /* .medicine_name_wrapper {
             display: grid;
             grid-template-columns: 30% 70%;
-        }
+        } */
 
         .medicine_name_wrapper div {
             padding: 15px 5px;
@@ -665,15 +665,15 @@
 
         /* Medicine Schedule */
         .schedule_medicine_wrapper {
-            border: 1px solid black;
+            /* border: 1px solid black; */
             border-left: 0;
             border-right: 0;
             border-bottom: 0;
-            margin-top: 10px;
+            /* margin-top: 10px; */
             display: grid;
             grid-template-columns: repeat(3, minmax(0, 1fr)); /* Key fix */
             grid-auto-rows: minmax(20px, auto);
-            padding: 10px;
+            /* padding: 10px; */
             align-items: center; /* Vertical alignment */
             justify-items: center; /* Horizontal alignment */
         }
@@ -841,20 +841,61 @@
     </div>
 
     <!-- Chief Complaints:  -->
-    <div class="chef-complaints-section">
-        <!-- <div style="display: flex; align-items: center">
-          <h3>{{translatedLabels.Relevant_History}}:</h3>
-          <br />
-        </div> -->
-        <div style="display: flex; align-items: center">
-            <h3>{{translatedLabels.Allergies}}:</h3>
-            <p>{{ patient_data.allergies }}</p>
-            <br/>
+    <div style="display: flex; width: 100%; border-left: 1px solid; border-right: 1px solid;">
+        <!-- Left Section -->
+        <div style="width: 50%; border-right: 1px solid; padding: 5px; text-align: center;">
+            <div style="display: flex; align-items: center">
+                <h3>{{translatedLabels.Allergies}}:</h3>
+                <p>{{ patient_data.allergies }}</p>
+                <br />
+            </div>
+            <div style="display: flex; align-items: center">
+                <h3>{{translatedLabels.Comorbidities}} :</h3>
+                <p>{{ patient_data.comorbidities }}</p>
+                <br />
+            </div>
         </div>
-        <div style="display: flex; align-items: center">
-            <h3>{{translatedLabels.Comorbidities}}:</h3>
-            <p>{{ patient_data.comorbidities }}</p>
-            <br/>
+
+        <!-- Right Section -->
+        <div style="width: 50%; padding: 5px;">
+            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px;">
+                <!-- 12 Boxes with Label and Value -->
+                <div
+                    style="border: 1px solid black; height: 25px; text-align: center; line-height: 25px; font-weight: bold;">
+                    HEIGHT</div>
+                <div style="border: 1px solid black; height: 25px; text-align: center; line-height: 25px;">
+                    {{patient_data.height}} cm</div>
+
+                <div
+                    style="border: 1px solid black; height: 25px; text-align: center; line-height: 25px; font-weight: bold;">
+                    WEIGHT</div>
+                <div style="border: 1px solid black; height: 25px; text-align: center; line-height: 25px;">
+                    {{patient_data.weight}} kg</div>
+
+                <div
+                    style="border: 1px solid black; height: 25px; text-align: center; line-height: 25px; font-weight: bold;">
+                    PULSE</div>
+                <div style="border: 1px solid black; height: 25px; text-align: center; line-height: 25px;">
+                </div>
+
+                <div
+                    style="border: 1px solid black; height: 25px; text-align: center; line-height: 25px; font-weight: bold;">
+                    TEMP</div>
+                <div style="border: 1px solid black; height: 25px; text-align: center; line-height: 25px;">
+                  </div>
+
+                <div
+                    style="border: 1px solid black; height: 25px; text-align: center; line-height: 25px; font-weight: bold;">
+                    BMI</div>
+                <div style="border: 1px solid black; height: 25px; text-align: center; line-height: 25px;">
+                </div>
+
+                <div
+                    style="border: 1px solid black; height: 25px; text-align: center; line-height: 25px; font-weight: bold;">
+                    BP</div>
+                <div style="border: 1px solid black; height: 25px; text-align: center; line-height: 25px;">
+                </div>
+            </div>
         </div>
     </div>
 
@@ -891,31 +932,7 @@
         </p>
     </div>
 
-    <!-- COMPLAINTS SECTION -->
-    <!-- Grid style not to be used until we get BMI, BP, Temperature, etc.
-    <div class="complaints_section">
-        <div class="complaints_subsection">
-            <div>
-                <table class="complaint_table">
-                    <tr>
-                        <th><h3>Height</h3></th>
-                        <td><p>{{patient_data.height}} cm</p></td>
-                    </tr>
-                </table>
-            </div>
-            <div>
-                <table class="complaint_table">
-                    <tr>
-                        <th><h3>Weight</h3></th>
-                        <td><p>{{patient_data.weight}} kg</p></td>
-                    </tr>
-                </table>
-            </div>
-        </div>
-    </div>
-    -->
-    <!-- COMPLAINTS SECTION -->
-    <div class="top_section_wrapper">
+    <!-- <div class="top_section_wrapper">
         <div class="top_section_wrapper_one" style="border-right: 1px solid; padding: 10px">
             <h3>{{translatedLabels.Height}}:</h3>
             <p>{{patient_data.height}} cm</p>
@@ -924,29 +941,20 @@
             <h3>{{translatedLabels.Weight}}:</h3>
             <p>{{patient_data.weight}} kg</p>
         </div>
-    </div>
+    </div> -->
 
     <!-- MEDICINE  SECTION -->
     <div class="medicine_section">
-        <table class="medicine_table">
+        <table class="medicine_table" style="width: 100%; text-align: center;">
             <thead>
             <tr>
-                <th>
+                <th style="width: 5%">
                     <h3>S.No</h3>
                 </th>
                 <th style="width: 30%" colspan="2">
                     <h3>{{translatedLabels.Name_of_Medicine}}</h3>
                 </th>
-                <th>
-                    <h3>{{translatedLabels.Dose}}</h3>
-                </th>
-                <th>
-                    <h3>{{translatedLabels.Qty}}</h3>
-                </th>
-                <th colspan="3">
-                    <div>
-                        <h3>{{translatedLabels.Medicine_Schedule}}</h3>
-                    </div>
+                <th style="width: 30%" colspan="3">
                     <div class="schedule_medicine_wrapper">
                         <div>
                             <h4>{{translatedLabels.Morning}}</h4>
@@ -959,8 +967,8 @@
                         </div>
                     </div>
                 </th>
-                <th>
-                    <h3>{{translatedLabels.Start_Date}} / {{translatedLabels.Duration}}</h3>
+                <th style="width: 10%">
+                    <h3>{{translatedLabels.Duration}}</h3>
                 </th>
             </tr>
             </thead>
@@ -972,25 +980,17 @@
                 </td>
                 <td colspan="2" style="padding: 0">
                     <div class="medicine_name_wrapper">
-                        <div style="border-right: 1px solid; width: 80%;">
-                            <p>{{ medicineType }}</p>
-                        </div>
                         <div style="text-align: justify;">
                             <p>
-                                <strong>{{ medicineName }}</strong><br/>
+                                <strong>{{ medicineType }} - {{ medicineName }} &nbsp; {{ unit }} qty: {{
+                                    quantity }}</strong><br/>
                                 {{ genericName }} {{ strength }}<br/>
-                                <span style="font-size: 10px;">{{translatedLabels.by}} {{translatedLabels.Dr_}} {{ organizer.name }}</span><br/>
+                                <!-- <span style="font-size: 10px;">{{translatedLabels.by}} {{translatedLabels.Dr_}} {{ organizer.name }}</span><br/> -->
                                 {{translatedLabels.Note}}: - <span
                                     style="font-family: var(--font-family-base);">{{ description }}</span>
                             </p>
                         </div>
                     </div>
-                </td>
-                <td>
-                    <p>{{ unit }}</p>
-                </td>
-                <td>
-                    <p>{{ quantity }}</p>
                 </td>
                 <td>
                     <div class="right_tick_div">
@@ -1070,7 +1070,7 @@
             >
                 <thead>
                 <tr>
-                    <th style="width: 3%">
+                    <th style="width: 6%">
                         <h3>S. No</h3>
                     </th>
                     <th style="width: 20%">
@@ -1124,7 +1124,7 @@
             >
                 <thead>
                 <tr>
-                    <th style="width: 3%">
+                    <th style="width: 6%">
                         <h3>S. No</h3>
                     </th>
                     <th style="width: 20%">
