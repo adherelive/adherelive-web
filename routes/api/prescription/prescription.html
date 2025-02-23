@@ -245,14 +245,13 @@
             width: 100%;
             padding: 10px 0;
             background-color: #fff;
-            border-top: 1px solid black;
             font-family: "PlusJakartaSans-Regular";
         }
 
 
         table th,
         td {
-            border: 1px solid black;
+            border: 1px solid #ddd;
             padding: 5px;
             border-top: 0;
             border-left: 0;
@@ -299,15 +298,14 @@
         .medicine_table,
         .investigation_table,
         .consultation_table,
-        .diet_table,
-        .workout_table {
+        .diet_table {
             width: 100%;
             table-layout: fixed;
             border-collapse: collapse;
             border-spacing: 0;
             empty-cells: show;
             page-break-inside: auto;
-            border-left: 1px solid black;
+            /* border-left: 1px solid black; */
         }
 
         /* Table Headers */
@@ -344,14 +342,15 @@
         .medicine_table th,
         .investigation_table th,
         .consultation_table th,
-        .diet_table th,
-        .workout_table th {
+        .diet_table th {
             background-color: #fff;
             position: sticky;
             top: 0;
             z-index: 2;
-            border-bottom: 2px solid #000;
+            /* border-bottom: 2px solid #000; */
         }
+
+
 
         /* Medicine Table Specific */
         .medicine_table {
@@ -369,7 +368,7 @@
 
         .medicine_table th,
         .medicine_table td {
-            border: 1px solid black;
+            /* border: 1px solid black; */
             padding: 5px;
             text-align: left;
             /* Align text to the left within cells */
@@ -482,7 +481,7 @@
 
         /* Section Wrappers */
         .top_section_wrapper {
-            border: 1px solid black;
+            border: 1px solid #ddd;
             display: grid;
             grid-template-columns: repeat(2, 3fr);
             grid-auto-rows: minmax(30px, auto);
@@ -523,7 +522,7 @@
             padding: 5px;
             text-align: center;
             /* Center the content */
-            border: 1px solid black;
+            /* border: 1px solid black; */
             /* Add borders back if needed */
         }
 
@@ -544,7 +543,7 @@
 
         /* Complaint Section */
         .complaints_section {
-            border: 1px solid black;
+            border: 1px solid #ddd;
             border-right: 0;
             border-top: 0;
             border-bottom: 0;
@@ -611,20 +610,48 @@
         .chef-complaints-section,
         .treatment_advise_section,
         .investigation_section_heading,
-        .next_consultation_section_heading,
-        .workout_section_heading {
+        .next_consultation_section_heading {
             /* border: 1px solid black;
             border-top: 0;
             padding: 10px; */
-            border-left: 1px solid black;
-            border-right: 1px solid black;
+            /* border-left: 1px solid black; */
+            /* border-right: 1px solid black; */
             border-top: 0;
+            padding: 10px;
+        }
+
+        .next_consultation_section_heading{
+            border-left: 1px solid #ddd;
+            border-right: 1px solid #ddd;
+            border-bottom: 1px solid #ddd;
+        }
+        .next_consultation_section {
+            border-left: 1px solid  #ddd;
+            border-bottom: 1px solid #ddd;
+            border-right: 1px solid #ddd;
+        }
+
+        .diagnosis_section,
+        .chef-complaints-section,
+        .treatment_advise_section,
+        .investigation_section_heading {
+            border-left: 1px solid #ddd;
+            border-right: 1px solid #ddd;
+            border-bottom: 1px solid #ddd;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+        .workout_section_heading {
+            border-left: 1px solid #ddd;
+            border-right: 1px solid #ddd;
+            border-collapse: separate;
+            border-spacing: 0;
             padding: 10px;
         }
 
         .diet_section_heading {
             margin-top: 30px;
-            border: 1px solid black;
             padding: 10px;
         }
 
@@ -712,6 +739,7 @@
         <h3>OUT PATIENT CARD</h3>
     </div>
     <div class="main-content">
+        <!-- PATIENT TOP BASIC INFO  -->
         <div class="top_section_wrapper">
             <div class="top_section_wrapper_one">
                 <h3>Patient Name :</h3>
@@ -769,9 +797,9 @@
         </div>
 
         <!-- Chief Complaints:  -->
-        <div style="display: flex; width: 100%; border-left: 1px solid; border-right: 1px solid;">
+        <div style="display: flex; width: 100%; border-right: 1px solid #ddd; border-left: 1px solid #ddd;">
             <!-- Left Section -->
-            <div style="width: 50%; border-right: 1px solid; padding: 5px; text-align: center;">
+            <div style="width: 65%; padding: 5px; text-align: center; border-right: 1px solid #ddd;">
                 <div style="display: flex; align-items: center">
                     <h3>Allergies:</h3>
                     <p>{{ patient_data.allergies }}</p>
@@ -785,43 +813,43 @@
             </div>
 
             <!-- Right Section -->
-            <div style="width: 50%; padding: 5px;">
+            <div style="width: 35%; padding: 5px;">
                 <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px;">
                     <!-- 12 Boxes with Label and Value -->
                     <div
-                        style="border: 1px solid black; height: 25px; text-align: center; line-height: 25px; font-weight: bold;">
+                        style="border: 1px solid #ddd; height: 25px; text-align: center; line-height: 25px; font-weight: bold;">
                         HEIGHT</div>
-                    <div style="border: 1px solid black; height: 25px; text-align: center; line-height: 25px;">
+                    <div style="border: 1px solid #ddd; height: 25px; text-align: center; line-height: 25px;">
                         {{patient_data.height}} cm</div>
 
                     <div
-                        style="border: 1px solid black; height: 25px; text-align: center; line-height: 25px; font-weight: bold;">
+                        style="border: 1px solid #ddd; height: 25px; text-align: center; line-height: 25px; font-weight: bold;">
                         WEIGHT</div>
-                    <div style="border: 1px solid black; height: 25px; text-align: center; line-height: 25px;">
+                    <div style="border: 1px solid #ddd; height: 25px; text-align: center; line-height: 25px;">
                         {{patient_data.weight}} kg</div>
 
                     <div
-                        style="border: 1px solid black; height: 25px; text-align: center; line-height: 25px; font-weight: bold;">
+                        style="border: 1px solid #ddd; height: 25px; text-align: center; line-height: 25px; font-weight: bold;">
                         PULSE</div>
-                    <div style="border: 1px solid black; height: 25px; text-align: center; line-height: 25px;">
+                    <div style="border: 1px solid #ddd; height: 25px; text-align: center; line-height: 25px;">
                     </div>
 
                     <div
-                        style="border: 1px solid black; height: 25px; text-align: center; line-height: 25px; font-weight: bold;">
+                        style="border: 1px solid #ddd; height: 25px; text-align: center; line-height: 25px; font-weight: bold;">
                         TEMP</div>
-                    <div style="border: 1px solid black; height: 25px; text-align: center; line-height: 25px;">
+                    <div style="border: 1px solid #ddd; height: 25px; text-align: center; line-height: 25px;">
                     </div>
 
                     <div
-                        style="border: 1px solid black; height: 25px; text-align: center; line-height: 25px; font-weight: bold;">
+                        style="border: 1px solid #ddd; height: 25px; text-align: center; line-height: 25px; font-weight: bold;">
                         BMI</div>
-                    <div style="border: 1px solid black; height: 25px; text-align: center; line-height: 25px;">
+                    <div style="border: 1px solid #ddd; height: 25px; text-align: center; line-height: 25px;">
                     </div>
 
                     <div
-                        style="border: 1px solid black; height: 25px; text-align: center; line-height: 25px; font-weight: bold;">
+                        style="border: 1px solid #ddd; height: 25px; text-align: center; line-height: 25px; font-weight: bold;">
                         BP</div>
-                    <div style="border: 1px solid black; height: 25px; text-align: center; line-height: 25px;">
+                    <div style="border: 1px solid #ddd; height: 25px; text-align: center; line-height: 25px;">
                     </div>
                 </div>
             </div>
@@ -830,7 +858,7 @@
 
         <!-- DIAGNOSIS  AND SYMPTOMS-->
         <div class="top_section_wrapper">
-            <div class="top_section_wrapper_one" style="border-right: 1px solid; padding: 10px">
+            <div class="top_section_wrapper_one" style="border-right: 1px solid #ddd; padding: 10px">
                 <h3>Diagnosis :</h3>
                 <p>{{ diagnosis }}</p>
             </div>
@@ -981,19 +1009,20 @@
                 <h3>Investigation :</h3>
             </div>
             <div class="investigation_section_content">
-                <table class="investigation_table" style="width: 100%; text-align: center">
+                <table class="investigation_table"
+                    style="width: 100%; text-align: center; border-collapse: collapse; border: 1px solid #ddd;">
                     <thead>
-                        <tr>
-                            <th style="width: 6%">
+                        <tr style="border-bottom: 1px solid #ddd;">
+                            <th style="width: 6%; padding: 8px;">
                                 <h3>S. No</h3>
                             </th>
-                            <th style="width: 20%">
+                            <th style="width: 20%; padding: 8px;">
                                 <h3>Description</h3>
                             </th>
-                            <th style="width: 10%">
+                            <th style="width: 10%; padding: 8px;">
                                 <h3>Date</h3>
                             </th>
-                            <th style="width: 20%">
+                            <th style="width: 20%; padding: 8px;">
                                 <h3>Purpose</h3>
                             </th>
                         </tr>
@@ -1001,22 +1030,21 @@
                     <tbody>
                         {{#each investigations}}
                         <tr>
-                            <td>
-                                <p>{{print @index }}</p>
+                            <td style="padding: 8px; border: none;">
+                                <p>{{print @index}}</p>
                             </td>
-                            <td style="text-align: left">
+                            <td style="text-align: left; padding: 8px; border: none;">
                                 <p>
                                     {{ type_description }} <br />
-                                    <span style="font-size: 8px">by Dr. {{ organizer.name }}</span>
-                                    <br />
-                                    Note:-
-                                    <span>{{ description }}</span>
+                                    <!-- <span style="font-size: 8px;">by Dr. {{ organizer.name }}</span>
+                                    <br /> -->
+                                    Note:- <span>{{ description }}</span>
                                 </p>
                             </td>
-                            <td>
+                            <td style="padding: 8px; border: none;">
                                 <p>{{ start_date }}</p>
                             </td>
-                            <td>
+                            <td style="padding: 8px; border: none;">
                                 <p>{{ reason }}</p>
                             </td>
                         </tr>
@@ -1025,6 +1053,8 @@
                 </table>
             </div>
         </div>
+
+
         <!-- NEXT CONSULTATION SECTION -->
         <div class="next_consultation_section_heading">
             <h3>Next Consultation :</h3>
@@ -1051,22 +1081,22 @@
                     <tbody>
                         {{#each nextConsultation}}
                         <tr>
-                            <td>
+                            <td style="border: none;">
                                 <p>{{print @index}}</p>
                             </td>
-                            <td style="text-align: left">
+                            <td style="text-align: left; border: none">
                                 <p>
                                     {{ type_description }} <br />
-                                    <span style="font-size: 8px">by Dr. {{ organizer.name }}</span>
-                                    <br />
+                                    <!-- <span style="font-size: 8px">by Dr. {{ organizer.name }}</span>
+                                    <br /> -->
                                     Note:-
                                     <span>{{ description }}</span>
                                 </p>
                             </td>
-                            <td>
+                            <td style="border: none;">
                                 <p>{{ start_date }}</p>
                             </td>
-                            <td>
+                            <td style="border: none;">
                                 <p>{{ reason }}</p>
                             </td>
                         </tr>
@@ -1076,6 +1106,7 @@
             </div>
         </div>
 
+        <!-- SIGNITURE SECTION  -->
         <div class="signature_section">
             <div class="signature_image_section">
                 <picture>
@@ -1097,6 +1128,7 @@
             </div>
         </div>
 
+        <!-- NOTE SECTION  -->
         <div>
             <h3>
                 Note:
@@ -1122,72 +1154,61 @@
 
         <!-- DIET SECTION  -->
         {{#if diet_output.length}}
-        <div class="diet_section_heading">
+        <div style="border-collapse: separate; border-spacing: 0; border: 1px solid #ddd;" class="diet_section_heading">
             <h3>Diet :</h3>
         </div>
-        <div class="diet_section_section">
-            <div class="diet_section_section_one">
-                <table class="diet_table" style="width: 100%; text-align: center">
+        <div>
+            <div>
+                <table
+                    style="width: 100%; text-align: center; border-collapse: separate; border-spacing: 0; border: 1px solid #ddd;">
                     <thead>
                         <tr>
-                            <th style="width: 6%">
+                            <th style="width: 6%; border: 1px solid #ddd; padding: 8px;">
                                 <h3>S. No</h3>
                             </th>
-                            <th>
+                            <th style="border: 1px solid #ddd; padding: 8px;">
                                 <h3>Diet Name</h3>
                             </th>
-                            <th style="width: 40%">
+                            <th style="width: 40%; border: 1px solid #ddd; padding: 8px;">
                                 <h3>Time and details</h3>
                             </th>
-                            <th style="width: 30%">
+                            <th style="width: 30%; border: 1px solid #ddd; padding: 8px;">
                                 <h3>Duration</h3>
                             </th>
                         </tr>
                     </thead>
                     <tbody>
                         {{#each diet_output }}
-                        <tr>
-                            <td>
+                        <tr style="border-bottom: 1px solid #ddd;">
+                            <td style="border: none; padding: 8px;">
                                 <p>{{print @index}}</p>
                             </td>
-                            <td style="text-align: left">
+                            <td style="text-align: left; border: none; padding: 8px;">
                                 <p>{{ this.name }}</p>
                             </td>
-                            <td style="text-align: left">
+                            <td style="text-align: left; border: none; padding: 8px;">
                                 {{#each this.food_group }}
-                                <div style="
-	                  display: flex;
-	                  justify-content: space-between;
-	                  margin-bottom: 30px;
-	                ">
-                                    <div style="width: 100px">
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 30px;">
+                                    <div style="width: 100px;">
                                         <p>{{this.time.text}}</p>
                                     </div>
-                                    <div style="display: flex; flex-flow: column">
+                                    <div style="display: flex; flex-flow: column;">
                                         {{#each this.food_group_details_array}}
-                                        <div style="width: 120px">
+                                        <div style="width: 120px;">
                                             <p>{{ this.details.name }}</p>
-                                            <p>
-                                                Instructions:
-                                                <span>{{ this.notes }}</span>
-                                            </p>
+                                            <p>Instructions: <span>{{ this.notes }}</span></p>
                                         </div>
                                         {{/each}}
                                     </div>
                                 </div>
                                 {{/each}}
-                                <div style="margin-top: 20px">
-                                    <h5>
-                                        Repeat Days - {{#each this.repeat_days}}<span>{{this}},</span>{{/each}}
-                                    </h5>
-                                    <h5>
-                                        What Not to Do -
-                                        <span>{{this.not_to_do}}</span>
-                                    </h5>
+                                <div style="margin-top: 20px;">
+                                    <h5>Repeat Days - {{#each this.repeat_days}}<span>{{this}},</span>{{/each}}</h5>
+                                    <h5>What Not to Do - <span>{{this.not_to_do}}</span></h5>
                                     <h5>Total Calories - <span>{{ this.total_calories }}</span></h5>
                                 </div>
                             </td>
-                            <td>
+                            <td style="border: none; padding: 8px;">
                                 <p>{{ this.durationText }}</p>
                             </td>
                         </tr>
@@ -1198,45 +1219,50 @@
         </div>
         {{/if}}
 
+
+
+
+        <!-- WORKOUT SECTION  -->
         {{#if pre_workouts.length}}
         <div class="workout_section_heading">
             <h3>Workout :</h3>
         </div>
-        <div class="workout_section_section">
-            <div class="workout_section_section_one">
-                <table class="workout_table" style="width: 100%; text-align: center">
+        <div>
+            <div>
+                <table
+                    style="width: 100%; text-align: center; border-collapse: separate; border-spacing: 0; border: 1px solid #ddd;">
                     <thead>
                         <tr>
-                            <th style="width: 6%">
+                            <th style="width: 6%; border: 1px solid #ddd; padding: 8px;">
                                 <h3>S. No</h3>
                             </th>
-                            <th style="width: 30%">
+                            <th style="width: 30%; border: 1px solid #ddd; padding: 8px;">
                                 <h3>Workout Name</h3>
                             </th>
-                            <th style="width: 15%">
+                            <th style="width: 15%; border: 1px solid #ddd; padding: 8px;">
                                 <h3>Time</h3>
                             </th>
-                            <th style="width: 30%">
+                            <th style="width: 30%; border: 1px solid #ddd; padding: 8px;">
                                 <h3>Details</h3>
                             </th>
-                            <th style="width: 15%">
+                            <th style="width: 15%; border: 1px solid #ddd; padding: 8px;">
                                 <h3>Duration</h3>
                             </th>
                         </tr>
                     </thead>
                     <tbody>
                         {{#each pre_workouts }}
-                        <tr>
-                            <td>
+                        <tr style="border-bottom: 1px solid #ddd;">
+                            <td style="border: none; padding: 8px;">
                                 <p>{{print @index }}</p>
                             </td>
-                            <td style="text-align: left">
+                            <td style="text-align: left; border: none; padding: 8px;">
                                 <p>{{ name }}</p>
                             </td>
-                            <td>
+                            <td style="border: none; padding: 8px;">
                                 <p>{{ formattedTime }}</p>
                             </td>
-                            <td style="text-align: left">
+                            <td style="text-align: left; border: none; padding: 8px;">
                                 {{#each ex}}
                                 <p>
                                     {{ ex_group.set }} set x {{ repetition_value }}
@@ -1249,7 +1275,7 @@
                                 <h5>What Not to Do - <span>{{ not_to_do }}</span></h5>
                                 <h5>Total Calories - <span>{{ total_cal }} Cal</span></h5>
                             </td>
-                            <td>
+                            <td style="border: none; padding: 8px;">
                                 <p>{{ durationText }}</p>
                             </td>
                         </tr>
@@ -1260,6 +1286,7 @@
         </div>
         {{/if}}
         {{/if}}
+
     </div>
 
     <!-- Footer Template -->

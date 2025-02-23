@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="hi">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -19,11 +20,13 @@
             --color-text: #000;
             --color-gray-light: #666;
             --color-gray-medium: #888;
-            --border-color: #000;
-            --page-margin: 10mm 5mm; /* Combined margin */
+            --border-color: #ddd;
+            --page-margin: 10mm 5mm;
+            /* Combined margin */
         }
 
         @media print {
+
             /* Force background colors and images to print */
             * {
                 -webkit-print-color-adjust: exact !important;
@@ -31,7 +34,12 @@
             }
 
             /* Ensure page breaks don't occur within header elements */
-            h1, h2, h3, h4, h5, h6 {
+            h1,
+            h2,
+            h3,
+            h4,
+            h5,
+            h6 {
                 page-break-after: auto;
             }
 
@@ -60,8 +68,8 @@
                 height: attr(height);
             }
              */
-			 
-		    /* This CSS rule ensures that table headers (contained within the <thead> element)
+
+            /* This CSS rule ensures that table headers (contained within the <thead> element)
                repeat at the top of each new page when the table spans multiple pages. */
             /* Ensure table headers repeat */
             thead {
@@ -78,22 +86,27 @@
         /* Add support for both A4 and Letter sizes */
         @page {
             size: A4 portrait;
-            margin: 10mm 5mm; /* Use CSS variable. Reduced margins for better space utilization */
+            margin: 10mm 5mm;
+
+            /* Use CSS variable. Reduced margins for better space utilization */
             /* bleed: 0; */
             @top-center {
                 content: element(header);
             }
+
             @bottom-center {
                 content: element(footer);
             }
         }
 
         /* Global styles */
-        * { /* Apply to all elements by default */
+        * {
+            /* Apply to all elements by default */
             font-family: var(--font-family-base), sans-serif;
             -webkit-font-smoothing: antialiased;
             text-rendering: optimizeLegibility;
-            box-sizing: border-box; /* Include padding and border in element's total width and height */
+            box-sizing: border-box;
+            /* Include padding and border in element's total width and height */
         }
 
         /* Font Faces (Optimize loading - preload critical fonts) */
@@ -101,17 +114,23 @@
         @font-face {
             font-family: "TiroDevanagariHindi-Regular";
             src: url("https://res.cloudinary.com/myrltech/raw/upload/v1686297287/TiroDevanagariHindi-Regular.ttf");
-            font-weight: normal; /* Or specify font-weight if needed */
-            font-style: normal; /* Or specify font-style if needed */
-            font-display: swap; /* Optional: improve perceived performance */
+            font-weight: normal;
+            /* Or specify font-weight if needed */
+            font-style: normal;
+            /* Or specify font-style if needed */
+            font-display: swap;
+            /* Optional: improve perceived performance */
         }
 
         @font-face {
             font-family: 'NotoSansDevanagari';
             src: url('https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;700&display=swap');
-            font-weight: normal; /* Or specify font-weight if needed */
-            font-style: normal; /* Or specify font-style if needed */
-            font-display: swap; /* Optional: improve perceived performance */
+            font-weight: normal;
+            /* Or specify font-weight if needed */
+            font-style: normal;
+            /* Or specify font-style if needed */
+            font-display: swap;
+            /* Optional: improve perceived performance */
         }
 
         @font-face {
@@ -152,25 +171,31 @@
 
         /* General Styles */
         body {
-            direction: ltr; /* Hindi is written left-to-right */
+            direction: ltr;
+            /* Hindi is written left-to-right */
             margin: 0;
-            padding: 10px; /* Use CSS variable */
+            padding: 10px;
+            /* Use CSS variable */
             font-size: 10px;
             font-family: var(--font-family-base), sans-serif;
-            color: var(--color-text); /* Use CSS variable */
+            color: var(--color-text);
+            /* Use CSS variable */
         }
 
         /* Maintains aspect ratio in the images */
         img {
             max-width: 100%;
             height: auto;
-            object-fit: contain; /* Default object-fit */
+            object-fit: contain;
+            /* Default object-fit */
             -webkit-backface-visibility: hidden;
             backface-visibility: hidden;
         }
 
         /* Typography */
-        h3, h4, h5 {
+        h3,
+        h4,
+        h5 {
             font-family: var(--font-family-bold), sans-serif;
             margin: 0;
             page-break-after: avoid;
@@ -180,7 +205,8 @@
             font-size: 13px;
         }
 
-        h4, h5 {
+        h4,
+        h5 {
             font-size: 10px;
         }
 
@@ -190,7 +216,8 @@
             margin: 0;
         }
 
-        span { /* If you need this style, keep it */
+        span {
+            /* If you need this style, keep it */
             font-family: var(--font-family-base);
         }
 
@@ -222,16 +249,18 @@
         /* Container width constraints */
         .main-content {
             width: 100%;
-            max-width: 210mm; /* A4 width */
+            max-width: 210mm;
+            /* A4 width */
             margin: 0 auto;
         }
 
         /* Hindi text specific styles */
         /* Specific elements that should ALWAYS be in Hindi */
         .hindi-text {
-            font-family: "TiroDevanagariHindi-Regular", "NotoSansDevanagari"; /* No fallbacks if it MUST be Hindi */
+            font-family: "TiroDevanagariHindi-Regular", "NotoSansDevanagari";
+            /* No fallbacks if it MUST be Hindi */
         }
-		
+
         /* Specific rules for content breaking to existing styles */
         .avoid-break {
             break-inside: avoid-page;
@@ -289,17 +318,16 @@
         }
 
         /* Header and Footer */
-        .header, .footer { /* Combined styles */
-            position: running(header); /* or running(footer) */
+        .header,
+        .footer {
+            /* Combined styles */
+            position: running(header);
+            /* or running(footer) */
             width: 100%;
-            padding: 10px 0; /* Consistent padding */
-            border-top: 1px solid var(--border-color); /* or border-bottom */
-            background-color: #fff; /* Consistent background */
+            padding: 10px 0;
+            background-color: #fff;
         }
 
-        .header {
-            border-bottom: 1px solid var(--border-color);
-        }
 
         .footer {
             position: running(footer);
@@ -322,23 +350,6 @@
             break-before: auto;
         }
 
-        .table th,
-        .table td {
-            border: 1px solid black;
-            padding: 5px;
-            border-top: 0;
-            border-left: 0;
-            page-break-inside: avoid;
-            break-inside: avoid;
-        }
-
-        .table th { /* Table header specific styles */
-            background-color: #fff;
-            position: sticky;
-            top: 0;
-            z-index: 2;
-            border-bottom: 2px solid var(--border-color);
-        }
 
         /* Footer Styles */
         .footer-content {
@@ -384,11 +395,13 @@
         .diet_table,
         .workout_table {
             width: 100%;
-            /* Remove table-layout: fixed; */ /* This is CRUCIAL */
+            /* Remove table-layout: fixed; */
+            /* This is CRUCIAL */
             border-collapse: collapse;
             border-spacing: 0;
             empty-cells: show;
-            border: 1px solid var(--border-color); /* Consistent border */
+            border: 1px solid var(--border-color);
+            /* Consistent border */
         }
 
         /* Table Headers */
@@ -415,8 +428,10 @@
         .consultation_table tr,
         .diet_table tr,
         .workout_table tr {
-            page-break-inside: avoid; /* Keep rows together as much as possible */
-            page-break-after: auto; /* Allow page breaks *after* rows */
+            page-break-inside: avoid;
+            /* Keep rows together as much as possible */
+            page-break-after: auto;
+            /* Allow page breaks *after* rows */
         }
 
         /* Table Headers and Cells */
@@ -431,8 +446,9 @@
             top: 0;
             z-index: 2;
             border: 1px solid var(--border-color);
-            border-bottom: 2px solid #000;
-            padding: 8px; /* Add padding for better spacing */
+            border-bottom: 1px solid #ddd;
+            padding: 8px;
+            /* Add padding for better spacing */
         }
 
         /* Medicine Table Specific */
@@ -444,9 +460,10 @@
         .medicine_table {
             width: 100%;
             border-collapse: collapse;
-            table-layout: fixed; /* Keep columns aligned */
+            table-layout: fixed;
+            /* Keep columns aligned */
         }
-		
+
         .medicine_table td p {
             font-size: 10px;
             margin: 0;
@@ -457,75 +474,96 @@
         .medicine_table td {
             border: 1px solid var(--border-color);
             padding: 5px;
-            text-align: left; /* Align text to the left within cells */
-            vertical-align: top; /* Align content to the top of cells */
-            /* Remove page-break-inside: avoid; */ /* This is CRUCIAL */
+            text-align: left;
+            /* Align text to the left within cells */
+            vertical-align: top;
+            /* Align content to the top of cells */
+            /* Remove page-break-inside: avoid; */
+            /* This is CRUCIAL */
             overflow: hidden;
             text-overflow: ellipsis;
-            white-space: normal; /* Allow wrapping within cells */
-            word-wrap: break-word; /* Allow words to break */
+            white-space: normal;
+            /* Allow wrapping within cells */
+            word-wrap: break-word;
+            /* Allow words to break */
         }
 
         .medicine_table thead {
-            display: table-header-group; /* Essential for header repetition */
+            display: table-header-group;
+            /* Essential for header repetition */
         }
 
         .medicine_table tfoot {
-            display: table-footer-group; /* For possible future use */
+            display: table-footer-group;
+            /* For possible future use */
         }
 
         .medicine_table thead::after {
             content: '';
             display: block;
-            height: 5mm; /* Space after header */
+            height: 5mm;
+            /* Space after header */
         }
 
         /* Optional but recommended:  Improve header spacing */
-        .medicine_table thead tr th { /* Target the THs inside the header row */
-            padding-bottom: 8px; /* Add some bottom padding to the header */
+        .medicine_table thead tr th {
+            /* Target the THs inside the header row */
+            padding-bottom: 8px;
+            /* Add some bottom padding to the header */
         }
 
         .medicine_table tfoot::before {
             content: '';
             display: block;
-            height: 5mm; /* Space before footer */
+            height: 5mm;
+            /* Space before footer */
         }
 
         /* Optional: Add a small space between rows */
         .medicine_table tbody tr {
-            page-break-before: auto; /* Allow page breaks before rows in the tbody */
-            border-bottom: 1px solid #eee; /* Light separator */
+            page-break-before: auto;
+            /* Allow page breaks before rows in the tbody */
+            border-bottom: 1px solid #eee;
+            /* Light separator */
         }
 
         .medicine_table tbody tr:last-child {
-            border-bottom: none; /* Remove separator on last row */
+            border-bottom: none;
+            /* Remove separator on last row */
         }
 
         .medicine_table th:nth-child(1),
         .medicine_table td:nth-child(1) {
-            width: 5%; /* S.No */
+            width: 5%;
+            /* S.No */
         }
 
         .medicine_table th:nth-child(3),
         .medicine_table td:nth-child(4),
         .medicine_table th:nth-child(4),
         .medicine_table td:nth-child(5) {
-            width: 4%; /* Dose and Qty */
+            width: 4%;
+            /* Dose and Qty */
         }
 
         /* Medicine Schedule Columns - Make them equal and flexible */
-        .medicine_table th:nth-child(5), /* Morning */
+        .medicine_table th:nth-child(5),
+        /* Morning */
         .medicine_table td:nth-child(6),
-        /*.medicine_table th:nth-child(6),*/ /* Afternoon */
+        /*.medicine_table th:nth-child(6),*/
+        /* Afternoon */
         .medicine_table td:nth-child(7),
-        /*.medicine_table th:nth-child(7),*/ /* Night */
+        /*.medicine_table th:nth-child(7),*/
+        /* Night */
         .medicine_table td:nth-child(8) {
-            width: 30%; /* Medicine Schedule */
+            width: 30%;
+            /* Medicine Schedule */
         }
 
         .medicine_table th:nth-child(6),
         .medicine_table td:nth-child(9) {
-            width: 12%; /* Start Date / Duration */
+            width: 12%;
+            /* Start Date / Duration */
             white-space: normal;
         }
 
@@ -561,7 +599,7 @@
 
         /* Section Wrappers */
         .top_section_wrapper {
-            border: 1px solid black;
+            border: 1px solid #ddd;
             display: grid;
             grid-template-columns: repeat(2, 3fr);
             grid-auto-rows: minmax(30px, auto);
@@ -591,20 +629,28 @@
         /* Complaint Table Specific */
         .complaint_table {
             width: 100%;
-            table-layout: fixed; /* Important: Use fixed layout to keep columns aligned */
-            border-collapse: collapse; /* Collapse borders for a cleaner look */
+            table-layout: fixed;
+            /* Important: Use fixed layout to keep columns aligned */
+            border-collapse: collapse;
+            /* Collapse borders for a cleaner look */
         }
 
-        .complaint_table th, .complaint_table td {
+        .complaint_table th,
+        .complaint_table td {
             padding: 5px;
-            text-align: center; /* Center the content */
-            border: 1px solid black; /* Add borders back if needed */
+            text-align: center;
+            /* Center the content */
+            border: 1px solid #ddd;
+            /* Add borders back if needed */
         }
 
-        .complaint_table td { /* Added complaint_table */
-            border: 1px solid var(--border-color); /* Consistent border */
+        .complaint_table td {
+            /* Added complaint_table */
+            border: 1px solid var(--border-color);
+            /* Consistent border */
             padding: 5px;
-            text-align: left; /* Default left alignment */
+            text-align: left;
+            /* Default left alignment */
             vertical-align: top;
             page-break-inside: avoid;
             overflow: hidden;
@@ -614,19 +660,23 @@
         }
 
         /* Hide BMI, BP, RBS, Temperature */
-        .complaint_table tr:nth-child(2) { /* Select the second row in each table */
+        .complaint_table tr:nth-child(2) {
+            /* Select the second row in each table */
             display: none;
         }
 
-        .complaints_subsection > div:nth-child(1) .complaint_table tr:nth-child(2), /* BMI in the first table */
-        .complaints_subsection > div:nth-child(2) .complaint_table tr:nth-child(2), /* BP in the second table */
-        .complaints_subsection > div:nth-child(3) .complaint_table tr:nth-child(2) { /* Temperature in the third table */
+        .complaints_subsection>div:nth-child(1) .complaint_table tr:nth-child(2),
+        /* BMI in the first table */
+        .complaints_subsection>div:nth-child(2) .complaint_table tr:nth-child(2),
+        /* BP in the second table */
+        .complaints_subsection>div:nth-child(3) .complaint_table tr:nth-child(2) {
+            /* Temperature in the third table */
             display: none;
         }
 
         /* Complaint Section */
         .complaints_section {
-            border: 1px solid black;
+            border: 1px solid #ddd;
             border-right: 0;
             border-top: 0;
             border-bottom: 0;
@@ -652,14 +702,18 @@
 
         /* Modified Styles */
         .complaints_subsection {
-            display: table; /* Use table display for the container */
+            display: table;
+            /* Use table display for the container */
             width: 100%;
-            table-layout: fixed; /* Crucial for consistent column widths */
+            table-layout: fixed;
+            /* Crucial for consistent column widths */
         }
 
-        .complaints_subsection > div {
-            display: table-cell; /* Use table cell display for the inner divs */
-            vertical-align: top; /* Align cells to the top */
+        .complaints_subsection>div {
+            display: table-cell;
+            /* Use table cell display for the inner divs */
+            vertical-align: top;
+            /* Align cells to the top */
             padding: 10px;
         }
 
@@ -671,18 +725,22 @@
             border-bottom: 0;
             /* margin-top: 10px; */
             display: grid;
-            grid-template-columns: repeat(3, minmax(0, 1fr)); /* Key fix */
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            /* Key fix */
             grid-auto-rows: minmax(20px, auto);
             /* padding: 10px; */
-            align-items: center; /* Vertical alignment */
-            justify-items: center; /* Horizontal alignment */
+            align-items: center;
+            /* Vertical alignment */
+            justify-items: center;
+            /* Horizontal alignment */
         }
 
         /* Optional: Handle content in grid items */
-        .schedule_medicine_wrapper > * {
+        .schedule_medicine_wrapper>* {
             min-width: 0;
             overflow: hidden;
-            text-overflow: ellipsis; /* For text truncation */
+            text-overflow: ellipsis;
+            /* For text truncation */
         }
 
         .right_tick_div {
@@ -704,14 +762,14 @@
         .investigation_section_heading,
         .next_consultation_section_heading,
         .workout_section_heading {
-            border: 1px solid black;
+            border: 1px solid #ddd;
             border-top: 0;
             padding: 10px;
         }
 
         .diet_section_heading {
             margin-top: 30px;
-            border: 1px solid black;
+            border: 1px solid #ddd;
             padding: 10px;
         }
 
@@ -758,181 +816,175 @@
 
         /* New Page for Lifestyle Advice */
         .lifestyle-advice-page {
-            page-break-before: always; /* Start on a new page */
+            page-break-before: always;
+            /* Start on a new page */
         }
     </style>
 </head>
 
 <body>
-<!-- TOP HEADING SECTION -->
-<!-- Header Template -->
-<div class="header">
-    <div class="top_provider_section">
-        <div class="top_provider_section_one">
-            <picture>
-                <!-- Primary source - hospital's actual logo -->
-                <source srcset="{{ providerLogo }}">
-                <!-- Fallback SVG logo -->
-                <img
-                        height="60"
-                        width="60"
-                        src="../../../other/medical-backup.svg"
-                        alt="AdhereLive - Hospital Logo"
-                />
-            </picture>
-        </div>
-        <div class="top_provider_section_two">
-            <h3>
-                {{ providerName }} <br/>
-                {{ providerAddress }} +91-8411042323 <br/>
-            </h3>
-            <p>{{translatedLabels.Patient}}: {{ patient_data.name }} - {{translatedLabels.ID}}: {{ patient_data.uid}}</p>
-        </div>
-        <div class="top_provider_section_three">
-            <img
-                    src="https://res.cloudinary.com/myrltech/image/upload/v1685082132/qr-code.jpg"
-                    alt="adhere"
-                    width="100"
-                    height="100"
-            />
+    <!-- TOP HEADING SECTION -->
+    <!-- Header Template -->
+    <div class="header">
+        <div class="top_provider_section">
+            <div class="top_provider_section_one">
+                <picture>
+                    <!-- Primary source - hospital's actual logo -->
+                    <source srcset="{{ providerLogo }}">
+                    <!-- Fallback SVG logo -->
+                    <img height="60" width="60" src="../../../other/medical-backup.svg"
+                        alt="AdhereLive - Hospital Logo" />
+                </picture>
+            </div>
+            <div class="top_provider_section_two">
+                <h3>
+                    {{ providerName }} <br />
+                    {{ providerAddress }} +91-8411042323 <br />
+                </h3>
+                <p>{{translatedLabels.Patient}}: {{ patient_data.name }} - {{translatedLabels.ID}}: {{
+                    patient_data.uid}}</p>
+            </div>
+            <div class="top_provider_section_three">
+                <img src="https://res.cloudinary.com/myrltech/image/upload/v1685082132/qr-code.jpg" alt="adhere"
+                    width="100" height="100" />
+            </div>
         </div>
     </div>
-</div>
 
-<!-- SECTION TWO -->
-<!-- Content sections with your existing HTML, but with page break controls -->
-<!-- Main content starts -->
-<div class="main-content">
-    <div class="top_section_wrapper">
-        <div class="top_section_wrapper_one">
-            <h3>{{translatedLabels.Patient_Name}}:</h3>
-            <p>{{ patient_data.name }}</p>
-        </div>
-        <div class="top_section_wrapper_two">
-            <h3>{{translatedLabels.Registration}} {{translatedLabels.date}}/{{translatedLabels.time}}:</h3>
-            <p>{{ patient_data.created_at }}</p>
-        </div>
-        <div class="top_section_wrapper_one">
-            <h3>{{translatedLabels.Patient}} {{translatedLabels.Age}}/{{translatedLabels.Gender}}:</h3>
-            <p>{{ patient_data.age }}/{{ patient_data.gender }}</p>
-        </div>
+    <!-- SECTION TWO -->
+    <!-- Content sections with your existing HTML, but with page break controls -->
+    <!-- Main content starts -->
+    <div style="width:100%;display:flex; justify-content: center; align-items: center; margin-bottom: 5px;">
+        <h3>ओपीडी कार्ड</h3>
+    </div>
+    <div class="main-content">
+        <div class="top_section_wrapper">
+            <div class="top_section_wrapper_one">
+                <h3>{{translatedLabels.Patient_Name}}:</h3>
+                <p>{{ patient_data.name }}</p>
+            </div>
+            <div class="top_section_wrapper_two">
+                <h3>{{translatedLabels.Registration}} {{translatedLabels.date}}/{{translatedLabels.time}}:</h3>
+                <p>{{ patient_data.created_at }}</p>
+            </div>
+            <div class="top_section_wrapper_one">
+                <h3>{{translatedLabels.Patient}} {{translatedLabels.Age}}/{{translatedLabels.Gender}}:</h3>
+                <p>{{ patient_data.age }}/{{ patient_data.gender }}</p>
+            </div>
 
-        <div class="top_section_wrapper_two">
-            <h3>{{translatedLabels.Patient}} {{translatedLabels.ID}}:</h3>
-            <p>{{ patient_data.uid }}</p>
-        </div>
-        <div class="top_section_wrapper_one">
-            <h3>{{translatedLabels.Patient_Mobile_No_}}:</h3>
-            <p>+{{ patient_data.prefix }}-{{ patient_data.mobile_number }}</p>
-        </div>
-        <div class="top_section_wrapper_two">
-            <h3>{{translatedLabels.Doctor_Name}}:</h3>
-            <p>Dr. {{ doctorName }} {{ degree }}</p>
-        </div>
-        <div class="top_section_wrapper_one">
-            <h3>{{translatedLabels.Patient}} {{translatedLabels.Address}}:</h3>
-            <p>{{ patient_data.address }}</p>
-        </div>
-        <div class="top_section_wrapper_two">
-            <!-- Removed the Doctor Email -->
-            <!-- <h3>{{translatedLabels.Doctor_Email}}:</h3>
+            <div class="top_section_wrapper_two">
+                <h3>{{translatedLabels.Patient}} {{translatedLabels.ID}}:</h3>
+                <p>{{ patient_data.uid }}</p>
+            </div>
+            <div class="top_section_wrapper_one">
+                <h3>{{translatedLabels.Patient_Mobile_No_}}:</h3>
+                <p>+{{ patient_data.prefix }}-{{ patient_data.mobile_number }}</p>
+            </div>
+            <div class="top_section_wrapper_two">
+                <h3>{{translatedLabels.Doctor_Name}}:</h3>
+                <p>Dr. {{ doctorName }} {{ degree }}</p>
+            </div>
+            <div class="top_section_wrapper_one">
+                <h3>{{translatedLabels.Patient}} {{translatedLabels.Address}}:</h3>
+                <p>{{ patient_data.address }}</p>
+            </div>
+            <div class="top_section_wrapper_two">
+                <!-- Removed the Doctor Email -->
+                <!-- <h3>{{translatedLabels.Doctor_Email}}:</h3>
           <p>{{ doctorEmail }}</p> -->
+            </div>
         </div>
-    </div>
 
-    <!-- Chief Complaints:  -->
-    <div style="display: flex; width: 100%; border-left: 1px solid; border-right: 1px solid;">
-        <!-- Left Section -->
-        <div style="width: 50%; border-right: 1px solid; padding: 5px; text-align: center;">
+        <!-- Chief Complaints:  -->
+        <div style="display: flex; width: 100%; border-left: 1px solid #ddd; border-right: 1px solid #ddd;">
+            <!-- Left Section -->
+            <div style="width: 65%; border-right: 1px solid #ddd; padding: 5px; text-align: center;">
+                <div style="display: flex; align-items: center">
+                    <h3>{{translatedLabels.Allergies}}:</h3>
+                    <p>{{ patient_data.allergies }}</p>
+                    <br />
+                </div>
+                <div style="display: flex; align-items: center">
+                    <h3>{{translatedLabels.Comorbidities}} :</h3>
+                    <p>{{ patient_data.comorbidities }}</p>
+                    <br />
+                </div>
+            </div>
+
+            <!-- Right Section -->
+            <div style="width: 35%; padding: 5px;">
+                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px;">
+                    <!-- 12 Boxes with Label and Value -->
+                    <div
+                        style="border: 1px solid #ddd; height: 25px; text-align: center; line-height: 25px; font-weight: bold;">
+                        {{translatedLabels.Height}}</div>
+                    <div style="border: 1px solid #ddd; height: 25px; text-align: center; line-height: 25px;">
+                        {{patient_data.height}} cm</div>
+
+                    <div
+                        style="border: 1px solid #ddd; height: 25px; text-align: center; line-height: 25px; font-weight: bold;">
+                        {{translatedLabels.Weight}}</div>
+                    <div style="border: 1px solid #ddd; height: 25px; text-align: center; line-height: 25px;">
+                        {{patient_data.weight}} kg</div>
+
+                    <div
+                        style="border: 1px solid #ddd; height: 25px; text-align: center; line-height: 25px; font-weight: bold;">
+                        {{translatedLabels.PULSE}}</div>
+                    <div style="border: 1px solid #ddd; height: 25px; text-align: center; line-height: 25px;">
+                    </div>
+
+                    <div
+                        style="border: 1px solid #ddd; height: 25px; text-align: center; line-height: 25px; font-weight: bold;">
+                        {{translatedLabels.Temperature}}</div>
+                    <div style="border: 1px solid #ddd; height: 25px; text-align: center; line-height: 25px;">
+                    </div>
+
+                    <div
+                        style="border: 1px solid #ddd; height: 25px; text-align: center; line-height: 25px; font-weight: bold;">
+                        {{translatedLabels.BMI}}</div>
+                    <div style="border: 1px solid #ddd; height: 25px; text-align: center; line-height: 25px;">
+                    </div>
+
+                    <div
+                        style="border: 1px solid #ddd; height: 25px; text-align: center; line-height: 25px; font-weight: bold;">
+                        {{translatedLabels.BP}}</div>
+                    <div style="border: 1px solid #ddd; height: 25px; text-align: center; line-height: 25px;">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- DIAGNOSIS  AND SYMPTOMS-->
+        <div class="top_section_wrapper">
+            <div class="top_section_wrapper_one" style="border-right: 1px solid #ddd; padding: 10px">
+                <h3>{{translatedLabels.Diagnosis}}:</h3>
+                <p>{{ diagnosis }}</p>
+            </div>
+            <div class="top_section_wrapper_two" style="padding: 10px">
+                <h3>{{translatedLabels.Symptoms}}:</h3>
+                <p style="width: 250px">{{ symptoms_final_value }}</p>
+            </div>
+        </div>
+
+        <!-- General | Systemic Examination: -->
+        <div class="diagnosis_section">
             <div style="display: flex; align-items: center">
-                <h3>{{translatedLabels.Allergies}}:</h3>
-                <p>{{ patient_data.allergies }}</p>
-                <br />
-            </div>
-            <div style="display: flex; align-items: center">
-                <h3>{{translatedLabels.Comorbidities}} :</h3>
-                <p>{{ patient_data.comorbidities }}</p>
-                <br />
+                <h3>{{translatedLabels.General}} | {{translatedLabels.Systematic_Examination}}:</h3>
+                <p style="font-family: TiroDevanagariHindi-Regular, NotoSansDevanagari, Arial, sans-serif">
+                    {{ clinicalNotes }}
+                </p>
             </div>
         </div>
 
-        <!-- Right Section -->
-        <div style="width: 50%; padding: 5px;">
-            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px;">
-                <!-- 12 Boxes with Label and Value -->
-                <div
-                    style="border: 1px solid black; height: 25px; text-align: center; line-height: 25px; font-weight: bold;">
-                    HEIGHT</div>
-                <div style="border: 1px solid black; height: 25px; text-align: center; line-height: 25px;">
-                    {{patient_data.height}} cm</div>
-
-                <div
-                    style="border: 1px solid black; height: 25px; text-align: center; line-height: 25px; font-weight: bold;">
-                    WEIGHT</div>
-                <div style="border: 1px solid black; height: 25px; text-align: center; line-height: 25px;">
-                    {{patient_data.weight}} kg</div>
-
-                <div
-                    style="border: 1px solid black; height: 25px; text-align: center; line-height: 25px; font-weight: bold;">
-                    PULSE</div>
-                <div style="border: 1px solid black; height: 25px; text-align: center; line-height: 25px;">
-                </div>
-
-                <div
-                    style="border: 1px solid black; height: 25px; text-align: center; line-height: 25px; font-weight: bold;">
-                    TEMP</div>
-                <div style="border: 1px solid black; height: 25px; text-align: center; line-height: 25px;">
-                  </div>
-
-                <div
-                    style="border: 1px solid black; height: 25px; text-align: center; line-height: 25px; font-weight: bold;">
-                    BMI</div>
-                <div style="border: 1px solid black; height: 25px; text-align: center; line-height: 25px;">
-                </div>
-
-                <div
-                    style="border: 1px solid black; height: 25px; text-align: center; line-height: 25px; font-weight: bold;">
-                    BP</div>
-                <div style="border: 1px solid black; height: 25px; text-align: center; line-height: 25px;">
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- DIAGNOSIS  AND SYMPTOMS-->
-    <div class="top_section_wrapper">
-        <div
-                class="top_section_wrapper_one"
-                style="border-right: 1px solid; padding: 10px"
-        >
-            <h3>{{translatedLabels.Diagnosis}}:</h3>
-            <p>{{ diagnosis }}</p>
-        </div>
-        <div class="top_section_wrapper_two" style="padding: 10px">
-            <h3>{{translatedLabels.Symptoms}}:</h3>
-            <p style="width: 250px">{{ symptoms_final_value }}</p>
-        </div>
-    </div>
-
-    <!-- General | Systemic Examination: -->
-    <div class="diagnosis_section">
-        <div style="display: flex; align-items: center">
-            <h3>{{translatedLabels.General}} | {{translatedLabels.Systematic_Examination}}:</h3>
+        <!-- TREATMENT ADVISE -->
+        <div class="treatment_advise_section">
+            <h3>{{translatedLabels.Treatment_And_Follow_up_Advice}}:</h3>
             <p style="font-family: TiroDevanagariHindi-Regular, NotoSansDevanagari, Arial, sans-serif">
-                {{ clinicalNotes }}
+                <strong>{{ follow_up_advise }}</strong>
             </p>
         </div>
-    </div>
 
-    <!-- TREATMENT ADVISE -->
-    <div class="treatment_advise_section">
-        <h3>{{translatedLabels.Treatment_And_Follow_up_Advice}}:</h3>
-        <p style="font-family: TiroDevanagariHindi-Regular, NotoSansDevanagari, Arial, sans-serif">
-            <strong>{{ follow_up_advise }}</strong>
-        </p>
-    </div>
-
-    <!-- <div class="top_section_wrapper">
+        <!-- <div class="top_section_wrapper">
         <div class="top_section_wrapper_one" style="border-right: 1px solid; padding: 10px">
             <h3>{{translatedLabels.Height}}:</h3>
             <p>{{patient_data.height}} cm</p>
@@ -943,442 +995,429 @@
         </div>
     </div> -->
 
-    <!-- MEDICINE  SECTION -->
-    <div class="medicine_section">
-        <table class="medicine_table" style="width: 100%; text-align: center;">
-            <thead>
-            <tr>
-                <th style="width: 5%">
-                    <h3>S.No</h3>
-                </th>
-                <th style="width: 30%" colspan="2">
-                    <h3>{{translatedLabels.Name_of_Medicine}}</h3>
-                </th>
-                <th style="width: 30%" colspan="3">
-                    <div class="schedule_medicine_wrapper">
-                        <div>
-                            <h4>{{translatedLabels.Morning}}</h4>
-                        </div>
-                        <div>
-                            <h4>{{translatedLabels.Afternoon}}</h4>
-                        </div>
-                        <div>
-                            <h4>{{translatedLabels.Night}}</h4>
-                        </div>
-                    </div>
-                </th>
-                <th style="width: 10%">
-                    <h3>{{translatedLabels.Duration}}</h3>
-                </th>
-            </tr>
-            </thead>
-            <tbody>
-            {{#each medicationsList}}
-            <tr>
-                <td>
-                    <p>{{print @index }}</p>
-                </td>
-                <td colspan="2" style="padding: 0">
-                    <div class="medicine_name_wrapper">
-                        <div style="text-align: justify;">
-                            <p>
-                                <strong>{{ medicineType }} - {{ medicineName }} &nbsp; {{ unit }} qty: {{
-                                    quantity }}</strong><br/>
-                                {{ genericName }} {{ strength }}<br/>
-                                <!-- <span style="font-size: 10px;">{{translatedLabels.by}} {{translatedLabels.Dr_}} {{ organizer.name }}</span><br/> -->
-                                {{translatedLabels.Note}}: - <span
-                                    style="font-family: var(--font-family-base);">{{ description }}</span>
-                            </p>
-                        </div>
-                    </div>
-                </td>
-                <td>
-                    <div class="right_tick_div">
-                        <div class="tick_image">
-                            {{#each timings_new.morning}}
-                            <img
-                                    src="https://res.cloudinary.com/myrltech/image/upload/v1685103497/download.png"
-                                    alt="tick"
-                                    width="15px"
-                                    height="15px"
-                            />
-                            {{/each}}
-                        </div>
-                        {{#each timings_new.morning}}
-                        <p style="font-size: 8px">{{ this }}</p>
-                        {{/each}}
-                    </div>
-                </td>
-                <td>
-                    <div class="right_tick_div">
-                        <div class="tick_image">
-                            {{#each timings_new.afternoon}}
-                            <img
-                                    src="https://res.cloudinary.com/myrltech/image/upload/v1685103497/download.png"
-                                    alt="tick"
-                                    width="15px"
-                                    height="15px"
-                            />
-                            {{/each}}
-                        </div>
-                        {{#each timings_new.afternoon}}
-                        <p style="font-size: 8px">{{ this }}</p>
-                        {{/each}}
-                    </div>
-                </td>
-                <td>
-                    <div class="right_tick_div">
-                        <div class="tick_image">
-                            {{#each timings_new.night}}
-                            <img
-                                    src="https://res.cloudinary.com/myrltech/image/upload/v1685103497/download.png"
-                                    alt="tick"
-                                    width="15px"
-                                    height="15px"
-                            />
-                            {{/each}}
-                        </div>
-                        {{#each timings_new.night}}
-                        <p style="font-size: 8px">{{ this }}</p>
-                        {{/each}}
-                    </div>
-                </td>
-                <td>
-                    {{#if isSOS}}
-                    <p>{{translatedLabels.Take_whenever_required}}</p>
-                    {{else}}
-                    <p>{{ startDate }} {{translatedLabels.From}} {{ duration }} {{translatedLabels.day_s_}}</p>
-                    {{/if}}
-                </td>
-            </tr>
-            {{/each}}
-            </tbody>
-        </table>
-    </div>
-
-    <!-- INVESTIGATION SECTION -->
-    <!-- style="page-break-before: always" -->
-    <!-- <div class="page-break"></div> -->
-    <div class="investigation_section">
-        <div class="investigation_section_heading">
-            <h3>{{translatedLabels.Investigation}}:</h3>
-        </div>
-        <div class="investigation_section_content">
-            <table
-                    class="investigation_table"
-                    style="width: 100%; text-align: center"
-            >
+        <!-- MEDICINE  SECTION -->
+        <div class="medicine_section">
+            <table class="medicine_table" style="width: 100%; text-align: center;">
                 <thead>
-                <tr>
-                    <th style="width: 6%">
-                        <h3>S. No</h3>
-                    </th>
-                    <th style="width: 20%">
-                        <h3>{{translatedLabels.Description}}</h3>
-                    </th>
-                    <th style="width: 10%">
-                        <h3>{{translatedLabels.Date}}</h3>
-                    </th>
-                    <th style="width: 20%">
-                        <h3>{{translatedLabels.Purpose}}</h3>
-                    </th>
-                </tr>
+                    <tr>
+                        <th style="width: 5%">
+                            <h3>S.No</h3>
+                        </th>
+                        <th style="width: 30%" colspan="2">
+                            <h3>{{translatedLabels.Name_of_Medicine}}</h3>
+                        </th>
+                        <th style="width: 30%" colspan="3">
+                            <div class="schedule_medicine_wrapper">
+                                <div>
+                                    <h4>{{translatedLabels.Morning}}</h4>
+                                </div>
+                                <div>
+                                    <h4>{{translatedLabels.Afternoon}}</h4>
+                                </div>
+                                <div>
+                                    <h4>{{translatedLabels.Night}}</h4>
+                                </div>
+                            </div>
+                        </th>
+                        <th style="width: 10%">
+                            <h3>{{translatedLabels.Duration}}</h3>
+                        </th>
+                    </tr>
                 </thead>
                 <tbody>
-                {{#each investigations}}
-                <tr>
-                    <td>
-                        <p>{{print @index }}</p>
-                    </td>
-                    <td style="text-align: left">
-                        <p>
-                            {{ type_description }} <br/>
-                            <span style="font-size: 8px">{{translatedLabels.by}} {{translatedLabels.Dr_}} {{ organizer.name }}</span>
-                            <br/>
-                            {{translatedLabels.Note}}:-
-                            <span style="font-family: var(--font-family-base);">{{ description }}</span
-                            >
-                        </p>
-                    </td>
-                    <td>
-                        <p>{{ start_date }}</p>
-                    </td>
-                    <td>
-                        <p>{{ reason }}</p>
-                    </td>
-                </tr>
-                {{/each}}
+                    {{#each medicationsList}}
+                    <tr>
+                        <td>
+                            <p>{{print @index }}</p>
+                        </td>
+                        <td colspan="2" style="padding: 0">
+                            <div class="medicine_name_wrapper">
+                                <div style="text-align: justify;">
+                                    <p>
+                                        <strong>{{ medicineType }} - {{ medicineName }} &nbsp; {{ unit }} qty: {{
+                                            quantity }}</strong><br />
+                                        {{ genericName }} {{ strength }}<br />
+                                        <!-- <span style="font-size: 10px;">{{translatedLabels.by}} {{translatedLabels.Dr_}} {{ organizer.name }}</span><br/> -->
+                                        {{translatedLabels.Note}}: - <span
+                                            style="font-family: var(--font-family-base);">{{ description }}</span>
+                                    </p>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="right_tick_div">
+                                <div class="tick_image">
+                                    {{#each timings_new.morning}}
+                                    <img src="https://res.cloudinary.com/myrltech/image/upload/v1685103497/download.png"
+                                        alt="tick" width="15px" height="15px" />
+                                    {{/each}}
+                                </div>
+                                {{#each timings_new.morning}}
+                                <p style="font-size: 8px">{{ this }}</p>
+                                {{/each}}
+                            </div>
+                        </td>
+                        <td>
+                            <div class="right_tick_div">
+                                <div class="tick_image">
+                                    {{#each timings_new.afternoon}}
+                                    <img src="https://res.cloudinary.com/myrltech/image/upload/v1685103497/download.png"
+                                        alt="tick" width="15px" height="15px" />
+                                    {{/each}}
+                                </div>
+                                {{#each timings_new.afternoon}}
+                                <p style="font-size: 8px">{{ this }}</p>
+                                {{/each}}
+                            </div>
+                        </td>
+                        <td>
+                            <div class="right_tick_div">
+                                <div class="tick_image">
+                                    {{#each timings_new.night}}
+                                    <img src="https://res.cloudinary.com/myrltech/image/upload/v1685103497/download.png"
+                                        alt="tick" width="15px" height="15px" />
+                                    {{/each}}
+                                </div>
+                                {{#each timings_new.night}}
+                                <p style="font-size: 8px">{{ this }}</p>
+                                {{/each}}
+                            </div>
+                        </td>
+                        <td>
+                            {{#if isSOS}}
+                            <p>{{translatedLabels.Take_whenever_required}}</p>
+                            {{else}}
+                            <p>{{ startDate }} {{translatedLabels.From}} {{ duration }} {{translatedLabels.day_s_}}</p>
+                            {{/if}}
+                        </td>
+                    </tr>
+                    {{/each}}
                 </tbody>
             </table>
         </div>
-    </div>
-    <!-- NEXT CONSULTATION SECTION -->
-    <div class="next_consultation_section_heading">
-        <h3>{{translatedLabels.Next_Consultation}}:</h3>
-    </div>
-    <div class="next_consultation_section">
-        <div class="next_consultation_section_one">
-            <table
-                    class="consultation_table"
-                    style="width: 100%; text-align: center"
-            >
-                <thead>
-                <tr>
-                    <th style="width: 6%">
-                        <h3>S. No</h3>
-                    </th>
-                    <th style="width: 20%">
-                        <h3>{{translatedLabels.Description}}</h3>
-                    </th>
-                    <th style="width: 10%">
-                        <h3>{{translatedLabels.Date}}</h3>
-                    </th>
-                    <th style="width: 20%">
-                        <h3>{{translatedLabels.Purpose}}</h3>
-                    </th>
-                </tr>
-                </thead>
-                <tbody>
-                {{#each nextConsultation}}
-                <tr>
-                    <td>
-                        <p>{{print @index}}</p>
-                    </td>
-                    <td style="text-align: left">
-                        <p>
-                            {{ type_description }} <br/>
-                            <span style="font-size: 8px">{{translatedLabels.by}} {{translatedLabels.Dr_}} {{ organizer.name }}</span>
-                            <br/>
-                            {{translatedLabels.Note}}:-
-                            <span style="font-family: var(--font-family-base);">{{ description }}</span
-                            >
-                        </p>
-                    </td>
-                    <td>
-                        <p>{{ start_date }}</p>
-                    </td>
-                    <td>
-                        <p>{{ reason }}</p>
-                    </td>
-                </tr>
-                {{/each}}
-                </tbody>
-            </table>
-        </div>
-    </div>
 
-    <div class="signature_section">
-        <div class="signature_image_section">
-            <picture>
-                <!-- Primary source - doctor's actual signature -->
-                <source srcset="{{ doctorSignImage }}" type="image/jpeg">
-                <!-- Fallback SVG signature -->
-                <img
-                        class="signature_image"
-                        height="40"
-                        width="120"
-                        src="../../../other/signature-default.svg"
-                        alt="AdhereLive - Doctor's Signature"
-                />
-            </picture>
-            <h3 class="signature-date">
-                {{ creationDate }}
+        <!-- INVESTIGATION SECTION -->
+        <!-- style="page-break-before: always" -->
+        <!-- <div class="page-break"></div> -->
+        <div class="investigation_section">
+            <div class="investigation_section_heading">
+                <h3>{{translatedLabels.Investigation}}:</h3>
+            </div>
+            <div class="investigation_section_content">
+                <table class="investigation_table" style="width: 100%; text-align: center">
+                    <thead>
+                        <tr>
+                            <th style="width: 6%">
+                                <h3>S. No</h3>
+                            </th>
+                            <th style="width: 20%">
+                                <h3>{{translatedLabels.Description}}</h3>
+                            </th>
+                            <th style="width: 10%">
+                                <h3>{{translatedLabels.Date}}</h3>
+                            </th>
+                            <th style="width: 20%">
+                                <h3>{{translatedLabels.Purpose}}</h3>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each investigations}}
+                        <tr>
+                            <td>
+                                <p>{{print @index }}</p>
+                            </td>
+                            <td style="text-align: left">
+                                <p>
+                                    {{ type_description }} <br />
+                                    <!-- <span style="font-size: 8px">{{translatedLabels.by}} {{translatedLabels.Dr_}} {{
+                                        organizer.name }}</span>
+                                    <br /> -->
+                                    {{translatedLabels.Note}}:-
+                                    <span style="font-family: var(--font-family-base);">{{ description }}</span>
+                                </p>
+                            </td>
+                            <td>
+                                <p>{{ start_date }}</p>
+                            </td>
+                            <td>
+                                <p>{{ reason }}</p>
+                            </td>
+                        </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+
+
+        <!-- NEXT CONSULTATION SECTION -->
+        <div class="next_consultation_section_heading">
+            <h3>{{translatedLabels.Next_Consultation}}:</h3>
+        </div>
+        <div class="next_consultation_section">
+            <div class="next_consultation_section_one">
+                <table class="consultation_table" style="width: 100%; text-align: center">
+                    <thead>
+                        <tr>
+                            <th style="width: 6%">
+                                <h3>S. No</h3>
+                            </th>
+                            <th style="width: 20%">
+                                <h3>{{translatedLabels.Description}}</h3>
+                            </th>
+                            <th style="width: 10%">
+                                <h3>{{translatedLabels.Date}}</h3>
+                            </th>
+                            <th style="width: 20%">
+                                <h3>{{translatedLabels.Purpose}}</h3>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each nextConsultation}}
+                        <tr>
+                            <td>
+                                <p>{{print @index}}</p>
+                            </td>
+                            <td style="text-align: left">
+                                <p>
+                                    {{ type_description }} <br />
+                                    <!-- <span style="font-size: 8px">{{translatedLabels.by}} {{translatedLabels.Dr_}} {{
+                                        organizer.name }}</span>
+                                    <br /> -->
+                                    {{translatedLabels.Note}}:-
+                                    <span style="font-family: var(--font-family-base);">{{ description }}</span>
+                                </p>
+                            </td>
+                            <td>
+                                <p>{{ start_date }}</p>
+                            </td>
+                            <td>
+                                <p>{{ reason }}</p>
+                            </td>
+                        </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+         <!-- SIGNITURE SECTION  -->
+        <div class="signature_section">
+            <div class="signature_image_section">
+                <picture>
+                    <!-- Primary source - doctor's actual signature -->
+                    <source srcset="{{ doctorSignImage }}" type="image/jpeg">
+                    <!-- Fallback SVG signature -->
+                    <img class="signature_image" height="40" width="120" src="../../../other/signature-default.svg"
+                        alt="AdhereLive - Doctor's Signature" />
+                </picture>
+                <h3 class="signature-date">
+                    {{ creationDate }}
+                </h3>
+                <div class="signature-stamp">
+                    <h3>{{translatedLabels.Signature}}{{translatedLabels.Stamp}}</h3>
+                </div>
+                <div class="signature-details">
+                    <p>{{translatedLabels.RegNo}} {{ registrationNumber }}, {{ city }}</p>
+                </div>
+            </div>
+        </div>
+
+          <!-- NOTE SECTION  -->
+        <div>
+            <h3>
+                Note:
+                <p style="font-family: PlusJakartaSans-Regular,sans-serif">
+                    This prescription is generated on the AdhereLive platform. To access
+                    your digital prescription download the mobile app using the QR code at
+                    the top. Please write to "customersupport@adhere.live" for any
+                    technical assistance.
+                </p>
+                <br />
+                <p style="font-weight: 100; font-family: var(--font-family-base);">
+                    यह प्रिस्क्रिप्शन AdhereLive प्लेटफॉर्म पर तैयार किया गया है। अपने
+                    डिजिटल प्रिस्क्रिप्शन देखने के लिए ऊपर दिए गए QR कोड का उपयोग करके
+                    मोबाइल ऐप डाउनलोड करें। कृपया किसी तकनीकी सहायता के लिए
+                    "customersupport@adhere.live" पर लिखें।
+                </p>
             </h3>
-            <div class="signature-stamp">
-                <h3>{{translatedLabels.Signature}}{{translatedLabels.Stamp}}</h3>
-            </div>
-            <div class="signature-details">
-                <p>{{translatedLabels.RegNo}} {{ registrationNumber }}, {{ city }}</p>
-            </div>
         </div>
-    </div>
 
-    <div>
-        <h3>
-            Note:
-            <p style="font-family: PlusJakartaSans-Regular,sans-serif">
-                This prescription is generated on the AdhereLive platform. To access
-                your digital prescription download the mobile app using the QR code at
-                the top. Please write to "customersupport@adhere.live" for any
-                technical assistance.
-            </p>
-            <br/>
-            <p style="font-weight: 100; font-family: var(--font-family-base);">
-                यह प्रिस्क्रिप्शन AdhereLive प्लेटफॉर्म पर तैयार किया गया है। अपने
-                डिजिटल प्रिस्क्रिप्शन देखने के लिए ऊपर दिए गए QR कोड का उपयोग करके
-                मोबाइल ऐप डाउनलोड करें। कृपया किसी तकनीकी सहायता के लिए
-                "customersupport@adhere.live" पर लिखें।
-            </p>
-        </h3>
-    </div>
+        {{#if (or diet_output.length pre_workouts.length) }}
+        <div style="margin-top: 30px">
+            <h3>{{translatedLabels.Lifestyle}} {{translatedLabels.Advice}}</h3>
+        </div>
 
-    {{#if (or diet_output.length pre_workouts.length) }}
-    <div style="margin-top: 30px">
-        <h3>{{translatedLabels.Lifestyle}} {{translatedLabels.Advice}}</h3>
-    </div>
-
-    <!-- DIET SECTION  -->
-    {{#if diet_output.length}}
-    <div class="diet_section_heading">
-        <h3>{{translatedLabels.Diet}}:</h3>
-    </div>
-    <div class="diet_section_section">
-        <div class="diet_section_section_one">
-            <table class="diet_table" style="width: 100%; text-align: center">
-                <thead>
-                <tr>
-                    <th style="width: 6%">
-                        <h3>S. No</h3>
-                    </th>
-                    <th>
-                        <h3>{{translatedLabels.Diet_Name}}</h3>
-                    </th>
-                    <th style="width: 40%">
-                        <h3>{{translatedLabels.TimeDetails}}</h3>
-                    </th>
-                    <th style="width: 30%">
-                        <h3>{{translatedLabels.Duration}}</h3>
-                    </th>
-                </tr>
-                </thead>
-                <tbody>
-                {{#each diet_output }}
-                <tr>
-                    <td>
-                        <p>{{print @index}}</p>
-                    </td>
-                    <td style="text-align: left">
-                        <p>{{ this.name }}</p>
-                    </td>
-                    <td style="text-align: left">
-                        {{#each this.food_group }}
-                        <div
-                                style="
+        <!-- DIET SECTION  -->
+        {{#if diet_output.length}}
+        <div class="diet_section_heading">
+            <h3>{{translatedLabels.Diet}}:</h3>
+        </div>
+        <div class="diet_section_section">
+            <div class="diet_section_section_one">
+                <table class="diet_table" style="width: 100%; text-align: center">
+                    <thead>
+                        <tr>
+                            <th style="width: 6%">
+                                <h3>S. No</h3>
+                            </th>
+                            <th>
+                                <h3>{{translatedLabels.Diet_Name}}</h3>
+                            </th>
+                            <th style="width: 40%">
+                                <h3>{{translatedLabels.TimeDetails}}</h3>
+                            </th>
+                            <th style="width: 30%">
+                                <h3>{{translatedLabels.Duration}}</h3>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each diet_output }}
+                        <tr>
+                            <td>
+                                <p>{{print @index}}</p>
+                            </td>
+                            <td style="text-align: left">
+                                <p>{{ this.name }}</p>
+                            </td>
+                            <td style="text-align: left">
+                                {{#each this.food_group }}
+                                <div style="
 	                  display: flex;
 	                  justify-content: space-between;
 	                  margin-bottom: 30px;
-	                "
-                        >
-                            <div style="width: 100px">
-                                <p>{{this.time.text}}</p>
-                            </div>
-                            <div style="display: flex; flex-flow: column">
-                                {{#each this.food_group_details_array}}
-                                <div style="width: 120px">
-                                    <p>{{ this.details.name }}</p>
-                                    <p>
-                                        {{translatedLabels.Instructions}}:
-                                        <span style="font-family: var(--font-family-base);">{{ this.notes }}</span>
-                                    </p>
+	                ">
+                                    <div style="width: 100px">
+                                        <p>{{this.time.text}}</p>
+                                    </div>
+                                    <div style="display: flex; flex-flow: column">
+                                        {{#each this.food_group_details_array}}
+                                        <div style="width: 120px">
+                                            <p>{{ this.details.name }}</p>
+                                            <p>
+                                                {{translatedLabels.Instructions}}:
+                                                <span style="font-family: var(--font-family-base);">{{ this.notes
+                                                    }}</span>
+                                            </p>
+                                        </div>
+                                        {{/each}}
+                                    </div>
                                 </div>
                                 {{/each}}
-                            </div>
-                        </div>
-                        {{/each}}
-                        <div style="margin-top: 20px">
-                            <h5>
-                                {{translatedLabels.Repeat_Days}} - 
-								{{#each this.repeat_days}}<span>{{this}},</span>{{/each}}
-                            </h5>
-                            <h5>
-                                {{translatedLabels.What_Not_to_Do}} -
-                                <span style="font-family: var(--font-family-base);">{{this.not_to_do}}</span>
-                            </h5>
-                            <h5>{{translatedLabels.Total_Calories}} - <span>{{ this.total_calories }}</span></h5>
-                        </div>
-                    </td>
-                    <td>
-                        <p>{{ this.durationText }}</p>
-                    </td>
-                </tr>
-                {{/each }}
-                </tbody>
-            </table>
+                                <div style="margin-top: 20px">
+                                    <h5>
+                                        {{translatedLabels.Repeat_Days}} -
+                                        {{#each this.repeat_days}}<span>{{this}},</span>{{/each}}
+                                    </h5>
+                                    <h5>
+                                        {{translatedLabels.What_Not_to_Do}} -
+                                        <span style="font-family: var(--font-family-base);">{{this.not_to_do}}</span>
+                                    </h5>
+                                    <h5>{{translatedLabels.Total_Calories}} - <span>{{ this.total_calories }}</span>
+                                    </h5>
+                                </div>
+                            </td>
+                            <td>
+                                <p>{{ this.durationText }}</p>
+                            </td>
+                        </tr>
+                        {{/each }}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {{/if}}
+
+
+         <!-- WORKOUT SECTION  -->
+        {{#if pre_workouts.length}}
+        <div class="workout_section_heading">
+            <h3>{{translatedLabels.Workout}}:</h3>
+        </div>
+        <div class="workout_section_section">
+            <div class="workout_section_section_one">
+                <table class="workout_table" style="width: 100%; text-align: center">
+                    <thead>
+                        <tr>
+                            <th style="width: 6%">
+                                <h3>S. No</h3>
+                            </th>
+                            <th>
+                                <h3>{{translatedLabels.Workout_Name}}</h3>
+                            </th>
+                            <th style="width: 30%">
+                                <h3>{{translatedLabels.Time}}</h3>
+                            </th>
+                            <th style="width: 30%">
+                                <h3>{{translatedLabels.Details}}</h3>
+                            </th>
+                            <th style="width: 20%">
+                                <h3>{{translatedLabels.Duration}}</h3>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each pre_workouts }}
+                        <tr>
+                            <td>
+                                <p>{{print @index }}</p>
+                            </td>
+                            <td style="text-align: left">
+                                <p>{{ name }}</p>
+                            </td>
+                            <td>
+                                <p>{{ formattedTime }}</p>
+                            </td>
+                            <td style="text-align: left">
+                                {{#each ex}}
+                                <p>
+                                    {{ ex_group.set }} {{translatedLabels.repetitions}} x {{ repetition_value }}
+                                    {{ repetitions.type }} {{ exercises.basic_info.name }}
+                                </p>
+                                {{/each}}
+                                <h5>
+                                    {{translatedLabels.Repeat_Days}} - {{#each repeat_days}}<span>{{ this }},
+                                    </span>{{/each }}
+                                </h5>
+                                <h5>{{translatedLabels.What_Not_to_Do}} - <span>{{ not_to_do }}</span></h5>
+                                <h5>
+                                    {{translatedLabels.['Total_Calories']}} -
+                                    <span>
+                                        {{total_cal}}
+                                        {{#if translatedLabels.Cal}}
+                                        {{translatedLabels.Cal}}
+                                        {{else}}
+                                        Cal <!-- Fallback text -->
+                                        {{/if}}
+                                    </span>
+                                </h5>
+                            </td>
+                            <td>
+                                <p>{{ durationText }}</p>
+                            </td>
+                        </tr>
+                        {{/each }}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {{/if}}
+        {{/if}}
+    </div>
+
+    <!-- Footer Template -->
+    <div class="footer" id="pdf-footer">
+        <div class="footer-content">
+            <p class="page-info">{{translatedLabels.Page}} <span id="page-num"></span> <span id="page-count"></span></p>
+            <p class="generation-info">{{translatedLabels.Generated_via_AdhereLive_platform}}<br />{{
+                generationTimestamp }}
+            </p>
         </div>
     </div>
-    {{/if}}
-
-    {{#if pre_workouts.length}}
-    <div class="workout_section_heading">
-        <h3>{{translatedLabels.Workout}}:</h3>
-    </div>
-    <div class="workout_section_section">
-        <div class="workout_section_section_one">
-            <table class="workout_table" style="width: 100%; text-align: center">
-                <thead>
-                <tr>
-                    <th style="width: 6%">
-                        <h3>S. No</h3>
-                    </th>
-                    <th>
-                        <h3>{{translatedLabels.Workout_Name}}</h3>
-                    </th>
-                    <th style="width: 30%">
-                        <h3>{{translatedLabels.Time}}</h3>
-                    </th>
-                    <th style="width: 30%">
-                        <h3>{{translatedLabels.Details}}</h3>
-                    </th>
-                    <th style="width: 20%">
-                        <h3>{{translatedLabels.Duration}}</h3>
-                    </th>
-                </tr>
-                </thead>
-                <tbody>
-                {{#each pre_workouts }}
-                <tr>
-                    <td>
-                        <p>{{print @index }}</p>
-                    </td>
-                    <td style="text-align: left">
-                        <p>{{ name }}</p>
-                    </td>
-                    <td>
-                        <p>{{ formattedTime }}</p>
-                    </td>
-                    <td style="text-align: left">
-                        {{#each ex}}
-                        <p>
-                            {{ ex_group.set }} {{translatedLabels.repetitions}} x {{ repetition_value }}
-                            {{ repetitions.type }} {{ exercises.basic_info.name }}
-                        </p>
-                        {{/each}}
-                        <h5>
-                            {{translatedLabels.Repeat_Days}} - {{#each repeat_days}}<span>{{ this }}, </span>{{/each }}
-                        </h5>
-                        <h5>{{translatedLabels.What_Not_to_Do}} - <span>{{ not_to_do }}</span></h5>
-                        <h5>
-                            {{translatedLabels.['Total_Calories']}} -
-                            <span>
-                                {{total_cal}}
-                                {{#if translatedLabels.Cal}}
-                                    {{translatedLabels.Cal}}
-                                {{else}}
-                                    Cal  <!-- Fallback text -->
-                                {{/if}}
-                            </span>
-                        </h5>
-                    </td>
-                    <td>
-                        <p>{{ durationText }}</p>
-                    </td>
-                </tr>
-                {{/each }}
-                </tbody>
-            </table>
-        </div>
-    </div>
-    {{/if}}
-    {{/if}}
-</div>
-
-<!-- Footer Template -->
-<div class="footer" id="pdf-footer">
-    <div class="footer-content">
-        <p class="page-info">{{translatedLabels.Page}} <span id="page-num"></span> <span id="page-count"></span></p>
-        <p class="generation-info">{{translatedLabels.Generated_via_AdhereLive_platform}}<br/>{{ generationTimestamp }}
-        </p>
-    </div>
-</div>
 </body>
+
 </html>
