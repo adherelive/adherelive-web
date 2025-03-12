@@ -620,13 +620,14 @@
             padding: 10px;
         }
 
-        .next_consultation_section_heading{
+        .next_consultation_section_heading {
             border-left: 1px solid #ddd;
             border-right: 1px solid #ddd;
             border-bottom: 1px solid #ddd;
         }
+
         .next_consultation_section {
-            border-left: 1px solid  #ddd;
+            border-left: 1px solid #ddd;
             border-bottom: 1px solid #ddd;
             border-right: 1px solid #ddd;
         }
@@ -741,58 +742,71 @@
     <div class="main-content">
         <!-- PATIENT TOP BASIC INFO  -->
         <div class="top_section_wrapper">
+          
             <div class="top_section_wrapper_one">
                 <h3>Patient Name :</h3>
                 <p>{{ patient_data.name }}</p>
             </div>
             <div class="top_section_wrapper_two">
-                <h3>Registration date/time :</h3>
-                <p>{{ patient_data.created_at }}</p>
-            </div>
-            <div class="top_section_wrapper_one">
-                <h3>Patient Age/Gender :</h3>
-                <p>{{ patient_data.age }}/{{ patient_data.gender }}</p>
-            </div>
-
-            <div class="top_section_wrapper_two">
-                <h3>Patient ID :</h3>
-                <p>{{ patient_data.uid }}</p>
-            </div>
-            <div class="top_section_wrapper_one">
-                <h3>Patient Mobile No. :</h3>
-                <p>+{{ patient_data.prefix }}-{{ patient_data.mobile_number }}</p>
-            </div>
-            <div class="top_section_wrapper_two">
                 <h3>Doctor Name:</h3>
                 <p>Dr. {{ doctorName }} {{ degree }}</p>
             </div>
+            
             <div class="top_section_wrapper_one">
-                <h3>Patient Address:</h3>
-                <p>{{ patient_data.address }}</p>
+                <h3>Patient Age/Gender :</h3>
+                <p>{{ patient_data.age }}/{{ patient_data.gender }}</p>
             </div>
             <div class="top_section_wrapper_two">
                 <h3>Departmont Name :</h3>
                 <p></p>
             </div>
+
             <div class="top_section_wrapper_two">
                 <h3>Next to Kin :</h3>
-                <p></p>
-            </div>
-            <div class="top_section_wrapper_two">
-                <h3>Visit Id :</h3>
-                <p></p>
-            </div>
-            <div class="top_section_wrapper_two">
-                <h3>Sponsor :</h3>
                 <p></p>
             </div>
             <div class="top_section_wrapper_two">
                 <h3>Unit :</h3>
                 <p></p>
             </div>
+
+            <div class="top_section_wrapper_two">
+                <h3>Visit Id :</h3>
+                <p></p>
+            </div>
+            <div class="top_section_wrapper_two">
+                <h3>Registration date/time :</h3>
+                <p>{{ patient_data.created_at }}</p>
+            </div>
+         
+            <div class="top_section_wrapper_one">
+                <h3>Patient Mobile No. :</h3>
+                <p>+{{ patient_data.prefix }}-{{ patient_data.mobile_number }}</p>
+            </div>
             <div class="top_section_wrapper_two">
                 <h3>MR No :</h3>
                 <p></p>
+            </div>
+          
+            <div class="top_section_wrapper_one">
+                <h3>Patient Address:</h3>
+                <p>{{ patient_data.address }}</p>
+            </div>
+            <div class="top_section_wrapper_one">
+            </div>
+           
+            <div class="top_section_wrapper_two">
+                <h3>Sponsor :</h3>
+                <p></p>
+            </div>
+            <div class="top_section_wrapper_one">
+            </div>
+           
+            <div class="top_section_wrapper_two">
+                <h3>Patient ID :</h3>
+                <p>{{ patient_data.uid }}</p>
+            </div>
+            <div class="top_section_wrapper_one">
             </div>
         </div>
 
@@ -859,22 +873,83 @@
         <!-- DIAGNOSIS  AND SYMPTOMS-->
         <div class="top_section_wrapper">
             <div class="top_section_wrapper_one" style="border-right: 1px solid #ddd; padding: 10px">
-                <h3>Diagnosis :</h3>
-                <p>{{ diagnosis }}</p>
-            </div>
-            <div class="top_section_wrapper_two" style="padding: 10px">
+                <!-- <h3>Diagnosis :</h3>
+                <p>{{ diagnosis }}</p> -->
                 <h3>Symptoms :</h3>
                 <p style="width: 250px">{{ symptoms_final_value }}</p>
+            </div>
+            <div class="top_section_wrapper_two" style="padding: 10px">
+                <!-- <h3>Symptoms :</h3> -->
+                <!-- <p style="width: 250px">{{ symptoms_final_value }}</p> -->
+                <h3>General | Systematic Examination :</h3>
+                <p style="font-family: TiroDevanagariHindi-Regular">
+                    {{ clinicalNotes }}
+                </p>
             </div>
         </div>
 
         <!-- General | Systemic Examination: -->
         <div class="diagnosis_section">
             <div style="display: flex; align-items: center">
-                <h3>General | Systematic Examination :</h3>
+                <h3>Diagnosis :</h3>
+                <p>{{ diagnosis }}</p>
+                <!-- <h3>General | Systematic Examination :</h3>
                 <p style="font-family: TiroDevanagariHindi-Regular">
                     {{ clinicalNotes }}
-                </p>
+                </p> -->
+            </div>
+        </div>
+
+        <!-- INVESTIGATION SECTION -->
+        <!-- style="page-break-before: always" -->
+        <!-- <div class="page-break"></div> -->
+        <div class="investigation_section">
+            <div class="investigation_section_heading">
+                <h3>Investigation :</h3>
+            </div>
+            <div class="investigation_section_content">
+                <table class="investigation_table"
+                    style="width: 100%; text-align: center; border-collapse: collapse; border: 1px solid #ddd;">
+                    <thead>
+                        <tr style="border-bottom: 1px solid #ddd;">
+                            <th style="width: 6%; padding: 8px;">
+                                <h3>S. No</h3>
+                            </th>
+                            <th style="width: 20%; padding: 8px;">
+                                <h3>Description</h3>
+                            </th>
+                            <th style="width: 10%; padding: 8px;">
+                                <h3>Date</h3>
+                            </th>
+                            <th style="width: 20%; padding: 8px;">
+                                <h3>Purpose</h3>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each investigations}}
+                        <tr>
+                            <td style="padding: 8px; border: none;">
+                                <p>{{print @index}}</p>
+                            </td>
+                            <td style="text-align: left; padding: 8px; border: none;">
+                                <p>
+                                    {{ type_description }} <br />
+                                    <!-- <span style="font-size: 8px;">by Dr. {{ organizer.name }}</span>
+                                    <br /> -->
+                                    Note:- <span>{{ description }}</span>
+                                </p>
+                            </td>
+                            <td style="padding: 8px; border: none;">
+                                <p>{{ start_date }}</p>
+                            </td>
+                            <td style="padding: 8px; border: none;">
+                                <p>{{ reason }}</p>
+                            </td>
+                        </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
             </div>
         </div>
 
@@ -1001,58 +1076,7 @@
             </table>
         </div>
 
-        <!-- INVESTIGATION SECTION -->
-        <!-- style="page-break-before: always" -->
-        <!-- <div class="page-break"></div> -->
-        <div class="investigation_section">
-            <div class="investigation_section_heading">
-                <h3>Investigation :</h3>
-            </div>
-            <div class="investigation_section_content">
-                <table class="investigation_table"
-                    style="width: 100%; text-align: center; border-collapse: collapse; border: 1px solid #ddd;">
-                    <thead>
-                        <tr style="border-bottom: 1px solid #ddd;">
-                            <th style="width: 6%; padding: 8px;">
-                                <h3>S. No</h3>
-                            </th>
-                            <th style="width: 20%; padding: 8px;">
-                                <h3>Description</h3>
-                            </th>
-                            <th style="width: 10%; padding: 8px;">
-                                <h3>Date</h3>
-                            </th>
-                            <th style="width: 20%; padding: 8px;">
-                                <h3>Purpose</h3>
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {{#each investigations}}
-                        <tr>
-                            <td style="padding: 8px; border: none;">
-                                <p>{{print @index}}</p>
-                            </td>
-                            <td style="text-align: left; padding: 8px; border: none;">
-                                <p>
-                                    {{ type_description }} <br />
-                                    <!-- <span style="font-size: 8px;">by Dr. {{ organizer.name }}</span>
-                                    <br /> -->
-                                    Note:- <span>{{ description }}</span>
-                                </p>
-                            </td>
-                            <td style="padding: 8px; border: none;">
-                                <p>{{ start_date }}</p>
-                            </td>
-                            <td style="padding: 8px; border: none;">
-                                <p>{{ reason }}</p>
-                            </td>
-                        </tr>
-                        {{/each}}
-                    </tbody>
-                </table>
-            </div>
-        </div>
+
 
 
         <!-- NEXT CONSULTATION SECTION -->

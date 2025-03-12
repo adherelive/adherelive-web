@@ -841,8 +841,9 @@
                     {{ providerName }} <br />
                     {{ providerAddress }} +91-8411042323 <br />
                 </h3>
-                <p>{{translatedLabels.Patient}}: {{ patient_data.name }} - {{translatedLabels.ID}}: {{
-                    patient_data.uid}}</p>
+                <!-- <p>{{translatedLabels.Patient}}: {{ patient_data.name }} - {{translatedLabels.ID}}: {{
+                    patient_data.uid}}</p> -->
+                <p>Patient: {{ patient_data.name }} - ID: {{ patient_data.uid }}</p>
             </div>
             <div class="top_provider_section_three">
                 <img src="https://res.cloudinary.com/myrltech/image/upload/v1685082132/qr-code.jpg" alt="adhere"
@@ -859,40 +860,85 @@
     </div>
     <div class="main-content">
         <div class="top_section_wrapper">
+
             <div class="top_section_wrapper_one">
-                <h3>{{translatedLabels.Patient_Name}}:</h3>
+                <!-- <h3>{{translatedLabels.Patient_Name}}:</h3> -->
+                <h3>Patient Name :</h3>
                 <p>{{ patient_data.name }}</p>
             </div>
             <div class="top_section_wrapper_two">
-                <h3>{{translatedLabels.Registration}} {{translatedLabels.date}}/{{translatedLabels.time}}:</h3>
-                <p>{{ patient_data.created_at }}</p>
+                <!-- <h3>{{translatedLabels.Doctor_Name}}:</h3> -->
+                <h3>Doctor Name:</h3>
+                <p>Dr. {{ doctorName }} {{ degree }}</p>
             </div>
+           
             <div class="top_section_wrapper_one">
-                <h3>{{translatedLabels.Patient}} {{translatedLabels.Age}}/{{translatedLabels.Gender}}:</h3>
+                <!-- <h3>{{translatedLabels.Patient}} {{translatedLabels.Age}}/{{translatedLabels.Gender}}:</h3> -->
+                <h3>Patient Age/Gender :</h3>
                 <p>{{ patient_data.age }}/{{ patient_data.gender }}</p>
             </div>
-
             <div class="top_section_wrapper_two">
-                <h3>{{translatedLabels.Patient}} {{translatedLabels.ID}}:</h3>
-                <p>{{ patient_data.uid }}</p>
+                <h3>Departmont Name :</h3>
+                <p></p>
             </div>
+           
+            <div class="top_section_wrapper_two">
+                <h3>Next to Kin :</h3>
+                <p></p>
+            </div>
+            <div class="top_section_wrapper_two">
+                <h3>Unit :</h3>
+                <p></p>
+            </div>
+          
+            <div class="top_section_wrapper_two">
+                <h3>Visit Id :</h3>
+                <p></p>
+            </div>
+            <div class="top_section_wrapper_two">
+                <!-- <h3>{{translatedLabels.Registration}} {{translatedLabels.date}}/{{translatedLabels.time}}:</h3> -->
+                <h3>Registration date/time :</h3>
+                <p>{{ patient_data.created_at }}</p>
+            </div>
+          
             <div class="top_section_wrapper_one">
-                <h3>{{translatedLabels.Patient_Mobile_No_}}:</h3>
+                <!-- <h3>{{translatedLabels.Patient_Mobile_No_}}:</h3> -->
+                <h3>Patient Mobile No. :</h3>
                 <p>+{{ patient_data.prefix }}-{{ patient_data.mobile_number }}</p>
             </div>
             <div class="top_section_wrapper_two">
-                <h3>{{translatedLabels.Doctor_Name}}:</h3>
-                <p>Dr. {{ doctorName }} {{ degree }}</p>
+                <h3>MR No :</h3>
+                <p></p>
             </div>
+           
             <div class="top_section_wrapper_one">
-                <h3>{{translatedLabels.Patient}} {{translatedLabels.Address}}:</h3>
+                <!-- <h3>{{translatedLabels.Patient}} {{translatedLabels.Address}}:</h3> -->
+                <h3>Patient Address:</h3>
                 <p>{{ patient_data.address }}</p>
             </div>
-            <div class="top_section_wrapper_two">
-                <!-- Removed the Doctor Email -->
-                <!-- <h3>{{translatedLabels.Doctor_Email}}:</h3>
-          <p>{{ doctorEmail }}</p> -->
+            <div class="top_section_wrapper_one">
             </div>
+           
+            <div class="top_section_wrapper_two">
+                <h3>Sponsor :</h3>
+                <p></p>
+            </div>
+            <div class="top_section_wrapper_one">
+            </div>
+           
+            <div class="top_section_wrapper_two">
+                <!-- <h3>{{translatedLabels.Patient}} {{translatedLabels.ID}}:</h3> -->
+                <h3>Patient ID :</h3>
+                <p>{{ patient_data.uid }}</p>
+            </div>
+            <div class="top_section_wrapper_one">
+            </div>
+          
+            <!-- <div class="top_section_wrapper_two"> -->
+            <!-- Removed the Doctor Email -->
+            <!-- <h3>{{translatedLabels.Doctor_Email}}:</h3>
+          <p>{{ doctorEmail }}</p> -->
+            <!-- </div> -->
         </div>
 
         <!-- Chief Complaints:  -->
@@ -900,12 +946,14 @@
             <!-- Left Section -->
             <div style="width: 65%; border-right: 1px solid #ddd; padding: 5px; text-align: center;">
                 <div style="display: flex; align-items: center">
-                    <h3>{{translatedLabels.Allergies}}:</h3>
+                    <!-- <h3>{{translatedLabels.Allergies}}:</h3> -->
+                    <h3>Allergies:</h3>
                     <p>{{ patient_data.allergies }}</p>
                     <br />
                 </div>
                 <div style="display: flex; align-items: center">
-                    <h3>{{translatedLabels.Comorbidities}} :</h3>
+                    <!-- <h3>{{translatedLabels.Comorbidities}} :</h3> -->
+                    <h3>Comorbidities :</h3>
                     <p>{{ patient_data.comorbidities }}</p>
                     <br />
                 </div>
@@ -915,39 +963,57 @@
             <div style="width: 35%; padding: 5px;">
                 <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px;">
                     <!-- 12 Boxes with Label and Value -->
+                    <!-- <div
+                        style="border: 1px solid #ddd; height: 25px; text-align: center; line-height: 25px; font-weight: bold;">
+                        {{translatedLabels.Height}}</div> -->
                     <div
                         style="border: 1px solid #ddd; height: 25px; text-align: center; line-height: 25px; font-weight: bold;">
-                        {{translatedLabels.Height}}</div>
+                        HEIGHT</div>
                     <div style="border: 1px solid #ddd; height: 25px; text-align: center; line-height: 25px;">
                         {{patient_data.height}} cm</div>
 
+                    <!-- <div
+                        style="border: 1px solid #ddd; height: 25px; text-align: center; line-height: 25px; font-weight: bold;">
+                        {{translatedLabels.Weight}}</div> -->
                     <div
                         style="border: 1px solid #ddd; height: 25px; text-align: center; line-height: 25px; font-weight: bold;">
-                        {{translatedLabels.Weight}}</div>
+                        WEIGHT</div>
                     <div style="border: 1px solid #ddd; height: 25px; text-align: center; line-height: 25px;">
                         {{patient_data.weight}} kg</div>
 
+                    <!-- <div
+                        style="border: 1px solid #ddd; height: 25px; text-align: center; line-height: 25px; font-weight: bold;">
+                        {{translatedLabels.PULSE}}</div> -->
                     <div
                         style="border: 1px solid #ddd; height: 25px; text-align: center; line-height: 25px; font-weight: bold;">
-                        {{translatedLabels.PULSE}}</div>
+                        PULSE</div>
                     <div style="border: 1px solid #ddd; height: 25px; text-align: center; line-height: 25px;">
                     </div>
 
+                    <!-- <div
+                        style="border: 1px solid #ddd; height: 25px; text-align: center; line-height: 25px; font-weight: bold;">
+                        {{translatedLabels.Temperature}}</div> -->
                     <div
                         style="border: 1px solid #ddd; height: 25px; text-align: center; line-height: 25px; font-weight: bold;">
-                        {{translatedLabels.Temperature}}</div>
+                        TEMP</div>
                     <div style="border: 1px solid #ddd; height: 25px; text-align: center; line-height: 25px;">
                     </div>
 
+                    <!-- <div
+                        style="border: 1px solid #ddd; height: 25px; text-align: center; line-height: 25px; font-weight: bold;">
+                        {{translatedLabels.BMI}}</div> -->
                     <div
                         style="border: 1px solid #ddd; height: 25px; text-align: center; line-height: 25px; font-weight: bold;">
-                        {{translatedLabels.BMI}}</div>
+                        BMI</div>
                     <div style="border: 1px solid #ddd; height: 25px; text-align: center; line-height: 25px;">
                     </div>
 
+                    <!-- <div
+                        style="border: 1px solid #ddd; height: 25px; text-align: center; line-height: 25px; font-weight: bold;">
+                        {{translatedLabels.BP}}</div> -->
                     <div
                         style="border: 1px solid #ddd; height: 25px; text-align: center; line-height: 25px; font-weight: bold;">
-                        {{translatedLabels.BP}}</div>
+                        BP</div>
                     <div style="border: 1px solid #ddd; height: 25px; text-align: center; line-height: 25px;">
                     </div>
                 </div>
@@ -957,28 +1023,99 @@
         <!-- DIAGNOSIS  AND SYMPTOMS-->
         <div class="top_section_wrapper">
             <div class="top_section_wrapper_one" style="border-right: 1px solid #ddd; padding: 10px">
-                <h3>{{translatedLabels.Diagnosis}}:</h3>
-                <p>{{ diagnosis }}</p>
+                <!-- <h3>{{translatedLabels.Diagnosis}}:</h3> -->
+                <!-- <h3>Diagnosis :</h3>
+                <p>{{ diagnosis }}</p> -->
+                <h3>Symptoms :</h3>
+                <p style="width: 250px">{{ symptoms_final_value }}</p>
             </div>
             <div class="top_section_wrapper_two" style="padding: 10px">
-                <h3>{{translatedLabels.Symptoms}}:</h3>
-                <p style="width: 250px">{{ symptoms_final_value }}</p>
+                <!-- <h3>{{translatedLabels.Symptoms}}:</h3> -->
+                <!-- <h3>Symptoms :</h3>
+                <p style="width: 250px">{{ symptoms_final_value }}</p> -->
+                <h3>General | Systematic Examination :</h3>
+                <p style="font-family: TiroDevanagariHindi-Regular">
+                    {{ clinicalNotes }}
+                </p>
             </div>
         </div>
 
         <!-- General | Systemic Examination: -->
         <div class="diagnosis_section">
             <div style="display: flex; align-items: center">
-                <h3>{{translatedLabels.General}} | {{translatedLabels.Systematic_Examination}}:</h3>
+                <!-- <h3>{{translatedLabels.General}} | {{translatedLabels.Systematic_Examination}}:</h3> -->
+                <!-- <h3>General | Systematic Examination :</h3>
                 <p style="font-family: TiroDevanagariHindi-Regular, NotoSansDevanagari, Arial, sans-serif">
                     {{ clinicalNotes }}
-                </p>
+                </p> -->
+                <h3>Diagnosis :</h3>
+                <p>{{ diagnosis }}</p>
+            </div>
+        </div>
+
+         <!-- INVESTIGATION SECTION -->
+        <!-- style="page-break-before: always" -->
+        <!-- <div class="page-break"></div> -->
+        <div class="investigation_section">
+            <div class="investigation_section_heading">
+                <!-- <h3>{{translatedLabels.Investigation}}:</h3> -->
+                <h3>Investigation :</h3>
+            </div>
+            <div class="investigation_section_content">
+                <table class="investigation_table" style="width: 100%; text-align: center">
+                    <thead>
+                        <tr>
+                            <th style="width: 6%">
+                                <h3>S. No</h3>
+                            </th>
+                            <th style="width: 20%">
+                                <!-- <h3>{{translatedLabels.Description}}</h3> -->
+                                <h3>Description</h3>
+                            </th>
+                            <th style="width: 10%">
+                                <!-- <h3>{{translatedLabels.Date}}</h3> -->
+                                <h3>Date</h3>
+                            </th>
+                            <th style="width: 20%">
+                                <!-- <h3>{{translatedLabels.Purpose}}</h3> -->
+                                <h3>Purpose</h3>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each investigations}}
+                        <tr>
+                            <td>
+                                <p>{{print @index }}</p>
+                            </td>
+                            <td style="text-align: left">
+                                <p>
+                                    {{ type_description }} <br />
+                                    <!-- <span style="font-size: 8px">{{translatedLabels.by}} {{translatedLabels.Dr_}} {{
+                                        organizer.name }}</span>
+                                    <br /> -->
+                                    <!-- {{translatedLabels.Note}}:- -->
+                                    Note:-
+                                    <span style="font-family: var(--font-family-base);">{{ description }}</span>
+                                </p>
+                            </td>
+                            <td>
+                                <p>{{ start_date }}</p>
+                            </td>
+                            <td>
+                                <p>{{ reason }}</p>
+                            </td>
+                        </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
             </div>
         </div>
 
         <!-- TREATMENT ADVISE -->
         <div class="treatment_advise_section">
-            <h3>{{translatedLabels.Treatment_And_Follow_up_Advice}}:</h3>
+            <!-- <h3>{{translatedLabels.Treatment_And_Follow_up_Advice}}:</h3> -->
+            <h3>Treatment And Follow-up Advice:</h3>
             <p style="font-family: TiroDevanagariHindi-Regular, NotoSansDevanagari, Arial, sans-serif">
                 <strong>{{ follow_up_advise }}</strong>
             </p>
@@ -1004,7 +1141,8 @@
                             <h3>S.No</h3>
                         </th>
                         <th style="width: 30%" colspan="2">
-                            <h3>{{translatedLabels.Name_of_Medicine}}</h3>
+                            <!-- <h3>{{translatedLabels.Name_of_Medicine}}</h3> -->
+                            <h3>Name of Medicine</h3>
                         </th>
                         <th style="width: 30%" colspan="3">
                             <div class="schedule_medicine_wrapper">
@@ -1020,7 +1158,8 @@
                             </div>
                         </th>
                         <th style="width: 10%">
-                            <h3>{{translatedLabels.Duration}}</h3>
+                            <!-- <h3>{{translatedLabels.Duration}}</h3> -->
+                            <h3>Duration</h3>
                         </th>
                     </tr>
                 </thead>
@@ -1096,65 +1235,10 @@
             </table>
         </div>
 
-        <!-- INVESTIGATION SECTION -->
-        <!-- style="page-break-before: always" -->
-        <!-- <div class="page-break"></div> -->
-        <div class="investigation_section">
-            <div class="investigation_section_heading">
-                <h3>{{translatedLabels.Investigation}}:</h3>
-            </div>
-            <div class="investigation_section_content">
-                <table class="investigation_table" style="width: 100%; text-align: center">
-                    <thead>
-                        <tr>
-                            <th style="width: 6%">
-                                <h3>S. No</h3>
-                            </th>
-                            <th style="width: 20%">
-                                <h3>{{translatedLabels.Description}}</h3>
-                            </th>
-                            <th style="width: 10%">
-                                <h3>{{translatedLabels.Date}}</h3>
-                            </th>
-                            <th style="width: 20%">
-                                <h3>{{translatedLabels.Purpose}}</h3>
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {{#each investigations}}
-                        <tr>
-                            <td>
-                                <p>{{print @index }}</p>
-                            </td>
-                            <td style="text-align: left">
-                                <p>
-                                    {{ type_description }} <br />
-                                    <!-- <span style="font-size: 8px">{{translatedLabels.by}} {{translatedLabels.Dr_}} {{
-                                        organizer.name }}</span>
-                                    <br /> -->
-                                    {{translatedLabels.Note}}:-
-                                    <span style="font-family: var(--font-family-base);">{{ description }}</span>
-                                </p>
-                            </td>
-                            <td>
-                                <p>{{ start_date }}</p>
-                            </td>
-                            <td>
-                                <p>{{ reason }}</p>
-                            </td>
-                        </tr>
-                        {{/each}}
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-
-
         <!-- NEXT CONSULTATION SECTION -->
         <div class="next_consultation_section_heading">
-            <h3>{{translatedLabels.Next_Consultation}}:</h3>
+            <!-- <h3>{{translatedLabels.Next_Consultation}}:</h3> -->
+            <h3>Next Consultation :</h3>
         </div>
         <div class="next_consultation_section">
             <div class="next_consultation_section_one">
@@ -1165,13 +1249,16 @@
                                 <h3>S. No</h3>
                             </th>
                             <th style="width: 20%">
-                                <h3>{{translatedLabels.Description}}</h3>
+                                <!-- <h3>{{translatedLabels.Description}}</h3> -->
+                                <h3>Description</h3>
                             </th>
                             <th style="width: 10%">
-                                <h3>{{translatedLabels.Date}}</h3>
+                                <!-- <h3>{{translatedLabels.Date}}</h3> -->
+                                <h3>Date</h3>
                             </th>
                             <th style="width: 20%">
-                                <h3>{{translatedLabels.Purpose}}</h3>
+                                <!-- <h3>{{translatedLabels.Purpose}}</h3> -->
+                                <h3>Purpose</h3>
                             </th>
                         </tr>
                     </thead>
@@ -1187,7 +1274,8 @@
                                     <!-- <span style="font-size: 8px">{{translatedLabels.by}} {{translatedLabels.Dr_}} {{
                                         organizer.name }}</span>
                                     <br /> -->
-                                    {{translatedLabels.Note}}:-
+                                    <!-- {{translatedLabels.Note}}:- -->
+                                    Note:-
                                     <span style="font-family: var(--font-family-base);">{{ description }}</span>
                                 </p>
                             </td>
@@ -1204,7 +1292,7 @@
             </div>
         </div>
 
-         <!-- SIGNITURE SECTION  -->
+        <!-- SIGNITURE SECTION  -->
         <div class="signature_section">
             <div class="signature_image_section">
                 <picture>
@@ -1218,15 +1306,17 @@
                     {{ creationDate }}
                 </h3>
                 <div class="signature-stamp">
-                    <h3>{{translatedLabels.Signature}}{{translatedLabels.Stamp}}</h3>
+                    <!-- <h3>{{translatedLabels.Signature}}{{translatedLabels.Stamp}}</h3> -->
+                    <h3>SIGNATURE & STAMP</h3>
                 </div>
                 <div class="signature-details">
-                    <p>{{translatedLabels.RegNo}} {{ registrationNumber }}, {{ city }}</p>
+                    <!-- <p>{{translatedLabels.RegNo}} {{ registrationNumber }}, {{ city }}</p> -->
+                    <p>Reg. No. {{ registrationNumber }}, {{ city }}</p>
                 </div>
             </div>
         </div>
 
-          <!-- NOTE SECTION  -->
+        <!-- NOTE SECTION  -->
         <div>
             <h3>
                 Note:
@@ -1248,13 +1338,15 @@
 
         {{#if (or diet_output.length pre_workouts.length) }}
         <div style="margin-top: 30px">
-            <h3>{{translatedLabels.Lifestyle}} {{translatedLabels.Advice}}</h3>
+            <!-- <h3>{{translatedLabels.Lifestyle}} {{translatedLabels.Advice}}</h3> -->
+            <h3>Lifestyle Advice</h3>
         </div>
 
         <!-- DIET SECTION  -->
         {{#if diet_output.length}}
         <div class="diet_section_heading">
-            <h3>{{translatedLabels.Diet}}:</h3>
+            <!-- <h3>{{translatedLabels.Diet}}:</h3> -->
+            <h3>Diet :</h3>
         </div>
         <div class="diet_section_section">
             <div class="diet_section_section_one">
@@ -1265,13 +1357,16 @@
                                 <h3>S. No</h3>
                             </th>
                             <th>
-                                <h3>{{translatedLabels.Diet_Name}}</h3>
+                                <!-- <h3>{{translatedLabels.Diet_Name}}</h3> -->
+                                <h3>Diet Name</h3>
                             </th>
                             <th style="width: 40%">
-                                <h3>{{translatedLabels.TimeDetails}}</h3>
+                                <!-- <h3>{{translatedLabels.TimeDetails}}</h3> -->
+                                <h3>Time and details</h3>
                             </th>
                             <th style="width: 30%">
-                                <h3>{{translatedLabels.Duration}}</h3>
+                                <!-- <h3>{{translatedLabels.Duration}}</h3> -->
+                                <h3>Duration</h3>
                             </th>
                         </tr>
                     </thead>
@@ -1298,27 +1393,31 @@
                                         {{#each this.food_group_details_array}}
                                         <div style="width: 120px">
                                             <p>{{ this.details.name }}</p>
-                                            <p>
+                                            <!-- <p>
                                                 {{translatedLabels.Instructions}}:
                                                 <span style="font-family: var(--font-family-base);">{{ this.notes
                                                     }}</span>
-                                            </p>
+                                            </p> -->
+                                            <p>Instructions: <span>{{ this.notes }}</span></p>
                                         </div>
                                         {{/each}}
                                     </div>
                                 </div>
                                 {{/each}}
                                 <div style="margin-top: 20px">
-                                    <h5>
+                                    <!-- <h5>
                                         {{translatedLabels.Repeat_Days}} -
                                         {{#each this.repeat_days}}<span>{{this}},</span>{{/each}}
-                                    </h5>
-                                    <h5>
+                                    </h5> -->
+                                    <h5>Repeat Days - {{#each this.repeat_days}}<span>{{this}},</span>{{/each}}</h5>
+                                    <!-- <h5>
                                         {{translatedLabels.What_Not_to_Do}} -
                                         <span style="font-family: var(--font-family-base);">{{this.not_to_do}}</span>
-                                    </h5>
-                                    <h5>{{translatedLabels.Total_Calories}} - <span>{{ this.total_calories }}</span>
-                                    </h5>
+                                    </h5> -->
+                                    <h5>What Not to Do - <span>{{this.not_to_do}}</span></h5>
+                                    <!-- <h5>{{translatedLabels.Total_Calories}} - <span>{{ this.total_calories }}</span>
+                                    </h5> -->
+                                    <h5>Total Calories - <span>{{ this.total_calories }}</span></h5>
                                 </div>
                             </td>
                             <td>
@@ -1333,10 +1432,11 @@
         {{/if}}
 
 
-         <!-- WORKOUT SECTION  -->
+        <!-- WORKOUT SECTION  -->
         {{#if pre_workouts.length}}
         <div class="workout_section_heading">
-            <h3>{{translatedLabels.Workout}}:</h3>
+            <!-- <h3>{{translatedLabels.Workout}}:</h3> -->
+            <h3>Workout :</h3>
         </div>
         <div class="workout_section_section">
             <div class="workout_section_section_one">
@@ -1347,16 +1447,20 @@
                                 <h3>S. No</h3>
                             </th>
                             <th>
-                                <h3>{{translatedLabels.Workout_Name}}</h3>
+                                <!-- <h3>{{translatedLabels.Workout_Name}}</h3> -->
+                                <h3>Workout Name</h3>
                             </th>
                             <th style="width: 30%">
-                                <h3>{{translatedLabels.Time}}</h3>
+                                <!-- <h3>{{translatedLabels.Time}}</h3> -->
+                                <h3>Time</h3>
                             </th>
                             <th style="width: 30%">
-                                <h3>{{translatedLabels.Details}}</h3>
+                                <!-- <h3>{{translatedLabels.Details}}</h3> -->
+                                <h3>Details</h3>
                             </th>
                             <th style="width: 20%">
-                                <h3>{{translatedLabels.Duration}}</h3>
+                                <!-- <h3>{{translatedLabels.Duration}}</h3> -->
+                                <h3>Duration</h3>
                             </th>
                         </tr>
                     </thead>
@@ -1374,27 +1478,36 @@
                             </td>
                             <td style="text-align: left">
                                 {{#each ex}}
-                                <p>
+                                <!-- <p>
                                     {{ ex_group.set }} {{translatedLabels.repetitions}} x {{ repetition_value }}
+                                    {{ repetitions.type }} {{ exercises.basic_info.name }}
+                                </p> -->
+                                <p>
+                                    {{ ex_group.set }} set x {{ repetition_value }}
                                     {{ repetitions.type }} {{ exercises.basic_info.name }}
                                 </p>
                                 {{/each}}
-                                <h5>
+                                <!-- <h5>
                                     {{translatedLabels.Repeat_Days}} - {{#each repeat_days}}<span>{{ this }},
                                     </span>{{/each }}
-                                </h5>
-                                <h5>{{translatedLabels.What_Not_to_Do}} - <span>{{ not_to_do }}</span></h5>
+                                </h5> -->
                                 <h5>
+                                    Repeat Days - {{#each repeat_days}}<span>{{ this }}, </span>{{/each }}
+                                </h5>
+                                <!-- <h5>{{translatedLabels.What_Not_to_Do}} - <span>{{ not_to_do }}</span></h5> -->
+                                <h5>What Not to Do - <span>{{ not_to_do }}</span></h5>
+                                <!-- <h5>
                                     {{translatedLabels.['Total_Calories']}} -
                                     <span>
                                         {{total_cal}}
                                         {{#if translatedLabels.Cal}}
                                         {{translatedLabels.Cal}}
                                         {{else}}
-                                        Cal <!-- Fallback text -->
+                                        Cal
                                         {{/if}}
                                     </span>
-                                </h5>
+                                </h5> -->
+                                <h5>Total Calories - <span>{{ total_cal }} Cal</span></h5>
                             </td>
                             <td>
                                 <p>{{ durationText }}</p>
@@ -1412,10 +1525,12 @@
     <!-- Footer Template -->
     <div class="footer" id="pdf-footer">
         <div class="footer-content">
-            <p class="page-info">{{translatedLabels.Page}} <span id="page-num"></span> <span id="page-count"></span></p>
-            <p class="generation-info">{{translatedLabels.Generated_via_AdhereLive_platform}}<br />{{
+            <!-- <p class="page-info">{{translatedLabels.Page}} <span id="page-num"></span> <span id="page-count"></span></p> -->
+            <p class="page-info">Page <span id="page-num"></span> of <span id="page-count"></span></p>
+            <!-- <p class="generation-info">{{translatedLabels.Generated_via_AdhereLive_platform}}<br />{{
                 generationTimestamp }}
-            </p>
+            </p> -->
+            <p class="generation-info">Generated via AdhereLive platform<br />{{ generationTimestamp }}</p>
         </div>
     </div>
 </body>
