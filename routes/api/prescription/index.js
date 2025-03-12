@@ -337,14 +337,26 @@ async function getGoogleTranslation(text, targetLanguage) {
  * @param targetLanguage
  * @returns {Promise<*>}
  */
-async function translateObjectToHindi(obj, targetLanguage) {
+async function translateObjectToHindi(obj, targetLanguage, parent_name) {
+
+    let parents_key_to_translate = ["afternoon","morning","evening","night"]
+    // let parent_name=''
     for (let key in obj) {
+
         if (typeof obj[ key ] === 'string') {
             // Translate only non-empty strings
-            obj[ key ] = obj[ key ].trim() !== '' ? await translateText(obj[ key ], targetLanguage) : '';
-        } else if (typeof obj[ key ] === 'object' && obj[ key ] !== null) {
-            // Recursively translate nested objects
-            await translateObjectToHindi(obj[ key ], targetLanguage);
+            let before_value = obj[ key ]
+            
+            if(parents_key_to_translate.includes(parent_name)){
+                obj[ key ] = obj[ key ].trim() !== '' ? await translateText(obj[ key ], targetLanguage) : '';
+                continue
+            }
+            obj[ key ]=obj[ key ]
+
+        }else if (typeof obj[ key ] === 'object' && obj[ key ] !== null) {
+            
+            await translateObjectToHindi(obj[ key ], targetLanguage,key);
+            parent_name=key
         }
     }
     logger.debug('The translated object: ', obj);
