@@ -1,8 +1,6 @@
 version: "3.0"
 
 services:
-  #TODO: My Dockerfile name is DockerfileDev
-  #TODO: need to install nodemon in Dev Dockerimage
   node:
     build:
       context: .
@@ -41,6 +39,13 @@ services:
     volumes:
       - adhere_mongo:/data/db
 
+  adminer:
+    image: adminer
+    container_name: adminer_container
+    ports:
+      - "3000:8080"
+    depends_on:
+      - mysql
 volumes:
   mysql:
     driver: local
