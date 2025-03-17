@@ -600,9 +600,9 @@
         /* Section Wrappers */
         .top_section_wrapper {
             border: 1px solid #ddd;
-            display: grid;
+            /* display: grid;
             grid-template-columns: repeat(2, 3fr);
-            grid-auto-rows: minmax(30px, auto);
+            grid-auto-rows: minmax(30px, auto); */
         }
 
         .top_section_wrapper_one,
@@ -861,79 +861,101 @@
     <div class="main-content">
         <div class="top_section_wrapper">
 
-            <div class="top_section_wrapper_one">
-                <!-- <h3>{{translatedLabels.Patient_Name}}:</h3> -->
-                <h3>Patient Name :</h3>
-                <p>{{ patient_data.name }}</p>
+            <div style="display: flex;">
+                <div style="width: 50%;"  class="top_section_wrapper_one">
+                    <!-- <h3>{{translatedLabels.Patient_Name}}:</h3> -->
+                    <h3>Patient Name :</h3>
+                    <p>{{ patient_data.name }}</p>
+                </div>
+                <div style="width: 50%;"  class="top_section_wrapper_two">
+                    <!-- <h3>{{translatedLabels.Doctor_Name}}:</h3> -->
+                    <h3>Doctor Name:</h3>
+                    <p>Dr. {{ doctorName }} {{ degree }}</p>
+                </div>
             </div>
-            <div class="top_section_wrapper_two">
-                <!-- <h3>{{translatedLabels.Doctor_Name}}:</h3> -->
-                <h3>Doctor Name:</h3>
-                <p>Dr. {{ doctorName }} {{ degree }}</p>
+
+
+            <div style="display: flex;">
+                <div style="width: 50%;"  class="top_section_wrapper_one">
+                    <!-- <h3>{{translatedLabels.Patient}} {{translatedLabels.Age}}/{{translatedLabels.Gender}}:</h3> -->
+                    <h3>Patient Age/Gender :</h3>
+                    <p>{{ patient_data.age }}/{{ patient_data.gender }}</p>
+                </div>
+                <div style="width: 50%;"  class="top_section_wrapper_two">
+                    <h3>Departmont Name :</h3>
+                    <p></p>
+                </div>
             </div>
-           
-            <div class="top_section_wrapper_one">
-                <!-- <h3>{{translatedLabels.Patient}} {{translatedLabels.Age}}/{{translatedLabels.Gender}}:</h3> -->
-                <h3>Patient Age/Gender :</h3>
-                <p>{{ patient_data.age }}/{{ patient_data.gender }}</p>
+
+
+            <div style="display: flex;">
+                <div style="width: 50%;"  class="top_section_wrapper_two">
+                    <h3>Next to Kin :</h3>
+                    <p></p>
+                </div>
+                <div style="width: 50%;"  class="top_section_wrapper_two">
+                    <h3>Unit :</h3>
+                    <p></p>
+                </div>
             </div>
-            <div class="top_section_wrapper_two">
-                <h3>Departmont Name :</h3>
-                <p></p>
+
+
+            <div style="display: flex;">
+                <div style="width: 50%;"  class="top_section_wrapper_two">
+                    <h3>Visit Id :</h3>
+                    <p></p>
+                </div>
+                <div style="width: 50%;"  class="top_section_wrapper_two">
+                    <!-- <h3>{{translatedLabels.Registration}} {{translatedLabels.date}}/{{translatedLabels.time}}:</h3> -->
+                    <h3>Registration date/time :</h3>
+                    <p>{{ patient_data.created_at }}</p>
+                </div>
             </div>
-           
-            <div class="top_section_wrapper_two">
-                <h3>Next to Kin :</h3>
-                <p></p>
+
+
+            <div style="display: flex;">
+                <div style="width: 50%;"  class="top_section_wrapper_one">
+                    <!-- <h3>{{translatedLabels.Patient_Mobile_No_}}:</h3> -->
+                    <h3>Patient Mobile No. :</h3>
+                    <p>+{{ patient_data.prefix }}-{{ patient_data.mobile_number }}</p>
+                </div>
+                <div style="width: 50%;"  class="top_section_wrapper_two">
+                    <h3>MR No :</h3>
+                    <p></p>
+                </div>
             </div>
-            <div class="top_section_wrapper_two">
-                <h3>Unit :</h3>
-                <p></p>
+
+
+            <div style="display: flex;">
+                <div style="width: 50%;" class="top_section_wrapper_one">
+                    <!-- <h3>{{translatedLabels.Patient}} {{translatedLabels.Address}}:</h3> -->
+                    <h3>Patient Address:</h3>
+                    <p>{{ patient_data.address }}</p>
+                </div>
+                <div style="width: 50%;" class="top_section_wrapper_one">
+                </div>
             </div>
-          
-            <div class="top_section_wrapper_two">
-                <h3>Visit Id :</h3>
-                <p></p>
+
+
+            <div style="display: flex;">
+                <div style="width: 50%;" class="top_section_wrapper_two">
+                    <h3>Sponsor :</h3>
+                    <p></p>
+                </div>
+                <div style="width: 50%;" class="top_section_wrapper_one">
+                </div>
             </div>
-            <div class="top_section_wrapper_two">
-                <!-- <h3>{{translatedLabels.Registration}} {{translatedLabels.date}}/{{translatedLabels.time}}:</h3> -->
-                <h3>Registration date/time :</h3>
-                <p>{{ patient_data.created_at }}</p>
+
+            <div style="display: flex;">
+                <div style="width: 50%;" class="top_section_wrapper_two">
+                    <!-- <h3>{{translatedLabels.Patient}} {{translatedLabels.ID}}:</h3> -->
+                    <h3>Patient ID :</h3>
+                    <p>{{ patient_data.uid }}</p>
+                </div>
+                <div style="width: 50%;" class="top_section_wrapper_one">
+                </div>
             </div>
-          
-            <div class="top_section_wrapper_one">
-                <!-- <h3>{{translatedLabels.Patient_Mobile_No_}}:</h3> -->
-                <h3>Patient Mobile No. :</h3>
-                <p>+{{ patient_data.prefix }}-{{ patient_data.mobile_number }}</p>
-            </div>
-            <div class="top_section_wrapper_two">
-                <h3>MR No :</h3>
-                <p></p>
-            </div>
-           
-            <div class="top_section_wrapper_one">
-                <!-- <h3>{{translatedLabels.Patient}} {{translatedLabels.Address}}:</h3> -->
-                <h3>Patient Address:</h3>
-                <p>{{ patient_data.address }}</p>
-            </div>
-            <div class="top_section_wrapper_one">
-            </div>
-           
-            <div class="top_section_wrapper_two">
-                <h3>Sponsor :</h3>
-                <p></p>
-            </div>
-            <div class="top_section_wrapper_one">
-            </div>
-           
-            <div class="top_section_wrapper_two">
-                <!-- <h3>{{translatedLabels.Patient}} {{translatedLabels.ID}}:</h3> -->
-                <h3>Patient ID :</h3>
-                <p>{{ patient_data.uid }}</p>
-            </div>
-            <div class="top_section_wrapper_one">
-            </div>
-          
+
             <!-- <div class="top_section_wrapper_two"> -->
             <!-- Removed the Doctor Email -->
             <!-- <h3>{{translatedLabels.Doctor_Email}}:</h3>
@@ -1053,7 +1075,7 @@
             </div>
         </div>
 
-         <!-- INVESTIGATION SECTION -->
+        <!-- INVESTIGATION SECTION -->
         <!-- style="page-break-before: always" -->
         <!-- <div class="page-break"></div> -->
         <div class="investigation_section">
