@@ -340,14 +340,14 @@ async function getGoogleTranslation(text, targetLanguage) {
 async function translateObjectToHindi(obj, targetLanguage, parent_name) {
 
     let parents_key_to_translate = ["afternoon","morning","evening","night"]
+    let key_to_translate = ['description']
     // let parent_name=''
     for (let key in obj) {
-
         if (typeof obj[ key ] === 'string') {
             // Translate only non-empty strings
             let before_value = obj[ key ]
             
-            if(parents_key_to_translate.includes(parent_name)){
+            if(parents_key_to_translate.includes(parent_name) || key_to_translate.includes(key)){
                 obj[ key ] = obj[ key ].trim() !== '' ? await translateText(obj[ key ], targetLanguage) : '';
                 continue
             }
