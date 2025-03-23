@@ -862,97 +862,97 @@
         <div class="top_section_wrapper">
 
             <div style="display: flex;">
-                <div style="width: 50%;"  class="top_section_wrapper_one">
+                <div style="width: 50%; display: flex; justify-content: space-between;"  class="top_section_wrapper_one">
                     <!-- <h3>{{translatedLabels.Patient_Name}}:</h3> -->
-                    <h3>Patient Name :</h3>
-                    <p>{{ patient_data.name }}</p>
+                    <h3 style="flex: 0.5;">Patient Name</h3>
+                    <p style="flex: 1;">: {{ patient_data.name }}</p>
                 </div>
-                <div style="width: 50%;"  class="top_section_wrapper_two">
+                <div style="width: 50%; display: flex; justify-content: space-between;"  class="top_section_wrapper_two">
                     <!-- <h3>{{translatedLabels.Doctor_Name}}:</h3> -->
-                    <h3>Doctor Name:</h3>
-                    <p>Dr. {{ doctorName }} {{ degree }}</p>
+                    <h3 style="flex: 0.5;">Doctor Name</h3>
+                    <p style="flex: 1;">: Dr. {{ doctorName }} {{ degree }}</p>
                 </div>
             </div>
 
 
             <div style="display: flex;">
-                <div style="width: 50%;"  class="top_section_wrapper_one">
+                <div style="width: 50%; display: flex; justify-content: space-between;"  class="top_section_wrapper_one">
                     <!-- <h3>{{translatedLabels.Patient}} {{translatedLabels.Age}}/{{translatedLabels.Gender}}:</h3> -->
-                    <h3>Patient Age/Gender :</h3>
-                    <p>{{ patient_data.age }}/{{ patient_data.gender }}</p>
+                    <h3 style="flex: 0.5;">Age/Gender</h3>
+                    <p style="flex: 1;">: {{ patient_data.age }}/{{ patient_data.gender }}</p>
                 </div>
-                <div style="width: 50%;"  class="top_section_wrapper_two">
-                    <h3>Departmont Name :</h3>
-                    <p></p>
-                </div>
-            </div>
-
-
-            <div style="display: flex;">
-                <div style="width: 50%;"  class="top_section_wrapper_two">
-                    <h3>Next to Kin :</h3>
-                    <p></p>
-                </div>
-                <div style="width: 50%;"  class="top_section_wrapper_two">
-                    <h3>Unit :</h3>
-                    <p></p>
+                <div style="width: 50%; display: flex; justify-content: space-between;"  class="top_section_wrapper_two">
+                    <h3 style="flex: 0.5;">Departmont Name</h3>
+                    <p style="flex: 1.0;">:</p>
                 </div>
             </div>
 
 
             <div style="display: flex;">
-                <div style="width: 50%;"  class="top_section_wrapper_two">
-                    <h3>Visit Id :</h3>
-                    <p></p>
+                <div style="width: 50%; display: flex; justify-content: space-between;"  class="top_section_wrapper_two">
+                    <h3 style="flex: 0.5;">Next to Kin</h3>
+                    <p style="flex: 1;">:</p>
                 </div>
-                <div style="width: 50%;"  class="top_section_wrapper_two">
+                <div style="width: 50%; display: flex; justify-content: space-between;"  class="top_section_wrapper_two">
+                    <h3 style="flex: 0.5;">Unit</h3>
+                    <p style="flex: 1;">:</p>
+                </div>
+            </div>
+
+
+            <div style="display: flex;">
+                <div style="width: 50%; display: flex; justify-content: space-between;"  class="top_section_wrapper_two">
+                    <h3 style="flex: 0.5;">Visit Id</h3>
+                    <p style="flex: 1;">:</p>
+                </div>
+                <div style="width: 50%; display: flex; justify-content: space-between;"  class="top_section_wrapper_two">
                     <!-- <h3>{{translatedLabels.Registration}} {{translatedLabels.date}}/{{translatedLabels.time}}:</h3> -->
-                    <h3>Registration date/time :</h3>
-                    <p>{{ patient_data.created_at }}</p>
+                    <h3 style="flex: 0.5;">Registration date</h3>
+                    <p style="flex: 1;">: {{ patient_data.created_at }}</p>
                 </div>
             </div>
 
 
             <div style="display: flex;">
-                <div style="width: 50%;"  class="top_section_wrapper_one">
+                <div style="width: 50%; display: flex; justify-content: space-between;"  class="top_section_wrapper_one">
                     <!-- <h3>{{translatedLabels.Patient_Mobile_No_}}:</h3> -->
-                    <h3>Patient Mobile No. :</h3>
-                    <p>+{{ patient_data.prefix }}-{{ patient_data.mobile_number }}</p>
+                    <h3 style="flex: 0.5;">Mobile No. :</h3>
+                    <p style="flex: 1;">+{{ patient_data.prefix }}-{{ patient_data.mobile_number }}</p>
                 </div>
-                <div style="width: 50%;"  class="top_section_wrapper_two">
-                    <h3>MR No :</h3>
-                    <p></p>
+                <div style="width: 50%; display: flex; justify-content: space-between;"  class="top_section_wrapper_two">
+                    <h3 style="flex: 0.5;">MR No</h3>
+                    <p style="flex: 1;">: </p>
                 </div>
             </div>
 
 
             <div style="display: flex;">
-                <div style="width: 50%;" class="top_section_wrapper_one">
+                <div style="width: 50%; display: flex; justify-content: space-between;" class="top_section_wrapper_one">
                     <!-- <h3>{{translatedLabels.Patient}} {{translatedLabels.Address}}:</h3> -->
-                    <h3>Patient Address:</h3>
-                    <p>{{ patient_data.address }}</p>
+                    <h3 style="flex: 0.5;">Address</h3>
+                    <p style="flex: 1;">: {{ patient_data.address }}</p>
                 </div>
-                <div style="width: 50%;" class="top_section_wrapper_one">
+                <div style="width: 50%; display: flex; justify-content: space-between;" class="top_section_wrapper_one">
                 </div>
             </div>
 
 
             <div style="display: flex;">
-                <div style="width: 50%;" class="top_section_wrapper_two">
-                    <h3>Sponsor :</h3>
-                    <p></p>
+                <div style="width: 50%; display: flex; justify-content: space-between;" class="top_section_wrapper_two">
+                    <h3 style="flex: 0.5;">Sponsor</h3>
+                    <p style="flex: 1;">:</p>
                 </div>
-                <div style="width: 50%;" class="top_section_wrapper_one">
+                <div style="width: 50%; display: flex; justify-content: space-between;" class="top_section_wrapper_one">
                 </div>
             </div>
 
             <div style="display: flex;">
-                <div style="width: 50%;" class="top_section_wrapper_two">
+                <div style="width: 50%; display: flex; justify-content: space-between;" class="top_section_wrapper_two">
                     <!-- <h3>{{translatedLabels.Patient}} {{translatedLabels.ID}}:</h3> -->
-                    <h3>Patient ID :</h3>
-                    <p>{{ patient_data.uid }}</p>
+                    <h3 style="flex: 0.5;">Patient ID</h3>
+                    <p style="flex: 1;">: {{ patient_data.uid }}</p>
                 </div>
-                <div style="width: 50%;" class="top_section_wrapper_one">
+                <div style="width: 50%; display: flex; justify-content: space-between;" class="top_section_wrapper_one">
                 </div>
             </div>
 
